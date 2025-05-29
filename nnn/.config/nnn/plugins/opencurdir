@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1090,SC1091
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+current_path="$2/$(basename "$2/$1")"
+
+get_target_path="$(dirname "${current_path[0]}")"
+
+_is_nvim() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+_is_nnn() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
+}
+
+if not_in_tmux; then
+  pane_id=$(wezterm cli get-pane-direction right)
+  if [ -z "${pane_id}" ]; then
+    pane_id=$(wezterm cli split-pane --right --percent 85)
+  fi
+
+  program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+  if [ "$program" = "nvim" ]; then
+    echo ":qa!" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+    wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+    sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
+  fi
+
+  echo "cd ${get_target_path}" | wezterm cli send-text --pane-id "$pane_id"
+  wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+  echo "nvim" | wezterm cli send-text --pane-id "$pane_id"
+  wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+  wezterm cli activate-pane-direction --pane-id "$pane_id" right
+
+else
+  tmux select-pane -R
+  current_pane=$(tmux display-message -p '#{pane_id}')
+
+  if _is_nvim; then
+    tmux send-keys -t "$current_pane" ":qa!" Enter
+  elif _is_nnn; then
+    tmux split-window -h -p 83
+  fi
+
+  sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
+
+  tmux send-keys -t "$current_pane" "cd ${get_target_path}" Enter
+  tmux send-keys -t "$current_pane" "nvim" Enter
+fi

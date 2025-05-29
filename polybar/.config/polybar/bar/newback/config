@@ -1,0 +1,92 @@
+; vim: foldmethod=marker foldlevel=0 ft=dosini
+; ░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄
+; ░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄
+; ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
+; #########################################
+; check --> https://github.com/polybar/polybar-scripts/tree/master/polybar-scripts
+[global/wm]
+margin-bottom       = 0
+margin-top          = 0
+
+include-file = ~/.config/polybar/bar/newback/modules.ini
+
+[bar/top]
+monitor = ${env:MONITOR:}
+; monitor-fallback =
+monitor-strict = false
+override-redirect = false
+wm-restack = i3
+bottom = false
+fixed-center = false
+
+; width = 100%
+; height = 25
+width = 100%
+height = 25
+
+offset-x = 0%
+offset-y = 0%
+
+background = ${color.background}
+foreground = ${color.foreground}
+
+border-size = 2
+border-color = ${color.background}
+; border-color = #00000000
+border-top-size = 2
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; Fonts
+font-0              = SF Mono:size=10;0
+font-1              = JetBrainsMono NF:size=10;0
+font-2              = Siji:size=5:fontformat=truetype;0
+font-3              = SF Mono:size=10;0
+; font-4              = Wucon Siji:size=8:0
+
+; modules-left = appmenu bspwm separator-bullet memory separator-bullet filesystem separator-bullet check-network mpd pulseaudio
+modules-left = appmenu bspwm separator-bullet memory separator-bullet filesystem separator-bullet check-network pulseaudio
+; modules-right = mpd pillar polypomo pillar info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar check-network pillar date pillar powermenu pillar
+; modules-right = mpd info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar date pillar powermenu pillar
+; modules-right = mpd info-docker record-ffmpeg pulseaudio check-network transmission memory filesystem date powermenu
+; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network memory filesystem popup-calendar powermenu
+; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network transmission memory filesystem popup-calendar powermenu
+; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update transmission memory filesystem popup-calendar powermenu
+modules-right = polypomo record-ffmpeg mpd popup-calendar powermenu
+; modules-right = info-docker record-ffmpeg pulseaudio memory filesystem date powermenu
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; General
+separator =
+dim-value = 1.0
+; wm-name = bspwm
+locale =
+; tray-detached = false
+; tray-maxsize = 16
+; tray-offset-x = 0
+; tray-offset-y = 0
+tray-padding = 1
+; tray-scale = 1.0
+tray-position = right
+tray-background = ${color.background}
+; enable-ipc = true
+click-left =
+click-middle =
+click-right =
+scroll-up =
+scroll-down =
+double-click-left =
+double-click-middle =
+double-click-right =
+cursor-click =
+cursor-scroll =
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; Application Settings
+[settings]
+throttle-output = 5
+throttle-output-for = 10
+screenchange-reload = true
+compositing-background = over
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over

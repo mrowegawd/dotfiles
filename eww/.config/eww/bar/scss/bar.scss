@@ -1,0 +1,230 @@
+* {
+  all: unset;
+  transition: 200ms ease-out;
+}
+
+.bar {
+  font-family: $altfont;
+  font-size: 1.1rem;
+  // margin: -2;
+  margin: 1px 1.2px 1px 1px;
+  background-color: $bg;
+  color: $fg;
+  border-radius: 20px;
+  // opacity: 0.92; @TODO one day
+}
+
+.logo {
+  font-family: inherit;
+  .icon {
+    font-size: 1.5rem;
+    padding: 1em 1em 1em;
+    color: $magenta;
+  }
+}
+
+.icon {
+  margin: 1px 8px 0 1px;
+  color: $magenta;
+  font-family: $altfont;
+  font-size: 1.5rem;
+  padding: 1px 1px 1px 1px;
+}
+
+.texting {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+tooltip {
+  font-family: $altfont;
+  background-color: $fg2;
+  border-radius: 15px;
+  min-height: 7px;
+  min-width: 70px;
+  font-size: 1.5em;
+  color: $bg;
+}
+
+// ========================
+// WORKSPACES
+// ========================
+
+.left-menu-button {
+  padding: 0px 12px;
+  border-radius: 7px;
+}
+
+.ws {
+  background-color: $bg;
+  border-radius: 20px;
+  // padding: 1em 0.5em;
+  font-size: 1.5em;
+  font-family: $altfont;
+
+  button {
+    margin: 0px 3px;
+    color: $magenta;
+  }
+
+  .occupied {
+    color: $magenta;
+  }
+
+  .focused {
+    color: $red;
+  }
+
+  .urgent {
+    color: $yellow;
+  }
+
+  &:hover {
+    color: $fg2;
+  }
+}
+
+// .time-label {
+//   border-radius: 7px;
+// }
+//
+
+// scale trough {
+//   all: unset;
+//   background-color: $foreground;
+//   border-radius: 5px;
+//   min-height: 7px;
+//   min-width: 70px;
+// }
+//
+// .volume-slider trough highlight {
+//   background-color: $color1;
+//   border-radius: 5px;
+// }
+
+// =======
+// AUDIO
+// =======
+
+@mixin window {
+  background-color: $bg;
+  border-radius: 1rem;
+  padding: 1rem;
+  color: $blue;
+  box-shadow: 0 0 4px 2px $red;
+  margin: 1rem;
+}
+
+.volume-osd {
+  // @include window;
+  background-color: $black;
+  box-shadow: 0 0 0 0px black;
+  // min-width: 25rem;
+  // border-top-left-radius: 10px;
+  // border-top-right-radius: 10px;
+  // border-bottom-left-radius: 0;
+  // border-bottom-right-radius: 0;
+}
+.volume-control-center {
+  // background-color: $bg;
+  // margin: 1px 1.2px 1px 1px;
+  padding: 1px 2px 0 4px;
+  margin: 1em 0.7em 1em 1em;
+  // margin-top: 1rem;
+}
+
+.volume-scale trough {
+  background-color: $red;
+  border-radius: 1rem;
+  min-height: 2.25rem;
+}
+
+.volume-scale trough highlight {
+  background-color: $gray;
+  border-radius: 1rem;
+  min-height: 2.25rem;
+}
+
+.volume-icon {
+  // margin-left: 0.75rem;
+  // font-size: 1.5rem;
+  &.less {
+    color: $red;
+  }
+
+  &.more {
+    color: $magenta;
+  }
+}
+
+.volume-arrow {
+  color: $red;
+  margin-left: 0.5rem;
+  font-size: 2rem;
+  min-width: 2.25rem;
+  border-radius: 2rem;
+  transition: 0.3s;
+}
+
+.volume-arrow:hover {
+  background-color: mix($red, $black, 70%);
+}
+
+.volume-mute {
+  background-color: $bg;
+  color: $red;
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+  min-width: 2.25rem;
+  border-radius: 2rem;
+  transition: 0.3s;
+
+  &.active {
+    background-color: $blue;
+    color: $red;
+  }
+
+  &.active:hover {
+    background-color: mix($blue, $altgreen, 70%);
+  }
+}
+
+.volume-mute:hover {
+  background-color: mix($red, $bg, 70%);
+}
+
+// ========================
+// TIME
+// ========================
+
+.clock {
+  // background-color: $altbg;
+  border-radius: 15px;
+  // padding: 8px 2px 0 2px;
+  font-size: 1.3em;
+  color: $fg2;
+}
+
+.hour {
+  font-size: 1.4em;
+  font-weight: bolder;
+}
+.min {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+// ========================
+// POWER MENU // SHUTDOWN
+// ========================
+
+.power-button {
+  //background-color: $red;
+  margin: 1em 1.3em 1em 1em;
+  // margin: 15px 2px;
+
+  // padding: 0em;
+  color: $red;
+  border-radius: 2px;
+  font-size: 1.2em;
+}

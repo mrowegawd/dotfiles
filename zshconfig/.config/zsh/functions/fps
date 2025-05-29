@@ -1,0 +1,35 @@
+# vim: ft=zsh sw=2 ts=2 et
+
+emulate -L zsh
+
+setopt pipefail
+
+_fps() {
+  local render
+  if (( $+commands[grcat] )); then
+    render='grcat fps.grc'
+  else
+    render='cat'
+  fi
+
+  ps -eo user,pid,ppid,pgid,stat,command | awk '
+  BEGIN { "ps -p $$ -o pgid= | tr -d \"[:blank:]\"" | getline pgid } {
+  if ($4 != pgid || $2 == pgid)
+    print
+  }' | ${(z)render}
+}
+
+local fzf_opts="--header-lines=1 -m \
+  ${commands[grcat]:+--ansi} --height=60% \
+  --min-height=15 --tac --reverse \
+  --preview-window=down:2,border-top"
+
+local nlwp='nlwp'
+if [[ $OSTYPE == darwin* ]]; then
+  nlwp='wq'
+fi
+
+local fzf_preview_cmd="ps -o pcpu,pmem,vsz,rss,$nlwp,start,time -p {2}"
+
+_fps | $FZF_CMD ${(z)fzf_opts} --preview=$fzf_preview_cmd |
+    awk -v sep=${FZF_MUL_DELIM:- } '{ printf "%s%c", $2, sep }' | sed -E "s/${FZF_MUL_DELIM:- }$//"

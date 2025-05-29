@@ -1,0 +1,16 @@
+* {
+
+    background:                     %%background%%;
+    foreground:                     %%foreground%%;
+    background-alt:                 %%background_alt%%;
+    border:               			    %%border%%;
+    border-alt:               		  %%border_alt%%;
+    selected:               		    %%selected%%;
+    selected-alt:               		%%selected_alt%%;
+    urgent:                         %%urgent%%;
+
+    green:                          %%green%%;
+    red:                            %%red%%;
+    blue:                           %%blue%%;
+    yellow:                         %%yellow%%;
+}

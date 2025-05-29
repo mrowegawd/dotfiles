@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/menuleft"
+rofi_command="rofi -theme $dir/$theme"
+
+options="@\nEmojis\nEarnings\nGames\nGhosted\nSnippet\nThemes\nTools\nRasp-on"
+
+chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
+
+(
+  [[ -z $chosen ]] && exit
+
+  MYBIN_PATH="$HOME/.config/miscxrdb/exbin"
+
+  [[ ! -d $MYBIN_PATH ]] && dunstify "Path not found:" "$MYBIN_PATH"
+
+  case "$chosen" in
+  "@")
+    rofi -modi drun -theme "$dir/$theme" -show drun
+    ;;
+  "Emojis") "$dir/_emoji" ;;
+  "Snippet") "$dir/_snippet" ;;
+  "Themes") "$dir/_themes" "main" ;;
+  "Tools") "$dir/_tools" ;;
+  esac
+)

@@ -1,0 +1,94 @@
+; (defwidget power []
+;   (eventbox	:class "power-menu"
+;             :halign "center"
+;             :valign "end"
+;             :onhover "eww update show_power_menu=true"
+;             :onhoverlost "eww update show_power_menu=false"
+;
+;     (box :orientation "h"
+;          :space-evenly false
+;
+;       (revealer :transition "slideleft"
+;                 :reveal show_power_menu
+;                 :duration "0.5s"
+;
+;         (box :orientation "h"
+;              :space-evenly false
+;
+;           (button	:class "icon"
+;                   :tooltip "Lock Screen"
+;                   :onclick "bar/scripts/lockscreen.sh" "  ")
+;
+;           (button	:class "icon"
+;                   :tooltip "Logout"
+;                   :onclick "i3-msg exit" "  ")
+;
+;           (button	:class "icon"
+;                   :tooltip "Suspend"
+;                   :onclick "bar/scripts/lockscreen.sh && bar/scripts/suspend.sh" "  ")
+;
+;           (button	:class "icon"
+;                   :tooltip "Reboot"
+;                   :onclick "systemctl reboot" "  ")))
+;
+;       (button	:class "icon power-button"
+;               :tooltip "Shutdown"
+;               :onclick "systemctl poweroff" ""))))
+
+(defvar image-lock "assets/lock.png")
+(defvar image-logout "assets/logout.png")
+
+(defwidget power []
+  (box
+    :class "power-menu"
+    :halign "center"
+    :valign "end"
+    ; :onhover "eww update show_power_menu=true"
+    ; :onhoverlost "eww update show_power_menu=false"
+
+    (box
+        :orientation "h"
+        :space-evenly true
+
+        (button
+            :class "icon power-button"
+            ; :onclick "systemctl poweroff" ""))))
+            :onclick "dunstify 'hello'" "")
+        )
+    )
+  )
+
+        ;; Boton de Bloquear
+        ; (box
+        ;     :orientation "v"
+        ;     :space-evenly false
+        ;     :halign "center"
+        ;     :valign "center"
+        ;     (button
+        ;         :class "bloquear"
+        ;         :halign "center"
+        ;         :valign "center"
+        ;         :onclick "betterlockscreen --lock"
+        ;         (image :path image-lock :image-width 40 :image-height 40)
+        ;     )
+        ;     (label :text "Bloquear" :justify "center")
+        ; )
+        ;
+        ; ;; Boton de Cerrar Sesión
+        ; (box
+        ;     :orientation "v"
+        ;     :space-evenly false
+        ;     :halign "center"
+        ;     :valign "center"
+        ;     (button
+        ;         :class "sesion"
+        ;         :halign "center"
+        ;         :valign "center"
+        ;         :onclick "bspc quit"
+        ;         (image :path image-logout :image-width 40 :image-height 40)
+        ;     (label :text "Cerrar Sesión" :justify "center")
+        ; )
+    ; )
+
+  ; )
+; )

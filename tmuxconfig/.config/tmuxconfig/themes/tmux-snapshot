@@ -1,0 +1,91 @@
+ACTIVE_BG="#3f3023"
+ACTIVE_FG="#724d2e"
+
+STATUSLINE_BG_MESSAGE="#e49b5d"
+STATUSLINE_FG="#51473b"
+
+SESSION_BG="#c1a78e"
+SESSION_FG="#2a2520"
+
+TMUX_BG="#2a2520"
+TMUX_FG="#5b5145"
+
+BORDER_FG_ACTIVE="#e49b5d"
+BORDER_FG_NC="#433b33"
+
+RED="#bd8183"
+BLUE="#7f91b2"
+WHITE="#c1a78e"
+GREEN="#78997a"
+
+setw -g window-style bg=$TMUX_BG
+setw -g window-active-style bg=$TMUX_BG
+
+setw -g pane-active-border-style bg=$TMUX_BG,fg=$BORDER_FG_ACTIVE
+setw -g pane-border-style bg=$TMUX_BG,fg=$BORDER_FG_NC
+
+setw -g pane-border-status top # bottom, top
+
+setw -g pane-border-format "\
+#{?pane_active,#[fg=$RED]$left_slant_separator,}\
+#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_ACTIVE],}#{pane_index}.#{pane_id} \
+#{?pane_active,#{pane_current_command} ,}\
+#{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
+
+# setw -g pane-border-format ""
+
+#  +----------------------------------------------------------+
+#  |                      STATUS THEMES                       |
+#  +----------------------------------------------------------+
+set -g status-fg $TMUX_FG
+set -g status-bg $TMUX_BG
+set -g status on
+set -g status-interval 5
+set -g status-position top
+set -g status-justify left # left,centre, absolute-centre
+set -g status-left ""
+
+set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+
+#  ╓
+#  ║  RIGHT
+#  ╙
+set -g status-right-length 80
+set -g status-right "#{?#{e|<:#{window_width},130},\
+#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
+#[fg=$GREEN]#{pomodoro_status} \
+#[fg=$BORDER_FG_ACTIVE,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
+#[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
+
+# +----------------------------------------------------------+
+# |                      STATUS FORMAT                       |
+# +----------------------------------------------------------+
+# '' '' '' '' '' '' 
+
+set-option -g window-status-current-format "\
+#{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
+#[fg=$BORDER_FG_ACTIVE,bg=$ACTIVE_BG,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$BORDER_FG_ACTIVE]#[bold] 󰁌,} \
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
+#[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] COPY \
+#{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
+#[bg=$WHITE]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
+#[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]}"
+
+# set-option -g window-status-format "\
+# #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
+# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},>> COPY << ℓ #{e|-|:#{history_size},#{scroll_position}}/#{history_size} #[default],}\
+# #[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
+
+set-option -g window-status-format "\
+#[fg=$TMUX_BG]#[bg=$TMUX_BG] \
+#[fg=$TMUX_FG,bg=$TMUX_BG,noreverse]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
+#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]COPY \
+#{?#{e|>:#{search_count},0},#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]Found #{search_count} #[bg=$TMUX_BG]#[fg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
+#[bg=$TMUX_BG]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
+#[fg=$TMUX_BG]#[bg=$TMUX_BG],#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]}"
+
+# vim: foldmethod=marker foldlevel=0 ft=tmux

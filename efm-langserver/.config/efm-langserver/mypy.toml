@@ -1,0 +1,6 @@
+# Global options:
+
+[mypy]
+python_version = 3.8
+# show-column-numbers = True
+# ignore-missing-imports = True

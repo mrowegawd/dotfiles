@@ -1,0 +1,8 @@
+[languages]
+rust = ["rustfmt"]
+go = ["gofumpt"]
+sh = ["shfmt"]
+bash = ["shfmt"]
+kotlin = ["ktlin"]
+lua = ["stylua -s -"]
+python = ["black --fast -"]

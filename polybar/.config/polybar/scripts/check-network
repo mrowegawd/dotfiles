@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# count=0
+disconnected="󰖪 down!"
+wireless_connected=" "
+# ethernet_connected="直"
+
+# install xgetres at https://github.com/tamirzb/xgetres
+NORMAL=$(xgetres color4)
+NORMALTEXT=$(xgetres color2)
+RED=$(xgetres color1)
+
+# ID="$(ip link | awk '/state UP/ {print $2}')"
+
+while true; do
+  if (ping -c 1 archlinux.org || ping -c 1 google.com || ping -c 1 bitbucket.org || ping -c 1 github.com || ping -c 1 sourceforge.net) &>/dev/null; then
+    echo "%{F$NORMAL}$wireless_connected%{F-} %{F$NORMALTEXT}ok%{F-}"
+    sleep 25
+  else
+    dunstify "Internet down!"
+    echo "%{F$RED}$disconnected%{F-}"
+    sleep 0.5
+  fi
+done

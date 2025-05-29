@@ -1,0 +1,310 @@
+#!/bin/bash
+
+EXTRA_SIZE=12
+
+session_exists() {
+  tmux has-session -t "=$1"
+}
+_check_pane_is_nvim() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+_check_pane_is_zsh() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
+}
+_check_pane_is_tclock() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
+}
+
+current_session=$(tmux display-message -p '#S')
+PATH_PANE_COLLECT_JSON="/tmp/tmux-toggle-pane-$current_session.json"
+PATH_MAIN_WORKSPACE="/tmp/tmux-toggle-pane-main-workspace.json"
+
+TEMP_FILES=$(mktemp)
+
+GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+
+float_term() {
+  session="tmp_float_term"
+
+  pane_width="$(tmux display -p '#{window_width}')"
+  width_pane2="$(("$pane_width" / 2))"
+  width_pane="$(("$width_pane2" / 2 + "$EXTRA_SIZE"))"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w "$width_pane%" -h '100%' -x '100%' -y '100%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session zsh;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w "$width_pane%" -h '100%' -x '100%' -y '100%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -E "tmux attach -t $session"
+    fi
+  fi
+}
+
+split_normal_v() {
+  pane_count=$(tmux list-panes | wc -l)
+
+  if [[ $pane_count -gt 1 ]]; then
+    tmux split-window -h -c '#{pane_current_path}'
+    exit
+  fi
+
+  # open split pane dengan size
+  tmux split-window -hl 80 -c '#{pane_current_path}'
+}
+split_normal_h() {
+  pane_count=$(tmux list-panes | wc -l)
+
+  if [[ $pane_count -gt 1 ]]; then
+    tmux split-window -vl 20 -c '#{pane_current_path}'
+    exit
+  fi
+
+  # open split pane dengan size
+  tmux split-window -vl 20 -c '#{pane_current_path}'
+}
+last_session() {
+  if _check_pane_is_yazi; then
+    tmux send-keys M-b
+  else
+    current_session=$(tmux display-message -p '#S')
+    last_session=$(tmux display-message -p '#{client_last_session}')
+
+    if [[ $(tmux list-sessions | wc -l) -eq 1 ]]; then
+      tmux display-message "Only One Session. Abort it"
+    elif [[ -z "$last_session" ]]; then
+      tmux display-message "The last session no longer exists. Try to find another one"
+    else
+      tmux switch-client -l
+    fi
+  fi
+}
+
+__split_term_init() {
+  [[ ! -f $PATH_PANE_COLLECT_JSON ]] && touch "$PATH_PANE_COLLECT_JSON"
+  if [[ ! -s $PATH_PANE_COLLECT_JSON ]]; then
+    json_output=$(
+      cat <<EOF
+[
+  {
+    "window_id": "$window_id",
+    "pane_id": "$pane_id",
+    "cwd": "$current_cwd",
+    "session": "$current_session"
+  }
+]
+EOF
+    )
+    echo "$json_output" >"$PATH_PANE_COLLECT_JSON"
+  fi
+
+}
+__split_term_update_data_json() {
+
+  __insert_json() {
+    jq --arg pid "$pane_id" --arg cwd "$current_cwd" --arg session "$current_session" --arg window_id "$window_id" \
+      '. += [{"pane_id": $pid, "cwd": $cwd, "session": $session, "window_id": $window_id}]' \
+      "$PATH_PANE_COLLECT_JSON" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_COLLECT_JSON"
+  }
+
+  # example data json:
+  # [
+  #   {
+  #     "window_id": "1",
+  #     "pane_id": "%97",
+  #     "cwd": "$HOME/moxconf/development/dotfiles",
+  #     "session": "Dotfiles"
+  #   }
+  # ]
+
+  session_id_exists=$(jq -e --arg cur_session "$current_session" '.[] | select(.session == $cur_session)' "$PATH_PANE_COLLECT_JSON")
+  window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
+  pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
+
+  # dunstify $pane_id_exists
+
+  # Update workspace json. jika belum ada isi data json sama sekali
+  if [ -z "$session_id_exists" ] && [ -z "$window_id_exists" ] && [ -z "$pane_id_exists" ]; then
+    __insert_json
+  fi
+
+  # Update workspace json. Setiap session pada satu window, setidaknya harus
+  # punya satu main pane sebagai main workspace
+  if [ -n "$session_id_exists" ]; then
+    if [ -z "$window_id_exists" ] && [ -z "$pane_id_exists" ]; then
+      # dunstify "$window_id_exists"
+      __insert_json
+    fi
+  fi
+
+}
+__split_term_cleanup_update_and_remove_data_json() {
+  # Mendapatkan daftar session dan pane yang ada di tmux
+  tmux_sessions=$(tmux list-sessions -F '#{session_name}')
+  tmux_panes=$(tmux list-panes -a -F '#{session_name}:#{pane_id}')
+
+  # dunstify "$tmux_panes"
+
+  # Memfilter data JSON dan menghapus yang tidak ada dalam tmux session dan pane
+  jq --argjson tmux_sessions "$(echo "$tmux_sessions" | jq -R . | jq -s .)" \
+    --argjson tmux_panes "$(echo "$tmux_panes" | jq -R . | jq -s .)" '
+   map(select(
+     .session as $session |
+     .pane_id as $pane_id |
+     ($tmux_sessions | index($session)) and
+     ($tmux_panes | index("\($session):\($pane_id)"))
+   ))' "$PATH_PANE_COLLECT_JSON" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_COLLECT_JSON"
+}
+
+__set_main_workspace() {
+  if _check_pane_is_nvim; then
+    session_id_exists=$(jq -e --arg cur_session "$current_session" '.[] | select(.session == $cur_session)' "$PATH_PANE_COLLECT_JSON")
+    window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
+    pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
+
+    if [ -n "$session_id_exists" ] && [ -n "$window_id_exists" ] && [ -n "$pane_id_exists" ]; then
+      jq --arg window_id "$window_id" --arg pane_id "$pane_id" \
+        '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' \
+        "$PATH_PANE_COLLECT_JSON" >$PATH_MAIN_WORKSPACE
+    fi
+  fi
+
+}
+
+__jump_to_main_workspace() {
+  main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_WORKSPACE)
+  main_pane_id=$(echo "$main_pane" | sed 's/"//g')
+  tmux select-pane -t "$main_pane_id"
+  # dunstify "tmux select-pane -t $main_pane_id"
+}
+
+__adjust_pane_height() {
+  pane_height=$(tmux display-message -p '#{pane_height}')
+  main_pane_height=$(echo "$pane_height" | sed 's/%//g')
+
+  # I don't want every pane opened with toggle-pane to have its height size set,
+  # so if there is 1 row pane below the main pane (nvim) then it's okay to set
+  # the size, but if there is more than 1 row it's not necessary
+  _is_pane_is_nvim=$(tmux select-pane -U | tmux display-message -p "#{pane_id} #{pane_current_command}")
+  # After getting the data value for `is_pane_is_nvim`, go back to the last pane
+  tmux last-pane
+  # If the pane above the toggle pane is nvim, then set the height if necessary
+  pane_current_command=$(echo "$_is_pane_is_nvim" | cut -d" " -f2)
+  if [ "$pane_current_command" == "nvim" ]; then
+    # dunstify "$main_pane_height > $(($EXTRA_SIZE))"
+    if [[ $(($main_pane_height)) -gt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
+
+    if [[ $(($main_pane_height)) -lt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
+  fi
+
+}
+
+__toggle_the_pane() {
+  is_pane_at_right=$(tmux display -p '#{pane_at_right}')
+  if [[ $is_pane_at_right == 1 ]]; then
+    if _check_pane_is_yazi || _check_pane_is_tclock; then
+      is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
+      if [[ $is_pane_at_bottom == 1 ]]; then
+        tmux select-pane -R
+        if ! _check_pane_is_nvim; then
+          tmux select-pane -L
+        fi
+        tmux split-window -vl 20 -c '#{pane_current_path}'
+      else
+        tmux select-pane -U
+      fi
+    fi
+  fi
+
+  # dunstify "hello"
+  # zc=$(tmux display-message -p "#{pane_id} #{pane_current_command}")
+  # dunstify "$zc"
+  # if _check_pane_is_nvim; then
+  #   dunstify "hore"
+  # fi
+
+  # is_pane_at_right=$(tmux display -p '#{pane_at_right}')
+  # if [[ $is_pane_at_right == 1 ]]; then
+  #   is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
+  #   if [[ $is_pane_at_bottom == 1 ]]; then
+  # dunstify "hasdf"
+  #
+
+  # pane_count=$(tmux list-panes | wc -l)
+  # dunstify $pane_count
+  # if [[ $pane_count -gt 3 ]]; then
+  #   tmux last-pane
+  #   if ! _check_pane_is_nvim; then
+  #     tmux select-pane -L
+  #     tmux split-window -vl 20 -c '#{pane_current_path}'
+  #   fi
+  # fi
+  #   fi
+  # fi
+}
+
+split_term() {
+  pane_id=$(tmux display-message -p '#{pane_id}')
+  # list_sessions=$(tmux list-sessions -F '#{session_name}')
+  window_id=$(tmux display-message -p '#I')
+  current_cwd=$(pwd)
+  current_session=$(tmux display-message -p '#S')
+
+  if _check_pane_is_nvim; then
+
+    # Check apakah file `tmux-tm-toggle-term.json` sudah siap dan lakukan pengisian minimal content
+    __split_term_init
+
+    # Update json jika dibutuhkan
+    __split_term_update_data_json
+
+    __set_main_workspace
+
+    is_zoomed=$(tmux list-panes -F '#F' | grep Z)
+    if [[ -n $is_zoomed ]]; then
+      tmux resize-pane -Z
+      tmux last-pane
+
+      # Open and toggle the pane
+      __toggle_the_pane
+
+      __adjust_pane_height
+
+    else
+      pane_count=$(tmux list-panes | wc -l)
+      if [[ $pane_count -eq 1 ]]; then
+        tmux split-window -vl $EXTRA_SIZE -c '#{pane_current_path}'
+        exit
+      fi
+
+      __jump_to_main_workspace
+      tmux resize-pane -Z
+    fi
+
+  else
+    __jump_to_main_workspace
+    tmux resize-pane -Z
+  fi
+
+  # Melakukan pembersihan config terhadap non active session pada file `tmux-tm-toggle-term.json`
+  __split_term_cleanup_update_and_remove_data_json
+
+  rm -rf "$TEMP_FILES"
+}
+
+"$@"

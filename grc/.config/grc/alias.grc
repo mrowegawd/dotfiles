@@ -1,0 +1,6 @@
+# HEADERS
+regexp=\scheck:|run:|watch:|misc:|docker:|yarn:|npm:|download:|ps:|fzf:|pipenv:|pip:|gpg:
+colours=green
+-
+regexp=^[a-zA-Z_()]*
+colours=red,on_yellow

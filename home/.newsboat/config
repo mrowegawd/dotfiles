@@ -1,0 +1,115 @@
+# vim: set ft:conf
+
+auto-reload                 yes
+browser                     zen-browser
+datetime-format             "%F"  # ISO 8601
+refresh-on-startup          yes
+player                      "mpv"
+download-path               "~/Downloads/newsboat/%n"
+save-path                   "~/Downloads/newsboat"
+reload-threads              2
+cleanup-on-quit             yes
+text-width                  80
+external-url-viewer         "urlview"
+
+# history-limit               0
+# max-items                   50
+cache-file                   ~/.cache/newsboat/cache.db
+
+notify-format               "%d new articles"
+notify-program              "/usr/local/bin/dunstify"
+
+# feedlist-title-format       "—[%u feeds with new articles]——%>——(%N %V)—"
+# feedlist-format             "%4i  %t (%c)"
+feedlist-format "%?l?│ %3U %t &├──── %t?"
+
+# feedlist-format "%?T?║%4i %n %8u (%T) %t &╠═════════════════════════════════════════════════════%t?"
+# feedlist-format "%4i %n %8u (%T) %t &╠═════════════════════════════════════════════════════%t?"
+
+articlelist-title-format    "—[%T]——(%u unread, %t total)——%>——(%U)—"
+# articlelist-format          "%4i  %D  %t %T"
+
+searchresult-title-format   "Search result (%u unread, %t total)"
+filebrowser-title-format    "%?O?Open File&Save File? - %f"
+help-title-format           "Help"
+selecttag-title-format      "Select Tag"
+selectfilter-title-format   "Select Filter"
+itemview-title-format       "%T"
+urlview-title-format        "URLs"
+dialogs-title-format        "Dialogs"
+
+# proxy-type                socks5
+# proxy                     localhost:73
+
+# COLORTHEME ------------------------------------------------------------------
+
+# color background          white     black
+color listnormal            color4    default
+color listfocus             color15   default bold
+color listnormal_unread     color5    default bold
+color listfocus_unread      black     color5 bold
+color info                  color8    default bold
+color article               color3    default
+
+# FEEDLIST --------------------------------------------------------------------
+
+highlight feedlist "[║│]" yellow default bold
+highlight feedlist "^(Feed|Local News|METHOD)" blue black
+highlight feedlist "^ *[0-9]+ *N " color156 default
+
+# highlight feedlist "(Tech News|Linux News|Distro News|Subreddits)" green black
+# highlight feedlist "(Real Estate|Other News)" blue black
+
+# ARTICLELIST -----------------------------------------------------------------
+
+highlight article "^(Feed|Author|Link|Date|Linux|METHOD):.*"  color9    default
+highlight article "^Title:.*"                                 color11   default bold
+highlight article "\\[[0-9][0-9]*\\]"                         color66   default bold
+highlight article "\\[image [0-9][0-9]*\\]"                   color109  default bold
+highlight article "\\[embedded flash: [0-9][0-9]*\\]"         color66   default bold
+highlight article ":.*\\(link\\)$"                            color74   default
+highlight article ":.*\\(image\\)$"                           color73   default
+highlight article ":.*\\(embedded flash\\)$"                  color74   default
+highlight articlelist "^ *[0-9]+ *N "                         color156  default
+
+# KEYMAPPING ------------------------------------------------------------------
+
+unbind-key ^D
+unbind-key b
+unbind-key ^V
+unbind-key ^E
+unbind-key o
+
+# -- navigation
+bind-key   j            down
+bind-key   ^D           pagedown
+bind-key   ^E           pagedown
+bind-key   k            up
+bind-key   ^U           pageup
+bind-key   ^Y           pageup
+bind-key   d            delete-article
+bind-key   ^g           open-search
+bind-key   g            home
+bind-key   G            end
+bind-key   ^f           edit-flags
+
+# -- articlelist
+bind-key   J            next-feed   articlelist
+bind-key   K            prev-feed   articlelist
+
+bind-key   l            open
+bind-key   o            open-in-browser-and-mark-read
+bind-key   E            edit-urls
+bind-key   r            reload
+bind-key   R            reload-all
+bind-key   U            show-urls
+bind-key   D            pb-download
+bind-key   x            pb-delete
+bind-key   w            toggle-source-view
+bind-key   v            toggle-article-read
+
+# MACRO -----------------------------------------------------------------------
+
+# macro mapping use `,`
+
+macro v set browser "tsp mpv --no-terminal -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 %u"; open-in-browser ; set browser "$BROWSER"

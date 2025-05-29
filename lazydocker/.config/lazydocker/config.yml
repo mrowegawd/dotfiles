@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://json.schemastore.org/lazydocker.json
+stats:
+  graphs:
+    - caption: CPU (%)
+      statPath: DerivedStats.CPUPercentage
+      color: blue
+    - caption: Memory (%)
+      statPath: DerivedStats.MemoryPercentage
+      color: green

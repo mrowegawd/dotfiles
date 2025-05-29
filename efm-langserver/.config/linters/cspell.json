@@ -1,0 +1,86 @@
+{
+  "$schema": "./cspell.schema.json",
+  "version": "0.2",
+  "cache": {
+    "useCache": true,
+    "cacheLocation": "./.cspell/.cspellcache",
+    "cacheStrategy": "content"
+  },
+  "dictionaryDefinitions": [
+    {
+      "name": "workspace",
+      "path": "./cspell-dict.txt",
+      "description": "Custom Workspace Dictionary",
+      "addWords": true
+    },
+    {
+      "name": "ignore words",
+      "path": "./cspell-ignore-words.txt",
+      "description": "Words to be Ignored",
+      "addWords": true,
+      "noSuggest": true
+    }
+  ],
+  "dictionaries": ["workspace", "ignore words"],
+  "ignorePaths": [
+    ".eslintignore",
+    ".git",
+    ".gitattributes",
+    ".gitignore",
+    ".github/integrations.json",
+    ".pnp.{js,cjs}",
+    ".prettierignore",
+    ".yarn",
+    "*.{png,jpg,pdf,svg}",
+    "*.cpuprofile",
+    "*.heapprofile",
+    "**/.docusaurus/**",
+    "**/.gitignore",
+    "**/.vscode/**",
+    "**/{cspell.*,cSpell.*,.cspell.*,cspell.config.*}",
+    "**/*.schema.json",
+    "**/*.snap",
+    "**/*.trie",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/jest.config.js",
+    "**/node_modules/**",
+    "**/tsconfig.json",
+    "/cspell-dict.txt",
+    "/cspell-ignore-words.txt",
+    "/docs/docsV2/**",
+    "/docs/types/cspell-types",
+    "/.cspell",
+    "cspell*.{json,yaml}",
+    "integration-tests/config/config.json",
+    "integration-tests/config/repositories/**",
+    "integration-tests/repositories/**",
+    "integration-tests/snapshots/**",
+    "lcov.info",
+    "lib-bundled",
+    "package.json",
+    "*-lock.{json,yaml}",
+    "packages/*/fixtures/**",
+    "packages/*/samples/**",
+    "packages/Samples/**",
+    "packages/cspell-lib/fixtures/**",
+    "temp",
+    "test-fixtures/**",
+    "test-packages/*/test-cspell-eslint-plugin/**",
+    "test-packages/examples/example-cspell-lib-single-doc/samples/**",
+    "test-packages/*/test-cspell-tools/src/*.txt"
+  ],
+  "useGitignore": false,
+  "flagWords": [],
+  "ignoreWords": ["commitcomment"],
+  "words": ["lenc"],
+  "features": {
+    "weighted-suggestions": true
+  },
+  "overrides": [
+    {
+      "filename": "**/CHANGELOG.md",
+      "words": ["webm"]
+    }
+  ]
+}

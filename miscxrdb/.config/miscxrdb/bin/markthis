@@ -1,0 +1,50 @@
+#!/bin/bash
+
+is_file="false"
+is_file="false"
+
+DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
+MARKED_PWD="$DROPBOX_PATH/marked-pwd"
+
+[[ ! -d $DROPBOX_PATH ]] && echo "[+] $DROPBOX_PATH: path not found" && exit
+
+isdir() {
+	if [[ -f $1 ]]; then
+		is_file="true"
+	fi
+}
+
+if [[ "$is_file" = "false" ]]; then
+	touch "$MARKED_PWD"
+fi
+
+notif_me() {
+
+	msg_marked="This path have been marked"
+
+	if command -v dunstify &>/dev/null; then
+		dunstify "Path: $1" "$msg_marked"
+	else
+		echo "Path: $1"
+		echo "$msg_marked"
+	fi
+
+}
+
+path_not_exists="true"
+
+pwd_command=$(pwd)
+
+while IFS= read -r line; do
+	if [[ $line == "$pwd_command" ]]; then
+		path_not_exists="false"
+		break
+	fi
+
+done <"$MARKED_PWD"
+
+if [[ "$path_not_exists" == "true" ]]; then
+	echo "$pwd_command" >>"$MARKED_PWD"
+else
+	notif_me "$pwd_command"
+fi

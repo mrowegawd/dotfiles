@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Get the number of panes in the current tmux window
+pane_count=$(tmux list-panes | wc -l)
+
+auto_toggle() {
+
+  # Check if there is only one pane or if the pane is zoomed
+  if [ "$pane_count" -eq 1 ] || [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
+    tmux set-option -g pane-border-status off
+
+  else
+    tmux set-option -g pane-border-status top
+  fi
+}
+
+hide_bar_pane() {
+  if [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
+    tmux set-option -g pane-border-status top
+  else
+    tmux set-option -g pane-border-status off
+  fi
+  tmux resize-pane -Z
+}
+
+"$@"

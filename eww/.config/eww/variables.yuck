@@ -1,0 +1,24 @@
+(defvar is_open_dashboard true)
+(defvar is_open_calendar false)
+(defvar show_audio_slider false)
+(defvar show_power_menu false)
+(defvar active_workspace_icon "")
+(defvar inactive_workspace_icon "")
+
+(defvar ANIM_DURATION "500ms")
+(defvar open_osd false)
+
+(defpoll gpu_usage :interval "1s"
+  "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | awk '{ print \"\"$1\"\"}'")
+
+(deflisten volume :initial "0"
+"bar/scripts/volume.sh")
+
+; (defpoll volume :interval "1s"
+;   "amixer sget Master | awk -F'[][]' '/Right:|Mono:/ && NF > 1 {sub(/%/, \"\"); printf \"%0.0f\", $2}'")
+
+(defpoll dateVar :interval "600s" "date '+%A %d.%m.%y +%H:%M'")
+; (defpoll time :interval "10s" `date "+%H:%M"`)
+(defpoll time :interval "20h" "date '+%d'")
+(defpoll calendar_year :interval "20h" "date '+%H'")
+(defpoll calendar_month :interval "20h" "date '+%m'")

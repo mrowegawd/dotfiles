@@ -1,0 +1,28 @@
+(include "/home/mr00x/.config/eww/bar/widgets/power.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/time.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/cpu.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/memory.yuck")
+;(include "/home/mr00x/.config/eww/bar/widgets/gpu.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/disk.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/audio.yuck")
+;(include "/home/mr00x/.config/eww/bar/widgets/network.yuck")
+
+(defwidget right-widgets []
+  (box :class ""
+       :orientation "v"
+       :space-evenly true
+       :halign "center"
+       :valign "end"
+       ; :spacing 20
+
+       ;(network)
+       (cpu)
+       (memory)
+       ;(gpu)
+       (disk)
+       (audio)
+       (time)
+       ; (date)
+       (power)
+  )
+)

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PATH_NVIM_PLUGINS="$HOME/.local/share/nvim/lazy/orgmode"
+[[ ! -d $PATH_NVIM_PLUGINS ]] && exit 1
+
+# crontab -e
+# * * * * * DISPLAY=:0 /bin/bash /home/<user>/.local/bin/nvim-org
+
+"$HOME/.local/bin/nvim" --headless -c 'lua require("orgmode").cron(require("r.utils.partial_org"))' &
+sleep 2
+
+COMMAND_NVIMORG=$(ps -ef | grep -i "headless -c lua require" | grep -v grep | awk '{print $2}')
+if [ -n "$COMMAND_NVIMORG" ]; then
+  echo "$COMMAND_NVIMORG"
+  kill -9 "$COMMAND_NVIMORG"
+fi

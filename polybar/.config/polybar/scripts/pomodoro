@@ -1,0 +1,89 @@
+#!/bin/bash
+
+RUN_ON="On"
+RUN_OFF="Off"
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/emojis"
+rofi_command="rofi -theme $dir/$theme"
+terminal="xterm"
+
+# buat alias di bash, jika diperlukan
+# alias wo_60="timer 60m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+# alias wo_5s="timer 5s && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/beep-warning.mp3 --volume=100 2 >/dev/null"
+#
+# alias wo_30="timer 30m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+# alias wo_30_fullscreen="timer 30m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+# alias wo_60_fullscreen="timer 60m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+# alias wo_rest="timer 10m && dunstify \"Pomodoro:\" \"Break is over! Get back to work\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+
+if ! command -v $terminal >/dev/null; then
+  dunstify "xterm not found??"
+  exit
+fi
+
+run_pomo() {
+  if [[ $1 == "kill" ]]; then
+    dunstify "Pomodoro:" "$2"
+    exit
+  fi
+
+  # bspc rule -a \* -o state=floating center=true focus=off rectangle=1200x800+0+0 follow=off desktop=4 &&
+  $terminal -e zsh -c "timer $1 && dunstify -u normal \"Pomodoro:\" \"$2\" -i ~/.config/miscxrdb/icons/pomodoro.png && play ~/.config/miscxrdb/mp3-wav/beep-warning.mp3 2>/dev/null" &
+}
+
+main() {
+  select_pomo=$(echo -e "5s\n30m\n1 jam\n2 jam\nkill pomo" | $rofi_command -dmenu -p '祥 pomo timer ')
+
+  [[ -z $select_pomo ]] && exit
+
+  msg_status="Will run for"
+
+  case "$select_pomo" in
+  "5s")
+    # bspc rule -a \* -o state=floating center=true focus=off rectangle=1200x800+0+0 follow=off desktop=4 &&
+    # uxterm -e zsh -c "timer 5s && dunstify -u normal \"Pomodoro:\" \"masdf\" -i ~/.config/miscxrdb/icons/pomodoro.png && mpv ~/.config/miscxrdb/mp3-wav/beep-warning.mp3 --volume=100 2 >/dev/null" &
+    #
+    dunstify "Pomodoro:" "$msg_status 5s.."
+    run_pomo "5s" "Work timer is up! Take a break"
+    ;;
+  "30m")
+    dunstify "Pomodoro:" "$msg_status 30m.."
+    run_pomo "30m" "Work timer is up! Take a break"
+    ;;
+  "1 jam")
+    dunstify "Pomodoro:" "$msg_status 1 jam.."
+    run_pomo "60m" "Work timer is up! Take a break"
+    ;;
+  "2 jam")
+    dunstify "Pomodoro:" "$msg_status 2 jam.."
+    run_pomo "120m" "Work timer is up! Take a break"
+    ;;
+  "kill pomo")
+    run_pomo "kill" "Force to quit.."
+    # TODO: cannot kill the terminal, hanya bisa dikill dgn lewat login ke shell lalu type command `pkill xterm`
+    bspc rule -a \* -o state=floating center=true focus=off rectangle=1200x800+0+0 follow=off desktop=4 &&
+      st -c bash -c "pkill $terminal"
+    ;;
+  *)
+    exit
+    ;;
+
+  esac
+}
+case "$1" in
+--toggle)
+  main
+  echo -e "$RUN_ON"
+  ;;
+--check-status)
+  if pgrep -f timer >/dev/null 2>&1; then
+    blink=$(date +%s)
+    if [ $((blink % 2)) -eq 0 ]; then
+      echo "Pomodoro: $RUN_ON"
+    # else
+    # 	echo "$RUN_OFF"
+    fi
+  fi
+  ;;
+esac

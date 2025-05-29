@@ -1,0 +1,10 @@
+--exclude=.mypy_cache/\*
+
+--langdef=vimwiki
+--langmap=vimwiki:.md
+#--regex-vimwiki=/^#[ \t]+(.+)+$/\1/h,header/
+#--regex-vimwiki=/^##[ \t]+(.+)+$/. \1/h,header/
+#--regex-vimwiki=/^###[ \t]+(.+)+$/.   \1/h,header/
+#--regex-vimwiki=/^####[ \t]+(.+)+$/.     \1/h,header/
+#--regex-vimwiki=/^#####[ \t]+(.+)+$/.       \1/h,header/
+#--regex-vimwiki=/^######[ \t]+(.+)+$/.          \1/h,header/

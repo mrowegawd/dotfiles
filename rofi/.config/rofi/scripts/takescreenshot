@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -u -e
+
+LC_TIME=id_ID.UTF-8
+
+_notifysend() {
+  # COL_MSG="$(xrdb -query | grep "color6" | head -n 1 |
+  #   cut -d":" -f2 | xargs)"
+  COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 |
+    cut -d":" -f2 | xargs)"
+}
+
+_maimselection() {
+  _notifysend
+
+  maim --select --hidecursor --quiet "$IMGTEMP/$NAME_FILE"
+
+  MSG_SCROT="<b><span foreground='$COL_MSG_SUCCSS'>SUCCESS !!</span></b>\n$NAME_FILE"
+
+  dunstify "Take a screenshot:" "$MSG_SCROT"
+  sleep 1
+
+  case "$XDG_SESSION_DESKTOP" in
+  "bspwm") bspc rule -a \* -o state=floating && sxiv "$IMGTEMP/$NAME_FILE" ;;
+  "*") sxiv "$IMGTEMP/$NAME_FILE" ;;
+  esac
+
+  dunstify "Path save:" "<b><span foreground='$COL_MSG_SUCCSS'>$IMGTEMP/$NAME_FILE</span></b>"
+}
+
+_maimfullscreen() {
+  _notifysend
+  maim --hidecursor --quiet "$IMGTEMP/$NAME_FILE"
+
+  MSG_SCROT="<b><span foreground='$COL_MSG_SUCCSS'>SUCCESS !!</span></b>\n$NAME_FILE"
+
+  dunstify "Take a screenshot:" "$MSG_SCROT"
+  sleep 1
+
+  case "$XDG_SESSION_DESKTOP" in
+  "bspwm") bspc rule -a \* -o state=floating && sxiv "$IMGTEMP/$NAME_FILE" ;;
+  "*") sxiv "$IMGTEMP/$NAME_FILE" ;;
+  esac
+
+  dunstify "Path save:" "<b><span foreground='$COL_MSG_SUCCSS'>$IMGTEMP/$NAME_FILE</span></b>"
+}
+
+(
+
+  # shellcheck source=/dev/null
+  NAME_PATH_PNG=$(date "+%d-%B-%Y_%H%S")
+  NAME_FILE="screenshot_$NAME_PATH_PNG.png"
+  IMGTEMP="$HOME/Downloads/screenshot"
+
+  dir="$HOME/.config/rofi/menu"
+  theme="styles/menuleft"
+  rofi_command="rofi -theme $dir/$theme"
+
+  # pastikan folder screenshot dan screenshot/videos exists
+  mkdir -p "$IMGTEMP"
+  mkdir -p "$IMGTEMP/videos"
+
+  options="selection\nfullscreen\n"
+  chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
+
+  [[ -z $chosen ]] && exit
+
+  case "$chosen" in
+  "selection") _maimselection ;;
+  "fullscreen") _maimfullscreen ;;
+  *) dunstify "takescreenshot:" "aborting.." ;;
+  esac
+)

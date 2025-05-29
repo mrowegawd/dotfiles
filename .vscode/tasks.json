@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Task: run_file",
+      "type": "shell",
+      "command": "lua",
+      "args": ["${fileBasename}"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Orchestrations: Run All Tail Task",
+      "type": "shell",
+      "dependsOn": [
+        "Tail lsp.log",
+        "Tail nvim log",
+        "Tail journalctl"
+      ]
+    },
+    {
+      "label": "Tail lsp.log",
+      "type": "shell",
+      "command": "tail",
+      "args": ["-f", "$HOME/.local/state/nvim/lsp.log"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Tail nvim log",
+      "type": "shell",
+      "command": "tail",
+      "args": ["-f", "$HOME/.local/state/nvim/log"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Tail journalctl",
+      "type": "shell",
+      "command": "journalctl",
+      "args": ["-f", "-n", "50", "-q"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Tail noice.log",
+      "type": "shell",
+      "command": "tail",
+      "args": ["-f", "$HOME/.local/state/nvim/noice.log"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Tail conform log",
+      "type": "shell",
+      "command": "tail",
+      "args": ["-f", "$HOME/.local/state/nvim/conform.log"],
+      "problemMatcher": []
+    }
+  ]
+}

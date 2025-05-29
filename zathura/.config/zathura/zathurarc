@@ -1,0 +1,115 @@
+set adjust-open "best-fit"
+set font "SF Mono 12"
+set zoom-min 50
+set pages-per-row 1
+
+set recolor "true"
+
+# set first-page-column     1:2
+
+set first-page-column     1
+
+# set first-page-column     2
+
+set scroll-page-aware "true"
+set selection-clipboard   clipboard
+set statusbar-home-tilde true
+set adjust-open "best-fit"
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ MISC                                                     │
+# └──────────────────────────────────────────────────────────┘
+# Disable default mapping
+unmap +
+unmap -
+# unmap f
+
+# zoom-in/out/reset
+map <C-=>               zoom in
+map <C-->               zoom out
+map <C-0>               zoom reset
+
+map [index] q           quit
+map <C-g>               feedkeys "?"
+
+map [normal] n          search forward
+map [normal] N          search backward
+
+# map <c-f>             search forward
+# map f                 toggle_fullscreen
+# map b                 toggle_statusbar
+# map D set             "first-page-column 1:1"
+# map <C-d> set         "first-page-column 1:2"
+
+# NOTE: To create 2 coloumn, press d
+
+map i                   recolor
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ BOOKMARKS                                                │
+# └──────────────────────────────────────────────────────────┘
+map <C-s>               focus_inputbar ":bmark "
+map b                   focus_inputbar ":blist "
+map B                   focus_inputbar ":bdelete "
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ SCROLL                                                   │
+# └──────────────────────────────────────────────────────────┘
+unmap y
+unmap e
+map <C-e>               scroll down 2
+map <C-y>               scroll up
+
+map k                   scroll up
+map j                   scroll down
+map h                   scroll left
+map l                   scroll right
+
+map K                   scroll half-up
+map J                   scroll half-down
+
+map <C-n>               scroll full-down
+map <C-p>               scroll full-up
+
+map [fullscreen] f      toggle_fullscreen
+map [fullscreen] =      zoom in
+map [fullscreen] k      scroll up
+map [fullscreen] j      scroll down
+map [fullscreen] h      scroll left
+map [fullscreen] l      scroll right
+map [fullscreen] K      scroll half-up
+map [fullscreen] J      scroll half-down
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ THEMES                                                   │
+# └──────────────────────────────────────────────────────────┘
+set default-bg "#2a2520"
+set default-fg "#ece1d7"
+
+set statusbar-bg "#202020"
+set statusbar-fg "#eee4e5"
+
+set inputbar-bg "#78997a"
+set inputbar-fg "#202020"
+
+set highlight-color "#bd8183"
+set highlight-active-color "#6A9FB5"
+
+set completion-highlight-fg "#151515"
+set completion-highlight-bg "#90A959"
+
+set notification-bg "#2a2520"
+set notification-fg "#ece1d7"
+
+set notification-error-bg "#AC4142"
+set notification-error-fg "#151515"
+
+set notification-warning-bg "#AC4142"
+set notification-warning-fg "#151515"
+
+set recolor-lightcolor "#2a2520"
+set recolor-darkcolor "#E0E0E0"
+set recolor-reverse-video "true"
+set recolor-keephue "false"
+
+# vim: ft=conf

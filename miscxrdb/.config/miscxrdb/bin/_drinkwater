@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Usage example (crontab -e):
+# 0 */2 * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_drinkwater >/dev/null 2>&1
+
+/usr/local/bin/dunstify --replace 31341 -i ~/.config/miscxrdb/icons/drinks.png "Jangan lupa minum"
+
+sound_man="$HOME/.config/miscxrdb/mp3-wav/notif-drink.mp3"
+
+if [ -f "$sound_man" ]; then
+  for ((i = 0; i < 5; i++)); do
+    /usr/bin/play "$sound_man" 2>/dev/null
+  done
+fi

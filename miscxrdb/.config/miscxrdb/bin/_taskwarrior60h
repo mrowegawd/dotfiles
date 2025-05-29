@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# check jika line task lebih dari 1
+num=$("$HOME/.local/bin/task" active | wc -l)
+
+# grab active tasks dari `task active`
+msg=$("$HOME/.local/bin/task" active | tail -n +4 | head -n 1 | awk '{ for (i=6; i<=NF; i++) printf $i" "; print "" }')
+icon="$HOME/.config/miscxrdb/icons/todo-list.png"
+
+sound="$HOME/.config/miscxrdb/mp3-wav/reminder-task-notif.mp3"
+
+if [[ $num -gt "1" ]]; then
+  /usr/local/bin/dunstify -i "$icon" "Active Task" "$msg"
+else
+  /usr/local/bin/dunstify -i "$icon" "No Active Tasks" "C'mon! what are you doing!"
+  sound="$HOME/.config/miscxrdb/mp3-wav/reminder-notask-notif.wav"
+fi
+
+if [ -f "$sound" ]; then
+  /usr/bin/play "$sound" 2>/dev/null
+fi

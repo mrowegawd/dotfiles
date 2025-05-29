@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# NORMAL=$(xgetres color12)
+# RED=$(xgetres color1)
+
+DATA="Sync"
+DATARUN="Re-sync.."
+ICON="$HOME/.config/miscxrdb/icons/backup-file.png"
+TITLE="Task And Notes"
+
+start_docker_syncthing() {
+
+  # if [[ -n $(command -v dropbox) ]]; then
+  # 	/usr/local/bin/dunstify "Dropbox running.."
+  # 	killall -q dropbox
+  # 	dropbox start &
+  # fi
+
+  # check jika ada container `mysyncthing`, yang telah dibuat dari docker image
+  DOCKER_CON_ID=$(docker ps -aqf "name=mysyncthing")
+  # check jika container `mysyncthing`, telah running apa belum
+  DOCKER_CHECK_RUNNING=$(docker ps --filter "name=mysyncthing" --filter "status=running" --quiet)
+
+  if ! command -v docker >/dev/null; then
+    /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Cannot run, docker not install"
+    exit 1
+  fi
+
+  if [ -n "$DOCKER_CON_ID" ]; then
+    if [ -z "$DOCKER_CHECK_RUNNING" ]; then
+      docker start "$DOCKER_CON_ID"
+    fi
+  else
+    /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Cannot find $DOCKER_CON_ID, so abort it"
+    exit 1
+  fi
+
+}
+
+main() {
+  /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Starting backup.. (manual)"
+
+  if [ ! -d "$HOME/.task" ]; then
+    /usr/local/bin/dunstify --replace=7731 "Polybar" "Sync-update cannot run!\ntask not exists"
+    exit
+  fi
+
+  if [ ! -d "$HOME/Dropbox" ]; then
+    /usr/local/bin/dunstify --replace=7731 "Polybar" "Sync-update cannot run!\ndropbox not exists"
+    exit
+  fi
+
+  # -a: --archive, yang akan menjaga semua atribut file dan folder seperti izin,
+  #     waktu modifikasi, dan lain-lain.
+  # -r: --recursive: Opsi ini menyebabkan rsync untuk melakukan sinkronisasi
+  #     secara rekursif, artinya akan mencakup semua file dan folder di dalam
+  #     direktori yang Anda tentukan sebagai sumber.
+  # -v: --verbose, yang menampilkan detail dari proses rsync.
+  rsync -arv --delete "$HOME/Dropbox/neorg" "$HOME/moxconf/mobilebackup/DCIM" >/dev/null
+}
+
+case "$1" in
+--run)
+  main
+  start_docker_syncthing
+  # polybar-msg hook sync-update 1
+  # echo "%{F$RED}$DATA%{F-}"
+  echo "$DATARUN"
+  /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Backup data, done.."
+  ;;
+
+*)
+  DATA="Sync"
+  # main
+  # /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Backup running.."
+  # polybar-msg hook sync-update 0
+  echo "$DATA"
+  # echo "%{F$NORMAL}$DATA%{F-}"
+  ;;
+esac

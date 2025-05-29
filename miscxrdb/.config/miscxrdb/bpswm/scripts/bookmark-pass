@@ -1,0 +1,299 @@
+#!/bin/bash
+
+# MENU="dmenu"
+FILE_BOOKMARKED="$HOME/Dropbox/neorg/orgmode/bookmarks/urls.org"
+
+ROFI_DIR="$HOME/.config/rofi/menu"
+ROFI_THEME_SNIPPETS="styles/snippets"
+ROFI_THEME_MENULEFT="styles/big_screen"
+ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME_SNIPPETS"
+
+[ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
+
+OPTIONS="Open:Bookmarked\nOpen:Pass\nEdit:Bookmarked"
+
+OBJ_MENU=$(echo -e "$OPTIONS" | $ROFI_COMMAND -dmenu -sorting-method fzf -p " WebSearch:")
+OBJ_SELECTED=$(echo "$OBJ_MENU" | xargs)
+
+# Dibutuhkan pengecekan session desktop seperti ini
+# terkadang session desktop dengan variable $XDG_SESSION_DESKTOP teroutput kosong
+# -----------------------
+WM_WINDOW="bspwm" # set default wm window
+if [[ $XDG_SESSION_DESKTOP == "" ]]; then
+  WM_WINDOW=$DESKTOP_SESSION
+fi
+
+if [[ $DESKTOP_SESSION == "" ]]; then
+  WM_WINDOW="i3"
+fi
+# -----------------------
+
+open_bookmark() {
+  ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME_MENULEFT"
+
+  SELECTIONOPS=$(
+    awk -F'*||\\[\\[' 'NF > 1 { printf "%-40s%s\n", $2, $4 }' "$FILE_BOOKMARKED" | awk ' {
+    name=$0;
+    getline url;
+    sub(/[[:space:]]+$/, "", url);
+    gsub(/\]\]$/, "", url)
+    printf "%s+ %s\n", name, url;
+}' | $ROFI_COMMAND -dmenu -i -p " Bookmark" | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
+  )
+  [ -z "$SELECTIONOPS" ] && exit
+  dunstify "(BOOKMARK) Open URL:" "$SELECTIONOPS"
+  $NUBROWSER "$SELECTIONOPS" 2>/dev/null
+  exit
+}
+edit_bookmark() {
+  case $WM_WINDOW in
+  "bspwm")
+    bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+      st -e bash -c "nvim $FILE_BOOKMARKED"
+    ;;
+  *)
+    dunstify "cannot edit bookmarks, OS $XDG_SESSION_DESKTOP not implemented yet?"
+    ;;
+  esac
+  exit
+}
+
+bspwm_open_float() {
+  path_pass=$(cat /tmp/mypass)
+
+  if [[ $1 == "create_pass" ]]; then
+
+    get_the_name=$(echo "" | $ROFI_COMMAND -dmenu -p "Create pass")
+
+    sel=$(echo "$path_pass" | sed -r "s/(.+)\/.+/\1/")
+    if [[ "$sel" == *\/* ]] || [[ "$sel" == *\\* ]]; then
+      new_acc_pass="$sel/$get_the_name"
+    else
+      new_acc_pass="$get_the_name"
+    fi
+
+    # `new_acc_pass` harus contains some string
+    # untuk memastikan `create pass` dapat berjalan lancar
+    if [[ -n $new_acc_pass ]]; then
+      [[ -d $HOME/.password-store/$new_acc_pass ]] && dunstify "The path; $HOME/.password-store/$new_acc_pass is a directory, you type wrong!"
+      dunstify "Creating new pass: $new_acc_pass"
+      # bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass init $new_acc_pass"
+    fi
+
+  fi
+}
+open_pass() {
+  tmp_mypass="/tmp/mypass"
+  dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
+
+  copy_pasword_or_username() {
+    if ! command -v ydotool >/dev/null; then
+      dunstify "[!] install ydotool and ydotoold first!"
+      # Installation: `sudo apt install ydotool ydotoold`
+      exit
+    fi
+
+    # Avoid the error; ydotoold backend unavailable #36
+    # https://github.com/ReimuNotMoe/ydotool/issues/36#issuecomment-788148567
+    if [[ ! -f $HOME/.config/autostart/ydotoold.desktop ]]; then
+      usermod -aG input "$USER"
+
+      echo '## ydotoold fix #     https://github.com/ReimuNotMoe/ydotool/issues/25#issuecomment-535842993
+				KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
+				' | sudo tee /etc/udev/rules.d/80-uinput.rules >/dev/null
+
+      echo "
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=ydotool deamon
+Exec=/usr/bin/ydotoold
+Comment=Generic Linux command-line automation tool (no X!).
+Categories=GNOME;GTK;System;
+        " >"$HOME/.config/autostart/ydotoold.desktop"
+    fi
+
+    path_pass=$(cat /tmp/mypass)
+
+    [[ ! -f $tmp_mypass ]] && dunstify "no path_pass found???" && exit
+    [[ -z $path_pass ]] && dunstify "var path_pass is empty???" && exit
+
+    case "$1" in
+    "autoinput")
+      username=$(pass show "$path_pass" | grep '^username: ' | cut -b 11-)
+      password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11-)
+      if [[ -n $username ]] && [[ -n $password ]]; then
+        ydotool type "$username" && ydotool key Tab && ydotool type "$password" && ydotool key Enter
+      else
+        dunstify "[autoinput] no password and username? something went wrong!"
+      fi
+      ;;
+    "copy_username")
+      pass show "$path_pass" | grep '^username: ' | cut -b 11- | xclip -selection c
+      get_clip=$(xclip -o -sel clip)
+      if [ -n "$get_clip" ]; then
+        dunstify "username copied"
+      else
+        dunstify "[copy username] cant copy!! something went wrong!"
+      fi
+      ;;
+    "input_username")
+      username=$(pass show "$path_pass" | grep '^username: ' | cut -b 11-)
+      if [[ -n $username ]]; then
+        ydotool type "$username" && ydotool key Enter
+      else
+        dunstify "[input username] no username? can't input username, something went wrong!"
+      fi
+      ;;
+    "copy_password")
+      pass show "$path_pass" | grep '^password: ' | cut -b 11- | xclip -selection c
+      get_clip=$(xclip -o -sel clip)
+      if [[ -n $get_clip ]]; then
+        dunstify "password copied"
+      else
+        dunstify "[username] no password? something went wrong!"
+      fi
+      ;;
+    "input_password")
+      password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11-)
+      if [[ -n $password ]]; then
+        ydotool type "$password" && ydotool key Enter
+      else
+        dunstify "[password] no password? something went wrong!"
+      fi
+      ;;
+    "url")
+      url=$(pass "$path_pass" | grep '^url: ' | cut -b 6-)
+      if [[ -n $url ]]; then
+        $NUBROWSER "$url"
+      else
+        dunstify "[url] no url? something went wrong"
+      fi
+      ;;
+    *)
+      exit
+      ;;
+    esac
+
+  }
+
+  select_command() {
+    selection="$(echo -e "auto input\ninput username\ninput password\ncopy username\ncopy password\nopen url" |
+      $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p "$1")"
+
+    if [[ -n "$selection" ]]; then
+      if [[ $selection == "auto input" ]]; then
+        copy_pasword_or_username "autoinput"
+      fi
+      if [[ $selection == "input username" ]]; then
+        copy_pasword_or_username "input_username"
+      fi
+      if [[ $selection == "copy username" ]]; then
+        copy_pasword_or_username "copy_username"
+      fi
+      if [[ $selection == "input password" ]]; then
+        copy_pasword_or_username "input_password"
+      fi
+      if [[ $selection == "copy password" ]]; then
+        copy_pasword_or_username "copy_password"
+      fi
+      if [[ $selection == "open url" ]]; then
+        copy_pasword_or_username "url"
+      fi
+    else
+      exit 1
+    fi
+  }
+
+  __select_password() {
+    find "$dir" -not -path '*/.git/*' -type f |
+      grep '\.gpg$' |
+      sed "s:$dir\(.*\)\.gpg$:\1:" |
+      $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1"
+  }
+
+  __select_dir_password() {
+    find "$dir" -not -path '*/.git/*' -type d |
+      sed "s:$dir\(.*\):\1:" |
+      grep "\/" |
+      $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'select dir' -filter "$1"
+    # sed "s:$dir\(.*\)\.gpg$:\1:" |
+  }
+
+  selection=$(echo -e "get pass\ninsert new pass\nedit pass" | $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1")
+  [[ -z "$selection" ]] && exit
+
+  case $selection in
+  "get pass")
+    password_selection="$(__select_password "$1")"
+    [[ -z $password_selection ]] && exit
+    touch $tmp_mypass
+    echo "$password_selection" >/tmp/mypass
+    select_command "$password_selection"
+    ;;
+
+  "insert new pass")
+    dir_selection="$(__select_dir_password "$1")"
+    [[ -z $dir_selection ]] && exit
+    [[ ! -d $HOME/.password-store/$dir_selection ]] && exit
+
+    case "$WM_WINDOW" in
+    "bspwm")
+      if [[ "$TERMINAL" == "wezterm" ]]; then
+        dunstify -t 10000 "ex: 'pass insert $dir_selection/<pass_baru>'"
+        bspc rule -a \* -o state=floating st && st -e zsh -c "cd $HOME/.password-store/$dir_selection; exec zsh"
+      else
+        bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
+      fi
+
+      ;;
+    *)
+      dunstify "Insert new pass: failed to define WM_WINDOW"
+      ;;
+    esac
+    ;;
+
+  "edit pass")
+    edit_selection="$(__select_password "$1")"
+    [[ -z "$edit_selection" ]] && exit
+    touch $tmp_mypass
+    echo "$edit_selection" >$tmp_mypass
+
+    case "$WM_WINDOW" in
+    "bspwm")
+      bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $edit_selection"
+      ;;
+    *)
+      dunstify "Edit pass: failed to define WM_WINDOW"
+      ;;
+    esac
+    ;;
+  esac
+
+  [[ -f $tmp_mypass ]] && rm $tmp_mypass
+  exit
+}
+main() {
+  if [ "$OBJ_SELECTED" = "Open:Bookmarked" ]; then
+    open_bookmark
+  fi
+
+  # if [ "$OBJ_SELECTED" = "Delete:Query" ]; then
+  # 	delete_query "DMENU" "$FILE"
+  # fi
+
+  # if [ "$OBJ_SELECTED" = "Delete:Bookmarked" ]; then
+  # 	delete_query "ROFI" "$FILE_BOOKMARKED"
+  # fi
+
+  if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
+    edit_bookmark
+  fi
+
+  if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
+    open_pass ""
+  fi
+
+}
+
+main

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+clear
+
+# Membuat playlist kosong
+playlist="playlist.m3u"
+
+# Menghapus playlist jika sudah ada sebelumnya
+if [ -f "$playlist" ]; then
+  rm "$playlist"
+fi
+
+# Mencari semua file .mp4 dalam direktori dan subdirektori
+find . -type f -name "*.mp4" | while read -r file; do
+  # Menambahkan file ke playlist
+  echo "$file" >>"$playlist"
+done
+
+# Memainkan playlist dengan MPV
+mpv --ontop --no-border --force-window \
+  --autofit=1400x1200 \
+  --playlist="$playlist" --osd-level=1

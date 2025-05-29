@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Date Created: 10 Jul 2019
+# Last Modified: 10 Jul 2019 (02:15:09)
+# Summary:
+# Author: Gitmox
+# License:
+
+# set -u -e
+
+WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
+
+#####################################
+
+# > TAK PERLU OTAK ATIK KODE DI BAWAH
+
+#####################################
+
+# [[ ! -d "$WALLI3IMG" ]] && exit 1
+
+numberPath="$HOME/.cache/wallpaper"
+numberFile="imgWall"
+
+set_wallpaper_with_gowall() {
+  if asdf which gowall >/dev/null; then
+    gowall convert "$1" -t "$2" --output /tmp/newName.jpg >/dev/null
+    feh --bg-scale /tmp/newName.jpg
+  else
+    feh --bg-scale "$1"
+  fi
+}
+
+main() {
+  local set_theme="general"
+  if [[ -n "$1" ]]; then
+    set_theme="$1"
+  fi
+
+  [[ ! -d $WALLI3IMG ]] && dunstify "Fehbg: path walli3=$WALLI3IMG not found!" && exit 1
+
+  pathNumber="$numberPath/$numberFile"
+
+  [[ ! -f "$pathNumber" ]] &&
+    mkdir -p "$numberPath" &&
+    touch "$pathNumber" &&
+    echo "0" >"$pathNumber"
+
+  # 1. Get all files inside path and then convert all them to array
+  array=()
+  while IFS= read -r -d $'\0'; do
+    array+=("$REPLY")
+  done < <(find "$WALLI3IMG" -type f -name "*" -print0)
+
+  # 2. And now starting decrement sum of array
+  totalNumImg=$((${#array[@]})) # get total length of array
+  numImg="$(cat "$pathNumber")"
+
+  if [ "$(cat "$pathNumber")" == 0 ]; then
+    echo "$totalNumImg" >"$pathNumber"
+  else
+    ((totalNumImg = numImg - 1))
+    echo "$totalNumImg" >"$pathNumber"
+  fi
+
+  nextImg="$((${#array[@]} - $(cat "$pathNumber")))"
+
+  for i in "${!array[@]}"; do
+    if [ "$i" == "$nextImg" ]; then
+      if [[ $set_theme == "general" ]]; then
+        path_nvim="$HOME/.config/nvim/lua/r/config/init.lua"
+        if [[ -f $path_nvim ]]; then
+          colorscheme=$(grep -i "local colorscheme" <"$path_nvim" | cut -d'=' -f2 | xargs)
+          if [[ -n "$colorscheme" ]]; then
+            set_wallpaper_with_gowall "${array[$i]}" "$colorscheme"
+          fi
+        else
+          feh --bg-scale "${array[$i]}"
+        fi
+      else
+        set_wallpaper_with_gowall "${array[$i]}" "$set_theme"
+      fi
+      echo "${array[$i]}" >/tmp/bg-windows
+    fi
+  done
+}
+
+main "$@"

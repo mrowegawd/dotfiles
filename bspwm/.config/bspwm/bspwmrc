@@ -1,0 +1,150 @@
+#! /bin/sh
+
+# - Line ini dibutuhkan karena saat menggunakan Debian 12, `~/.profile` tidak
+#   ter-load secara benar mungkin ada kesalahan install atau hal lain
+# - Line ini diperuntukkan untuk Debian 12, jika tidak menggunakannya
+#   hapus line source ini
+if [ -f "$HOME/.profile" ]; then
+  . "$HOME/.profile"
+fi
+
+export SXHKD_SHELL=/usr/bin/sh
+
+getcolors() {
+  #activate=$(xrdb -query | grep foreground | awk '{print $NF}')
+  INACTIVE=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
+  MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
+  KEYWORD=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
+  # BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
+  CYAN=$(xrdb -query | grep 'color9:' | head -1 | awk '{print $NF}')
+  # BLUE=$(xrdb -query | grep 'color6:' | head -1 | awk '{print $NF}')
+}
+
+getcolors
+
+# Set the border colors.
+bspc config normal_border_color "$INACTIVE"
+# bspc config normal_border_color "$activate"
+# bspc config focused_border_color "$CYAN"
+bspc config focused_border_color "$KEYWORD"
+bspc config active_border_color "$CYAN"
+bspc config presel_feedback_color "$MAGENTA"
+
+# bspc monitor -d I II III IV V VI VII VIII IX X
+# bspc monitor -d term web todo pdfile code docs music misc
+bspc monitor -d 1 2 3 4 5 6
+# bspc monitor -d ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉
+
+CURRENT_BORDER=4
+CURRENT_GAP=15
+CURRENT_SRATIO='0.50'
+
+bspc config border_width "$CURRENT_BORDER"
+bspc config window_gap "$CURRENT_GAP"
+bspc config split_ratio "$CURRENT_SRATIO"
+# bspc config swallow_first_click true
+# bspc config click_to_focus button1
+bspc config pointer_follows_focus false
+
+# Mouse bindings
+bspc config pointer_action1 move          # Set mouse 1 to move floating windows
+bspc config pointer_action2 resize_side   # Mouse 2 button resizes the window by side
+bspc config pointer_action2 resize_corner # Mouse 3 button (right mouse) resize by corner
+
+bspc config borderless_monocle true
+bspc config single_monocle true
+# bspc config gapless_monocle true
+
+bspc config external_rules_command "$HOME/.config/miscxrdb/bpswm/scripts/bspc-external-rules"
+# bspc config external_rules_command "$HOME/.config/miscxrdb/bpswm/scripts/bspc-external-rules-border"
+
+desk_code="1"
+desk_web="2"
+desk_doc="3"
+
+# remove all rules first
+bspc rule -r "*"
+
+# term
+bspc rule -a URxvt:ncmpcpp state=floating
+bspc rule -a st:ncmpcpp state=floating
+# bspc rule -a mpv state=floating rectangle=WidthxHeight+Xoffset+Yoffset
+# bspc rule -a URxvt:urxvt_keys_help state=floating center=true rectangle=500x300+0+0
+bspc rule -a "discord" desktop=$desk_doc follow=on
+bspc rule -a "Firefox-esr" desktop=$desk_web
+bspc rule -a "Zen Browser" desktop=$desk_web
+bspc rule -a "Navigator" desktop=$desk_web
+
+bspc rule -a Yad state=floating center=off
+bspc rule -a jetbrains-idea-ce desktop=$desk_code # intellij 'did you know' popup
+bspc rule -a jetbrains-idea-c desktop=$desk_code  # the rest of intellij
+bspc rule -a Transmission-gtk state=tiled center=off
+bspc rule -a Pulseeffects state=floating center=on
+bspc rule -a Pulsemixer state=floating center=on
+# bspc rule -a Zathura state=floating focus=off rectangle=631x470+185+188
+
+# bspc rule -a libreofficedev-calc state=tiled desktop='docs'
+# bspc rule -a '*:libreofficedev' desktop='docs'
+bspc rule -a '*:soffice' state=tiled desktop=$desk_doc
+
+# bspc rule -a Chromium desktop='web'
+# bspc rule -a Nautilus desktop='file'
+# bspc rule -a Peek state=floating follow=on focus=on
+# bspc rule -a Sxiv state=floating follow=on focus=on
+# bspc rule -a 'Thunar' desktop='file' follow=on focus=on
+# bspc rule -a mpv state=floating follow=on focus=on
+# bspc rule -a 'Gimp' desktop='misc' follow=on
+# bspc rule -a Screenkey manage=off
+# bspc rule -a Spotify desktop='music' follow=on
+# bspc rule -a 'Zathura' desktop='file' follow=on state=tiled
+
+bspc wm --record-history on
+
+# remove x cursor
+# xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
+
+run_disowned() {
+  nohup "$@" >/dev/null 2>&1 &
+}
+
+#Don't run if it's running
+run_once() {
+  pidof "$(basename "$1")" || run_disowned "$@"
+}
+
+# Reload sxhkd manually cause using USR1 hangs the keyboard frome time to time
+pkill sxhkd
+run_disowned sxhkd
+run_once xsettingsd
+
+setxkbmap -option caps:backspace # switch capslock to backspace
+# export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Launch picom // If you have old hardware or encounter problems
+# uncomment the picom "--legacy-backends" line and comment the current one.
+pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
+
+# Launch eww (I HATE THIS BAR!)
+"$HOME/.config/eww/starteww.sh"
+
+# [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
+
+startup_lock_file=/tmp/bspwm-startup.lock
+if [ ! -f $startup_lock_file ]; then
+  echo "dummy" >$startup_lock_file
+
+  pkill mpdris2-rs || "$HOME/.local/bin/mpdris2-rs" &
+
+  # run_once firefox
+  run_once zen-browser
+
+  [ -f ~/.lesskey ] && run_once lesskey
+  [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
+  [ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
+  [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
+    [ -f ~/.dropbox-dist/dropboxd ] && run_once ~/.dropbox-dist/dropboxd start
+  run_once "$TERMINAL"
+fi
+
+run_once xrdb ~/.Xresources

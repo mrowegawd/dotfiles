@@ -1,0 +1,11 @@
+(defwidget time []
+  (eventbox :cursor "hand"  :hexpand false :vexpand false
+                :tooltip "${dateVar}"
+    (box :orientation "v" :hexpand false :vexpand false :space-evenly false :class "clock"
+    (button		:class "date"
+                :onclick ""	"${time}")
+    (button		:class "date"
+                :onclick ""	"${calendar_month}")
+    )
+  )
+)

@@ -1,0 +1,136 @@
+#!/bin/bash
+
+#shellcheck source=/dev/null
+. ~/.config/miscxrdb/fzf/fzf.config
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/snippets"
+rofi_command="rofi -theme $dir/$theme"
+
+aliases() {
+	awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc | sed 's/#//' | sed 's/()//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+surfingkeys() {
+	awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/surfingkeys/guidekeys.conf |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+vimiumc() {
+	awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/vimmum-c/vimium_c.rc | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+calcurse() {
+	awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^/{last=$0}' ~/.calcurse/keys |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+ncmpcpp() {
+	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/ncmpcpp/bindings | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+newsboat() {
+	awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.newsboat/helpmappings | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+sxhkdrc() {
+	awk '/^[a-zA-Z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' <~/.config/sxhkd/sxhkdrc | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+tmux() {
+	awk '/^[a-z]/ && last {
+  if ($2 == "-n")
+    print $1,$3,"\t",last;
+  else if ($2 == "-r")
+    print $1,$3,"\t",last;
+  else if ($2 == "-T")
+    print $1,$3,$4,"\t",last;
+  else
+    print $1,$2,"\t",last;
+  }
+  {last=""} /^#/{last=$0}' ~/.tmux.conf | sort |
+		awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
+		column -t -s ")" | $rofi_command -dmenu -p "snippet[$1]"
+}
+zathura() {
+	awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/zathura/zathurarc | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+terminal_st() {
+	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/miscxrdb/terminal/st/binding | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+terminal_alacritty() {
+	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/miscxrdb/terminal/binding/alacritty |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+terminal_kitty() {
+	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/kitty/mappings.conf | sed 's/#//' |
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+}
+vim() {
+
+	OUT="$HOME/.cache/vimsnipets.sh"
+
+	mystat=$(grep -i "^Plug" <"$HOME/.config/nvim/plugins.vim" | cut -d"/" -f2 | cut -d"'" -f1 | xargs)
+
+	filepath=""
+	for v in $mystat; do
+		if [ -f "$HOME/.config/nvim/after/plugin/$v.vim" ]; then
+			filepath+="$HOME/.config/nvim/after/plugin/$v.vim "
+		fi
+	done
+
+	cat <<-EOF >"$OUT"
+		main () {
+		  awk '
+		    /^[a-z_ ]/ && last {
+		    if (\$2 == "<silent>")
+		      if (\$3 == "<buffer>")
+		        print \$1,\$4"\\t\\t -",last;
+		      else if (\$3 == "<expr>")
+		        print \$1,\$4"\\t\\t -",last;
+		      else
+		        print \$1,\$3"\\t\\t -",last;
+		    else if (\$2 == "<expr>")
+		        print \$1,\$3"\\t\\t -",last;
+		    else
+		        print \$1,\$2"\\t\\t -",last;
+		    }
+		  {last=""}
+		  /keymap/ {last=\$0}' ~/.config/vimlocal/mapping.vim \\
+		    $filepath \\
+		    ~/.config/nvim/plugin/after/*.vim \\
+		    ~/Dropbox/data.programming.forprivate/vim-guide/*.vim |
+		    sort |
+		    sed -e s/\".keymap://g |
+		    column -t -s $'\\t' |
+		    rofi -width 1000 -dmenu -shorting-method fzf -p "$1"
+		}
+
+		main
+	EOF
+
+	[[ -f $OUT ]] && bash "$OUT"
+}
+
+main() {
+	case $1 in
+	"aliases") aliases "aliases" ;;
+	"calcurse") calcurse "calcurse" ;;
+	"ncmpcpp") ncmpcpp "ncmpcpp" ;;
+	"newsboat") newsboat "newsboat" ;;
+	"surfingkeys") surfingkeys "surfingkeys" ;;
+	"sxhkdrc") sxhkdrc "sxhkdrc" ;;
+	"term-alacritty") terminal_alacritty "term-alacritty" ;;
+	"term-kitty") terminal_kitty "term-kitty" ;;
+	"term-st") terminal_st "term-st" ;;
+	"term-termite") terminal_termite "term-termite" ;;
+	"tmux") tmux "tmux" ;;
+	"vim") vim "vim" ;;
+	"vimium") vimiumc "vimium_c" ;;
+	"zathura") zathura "zathura" ;;
+	*) dunstify "...what are you doing?" ;;
+
+	esac
+}
+
+main "$1"

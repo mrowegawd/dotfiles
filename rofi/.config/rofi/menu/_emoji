@@ -1,0 +1,22 @@
+#!/bin/bash
+
+EMOJI_PATH="$HOME/Dropbox/data.programming.forprivate/emojis"
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/emojis"
+rofi_command="rofi -theme $dir/$theme"
+
+# [[ ! -d $EMOJI_PATH ] && dunstify "Emoji run" "Path: $EMOJI_PATH not found" && exit 0
+
+(
+	awk -F";" '{printf "%s\n",$1}' <"$EMOJI_PATH" |
+		$rofi_command -dmenu -p " ﲃ " |
+		awk '{print $1}' | tr -d '\d' | xclip -selection c
+)
+
+CHECK_XCLIP_EMOJI=$(xclip -o -selection clipboard)
+
+if [ -n "$CHECK_XCLIP_EMOJI" ]; then
+	MSG="<b><span foreground='#A3BE8C'>$(xclip -o -selection clipboard)</span></b>"
+	dunstify "Emoji copied:" "\n$MSG"
+fi

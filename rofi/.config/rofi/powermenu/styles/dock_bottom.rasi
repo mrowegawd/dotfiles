@@ -1,0 +1,114 @@
+configuration {
+    font:                           "JetBrainsMono NF 20";
+    show-icons:                     false;
+    icon-theme: 					          "Papirus";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+    sidebar-mode: 					        false;
+}
+
+@import "colors/colors.rasi"
+
+window {
+    transparency:                   "screenshot";
+    background-color:               @background;
+    text-color:                     @foreground;
+    border-radius:                  0px;
+    height:                         50%;
+    width:                          100%;
+    location:                       south;
+    x-offset:                       0;
+    y-offset:                       0;
+}
+
+prompt {
+    enabled: 						            true;
+    padding:                        1% 1% 1% 0%;
+	  background-color: 				      @background;
+	  text-color: 					          @background-alt;
+}
+
+textbox-prompt-colon {
+    expand: 						            false;
+    str: 							              "System";
+    background-color: 				      @background;
+    text-color: 					          @border;
+    padding:                        1% 0.5% 1% 0.5%;
+}
+
+inputbar {
+	  children: 						          [ textbox-prompt-colon, prompt ];
+    background-color:               @background;
+    text-color:                     @border;
+    expand:                         false;
+    border:                  		    0.2% 0% 0.2% 0%;
+    border-radius:                  16px;
+    border-color:                  	@background;
+    margin:                         0% 59.3% 0% 0%;
+    padding:                        0.5%;
+    position:                       center;
+}
+
+listview {
+    background-color:               @background;
+    margin:                         0% 0% 0% 0%;
+    spacing:                        3%;
+    cycle:                          true;
+    dynamic:                        true;
+    layout:                         horizontal;
+}
+
+mainbox {
+    background-color:               @background;
+    children:                       [ inputbar, listview ];
+    spacing:                        5%;
+    padding:                        5% 0% 0% 13.25%;
+}
+
+element {
+    background-color:               @background;
+    text-color:                     @red;
+    orientation:                    horizontal;
+    border-radius:                  35px;
+}
+
+element-text {
+    background-color: 				      #00000000;
+    text-color:       				      inherit;
+	  font:							              "feather 55";
+    expand:                         true;
+    horizontal-align:               0.5;
+    vertical-align:                 0.5;
+    margin:                         6.5% 4% 6.5% 4%;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:               @urgent;
+    text-color:                     @foreground;
+    border-radius:                  0.2%;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:               @background-alt;
+    text-color:                     @background-alt;
+}
+
+element selected {
+    background-color:               @selected-alt;
+    text-color:                     @red;
+    border:                  		    0.2% 0% 0.2% 0%;
+    border-radius:                  100px;
+    border-color:                  	@background;
+}
+
+element selected.urgent {
+    background-color:               @urgent;
+    text-color:                     @background-alt;
+}
+
+element selected.active {
+    background-color:               @background-alt;
+    color:                          @foreground;
+}

@@ -1,0 +1,299 @@
+#!/usr/bin/env sh
+
+# Description: Regular mode:
+#                Fuzzy find a file in directory subtree.
+#                Opens in $VISUAL or $EDITOR if text.
+#                Opens other type of files with xdg-open.
+#                Work only with a single file selected.
+#
+#              Picker mode:
+#                If picker mode output file is passed, it
+#                will be overwritten with any picked files.
+#                Leaves untouched if no file is picked.
+#                Works with single/multiple files selected.
+#
+# Dependencies: fd/find, fzf/skim, xdg-open/open (on macOS)
+#
+# Shell: POSIX compliant
+# Author: Arun Prakash Jana
+
+clear
+
+NUKE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins/nuke"
+USE_NUKE=0
+
+# shellcheck disable=SC1090,SC1091
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
+is_mac() {
+	uname | grep -q "Darwin"
+}
+
+if type fzf >/dev/null 2>&1; then
+	cmd="$FZF_DEFAULT_COMMAND"
+	if type fd >/dev/null 2>&1; then
+		[ -z "$cmd" ] && cmd="fd -H 2>/dev/null"
+	else
+		[ -z "$cmd" ] && cmd="find . -type f 2>/dev/null"
+	fi
+
+	if not_in_tmux; then
+		if [ "$TERM_PROGRAM" = "WezTerm" ]; then
+			pane_id_right=$(wezterm cli get-pane-direction right)
+			wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+			wezterm cli activate-pane-direction Up
+
+			entry="$(eval "$cmd" | fzf --no-height -m --prompt 'Select To Open And Change Dir To: ')"
+
+			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+			wezterm cli activate-pane-direction Left
+		fi
+	else
+		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'Select To Open And Change Dir To: ')"
+	fi
+
+	# To show only the file name
+	# entry=$(find . -type f 2>/dev/null | fzf --delimiter / --with-nth=-1 --tiebreak=begin --info=hidden)
+elif type sk >/dev/null 2>&1; then
+	entry=$(find . -type f 2>/dev/null | sk)
+else
+	exit 1
+fi
+
+# Check for picker mode
+if [ "$3" ]; then
+	if [ "$entry" ]; then
+		case "$entry" in
+		/*) fullpath="$entry" ;;
+		*) fullpath="$PWD/$entry" ;;
+		esac
+		if [ "-" = "$3" ]; then
+			printf "%s\n" "$fullpath"
+		else
+			printf "%s\n" "$fullpath" >"$3"
+		fi
+
+		# Tell `nnn` to clear its internal selection
+		printf "%s" "0p" >"$NNN_PIPE"
+	fi
+
+	exit 0
+fi
+
+handle_video() {
+	# if [ "$GUI" -ne 0 ]; then
+	dunstify "mantap"
+	if is_mac; then
+		nohup open "$1" >/dev/null 2>&1 &
+	elif type smplayer >/dev/null 2>&1; then
+		nohup smplayer "$1" >/dev/null 2>&1 &
+	elif type mpv >/dev/null 2>&1; then
+		nohup mpv --autofit=1000x900 --geometry=-15-60 "$1" >/dev/null 2>&1 &
+	else
+		return
+	fi
+	# elif type ffmpegthumbnailer >/dev/null 2>&1; then
+	# 	# Thumbnail
+	# 	[ -d "${IMAGE_CACHE_PATH}" ] || mkdir "${IMAGE_CACHE_PATH}"
+	# 	ffmpegthumbnailer -i "${entry}" -o "${IMAGE_CACHE_PATH}/${FNAME}.jpg" -s 0
+	# 	viu -n "${IMAGE_CACHE_PATH}/${FNAME}.jpg" | eval "$PAGER"
+	# elif type mediainfo >/dev/null 2>&1; then
+	# 	mediainfo "${entry}" | eval "$PAGER"
+	# elif type exiftool >/dev/null 2>&1; then
+	# 	exiftool "${entry}" | eval "$PAGER"
+	# else
+	# 	return
+	# fi
+	exit 0
+}
+
+handle_pdf() {
+	if is_mac; then
+		nohup open "$1" >/dev/null 2>&1 &
+	elif type zathura >/dev/null 2>&1; then
+		nohup zathura "$1" >/dev/null 2>&1 &
+	fi
+	# elif type pdftotext >/dev/null 2>&1; then
+	# 	## Preview as text conversion
+	# 	pdftotext -l 10 -nopgbrk -q -- "${entry}" - | eval "$PAGER"
+	# elif type mutool >/dev/null 2>&1; then
+	# 	mutool draw -F txt -i -- "${entry}" 1-10 | eval "$PAGER"
+	# elif type exiftool >/dev/null 2>&1; then
+	# 	exiftool "${entry}" | eval "$PAGER"
+	# else
+	# 	return
+	# fi
+	# exit 0
+}
+
+handle_file() {
+
+	# "${VISUAL:-$EDITOR}" "$entry"
+	# dunstify "$entry"
+
+	if not_in_tmux; then
+		pane_id=$(wezterm cli get-pane-direction right)
+		if [ -z "${pane_id}" ]; then
+			pane_id=$(wezterm cli split-pane --right --percent 85)
+		fi
+
+		program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+
+		if [ "$program" = "nvim" ]; then
+			# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+			echo ":e $1\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+		else
+			echo "nvim $1\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+		fi
+
+		wezterm cli activate-pane-direction --pane-id "$pane_id" right
+
+	else
+		tmux select-pane -R
+		current_pand_id=$(tmux display-message -p '#{pane_id}')
+		# output current_pane selalu 1
+
+		if [ -z "${current_pand_id}" ]; then
+			tmux split-window -h -p 83
+			current_pand_id=$(tmux display-message -p '#{pane_id}')
+		fi
+
+		program=$(tmux display -p '#{pane_current_command}')
+		if [ "$program" = "nvim" ]; then
+			tmux send-keys -t "$current_pand_id" ":e $1" Enter
+		else
+			tmux send-keys -t "$current_pand_id" "nvim $1" Enter
+		fi
+	fi
+}
+
+# sets the variable abs_target, this should be faster than calling printf
+abspath() {
+	case "$1" in
+	/*) abs_target="$1" ;;
+	*) abs_target="$PWD/$1" ;;
+	esac
+}
+
+# storing the result to a tmp file is faster than calling listimages twice
+listimages() {
+	find -L "${1%/*}" -maxdepth 1 -type f -print0 |
+		grep -izZE '\.(jpe?g|png|gif|webp|tiff|bmp|ico|svg)$' |
+		sort -z | tee "$tmp"
+}
+
+load_dir() {
+	abspath "$2"
+	tmp="${TMPDIR:-/tmp}/nuke_$$"
+	trap 'rm -f $tmp' EXIT
+	count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
+
+	if [ -n "$count" ]; then
+		if [ "$GUI" -ne 0 ]; then
+			xargs -0 nohup "$1" -n "$count" -- <"$tmp"
+		else
+			xargs -0 "$1" -n "$count" -- <"$tmp"
+		fi
+	else
+		shift
+		"$1" -- "$@" # fallback
+	fi
+}
+
+load_dir_with_flag() {
+	abspath "$3"
+
+	tmp="${TMPDIR:-/tmp}/nuke_$$"
+	trap 'rm -f $tmp' EXIT
+	count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
+
+	if [ -n "$count" ]; then
+		if [ "$GUI" -ne 0 ]; then
+			xargs -0 nohup "$1" -n "$count" -- <"$tmp"
+		else
+			xargs -0 "$1" "$2" -n "$count" -- <"$tmp"
+		fi
+	else
+		shift
+		"$1" -- "$@" # fallback
+	fi
+}
+
+if [ "$entry" ]; then
+	if [ "$USE_NUKE" -ne 0 ]; then
+		"$NUKE" "$entry"
+		exit 0
+	fi
+
+	# Open the file (works for a single file only)
+	cmd_file=""
+	# cmd_open=""
+	if uname | grep -q "Darwin"; then
+		cmd_file="file -bIL"
+		# cmd_open="open"
+	else
+		cmd_file="file -biL"
+		# cmd_open="xdg-open"
+	fi
+
+	case "$($cmd_file "$entry")" in
+	*text*)
+		handle_file "${entry}"
+		nnn "${entry}"
+		;;
+	*pdf*)
+		handle_pdf "${entry}"
+		;;
+	*gif*)
+		if type sxiv >/dev/null 2>&1; then
+			load_dir_with_flag sxiv -a "${entry}" >/dev/null 2>&1 &
+			# sxiv -a "${entry}" >/dev/null 2>&1 &
+		fi
+		;;
+
+	*image/*)
+		# if [ "$GUI" -ne 0 ]; then
+		if is_mac; then
+			nohup open "${entry}" >/dev/null 2>&1 &
+			exit 0
+		elif type imv >/dev/null 2>&1; then
+			load_dir imv "${entry}" >/dev/null 2>&1 &
+			exit 0
+		elif type imvr >/dev/null 2>&1; then
+			load_dir imvr "${entry}" >/dev/null 2>&1 &
+			exit 0
+		elif type sxiv >/dev/null 2>&1; then
+			load_dir sxiv "${entry}" >/dev/null 2>&1 &
+			exit 0
+		elif type nsxiv >/dev/null 2>&1; then
+			load_dir nsxiv "${entry}" >/dev/null 2>&1 &
+			exit 0
+		fi
+		# elif type viu >/dev/null 2>&1; then
+		# 	viu -n "${entry}" | eval "$PAGER"
+		# 	exit 0
+		# elif type img2txt >/dev/null 2>&1; then
+		# 	img2txt --gamma=0.6 -- "${entry}" | eval "$PAGER"
+		# 	exit 0
+		# elif type exiftool >/dev/null 2>&1; then
+		# 	exiftool "${entry}" | eval "$PAGER"
+		# 	exit 0
+		# fi
+		;;
+
+	*video*)
+		handle_video "${entry}"
+		;;
+
+	*)
+		handle_file "${entry}"
+		# $cmd_open "$entry" >/dev/null 2>&1
+		;;
+	esac
+fi

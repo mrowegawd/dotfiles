@@ -1,0 +1,235 @@
+#!/bin/bash
+
+LC_TIME=id_ID.UTF-8
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/menuleft"
+rofi_command="rofi -theme $dir/$theme"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Fullscreen\nRecord Video Rectangle Blur\nRecord Gif Rectangle\nRecord Video Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
+
+# For record video
+PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
+FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-$(date +%d_%B_%Y_%s).mp4"
+FILE_NAME_RECORD="ffmpeg-$(date +%d_%B_%Y_%s).mp4"
+# FILE_NAME_RECORD_BLUR="ffmpeg-(BLUR)-$(date +%d_%B_%Y_%s).mp4"
+FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
+# FILE_RECORDING_BLUR_BAK="$PATH_VIDEOS/$FILE_NAME_RECORD_BLUR"
+# COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
+
+(
+  SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
+
+  [[ -z $SELECT ]] && exit
+
+  run_screenkey() {
+    SCREENKEY=$(command -v screenkey)
+    pidof "$SCREENKEY" && killall "$SCREENKEY"
+    $SCREENKEY
+  }
+
+  run_ffmpeg_record_fullscreen() {
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    FPS="30"
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+
+      ffmpeg -f x11grab -s "$GEOMETRY" -r "$FPS" -i :0 -f alsa -ac 2 \
+        -i default -vcodec libx264 -s "$GEOMETRY" \
+        -acodec libmp3lame -ab 128k -ar 44100 \
+        -threads 0 -f flv "$FILE_RECORDING_BAK"
+
+      # For telegram
+      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac -pix_fmt yuv420p "$FILE_RECORDING"
+
+      if [ -f "$FILE_RECORDING_BAK" ]; then
+        rm -rf "$FILE_RECORDING_BAK"
+        dunstify "Saving record:" "$FILE_NAME_RECORD"
+      fi
+    fi
+  }
+
+  run_ffmpeg_record_with_rectangle_blurred() {
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+    SLOP_BLUR=$(slop -D -f "%x %y %w %h")
+
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+
+    read -r blur_x blur_y blur_width blur_height <<<"$SLOP_BLUR"
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+
+      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
+        -i default -vcodec libx264 -s "$GEOMETRY" \
+        -acodec libmp3lame -ab 128k -ar 44100 \
+        -threads 0 -f flv "$FILE_RECORDING_BAK"
+
+      # For telegram (for blur: use boxblur)
+      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+        -vf "split [main][blur]; [blur] crop=${blur_width}:${blur_height}:${blur_x}:${blur_y}, boxblur=10 [blurred]; [main][blurred] overlay=${blur_x}:${blur_y},scale=-2:min(1080\,bitand(ih\,-2))" \
+        -pix_fmt yuv420p "$FILE_RECORDING"
+
+      if [ -f "$FILE_RECORDING_BAK" ]; then
+        rm -rf "$FILE_RECORDING_BAK"
+        dunstify "Saving record:" "$FILE_NAME_RECORD"
+      fi
+    fi
+  }
+
+  run_ffmpeg_record_with_rectangle() {
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+
+      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
+        -i default -vcodec libx264 -s "$GEOMETRY" \
+        -acodec libmp3lame -ab 128k -ar 44100 \
+        -threads 0 -f flv "$FILE_RECORDING_BAK"
+
+      # For telegram
+      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+        -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
+        -pix_fmt yuv420p "$FILE_RECORDING"
+
+      if [ -f "$FILE_RECORDING_BAK" ]; then
+        rm -rf "$FILE_RECORDING_BAK"
+        dunstify "Saving record:" "$FILE_NAME_RECORD"
+      fi
+    fi
+  }
+
+  # getdim() { xrandr | grep -oP '(?<=current ).*(?=,)' | tr -d ' '; }
+
+  run_simplegif_with_rectangle() {
+    OUTPUT_MKV="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').mkv"
+    ICON="$HOME/.config/miscxrdb/icons/rec-button.png"
+
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      dunstify -t 2800 "Recording GIF has started.." -i "$ICON"
+
+      # -s "$(getdim)" \
+      ffmpeg \
+        -f x11grab \
+        -framerate 30 \
+        -s "$GEOMETRY" \
+        -i "$DISPLAY""$OFFSET" \
+        -c:v libx264 -qp 0 -r 30 \
+        "$OUTPUT_MKV"
+
+      ffmpeg -i "$OUTPUT_MKV" -c:v libx264 -crf 23 -profile:v baseline -level 3.0 \
+        -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -an \
+        "$OUTPUT_MKV.mp4"
+
+      OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
+      mv "$OUTPUT_MKV.mp4" "$OUTPUT_GIF"
+
+      if [ -f "$OUTPUT_MKV" ]; then
+        rm -rf "$OUTPUT_MKV" "$OUTPUT_MKV.mp4"
+        dunstify "Saving record GIF:" "$OUTPUT_GIF" -i "$ICON"
+      fi
+    fi
+  }
+
+  run_ffmpeg_stop() {
+    pkill ffmpeg
+    dunstify "Record" "quit.."
+  }
+
+  run_simplegif() {
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Gif" "starting.." -i "$FILE_ICONS"
+
+      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
+        -i default -vcodec libx264 -s "$GEOMETRY" \
+        -acodec libmp3lame -ab 128k -ar 44100 \
+        -threads 0 -f flv "$FILE_RECORDING_BAK"
+
+      # For telegram
+      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+        -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
+        -pix_fmt yuv420p "$FILE_RECORDING"
+
+      if [[ -f $FILE_RECORDING ]]; then
+        PATHGIF="$FILE_RECORDING.gif"
+        "$HOME/.config/miscxrdb/exbin/gifgenerator" -o "$PATHGIF" "$FILE_RECORDING"
+        # ffmpeg -i "$FILE_RECORDING" -pix_fmt yuv420p - | gifski -o "$PATHGIF" -
+        dunstify "Gif created:" "$PATHGIF"
+      fi
+
+      if [ -f "$FILE_RECORDING_BAK" ]; then
+        rm -rf "$FILE_RECORDING_BAK"
+        rm -rf "$FILE_RECORDING"
+      fi
+    fi
+  }
+
+  run_filemanager() {
+    FILEMANAGER=$(command -v nautilus)
+    pidof "$FILEMANAGER" && killall "$FILEMANAGER"
+
+    nautilus
+  }
+
+  sync_update() {
+    if [[ ! -f ~/.config/polybar/scripts/sync-update ]]; then
+      notify-send "file 'sync-update' not found "
+    fi
+
+    ~/.config/polybar/scripts/sync-update --run
+  }
+
+  run_neovide() {
+    [[ -f "$HOME/.local/bin/vv" ]] && "$HOME/.local/bin/vv"
+  }
+
+  run_pomodoro() {
+    script_pomodoro_path="$HOME/.config/polybar/scripts/pomodoro"
+
+    [[ ! -f $script_pomodoro_path ]] && dunstify "file pomodoro not found"
+
+    "$HOME/.config/polybar/scripts/pomodoro" --toggle
+  }
+
+  case "$SELECT" in
+  "Calendar") gnome-calendar ;;
+  "Drawing") gromit-mpx ;; # install: sudo apt install gromit-mpx
+  "File manager [UI]") run_filemanager ;;
+  "Keyboard") run_screenkey ;;
+  "Neovide") run_neovide ;;
+  "Pomodoro") run_pomodoro ;;
+  "Record Video Fullscreen") run_ffmpeg_record_fullscreen ;;
+  "Record Video Rectangle Blur") run_ffmpeg_record_with_rectangle_blurred ;;
+  "Record Video Rectangle") run_ffmpeg_record_with_rectangle ;;
+  "Record Gif") run_simplegif ;;
+  "Record Gif Rectangle") run_simplegif_with_rectangle ;;
+  "Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
+  "Stop Record") run_ffmpeg_stop ;;
+  "SyncUpdate") sync_update ;;
+
+  esac
+
+)

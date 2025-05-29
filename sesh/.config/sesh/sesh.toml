@@ -1,0 +1,70 @@
+[[session]]
+name = "Dotfiles"
+path = "~/moxconf/development/dotfiles"
+startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v"
+
+[[session]]
+name = "Downloads 📥"
+path = "~/Downloads"
+startup_command = "ls"
+preview_command = "bat --color=always ~/.config/zsh/.zshrc"
+
+[[session]]
+name = "Torrent "
+path = "~/moxconf/media_and_tuts/torrents"
+startup_command = "ls"
+
+[[session]]
+name = "PDF "
+path = "~/moxconf/media_and_tuts/pdf"
+startup_command = "ls"
+
+[[session]]
+name = "Linux void "
+path = "~/moxconf/development/linux-void"
+disable_startup_command = true
+
+[[session]]
+name = "Typescript 🕸 "
+path = "~/moxconf/development/project/typescript"
+disable_startup_command = true
+
+[[session]]
+name = "Rust 󱘗"
+path = "~/moxconf/development/project/rust"
+disable_startup_command = true
+
+[[session]]
+name = "Golang 󰟓"
+path = "~/moxconf/development/project/golang"
+disable_startup_command = true
+
+[[session]]
+name = "Python 󰌠"
+path = "~/moxconf/development/project/python"
+disable_startup_command = true
+
+[[session]]
+name = "Bot 🤖"
+path = "~/moxconf/development/project/misc"
+startup_command = ""
+
+[[session]]
+name = "Mobile 📱"
+path = "~/moxconf/development/project/mobile"
+startup_command = ""
+
+[[session]]
+name = "Log Sentric 󰍛"
+path = "~/moxconf/development/project/misc"
+startup_command = ""
+
+[[session]]
+name = "News 📰"
+path = "~/moxconf/development/project/misc"
+startup_command = ""
+
+[[session]]
+name = "Bench 📠"
+path = "~/moxconf/development/project/misc"
+startup_command = ""

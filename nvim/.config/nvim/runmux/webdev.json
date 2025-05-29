@@ -1,0 +1,27 @@
+{
+  "name": "webdev",
+  "run_file": {
+    "include_cwd": false,
+    "command": "yarn run_tsc",
+    "regex": ""
+  },
+  "repl": {
+    "open_pane": "tmux split-window -hl 20%",
+    "command": "node",
+    "regex": ""
+  },
+  "tasks": {
+    "layout": [
+      {
+        "open_pane": "tmux split-window -vl 20%",
+        "command": "yarn dev",
+        "regex": ""
+      },
+      {
+        "open_pane": "tmux split-window -hl 50%",
+        "command": "",
+        "regex": ""
+      }
+    ]
+  }
+}

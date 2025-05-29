@@ -1,0 +1,212 @@
+# vim: ft=conf
+
+########################################
+# STATES AND FLAGS
+########################################
+# alt, super (tombol tengah), ctrl
+
+# state: fullscreen
+super + f
+        bspc node -t {fullscreen,tiled}
+
+# state: float/tiled
+super + t
+        bspc node -t {floating,tiled}
+
+# state: parent,brother
+super + {p,b}
+        bspc node -f @{parent,brother}
+
+########################################
+# WINDOW
+########################################
+# window: select (backward/below)/z-index
+super + i
+	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
+
+# window: navigate hjkl
+# super + ctrl + {h,l,k,j}
+#         dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
+
+# window: navigate h,l
+super + ctrl + {h, l}
+        bspc node -f {prev,next}.local.!hidden.window
+
+# window: swap window
+super + shift + {Left,Down,Up,Right}
+        bspc node -s {west,south,north,east}
+
+# window: move window to the left,right,up,down (float)
+super + {h,j,k,l}
+        xdotool getwindowfocus windowmove --relative %1 {-25 0, 0 +25, 0 -25, +25 0}
+
+# window: rotate the windows
+super + R
+	      bspc node @parent -R 90
+
+########################################
+# WORKSPACE
+########################################
+# workspace: focus next/prev workspace
+# super + {Tab,shift+Tab}
+# 	      bspc node -d {next,prev} -f
+
+# focus the next/previous node in the current desktop
+# super + {_,shift + }c
+# 	      bspc node -f {next,prev}.local
+
+# workspace: focus next/prev workspace
+# super + {H,L}
+# 	      bspc desktop -f {prev,next}.local
+
+# workspace: focus next/prev workspace
+# alt + {shift+Tab,Tab}
+# 	      bspc desktop -f {prev,next}.local
+
+# workspace: focus next/prev workspace
+super + {shift+p,shift+n}
+	      bspc desktop -f {prev,next}.local
+
+# workspace: select workspace by number 1-9
+super + {_,shift + }{1-9,0}
+        bspc {desktop -f,node -d} '^{1-9,10}'
+
+########################################
+# RESIZE, FLOATING
+########################################
+# resize: expand vertically
+super + shift + k
+	      bspc node -z top 0 -20; bspc node -z bottom 0 20
+
+# resize: shrink vertically
+super + shift + j
+	      bspc node -z top 0 20; bspc node -z bottom 0 -20
+
+# resize: expand horizontally
+super + shift + h
+	      bspc node -z left 20 0; bspc node -z right -20 0
+
+# resize: shrink horizontally
+super + shift + l
+	      bspc node -z left -20 0; bspc node -z right 20 0
+
+########################################
+# BRIGHTNESS
+########################################
+# misc: increase brightness
+# XF86MonBrightnessUp
+#         xbacklight -inc 5
+
+# misc: decrease brightness
+# XF86MonBrightnessDown
+#         xbacklight -dec 5
+
+########################################
+# MULTIMEDIA
+########################################
+# media: increase volume audio
+super + shift + equal
+        amixer -q sset Master 3%+
+
+# media: decrease volume audio
+super + shift + minus
+        amixer -q sset Master 3%-
+
+# media: toggle mute audio
+super + m
+        amixer -q sset Master toggle
+
+# media: play next
+super + shift + ctrl + Right
+        playerctl next
+
+# media: play prev
+super + shift + ctrl + Left
+        playerctl previous
+
+# media: toggle pouse/play
+super + shift + ctrl + p
+        playerctl play-pause
+
+########################################
+# APPS
+########################################
+# misc: open terminal
+super + Return
+        $TERMINAL
+
+# misc: open rofi_menu
+super + u
+        $HOME/.config/rofi/menu/menu
+
+# misc: close/kill current app/window
+super + End
+        xdo close
+
+# misc: open tools
+super + shift + t
+        zsh -c "$HOME/.config/rofi/menu/_tools"
+
+# misc: open ncmpcpp (music)
+super + shift + m
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
+
+# misc: open note inbox (capture notes)
+super + shift + e
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
+
+# misc: open bookmark and pass
+super + shift + b
+        $HOME/.config/miscxrdb/bpswm/scripts/bookmark-pass
+
+# misc: reload/restart sxhkd config
+super + shift + F8
+        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
+
+# misc: quit/stop record video
+super + shift + F9
+        pkill ffmpeg; dunstify "Record" "Quit ffmpeg.."
+
+# misc: reload/restart bspwm config
+super + shift + F12
+        bspc wm -r && SLEEP=2 && dunstify "Reload BSPWM"  "Reload config.."
+
+# misc: change wallpaper
+super + shift + Home
+        $HOME/.config/miscxrdb/exbin/fehbg
+
+# misc: open poweroff
+super + shift + q
+        $HOME/.config/rofi/powermenu/poweroff
+
+# misc: open youtube with mpv
+super + shift + y
+        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
+
+# misc: open translate with nvim
+super + shift + o
+        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+
+        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
+        #
+        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
+
+# misc: open neovide
+super + shift + Return
+        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
+
+# misc: call firefox (side by side)
+super + F8
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
+
+# misc: call zathura (side by side)
+super + F9
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
+
+# misc: open link video with proxychains
+super + y
+        dunstify "Running vid with proxychains" "$(xclip -o -sel clip)" && tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
+
+# misc: run clipmenu
+# super + shift + c
+#         clipmenu

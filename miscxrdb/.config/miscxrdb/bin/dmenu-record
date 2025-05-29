@@ -1,0 +1,289 @@
+#!/usr/bin/env bash
+
+declare select=1
+declare -A dimensions
+
+# MENU="/usr/local/bin/dmenu"
+MENU="rofi -dmenu -lines 4 -width 200"
+
+die() {
+  [[ -n $1 ]] && err "$1"
+  exit 1
+}
+
+has() {
+  local v=0
+  if [[ $1 == '-v' ]]; then
+    v=1
+    shift
+  fi
+  for c in "${@%% *}"; do
+    if ! command -v "$c" &>/dev/null; then
+      ((v > 0)) && err "$c not found"
+      return 1
+    fi
+  done
+}
+
+get_dimensions() {
+  local scrsize
+  if ((select == 1)); then
+    echo "yo"
+    has -v slop || die
+    ((verbose > 0)) && info 'select a region'
+    scrsize=$(slop "${slop_args[@]}" -f "['x']='%x' ['y']='%y' ['w']='%w' ['h']='%h'") || die 'cancelled'
+    eval "dimensions=( $scrsize )"
+  else
+    has -v xdpyinfo || die
+    scrsize=$(xdpyinfo | awk '/dimensions/{print $2}')
+    dimensions=(['x']='0' ['y']='0' ['w']="${scrsize%%x*}" ['h']="${scrsize#*x}")
+  fi
+}
+
+updateicon() {
+  echo "$1" >~/.recordingicon
+}
+
+updatestatus() {
+  echo "$1" >~/.recordingstat
+}
+
+killRecording() {
+  recpid="$(cat ~/.recordingpid)"
+  kill -15 "$recpid"
+  rm -f ~/.recordingpid
+  rm -f ~/.recordingstat
+  updateicon ""
+  exit
+}
+
+# -i $(echo $DISPLAY).0+$2,$3 \
+videoOnly() {
+  ffmpeg \
+    -f x11grab \
+    -draw_mouse 1 \
+    -framerate 30 \
+    -s $1 \
+    -i :0.0+$2,$3 \
+    -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+    -vf setpts=N/FR/TB \
+    -c:v libx264 -pix_fmt yuv420p -preset veryfast -q:v 1 \
+    -threads 4 \
+    "$HOME/Downloads/screenshot/videos/video-$(date '+%y%m%d-%H%M-%S').mp4" &
+  echo $! >~/.recordingpid
+  updateicon " REC "
+  updatestatus "record"
+}
+
+# -i $(echo $DISPLAY).0+$X,$Y \
+videoOnlyArea() {
+  # slop=$(slop -f "%x %y %w %h %g %i") || exit 1
+  # read -r X Y W H G ID < <(echo $slop)
+  # ffmpeg \
+  #   -f x11grab \
+  #   -draw_mouse 1 \
+  #   -framerate 30 \
+  #   -s "$W"x"$H" \
+  #   -i :0.0+$X,$Y \
+  #   -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+  #   -vf setpts=N/FR/TB \
+  #   -c:v libx264 -pix_fmt yuv420p -preset veryfast -q:v 1 \
+  #   -threads 4 \
+  #   "$HOME/Downloads/screenshot/videos/video-$(date '+%y%m%d-%H%M-%S').mp4" &
+  # echo $! >~/.recordingpid
+  # updateicon " REC "
+  # updatestatus "record"
+
+  local loglevel size offset
+  loglevel='fatal'
+  ((verbose > 0)) && loglevel=$((verbose * 8))
+
+  screen_width=$((dimensions['w'] % 32))
+  screen_height=$((dimensions['h'] % 2))
+
+  width=""
+  height=""
+
+  if [ $screen_width != 0 ]; then
+    width=$((${dimensions['w']} / 2 * 2))
+  else
+    width=${dimensions['w']}
+  fi
+
+  if [ $screen_height != 0 ]; then
+    height=$((${dimensions['h']} / 32 * 32))
+  else
+    height=${dimensions['h']}
+  fi
+
+  size="${width}x${height}"
+  offset="${DISPLAY}.0+${dimensions['x']},${dimensions['y']}"
+
+  ffmpeg \
+    -f x11grab \
+    -draw_mouse 1 \
+    -framerate 30 \
+    -s "$size" \
+    -i "$offset" \
+    -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+    -vf setpts=N/FR/TB \
+    -c:v libx264 -pix_fmt yuv420p -preset veryfast -q:v 1 \
+    -threads 4 \
+    "$HOME/Downloads/screenshot/videos/video-$(date '+%y%m%d-%H%M-%S').mp4" &
+  echo $! >~/.recordingpid
+  updateicon " REC "
+  updatestatus "record"
+}
+
+# -i $(echo $DISPLAY).0+$2,$3 \
+videoHighOnly() {
+  ffmpeg \
+    -f x11grab \
+    -draw_mouse 1 \
+    -framerate 30 \
+    -s $1 \
+    -i :0.0+$2,$3 \
+    -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+    -vf setpts=N/FR/TB \
+    -c:v libx264rgb -preset veryfast -q:v 1 \
+    -threads 4 \
+    "$HOME/Downloads/screenshot/videos/video-$(date '+%y%m%d-%H%M-%S').mp4" &
+  echo $! >~/.recordingpid
+  updateicon " REC "
+  updatestatus "record"
+}
+
+injectMutedAudioToVideo() {
+  ffmpeg_inject_muted_audio
+}
+
+injectMutedAudioToVideoVoko() {
+  ffmpeg_inject_muted_audio_voko
+}
+
+injectMutedAudioToVideoSsr() {
+  ffmpeg_inject_muted_audio_ssr
+}
+
+injectFrame() {
+  ffmpeg_inject_frame
+  updateicon " FRM "
+}
+
+pauseRecording() {
+  pkill -STOP ffmpeg
+  updateicon " REC "
+  updatestatus "pause"
+}
+
+resumeRecording() {
+  pkill -CONT ffmpeg
+  updateicon " REC "
+  updatestatus "record"
+}
+
+asktoEnd() {
+  response=$(printf "Pause\nNo\nYes" | $MENU -p " End Recording") \
+    && [ "$response" = "Pause" ] && pauseRecording
+  [ "$response" = "Yes" ] && killRecording
+  exit
+}
+
+asktoResume() {
+  response=$(printf "Resume" | $MENU -p " Resume Recording") \
+    && [ "$response" = "Resume" ] && resumeRecording
+  exit
+}
+
+if [ -f ~/.recordingpid ]; then
+  if grep -q "record" ~/.recordingstat; then
+    asktoEnd
+    exit
+  elif grep -q "pause" ~/.recordingstat; then
+    asktoResume
+    exit
+  fi
+fi
+
+# +----------------+
+# | INTERFACE MENU |
+# +----------------+
+#
+# Don't put comma on last array element!
+# menu name         function name
+OPTIONS='''
+[
+["Video",     "videos"],
+["VideoArea", "videoOnlyArea"],
+["VideoHD",   "videoHighOnly"],
+["Effects ", "effects"]
+]
+'''
+obj_menu=$(echo $OPTIONS | jq -r ".[][0]" | $MENU -i -p " Record")
+obj_selected=$(echo $OPTIONS | jq -r ".[] | select(.[0] == \"$obj_menu\") | .[1]")
+
+if [ "$obj_selected" = "videos" ]; then
+  screen_size=$(xdpyinfo | grep dimensions | awk '{print $2;}')
+  monitors=$(xrandr --listmonitors | grep 'Monitors:' | tr -d "Monitors: ")
+
+  if [ "$monitors" = "2" ]; then
+    OPTIONS='''
+        [
+        ["All Monitor",         "videoOnly '1600x1668' '0' '0'"],
+        ["Laptop",              "videoOnly '1024x768' '576' '900'"],
+        ["Monitor",             "videoOnly '1600x900' '0' '0'"]
+        ]
+        '''
+    obj_menu=$(echo $OPTIONS | jq -r ".[][0]" | $MENU -i -p " Area")
+    obj_selected=$(echo $OPTIONS | jq -r ".[] | select(.[0] == \"$obj_menu\") | .[1]")
+  else
+    obj_selected="videoOnly $(xdpyinfo | grep dimensions | awk '{print $2;}') '0' '0'"
+  fi
+
+elif [ "$obj_selected" = "videoOnlyArea" ]; then
+  get_dimensions
+  obj_selected="videoOnlyArea"
+
+# elif [ "$obj_selected" = "videoHighOnly" ]; then
+#   obj_selected="videoHighOnly $(xdpyinfo | grep dimensions | awk '{print $2;}') '0' '0'"
+
+elif [ "$obj_selected" = "effects" ]; then
+  OPTIONS='''
+    [
+    ["Inject: Frame",         "injectFrame"],
+    ["Inject: MuteAudioVoko", "injectMutedAudioToVideoVoko"],
+    ["Inject: MuteAudioSSR",  "injectMutedAudioToVideoSsr"]
+    ]
+    '''
+  obj_menu=$(echo $OPTIONS | jq -r ".[][0]" | $MENU -i -p " Effects")
+  obj_selected=$(echo $OPTIONS | jq -r ".[] | select(.[0] == \"$obj_menu\") | .[1]")
+fi
+
+$obj_selected
+
+# OLD BACKUP INTERFACE MENU
+# choice=$(printf "Video\nAudio\nEffects ∇" | $MENU -p " Record")
+# case "$choice" in
+#     "Video")
+#         monitors=$(xrandr --listmonitors | grep 'Monitors:' | tr -d "Monitors: ")
+#         if [ "$monitors" = "2" ]; then
+#             area=$(printf "All Screen\nLaptop\nMonitor" | $MENU -p " Area")
+#             case "$area" in
+#                 "All Screen") videoOnly $(xdpyinfo | grep dimensions | awk '{print $2;}') "0" "0";;
+#                 "Laptop")     videoOnly "1024x768" "576" "900";;
+#                 "Monitor")    videoOnly "1600x900" "0" "0";;
+#             esac
+#         else
+#             videoOnly $(xdpyinfo | grep dimensions | awk '{print $2;}') "0" "0"
+#         fi
+#         ;;
+#     "Audio") audioOnly;;
+#     "Effects ∇")
+#         effects=$(printf "Inject: Frame\nInject: MutedAudioVoko" | $MENU -p " Effects")
+#         case "$effects" in
+#         "Inject: Frame")          injectFrame;;
+#         "Inject: MutedAudioVoko") injectMutedAudioToVideoVoko;;
+#         "Inject: MutedAudioSSR")  injectMutedAudioToVideoSsr;;
+#         esac
+#         ;;
+# esac

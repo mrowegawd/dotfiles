@@ -1,0 +1,22 @@
+# test
+
+[urgency_low]
+background = "%%normal_bg%%"
+foreground = "%%normal_fg%%"
+frame_color = "%%normal_frame_fg%%"
+timeout = 10
+icon = ~/.config/miscxrdb/icons/bell-notification.png
+
+[urgency_normal]
+background = "%%normal_bg%%"
+foreground = "%%normal_fg%%"
+frame_color = "%%normal_frame_fg%%"
+timeout = 12
+icon = ~/.config/miscxrdb/icons/bell-notification.png
+
+[urgency_critical]
+background = "%%critical_bg%%"
+foreground = "%%critical_fg%%"
+frame_color = "%%critical_frame_fg%%"
+timeout = 20
+icon = ~/.config/miscxrdb/icons/warning.png

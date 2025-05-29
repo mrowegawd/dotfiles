@@ -1,0 +1,149 @@
+configuration {
+    font:							              "JetBrainsMono NF 14";
+    show-icons:                     false;
+    icon-theme: 					          "Papirus";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+    fullscreen:                     false;
+    hide-scrollbar: 			          true;
+    sidebar-mode: 				          false;
+    display-window: 			          "  ";
+    display-windowcd: 		          "  ";
+    display-run: 					          "  ";
+    display-ssh: 					          "  ";
+    display-drun: 				          "  ";
+    display-combi: 				          "  ";
+
+    kb-remove-to-eol:               "";
+    kb-accept-entry:                "Control+m,Return,KP_Enter";
+    kb-row-up:                      "Up,Control+p";
+    kb-row-down:                    "Down,Control+n";
+}
+
+@import "colors/colors.rasi"
+
+* {
+    background-color:               @background;
+}
+
+window {
+    background-color:               @background;
+    text-color:                     @foreground;
+    transparency:                   "screenshot";
+	  border:							            0px;
+	  border-color:					          @urgent;
+    border-radius:                  20px;
+    width: 						              50%;
+    height: 					              50%;
+    // y-offset:                       -10em;
+    // x-offset:                       -23em;
+}
+
+prompt {
+    enabled: 						            true;
+    spacing: 					              0;
+    border: 					              0;
+    padding: 						            1.5% 0 1% 1.5%;
+    text-color: 					          @background;
+    background-color: 				      @border;
+}
+
+
+entry {
+    spacing:    				            0;
+    text-color: 				            @foreground;
+    background-color:               @border;
+    padding: 						            1.5% 1.5% 1.5% 1%;
+}
+
+// case-indicator {
+//     spacing:    					          0;
+//     text-color: 					          @background-alt;
+// }
+
+inputbar {
+    spacing:    				            0px;
+    background-color:               @background-alt;
+    text-color: 				            @border;
+    padding:    				            1px;
+    children: 					            [ prompt, entry ];
+}
+
+listview {
+    background-color:               @background;
+    columns:                        1;
+    lines:                          5;
+    spacing:                        0%;
+    cycle:                          false;
+    dynamic:                        true;
+    layout:                         vertical;
+}
+
+mainbox {
+    background-color:               @background;
+	  border:							            0% 0% 0% 0%;
+    border-radius:                  0% 0% 0% 0%;
+	  border-color:					          @border;
+    children:                       [ inputbar, listview ];
+    spacing:                        0%;
+}
+
+element {
+    background-color:               @background;
+    text-color:                     @urgent;
+    orientation:                    horizontal;
+    border-radius:                  0%;
+    padding:                        1.5% 0.5% 1% 0.2px;  // < ----
+}
+
+element-text {
+    expand:                         true;
+    horizontal-align:               0;
+    background-color:               inherit;
+    text-color:                     inherit;
+    vertical-align:                 0.5;
+    margin:                         0% 0.25% 0.25% 1.5%;
+}
+
+
+element normal.normal {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+element normal.urgent {
+    background-color: 		          @urgent;
+    text-color:       		          @background-alt;
+}
+
+element normal.active {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element selected.normal {
+    background-color: 		          @selected-alt;
+    text-color:       		          @red;
+}
+element selected.urgent {
+    background-color: 		          @red;
+    text-color:       		          @background;
+}
+element selected.active {
+    background-color: 		          @background;
+    text-color:       		          @background;
+}
+
+element alternate.normal {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element alternate.urgent {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element alternate.active {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}

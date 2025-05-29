@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+IFS="$(printf '\n\r')"
+
+# shellcheck disable=SC1090,SC1091
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+NNN_SPLIT="v"
+PERCENT=60
+
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
+if not_in_tmux; then
+	# export "${ENVVARS[@]}"
+	if [ "$NNN_SPLIT" = "v" ]; then split="--horizontal"; else split="--bottom"; fi
+	pane_id_right=$(wezterm cli get-pane-direction right)
+	if [ -n "$pane_id_right" ]; then
+		wezterm cli split-pane --cwd "$PWD" --bottom --percent $PERCENT --pane-id "$pane_id_right" lazygit >/dev/null
+	else
+		wezterm cli split-pane --cwd "$PWD" $split --percent $PERCENT "$0" "$1" >/dev/null
+	fi
+else
+	tmux popup -d '#{pane_current_path}' -h 80% -w 80% -E "lazydocker"
+
+	tmux select-pane -D
+fi

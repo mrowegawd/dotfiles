@@ -1,0 +1,170 @@
+configuration {
+    font:							              "JetBrainsMono NF 14";
+    show-icons:                     false;
+    icon-theme: 					          "Papirus";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+    /* fullscreen:                     false; */
+    /* hide-scrollbar: 			          true; */
+    sidebar-mode: 				          false;
+    display-window: 			          "  ";
+    display-windowcd: 		          "  ";
+    display-run: 					          "  ";
+    display-ssh: 					          "  ";
+    display-drun: 				          "  ";
+    display-combi: 				          "  ";
+
+    kb-remove-to-eol:               "";
+    kb-accept-entry:                "Control+m,Return,KP_Enter";
+    kb-row-up:                      "Up,Control+p";
+    kb-row-down:                    "Down,Control+n";
+}
+
+@import "colors/colors.rasi"
+
+* {
+    background-color:               @background;
+}
+
+window {
+    background-color:               @background;
+    text-color:                     @foreground;
+    transparency:                   "screenshot";
+	  border:							            0px;
+	  border-color:					          @urgent;
+    border-radius:                  12px;
+    width: 						              20%;
+    height: 					              50%;
+    y-offset:                       -10em;
+    x-offset:                       -23em;
+}
+
+prompt {
+    enabled: 						            true;
+    padding: 						            0.30% 0.6% 0% -0.5%;
+    background-color: 				      @border;
+    text-color: 					          @foreground;
+}
+
+entry {
+    background-color:               @border;
+    text-color:                     @foreground;
+    placeholder-color:              @foreground;
+    expand:                         true;
+    horizontal-align:               0;
+    placeholder:                    "Search";
+    padding:                        0.30% 0% 0% 0%;
+    blink:                          true;
+}
+
+inputbar {
+	  children: 						          [ prompt, entry ];
+    background-color:               @border;
+    text-color:                     @foreground;
+    expand:                         false;
+	  border:							            0% 0% 0% 0%;
+    border-radius:                  0px;
+	  border-color:					          @border;
+    margin:                         0% 0% 0% 0%;
+    padding:                        1.5%;
+}
+
+listview {
+    background-color:               @background;
+    columns:                        1;
+    lines:                          5;
+    spacing:                        0%;
+    cycle:                          false;
+    dynamic:                        true;
+    layout:                         vertical;
+}
+
+mainbox {
+    background-color:               @background;
+	  border:							            0% 0% 0% 0%;
+    border-radius:                  0% 0% 0% 0%;
+	  border-color:					          @border;
+    children:                       [ inputbar, listview ];
+    spacing:                       	0%;
+    padding:                        0%;
+}
+
+element {
+    // background-color:               @red;
+    // text-color:                     @red;
+    // orientation:                    horizontal;
+    border-radius:                  0%;
+    padding:                        1% 0.5% 1% 0.5%;
+}
+
+element-icon {
+    size:                           12px;
+    background-color:               @background;
+    border:                         0px;
+}
+
+element-text {
+    expand:                         true;
+    horizontal-align:               0;
+    background-color:               inherit;
+    text-color:                     inherit;
+    vertical-align:                 0.5;
+    margin:                         0% 0.25% 0.25% 1.5%;
+}
+
+/* element selected {
+    background-color:               @blue;
+    text-color:                     @border;
+	  border:							            0% 0% 0% 0%;
+    border-radius:                  0px;
+    border-color:                  	@border;
+} */
+
+/* element normal {
+    background-color: 		  @background;
+    padding: 40px;
+
+} */
+
+element normal.normal {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element normal.urgent {
+    background-color: 		          @urgent;
+    text-color:       		          @background-alt;
+}
+
+element normal.active {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element selected.normal {
+    background-color: 		          @selected-alt;
+    text-color:       		          @red;
+}
+element selected.urgent {
+    background-color: 		          @red;
+    text-color:       		          @background;
+}
+element selected.active {
+    background-color: 		          @background;
+    text-color:       		          @background;
+}
+
+element alternate.normal {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element alternate.urgent {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}
+
+element alternate.active {
+    background-color: 		          @background;
+    text-color:       		          @background-alt;
+}

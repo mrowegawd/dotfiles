@@ -1,0 +1,653 @@
+# vim: foldmethod=marker foldlevel=0
+
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                       SET OPTIONS                        ║
+#  ╚══════════════════════════════════════════════════════════╝
+
+set shellopts "-eu"
+set shell zsh
+set ifs "\n"
+set scrolloff 10
+set icons
+set hidden
+set period 1
+set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set cursorparentfmt "\033[7;90m" # Make parent cursor a bit less strident, to make it obvious focus isn't there.
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
+
+set nopreview
+set ratios 3
+
+
+cmd bulkrename $vidir
+
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                         COMMAND                          ║
+#  ╚══════════════════════════════════════════════════════════╝
+
+
+# ENCHANTED ----------------------------------------------------- {{{
+cmd on-select &{{
+    lf -remote "send $id set statfmt \"$(exa -ld --color=always "$f")\""
+}}
+# }}}
+
+cmd zoom_mode ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  if not_in_tmux; then
+    dunstify "not implemented yet"
+  else
+    tmux resize-pane -Z
+  fi
+}}
+
+cmd nopreview &{{
+    lf -remote "send $id zoom_mode"
+    lf -remote "send $id set nopreview"
+    lf -remote "send $id set ratios 3"
+    lf -remote "send $id map <a-p> showpreview"
+}}
+
+cmd showpreview &{{
+    # lf -remote "send $id set ratios 1:2:3"
+    lf -remote "send $id zoom_mode"
+    lf -remote "send $id set ratios 2:2:5"
+    lf -remote "send $id set preview"
+    lf -remote "send $id map <a-p> nopreview"
+}}
+
+
+
+# OPEN ---------------------------------------------------------- {{{
+cmd open ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":e $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
+    image/*) sxiv $fx 2>/dev/null;;
+    audio/*) mpv --audio-display=no $f ;;
+    video/*) mpv --autofit=1000x900 --geometry=-15-60 "$fx" >/dev/null 2>&1 ;;
+    # video/*) setsid -f mpv -ontop -no-border -force-window --autofit=600x500 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
+    application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    *) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
+  esac
+}}
+# }}}
+# OPENVSPLIT ---------------------------------------------------- {{{
+cmd open_vsplit ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":vsplit $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    *) exit;;
+  esac
+}}
+
+map <c-v> open_vsplit
+# }}}
+# OPENSPLIT ----------------------------------------------------- {{{
+cmd open_split ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":sp $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    *) exit;;
+  esac
+}}
+
+map <c-s> open_split
+# }}}
+# MKDIR --------------------------------------------------------- {{{
+cmd mkdir ${{
+    printf "\nDirectory Name: "
+    read name
+    mkdir $name
+}}
+# }}}
+# TOUCH --------------------------------------------------------- {{{
+cmd touch ${{
+    printf "File Name: "
+    read name
+    $EDITOR $name
+}}
+# }}}
+# DELETE -------------------------------------------------------- {{{
+cmd Delete ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	printf "delete?[y/N]"
+	read ans
+	[ $ans = "y" ] && rm -rf $fx
+}}
+# }}}
+# MOVETO -------------------------------------------------------- {{{
+cmd moveto ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	clear; echo "Move to where?"
+	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/miscxrdb/lf/bm-dirs | fzf | sed 's|~|$HOME|')" &&
+	for x in $fx; do
+		eval mv -iv \"$x\" \"$dest\"
+	done &&
+	dunstify "🚚 File(s) moved." "File(s) moved to $dest."
+}}
+# }}}
+# COPYTO -------------------------------------------------------- {{{
+cmd copyto ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	clear; echo "Copy to where?"
+	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/miscxrdb/lf/bm-dirs | fzf | sed 's|~|$HOME|')" &&
+	for x in $fx; do
+		eval cp -ivr \"$x\" \"$dest\"
+	done &&
+	dunstify "📋 File(s) copied." "File(s) copies to $dest."
+}}
+# }}}
+# FZF_SEARCH ---------------------------------------------------- {{{
+cmd fzf_search ${{
+    not_in_tmux() {
+    	[[ -z "$TMUX" ]]
+    }
+  	if not_in_tmux; then
+      select="$(echo -e 'Grep string in file\nSearch name of file' | fzf)"
+    else
+      select="$(echo -e 'Grep string in file\nSearch name of file' | fzf-tmux -xC -w '60%' -h '50%')"
+
+      if [[ "$select" == "Grep string in file" ]] then
+        res="$( \
+            RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always \
+                --smart-case "
+            FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+                fzf-tmux --bind "change:reload:$RG_PREFIX {q} || true" \
+                --ansi --layout=reverse -xC -w '80%' -h '80%' --header $select \
+                | cut -d':' -f1
+        )"
+        [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+      elif [[ "$select" == "Search name of file" ]] then
+        res="$( \
+            RG_PREFIX="fd --color=never --type f --hidden --follow --exclude .git "
+            FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+                fzf-tmux --bind "change:reload:$RG_PREFIX {q} || true" \
+                --ansi --layout=reverse -xC -w '80%' -h '80%' --header $select \
+                | cut -d':' -f1
+        )"
+        [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+      fi
+    fi
+
+}}
+map <a-q> fzf_search                          # search string in file or search name of file
+# }}}
+# WATCH_MPV_PLAYLIST -------------------------------------------- {{{
+cmd watch_mpv_playlist ${{
+    # ls -t1 . | sort > /tmp/mylist_mpv
+    IFS=$'\n' ; mpv -ontop -no-border -force-window \
+			--autofit=800x900 --geometry=-15-60 $(ls -t1 . | sort)
+}}
+# }}}
+
+# GETOPEN ------------------------------------------------------- {{{
+cmd getopen ${{
+	case $(file --mime-type $f -b) in
+	text/*|application/json)
+		tmux select-pane -R
+		current_pane=$(tmux display-message -p '#{pane_id}')
+		# output current_pane selalu 1
+		if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+			tmux split-window -h -p 83
+			current_pane=$(tmux display-message -p '#{pane_id}')
+		fi
+
+		program=$(tmux display -p '#{pane_current_command}')
+		if [ "$program" = "nvim" ]; then
+			tmux send-keys -t "$current_pane" ":e $fx" Enter
+		else
+			tmux send-keys -t "$current_pane" "nvim $fx" Enter
+		fi
+  ;;
+  audio/*) mpv --audio-display=no $f ;;
+  video/*) mpv --autofit=1000x900 --geometry=-15-60 "$fx" >/dev/null 2>&1 ;;
+  image/*) sxiv $fx 2>/dev/null;;
+	application/pdf) setsid -f zathura $fx >/dev/null 2>&1 ;;
+	inode/directory) lfrun $f ;;
+	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
+	   esac
+}}
+# }}}
+# FZMARKS ------------------------------------------------------- {{{
+cmd fzmarks ${{
+  clear
+
+	cols=$(tput cols)
+	figlet -f slant -w "$cols" -c "Jump To" | lolcat
+  # dunstify $(display-message -p '#{pane_id} #{window_current_command}')
+
+  cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+
+  if grep -qi microsoft /proc/version; then # --> check for WSL
+  	cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+  fi
+
+  . "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+  not_in_tmux() {
+  	[[ -z "$TMUX" ]]
+  }
+
+
+  if [ -f "$cwd" ]; then
+  	if not_in_tmux; then
+  		pane_id_right=$(wezterm cli get-pane-direction right)
+  		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+  		wezterm cli activate-pane-direction Up
+
+  		select=$(cat "$cwd" | fzf --no-height --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+  			--preview-window right:50%:hidden \
+  			--prompt "Jump To: ")
+
+  		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+  		wezterm cli activate-pane-direction Left
+  	else
+  		select=$(cat "$cwd" | fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+  			--preview-window right:50%:hidden -xC -w '60%' -h '50%' \
+  			--prompt "Jump to> ")
+  	fi
+
+  	if [ -n "$select" ]; then
+  		# we select directory not a file
+	    lf -remote "send $id cd \"$select\""
+  	fi
+  fi
+}}
+
+map <a-g> fzmarks
+# }}}
+# FZCD ---------------------------------------------------------- {{{
+cmd fzcd ${{
+  clear
+
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  LIST=''
+
+  if type find >/dev/null 2>&1; then
+  	tmpfile=$(mktemp /tmp/abc-script.XXXXXX)
+
+  	while IFS= read -r path; do
+  		if [ -d "$path" ]; then
+  			printf "%s\n" "$path" >>"$tmpfile"
+  		elif [ -f "$path" ]; then
+  			printf "%s\n" "$(dirname "$path")" >>"$tmpfile"
+  		fi
+  	done <"$LIST"
+
+  	if not_in_tmux; then
+  		pane_id_right=$(wezterm cli get-pane-direction right)
+  		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+  		wezterm cli activate-pane-direction Up
+
+  		# sel=$(xargs -d '\n' fd -H -I . <"$tmpfile" | fzf --delimiter / --with-nth=-2,-1 --tiebreak=begin --info=hidden --prompt "Cd to> ")
+  		sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf --no-height --prompt "Change Directory To: ")
+
+  		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+  		wezterm cli activate-pane-direction Left
+
+  	else
+  		sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf-tmux -xC -w '60%' -h '50%' --prompt "Change Directory To: ")
+  	fi
+
+  	rm "$tmpfile"
+  # else
+  # 	printf "find missing"
+  # 	read -r _
+  # 	exit 1
+  fi
+
+  if [ -n "$sel" ]; then
+  	if [ "$sel" = "." ] || { ! [ -d "$sel" ] && ! [ -f "$sel" ]; }; then
+  		exit 0
+  	fi
+
+    pwd=$(pwd)
+
+    # dunstify "$pwd/$sel"
+
+    lf -remote "send $id cd \"$sel\""
+  fi
+}}
+
+map <a-d> fzcd
+# }}}
+# TERMCD -------------------------------------------------------- {{{
+cmd termcd ${{
+   . "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+   current_path="$2/$(basename "$2/$1")"
+   get_target_path="$(dirname "${current_path[0]}")"
+
+   case "$XDG_SESSION_DESKTOP" in
+   "bspwm")
+   	bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+   		st -c "$get_target_path"
+   	exit 0
+   	;;
+   *) echo "none" ;;
+   esac
+}}
+
+map <a-t> termcd
+# }}}
+# FZOPEN -------------------------------------------------------- {{{
+cmd fzopen ${{
+  dunstify "not implemented yet"
+}}
+map <a-o> fzopen
+# }}}
+# OPEN_EDITOR_CURDIR -------------------------------------------- {{{
+cmd open_editor_curdir ${{
+  # result=${PWD##}          # to assign to a variable
+  # # result=${result}        # to correct for the case where PWD=/
+
+  get_target_path=${PWD##}
+
+  _is_nvim() {
+	  [[ "$(tmux display-message -p '#{pane_id} #{pane_current_command}' | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]]
+  }
+  _is_nnn() {
+  	[[ "$(tmux display-message -p '#{pane_id} #{pane_current_command}' | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]]
+  }
+  not_in_tmux() {
+  	[[ -z "$TMUX" ]]
+  }
+
+  if not_in_tmux; then
+  	pane_id=$(wezterm cli get-pane-direction right)
+  	if [ -z "${pane_id}" ]; then
+  		pane_id=$(wezterm cli split-pane --right --percent 85)
+  	fi
+
+  	program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+  	if [ "$program" = "nvim" ]; then
+  		echo ":qa!" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+  		wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+  		sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
+  	fi
+
+  	echo "cd ${get_target_path}" | wezterm cli send-text --pane-id "$pane_id"
+  	wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+  	echo "nvim" | wezterm cli send-text --pane-id "$pane_id"
+  	wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
+  	wezterm cli activate-pane-direction --pane-id "$pane_id" right
+
+  else
+    # dunstify "$get_target_path"
+
+  	tmux select-pane -R
+  	current_pane=$(tmux display-message -p '#{pane_id}')
+
+  	if _is_nvim; then
+  		tmux send-keys -t "$current_pane" ":qa!" Enter
+  	elif _is_nnn; then
+  		tmux split-window -h -p 83
+  	fi
+
+  	sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
+
+  	tmux send-keys -t "$current_pane" "cd $get_target_path" Enter
+  	tmux send-keys -t "$current_pane" "nvim" Enter
+  fi
+}}
+
+map <a-O> open_editor_curdir
+# }}}
+# OPLAZYGIT ----------------------------------------------------- {{{
+cmd oplazygit ${{
+  PWD="$PWD"
+
+  PERCENT=60
+
+  not_in_tmux() {
+  	[ -z "$TMUX" ]
+  }
+
+  if not_in_tmux; then
+  	# export "${ENVVARS[@]}"
+  	if [ "$NNN_SPLIT" = "v" ]; then split="--horizontal"; else split="--bottom"; fi
+  	pane_id_right=$(wezterm cli get-pane-direction right)
+  	if [ -n "$pane_id_right" ]; then
+  		wezterm cli split-pane --cwd "$PWD" --bottom --percent $PERCENT --pane-id "$pane_id_right" lazygit >/dev/null
+  	else
+  		wezterm cli split-pane --cwd "$PWD" $split --percent $PERCENT "$0" "$1" >/dev/null
+  	fi
+  else
+  	tmux select-pane -R
+
+  	tmux split-window -l"$PERCENT"% -d"v" -p"$PERCENT" lazygit
+
+  	tmux select-pane -D
+  fi
+}}
+
+map <a-G> oplazygit
+# }}}
+# OPLAZYDOCKER -------------------------------------------------- {{{
+cmd oplazydocker ${{
+  PWD="$PWD"
+
+  PERCENT=60
+
+  not_in_tmux() {
+  	[ -z "$TMUX" ]
+  }
+
+  if not_in_tmux; then
+  	# export "${ENVVARS[@]}"
+  	if [ "$NNN_SPLIT" = "v" ]; then split="--horizontal"; else split="--bottom"; fi
+  	pane_id_right=$(wezterm cli get-pane-direction right)
+  	if [ -n "$pane_id_right" ]; then
+  		wezterm cli split-pane --cwd "$PWD" --bottom --percent $PERCENT --pane-id "$pane_id_right" lazygit >/dev/null
+  	else
+  		wezterm cli split-pane --cwd "$PWD" $split --percent $PERCENT "$0" "$1" >/dev/null
+  	fi
+  else
+  	tmux select-pane -R
+
+  	tmux split-window -l"$PERCENT"% -d"v" -p"$PERCENT" lazydocker
+
+  	tmux select-pane -D
+  fi
+}}
+
+map <a-D> oplazydocker
+# }}}
+
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                         BINDINGS                         ║
+#  ╚══════════════════════════════════════════════════════════╝
+
+# Remove defaults
+# map "'"
+# map '"'
+# map c
+# map d
+# map e
+# map f
+# map m
+# map n
+# map o
+# map p
+# map r
+# map u
+# map y
+# map g
+# map q
+# map x
+
+# map P set preview!
+map <a-p> showpreview
+map H set hidden!
+
+map <c-e> down
+map <c-y> up
+
+map u unselect    # clear selected, yang ditandai dengan visual selection
+map U clear       # clear selected, yang ditandai dengan `mark` `cut` `copy`
+
+map <enter> open
+map <F5> reload
+
+map y copy
+map yp %readlink -f "$f" | clipper c # Copy selected file's path
+
+# map x cut
+map d delete
+map p paste
+map N mkdir
+map n touch
+map D Delete
+map C copyto
+map M moveto
+map R bulkrename
+map r rename
+
+map <c-c> quit
+
+# map c
+# map cd push :cd<space>
+# map cw watch_mpv_playlist
+
+# map e $$EDITOR "$f"                           # enter with nvim/vim
+# map i $edit "$f"
+# map I $nvr -cc call TermOpen(&shell,'v')
+
+# map e
+# map i
+# map I
+
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                       BOOKMARKS                          ║
+#  ╚══════════════════════════════════════════════════════════╝
+
+# map gs ${{clear; git status; echo "press ENTER"; read ENTER}}
+
+# cmd on-cd &{{
+# 	# display repository status in your prompt
+# 	if [ -d .git ] || [ -f .git ]; then
+# 		branch=$(git branch --show-current 2>/dev/null) || true
+# 		remote=$(git config --get branch.$branch.remote 2>/dev/null) || true
+# 		url=$(git remote get-url $remote 2>/dev/null) || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [GIT BRANCH:> $branch >> $url]\033[0m"
+# 	elif [ -d .hg ]; then
+# 		hg=$(hg branch 2>/dev/null) || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [HG BRANCH:> $hg]\033[0m"
+# 	elif [ -d .svn ]; then
+# 		svn=$(svn info 2>/dev/null | awk '/^URL: /{print $2}') || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [SVN URL:> $svn]\033[0m"
+# 	else
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
+# 	fi
+# 	lf -remote "send $id set promptfmt \"$fmt\""
+# }}
+
+map gc cd ~/moxconf/development/dotfiles
+map gd cd ~/Downloads
+map gD cd ~/Downloads/dotfilesxc
+map gv cd ~/Downloads/Video
+map gs cd ~/Downloads/screenshot
+map gt cd ~/moxconf/media_and_tuts/torrents           # path ini bisa dynamic
+map gm cd ~/moxconf/mobilebackup
+map gw cd ~/moxconf/media_and_tuts/walli3

@@ -1,0 +1,66 @@
+#!/usr/bin/env sh
+
+clear
+
+title_fzf="Jump To"
+
+# shellcheck disable=SC1090,SC1091
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+nnn_banner "$title_fzf"
+
+cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+if grep -qi microsoft /proc/version; then # --> check for WSL
+  cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+fi
+
+# shellcheck disable=SC1090,SC1091
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+if ! type fzf >/dev/null 2>&1; then
+  printf "fzf missing"
+  read -r _
+  exit 1
+fi
+
+if [ ! -f "$cwd" ]; then
+  notify-send "[warn] path not found: %s\n" "$cwd"
+  exit 1
+else
+
+  if not_in_tmux; then
+    # command ini bikin delay untuk beberapa saat, dunno how to fix
+    if [ "$TERM_PROGRAM" = "WezTerm" ]; then
+      pane_id_right=$(wezterm cli get-pane-direction right)
+      wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+      wezterm cli activate-pane-direction Up
+
+      select=$(fzf --no-height --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+        --preview-window right:50%:hidden \
+        --prompt "$title_fzf> " <"$cwd")
+
+      wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+      wezterm cli activate-pane-direction Left
+
+    else
+      select=$(fzf --no-height --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+        --preview-window right:50%:hidden \
+        --prompt "$title_fzf> " <"$cwd")
+    fi
+
+    if [ -n "$select" ]; then
+      # we select directory not a file
+      nnn "$select"
+    fi
+    exit 1
+  else
+    select=$(fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+      --preview-window right:50%:hidden -xC -w '60%' -h '50%' \
+      --prompt "$title_fzf> " <"$cwd")
+
+    if [ -n "$select" ]; then
+      nnn "$select"
+    fi
+  fi
+  exit 1
+fi

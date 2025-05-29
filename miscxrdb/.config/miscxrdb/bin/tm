@@ -1,0 +1,55 @@
+#!/bin/bash
+
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+
+# not_in_tmux_2() {
+#   tmux_ls=$(tmux ls 2>&1)
+#
+#   if [[ $tmux_ls == *"no server"* ]]; then
+#     return 1
+#   elif not_in_tmux; then
+#     return 1
+#   else
+#     return 0
+#   fi
+# }
+
+create_if_needed_and_attach() {
+  if [[ $TERMINAL == "wezterm" ]]; then
+    dunstify "WARN: $TERMINAL tidak punya spesific cli command untuk akses api switch workspace"
+    dunstify "WARN: keymap -> alt+y"
+    exit
+  fi
+
+  # if [[ $TERMINAL == "kitty" ]]; then
+  #   dunstify "WARN: $TERMINAL mempunyai spesific keymap untuk create window, pane"
+  #   dunstify "WARN: check ~/.config/kitty/kitty.conf"
+  #   exit
+  # fi
+
+  # jika output 0, dalam tmux mode
+  # jika output 1, tidak dalam tmux mode
+  if not_in_tmux; then
+    session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
+    [[ -z "$session" ]] && return
+    sesh connect "$session"
+  else
+    dir_name=$(basename "$PWD")
+    if ! tmux has-session -t "$dir_name" 2>/dev/null; then
+      tmux new-session -d -s "$dir_name"
+    fi
+
+    # Save the current window ID
+    current_window=$(tmux display-message -p '#{window_id}')
+
+    # Switch to the new session
+    tmux switch-client -t "$dir_name"
+
+    # Kill the current pane in the previous window
+    tmux kill-pane -t "$current_window"
+  fi
+}
+
+create_if_needed_and_attach

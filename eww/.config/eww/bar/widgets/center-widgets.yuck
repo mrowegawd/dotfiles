@@ -1,0 +1,10 @@
+(include "~/.config/eww/bar/widgets/workspaces.yuck")
+
+(defwidget center-widgets []
+  (box :class "workspaces"
+       :orientation "v"
+       ;:space-evenly true
+       :halign "center"
+       :valign "center"
+       ;:vexpand "false"
+    (workspaces)))

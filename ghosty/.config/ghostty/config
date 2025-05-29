@@ -1,0 +1,108 @@
+# +-----------------------------------------------------------+
+# | FONTS                                                     |
+# +-----------------------------------------------------------+
+# font-family    = "CommitMono"
+font-family = "SFMono"
+# font-family = "Cousins hug" # "JetBrainsMono NF"
+# font-family = "JetBrainsMono NF"
+# font-family-bold = "SF Mono"
+# font-family-italic = "Maple Mono Italic"
+# font-family-bold-italic = "Maple Mono Bold Italic"
+font-size      = 11.8
+# font-feature = "-calt"
+font-thicken   = true
+
+# +-----------------------------------------------------------+
+# | MOUSE                                                     |
+# +-----------------------------------------------------------+
+mouse-hide-while-typing         = true
+adw-toolbar-style               = flat
+
+# +-----------------------------------------------------------+
+# | THEME                                                     |
+# +-----------------------------------------------------------+
+theme = base46-melange
+
+# +-----------------------------------------------------------+
+# | WINDOW                                                    |
+# +-----------------------------------------------------------+
+window-decoration               = none
+window-padding-x                = 0
+window-padding-y                = 0
+window-colorspace               = display-p3
+window-padding-balance          = false
+window-step-resize              = false
+window-theme                    = ghostty
+
+gtk-adwaita                     = false
+
+# +-----------------------------------------------------------+
+# | MISC                                                      |
+# +-----------------------------------------------------------+
+# custom-shader = "~/.config/ghostty/test.glsl"
+
+# adjust-cell-width = 0
+# adjust-cell-height = 20%
+
+cursor-style                    = block
+cursor-style-blink              = false
+shell-integration-features      = no-cursor
+
+gtk-titlebar                    = false
+confirm-close-surface           = false
+
+unfocused-split-opacity         = 0.5
+
+# NOTE: jika background-opacity ini active dan picom juga active
+# maka akam mempengaruhi color background, menjadikan color background terminal
+# ghostty ini tidak sama dengan color terminal lain (wezterm, kitty),
+# recommended: gunakan picom untuk transparant nya, disable `background-opacity`
+# background-opacity            = 0.85
+
+# blur radis only works for Mac
+# background-blur-radius        = 20
+# macos-titlebar-style          = tabs
+
+# +-----------------------------------------------------------+
+# | MAPPINGS                                                  |
+# +-----------------------------------------------------------+
+# clear all default mappings, to unbind specific mapping --> use ex: ctrl+enter=unbind
+# keybind = clear
+
+# NOTE: keybind dibawah ini hanya digunakan ketika di luar tmux-only (commented jika perlu)
+
+# ┏╍╍╍╍╍╍┓
+# ╏ MISC ╏
+# ┗╍╍╍╍╍╍┛
+keybind = unconsumed:alt+ctrl+c=copy_to_clipboard
+keybind = unconsumed:alt+ctrl+v=paste_from_clipboard
+keybind = ctrl+enter=unbind
+# keybind = alt+m=toggle_split_zoom
+# keybind = ctrl+shift+comma=reload_config
+# keybind = alt+shift+r=reload_config
+# keybind = global:alt+f=toggle_quick_terminal # (Mac only)
+
+# ┏╍╍╍╍╍┓
+# ╏ TAB ╏
+# ┗╍╍╍╍╍┛
+# keybind = shift+alt+n=new_tab
+# keybind = ctrl+alt+l=next_tab
+# keybind = ctrl+alt+h=previous_tab
+# keybind = ctrl+alt+h=previous_tab
+
+# ┏╍╍╍╍╍╍┓
+# ╏ PANE ╏
+# ┗╍╍╍╍╍╍┛
+# keybind = ctrl+h=goto_split:left
+# keybind = ctrl+j=goto_split:bottom
+# keybind = ctrl+k=goto_split:top
+# keybind = ctrl+l=goto_split:right
+
+# keybind = unconsumed:alt+enter=new_split:right
+# keybind = alt+l=new_split:right
+# keybind = ctrl+space,j=new_split:down
+
+# keybind = alt+shift+k=resize_split:up,15
+# keybind = alt+shift+h=resize_split:left,15
+# keybind = alt+shift+j=resize_split:down,15
+# keybind = alt+shift+l=resize_split:right,15

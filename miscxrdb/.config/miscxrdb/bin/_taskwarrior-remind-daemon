@@ -1,0 +1,33 @@
+#!/bin/bash
+
+XAUTHORITY=/home/$USER/.Xauthority
+
+export XAUTHORITY
+
+# notifme() {
+#   rem -az | while read -r SPAM_OUT; do
+#     [[ ! -z $SPAM_OUT ]] && dunstify -t 100001 "$SPAM_OUT" -i "/home/$USER/.config/miscxrdb/icons/checklist.png" &&
+#       mpv --audio-display=no ~/.config/miscxrdb/mp3-wav/notif-me.mp3 --volume=30
+#   done &
+# }
+
+rem_pid=$(ps -C rem -o pid=)
+
+if [ -n "$rem_pid" ]; then
+	#Remind is running so restart it
+	kill "$rem_pid"
+	# rem -az | while read -r SPAM_OUT; do dunstify -t 100000 "$SPAM_OUT"; done &
+	rem -az | while read -r SPAM_OUT; do
+		[[ -n $SPAM_OUT ]] && dunstify -t 100001 "$SPAM_OUT" -i "/home/$USER/.config/miscxrdb/icons/checklist.png" &&
+			mpv --audio-display=no ~/.config/miscxrdb/mp3-wav/notif-me.mp3 --volume=30
+	done &
+
+else
+	#Remind is NOT running so start it
+	rem -az | while read -r SPAM_OUT; do
+		[[ -n $SPAM_OUT ]] && dunstify -t 100001 "$SPAM_OUT" -i "/home/$USER/.config/miscxrdb/icons/checklist.png" &&
+			mpv --audio-display=no ~/.config/miscxrdb/mp3-wav/notif-me.mp3 --volume=30
+	done &
+fi
+
+exit

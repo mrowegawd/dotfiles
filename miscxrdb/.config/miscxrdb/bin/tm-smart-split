@@ -1,0 +1,18 @@
+#!/bin/bash
+
+is_zoom=$(tmux list-panes -F "#F" | grep -i z)
+
+if [ -n "$is_zoom" ]; then
+	tmux resize-pane -Z
+fi
+
+pane_width=$(tmux display-message -p "#{pane_width}")
+pane_height=$(($(tmux display-message -p "#{pane_height}") + 75))
+
+# dunstify "width=$pane_width height=$pane_height"
+
+if [ "$pane_height" -gt "$pane_width" ]; then
+	tmux split-window -v -c "#{pane_current_path}"
+else
+	tmux split-window -h -c "#{pane_current_path}"
+fi

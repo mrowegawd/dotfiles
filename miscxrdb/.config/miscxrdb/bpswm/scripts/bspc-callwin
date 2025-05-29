@@ -1,0 +1,40 @@
+#!/bin/bash
+
+make_call() {
+  if [ ! -f "$1" ]; then
+    touch "$1"
+    bspc node "$2" -d "^1"
+    # bspc node -f east
+  else
+    bspc node "$2" -d "^$3"
+    rm "$1"
+  fi
+
+}
+
+toggle_call_win() {
+  MARK_FILE="/tmp/.keep_$1"
+  POSITION_WIN=$2
+
+  for VAR in $(bspc query -N); do
+    # output dari $VAR adalah 0x041xx (number window id)
+    # output dari xdotool getwindowname "$VAR" (berupa string)
+
+    # check apakah getwindowname name dari $VAR contains string mozilla
+    if [ "$1" == "firefox" ]; then
+      if [[ $(xdotool getwindowname "$VAR") == *"Mozilla"* ]] || [[ $(xdotool getwindowname "$VAR") == *"Zen Browser"* ]]; then
+        make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
+        break
+      fi
+    fi
+
+    if [ "$1" == "zathura" ]; then
+      if [[ $(xdotool getwindowname "$VAR") == *".pdf"* ]]; then
+        make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
+        break
+      fi
+    fi
+  done
+}
+
+toggle_call_win "$@"

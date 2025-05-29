@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1090,SC1091
+# . "$(dirname "$0")"/.nnn-plugin-helper
+
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+current_path="$2/$(basename "$2/$1")"
+get_target_path="$(dirname "${current_path[0]}")"
+
+# if not_in_tmux; then
+# Untuk menjalankan command dengan kitty: gunakan `kitty -e`
+# bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+# 	kitty -e "$get_target_path"
+
+# Untuk menjalankan command dengan st: gunakan `st -c`
+# bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+# 	st -c "$get_target_path"
+
+case "$XDG_SESSION_DESKTOP" in
+"bspwm")
+	bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+		st -c "$get_target_path"
+	exit 0
+	;;
+*) echo "none" ;;
+esac

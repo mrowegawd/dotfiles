@@ -1,0 +1,144 @@
+set encoding=utf-8
+scriptencoding utf-8
+
+"░░░░▀█▀░█▀▄░█▀▀░█▀█░█░█░▀█▀░█▄█░█▀▄░█▀▀
+"░░░░░█░░█░█░█▀▀░█▀█░▀▄▀░░█░░█░█░█▀▄░█░░
+"░▀░░▀▀▀░▀▀░░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀
+
+" GENERAL ---------------------------------- {{{
+" ------------------------
+" base ---------------------------------- {{{
+"
+set history=1000                  " keep x lines of command line history
+set hlsearch                      " highlight all search occurrences
+set ignorecase                    " ignore case in search patterns
+set noerrorbells
+set number                        " line numbers
+set relativenumber                " love vim yeah
+set scrolloff=5 sidescrolloff=10  " keep some lines before and after the cursor visible
+set smartcase                     " no ignore case when pattern is uppercase
+set visualbell
+
+" Turn off recording
+map q <Nop>
+
+" edit ideavim config
+" nnoremap <space>vv :e ~/.ideavimrc<CR>
+
+let mapleader = ' '
+
+inoremap jk <Esc>
+vnoremap jk  <Esc>
+nnoremap esc :nohlsearch<CR>
+
+" Emulated Plugins
+set surround
+
+" Copy to system clipboard as well
+set clipboard+=unnamedplus
+
+" Use Idea to join lines smartly
+set ideajoin
+
+" Keep a block highlighted while shifting
+vnoremap < <gv
+vnoremap > >gv
+"
+" }}}
+" Search -------------------------------- {{{
+nnoremap n nzzzv
+nnoremap n nzzzv
+" }}}
+" Folds, expand, ------------------------ {{{
+" Open one fold under the cursor.
+nnoremap ze :action ExpandRegion<CR>
+
+" Close one fold under the cursor.
+nnoremap zc :action CollapseRegion<CR>
+" }}}
+" Window handling ----------------------- {{{
+" change cursor between split
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+
+" goto next tab / prev
+nnoremap gh gt
+nnoremap gl gT
+
+nmap <leader>H :vsplit<CR>
+nmap <leader>V :split<CR>
+" }}}
+" Abbreviations ------------------------- {{{
+
+
+" }}}
+"
+cab W w
+" }}}
+" IDEAVIMRC -------------------------------- {{{
+" ------------------------
+" change font size
+nmap zi :action EditorIncreaseFontSize<CR>
+nmap zo :action EditorDecreaseFontSize<CR>
+
+" action, check with run :actionlist
+nnoremap <leader>ld :action GotoDeclaration<CR>
+nnoremap <leader>lm :action GotoImplementation<CR>
+" >>find keyword only current
+nnoremap <leader>lu :action ShowUsages<CR>
+" >>find all keyword from all files
+nnoremap <leader>fu :action FindUsages<CR>
+nnoremap <leader>la :action GotoAction<CR>
+nnoremap <leader>lR :action RenameElement<CR>
+nnoremap <a-b> :action GotoSymbol<CR>
+
+nnoremap <F1> :action ActivateProjectToolWindow<CR>
+nnoremap <leader>t :action ActivateTerminalToolWindow<CR>
+
+nnoremap <leader>ca :action CollapseAll<CR>
+nnoremap <leader>ct :action CloseActiveTab<CR>
+
+" code
+nnoremap <C-/>/ :action CommentByLineComment<CR>
+vnoremap <C-/>/ :action CommentByLineComment<CR>
+
+nnoremap <leader>f :action Forward<CR>
+nnoremap <leader>b :action Back<CR>
+
+imap <C-j> <ESC>:action HippieCompletion<CR>a
+
+" debug
+nnoremap <F5> :action Debug<CR>
+nnoremap <F7> :action ToggleLineBreakpoint<CR>
+
+" bookmark
+nnoremap <leader>mm :action ShowBookmarks<CR>
+nnoremap <leader>mt :action ToggleBookmark<CR>
+nnoremap <leader>mn :action GotoNextBookmark<CR>
+nnoremap <leader>mp :action GotoPreviousBookmark<CR>
+
+" errors
+nnoremap <leader>an :action GotoNextError<CR>
+nnoremap <leader>ap :action GotoPreviousError<CR>
+
+" run script
+nnoremap <F2> :action Run<CR>
+
+" file operation
+nnoremap ff :action GotoFile<CR>
+map / :action Find<CR>
+nnoremap cd :action ShowFilePath<CR>
+"
+" }}}
+" PLUGINS:Multiple Cursor ------------------ {{{
+"
+" Multiple cursors support
+" set multiple-cursors
+" map <C-N>  <A-N>
+" map <C-P>  <A-P>
+" map <C-X>  <A-X>
+" map g<C-N> g<A-N>
+"
+" }}}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule a message every 1 minute
+
+[Timer]
+Persistent=true
+OnBootSec=120
+OnUnitActiveSec=60
+Unit=orgnotif.service
+
+[Install]
+WantedBy=timers.target

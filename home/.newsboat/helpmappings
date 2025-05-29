@@ -1,0 +1,46 @@
+# vim: set ft=conf
+
+# articlelist: edit urls
+bind E
+
+# articlelist: mark all items feed as read
+bind A
+
+# articlelist: delete article item
+bind d
+
+# articlelist: go next feed article
+bind J
+
+# articlelist: go prev feed article
+bind K
+
+# articlelist: show the url
+bind U
+
+# macro: prefix macro
+bind ,
+
+# macro: open video (watch youtube)
+bind ,v
+
+# misc: edit/open urllist with vim
+bind <c-v>
+
+# misc: set flag (isikan "s" saja)
+bind F
+
+# misc: open list tags
+bind t
+
+# misc: open in browser
+bind o
+
+# misc: search
+bind <c-g>
+
+# misc: reload all article list (check new update)
+bind R
+
+# misc: reload the article (check new update)
+bind r

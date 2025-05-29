@@ -1,0 +1,131 @@
+#!/bin/bash
+
+file_manager="$TERM_FILEMANAGER"
+
+[ -z "$TMUX" ] && exit
+
+_go_left() {
+  tmux select-pane -L
+}
+_go_right() {
+  tmux select-pane -R
+}
+_go_last_pane() {
+  tmux last-pane
+}
+
+_check_pane_is_nnn() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
+}
+_check_pane_is_lf() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }')" == "lf" ]
+}
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+_check_pane_is_nvim() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+_check_pane_is_zsh() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
+}
+_open_file_manager_window() {
+  # tmux split-window -hb -p 30 -l 30 -c "#{pane_current_path}" "$file_manager"
+  tmux split-window -h -l 45 -c "#{pane_current_path}" "$file_manager"
+}
+
+_open_wiki_file_manager_window() {
+  WIKI_DIR="$HOME/Dropbox/neorg/"
+
+  if [[ -d "$WIKI_DIR" ]]; then
+    tmux split-window -h -l 45 -c "$HOME/Dropbox/neorg" "$file_manager"
+  else
+    dunstify "path not found"
+  fi
+
+}
+
+GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
+
+clean_tree() {
+  if _check_pane_is_nnn; then
+    tmux kill-pane
+    exit
+  fi
+
+  if _check_pane_is_lf; then
+    tmux kill-pane
+    exit
+  fi
+
+  if _check_pane_is_yazi; then
+    tmux kill-pane
+    exit
+  fi
+
+  _go_left
+
+  if _check_pane_is_nnn; then
+    tmux kill-pane
+    exit
+  fi
+
+  if _check_pane_is_nnn; then
+    tmux kill-pane
+    exit
+  fi
+
+  if _check_pane_is_lf; then
+    tmux kill-pane
+    exit
+  fi
+
+  if _check_pane_is_yazi; then
+    tmux kill-pane
+    exit
+  fi
+
+}
+
+open_tree_cwd() {
+  if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
+    _open_file_manager_window
+  else
+    is_pane_is_right=$(tmux display -p '#{pane_at_right}')
+    if [ "$is_pane_is_right" == 0 ]; then
+      if _check_pane_is_yazi; then
+        clean_tree
+      else
+        _go_right
+        if ! _check_pane_is_yazi; then
+          tmux kill-pane
+        fi
+      fi
+    else
+      clean_tree
+      _go_right
+      _open_file_manager_window
+    fi
+  fi
+}
+
+open_tree_wiki() {
+  is_pane_is_right=$(tmux display -p '#{pane_at_right}')
+  if ! _check_pane_is_yazi && [[ $is_pane_is_right == "1" ]]; then
+    _open_wiki_file_manager_window
+  else
+    clean_tree
+    _go_right
+  fi
+}
+
+main() {
+  if [[ $1 == "wiki" ]]; then
+    open_tree_wiki
+  else
+    open_tree_cwd
+  fi
+
+}
+
+main "$@"

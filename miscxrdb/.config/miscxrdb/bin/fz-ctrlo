@@ -1,0 +1,454 @@
+#!/bin/bash
+
+set -uo pipefail
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                          utils                           │
+# ╰──────────────────────────────────────────────────────────╯
+
+GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+RED="red"
+TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+  GET_FG=$(grep -i TMUX_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+fi
+
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+not_in_tmux_2() {
+  tmux_ls=$(tmux ls 2>&1)
+
+  if [[ $tmux_ls == *"no server"* ]]; then
+    return 1
+  elif not_in_tmux; then
+    return 1
+  else
+    return 0
+  fi
+}
+notifme_to_run_in_tmux() {
+  if not_in_tmux; then
+    echo "$1"
+    exit 1
+  fi
+}
+
+_go_left() {
+  tmux select-pane -L
+}
+_go_right() {
+  tmux select-pane -R
+}
+_go_up() {
+  tmux select-pane -U
+}
+
+_check_pane_is_zsh() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
+}
+_check_pane_is_nvim() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+_check_pane_is_nnn() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
+}
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+_check_pane_is_tclock() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
+}
+
+session_exists() {
+  tmux has-session -t "=$1"
+}
+
+#  +----------------------------------------------------------+
+#  |                       APT AND DKPG                       |
+#  +----------------------------------------------------------+
+show_apt_search() {
+  select=$(apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
+    --multi \
+    --preview 'apt-cache show {1}' \
+    --preview-window right:70%:nohidden)
+
+  [[ -z $select ]] && exit
+
+  sudo \$aptget install -y "$select"
+}
+
+#  +----------------------------------------------------------+
+#  |                           OPEN                           |
+#  +----------------------------------------------------------+
+open_url() {
+  get_fzf_options() {
+    local fzf_options
+    local fzf_default_options='-w 70% -h 50% --multi -0 --no-preview --bind ctrl-a:toggle-all --prompt="Open URL> "'
+    fzf_options="$(tmux show -gqv '@fzf-url-fzf-options')"
+    [ -n "$fzf_options" ] && echo "$fzf_options" || echo "$fzf_default_options"
+  }
+
+  fzf_filter() {
+    eval "fzf-tmux $(get_fzf_options)"
+  }
+
+  limit='screen'
+  [[ $# -ge 2 ]] && limit=$2
+
+  if [[ $limit == 'screen' ]]; then
+    content="$(tmux capture-pane -J -p -e -S -32768 | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
+  else
+    content="$(tmux capture-pane -J -p -e -S -"$limit" | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
+  fi
+
+  # Taken from https://github.com/wfxr/tmux-fzf-url/blob/16381dce1c30fedd75fc775f887be7ea6c7cbf55/fzf-url.sh
+  urls=$(echo "$content" | grep -oE '(https?|ftp|file):/?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]')
+  wwws=$(echo "$content" | grep -oE '(http?s://)?www\.[a-zA-Z](-?[a-zA-Z0-9])+\.[a-zA-Z]{2,}(/\S+)*' | grep -vE '^https?://' | sed 's/^\(.*\)$/http:\/\/\1/')
+  ips=$(echo "$content" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,5})?(/\S+)*' | sed 's/^\(.*\)$/http:\/\/\1/')
+  gits=$(echo "$content" | grep -oE '(ssh://)?git@\S*' | sed 's/:/\//g' | sed 's/^\(ssh\/\/\/\)\{0,1\}git@\(.*\)$/https:\/\/\2/')
+  gh=$(echo "$content" | grep -oE "['\"]([_A-Za-z0-9-]*/[_.A-Za-z0-9-]*)['\"]" | sed "s/['\"]//g" | sed 's#.#https://github.com/&#')
+
+  if [[ $# -ge 1 && "$1" != '' ]]; then
+    extras=$(echo "$content" | eval "$1")
+  fi
+
+  items=$(
+    printf '%s\n' "${urls[@]}" "${wwws[@]}" "${gh[@]}" "${ips[@]}" "${gits[@]}" "${extras[@]}" |
+      grep -v '^$' |
+      sort -u |
+      nl -w3 -s '  '
+  )
+
+  if [[ -n $items ]]; then
+    chosen=$(fzf_filter <<<"$items" | awk '{print $2}')
+    if [[ -n $chosen ]]; then
+      while read -r url; do
+        open "$url" &>"/tmp/tmux-$(id -u)-fzf-url.log"
+      done <<<"$chosen"
+    fi
+  else
+    tmux display-message "#[fill=$RED bg=$RED  fg=red bold align=centre]Searching URL Not Found"
+  fi
+}
+
+open_calc() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  tmux display-popup \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -b rounded \
+    -E python -ic "from __future__ import division; from math import *; from random import *"
+}
+open_mutlilog() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
+    if tmux list-window | grep logging >/dev/null; then
+      tmuxWindowName=$(tmux list-windows | grep logging | cut -d: -f1)
+      tmux kill-window -t "$tmuxWindowName"
+    fi
+    tmux new-window && tmux rename-window "logging" &&
+      tmux send-keys "sudo multitail -s 2 -cS alf_log /var/log/syslog /var/log/auth.log /var/log/kern.log && tmux kill-pane" enter
+  else
+    sudo multitail -cS alf_log -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
+  fi
+}
+open_newsboat() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  session="tmp_newsboat"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E "tmux attach -t $session"
+    fi
+  fi
+}
+open_rkill() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  local pid
+  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]; then
+    echo "$pid" | xargs kill -9
+  fi
+}
+open_calcure() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  session="tmp_calcure"
+
+  if ! session_exists "$session"; then
+    set -gF status off
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E -d "#{pane_current_path}" \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session calcure;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E -d "#{pane_current_path}" \
+        -E "tmux attach -t $session"
+    fi
+  fi
+
+}
+open_ps_btop() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  session="tmp_btop"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session btop;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E -d "#{pane_current_path}" \
+        -E "tmux attach -t $session"
+    fi
+  fi
+}
+open_ps_lsof() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  session="tmp_lsof"
+
+  if ! session_exists "$session"; then
+
+    fzf_preview_cmd="ps -o pcpu,pmem,vsz,rss,thcount,start_time,time -p {2}"
+
+    SELECT_PS=$(
+      ps -eo user,pid,ppid,pgid,stat,tname,cmd | awk '
+     BEGIN { "ps -p $$ -o pgid --no-headers | tr -d \"[:blank:]\"" | getline pgid } {
+         if ($4 != pgid || $2 == pgid)
+             print
+     }' | grcat fps.grc | fzf-tmux -xC -w '80%' -h '80%' -y '55%' --header-lines=1 -m --ansi \
+        --height=80% \
+        --min-height=15 --tac --reverse \
+        --preview "$fzf_preview_cmd" \
+        --preview-window down:10%:nohidden,border-top |
+        awk -v sep="${myflag:- }" '{ printf "%s%c", $2, sep }' |
+        sed -E "s/${myflag:- }$//"
+    )
+
+    [[ -z $SELECT_PS ]] && exit
+
+    output=""
+
+    # Memecah string input berdasarkan koma dan spasi
+    IFS=", " read -ra words <<<"$SELECT_PS"
+
+    # Memeriksa panjang array words
+    if [ ${#words[@]} -eq 1 ]; then
+      # Jika hanya satu string, tidak perlu mengubah format
+      output="$SELECT_PS"
+    else
+      # Jika lebih dari satu string, konversi sesuai dengan format yang diinginkan
+      for word in "${words[@]}"; do
+        output+=" -p $word"
+      done
+    fi
+
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E "tmux attach -t $session"
+      # -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
+    fi
+
+  fi
+}
+open_systemctl_ui() {
+  session="tmp_szy"
+
+  tmux display-popup -d '#{pane_current_path}' -w '80%' -h '90%' -y '80%' \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -b rounded \
+    -E -d "#{pane_current_path}" \
+    -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
+}
+open_lazydocker() {
+  tmux display-popup -d '#{pane_current_path}' \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -E -w 90% -h 90% \
+    "lazydocker"
+}
+open_lazygit() {
+  tmux display-popup -d '#{pane_current_path}' \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -E -w 90% -h 90% \
+    "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml" # Open Lazygit inside popup
+}
+
+#  +----------------------------------------------------------+
+#  |                           TMUX                           |
+#  +----------------------------------------------------------+
+
+tmux_clock_mode() {
+  GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
+  if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
+    tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
+    tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
+    if command -v tclock &>/dev/null; then
+      CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+      tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+    else
+      tmux clock-mode
+    fi
+    _go_up
+    _go_left
+  else
+    _go_right
+
+    # cs=$(tmux display-message -p "#{pane_current_command}")
+    # dunstify "$cs"
+
+    if _check_pane_is_nvim; then
+      tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
+    fi
+
+    if _check_pane_is_nnn; then
+      _go_right
+      tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
+    fi
+
+    if _check_pane_is_yazi; then
+      tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}'
+
+      if command -v tclock &>/dev/null; then
+        CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+        tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+      else
+        tmux clock-mode
+      fi
+
+      _go_left
+      exit
+    fi
+
+    if _check_pane_is_zsh; then
+      tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
+      if command -v tclock &>/dev/null; then
+        CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+        tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+      else
+        tmux clock-mode
+      fi
+      _go_up
+      _go_left
+    fi
+  fi
+}
+tmux_toggle_status() {
+  tmux set-option -g status
+}
+tmux_toggle_synchronize_panes() {
+  file_sync="/tmp/.tmux_toggle_synchronize_panes"
+  [[ ! -f $file_sync ]] && touch "$file_sync" && tmux set-window-option synchronize-panes on \; display 'Synchronize Begin Now!' && exit
+  [[ -f $file_sync ]] && rm "$file_sync" && tmux set-window-option synchronize-panes off \; display 'Synchronize End!' && exit
+}
+tmux_select_sess() {
+  # session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf-tmux -xC -w '50%' -h '40%' --exit-0)
+  # [[ -z $session ]] && exit
+  # tmux switch-client -t "$session"
+  SELECT_SESS=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf-tmux -xC -w '50%' -h '40%' --exit-0 --prompt="Select Session> ")
+  [[ -z $SELECT_SESS ]] && exit
+
+  tmux switch-client -t "$SELECT_SESS"
+}
+tmux_create_sess() {
+  DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
+  MARKED_PWD="$DROPBOX_PATH/marked-pwd"
+
+  select=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Create New Session> ' <"$MARKED_PWD")
+
+  [[ -z $select ]] && exit
+  [[ ! -d $select ]] && notify-send "Path: $select" "Not found!" && exit
+
+  ss_name=$(basename "$select" | sed -e "s/\./\_/g")
+
+  session_exists() {
+    tmux has-session -t "=$ss_name"
+  }
+
+  if ! session_exists; then
+    tmux new-session -d -s "$ss_name" -c "$select"
+  fi
+
+  tmux switch-client -t "$ss_name"
+  notify-send "create new session and detach --> $ss_name"
+}
+
+#  +----------------------------------------------------------+
+#  |                         MENULIST                         |
+#  +----------------------------------------------------------+
+
+callme() {
+  MENULIST=" calc\n calcure\n ps-lsof\n systemctlUI\n btop"
+  MENULIST="$MENULIST\n toggle-status\n toggle-synchronize-panes\n clock-mode\n select-session"
+  MENULIST="$MENULIST\n rkill\n multilog\n newsboat\n apt-search"
+
+  selected=$(echo -e "$MENULIST" | fzf-tmux -xC -w '60%' -h '50%' --prompt="⚡ " --border-label ' ALT-O ')
+  [[ -z $selected ]] && exit
+
+  select=$(echo "$selected" | cut -d " " -f 2)
+
+  case $select in
+  "calc") open_calc ;;
+  "calcure") open_calcure ;;
+  "ps-lsof") open_ps_lsof ;;
+  "btop") open_ps_btop ;;
+  "systemctlUI") open_systemctl_ui ;;
+  "clock-mode") tmux_clock_mode ;;
+  "select-session") tmux_select_sess ;;
+  "toggle-status") tmux_toggle_status ;;
+  "toggle-synchronize-panes") tmux_toggle_synchronize_panes ;;
+  "apt-search") show_apt_search ;;
+  "rkill") open_rkill ;;
+  "multilog") open_mutlilog ;;
+  "newsboat") open_newsboat ;;
+  *) exit ;;
+  esac
+}
+
+"$@"

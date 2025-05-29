@@ -1,0 +1,81 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
+# Main background, empty for terminal default, need to be empty if you want transparent background
+theme[main_bg]="#2a2520"
+
+# Main text color
+theme[main_fg]="#ece1d7"
+
+# Title color for boxes
+theme[title]="#7b9695"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#bd8183"
+
+# Color cursorline
+theme[selected_fg]="#2a2520"
+theme[selected_bg]="#e49b5d"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#342f2a"
+
+# Color of text appearing on top of graphs, i.e uptime and current network graph scaling
+theme[graph_text]="#F2D5CF"
+
+# Background color of the percentage meters
+theme[meter_bg]="#f1e6dc"
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#F2D5CF"
+
+# CPU, Memory, Network, Proc box outline colors
+theme[cpu_box]="#433b33"
+theme[mem_box]="#433b33"
+theme[net_box]="#433b33"
+theme[proc_box]="#433b33"
+theme[div_line]="#433b33"
+
+# Temperature graph color (Green -> Yellow -> Red)
+theme[temp_start]="#a7c080"
+theme[temp_mid]="#dbbc7f"
+theme[temp_end]="#f85552"
+
+# CPU graph colors (Teal -> Lavender)
+theme[cpu_start]="#a7c080"
+theme[cpu_mid]="#dbbc7f"
+theme[cpu_end]="#f85552"
+
+# Mem/Disk free meter (Mauve -> Lavender -> Blue)
+theme[free_start]="#f85552"
+theme[free_mid]="#dbbc7f"
+theme[free_end]="#a7c080"
+
+# Mem/Disk cached meter (Sapphire -> Lavender)
+theme[cached_start]="#7fbbb3"
+theme[cached_mid]="#83c092"
+theme[cached_end]="#a7c080"
+
+# Mem/Disk available meter
+theme[available_start]="#f85552"
+theme[available_mid]="#dbbc7f"
+theme[available_end]="#a7c080"
+
+# Mem/Disk used meter
+theme[used_start]="#a7c080"
+theme[used_mid]="#dbbc7f"
+theme[used_end]="#f85552"
+
+# Download graph colors
+theme[download_start]="#8da101"
+theme[download_mid]="#83c092"
+theme[download_end]="#a7c080"
+
+# Upload graph colors
+theme[upload_start]="#f85552"
+theme[upload_mid]="#dbbc7f"
+theme[upload_end]="#a7c080"
+
+# Process box color gradient for threads, mem and cpu usage
+theme[process_start]="#a7c080"
+theme[process_mid]="#f85552"
+theme[process_end]="#CC241D"

@@ -1,0 +1,15 @@
+!fuck
+# Prevent suggesting these words
+cacheable
+crap
+dbaeumer
+esbenp
+flagger
+flaggy
+lama
+maka
+shit
+crate
+Crate
+dosen
+samping

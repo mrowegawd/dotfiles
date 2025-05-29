@@ -1,0 +1,91 @@
+; vim: foldmethod=marker foldlevel=0 ft=dosini
+; ░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄
+; ░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄
+; ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
+; #########################################
+; check --> https://github.com/polybar/polybar-scripts/tree/master/polybar-scripts
+[global/wm]
+margin-bottom       = 0
+margin-top          = 0
+
+include-file = ~/.config/polybar/bar/modules.ini
+
+[bar/top]
+monitor = ${env:MONITOR:}
+monitor-fallback =
+monitor-strict = false
+override-redirect = false
+wm-restack = bspwm
+bottom = false
+fixed-center = true
+width = 100%
+height = 25
+; offset bikin bar jadi floating : 1 %
+offset-x = 0%
+offset-y = 0%
+background = ${color.background}
+foreground = ${color.foreground}
+padding-left = 1
+padding-right = 2
+radius-top = 0.0
+radius-bottom = 0.0
+underline-size = 2
+underline-color = #bebebe
+border-size = 0
+border-color = #2a2a2a
+module-margin-left = 1
+module-margin-right = 1
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; Fonts
+font-0              = Iosevka Nerd Font:style=Medium:size=8;1
+; font-0              = "JetBrainsMono Nerd Font:style=Medium:pixelsize=8;1"
+font-1              = TerminessTTF Nerd Font:size=8;1
+font-2              = Siji:size=4:fontformat=truetype;1
+font-3              = Siji:size=8:fontformat=truetype;1
+font-4              = Siji:size=15:fontformat=truetype;1
+font-5              = Wucon Siji:size=8;1
+; modules-right     = pomo pulseaudio updates network memory filesystem powermenu
+; modules-left        = appmenu round-left bspwm round-right round-left mpd  round-right
+; modules-right       = cpu cpu-load pulseaudio round-left updates network temperature memory filesystem round-right round-left time round-right powermenu
+; modules-right       = record-ffmpeg pulseaudio round-left youtube_count updates network temperature memory filesystem round-right round-left time round-right powermenu
+modules-left = appmenu mod bspwm mpd
+modules-right = pulseaudio info-docker updates memory transmission filesystem check-network date powermenu
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; General
+separator =
+dim-value = 1.0
+; wm-name = bspwm
+locale =
+tray-position = right
+tray-detached = false
+tray-maxsize = 16
+tray-offset-x = 0
+tray-offset-y = 0
+tray-padding = 0
+tray-scale = 1.0
+tray-background = ${color.background}
+enable-ipc = true
+click-left =
+click-middle =
+click-right =
+scroll-up =
+scroll-down =
+double-click-left =
+double-click-middle =
+double-click-right =
+cursor-click =
+cursor-scroll =
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+;; Application Settings
+[settings]
+throttle-output = 5
+throttle-output-for = 10
+screenchange-reload = false
+compositing-background = source
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+pseudo-transparency = false
