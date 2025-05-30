@@ -7,20 +7,7 @@
 -- https://base2t.one
 
 return {
-  {
-    "kamwitsta/vinyl.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local vinyl_theme = { "vinyl" }
-      if vim.tbl_contains(vinyl_theme, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = true,
-  },
-  -- Using Lazy
+  -- KANSO.NVIM
   {
     "webhooked/kanso.nvim",
     lazy = false,
