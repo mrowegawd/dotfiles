@@ -26,6 +26,8 @@ return {
           { "<Leader>f", group = "fzflua" },
 
           { "<Leader>g", group = "git" },
+          { "<Leader>gl", group = "lazygit" },
+
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
           { "<Leader>go", group = "open" },

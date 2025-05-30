@@ -2454,14 +2454,6 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       --
       {
         NormalBoxComment = {
@@ -2541,7 +2533,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
 
       -- TROUBLE
       {
@@ -2556,7 +2548,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.34, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.35, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
@@ -2598,10 +2590,18 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -4653,7 +4653,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.8 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -4757,7 +4757,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.9 },
+          fg = { from = "Normal", attr = "bg", alter = 2.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.6 },
           reverse = false,
         },
@@ -4768,7 +4768,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.52 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.65 }, bg = "NONE" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -4800,10 +4800,10 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.8 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.2 } } },
+      { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.5 } } },
-      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
+      { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
     },
     ["base46-rosepine"] = {
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.6 }, bold = true } },
