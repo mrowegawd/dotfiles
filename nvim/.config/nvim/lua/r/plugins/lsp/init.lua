@@ -2,7 +2,7 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = "LazyFile",
+    event = "VeryLazy", -- LazyFile
     dependencies = {
       "mason.nvim",
       { "mason-org/mason-lspconfig.nvim", config = function() end },
