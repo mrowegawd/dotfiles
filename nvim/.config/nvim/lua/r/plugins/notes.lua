@@ -30,7 +30,7 @@ return {
     opts = function()
       local Highlight = require "r.settings.highlights"
       local done_hi = Highlight.get("Comment", "fg")
-      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("KeywordMatch", "fg"))
+      -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
       local todo_fg = Highlight.get("KeywordMatch", "fg")
       return {
         ui = {
@@ -93,7 +93,7 @@ return {
           STATUS = ":foreground black :background magenta :weight bold :slant",
           DONE = ":foreground " .. done_hi .. " :weight bold :slant",
 
-          PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
+          PROGRESS = ":foreground white :background red :weight bold :slant italic",
           LEARNING = ":foreground black :background yellow :weight bold :slant",
         },
         org_agenda_skip_scheduled_if_done = true,
