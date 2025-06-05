@@ -184,7 +184,7 @@ return {
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>or",
-            org_capture_kill = { "q", "<ESC>" },
+            org_capture_kill = "<Leader><TAB>",
             org_capture_show_help = "?",
           },
           note = {

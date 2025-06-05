@@ -57,6 +57,13 @@ RUtils.cmd.augroup("SmartClose", {
     "org",
   },
   command = function(event)
+    -- Do not use the 'q' key as a keymap for this filetype IF they window is floating
+    local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+    local exclude_ft = { "org" }
+    if vim.tbl_contains(exclude_ft, vim.bo.filetype) and is_float then
+      return
+    end
+
     vim.bo[event.buf].buflisted = false
     if vim.api.nvim_buf_is_valid(event.buf) then
       vim.keymap.set("n", "q", function()
