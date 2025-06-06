@@ -127,7 +127,7 @@ return {
         { RenderMarkdownH6Bg = { fg = "NONE", bg = "NONE", reverse = false } },
       })
       return {
-        bullet = { enabled = true },
+        bullet = { icons = { "", "•", "", "-", "-" } },
         code = {
           sign = false,
           width = "block",
@@ -138,15 +138,22 @@ return {
           right_pad = 1,
           left_pad = 1,
         },
-        render_modes = { "n", "c", "t", "i" },
+        -- render_modes = { "n", "c", "t", "i" },
+        render_modes = true,
         anti_conceal = {
-          enabled = true,
           ignore = {
-            code_background = false,
-            sign = true,
+            bullet = { "n" },
+            callout = { "n" },
+            check_icon = { "n" },
+            check_scope = { "n" },
+            code_language = { "n" },
+            dash = { "n" },
+            head_icon = { "n" },
+            link = { "n" },
+            quote = { "n" },
+            table_border = { "n" },
           },
         },
-        latex = { enabled = false },
         heading = {
           enabled = true,
           sign = false,
@@ -154,10 +161,10 @@ return {
           icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
           -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
         },
-        quote = {
-          -- Turn on / off block quote & callout rendering
-          enabled = true,
-        },
+        quote = { icon = "▐" },
+        pipe_table = { cell = "raw" },
+        latex = { enabled = false },
+        html = { comment = { conceal = false } },
         overrides = {
           filetype = {
             -- CodeCompanion
