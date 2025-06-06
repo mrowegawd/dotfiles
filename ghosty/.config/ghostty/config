@@ -77,6 +77,9 @@ unfocused-split-opacity         = 0.5
 keybind = unconsumed:alt+ctrl+c=copy_to_clipboard
 keybind = unconsumed:alt+ctrl+v=paste_from_clipboard
 keybind = ctrl+enter=unbind
+keybind = ctrl+equal=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1
+keybind = ctrl+zero=reset_font_size
 # keybind = alt+m=toggle_split_zoom
 # keybind = ctrl+shift+comma=reload_config
 # keybind = alt+shift+r=reload_config
