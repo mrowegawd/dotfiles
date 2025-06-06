@@ -158,6 +158,43 @@ return {
           -- Turn on / off block quote & callout rendering
           enabled = true,
         },
+        overrides = {
+          filetype = {
+            -- CodeCompanion
+            codecompanion = {
+              heading = {
+                icons = { "󰪥 ", "  ", " ", " ", " ", "" },
+                custom = {
+                  codecompanion_input = {
+                    pattern = "^## Me$",
+                    icon = " ",
+                    background = "CodeCompanionInputHeader",
+                  },
+                },
+              },
+              html = {
+                tag = {
+                  buf = {
+                    icon = "󰌹 ",
+                    highlight = "Comment",
+                  },
+                  image = {
+                    icon = "󰥶 ",
+                    highlight = "Comment",
+                  },
+                  file = {
+                    icon = "󰨸 ",
+                    highlight = "Comment",
+                  },
+                  url = {
+                    icon = " ",
+                    highlight = "Comment",
+                  },
+                },
+              },
+            },
+          },
+        },
       }
     end,
   },

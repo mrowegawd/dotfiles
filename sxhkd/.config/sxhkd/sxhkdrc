@@ -185,7 +185,7 @@ super + shift + y
 
 # misc: open translate with nvim
 super + shift + o
-        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
 
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
         #
