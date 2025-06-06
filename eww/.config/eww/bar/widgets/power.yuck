@@ -52,8 +52,7 @@
 
         (button
             :class "icon power-button"
-            ; :onclick "systemctl poweroff" ""))))
-            :onclick "dunstify 'hello'" "")
+            :onclick "$HOME/.config/rofi/powermenu/poweroff" "")
         )
     )
   )
