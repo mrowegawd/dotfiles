@@ -133,6 +133,12 @@ return {
     },
     keys = {
       {
+        "<Leader>ac",
+        ":CodeCompanion ",
+        desc = "CodeCompanion: run :CodeCompanion command in normal or visual mode",
+        mode = { "n", "v" },
+      },
+      {
         "<Leader>aa",
         function()
           focus_or_toggle_chat()
