@@ -33,6 +33,7 @@ return {
         "base46-chocolate",
         "base46-default-dark",
         "base46-doomchad",
+        "base46-everforest",
         "base46-horizon",
         "base46-jabuti",
         "base46-jellybeans",
