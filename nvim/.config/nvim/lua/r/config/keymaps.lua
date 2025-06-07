@@ -160,6 +160,10 @@ RUtils.map.nnoremap("gl", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf()
 end, { desc = "Buffer/Qf: magic gl" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
+RUtils.map.nnoremap("<Leader>R", function()
+  vim.cmd [[wall!]]
+  vim.cmd [[restart]]
+end, { desc = "Buffer: restart nvim" })
 RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 RUtils.map.nnoremap("<Leader>b?", RUtils.map.show_help_buf_keymap, {
   desc = "Buffer: show keymaps curbuf",
