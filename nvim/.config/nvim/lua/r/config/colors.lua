@@ -817,6 +817,7 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
+    { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
     {
       MyCodeUsage = {
         fg = { from = "Keyword", attr = "fg", alter = 0.1 },

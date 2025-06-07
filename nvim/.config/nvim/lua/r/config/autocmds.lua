@@ -225,10 +225,10 @@ RUtils.cmd.augroup("DisableJsonConceal", {
 RUtils.cmd.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
-    vim.highlight.on_yank {
+    (vim.hl or vim.highlight).on_yank {
       timeout = 200,
       on_visual = true,
-      higroup = "NvimInternalError",
+      higroup = "YankInk",
     }
   end,
 })
