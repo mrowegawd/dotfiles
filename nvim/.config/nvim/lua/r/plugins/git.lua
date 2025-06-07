@@ -426,6 +426,16 @@ return {
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
       },
+      {
+        "<Leader>bl",
+        function()
+          vim.cmd "0,3Git blame"
+          vim.cmd "wincmd j"
+          vim.cmd "normal! 5j"
+          vim.cmd "25 wincmd _"
+        end,
+        desc = "Buffer: open git blame for curbuf [fugitive]",
+      },
     },
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
