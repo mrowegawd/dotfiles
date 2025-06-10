@@ -54,18 +54,6 @@ return {
       return false
     end,
   },
-  -- DARKEARTH
-  {
-    "ptdewey/darkearth-nvim",
-    priority = 1000,
-    enabled = function()
-      local darkearth_theme = { "darkearth" }
-      if vim.tbl_contains(darkearth_theme, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- ASHEN
   {
     "ficcdaf/ashen.nvim",

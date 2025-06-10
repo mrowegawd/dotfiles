@@ -476,8 +476,9 @@ set_zshrc() {
   fi
 
   colorline="$GET_COL_32"
-  colorsugest="$GET_COL_37"
-  if [ "$1" == "zenburned" ] || [ "$1" == "base46-seoul256_dark" ]; then
+  colorsugest="$GET_COL_45"
+
+  if [ "$1" == "zenburned" ]; then
     colorline="$GET_COL_18"
     colorsugest="$GET_COL_31"
   fi
@@ -488,11 +489,43 @@ set_zshrc() {
   fi
 
   if [ "$1" == "lackluster" ]; then
+    colorline="$GET_COL_30"
     colorsugest="$GET_COL_19"
   fi
 
-  if [ "$1" == "base46-ayu_dark" ]; then
-    colorline="$GET_COL_34"
+  if [ "$1" == "base46-chocolate" ]; then
+    colorsugest="$GET_COL_28"
+  fi
+
+  if [ "$1" == "ashen" ]; then
+    colorline="$GET_COL_38"
+    colorsugest="$GET_COL_19"
+  fi
+
+  if [ "$1" == "base46-horizon" ]; then
+    colorline="$GET_COL_45"
+    colorsugest="$GET_COL_19"
+  fi
+
+  if [ "$1" == "base46-everforest" ] || [ "$1" == "base46-seoul256_dark" ]; then
+    colorsugest="$GET_COL_31"
+  fi
+
+  if [ "$1" == "base46-melange" ]; then
+    colorline="$GET_COL_31"
+    colorsugest="$GET_COL_21"
+  fi
+
+  if [ "$1" == "tokyonight-night" ]; then
+    colorline="$GET_COL_31"
+  fi
+
+  if [ "$1" == "base46-ayu_dark" ] || [ "$1" == "base46-catppuccin" ] || [ "$1" == "base46-default-dark" ]; then
+    colorline="$GET_COL_28"
+  fi
+
+  if [ "$1" == "base46-rosepine" ]; then
+    colorline="$GET_COL_38"
     colorsugest="$GET_COL_21"
   fi
 

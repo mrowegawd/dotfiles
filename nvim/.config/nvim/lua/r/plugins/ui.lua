@@ -258,7 +258,6 @@ return {
           ["base46-seoul256_dark"] = { { ["BeaconDefault"] = { bg = "#d75f87" } } },
           ["base46-solarized_dark"] = { { ["BeaconDefault"] = { bg = "#708284" } } },
           ["base46-zenburn"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
-          ["darkearth"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
           ["nord"] = { { ["BeaconDefault"] = { bg = "#eceff4" } } },
           ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
