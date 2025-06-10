@@ -135,7 +135,7 @@ return {
       {
         "<Leader>ac",
         ":CodeCompanion ",
-        desc = "CodeCompanion: run :CodeCompanion command in normal or visual mode",
+        desc = "Codecompanion: run :CodeCompanion command in normal or visual mode",
         mode = { "n", "v" },
       },
       {
@@ -146,9 +146,49 @@ return {
         desc = "Codecompanion: toggle open",
       },
       {
-        "<Leader>aF",
+        "<Leader>aA",
         "<CMD>CodeCompanionActions<CR>",
         desc = "Codecompanion: select actions",
+      },
+      {
+        "<leader>aF",
+        function()
+          local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
+          return require("fzf-lua").files {
+            prompt = RUtils.fzflua.default_title_prompt(),
+            winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
+            cwd = codecompanion_cwd,
+            fzf_opts = {
+              ["--header"] = [[CTRL-R:rgflow  CTRL-G:Grep_codecompanion  CTRL-G:DeleteFile_codecompanion  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-U:toggle-hidden]],
+            },
+
+            actions = {
+              ["ctrl-g"] = function()
+                require("fzf-lua").live_grep_glob {
+                  winopts = { title = RUtils.fzflua.format_title("Grep: Codecompanion Saved", "󰈙") },
+                  cwd = codecompanion_cwd,
+                }
+              end,
+              ["ctrl-x"] = function(selected, _)
+                local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(selected[1])
+                if vim.fn.filereadable(file_path) ~= 1 then
+                  RUtils.error("File does not exist: " .. file_path, { title = "Codecompanion File Saved" })
+                  return
+                end
+
+                local ok, err = os.remove(file_path)
+                if not ok then
+                  RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
+                  return
+                end
+
+                RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
+                require("fzf-lua").actions.resume()
+              end,
+            },
+          }
+        end,
+        desc = "Codecompanion: find and grep previous chats",
       },
       {
         "<Leader>af",
@@ -303,11 +343,23 @@ return {
               },
               clear = {
                 modes = {
-                  n = "C",
+                  n = "<Leader>C",
+                  i = "<Leader>C",
                 },
-                index = 6,
+                index = 4,
                 callback = "keymaps.clear",
                 description = "Clear Chat",
+              },
+              close = {
+                modes = {
+                  n = "<C-c>",
+                  i = "<C-c>",
+                },
+                index = 5,
+                callback = function()
+                  return {}
+                end,
+                description = "The <c-c> mapping is disabled",
               },
               --   codeblock = {
               --     modes = {
@@ -383,7 +435,7 @@ return {
               pinned_buffer = " ",
               watched_buffer = " ",
             },
-            -- window = {
+            -- window = { -- Atm, using a floating window may cause conflicts when using 'translate' for the browser
             --   layout = "float",
             --   border = "rounded",
             --   height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
