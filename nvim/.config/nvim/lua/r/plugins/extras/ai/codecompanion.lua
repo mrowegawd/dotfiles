@@ -209,6 +209,7 @@ return {
 
             -- Git stuff
             git_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            -- git_commit_our = { cmd = "CodeCompanion /write_commit", ft = {} },
             git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = {} },
 
             -- Write doc
@@ -494,6 +495,42 @@ return {
               },
             },
           },
+
+          --           ["Write Commit Message"] = {
+          --             strategy = "inline",
+          --             description = "Writes commit message on gitcommit buffer",
+          --             opts = {
+          --               index = 10,
+          --               is_default = false,
+          --               is_slash_cmd = false,
+          --               short_name = "write_commit",
+          --               auto_submit = false,
+          --             },
+          --             prompts = {
+          --               {
+          --                 role = "user",
+          --                 content = function()
+          --                   return string.format(
+          --                     [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please @editor generate a commit message for me inside of the current #buffer:
+          --
+          -- ```diff
+          -- %s
+          -- ```
+          --
+          -- And the previous 10 commits, just in case they're related to the current changes:
+          -- ```gitcommit
+          -- %s
+          -- ```]],
+          --                     vim.fn.system "git diff --no-ext-diff --staged",
+          --                     vim.fn.system "git log -n 10"
+          --                   )
+          --                 end,
+          --                 opts = {
+          --                   contains_code = false,
+          --                 },
+          --               },
+          --             },
+          --           },
 
           -- Fix, correct, improve the sentence, ToDo, or Wiki entry in either English or Indonesian.
           ["Fix this sentence in properly English"] = {
