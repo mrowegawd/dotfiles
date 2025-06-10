@@ -28,6 +28,8 @@ return {
           { "<Leader>g", group = "git" },
           { "<Leader>gl", group = "lazygit" },
 
+          { "<Leader>j", group = "jumpTo" },
+
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
           { "<Leader>go", group = "open" },

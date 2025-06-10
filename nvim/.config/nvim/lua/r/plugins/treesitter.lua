@@ -143,7 +143,7 @@ return {
         desc = "Toggle: treesitter context",
       },
       {
-        "gC",
+        "<Leader>jc",
         function()
           require("treesitter-context").go_to_context()
           vim.cmd "normal! zt" -- move the cursor line to the top of the window
