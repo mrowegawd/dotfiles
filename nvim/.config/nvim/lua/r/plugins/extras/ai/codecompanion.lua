@@ -383,16 +383,16 @@ return {
               pinned_buffer = " ",
               watched_buffer = " ",
             },
-            window = {
-              layout = "float",
-              border = "rounded",
-              height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
-              width = 0.45,
-              relative = "editor",
-              col = vim.o.columns, -- right position
-              row = 1,
-              opts = {},
-            },
+            -- window = {
+            --   layout = "float",
+            --   border = "rounded",
+            --   height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
+            --   width = 0.45,
+            --   relative = "editor",
+            --   col = vim.o.columns, -- right position
+            --   row = 1,
+            --   opts = {},
+            -- },
             debug_window = {
               width = math.floor(vim.o.columns * 0.535),
               height = vim.o.lines - 4,
