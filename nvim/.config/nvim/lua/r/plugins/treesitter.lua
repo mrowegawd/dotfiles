@@ -142,6 +142,14 @@ return {
         end,
         desc = "Toggle: treesitter context",
       },
+      {
+        "gC",
+        function()
+          require("treesitter-context").go_to_context()
+          vim.cmd "normal! zt" -- move the cursor line to the top of the window
+        end,
+        desc = "JumpTo: treesitter context and align to top",
+      },
     },
     opts = function()
       local Highlight = require "r.settings.highlights"
