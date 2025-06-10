@@ -17,9 +17,9 @@ return {
     -- end,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
-      { "<space><space>", desc = "Misc: increment selection [treesitter]", unique = true },
-      { "<bs>", desc = "Misc: decrement selection (xmode) [treesitter]", mode = "x" },
-      { "<cr>", desc = "Misc: increment selection (xmode) [treesitter]", mode = "x" },
+      { "<c-a>", desc = "Misc: increment selection [treesitter]", unique = true },
+      { "<c-a>", desc = "Misc: increment selection [treesitter] (xmode)", mode = "x" },
+      { "<bs>", desc = "Misc: decrement selection [treesitter] (xmode)", mode = "x" },
     },
     opts_extend = { "ensure_installed" },
     ---@type TSConfig
