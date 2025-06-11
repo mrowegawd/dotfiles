@@ -137,12 +137,12 @@ RUtils.cmd.augroup("WindowBehaviour", {
   end,
 })
 
-local auto_fold_filetypes = { "org" } -- markdown
-RUtils.cmd.augroup("AutoFoldOnBufEnterOrRead", {
+local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
+RUtils.cmd.augroup("AutoFoldOnBufferEvents", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",
   command = function(event)
-    if vim.tbl_contains(auto_fold_filetypes, vim.bo[event.buf].filetype) then
+    if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
       vim.cmd [[normal! zMzvzz]]
     end
   end,

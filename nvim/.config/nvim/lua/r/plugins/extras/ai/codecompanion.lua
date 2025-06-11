@@ -969,14 +969,31 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
             strategy = "chat",
             description = "Give betting naming for the provided code snippet",
             opts = {
+              modes = { "v" },
               short_name = "better_naming",
-              auto_submit = false,
+              auto_submit = true,
               is_slash_cmd = true,
+              user_prompt = false,
+              stop_context_insertion = true,
             },
             prompts = {
               {
                 role = "user",
-                content = "Please provide better names for the following variables and functions.",
+                content = function(context)
+                  local header =
+                    "Please suggest more descriptive and meaningful names for the following variables and functions:"
+                  local body = code_block_delimiter
+                    .. context.filetype
+                    .. "\n"
+                    .. get_selected_lines(context)
+                    .. newline
+                    .. code_block_delimiter
+
+                  return header .. newline .. body .. newline
+                end,
+                opts = {
+                  contains_code = true,
+                },
               },
             },
           },
