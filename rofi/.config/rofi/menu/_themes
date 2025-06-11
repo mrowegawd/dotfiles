@@ -483,12 +483,12 @@ set_zshrc() {
     colorsugest="$GET_COL_31"
   fi
 
-  if [ "$1" == "base46-jellybeans" ] || [ "$1" == "kanso-ink" ] || [ "$1" == "base46-oxocarbon" ]; then
+  if [ "$1" == "base46-jellybeans" ] || [ "$1" == "base46-oxocarbon" ]; then
     colorline="$GET_COL_28"
     colorsugest="$GET_COL_19"
   fi
 
-  if [ "$1" == "lackluster" ]; then
+  if [ "$1" == "lackluster" ] || [ "$1" == "kanso-ink" ]; then
     colorline="$GET_COL_30"
     colorsugest="$GET_COL_19"
   fi
