@@ -310,7 +310,7 @@ function M.get()
         fzf_lua.lsp_definitions {
           prompt = RUtils.fzflua.default_title_prompt(),
           winopts = {
-            title = RUtils.fzflua.format_title("LSP: Peek", RUtils.config.icons.misc.lsp),
+            title = RUtils.fzflua.format_title("LSP: Peek [fzflua]", RUtils.config.icons.misc.lsp),
             relative = "editor",
             backdrop = 60,
             height = 0.80,
