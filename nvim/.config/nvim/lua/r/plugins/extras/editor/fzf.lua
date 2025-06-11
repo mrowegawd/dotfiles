@@ -116,7 +116,25 @@ return {
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "v" } },
 
       { "<Leader>bg", function() require("fzf-lua").blines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf [fzflua]" },
-      { "<Leader>bg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
+      {
+        "<Leader>bg",
+        function()
+          local visual_selection = RUtils.cmd.get_visual_selection { strict = true }
+
+          -- Kita harus membuat simulasi cursor itu harus keluar dari visual mode dengan memakai mapping <esc> 
+          -- lalu dikombinasikan dengan memakai `vim.schedule`.
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, true, true), "n", false)
+          vim.schedule(function()
+            if not visual_selection or not visual_selection.selection or visual_selection.selection == "" then
+              RUtils.warn("cannot execute: an error occurred..?", { title ="Fzflua Blines" } )
+              return
+            end
+            require("fzf-lua").blines { query = visual_selection.selection, fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }
+          end)
+        end,
+        desc = "Buffer: live grep on curbuf (visual) [fzflua]",
+        mode = { "v" },
+      },
       { "<Leader>bG", function() require("fzf-lua").lines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers [fzflua]" },
       { "<Leader>bG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
       { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: command history [fzflua]" },
