@@ -124,12 +124,14 @@ return {
       { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
       { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
       { "<Leader>fL", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
-      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Picker: jumps [fzflua]" },
-      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Picker: marks [fzflua]" },
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Picker: man pages [fzflua]" },
       { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
       { "<Leader>fH", function() require("fzf-lua").help_tags() end, desc = "Picker: help [fzflua]" },
       { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Picker: keymaps [fzflua]" },
+
+      -- Jump To
+      { "<Leader>jm", function() require("fzf-lua").marks() end, desc = "JumpTo: marks [fzflua]" },
+      { "<Leader>jj", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
 
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 

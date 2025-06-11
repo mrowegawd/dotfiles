@@ -412,10 +412,7 @@ return {
         desc = "Note: search global titles [obsidian]",
       },
     },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
       workspaces = {
