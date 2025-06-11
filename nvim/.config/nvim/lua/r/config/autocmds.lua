@@ -5,13 +5,13 @@ local cmd = vim.cmd
 ---------------------------------
 RUtils.cmd.augroup("LSPUserBehaviour", {
   event = "LspDetach",
-  command = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
+  command = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
     if not client or not client.attached_buffers then
       return
     end
     for buf_id in pairs(client.attached_buffers) do
-      if buf_id ~= args.buf then
+      if buf_id ~= event.buf then
         return
       end
     end
@@ -19,8 +19,8 @@ RUtils.cmd.augroup("LSPUserBehaviour", {
   end,
 }, {
   event = "LspAttach", -- remove copilot client, fuck it
-  command = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
+  command = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client.name == "copilot" then
       -- vim.notify("Copilot has been detached", vim.log.levels.WARN)
       client:stop()
@@ -137,11 +137,12 @@ RUtils.cmd.augroup("WindowBehaviour", {
   end,
 })
 
-RUtils.cmd.augroup("ManageFoldMarkdownAndOrg", {
+local auto_fold_filetypes = { "org" } -- markdown
+RUtils.cmd.augroup("AutoFoldOnBufEnterOrRead", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",
-  command = function(ctx)
-    if vim.tbl_contains({ "markdown", "org" }, vim.bo[ctx.buf].filetype) then
+  command = function(event)
+    if vim.tbl_contains(auto_fold_filetypes, vim.bo[event.buf].filetype) then
       vim.cmd [[normal! zMzvzz]]
     end
   end,
@@ -236,9 +237,9 @@ RUtils.cmd.augroup("TextYankHighlight", {
 RUtils.cmd.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
-  command = function(args)
+  command = function(event)
     local exclude = { "gitcommit", "Glance", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage", "qf" }
-    local buf = args.buf
+    local buf = event.buf
     if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
       return
     end
