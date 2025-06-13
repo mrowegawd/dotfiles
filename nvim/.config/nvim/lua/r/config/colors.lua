@@ -68,7 +68,7 @@ end
 
 reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
-  cursorline_alter = 0.05,
+  cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.1,
   fzfluaborder_fg_alter = -0.1,
   fzfluasel_bg_alter = -0.15,
@@ -363,7 +363,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
-  fzfluaborder_fg_alter = -0.35,
+  fzfluaborder_fg_alter = -0.4,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.45,
   pmenu_fg_alter = 0.1,
@@ -1940,9 +1940,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-
       -- STATUSLINE
       {
         StatusLine = {
@@ -1989,8 +1986,20 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.8 },
-          bg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.22 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
         },
       },
 
@@ -2106,9 +2115,6 @@ local function colorscheme_overrides()
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
@@ -2172,6 +2178,18 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.13 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2303,6 +2321,15 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
@@ -2465,9 +2492,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
@@ -2526,6 +2550,18 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
             -0.15
           ),
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
         },
       },
 
@@ -2626,9 +2662,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
@@ -2672,7 +2705,7 @@ local function colorscheme_overrides()
       },
       {
         NoiceCmdline = {
-          fg = { from = "StatusLine", attr = "fg", alter = 1 },
+          fg = { from = "StatusLine", attr = "fg", alter = 1.5 },
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
@@ -2704,6 +2737,18 @@ local function colorscheme_overrides()
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
         },
       },
 
@@ -2824,9 +2869,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-
       -- DIFFVIEW
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
 
@@ -2877,7 +2919,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 
@@ -2888,6 +2930,18 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -3016,7 +3070,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.16 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.16 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.58 } } },
@@ -3130,7 +3193,7 @@ local function colorscheme_overrides()
 
       -- SNACKS
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.23 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.15 } } },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
@@ -3186,7 +3249,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.16 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -3346,9 +3418,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
-
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
@@ -3411,6 +3480,18 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -3531,7 +3612,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
@@ -3715,7 +3805,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.6 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- STATUSLINE
       {
@@ -3757,7 +3856,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
@@ -3883,7 +3982,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.22 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(Highlight.get("Error", "bg"), 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(Highlight.get("Error", "bg"), 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.63 } } },
@@ -4061,7 +4169,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.5),
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- STATUSLINE
       {
@@ -4216,7 +4333,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.5),
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- STATUSLINE
       {
@@ -4400,7 +4526,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "bg", alter = 0.8 },
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -4561,7 +4696,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = "white",
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- STATUSLINE
       {
@@ -4742,7 +4886,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.darken(dark_red, 0.5, Highlight.get("Normal", "fg")),
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.75 } } },
@@ -4788,7 +4941,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -4939,7 +5092,16 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = "white",
+          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -5109,7 +5271,14 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "bg", alter = 1 },
+          bg = Highlight.darken(Highlight.get("Error", "bg"), 0.3, Highlight.get("Normal", "bg")),
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
@@ -5271,7 +5440,14 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
+          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
@@ -5469,6 +5645,16 @@ local function colorscheme_overrides()
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
       { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
+          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+        },
+      },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -5644,6 +5830,13 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.65 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
+          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -5933,6 +6126,13 @@ local function colorscheme_overrides()
           bg = "NONE",
           bold = false,
           italic = true,
+        },
+      },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
+          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
         },
       },
 
@@ -6532,7 +6732,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
 
       -- TROUBLE
       {
@@ -6959,6 +7159,13 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "fg", alter = 0.5 },
+          bg = Highlight.darken(Highlight.get("Error", "fg"), 0.3, Highlight.get("Normal", "bg")),
+        },
+      },
 
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
