@@ -195,6 +195,9 @@ return {
         function()
           local git_ft_stuff = { "fugitive" }
           local prompt_cmds = {
+            -- Ask a question
+            ask_question_with_ai = { cmd = "CodeCompanion /ai_chat", ft = {} },
+
             -- Explain stuff
             explain_to_me = { cmd = "CodeCompanion /explain_to_me", ft = {} },
 
@@ -461,6 +464,27 @@ return {
           diff = { layout = "vertical" },
         },
         prompt_library = {
+          ["Ask ai chat"] = {
+            strategy = "chat",
+            description = "Ask the AI via chat",
+            opts = {
+              index = 10,
+              is_default = true,
+              is_slash_cmd = true,
+              short_name = "ai_chat",
+              auto_submit = false,
+              display = { chat = { window = { layout = "buffer" } } },
+            },
+            prompts = {
+              {
+                role = constants.USER_ROLE,
+                content = function(context)
+                  return get_selected_lines(context) .. newline
+                end,
+              },
+            },
+          },
+
           ["Explain to me"] = {
             strategy = "chat",
             description = "Explains the code, how it works, and its process",
@@ -581,7 +605,7 @@ return {
                 role = constants.USER_ROLE,
                 content = function(context)
                   local header =
-                    "Tolong perbaiki kalimat berikut ini agar lebih jelas dan spesifik. Dan jika terdapat menjelaskan code tolong dijabarkan dengan benar:"
+                    "Tolong perbaiki kalimat berikut ini agar lebih jelas dan spesifik. Dan jika terdapat menjelaskan code tolong dijabarkan dengan benar, jika perlu tambahkan contoh-contoh penggunaannya:"
                   local body = code_block_delimiter
                     .. context.filetype
                     .. "\n"
