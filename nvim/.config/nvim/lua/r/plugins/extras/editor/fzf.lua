@@ -1192,4 +1192,11 @@ return {
       })
     end,
   },
+
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    dependencies = { "mangelozzi/nvim-rgflow.lua", "saghen/blink.compat" },
+    opts = { sources = { per_filetype = { rgflow = { "buffer", "path" } } } },
+  },
 }
