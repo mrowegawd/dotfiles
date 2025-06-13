@@ -205,7 +205,7 @@ reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.35,
+  fzfluaborder_fg_alter = -0.4,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.52,
   pmenusel_bg_alter = 1,
@@ -378,7 +378,7 @@ reset_base_alter({ "vscode_modern" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
   fzfluaborder_fg_alter = -0.35,
-  fzfluasel_bg_alter = -0.35,
+  fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.5,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
@@ -1531,7 +1531,7 @@ local general_overrides = function()
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
       RgFlowHeadLine = {
-        bg = { from = "Keyword", attr = "fg", alter = -0.5 },
+        bg = { from = "Keyword", attr = "fg", alter = -0.7 },
         fg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -2085,9 +2085,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-
       -- TROUBLE
       {
         TroubleIndent = {
@@ -2108,6 +2105,14 @@ local function colorscheme_overrides()
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -2299,6 +2304,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.5 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -2458,6 +2468,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -2613,6 +2628,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- TROUBLE
       {
@@ -2998,6 +3018,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.16 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.58 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -3163,6 +3188,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -3215,7 +3245,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     },
     ["base46-horizon"] = {
-      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.95 }, bold = true } },
+      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.7 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3318,6 +3348,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -3497,6 +3532,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -3845,6 +3885,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.63 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -3959,7 +4004,7 @@ local function colorscheme_overrides()
 
       -- SNACKS
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.23 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.15 } } },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
@@ -4016,7 +4061,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
 
       -- STATUSLINE
       {
@@ -4028,7 +4073,7 @@ local function colorscheme_overrides()
       },
       {
         NoiceCmdline = {
-          fg = { from = "StatusLine", attr = "fg", alter = 1.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
@@ -4357,6 +4402,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -4455,7 +4505,7 @@ local function colorscheme_overrides()
 
       -- SNACKS
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.23 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.1 } } },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
@@ -4694,6 +4744,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.75 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -4886,6 +4941,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -5051,6 +5111,11 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -5207,6 +5272,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -5394,6 +5464,11 @@ local function colorscheme_overrides()
         },
       },
 
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -5569,6 +5644,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.65 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -5883,6 +5963,11 @@ local function colorscheme_overrides()
           undercurl = false,
         },
       },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.69 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
@@ -6735,7 +6820,7 @@ local function colorscheme_overrides()
       },
       { ["@comment"] = { inherit = "Comment" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -6874,6 +6959,11 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+
+      -- RGFLOW
+      { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
+      { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
 
       -- STATUSLINE
       {
