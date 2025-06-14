@@ -35,7 +35,7 @@ return {
       return {
         ui = {
           input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
-          agenda = { preview_window = { border = RUtils.config.icons.border.line } },
+          agenda = { preview_window = { border = RUtils.config.icons.border.line }, focusable = false },
           menu = {
             handler = function(data)
               local items = vim

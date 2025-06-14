@@ -604,8 +604,14 @@ return {
               {
                 role = constants.USER_ROLE,
                 content = function(context)
-                  local header =
-                    "Tolong perbaiki kalimat berikut ini agar lebih jelas dan spesifik. Dan jika terdapat menjelaskan code tolong dijabarkan dengan benar, jika perlu tambahkan contoh-contoh penggunaannya:"
+                  local header = "Tolong perbaiki kalimat berikut ini agar lebih jelas dan spesifik, dengan kondisi seperti ini:"
+                    .. newline
+                    .. "- jika terdapat code, tolong jelaskan code dan dijabarkan dengan benar"
+                    .. newline
+                    .. "- jika perlu tambahkan juga contoh-contoh code penggunaannya, mungkin dengan kasus yang berbeda"
+                    .. newline
+                    .. "- jika judul terbaca kurang jelas atau ambigu, tolong perbaiki dengan menyesuaikan konteksnya :"
+                    .. newline
                   local body = code_block_delimiter
                     .. context.filetype
                     .. "\n"
