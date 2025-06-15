@@ -497,6 +497,9 @@ set_zshrc() {
     colorline="$GET_COL_31"
     colorsugest="$GET_COL_38"
   fi
+  if [ "$1" == "base46-wombat" ]; then
+    colorsugest="$GET_COL_33"
+  fi
 
   if [ "$1" == "base46-chocolate" ]; then
     colorsugest="$GET_COL_28"

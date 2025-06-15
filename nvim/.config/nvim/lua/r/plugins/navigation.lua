@@ -638,6 +638,8 @@ return {
           position = "right",
           winhl = "Normal:Normal,EndOfBuffer:None,NonText:Normal,CursorLine:CursorLine",
           focus_on_open = false,
+          show_cursorline = true,
+          hide_cursor = false,
         },
         symbols = {
           filter = nil,

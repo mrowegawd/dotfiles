@@ -190,7 +190,7 @@ reset_base_alter({ "base46-jellybeans" }, {
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
-  cursorline_alter = 0.08,
+  cursorline_alter = 0.09,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.3,
@@ -237,11 +237,11 @@ reset_base_alter({ "base46-onenord" }, {
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   cursor_fg = "#ffffff",
-  cursorline_alter = 0.04,
+  cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
   fzfluaborder_fg_alter = -0.25,
-  fzfluasel_bg_alter = -0.2,
+  fzfluasel_bg_alter = -0.25,
   pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.3,
@@ -310,7 +310,7 @@ reset_base_alter({ "base46-zenburn" }, {
 reset_base_alter({ "kanso-ink" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#c5c9c7",
-  cursorline_alter = 0.09,
+  cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.25,
@@ -1676,8 +1676,9 @@ local general_overrides = function()
     {
       OutlineCurrent = {
         fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-        bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+        bg = "NONE",
         bold = true,
+        reverse = false,
       },
     },
     {
@@ -1907,13 +1908,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "@attribute", attr = "fg", alter = 1.5 },
-          bg = { from = "@attribute", attr = "fg", alter = -0.3 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "@attribute", attr = "fg", alter = 1.5 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -2063,13 +2058,6 @@ local function colorscheme_overrides()
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       -- SNACKS
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.7 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.3 },
-          bold = true,
-        },
-      },
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.23 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
 
@@ -2115,6 +2103,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.1 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -2486,6 +2475,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.2 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -2681,13 +2671,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.7 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.3 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.7 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -2855,13 +2839,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.6 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.3 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.3 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -3055,13 +3033,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.6 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.3 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -3234,13 +3206,6 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.6 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
-        },
-      },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -3406,9 +3371,10 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.6 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
+          fg = Highlight.increase_saturation(
+            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.7, Highlight.get("Boolean", "fg")), 0.3),
+            0.5
+          ),
         },
       },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
@@ -3597,13 +3563,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.6 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.15 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -3797,6 +3757,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -3893,14 +3854,6 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.6 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       --
       {
         NormalBoxComment = {
@@ -3940,9 +3893,10 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.45 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
+          fg = Highlight.increase_saturation(
+            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.7, Highlight.get("Boolean", "fg")), 0.3),
+            0.5
+          ),
         },
       },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
@@ -3987,7 +3941,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.28 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.32 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -4050,6 +4004,14 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -4153,13 +4115,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.4 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.4 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -4324,6 +4280,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.1 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -4510,13 +4467,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.3 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.5 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.35 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -4649,7 +4600,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4682,9 +4633,10 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.4 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.6 },
-          bold = true,
+          fg = Highlight.increase_saturation(
+            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.9, dark_yellow), 0.1),
+            0.5
+          ),
         },
       },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
@@ -4877,6 +4829,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.2 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -5075,9 +5028,7 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.2 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.5 },
-          bold = true,
+          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, dark_yellow), 0.5),
         },
       },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
@@ -5252,13 +5203,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.6 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.25 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.2 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -5397,7 +5342,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5418,6 +5363,7 @@ local function colorscheme_overrides()
           fg = { from = "TroubleIndent", attr = "fg", alter = 0.25 },
         },
       },
+
       { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
       { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
       { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.1 } } },
@@ -5428,6 +5374,11 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      {
+        OutlineCurrent = {
+          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, dark_yellow), 0.3),
+        },
+      },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -5622,13 +5573,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.3 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.6 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.2 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -5812,9 +5757,7 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         OutlineCurrent = {
-          fg = { from = "OutlineCurrent", attr = "fg", alter = 0.4 },
-          bg = { from = "OutlineCurrent", attr = "bg", alter = 0.6 },
-          bold = true,
+          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, dark_yellow), 0.5),
         },
       },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
@@ -6084,13 +6027,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "Keyword", attr = "fg", alter = -1 },
-          bg = { from = "Keyword", attr = "fg", alter = 0.05 },
-          bold = true,
-        },
-      },
+      { OutlineCurrent = { fg = { from = "Visual", attr = "bg", alter = 1.5 } } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -6692,7 +6629,7 @@ local function colorscheme_overrides()
         Visual = {
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Boolean", "fg")),
-            -0.55
+            -0.6
           ),
           fg = "NONE",
         },
@@ -6747,9 +6684,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
-
       -- TROUBLE
       {
         TroubleIndent = {
@@ -6767,13 +6701,6 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "Keyword", attr = "fg", alter = -1 },
-          bg = { from = "Keyword", attr = "fg", alter = 0.1 },
-          bold = true,
-        },
-      },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -6832,6 +6759,9 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.1 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -6904,14 +6834,11 @@ local function colorscheme_overrides()
       { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = 0.5 } } },
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 } } },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.32 } } },
-
       -- TROUBLE
       {
         TroubleIndent = {
           inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 },
+          fg = { from = "TroubleIndent", attr = "fg", alter = 0.1 },
         },
       },
       { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.25 } } },
@@ -6924,13 +6851,6 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = { from = "Keyword", attr = "fg", alter = -1 },
-          bg = { from = "Keyword", attr = "fg", alter = 0.1 },
-          bold = true,
-        },
-      },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -6975,7 +6895,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -6986,6 +6906,9 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.32 }, bg = "NONE" } },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.08 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
@@ -7125,6 +7048,7 @@ local function colorscheme_overrides()
       { TroubleQfPos = { link = "TroubleFsPos" } },
 
       -- OUTLINE
+      { OutlineCurrent = { fg = { from = "Keyword", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
       { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
@@ -7233,7 +7157,7 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.22 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = -0.03 } } },
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
