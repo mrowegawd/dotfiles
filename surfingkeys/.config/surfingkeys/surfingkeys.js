@@ -231,12 +231,26 @@ map("<Space>ff", "T");
 map("<Ctrl-l>", "R");
 map("<Ctrl-h>", "E");
 
-map("<Ctrl-j>", "R");
-map("<Ctrl-k>", "E");
+// map("<Ctrl-j>", "<Ctrl-Tab>");
+// map("<Ctrl-k>", "<Ctrl-Shift-Tab>");
 
-// Side tabbar zen-browser is left side sometimes make confuse
-// map("<Ctrl-Alt-j>", "R");
-// map("<Ctrl-Alt-k>", "E");
+// Gunakan mapping "pinning tab", jika c-j/k tidak jalan, di zen-browser
+mapkey(
+  "<Ctrl-j>",
+  "Go one tab right",
+  function () {
+    RUNTIME("nextTab");
+  },
+  { repeatIgnore: true },
+);
+mapkey(
+  "<Ctrl-k>",
+  "Go one tab left",
+  function () {
+    RUNTIME("previousTab");
+  },
+  { repeatIgnore: true },
+);
 
 mapkey("<Ctrl-o>", "backward", function () {
   history.go(-1);
@@ -244,9 +258,6 @@ mapkey("<Ctrl-o>", "backward", function () {
 mapkey("<Ctrl-i>", "forward", function () {
   history.go(1);
 });
-
-// reopen closed tab
-map("-", "X");
 
 // close tab
 mapkey("q", "#3Close current tab", () => {
