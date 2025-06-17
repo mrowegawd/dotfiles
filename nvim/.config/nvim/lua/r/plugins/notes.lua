@@ -2,7 +2,11 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    ft = { "org" },
+    -- event = "VeryLazy",
+    -- enabled = false,
+    -- ft = { "org" },
+    event = "VeryLazy",
+    lazy = false,
     keys = {
       {
         "<Localleader>aN",
@@ -28,10 +32,10 @@ return {
     },
     dependencies = { "akinsho/org-bullets.nvim" },
     opts = function()
-      local Highlight = require "r.settings.highlights"
-      local done_hi = Highlight.get("Comment", "fg")
-      -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
-      local todo_fg = Highlight.get("KeywordMatch", "fg")
+      -- local Highlight = require "r.settings.highlights"
+      -- local done_hi = Highlight.get("Comment", "fg")
+      -- -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
+      -- local todo_fg = Highlight.get("KeywordMatch", "fg")
       return {
         ui = {
           input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
@@ -89,10 +93,12 @@ return {
         },
         org_todo_keyword_faces = {
           CHECK = ":foreground royalblue :weight bold :slant",
-          TODO = ":foreground " .. todo_fg .. " :weight bold :slant",
+          -- TODO = ":foreground " .. todo_fg .. " :weight bold :slant",
+          TODO = ":foreground red :weight bold :slant",
           HBD = ":foreground pink :weight bold :slant",
           STATUS = ":foreground black :background magenta :weight bold :slant",
-          DONE = ":foreground " .. done_hi .. " :weight bold :slant",
+          -- DONE = ":foreground " .. done_hi .. " :weight bold :slant",
+          DONE = ":foreground gray :weight bold :slant",
 
           PROGRESS = ":foreground white :background red :weight bold :slant italic",
           LEARNING = ":foreground black :background yellow :weight bold :slant",
