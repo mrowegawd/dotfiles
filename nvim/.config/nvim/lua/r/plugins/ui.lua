@@ -228,7 +228,16 @@ return {
   {
     "HampusHauffman/block.nvim",
     cmd = { "BlockOn", "BlockOff", "Block" },
-    opts = true,
+    keys = {
+      {
+        "<Leader>ub",
+        function()
+          vim.cmd [[Block]]
+        end,
+        desc = "Toggle: block color [block]",
+      },
+    },
+    opts = {},
   },
   -- BEACON (disabled)
   {
