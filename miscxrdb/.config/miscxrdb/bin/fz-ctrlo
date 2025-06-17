@@ -11,7 +11,7 @@ GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 RED="red"
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  GET_FG=$(grep -i TMUX_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  GET_FG=$(grep -i ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
@@ -182,7 +182,7 @@ open_newsboat() {
 open_rkill() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
-  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$GET_FG" | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
     echo "$pid" | xargs kill -9

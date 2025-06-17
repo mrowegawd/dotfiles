@@ -83,7 +83,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # ZSH-AUTOSUGGESTIONS
-  GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # YAZI
   GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -223,7 +223,7 @@ set_tmux() {
     sleep 1
 
     ACTIVE_FG="$GET_COL_16"
-    ACTIVE_BG="$GET_COL_17"
+    # ACTIVE_BG="$GET_COL_17"
     if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
       ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
     fi
