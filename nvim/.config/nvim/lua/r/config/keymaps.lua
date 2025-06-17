@@ -482,11 +482,6 @@ RUtils.map.nnoremap("<Leader>of", function()
     oprhans_check_plugins_last_update = function()
       vim.cmd [[Orphans]]
     end,
-    blockon_toggle = function()
-      if not block_toggle then
-        vim.cmd [[Block]]
-      end
-    end,
     loadqf = function()
       cmd "LoadQf"
     end,
