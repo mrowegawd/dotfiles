@@ -1502,7 +1502,7 @@ local general_overrides = function()
 
     --  ───────────────────────────────[ FLASH ]───────────────────────────────
     { FlashMatch = { fg = "white", bg = "red", bold = true } },
-    { FlashLabel = { bg = "black", fg = "yellow", bold = true, strikethrough = false } },
+    { FlashLabel = { bg = "yellow", fg = "black", bold = true, strikethrough = false } },
     { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
 
     --  ─────────────────────────────[ GRUG FAR ]──────────────────────────

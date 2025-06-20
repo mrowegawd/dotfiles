@@ -5,6 +5,7 @@ return {
     opts = {
       modes = { char = { keys = { "F", "T", ";" } }, search = { enabled = false } },
       jump = { nohlsearch = true },
+      highlight = { backdrop = false },
     },
     -- stylua: ignore
     keys = {
