@@ -1,6 +1,23 @@
 local term_count = 1
 
 return {
+  -- FLOATERM
+  {
+    "nvzone/floaterm",
+    cmd = "FloatermToggle",
+    dependencies = "nvzone/volt",
+    opts = { terminals = { { name = "Terminal" } } },
+    keys = {
+      {
+        "<Localleader>t",
+        function()
+          vim.cmd [[FloatermToggle]]
+        end,
+        desc = "Terminal: toggle [floaterm]",
+        mode = { "n", "v", "t" },
+      },
+    },
+  },
   -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
