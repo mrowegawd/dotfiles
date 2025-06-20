@@ -8,7 +8,7 @@ keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Mar
 keymap.set("n", "<Leader>rf", function()
   local opts = {
     winopts = {
-      title = RUtils.fzflua.format_title("Buffers", "󰈙"),
+      title = RUtils.fzflua.format_title("Task Runner", "󰈙"),
       width = 0.60,
       height = 0.25,
       col = 0.50,
@@ -60,10 +60,14 @@ keymap.set("n", "<Leader>rf", function()
       if sel == "Sniprun" then
         vim.cmd [[SnipRun]]
       end
+
+      if sel == "RunCodeBlock" then
+        vim.cmd [[call org#main#runCodeBlock()]]
+      end
     end,
   }, {})
 
-  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert" }, opts)
+  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert", "RunCodeBlock" }, opts)
 end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false

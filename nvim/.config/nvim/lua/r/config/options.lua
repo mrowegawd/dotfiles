@@ -214,9 +214,8 @@ opt.sessionoptions = {
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.g.loaded_python_provider = 0 -- for python 2
--- vim.g.loaded_python_provider = 0
--- vim.g.loaded_python3_provider = 0
+vim.g.loaded_python_provider = 1 -- for python 2
+vim.g.loaded_python3_provider = 1
 vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
 
 local enable_providers = {
