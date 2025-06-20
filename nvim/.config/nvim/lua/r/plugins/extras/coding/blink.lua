@@ -334,7 +334,7 @@ return {
       if not opts.keymap["<Tab>"] then
         if opts.keymap.preset == "super-tab" then -- super-tab
           opts.keymap["<Tab>"] = {
-            require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
+            require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }
