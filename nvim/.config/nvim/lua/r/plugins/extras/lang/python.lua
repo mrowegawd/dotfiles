@@ -68,6 +68,24 @@ return {
     dependencies = {
       "nvim-neotest/neotest-python",
     },
+    keys = {
+      {
+        "<Leader>dam",
+        function()
+          require("dap-python").test_method()
+        end,
+        desc = "Debug: debug method [dap-python]",
+        ft = "python",
+      },
+      {
+        "<Leader>dac",
+        function()
+          require("dap-python").test_class()
+        end,
+        desc = "Debug: debug class [dap-python]",
+        ft = "python",
+      },
+    },
     opts = {
       adapters = {
         ["neotest-python"] = {
@@ -89,11 +107,7 @@ return {
         { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
       },
       config = function()
-        if vim.fn.has "win32" == 1 then
-          require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/Scripts/pythonw.exe"))
-        else
-          require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/bin/python"))
-        end
+        require("dap-python").setup "debugpy-adapter"
       end,
     },
   },
