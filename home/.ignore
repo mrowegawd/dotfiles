@@ -8,6 +8,7 @@ tags
 # folder
 node_modules
 dist
+.pytest_cache
 .venv
 
 #.vim

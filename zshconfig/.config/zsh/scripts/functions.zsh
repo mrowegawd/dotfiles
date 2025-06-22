@@ -278,7 +278,8 @@ build-python() {
   if [[ $1 == "" ]]; then
     echo "Must define project name:\nEx: 'build-python <name-project>'"
   else
-    poetry new "$1"
+    # poetry new "$1"
+    uv init "$1"
     cd "$1"
   fi
 }

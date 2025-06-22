@@ -82,7 +82,7 @@ reset_base_alter({ "base46-aylin" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
   fzfluaborder_fg_alter = -0.35,
-  fzfluasel_bg_alter = -0.25,
+  fzfluasel_bg_alter = -0.2,
   normalfloat_bg_alter = -0.1,
   pmenu_bg_alter = 0.45,
   pmenusel_bg_alter = 0.85,
