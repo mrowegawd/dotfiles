@@ -87,7 +87,7 @@ reset_base_alter({ "base46-aylin" }, {
   pmenu_bg_alter = 0.45,
   pmenusel_bg_alter = 0.85,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.55,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-ayu_dark" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -302,7 +302,7 @@ reset_base_alter({ "base46-zenburn" }, {
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  fzfluaborder_fg_alter = -0.52,
+  fzfluaborder_fg_alter = -0.55,
   fzfluasel_bg_alter = -0.37,
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
@@ -2127,7 +2127,7 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.35, Highlight.get("Normal", "bg")),
-            -0.05
+            0.05
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.12, Highlight.get("Normal", "bg")),
@@ -2169,14 +2169,14 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
       {
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2361,20 +2361,20 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
 
       {
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
+      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.15 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2411,8 +2411,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.58 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.76 },
+          fg = { from = "Keyword", attr = "fg", alter = -0.5 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.75 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2514,7 +2514,7 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.43, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.05
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
@@ -2554,19 +2554,13 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-            -0.15
-          ),
+          fg = { from = "StatusLine", attr = "bg", alter = 1.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2581,7 +2575,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.8 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
-      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.5 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.2 } } },
       { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     },
     ["base46-chocolate"] = {
@@ -5136,12 +5130,12 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.07 },
         },
       },
 
       -- CREATED HIGHLIGHTS
-      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.08 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
@@ -5528,7 +5522,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.2 },
+          fg = { from = "Folded", attr = "fg", alter = -0.1 },
           bg = { from = "Folded", attr = "bg", alter = -0.3 },
         },
       },
@@ -5557,8 +5551,15 @@ local function colorscheme_overrides()
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+          fg = { from = "Normal", attr = "bg", alter = 0.9 },
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
+        },
+      },
+      {
+        GrugFarResultsMatch = {
+          fg = { from = "DiffText", attr = "fg", alter = 0.1 },
+          bg = { from = "DiffText", attr = "bg", alter = -0.5 },
+          bold = true,
         },
       },
 
@@ -5680,12 +5681,12 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          bg = { from = "Normal", attr = "bg", alter = 0.31 },
         },
       },
 
       -- CREATED HIGHLIGHTS
-      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.17 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.9 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
@@ -6657,7 +6658,7 @@ local function colorscheme_overrides()
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.1 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
