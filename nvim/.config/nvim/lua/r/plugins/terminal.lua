@@ -6,7 +6,9 @@ return {
     "nvzone/floaterm",
     cmd = "FloatermToggle",
     dependencies = "nvzone/volt",
-    opts = { terminals = { { name = "Terminal" } } },
+    opts = {
+      mappings = { sidebar = nil, term = nil },
+    },
     keys = {
       {
         "<Localleader>t",
@@ -16,11 +18,20 @@ return {
         desc = "Terminal: toggle [floaterm]",
         mode = { "n", "v", "t" },
       },
+      {
+        "<a-f>",
+        function()
+          vim.cmd [[FloatermToggle]]
+        end,
+        desc = "Terminal: toggle [floaterm]",
+        mode = { "n", "v", "t" },
+      },
     },
   },
-  -- TOGGLETERM
+  -- TOGGLETERM (disabled)
   {
     "akinsho/nvim-toggleterm.lua",
+    enabled = false,
     cmd = { "ToggleTerm", "TermExec" },
     opts = function()
       return {

@@ -1,10 +1,10 @@
 return {
-  recommended = function()
-    return RUtils.extras.wants {
-      ft = { "go", "gomod", "gowork", "gotmpl" },
-      root = { "go.work", "go.mod" },
-    }
-  end,
+  -- recommended = function()
+  --   return RUtils.extras.wants {
+  --     ft = { "go", "gomod", "gowork", "gotmpl" },
+  --     root = { "go.work", "go.mod" },
+  --   }
+  -- end,
   {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "go", "gomod", "gowork", "gosum" } },
@@ -57,6 +57,7 @@ return {
         },
       },
       setup = {
+        ---@diagnostic disable-next-line: unused-local
         gopls = function(_, opts)
           -- workaround for gopls not supporting semanticTokensProvider
           -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
@@ -111,9 +112,7 @@ return {
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = {
-      "fredrikaverpil/neotest-golang",
-    },
+    dependencies = { "fredrikaverpil/neotest-golang" },
     opts = {
       adapters = {
         ["neotest-golang"] = {

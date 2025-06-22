@@ -107,14 +107,10 @@ return {
             -- Enable diagnostics if using rust-analyzer
             diagnostics = {
               enable = diagnostics == "rust-analyzer",
+              disabled = { "proc-macro-disabled" },
             },
             procMacro = {
               enable = true,
-              ignored = {
-                ["async-trait"] = { "async_trait" },
-                ["napi-derive"] = { "napi" },
-                ["async-recursion"] = { "async_recursion" },
-              },
             },
             files = {
               excludeDirs = {
@@ -129,20 +125,17 @@ return {
                 ".venv",
               },
             },
+            -- Avoid Roots Scanned hanging, see https://github.com/rust-lang/rust-analyzer/issues/12613#issuecomment-2096386344
+            watcher = "client",
           },
         },
       },
     },
     config = function(_, opts)
       if RUtils.has "mason.nvim" then
-        local package_path = require("mason-registry").get_package("codelldb"):get_install_path()
-        local codelldb = package_path .. "/extension/adapter/codelldb"
-        local library_path = package_path .. "/extension/lldb/lib/liblldb.dylib"
-        local uname = io.popen("uname"):read "*l"
-
-        if uname == "Linux" then
-          library_path = package_path .. "/extension/lldb/lib/liblldb.so"
-        end
+        local codelldb = vim.fn.exepath "codelldb"
+        local codelldb_lib_ext = io.popen("uname"):read "*l" == "Linux" and ".so" or ".dylib"
+        local library_path = vim.fn.expand("$MASON/opt/lldb/lib/liblldb" .. codelldb_lib_ext)
         opts.dap = {
           adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb, library_path),
         }
@@ -176,6 +169,19 @@ return {
     opts = {
       adapters = {
         ["rustaceanvim.neotest"] = {},
+      },
+    },
+  },
+
+  -- Show `impl` blocks in outline.nvim
+  {
+    "hedyhli/outline.nvim",
+    optional = true,
+    opts = {
+      symbols = {
+        filter = {
+          rust = vim.list_extend(vim.deepcopy(RUtils.config.kind_filter["default"]), { "Object" }),
+        },
       },
     },
   },

@@ -107,30 +107,45 @@ return {
         { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
       },
       config = function()
-        require("dap-python").setup "debugpy-adapter"
+        -- require("dap-python").setup "debugpy-adapter"
+        if vim.fn.has "win32" == 1 then
+          require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/Scripts/pythonw.exe"))
+          return
+        end
+        -- try loading python path configured in neoconf (pyright)
+        if RUtils.has "neoconf.nvim" and RUtils.is_loaded "neoconf.nvim" then
+          local ncf = require("neoconf").get()
+          local pypath = ((ncf.lspconfig or {}).pyright or {})["python.pythonPath"]
+          if pypath ~= nil then
+            pypath = vim.fn.expand(pypath)
+            require("dap-python").setup(nil, { pythonPath = pypath })
+            return
+          end
+        end
+        require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/bin/python"))
       end,
     },
   },
-  { -- this plugin has been disabled
-    "linux-cultist/venv-selector.nvim",
-    branch = "regexp", -- Use this branch for the new version
-    ft = "python", --  Call config for python files and load the cached venv automatically
-    cmd = "VenvSelect",
-    enabled = false,
-    -- enabled = function()
-    --   return RUtils.has "telescope.nvim"
-    -- end,
-    keys = {
-      { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
-    },
-    opts = {
-      settings = {
-        options = {
-          notify_user_on_venv_activation = true,
-        },
-      },
-    },
-  },
+  -- { -- this plugin has been disabled
+  --   "linux-cultist/venv-selector.nvim",
+  --   branch = "regexp", -- Use this branch for the new version
+  --   ft = "python", --  Call config for python files and load the cached venv automatically
+  --   cmd = "VenvSelect",
+  --   enabled = false,
+  --   -- enabled = function()
+  --   --   return RUtils.has "telescope.nvim"
+  --   -- end,
+  --   keys = {
+  --     { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
+  --   },
+  --   opts = {
+  --     settings = {
+  --       options = {
+  --         notify_user_on_venv_activation = true,
+  --       },
+  --     },
+  --   },
+  -- },
   {
     "benomahony/uv.nvim",
     ft = "python",
@@ -142,9 +157,7 @@ return {
         ft = "python",
       },
     },
-    opts = {
-      keymaps = false, -- Keymaps to register (set to false to disable)
-    },
+    opts = { keymaps = false }, -- Keymaps to register (set to false to disable)
   },
   {
     "iguanacucumber/magazine.nvim",
