@@ -101,7 +101,7 @@ autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
 colorline="#404858"
-colorsuggest="fg=#434756"
+colorsuggest="fg=#4b5e71"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -467,10 +467,16 @@ setopt PROMPT_SUBST
 # icon box_lines = ╭─ ├─ ╰─ ─╮ ─┤ ─╯
 #
 function __prompt_eval() {
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    virtualenv_prompt="%F{green}($(basename "$VIRTUAL_ENV"))%f"
+  else
+    virtualenv_prompt=""
+  fi
+
   local dots_prompt_icon="%F{${colorline}}╰─%f %F{${colorline}} %f "
   local dots_prompt_failure_icon="%F{${colorline}}╰─%f %F{red}✘ %f "
   local placeholder="(%F{gray}%{$__DOTS[ITALIC_ON]%}…%{$__DOTS[ITALIC_OFF]%}%f) "
-  local top="%F{${colorline}}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{${colorline}}]%f %(1j.%F{cyan}job:%j✦%f .)"
+  local top="%F{${colorline}}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{${colorline}}]%f %(1j.%F{cyan}job:%j✦%f .) %F{cyan}${virtualenv_prompt}"
   local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
   echo $top$'\n'$bottom
@@ -716,6 +722,8 @@ fi
 if exists zoxide; then
   eval "$(zoxide init zsh)"
 fi
+
+[ -f ~/.local/bin/uv ] && eval "$(uv generate-shell-completion zsh)"
 
 # To customize prompt, run `p10k configure`
 # Or edit $HOME/.config/zsh/.p10k.zsh.
