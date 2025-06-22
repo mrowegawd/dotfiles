@@ -123,6 +123,8 @@ local colors = {
   mode_term_bg = h("Boolean").fg,
   mode_visual_bg = h("Visual").bg,
 
+  boolean = h("Boolean").fg,
+
   diff_add = h("GitSignsAdd").fg,
   diff_change = h("GitSignsChange").fg,
   diff_delete = h("GitSignsDelete").fg,
@@ -596,10 +598,12 @@ M.Dap = {
 }
 M.virtualenv = {
   condition = function()
-    return set_conditions.hide_in_col_width(130) and RUtils.has "venv-selector.nvim"
+    -- return set_conditions.hide_in_col_width(130) and RUtils.has "venv-selector.nvim"
+    return set_conditions.hide_in_col_width(130) and (vim.env.VIRTUAL_ENV ~= nil)
   end,
   init = function(self)
     local python_logo = " "
+    local poetry_status = python_logo .. "UV Virtualenv"
     local msg = ""
 
     local venv_root = RUtils.extras.wants {
@@ -609,13 +613,11 @@ M.virtualenv = {
         "pyrightconfig.json",
       },
     }
-    local venv_name = require("venv-selector").venv()
+    -- local venv_name = require("venv-selector").venv()
+    local venv_name = vim.env.VIRTUAL_ENV
     if venv_name ~= nil and venv_root then
-      -- msg = python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
       if venv_name:find "%.venv" then
-        msg = python_logo .. ".venv"
-      else
-        msg = python_logo .. venv_name
+        msg = poetry_status .. " ON"
       end
     end
     self.venv = msg
@@ -626,7 +628,7 @@ M.virtualenv = {
         return self.venv .. "  "
       end
     end,
-    hl = { fg = colors.statusline_fg, bold = true },
+    hl = { fg = colors.boolean, bold = false },
   },
 }
 M.LSPActive = {

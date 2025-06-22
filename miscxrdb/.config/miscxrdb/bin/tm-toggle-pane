@@ -8,6 +8,9 @@ session_exists() {
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
+_check_pane_is_uv() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "uv" { print $2; exit }')" == "uv" ]
+}
 _check_pane_is_yazi() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
 }
@@ -168,7 +171,7 @@ __split_term_cleanup_update_and_remove_data_json() {
 }
 
 __set_main_workspace() {
-  if _check_pane_is_nvim; then
+  if _check_pane_is_nvim || _check_pane_is_uv; then
     session_id_exists=$(jq -e --arg cur_session "$current_session" '.[] | select(.session == $cur_session)' "$PATH_PANE_COLLECT_JSON")
     window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
     pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
@@ -265,7 +268,7 @@ split_term() {
   current_cwd=$(pwd)
   current_session=$(tmux display-message -p '#S')
 
-  if _check_pane_is_nvim; then
+  if _check_pane_is_nvim || _check_pane_is_uv; then
 
     # Check apakah file `tmux-tm-toggle-term.json` sudah siap dan lakukan pengisian minimal content
     __split_term_init
