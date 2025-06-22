@@ -30,7 +30,7 @@
 
 local rg_opts =
   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:178' -e "
-local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
+local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
 return {
   -- FZF-LUA

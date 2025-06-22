@@ -222,12 +222,7 @@ return {
     "sphamba/smear-cursor.nvim",
     event = "LazyFile",
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
-    opts = {
-      stiffness = 0.8, -- 0.5      [0, 1]
-      trailing_stiffness = 0.5, -- 0.4      [0, 1]
-      distance_stop_animating = 0.5, -- 0.1      > 0
-      trailing_stiffness_insert_mode = 0.7, -- 0.55     [0, 1]
-    },
+    opts = {},
   },
   -- BLOCK.NVIM
   {

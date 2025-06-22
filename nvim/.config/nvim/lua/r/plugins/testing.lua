@@ -32,10 +32,10 @@ return {
       consumers = {},
     },
     config = function(_, opts)
-      require("r.settings.highlights").plugin("neotest", {
-        { NeotestPassed = { bg = { from = "Normal", attr = "bg" } } },
-        { NeotestFailed = { bg = { from = "Normal", attr = "bg" } } },
-        { NeotestRunning = { bg = { from = "Normal", attr = "bg" } } },
+      require("r.settings.highlights").plugin("neotestui", {
+        { NeotestPassed = { bg = "NONE" } },
+        { NeotestFailed = { bg = "NONE" } },
+        { NeotestRunning = { bg = "NONE" } },
       })
 
       local neotest_ns = vim.api.nvim_create_namespace "neotest"
@@ -98,7 +98,7 @@ return {
                 adapter.adapter(config)
                 adapter = adapter.adapter
               elseif meta and meta.__call then
-                adapter(config)
+                adapter = adapter(config)
               else
                 error("Adapter " .. name .. " does not support setup")
               end

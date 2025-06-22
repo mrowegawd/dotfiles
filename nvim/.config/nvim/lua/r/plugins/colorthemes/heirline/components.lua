@@ -109,6 +109,7 @@ local colors = {
 
   winbar_filepath = h("WinbarFilepath").fg,
   winbar_fontwhite = h("WinbarFontWhite").fg,
+  winbar_dap = h("DapUINormal").bg,
 
   mode_bg = h("Keyword").fg,
 
@@ -1270,14 +1271,18 @@ M.WinbarIcons = {
 -- ║ WINBAR
 -- ╙
 M.status_winbar_active_left = {
-  -- condition = Conditions.is_active,
   M.WinbarSeparator,
   M.WinbarIcons,
   M.WinbarFilePath,
 
   M.Gap,
 
-  hl = { fg = colors.statusline_fg, bg = colors.normal_bg },
+  hl = function()
+    if vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype) then
+      return { fg = colors.winbar_filepath, bg = colors.winbar_dap, bold = true }
+    end
+    return { fg = colors.statusline_fg, bg = colors.normal_bg }
+  end,
 }
 
 return M

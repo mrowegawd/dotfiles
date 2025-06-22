@@ -35,7 +35,15 @@ return {
             if not vim.api.nvim_buf_is_valid(buf) then
               return true
             end
-            local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+
+            if vim.bo[buf].buftype == "nofile" then
+              return not vim.tbl_contains(
+                { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" },
+                vim.bo[buf].filetype
+              )
+            end
+
+            local buftype = vim.tbl_contains({ "help", "prompt", "nofile", "quickfix" }, vim.bo[buf].buftype)
             local filetype = vim.tbl_contains({
               "gitcommit",
               "fugitive",

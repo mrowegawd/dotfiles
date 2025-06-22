@@ -60,14 +60,10 @@ keymap.set("n", "<Leader>rf", function()
       if sel == "Sniprun" then
         vim.cmd [[SnipRun]]
       end
-
-      if sel == "RunCodeBlock" then
-        vim.cmd [[call org#main#runCodeBlock()]]
-      end
     end,
   }, {})
 
-  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert", "RunCodeBlock" }, opts)
+  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert" }, opts)
 end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false

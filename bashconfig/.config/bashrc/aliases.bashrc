@@ -33,7 +33,8 @@ md() {
 }
 
 tree() {
-  eza --icons --all -I '*.git' --color=always -T "$@"
+  # eza --icons --all -I '*.git,*.venv,*.pytest_cache' --color=always -T "$@"
+  eza --icons --all --git-ignore --color=always -T "$@"
 }
 
 l() {

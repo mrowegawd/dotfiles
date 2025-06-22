@@ -252,7 +252,7 @@ return {
         mappings = {
           close = { "q", "<Esc>" },
           edit = "e",
-          expand = { "<CR>", "<2-LeftMouse>" },
+          expand = { "<CR>", "<2-LeftMouse>", "<TAB>" },
           open = "o",
           remove = "d",
           repl = "r",

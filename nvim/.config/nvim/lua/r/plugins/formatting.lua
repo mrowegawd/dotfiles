@@ -10,6 +10,10 @@ function M.setup(_, opts)
       opts[key] = nil
     end
   end
+  ---@diagnostic disable-next-line: undefined-field
+  if opts.format then
+    RUtils.warn "**conform.nvim** `opts.format` is deprecated. Please use `opts.default_format_opts` instead."
+  end
   require("conform").setup(opts)
 end
 
@@ -18,6 +22,7 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
+    lazy = true,
     cmd = "ConformInfo",
     keys = {
       {
@@ -81,6 +86,7 @@ return {
         -- You can also define any custom formatters here.
         ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
         formatters = {
+          -- black = { prepend_args = { "--fast" } },
           injected = { options = { ignore_errors = true } },
           -- # Example of using dprint only when a dprint.json file is present
           -- dprint = {
