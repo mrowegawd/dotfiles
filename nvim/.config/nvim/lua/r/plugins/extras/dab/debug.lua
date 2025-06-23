@@ -110,7 +110,6 @@ return {
         { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
         { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
         { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
-        { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: widgets" },
 
         -- +----------------------------------------------------------+
         -- Step-in, step-out, step-over | Stack-up Stack-down
@@ -286,13 +285,13 @@ return {
     keys = {
       { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
       { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug: reset UI [dapui]" },
-      { "<Leader>dP", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover [dapui]" },
+      { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover [dapui]" },
     },
     dependencies = { "nvim-neotest/nvim-nio" },
     opts = {
       -- expand_lines = fn.has "nvim-0.7",
       mappings = {
-        expand = { "<CR>", "<2-LeftMouse>" },
+        expand = { "<CR>", "<2-LeftMouse>", "<TAB>" },
         open = "o",
         remove = "d",
         edit = "e",

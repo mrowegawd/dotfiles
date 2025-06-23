@@ -4,7 +4,7 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    cond = vim.g.neovide ~= nil or not vim.env.TMUX,
+    -- cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
     keys = {
       -- sidebar left (neotree)
@@ -15,6 +15,13 @@ return {
         end,
         desc = "Misc: open file explore [neotree]",
       },
+      {
+        "<Leader>ue",
+        function()
+          vim.cmd "Neotree toggle right"
+        end,
+        desc = "Toggle: open file explore [neotree]",
+      },
 
       {
         "<a-W>",
@@ -23,6 +30,14 @@ return {
           vim.cmd(string.format("Neotree dir=%s right", wiki_path))
         end,
         desc = "Misc: open file wikis explore [neotree]",
+      },
+      {
+        "<Leader>uE",
+        function()
+          local wiki_path = RUtils.config.path.wiki_path
+          vim.cmd(string.format("Neotree dir=%s right", wiki_path))
+        end,
+        desc = "Toggle: open file wikis explore [neotree]",
       },
     },
 
@@ -55,7 +70,7 @@ return {
         theme = {
           ["*"] = {
             { Directory = { link = "Directory" } },
-            { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
+            -- { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
             { NeoTreeNormal = { link = "PanelBackground" } },
             { NeoTreeNormalNC = { link = "PanelBackground" } },
             { NeoTreeCursorLine = { link = "CursorLine" } },
@@ -150,12 +165,12 @@ return {
           window = {
             mappings = {
               ["H"] = "toggle_hidden",
+              ["gp"] = "prev_git_modified",
+              ["gn"] = "next_git_modified",
               -- ["<leader>ff"] = "fuzzy_finder",
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
               -- ["<C-x>"] = "clear_filter",
-              ["gp"] = "prev_git_modified",
-              ["gn"] = "next_git_modified",
               --["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",
@@ -184,27 +199,21 @@ return {
           end,
 
           fzmark = function()
-            local contents = require("project_nvim").get_recent_projects()
             local reverse = {}
-            for i = #contents, 1, -1 do
-              reverse[#reverse + 1] = contents[i]
-            end
+            local dropbox_path = RUtils.config.path.dropbox_path
+            local path_fzmark = dropbox_path .. "/data.programming.forprivate/marked-pwd"
 
-            if #reverse == 0 then
-              local dropbox_path = RUtils.config.path.dropbox_path
-              local path_fzmark = dropbox_path .. "/data.programming.forprivate/marked-pwd"
-
-              local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
-              if cat_fzmark.output ~= nil then
-                local res = vim.split(cat_fzmark.output, "\n")
-                -- print(vim.inspect(#res - 1))
-                for index = 2, #res - 1 do
-                  if #res[index] > 1 then
-                    reverse[#reverse + 1] = res[index]
-                  end
+            local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
+            if cat_fzmark.output ~= nil then
+              local res = vim.split(cat_fzmark.output, "\n")
+              -- print(vim.inspect(#res - 1))
+              for index = 2, #res - 1 do
+                if #res[index] > 1 then
+                  reverse[#reverse + 1] = res[index]
                 end
               end
             end
+            -- end
 
             return require("fzf-lua").fzf_exec(reverse, {
               prompt = RUtils.fzflua.default_title_prompt(),
@@ -367,10 +376,6 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<c-o>"] = "fzmark",
-              ["<a-t>"] = "open_terminal",
-              ["<a-g>"] = "open_lazygit",
-              ["<a-d>"] = "open_lazydocker",
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
@@ -378,17 +383,28 @@ return {
               ["w"] = "noop",
 
               ["gg"] = "noop",
-              ["i"] = "show_file_details",
               ["e"] = "child_or_open",
-              ["g?"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+
+              [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+
+              ["g?"] = "show_help",
             },
           },
         },
 
         window = {
           mappings = {
+            ["tn"] = "noop",
+            ["<space>"] = "noop",
+            ["w"] = "noop",
+
             ["<c-o>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
+            ["<a-g>"] = "open_lazygit",
+            ["<a-d>"] = "open_lazydocker",
+
+            ["K"] = "show_file_details",
+
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
@@ -404,7 +420,6 @@ return {
             ["t"] = "", -- disabled open tab
             ["P"] = "",
             ["z"] = "",
-            ["tn"] = "noop",
             ["<Tab>"] = "toggle_node",
             ["<S-Tab>"] = "close_all_nodes",
             ["<c-s>"] = "open_split",
@@ -412,7 +427,6 @@ return {
             -- ["<c-t>"] = "open_tabnew",
             ["<esc>"] = "revert_preview",
             ["m"] = "",
-            ["w"] = "noop",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
             ["th"] = "prev_source",
@@ -423,7 +437,10 @@ return {
             [",n"] = { "order_by_name", nowait = false },
             [",s"] = { "order_by_size", nowait = false },
             [",t"] = { "order_by_type", nowait = false },
-            ["g?"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+
+            [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+
+            ["g?"] = "show_help",
           },
         },
       }
@@ -837,23 +854,23 @@ return {
           desc = "Open: filter kind for outline [outline]",
         },
         -- edgy
-        {
-          "<Leader>ue",
-          function()
-            if vim.bo[0].filetype == "trouble" then
-              vim.cmd [[wincmd p]]
-            end
-            require("edgy").toggle()
-          end,
-          desc = "Misc: edgy toggle [edgy]",
-        },
-        {
-          "<Leader>uE",
-          function()
-            require("edgy").select()
-          end,
-          desc = "Misc: edgy select window [edgy]",
-        },
+        -- {
+        --   "<Leader>ue",
+        --   function()
+        --     if vim.bo[0].filetype == "trouble" then
+        --       vim.cmd [[wincmd p]]
+        --     end
+        --     require("edgy").toggle()
+        --   end,
+        --   desc = "Misc: edgy toggle [edgy]",
+        -- },
+        -- {
+        --   "<Leader>uE",
+        --   function()
+        --     require("edgy").select()
+        --   end,
+        --   desc = "Misc: edgy select window [edgy]",
+        -- },
       }
     end,
     opts = function()

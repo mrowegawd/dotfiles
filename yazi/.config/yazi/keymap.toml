@@ -11,10 +11,10 @@ prepend_keymap = [
   { on = [ "<c-s>", ], run = "plugin smart-enter -- split", desc = "Open split the selected item" },
   { on = [ "<c-t>", ], run = "plugin smart-enter -- tab", desc = "Open tab the selected item" },
   { on = [ "<c-o>", ], run = "plugin fzmark", desc = "Open fzmark" },
-  { on = [ "O", ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
+  { on = [ "<a-o>" ], run = "plugin opcurdir", desc = "Open current directory" },
   { on = [ "<a-t>", ], run = "plugin opener -- terminal", desc = "Open terminal on target dir yazi" },
   { on = [ "P", ], run = "plugin preview-tree", desc = "Open preview file or directory tree" },
-  { on = [ "<A-o>", ], run = """ shell --block --confirm ' clear
+  { on = [ "<a-w>" ], run = """ shell --block --confirm ' clear
 playlist="playlist.m3u"
 
 if [ ! -f "$playlist" ]; then
@@ -35,7 +35,7 @@ nohup mpv --ontop --no-border --force-window \
   --geometry=-15-60 \
   --playlist="$playlist" --osd-level=1 >/dev/null 2>&1 &
 '
-""", desc = "Play playlist on mpv" },
+""", desc = "Play video playist on mpv" },
   { on = [ "<a-b>", ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
   { on = [ "B", ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
 ]

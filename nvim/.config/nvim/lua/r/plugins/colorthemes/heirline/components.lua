@@ -109,7 +109,7 @@ local colors = {
 
   winbar_filepath = h("WinbarFilepath").fg,
   winbar_fontwhite = h("WinbarFontWhite").fg,
-  winbar_dap = h("DapUINormal").bg,
+  winbar_dap = "lightgray",
 
   mode_bg = h("Keyword").fg,
 

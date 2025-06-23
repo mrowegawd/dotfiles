@@ -165,7 +165,7 @@ RUtils.map.nnoremap("<Leader>R", function()
   vim.cmd [[restart]]
 end, { desc = "Buffer: restart nvim" })
 RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
-RUtils.map.nnoremap("<Leader>b?", RUtils.map.show_help_buf_keymap, {
+RUtils.map.nnoremap("<Leader>bk", RUtils.map.show_help_buf_keymap, {
   desc = "Buffer: show keymaps curbuf",
   silent = true,
 })

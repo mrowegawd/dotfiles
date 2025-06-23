@@ -121,6 +121,7 @@ return {
       { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false } end, desc = "Testing: show output preview" },
       { "<Leader>tS", function() require("neotest").run.stop() end, desc = "Testing: stop" },
       { "<Leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Testing: toggle watch" },
+      { "<Leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug: nearest [dap]" },
       {
         "<Leader>tf",
         function()
@@ -176,14 +177,6 @@ return {
         end,
         desc = "Testing: list command of testing",
       },
-    },
-  },
-  {
-    "mfussenegger/nvim-dap",
-    optional = true,
-    -- stylua: ignore
-    keys = {
-      { "<Leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug: nearest [dap]" },
     },
   },
 }
