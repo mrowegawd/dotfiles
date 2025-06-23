@@ -14,11 +14,9 @@ local base_cl = {
   cursorline_alter = 0.04,
   dapstopped_bg_alter = 0.25,
   fzflua_bg_cursorline_alter = 0.05,
-  fzfluaborder_fg_alter = 0.1,
   fzfluasel_bg_alter = 0.05,
   normalfloat_bg_alter = -0.12,
   normalfloat_fg_alter = -0.01,
-  pmenu_bg_alter = 0.1,
   pmenu_fg_alter = -0.1,
   pmenusel_bg_alter = 0.15,
   quickfixline_alter = 0.6,
@@ -48,11 +46,9 @@ local function reset_base_alter(themes, alter_base)
     cursorline_alter = "cursorline_alter",
     dapstopped_bg_alter = "dapstopped_bg_alter",
     fzflua_bg_cursorline_alter = "fzflua_bg_cursorline_alter",
-    fzfluaborder_fg_alter = "fzfluaborder_fg_alter",
     fzfluasel_bg_alter = "fzfluasel_bg_alter",
     normalfloat_bg_alter = "normalfloat_bg_alter",
     normalfloat_fg_alter = "normalfloat_fg_alter",
-    pmenu_bg_alter = "pmenu_bg_alter",
     pmenu_fg_alter = "pmenu_fg_alter",
     pmenusel_bg_alter = "pmenusel_bg_alter",
     quickfixline_alter = "quickfixline_alter",
@@ -70,9 +66,7 @@ reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.1,
-  fzfluaborder_fg_alter = -0.1,
   fzfluasel_bg_alter = -0.15,
-  pmenu_bg_alter = 1,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.3,
   winseparator_alter = 1.6,
@@ -81,10 +75,8 @@ reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
-  fzfluaborder_fg_alter = -0.35,
   fzfluasel_bg_alter = -0.2,
   normalfloat_bg_alter = -0.1,
-  pmenu_bg_alter = 0.45,
   pmenusel_bg_alter = 0.85,
   quickfixline_alter = 0.25,
   winseparator_alter = 0.6,
@@ -93,10 +85,8 @@ reset_base_alter({ "base46-ayu_dark" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#f29718",
   cursorline_alter = 0.12,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.2,
   normalfloat_bg_alter = 0.5,
-  pmenu_bg_alter = 2.2,
   pmenusel_bg_alter = 3.2,
   quickfixline_alter = 0.25,
   winseparator_alter = 3,
@@ -106,9 +96,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.4,
-  pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.25,
   winseparator_alter = 0.9,
@@ -116,9 +104,7 @@ reset_base_alter({ "base46-catppuccin" }, {
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
   cursorline_alter = 0.1,
-  fzfluaborder_fg_alter = -0.35,
-  fzfluasel_bg_alter = -0.23,
-  pmenu_bg_alter = 0.4,
+  fzfluasel_bg_alter = -0.2,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.3,
   winseparator_alter = 0.6,
@@ -126,9 +112,7 @@ reset_base_alter({ "base46-chocolate" }, {
 reset_base_alter({ "base46-default-dark" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.07,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.28,
-  pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.4,
   quickfixline_alter = 0.3,
   winseparator_alter = 1,
@@ -138,9 +122,7 @@ reset_base_alter({ "base46-doomchad" }, {
   cursor_fg = "#81A1C1",
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.4,
   fzfluasel_bg_alter = -0.35,
-  pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
   search_bg_alter = 0.95,
@@ -150,8 +132,6 @@ reset_base_alter({ "base46-everforest" }, {
   cursor_fg = "#e69875",
   cursorline_alter = 0.05,
   fzfluasel_bg_alter = -0.32,
-  fzfluaborder_fg_alter = -0.45,
-  pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
   winseparator_alter = 0.4,
@@ -161,19 +141,15 @@ reset_base_alter({ "base46-horizon" }, {
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluaborder_fg_alter = -0.35,
   fzfluasel_bg_alter = -0.2,
-  pmenu_bg_alter = 0.6,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.85,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
   fzfluasel_bg_alter = -0.32,
-  fzfluaborder_fg_alter = -0.35,
-  pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
   winseparator_alter = 0.48,
@@ -182,9 +158,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.35,
   fzfluasel_bg_alter = -0.2,
-  pmenu_bg_alter = 1.3,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.25,
   winseparator_alter = 1.5,
@@ -196,8 +170,6 @@ reset_base_alter({ "base46-kanagawa" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.3,
-  fzfluaborder_fg_alter = -0.35,
-  pmenu_bg_alter = 0.6,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.35,
@@ -207,9 +179,7 @@ reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.35,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.52,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.25,
 })
@@ -218,21 +188,17 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  fzfluaborder_fg_alter = -0.4,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.09,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
   cursor_fg = "#3879C5",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.45,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.2,
   winseparator_alter = 0.5,
@@ -242,9 +208,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.25,
-  pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.3,
   winseparator_alter = 1.3,
@@ -254,9 +218,7 @@ reset_base_alter({ "base46-rosepine" }, {
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluaborder_fg_alter = -0.1,
   fzfluasel_bg_alter = -0.1,
-  pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.25,
   winseparator_alter = 1.5,
@@ -266,9 +228,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluaborder_fg_alter = -0.55,
   fzfluasel_bg_alter = -0.34,
-  pmenu_bg_alter = 0.25,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = 0.08,
   winseparator_alter = 0.33,
@@ -278,9 +238,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluaborder_fg_alter = -0.3,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.2,
   winseparator_alter = 0.6,
@@ -290,9 +248,7 @@ reset_base_alter({ "base46-wombat" }, {
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  fzfluaborder_fg_alter = -0.32,
   fzfluasel_bg_alter = -0.25,
-  pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.09,
   winseparator_alter = 0.6,
@@ -302,9 +258,7 @@ reset_base_alter({ "base46-zenburn" }, {
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  fzfluaborder_fg_alter = -0.55,
   fzfluasel_bg_alter = -0.37,
-  pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.09,
   winseparator_alter = 0.35,
@@ -314,10 +268,8 @@ reset_base_alter({ "kanso-ink" }, {
   cursor_fg = "#c5c9c7",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.25,
   normalfloat_bg_alter = 0.2,
-  pmenu_bg_alter = 0.85,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.2,
   winseparator_alter = 1.5,
@@ -326,11 +278,9 @@ reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.15,
   fzflua_bg_cursorline_alter = 0.3,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.28,
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
-  pmenu_bg_alter = 1.5,
   pmenu_fg_alter = 2,
   pmenusel_bg_alter = 2.5,
   quickfixline_alter = 0.3,
@@ -343,7 +293,6 @@ reset_base_alter({ "rose-pine-dawn" }, {
   fzflua_bg_cursorline_alter = 0.04,
   fzfluasel_bg_alter = 0.05,
   normalfloat_bg_alter = -0.08,
-  pmenu_bg_alter = -0.1,
   pmenu_fg_alter = -0.4,
   pmenusel_bg_alter = -0.02,
   quickfixline_alter = 0.05,
@@ -353,9 +302,7 @@ reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.01,
-  fzfluaborder_fg_alter = -0.25,
   fzfluasel_bg_alter = -0.1,
-  pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.5,
   winseparator_alter = 1.4,
@@ -366,9 +313,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
-  fzfluaborder_fg_alter = -0.45,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.45,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
@@ -380,9 +325,7 @@ reset_base_alter({ "vscode_modern" }, {
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
-  fzfluaborder_fg_alter = -0.35,
   fzfluasel_bg_alter = -0.3,
-  pmenu_bg_alter = 0.5,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.35,
@@ -459,7 +402,7 @@ local general_overrides = function()
     {
       Pmenu = {
         fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = pmenu_bg_alter },
+        bg = { from = "Normal", attr = "bg" },
         reverse = false,
       },
     },
@@ -484,7 +427,6 @@ local general_overrides = function()
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
-    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = 1 } } },
 
     {
       FloatTitle = {
@@ -940,10 +882,12 @@ local general_overrides = function()
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
     {
       CmpItemFloatBorder = {
-        fg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.15 },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
+
+    { PmenuThumb = { bg = { from = "CmpItemFloatBorder", attr = "fg" } } },
 
     -- ╭────────╮
     -- │ CMPDOC │
@@ -1133,12 +1077,7 @@ local general_overrides = function()
     -- │ PRPOMPT │
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-    {
-      FzfLuaBorder = {
-        inherit = "FloatBorder",
-        fg = { from = "FloatBorder", attr = "fg", alter = fzfluaborder_fg_alter },
-      },
-    },
+    { FzfLuaBorder = { inherit = "FloatBorder", fg = { from = "WinSeparator", attr = "fg" } } },
     { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
@@ -1770,14 +1709,6 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.5 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
-      {
-        Folded = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.75 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.85 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.51 }, bg = "NONE" } },
-
       -- QFSILET
       {
         NormalBoxComment = {
@@ -1842,7 +1773,7 @@ local function colorscheme_overrides()
       { FzfLuaCursorLine = { fg = "NONE" } },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaDirPart", attr = "fg" },
@@ -1986,12 +1917,21 @@ local function colorscheme_overrides()
           bg = { from = "StatusLineNC", attr = "bg", alter = 0.45 },
         },
       },
+
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3.5 },
-          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.51 }, bg = "NONE" } },
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.22 } } },
@@ -2008,7 +1948,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.4 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.9 } } },
-      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.8 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.6 } } },
       { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     },
     ["base46-aylin"] = {
@@ -2066,7 +2006,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.55 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2175,7 +2115,7 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
         },
       },
@@ -2269,7 +2209,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2361,7 +2301,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -2452,7 +2392,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2630,7 +2570,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.35 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2818,7 +2758,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.48 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.65 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3010,7 +2950,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.45 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3191,7 +3131,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3354,7 +3294,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3415,7 +3355,7 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.05
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.22, Highlight.get("Normal", "bg")),
@@ -3456,14 +3396,14 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.27 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -3483,7 +3423,7 @@ local function colorscheme_overrides()
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.9 } } },
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
+      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.95 } } },
       { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     },
@@ -3539,7 +3479,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.45 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3748,7 +3688,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.48 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3940,7 +3880,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.55 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4097,7 +4037,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.59 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4270,7 +4210,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4335,7 +4275,7 @@ local function colorscheme_overrides()
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.17, Highlight.get("Normal", "bg")),
-            -0.2
+            -0.3
           ),
           reverse = false,
         },
@@ -4375,8 +4315,8 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.14 },
         },
       },
 
@@ -4456,7 +4396,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.12 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.37 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4628,7 +4568,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4826,7 +4766,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.55 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5023,7 +4963,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.18 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5200,7 +5140,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5370,7 +5310,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5577,7 +5517,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.25 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5759,7 +5699,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5952,7 +5892,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollBorderEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollFloatEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
@@ -6347,7 +6287,7 @@ local function colorscheme_overrides()
       { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Normal", attr = "bg", alter = -0.35 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
 
       { FzfLuaBorder = { inherit = "FloatBorder" } },
       { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder" } },
@@ -6705,7 +6645,7 @@ local function colorscheme_overrides()
       -- FZF
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -6849,7 +6789,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -7049,7 +6989,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
       {
         FzfLuaCursorLineNr = {

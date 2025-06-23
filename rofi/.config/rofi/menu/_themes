@@ -511,7 +511,7 @@ set_zshrc() {
   fi
 
   if [ "$1" == "base46-horizon" ]; then
-    colorline="$GET_COL_45"
+    colorline="$GET_COL_31"
     colorsugest="$GET_COL_19"
   fi
 
