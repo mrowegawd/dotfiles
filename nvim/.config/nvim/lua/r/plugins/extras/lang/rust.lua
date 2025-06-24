@@ -175,7 +175,7 @@ return {
 
   -- Show `impl` blocks in outline.nvim
   {
-    "hedyhli/outline.nvim",
+    "mrowegawd/outline.nvim",
     optional = true,
     opts = {
       symbols = {

@@ -98,7 +98,7 @@ if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") 
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
   RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
-  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +3<cr>", { desc = "View: increase window width" })
+  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
 end
 
 -- Tab
