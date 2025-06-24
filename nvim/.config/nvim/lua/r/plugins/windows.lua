@@ -145,26 +145,69 @@ return {
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     keys = function()
       local resize_plus_or_mines = function(position)
-        local j = require("smart-splits.api").win_position(position)
-
+        local win_position = require("smart-splits.api").win_position(position)
+        local winid = vim.api.nvim_get_current_win()
+        local curwinnr = vim.api.nvim_win_get_number(0)
         local size = 7
 
-        local minus_or_plus
-        if position == "down" or position == "right" then
-          minus_or_plus = "+"
-          if j > 0 then
-            minus_or_plus = "-"
+        local function get_direction(minus_or_plus, position)
+          if not position then
+            return minus_or_plus
           end
+
+          local windows = vim.api.nvim_list_wins()
+          if curwinnr > 1 then
+            for _, win in ipairs(windows) do
+              local config = vim.api.nvim_win_get_config(win)
+              if win == winid then
+                if config.split == "left" or config.split == "right" then
+                  if
+                    (config.split == "left" and position == "right")
+                    or (config.split == "right" and position == "left")
+                  then
+                    minus_or_plus = (win_position > 0) and "+" or "-"
+                  else
+                    minus_or_plus = (win_position > 0) and "-" or "+"
+                  end
+                end
+              end
+            end
+          end
+          return minus_or_plus
         end
 
-        if position == "left" or position == "up" then
-          minus_or_plus = "-"
-          if j > 0 then
-            minus_or_plus = "+"
-          end
+        local minus_or_plus
+        if position == "up" or position == "left" then
+          minus_or_plus = (win_position > 0) and "+" or "-"
+        elseif position == "down" or position == "right" then
+          minus_or_plus = (win_position > 0) and "-" or "+"
+        end
+
+        if curwinnr > 1 then
+          minus_or_plus = get_direction(minus_or_plus, position)
         end
 
         return minus_or_plus .. size
+      end
+
+      local check_split_or_vsplit = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local winid = vim.api.nvim_get_current_win()
+        if vim.bo[bufnr].filetype == "noice" then
+          return true
+        end
+
+        local windows = vim.api.nvim_list_wins()
+        for _, win in ipairs(windows) do
+          local config = vim.api.nvim_win_get_config(win)
+          if win == winid then
+            if config.split == "below" then
+              return true
+            end
+          end
+        end
+
+        return false
       end
 
       return {
@@ -173,28 +216,28 @@ return {
           function()
             require("smart-splits").move_cursor_left()
           end,
-          desc = "window: move left a split [smart-splits]",
+          desc = "window: move cursor left [smart-splits]",
         },
         {
           "<C-j>",
           function()
             require("smart-splits").move_cursor_down()
           end,
-          desc = "window: move down a split [smart-splits]",
+          desc = "window: move cursor down [smart-splits]",
         },
         {
           "<C-k>",
           function()
             require("smart-splits").move_cursor_up()
           end,
-          desc = "window: move up a split [smart-splits]",
+          desc = "window: move cursor up [smart-splits]",
         },
         {
           "<C-l>",
           function()
             require("smart-splits").move_cursor_right()
           end,
-          desc = "window: move rith a split [smart-splits]",
+          desc = "window: move cursor right [smart-splits]",
         },
 
         {
@@ -202,28 +245,32 @@ return {
           function()
             vim.cmd("vertical resize " .. resize_plus_or_mines "left")
           end,
-          desc = "window: move left a split [smart-splits]",
+          desc = "window: resize window left [smart-splits]",
         },
         {
           "<a-J>",
           function()
-            vim.cmd("resize " .. resize_plus_or_mines "down")
+            if check_split_or_vsplit() then
+              vim.cmd("resize " .. resize_plus_or_mines "down")
+            end
           end,
-          desc = "window: move down a split [smart-splits]",
+          desc = "window: resize window down [smart-splits]",
         },
         {
           "<a-K>",
           function()
-            vim.cmd("resize " .. resize_plus_or_mines "up")
+            if check_split_or_vsplit() then
+              vim.cmd("resize " .. resize_plus_or_mines "up")
+            end
           end,
-          desc = "window: move up a split [smart-splits]",
+          desc = "window: resize window up [smart-splits]",
         },
         {
           "<a-L>",
           function()
             vim.cmd("vertical resize " .. resize_plus_or_mines "right")
           end,
-          desc = "window: move right a split [smart-splits]",
+          desc = "window: resize window right [smart-splits]",
         },
       }
     end,
