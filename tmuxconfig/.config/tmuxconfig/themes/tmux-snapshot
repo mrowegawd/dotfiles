@@ -55,6 +55,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
+#[fg=$RED]#[bold]#{?@resize-locked,Resize Pane: 󰌾,}#[default] \
 #[fg=$BORDER_FG_ACTIVE,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
