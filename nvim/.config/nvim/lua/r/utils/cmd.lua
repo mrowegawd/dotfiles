@@ -719,7 +719,7 @@ function M.change_colors()
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
   local lazygit_active_border = Highlight.get("KeywordNC", "fg")
-  local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
+  local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2) --> colorline zshrc
 
   local gitadd = Highlight.get("diffAdd", "bg")
   local gitlinenumber_add = Highlight.darken(Highlight.get("GitSignsAdd", "fg"), 0.4, Highlight.get("Normal", "bg"))
@@ -728,7 +728,7 @@ function M.change_colors()
   local gitlinenumber_delete =
     Highlight.darken(Highlight.get("GitSignsDelete", "fg"), 0.6, Highlight.get("Normal", "bg"))
 
-  local sugest_highlight = Highlight.tint(Highlight.get("StatusLineNC", "fg"), -0.49)
+  local sugest_highlight = Highlight.tint(Highlight.get("Comment", "fg"), -0.05)
 
   local yazi_cwd = Highlight.get("Comment", "fg")
   local yazi_hovered = Highlight.get("CursorLine", "bg")

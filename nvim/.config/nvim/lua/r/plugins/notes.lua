@@ -23,7 +23,7 @@ return {
         desc = "Note: capture note [orgmode]",
       },
       {
-        "<Localleader>an",
+        "<Localleader>aa",
         function()
           require("orgmode").action "agenda.prompt"
         end,
@@ -144,7 +144,7 @@ return {
           prefix = "<Leader>c",
           global = {
             org_capture = "<Localleader>ac",
-            org_agenda = "<Localleader>an",
+            org_agenda = "<Localleader>aa",
           },
           agenda = {
             org_agenda_day_view = "vd",
@@ -382,7 +382,7 @@ return {
         desc = "Note: find note files [obsidian]",
       },
       {
-        "<Localleader>aa",
+        "<Localleader>an",
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
       },

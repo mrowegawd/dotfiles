@@ -35,8 +35,6 @@ return {
         "c",
         "diff",
         "graphql",
-        "html",
-        "http",
         "ini",
         "javascript",
         "jsdoc",
@@ -261,6 +259,29 @@ return {
             {
               TreesitterContextLineNumber = {
                 fg = { from = "TreesitterContext", attr = "bg", alter = 0.8 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["base46-ayu_dark"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.85 },
                 bg = { from = "TreesitterContext" },
               },
             },

@@ -83,7 +83,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # ZSH-AUTOSUGGESTIONS
-  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # YAZI
   GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -475,67 +475,8 @@ set_zshrc() {
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
   fi
 
-  colorline="$GET_COL_32"
-  colorsugest="$GET_COL_45"
-
-  if [ "$1" == "zenburned" ]; then
-    colorline="$GET_COL_18"
-    colorsugest="$GET_COL_31"
-  fi
-
-  if [ "$1" == "base46-jellybeans" ] || [ "$1" == "base46-oxocarbon" ]; then
-    colorline="$GET_COL_28"
-    colorsugest="$GET_COL_19"
-  fi
-
-  if [ "$1" == "lackluster" ]; then
-    colorline="$GET_COL_30"
-    colorsugest="$GET_COL_19"
-  fi
-
-  if [ "$1" == "kanso-ink" ]; then
-    colorline="$GET_COL_31"
-    colorsugest="$GET_COL_38"
-  fi
-  if [ "$1" == "base46-wombat" ]; then
-    colorsugest="$GET_COL_33"
-  fi
-
-  if [ "$1" == "base46-chocolate" ]; then
-    colorsugest="$GET_COL_28"
-  fi
-
-  if [ "$1" == "ashen" ]; then
-    colorline="$GET_COL_38"
-    colorsugest="$GET_COL_19"
-  fi
-
-  if [ "$1" == "base46-horizon" ]; then
-    colorline="$GET_COL_31"
-    colorsugest="$GET_COL_19"
-  fi
-
-  if [ "$1" == "base46-everforest" ] || [ "$1" == "base46-seoul256_dark" ]; then
-    colorsugest="$GET_COL_31"
-  fi
-
-  if [ "$1" == "base46-melange" ]; then
-    colorline="$GET_COL_31"
-    colorsugest="$GET_COL_21"
-  fi
-
-  if [ "$1" == "tokyonight-night" ]; then
-    colorline="$GET_COL_31"
-  fi
-
-  if [ "$1" == "base46-ayu_dark" ] || [ "$1" == "base46-catppuccin" ] || [ "$1" == "base46-default-dark" ]; then
-    colorline="$GET_COL_28"
-  fi
-
-  if [ "$1" == "base46-rosepine" ]; then
-    colorline="$GET_COL_38"
-    colorsugest="$GET_COL_21"
-  fi
+  colorline="$GET_COL_31"
+  colorsugest="$GET_COL_37"
 
   sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$colorsugest\"/g" "$ZSHRC_PATH"
   sed -i -e "s/^colorline=.*/colorline=\"$colorline\"/g" "$ZSHRC_PATH"

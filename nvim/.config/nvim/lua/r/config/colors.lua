@@ -22,7 +22,7 @@ local base_cl = {
   quickfixline_alter = 0.6,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
-  winseparator_alter = 0.65,
+  winseparator_alter = 0.4,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -69,7 +69,7 @@ reset_base_alter({ "ashen" }, {
   fzfluasel_bg_alter = -0.15,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.3,
-  winseparator_alter = 1.6,
+  winseparator_alter = 1.2,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -79,7 +79,6 @@ reset_base_alter({ "base46-aylin" }, {
   normalfloat_bg_alter = -0.1,
   pmenusel_bg_alter = 0.85,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-ayu_dark" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -89,7 +88,7 @@ reset_base_alter({ "base46-ayu_dark" }, {
   normalfloat_bg_alter = 0.5,
   pmenusel_bg_alter = 3.2,
   quickfixline_alter = 0.25,
-  winseparator_alter = 3,
+  winseparator_alter = 2.3,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
@@ -99,7 +98,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   fzfluasel_bg_alter = -0.4,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.9,
+  winseparator_alter = 0.65,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
@@ -107,7 +106,7 @@ reset_base_alter({ "base46-chocolate" }, {
   fzfluasel_bg_alter = -0.2,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-default-dark" }, {
   cursor_fg = "#9e0e06",
@@ -115,7 +114,7 @@ reset_base_alter({ "base46-default-dark" }, {
   fzfluasel_bg_alter = -0.28,
   pmenusel_bg_alter = 1.4,
   quickfixline_alter = 0.3,
-  winseparator_alter = 1,
+  winseparator_alter = 0.85,
 })
 reset_base_alter({ "base46-doomchad" }, {
   cursearch_bg_alter = 0.95,
@@ -126,7 +125,6 @@ reset_base_alter({ "base46-doomchad" }, {
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
   search_bg_alter = 0.95,
-  winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-everforest" }, {
   cursor_fg = "#e69875",
@@ -134,7 +132,7 @@ reset_base_alter({ "base46-everforest" }, {
   fzfluasel_bg_alter = -0.32,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
@@ -152,7 +150,6 @@ reset_base_alter({ "base46-jabuti" }, {
   fzfluasel_bg_alter = -0.32,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
-  winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
@@ -161,7 +158,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   fzfluasel_bg_alter = -0.2,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.25,
-  winseparator_alter = 1.5,
+  winseparator_alter = 1.05,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -1078,7 +1075,7 @@ local general_overrides = function()
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     { FzfLuaBorder = { inherit = "FloatBorder", fg = { from = "WinSeparator", attr = "fg" } } },
-    { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.5 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
     {
@@ -1454,20 +1451,17 @@ local general_overrides = function()
     },
     {
       GrugFarResultsLineNr = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-        bg = { from = "Normal", attr = "bg", alter = 0.2 },
+        fg = { from = "Normal", attr = "bg", alter = 1.2 },
+        bg = { from = "Normal", attr = "bg", alter = 0.3 },
       },
     },
-
-    -- { GrugFarResultsLineColumn = { link = "GrugFarResultsLineNo" } },
-    --
-    -- {
-    --   GrugFarResultsMatch = {
-    --     fg = { from = "CurSearch", attr = "bg", alter = 0.5 },
-    --     bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
-    --     bold = true,
-    --   },
-    -- },
+    {
+      GrugFarResultsMatch = {
+        fg = { from = "CurSearch", attr = "bg", alter = 0.35 },
+        bg = { from = "CurSearch", attr = "bg", alter = -0.5 },
+        bold = true,
+      },
+    },
     { GrugFarResultsNumberLabel = { fg = { from = "CurSearch", attr = "bg", alter = -0.2 } } },
 
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
@@ -1773,7 +1767,6 @@ local function colorscheme_overrides()
       { FzfLuaCursorLine = { fg = "NONE" } },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaDirPart", attr = "fg" },
@@ -1812,15 +1805,10 @@ local function colorscheme_overrides()
 
       -- GRUG-FAR
       {
-        GrugFarResultsLineNo = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-        },
-      },
-      {
-        GrugFarResultsMatch = {
-          fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
-          bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
-          bold = true,
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.5 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.35 },
         },
       },
 
@@ -2006,7 +1994,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2209,7 +2196,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2220,6 +2206,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 1.5 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 1 },
         },
       },
 
@@ -2260,7 +2255,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Visual", "bg"), 0.8, Highlight.get("Normal", "bg")), 1.3),
+          fg = Highlight.tint(Highlight.darken(Highlight.get("Visual", "bg"), 0.8, Highlight.get("Normal", "bg")), 1.1),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Visual", "bg"), 0.8, Highlight.get("Normal", "bg")),
             -0.1
@@ -2301,7 +2296,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
         },
       },
 
@@ -2392,7 +2387,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2592,13 +2586,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
-        },
-      },
-
       -- RGFLOW
       { RgFlowHeadLine = { inherit = "RgFlowHeadLine", bg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
       { RgFlowHead = { bg = { from = "RgFlowHeadLine" } } },
@@ -2738,8 +2725,9 @@ local function colorscheme_overrides()
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.4 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -2930,8 +2918,9 @@ local function colorscheme_overrides()
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.05 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.1 },
         },
       },
 
@@ -2950,7 +2939,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3131,7 +3119,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3142,6 +3129,14 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.07 },
         },
       },
 
@@ -3294,7 +3289,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3479,7 +3473,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3688,7 +3681,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.48 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3699,6 +3691,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.6 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.4 },
         },
       },
 
@@ -3836,6 +3837,15 @@ local function colorscheme_overrides()
         },
       },
 
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.1 },
+        },
+      },
+
       -- TROUBLE
       {
         TroubleIndent = {
@@ -3880,7 +3890,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4037,7 +4046,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4187,14 +4195,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-
       -- ORGMODE
       { ["@org.block"] = { inherit = "Comment" } },
       { ["@org.checkbox"] = { inherit = "Comment" } },
@@ -4210,7 +4210,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4316,7 +4315,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.14 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.17 },
         },
       },
 
@@ -4349,7 +4348,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
@@ -4396,7 +4395,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.12 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4405,9 +4403,17 @@ local function colorscheme_overrides()
       },
       {
         TelescopeSelection = {
-          -- fg = { from = "PmenuSel", attr = "fg" },
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.05 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.05 },
         },
       },
 
@@ -4568,7 +4574,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4579,6 +4584,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.5 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.4 },
         },
       },
 
@@ -4766,7 +4780,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4777,6 +4790,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.4 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.3 },
         },
       },
 
@@ -4867,7 +4889,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
         },
       },
 
@@ -4929,8 +4951,9 @@ local function colorscheme_overrides()
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.15 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.15 },
         },
       },
 
@@ -4963,7 +4986,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5069,7 +5091,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.07 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
         },
       },
 
@@ -5140,7 +5162,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5151,6 +5172,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
         },
       },
 
@@ -5238,7 +5268,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.4 },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.4 },
         },
       },
@@ -5287,14 +5317,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-
       -- ORGMODE
       { ["@org.block"] = { inherit = "Comment" } },
       { ["@org.checkbox"] = { inherit = "Comment" } },
@@ -5310,7 +5332,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5490,15 +5511,9 @@ local function colorscheme_overrides()
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
-          fg = { from = "Normal", attr = "bg", alter = 0.9 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        GrugFarResultsMatch = {
-          fg = { from = "DiffText", attr = "fg", alter = 0.1 },
-          bg = { from = "DiffText", attr = "bg", alter = -0.5 },
-          bold = true,
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.1 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.1 },
         },
       },
 
@@ -5517,7 +5532,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5699,7 +5713,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5710,6 +5723,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.6 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.5 },
         },
       },
 
@@ -5892,12 +5914,10 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollBorderEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollFloatEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollFloatFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
-      { FzfLuaHelpBorder = { fg = { from = "FzfLuaNormal", attr = "bg", alter = 1 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5906,7 +5926,6 @@ local function colorscheme_overrides()
       },
       {
         TelescopeSelection = {
-          -- fg = { from = "PmenuSel", attr = "fg" },
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
         },
@@ -6008,15 +6027,13 @@ local function colorscheme_overrides()
       { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
 
       -- GRUG-FAR
-      { GrugFarResultsLineNo = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
       {
-        GrugFarResultsMatch = {
-          fg = { from = "Directory", attr = "fg", alter = 0.8 },
-          bg = { from = "Directory", attr = "fg", alter = -0.5 },
-          bold = true,
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.8 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.8 },
         },
       },
-      { GrugFarResultsNumberLabel = { fg = { from = "Directory", attr = "fg" } } },
 
       -- DIFFVIEW
       { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.1 } } },
@@ -6645,7 +6662,6 @@ local function colorscheme_overrides()
       -- FZF
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -6656,6 +6672,15 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -6789,7 +6814,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -6989,7 +7013,6 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
       {
         FzfLuaCursorLineNr = {

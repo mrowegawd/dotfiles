@@ -55,7 +55,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$RED]#[bold]#{?@resize-locked,Resize Pane: 󰌾,}#[default] \
+#[fg=$RED]#[bold]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
 #[fg=$BORDER_FG_ACTIVE,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
@@ -74,15 +74,9 @@ set-option -g window-status-current-format "\
 #[bg=$WHITE]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
 #[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]}"
 
-# set-option -g window-status-format "\
-# #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
-# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
-# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},>> COPY << ℓ #{e|-|:#{history_size},#{scroll_position}}/#{history_size} #[default],}\
-# #[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
-
 set-option -g window-status-format "\
 #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
-#[fg=$TMUX_FG,bg=$TMUX_BG,noreverse]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+#[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
 #[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]COPY \
 #{?#{e|>:#{search_count},0},#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]Found #{search_count} #[bg=$TMUX_BG]#[fg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
