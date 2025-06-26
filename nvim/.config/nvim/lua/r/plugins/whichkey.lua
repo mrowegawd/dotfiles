@@ -21,6 +21,8 @@ return {
           mode = { "n", "v" },
           { "<Leader>a", group = "ai" },
 
+          { "<Leader>A", group = "projectionist" },
+
           { "<Leader>c", group = "code/action" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
@@ -60,7 +62,6 @@ return {
               return require("which-key.extras").expand.buf()
             end,
           },
-          { "<Leader>ba", group = "projectionist" },
 
           { "<Localleader>n", group = "noice" },
           { "<Localleader>f", group = "telescope" },

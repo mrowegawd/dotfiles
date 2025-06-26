@@ -27,8 +27,6 @@ return {
               "12000",
               fmt("%s - %s", tostring(time[3]), subtitle),
               fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
-              "-u",
-              "normal",
             },
           })
         end
