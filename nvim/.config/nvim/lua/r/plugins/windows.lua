@@ -148,13 +148,15 @@ return {
         local win_position = require("smart-splits.api").win_position(position)
         local winid = vim.api.nvim_get_current_win()
         local curwinnr = vim.api.nvim_win_get_number(0)
+        local ft_exclude = { "aerial", "Outline", "neo-tree" }
         local size = 7
 
-        local function get_direction(minus_or_plus, position)
-          if not position then
+        local function get_direction(minus_or_plus, posisi)
+          if not posisi then
             return minus_or_plus
           end
 
+          local exclude_win = RUtils.cmd.windows_is_opened(ft_exclude)
           local windows = vim.api.nvim_list_wins()
           if curwinnr > 1 then
             for _, win in ipairs(windows) do
@@ -162,12 +164,17 @@ return {
               if win == winid then
                 if config.split == "left" or config.split == "right" then
                   if
-                    (config.split == "left" and position == "right")
-                    or (config.split == "right" and position == "left")
+                    (config.split == "left" and posisi == "right") or (config.split == "right" and posisi == "left")
                   then
                     minus_or_plus = (win_position > 0) and "+" or "-"
+                    if exclude_win.found and not (vim.tbl_contains(ft_exclude, vim.bo[0].filetype)) then
+                      minus_or_plus = "-"
+                    end
                   else
                     minus_or_plus = (win_position > 0) and "-" or "+"
+                    if exclude_win.found and not (vim.tbl_contains(ft_exclude, vim.bo[0].filetype)) then
+                      minus_or_plus = "+"
+                    end
                   end
                 end
               end
