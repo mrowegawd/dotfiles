@@ -155,7 +155,7 @@ autocmds.cursorline_blacklist = {
   ["orgagenda"] = true,
   ["packer"] = true,
   ["qf"] = true,
-  -- ["snacks_picker_input"] = true,
+  ["markdown"] = true,
   ["tsplayground"] = true,
   ["undotree"] = true,
 }

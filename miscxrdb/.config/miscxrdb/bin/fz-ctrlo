@@ -251,7 +251,7 @@ open_ps_lsof() {
      BEGIN { "ps -p $$ -o pgid --no-headers | tr -d \"[:blank:]\"" | getline pgid } {
          if ($4 != pgid || $2 == pgid)
              print
-     }' | grcat fps.grc | fzf-tmux -xC -w '80%' -h '80%' -y '55%' --header-lines=1 -m --ansi \
+     }' | grcat fps.grc | fzf-tmux -xC -w '80%' -h '80%' -y '50%' --header-lines=1 -m --ansi \
         --height=80% \
         --min-height=15 --tac --reverse \
         --preview "$fzf_preview_cmd" \
