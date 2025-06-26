@@ -21,7 +21,7 @@ local base_cl = {
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = -0.1,
   pmenusel_bg_alter = 0.15,
-  quickfixline_alter = 0.6,
+  quickfixline_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
   winseparator_alter = 0.4,
@@ -73,7 +73,6 @@ reset_base_alter({ "ashen" }, {
   fzfluasel_bg_alter = -0.15,
   pmenusel_bg_alter = 2,
   linenr_fg_alter = 1.35,
-  quickfixline_alter = 0.3,
   winseparator_alter = 1.3,
 })
 reset_base_alter({ "base46-aylin" }, {
@@ -83,7 +82,6 @@ reset_base_alter({ "base46-aylin" }, {
   fzfluasel_bg_alter = -0.2,
   normalfloat_bg_alter = -0.1,
   pmenusel_bg_alter = 0.85,
-  quickfixline_alter = 0.25,
 })
 reset_base_alter({ "base46-ayu_dark" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -93,7 +91,6 @@ reset_base_alter({ "base46-ayu_dark" }, {
   linenr_fg_alter = 2.5,
   normalfloat_bg_alter = 0.5,
   pmenusel_bg_alter = 3.2,
-  quickfixline_alter = 0.25,
   winseparator_alter = 2,
 })
 reset_base_alter({ "base46-catppuccin" }, {
@@ -104,7 +101,6 @@ reset_base_alter({ "base46-catppuccin" }, {
   fzfluasel_bg_alter = -0.4,
   linenr_fg_alter = 0.7,
   pmenusel_bg_alter = 1.5,
-  quickfixline_alter = 0.25,
   winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-chocolate" }, {
@@ -112,7 +108,6 @@ reset_base_alter({ "base46-chocolate" }, {
   cursorline_alter = 0.1,
   fzfluasel_bg_alter = -0.2,
   pmenusel_bg_alter = 0.9,
-  quickfixline_alter = 0.3,
   winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-default-dark" }, {
@@ -121,7 +116,6 @@ reset_base_alter({ "base46-default-dark" }, {
   fzfluasel_bg_alter = -0.28,
   linenr_fg_alter = 1,
   pmenusel_bg_alter = 1.4,
-  quickfixline_alter = 0.3,
   winseparator_alter = 0.85,
 })
 reset_base_alter({ "base46-doomchad" }, {
@@ -132,7 +126,6 @@ reset_base_alter({ "base46-doomchad" }, {
   fzfluasel_bg_alter = -0.35,
   linenr_fg_alter = 0.4,
   pmenusel_bg_alter = 0.8,
-  quickfixline_alter = 0.2,
   search_bg_alter = 0.95,
   winseparator_alter = 0.3,
 })
@@ -142,7 +135,6 @@ reset_base_alter({ "base46-everforest" }, {
   linenr_fg_alter = 0.4,
   fzfluasel_bg_alter = -0.32,
   pmenusel_bg_alter = 0.7,
-  quickfixline_alter = 0.15,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-horizon" }, {
@@ -153,7 +145,6 @@ reset_base_alter({ "base46-horizon" }, {
   fzfluasel_bg_alter = -0.2,
   linenr_fg_alter = 0.65,
   pmenusel_bg_alter = 1,
-  quickfixline_alter = 0.3,
   winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-jabuti" }, {
@@ -161,7 +152,6 @@ reset_base_alter({ "base46-jabuti" }, {
   cursorline_alter = 0.07,
   fzfluasel_bg_alter = -0.32,
   pmenusel_bg_alter = 0.7,
-  quickfixline_alter = 0.15,
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
@@ -170,7 +160,6 @@ reset_base_alter({ "base46-jellybeans" }, {
   fzfluasel_bg_alter = -0.2,
   linenr_fg_alter = 1.2,
   pmenusel_bg_alter = 2,
-  quickfixline_alter = 0.25,
   winseparator_alter = 0.95,
 })
 reset_base_alter({ "base46-kanagawa" }, {
@@ -182,7 +171,6 @@ reset_base_alter({ "base46-kanagawa" }, {
   fzfluasel_bg_alter = -0.3,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
-  quickfixline_alter = 0.35,
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-material-darker" }, {
@@ -191,7 +179,6 @@ reset_base_alter({ "base46-material-darker" }, {
   dapstopped_bg_alter = 0.2,
   fzfluasel_bg_alter = -0.3,
   pmenusel_bg_alter = 1,
-  quickfixline_alter = 0.25,
 })
 reset_base_alter({ "base46-melange" }, {
   cursor_fg = "#ece1d7",
@@ -200,7 +187,6 @@ reset_base_alter({ "base46-melange" }, {
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.3,
   pmenusel_bg_alter = 0.75,
-  quickfixline_alter = 0.09,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-onenord" }, {
@@ -211,7 +197,6 @@ reset_base_alter({ "base46-onenord" }, {
   fzfluasel_bg_alter = -0.3,
   linenr_fg_alter = 0.37,
   pmenusel_bg_alter = 0.75,
-  quickfixline_alter = 0.2,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
@@ -222,7 +207,6 @@ reset_base_alter({ "base46-oxocarbon" }, {
   linenr_fg_alter = 1.2,
   fzfluasel_bg_alter = -0.25,
   pmenusel_bg_alter = 1.5,
-  quickfixline_alter = 0.3,
   winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-rosepine" }, {
@@ -233,7 +217,6 @@ reset_base_alter({ "base46-rosepine" }, {
   linenr_fg_alter = 1,
   fzfluasel_bg_alter = -0.1,
   pmenusel_bg_alter = 0.9,
-  quickfixline_alter = 0.25,
   winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
@@ -254,7 +237,6 @@ reset_base_alter({ "base46-solarized_dark" }, {
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = -0.3,
   pmenusel_bg_alter = 0.7,
-  quickfixline_alter = 0.2,
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-wombat" }, {
@@ -264,7 +246,6 @@ reset_base_alter({ "base46-wombat" }, {
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.25,
   pmenusel_bg_alter = 0.75,
-  quickfixline_alter = 0.09,
   winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-zenburn" }, {
@@ -287,7 +268,6 @@ reset_base_alter({ "kanso-ink" }, {
   linenr_fg_alter = 1.2,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 1.5,
-  quickfixline_alter = 0.2,
   winseparator_alter = 1,
 })
 reset_base_alter({ "lackluster" }, {
@@ -300,7 +280,6 @@ reset_base_alter({ "lackluster" }, {
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
   pmenusel_bg_alter = 2.5,
-  quickfixline_alter = 0.3,
   winseparator_alter = 1.5,
 })
 reset_base_alter({ "tokyonight-night" }, {
@@ -310,7 +289,6 @@ reset_base_alter({ "tokyonight-night" }, {
   fzfluasel_bg_alter = -0.1,
   linenr_fg_alter = 0.95,
   pmenusel_bg_alter = 1,
-  quickfixline_alter = 0.5,
   winseparator_alter = 0.85,
 })
 reset_base_alter({ "tokyonight-storm" }, {
@@ -323,7 +301,6 @@ reset_base_alter({ "tokyonight-storm" }, {
   linenr_fg_alter = 0.45,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.8,
-  quickfixline_alter = 0.25,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -334,7 +311,6 @@ reset_base_alter({ "vscode_modern" }, {
   fzfluasel_bg_alter = -0.3,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
-  quickfixline_alter = 0.35,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winseparator_alter = 0.55,
@@ -499,11 +475,11 @@ local general_overrides = function()
     -- ╚═════════════════════════════════════════════════════════╝
     { qfFileName = { bg = "NONE" } },
     { QuickFixFileName = { bg = "NONE" } },
-    { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+    { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
     {
       QuickFixLine = {
         fg = "NONE",
-        bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
+        bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
         underline = false,
         reverse = false,
       },
@@ -793,19 +769,6 @@ local general_overrides = function()
     {
       KeywordBlur = {
         bg = { from = "StatusLineNC", attr = "bg", alter = 0.6 },
-      },
-    },
-
-    {
-      IndentGuides = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.6 },
-        bg = "NONE",
-      },
-    },
-    {
-      IndentGuidesFolded = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.9 },
-        bg = "NONE",
       },
     },
 
@@ -1599,10 +1562,17 @@ local general_overrides = function()
 
     --  ──────────────────────────────[ OUTLINE ]──────────────────────────────
     { OutlineGuides = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+    -- {
+    --   OutlineCurrent = {
+    --     fg = { from = "Keyword", attr = "fg", alter = 0.1 },
+    --     bg = "NONE",
+    --     bold = true,
+    --     reverse = false,
+    --   },
+    -- },
     {
       OutlineCurrent = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-        bg = "NONE",
+        fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")), 0.1),
         bold = true,
         reverse = false,
       },
@@ -1676,26 +1646,6 @@ local function colorscheme_overrides()
       {
         Visual = {
           bg = Highlight.tint(Highlight.darken(Highlight.get("Visual", "bg"), 0.1, Highlight.get("Error", "fg")), -0.6),
-        },
-      },
-
-      -- QFSILET
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.65 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -1819,17 +1769,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 5 },
@@ -1874,35 +1813,12 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.9 } } },
     },
     ["base46-aylin"] = {
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-
       {
         Visual = {
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
             -0.2
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -1944,17 +1860,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2009,26 +1914,6 @@ local function colorscheme_overrides()
       },
 
       { NonText = { inherit = "NonText", fg = { from = "NonText", attr = "fg", alter = 1.8 } } },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 4 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
 
       -- SNACKS
       {
@@ -2090,17 +1975,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.54 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2162,26 +2036,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2193,40 +2047,10 @@ local function colorscheme_overrides()
       },
       {
         TelescopeSelection = {
-          -- fg = { from = "PmenuSel", attr = "fg" },
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
         },
       },
-
-      -- TROUBLE
-      {
-        TroubleIndent = {
-          inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = 0.3 },
-        },
-      },
-      { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.3 } } },
-      { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 } } },
-
-      { TroubleLspPos = { link = "TroubleFsPos" } },
-      { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
-      { TroubleTodoPos = { link = "TroubleFsPos" } },
-      { TroubleQfPos = { link = "TroubleFsPos" } },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")),
-            0.1
-          ),
-        },
-      },
-      { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
-      { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
-      { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
 
       -- STATUSLINE
       {
@@ -2250,16 +2074,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2322,28 +2136,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- TROUBLE
-      {
-        TroubleIndent = {
-          inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = 0.1 },
-        },
-      },
-      { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 } } },
-      { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.1 } } },
-
-      { TroubleLspPos = { link = "TroubleFsPos" } },
-      { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
-      { TroubleTodoPos = { link = "TroubleFsPos" } },
-      { TroubleQfPos = { link = "TroubleFsPos" } },
-
-      -- OUTLINE
-      { OutlineCurrent = { fg = { from = "OutlineCurrent", attr = "fg", alter = 0.7 } } },
-      { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
-      { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
-      { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
-
       -- STATUSLINE
       {
         StatusLine = {
@@ -2360,17 +2152,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2450,35 +2231,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- TROUBLE
-      {
-        TroubleIndent = {
-          inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = 0.5 },
-        },
-      },
-      { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
-      { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
-
-      { TroubleLspPos = { link = "TroubleFsPos" } },
-      { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
-      { TroubleTodoPos = { link = "TroubleFsPos" } },
-      { TroubleQfPos = { link = "TroubleFsPos" } },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")),
-            0.1
-          ),
-        },
-      },
-      { IndentGuides = { fg = { from = "TroubleIndent", attr = "fg" }, bg = "NONE" } },
-      { IndentGuidesFolded = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
-      { OutlineDetails = { fg = { from = "IndentGuides", attr = "fg", alter = 0.2 } } },
-
       -- DIFFVIEW
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
 
@@ -2504,17 +2256,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2621,16 +2362,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2818,16 +2549,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2929,16 +2650,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.54 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -3071,17 +2782,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.45 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -3106,9 +2806,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-kanagawa"] = {
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-
       {
         Visual = {
           bg = Highlight.tint(
@@ -3188,14 +2885,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
       {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
           bg = { from = "Normal", attr = "bg", alter = 0.45 },
@@ -3227,9 +2916,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-material-darker"] = {
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-
       {
         Visual = {
           bg = Highlight.tint(
@@ -3283,14 +2969,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.45 }, bg = "NONE" } },
 
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -3381,20 +3059,6 @@ local function colorscheme_overrides()
         },
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
       {
         StatusLineNC = {
@@ -3509,16 +3173,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -3615,16 +3269,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.65 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -3745,16 +3389,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.52 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -3779,9 +3413,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.6 } } },
     },
     ["base46-seoul256_dark"] = {
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-
       {
         Visual = {
           bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, dark_yellow), -0.55),
@@ -3827,6 +3458,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.35 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3881,17 +3513,7 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = 0.45 },
         },
       },
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
+
       {
         KeywordBlur = {
           bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
@@ -3979,16 +3601,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -4067,18 +3679,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -4154,6 +3754,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
+      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.35 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4192,20 +3793,6 @@ local function colorscheme_overrides()
         },
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
       {
         StatusLineNC = {
@@ -4323,16 +3910,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -4379,9 +3956,6 @@ local function colorscheme_overrides()
         },
       },
       { Directory = { fg = "#7788aa", bg = "NONE" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
       { NonText = { inherit = "NonText", fg = { from = "NonText", attr = "fg", alter = 1 } } },
 
@@ -4584,8 +4158,6 @@ local function colorscheme_overrides()
         },
       },
 
-      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.8 } } },
-
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 3.7 },
@@ -4668,14 +4240,7 @@ local function colorscheme_overrides()
         },
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
+
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.8 },
@@ -4768,14 +4333,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
 
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -4926,16 +4483,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
