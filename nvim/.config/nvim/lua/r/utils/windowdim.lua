@@ -144,7 +144,6 @@ autocmds.cursorline_blacklist = {
   ["Outline"] = false,
   ["TelescopePrompt"] = true,
   ["alpha"] = true,
-  ["qf"] = true,
   ["command-t"] = true,
   ["dap-repl"] = true,
   ["dapui_breakpoints"] = true,
@@ -153,13 +152,12 @@ autocmds.cursorline_blacklist = {
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
   ["mason"] = true,
+  ["orgagenda"] = true,
   ["packer"] = true,
+  ["qf"] = true,
+  -- ["snacks_picker_input"] = true,
   ["tsplayground"] = true,
   ["undotree"] = true,
-}
-
-autocmds.cursorline_blacklist_buftype = {
-  ["quickfix"] = true,
 }
 
 autocmds.mkview_filetype_blacklist = {
@@ -258,22 +256,18 @@ end
 
 local set_cursorline = function(active)
   local filetype, _ = RUtils.buf.get_bo_buft()
-  if autocmds.ignore_cursorline[filetype] ~= false then
-    return
-  end
-
-  -- blur_window()
-  if autocmds.cursorline_blacklist[filetype] ~= true or autocmds.cursorline_blacklist_buftype[filetype] ~= true then
-    -- check jika window is floating, like TelescopePrompt
-    if api.nvim_win_get_config(0).relative ~= "" then
-      wo.cursorline = false
-    else
+  if autocmds.cursorline_blacklist[filetype] ~= true then
+    -- nvim_win_get_config.relative utk detect float window, output boolean
+    if not api.nvim_win_get_config(0).relative then
       wo.cursorline = active
     end
+  else
+    wo.cursorline = false
   end
 end
 
 autocmds.buf_enter = function()
+  set_cursorline(true)
   focus_window()
   winhl_window()
 end
@@ -293,7 +287,7 @@ autocmds.win_enter = function()
 end
 
 autocmds.win_leave = function()
-  set_cursorline(false)
+  set_cursorline(true)
   -- blur_window()
 end
 
