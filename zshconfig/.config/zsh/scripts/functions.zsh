@@ -109,6 +109,12 @@ build-install() {
     asdf reshim rust
   fi
 
+  if ! command -v rmpc >/dev/null; then
+    echo "Installing: rmpc - Terminal mp3 (alternatif dari nncmpc)"
+    cargo install --git https://github.com/mierak/rmpc --locked   # install latest
+    asdf reshim rust
+  fi
+
   if ! command -v gifski >/dev/null; then
     # Install: gifski
     # gihtub: https://github.com/sindresorhus/Gifski

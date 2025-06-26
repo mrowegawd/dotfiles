@@ -147,9 +147,9 @@ super + End
 super + shift + t
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
-# misc: open ncmpcpp (music)
+# misc: open rmpc (music)
 super + shift + m
-        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat rmpc
 
 # misc: open note inbox (capture notes)
 super + shift + e
