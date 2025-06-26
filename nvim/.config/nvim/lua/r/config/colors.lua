@@ -303,27 +303,15 @@ reset_base_alter({ "lackluster" }, {
   quickfixline_alter = 0.3,
   winseparator_alter = 1.5,
 })
-reset_base_alter({ "rose-pine-dawn" }, {
-  cmpdocnormal_fg_alter = -0.5,
-  cursor_fg = "#575279",
-  cursorline_alter = 0.1,
-  fzflua_bg_cursorline_alter = 0.04,
-  fzfluasel_bg_alter = 0.05,
-  normalfloat_bg_alter = -0.08,
-  pmenu_fg_alter = -0.4,
-  pmenusel_bg_alter = -0.02,
-  quickfixline_alter = 0.05,
-  winseparator_alter = -0.09,
-})
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.01,
   fzfluasel_bg_alter = -0.1,
-  linenr_fg_alter = 1,
+  linenr_fg_alter = 0.95,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.5,
-  winseparator_alter = 1,
+  winseparator_alter = 0.85,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -332,10 +320,10 @@ reset_base_alter({ "tokyonight-storm" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
   fzfluasel_bg_alter = -0.3,
-  linenr_fg_alter = 0.4,
+  linenr_fg_alter = 0.45,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.8,
-  quickfixline_alter = 0.2,
+  quickfixline_alter = 0.25,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -349,7 +337,7 @@ reset_base_alter({ "vscode_modern" }, {
   quickfixline_alter = 0.35,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.55,
 })
 
 local general_overrides = function()
@@ -459,13 +447,13 @@ local general_overrides = function()
 
     {
       NormalBoxComment = {
-        fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = 2 },
+        fg = { from = "FloatBorder", attr = "fg", alter = 3 },
+        bg = { from = "Keyword", attr = "fg", alter = -0.6 },
       },
     },
     {
       FloatBoxComment = {
-        fg = { from = "FloatBorder", attr = "fg", alter = 5 },
+        fg = { from = "NormalBoxComment", attr = "bg", alter = 0.45 },
         bg = { from = "NormalBoxComment", attr = "bg" },
       },
     },
@@ -850,6 +838,9 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                      PLUGIN COLORS                      ║
     -- ╚═════════════════════════════════════════════════════════╝
+    --  ───────────────────────────────[ BEACON ]──────────────────────────────
+    { BeaconDefault = { bg = cursor_fg } },
+
     --  ───────────────────────────────[ NOICE ]───────────────────────────────
     {
       NoiceCmdline = {
@@ -1090,7 +1081,7 @@ local general_overrides = function()
     -- │ PRPOMPT │
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-    { FzfLuaBorder = { inherit = "FloatBorder", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+    { FzfLuaBorder = { inherit = "FloatBorder", fg = { from = "WinSeparator", attr = "fg", alter = 0.05 } } },
     { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.5 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
@@ -1710,6 +1701,7 @@ local function colorscheme_overrides()
 
       { NonText = { inherit = "NonText", fg = { from = "NonText", attr = "fg", alter = 1 } } },
 
+      -- SNACKS
       {
         SnacksDashboardTerminal = {
           fg = { from = "NonText", attr = "fg", alter = -0.1 },
@@ -2313,26 +2305,6 @@ local function colorscheme_overrides()
         },
       },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.35 } } },
@@ -2449,26 +2421,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
             -0.2
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -2616,26 +2568,6 @@ local function colorscheme_overrides()
         },
       },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2749,26 +2681,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2861,26 +2773,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Boolean", "fg"), 0.3, Highlight.get("Keyword", "fg")),
             -0.65
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -2986,26 +2878,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
             -0.2
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -3130,26 +3002,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- SNACKS
       {
         SnacksDashboardTerminal = {
@@ -3263,26 +3115,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Boolean", "fg"), 0.35, Highlight.get("Keyword", "fg")),
             -0.65
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -3407,26 +3239,6 @@ local function colorscheme_overrides()
         },
       },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
@@ -3517,26 +3329,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Boolean", "fg"), 0.35, Highlight.get("Keyword", "fg")),
             -0.62
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -3654,26 +3446,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.12 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -3777,26 +3549,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
             -0.2
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -3924,26 +3676,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- SNACKS
       {
         SnacksDashboardTerminal = {
@@ -4066,26 +3798,6 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
 
       -- GRUG-FAR
       {
@@ -4216,26 +3928,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
@@ -4319,8 +4011,6 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
-      -- { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.65 } } },
-      -- { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.6 }, bold = true } },
     },
     ["base46-wombat"] = {
       {
@@ -4329,26 +4019,6 @@ local function colorscheme_overrides()
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Boolean", "fg")),
             -0.65
           ),
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -4469,26 +4139,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -4499,7 +4149,6 @@ local function colorscheme_overrides()
       },
 
       -- SNACKS
-      { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
       { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")) } },
 
       -- FZFLUA
@@ -4594,29 +4243,7 @@ local function colorscheme_overrides()
 
       { NonText = { inherit = "NonText", fg = { from = "NonText", attr = "fg", alter = 0.5 } } },
 
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.55 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
       -- SNACKS
-      -- { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
-      -- { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")) } },
       {
         SnacksDashboardTerminal = {
           fg = { from = "NonText", attr = "fg", alter = -0.1 },
@@ -4768,28 +4395,8 @@ local function colorscheme_overrides()
 
       {
         Visual = {
-          bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, dark_yellow), -0.55),
+          bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, dark_yellow), -0.7),
           fg = "NONE",
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.9 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -4820,8 +4427,6 @@ local function colorscheme_overrides()
       { ["@markup.link.url"] = { inherit = "@markup.link.label.markdown_inline" } },
 
       -- SNACKS
-      -- { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
-      -- { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")) } },
       {
         SnacksDashboardTerminal = {
           fg = { from = "NonText", attr = "fg", alter = -0.2 },
@@ -4992,456 +4597,6 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.3 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
-      -- { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.8 } } },
-      -- { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
-    },
-    ["rose-pine-dawn"] = {
-      -- DIFF
-      {
-        diffAdd = {
-          fg = Highlight.darken(dark_green, 1.3, Highlight.get("Normal", "bg")),
-          bg = Highlight.darken(dark_green, 0.9, Highlight.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        diffChange = {
-          fg = Highlight.darken(dark_yellow, 0.9, Highlight.get("Normal", "bg")),
-          bg = Highlight.darken(dark_yellow, 0.7, Highlight.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        diffDelete = {
-          fg = Highlight.darken(dark_red, 1.3, Highlight.get("Normal", "bg")),
-          bg = Highlight.darken(dark_red, 0.7, Highlight.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        diffText = {
-          fg = Highlight.darken(dark_yellow, 0.5, Highlight.get("Normal", "bg")),
-          bg = Highlight.darken(dark_yellow, 0.9, Highlight.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-
-      { diffAdded = { inherit = "DiffAdd" } },
-      { diffChanged = { inherit = "DiffChange" } },
-      { diffRemoved = { inherit = "DiffDelete" } },
-
-      { GitSignsAdd = { bg = "NONE", fg = dark_green } },
-      { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
-      { GitSignsDelete = { bg = "NONE", fg = dark_red } },
-
-      { NeogitDiffAdd = { link = "diffAdd" } },
-      { NeogitDiffAddHighlight = { link = "diffAdd" } },
-      { NeogitDiffDelete = { link = "diffDelete" } },
-      { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
-
-      { DiffText = { link = "diffText" } },
-
-      { NonText = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-
-      { LineNr = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bold = true } },
-      { LineNrAbove = { link = "LineNr" } },
-      { LineNrBelow = { link = "LineNr" } },
-
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
-
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.35 }, italic = true } },
-      { ["@comment"] = { inherit = "Comment" } },
-
-      {
-        FloatBorder = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
-          bg = { from = "NormalFloat", attr = "bg" },
-        },
-      },
-
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.06 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
-      { BlinkCmpLabelMatch = { fg = { from = "KeywordMatch", attr = "fg" } } },
-      { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
-
-      -- ORGMODE
-      { ["@org.block"] = { inherit = "Comment" } },
-      { ["@org.checkbox"] = { inherit = "Comment" } },
-      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
-      { ["@org.comment"] = { inherit = "Comment" } },
-      { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
-
-      -- OUTLINE
-      {
-        IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = -0.1 },
-          bg = "NONE",
-        },
-      },
-      {
-        IndentGuidesFolded = {
-          fg = { from = "Normal", attr = "bg", alter = -0.24 },
-          bg = "NONE",
-        },
-      },
-      { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = 0.2 }, bg = "NONE", italic = true } },
-
-      -- QFSILET
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = -0.12 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = -0.05 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
-
-      -- ORGMODE
-      { ["@org.comment"] = { inherit = "Comment" } },
-      { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
-
-      -- FZFLUA
-      { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
-      {
-        FzfLuaCursorLineNr = {
-          fg = { from = "FzfLuaCursorLine", attr = "bg", alter = -0.5 },
-          bg = { from = "FzfLuaCursorLine", attr = "bg" },
-        },
-      },
-      {
-        FzfLuaSel = {
-          fg = "NONE",
-          bg = { from = "PmenuSel", attr = "bg", alter = fzfluasel_bg_alter },
-          bold = true,
-        },
-      },
-      { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
-      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-      { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
-      { FzfLuaDirPart = { fg = { from = "Normal", attr = "bg", alter = -0.35 } } },
-      { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
-
-      { FzfLuaBorder = { inherit = "FloatBorder" } },
-      { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder" } },
-
-      {
-        TelescopeResultsNormal = {
-          fg = { from = "FzfLuaFilePart", attr = "fg" },
-          bg = { from = "FzfLuaNormal", attr = "bg" },
-        },
-      },
-      {
-        TelescopeSelection = {
-          bg = { from = "FzfLuaSel", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      -- MARKDOWN
-      {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "Keyword", attr = "fg", alter = 4.5 },
-          bold = true,
-        },
-      },
-      {
-        ["@markup.quote.markdown"] = {
-          fg = { from = "Boolean", attr = "fg", alter = -0.2 },
-          bg = { from = "Boolean", attr = "fg", alter = 0.5 },
-          italic = true,
-          bold = false,
-        },
-      },
-      {
-        ["@markup.strong.markdown_inline"] = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = "NONE",
-          bold = true,
-        },
-      },
-      {
-        ["@markup.italic.markdown_inline"] = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.4 },
-          bg = "NONE",
-          bold = false,
-          italic = true,
-        },
-      },
-      {
-        ["@markup.raw.markdown_inline"] = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "Keyword", attr = "fg", alter = 0.6 },
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        ["@punctuation.special.markdown"] = {
-          fg = { from = "@markup.quote.markdown", attr = "fg" },
-        },
-      },
-      {
-        markdownItalic = {
-          fg = { from = "@tag.attribute", attr = "fg", alter = 0.5 },
-          italic = false,
-          underline = false,
-        },
-      },
-      {
-        markdownBold = {
-          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
-          bold = true,
-        },
-      },
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
-      -- SNACKS
-      {
-        SnacksDashboardTerminal = {
-          fg = { from = "NonText", attr = "fg" },
-          bg = "NONE",
-          bold = false,
-        },
-      },
-      {
-        SnacksDashboardFooter = {
-          fg = { from = "NonText", attr = "fg" },
-          bg = "NONE",
-          bold = true,
-        },
-      },
-
-      -- info
-      {
-        SnacksNotifierInfo = {
-          fg = { from = "DiagnosticInfo", attr = "fg", alter = 2 },
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("DiagnosticInfo", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
-          bold = true,
-        },
-      },
-      {
-        SnacksNotifierBorderInfo = {
-          fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.2 },
-          bg = { from = "SnacksNotifierInfo", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleInfo = {
-          fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.2 },
-          bg = { from = "SnacksNotifierInfo", attr = "bg" },
-          bold = true,
-        },
-      },
-      -- error
-      {
-        SnacksNotifierError = {
-          fg = { from = "DiagnosticError", attr = "fg" },
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("DiagnosticError", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            0.5
-          ),
-          bold = true,
-        },
-      },
-      {
-        SnacksNotifierBorderError = {
-          fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.1 },
-          bg = { from = "SnacksNotifierError", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleError = {
-          fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.2 },
-          bg = { from = "SnacksNotifierError", attr = "bg" },
-          bold = true,
-        },
-      },
-      -- warn
-      {
-        SnacksNotifierWarn = {
-          fg = { from = "DiagnosticWarn", attr = "fg" },
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("DiagnosticWarn", "fg"), 0.8, Highlight.get("Normal", "bg")),
-            0.5
-          ),
-          bold = true,
-        },
-      },
-      {
-        SnacksNotifierBorderWarn = {
-          fg = { from = "SnacksNotifierWarn", attr = "bg", alter = -0.1 },
-          bg = { from = "SnacksNotifierWarn", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleWarn = {
-          fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = -0.2 },
-          bg = { from = "SnacksNotifierWarn", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      {
-        AvanteInlineHint = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.4 },
-          bg = "NONE",
-        },
-      },
-
-      -- LSP
-      {
-        LspReferenceWrite = {
-          bg = { from = "LspReferenceWrite", attr = "bg", alter = 0.22 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "LspReferenceRead", attr = "bg", alter = 0.22 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      -- TROUBLE
-      {
-        OutlineCurrent = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "Keyword", attr = "fg", alter = 1 },
-          bold = true,
-        },
-      },
-      {
-        TroubleIndent = {
-          fg = { from = "Normal", attr = "bg", alter = -0.5 },
-          bg = "NONE",
-        },
-      },
-      { TroubleIndentFoldClosed = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.2 } } },
-      { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = -0.1 } } },
-      {
-        TroubleFsCount = {
-          fg = { from = "Directory", attr = "fg", alter = 0.8 },
-          bg = { from = "Directory", attr = "fg", alter = 0.2 },
-        },
-      },
-
-      -- lsp
-      { TroubleLspFilename = { bg = "NONE" } },
-      { TroubleLspPos = { link = "TroubleFsPos" } },
-      { TroubleLspCount = { link = "TroubleFsCount" } },
-      { TroubleLspItemClient = { link = "TroubleLspCount" } },
-
-      -- diagnostics
-      { TroubleDiagnosticsBasename = { bg = "NONE" } },
-      { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
-      {
-        TroubleDiagnosticsCount = {
-          fg = { from = "DiagnosticWarn", attr = "fg", alter = 0.2 },
-          bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.1 },
-        },
-      },
-
-      -- todo
-      { TroubleTodoFilename = { bg = "NONE" } },
-      { TroubleTodoPos = { link = "TroubleFsPos" } },
-      { TroubleTodoCount = { link = "TroubleFsCount" } },
-
-      -- quickfix
-      { TroubleQfFilename = { bg = "NONE" } },
-      { TroubleQfPos = { link = "TroubleFsPos" } },
-      { TroubleQfCount = { link = "TroubleFsCount" } },
-
-      -- STATUSLINE
-      {
-        StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.37, Highlight.get("Normal", "bg")),
-            0.85
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.75, Highlight.get("Normal", "bg")),
-            0.28
-          ),
-          reverse = false,
-        },
-      },
-      {
-        NoiceCmdline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg" },
-        },
-      },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = 0.35 }, bg = "NONE" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = -0.2 },
-        },
-      },
-      { KeywordBlur = { bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 } } },
-      {
-        TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = -0.27 },
-          bg = { from = "Normal", attr = "bg", alter = -0.06 },
-        },
-      },
-      {
-        KeywordNC = {
-          fg = { from = "Keyword", attr = "fg" },
-          bg = { from = "TabLine", attr = "bg" },
-        },
-      },
-
-      -- CREATED HIGHLIGHTS
-      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = -0.05 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = -0.25 } } },
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = -0.35 } } },
-      { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = -0.08 } } },
-      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
-      { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     },
     ["tokyonight-night"] = {
       { ErrorMsg = { bg = { from = "ErrorMsg", attr = "fg" }, fg = "white" } },
@@ -5454,26 +4609,6 @@ local function colorscheme_overrides()
             -0.6
           ),
           fg = "NONE",
-        },
-      },
-
-      --
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.25 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
         },
       },
 
@@ -5577,26 +4712,6 @@ local function colorscheme_overrides()
     },
     ["tokyonight-storm"] = {
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
-
-      -- QFSILET
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
@@ -5722,26 +4837,6 @@ local function colorscheme_overrides()
       },
 
       { Directory = { fg = "#569cd6", bg = "NONE" } },
-
-      -- QFSILET
-      {
-        NormalBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.8 },
-          bg = { from = "NormalBoxComment", attr = "bg" },
-        },
-      },
-      {
-        VisualBoxComment = {
-          fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
-        },
-      },
 
       -- WHICHKEY
       { WhichKeyGroup = { inherit = "WhichKeyGroup", fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.1 } } },
