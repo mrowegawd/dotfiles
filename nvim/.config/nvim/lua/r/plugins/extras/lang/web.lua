@@ -20,28 +20,29 @@ return {
     },
   },
 
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       -- emmet_ls = {},
-  --       html = {},
-  --       -- cssls = {}, -- berat wkwkwkw
-  --       -- cssls = {
-  --       --   settings = {
-  --       --     css = {
-  --       --       lint = {
-  --       --         unknownAtRules = "ignore",
-  --       --       },
-  --       --     },
-  --       --     scss = {
-  --       --       lint = {
-  --       --         unknownAtRules = "ignore",
-  --       --       },
-  --       --     },
-  --       --   },
-  --       -- },
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        emmet_language_server = {},
+        html = {
+          filetypes = { "html", "htmldjango" },
+        },
+        -- cssls = {
+        --   settings = {
+        --     css = {
+        --       lint = {
+        --         unknownAtRules = "ignore",
+        --       },
+        --     },
+        --     scss = {
+        --       lint = {
+        --         unknownAtRules = "ignore",
+        --       },
+        --     },
+        --   },
+        -- },
+      },
+    },
+  },
 }
