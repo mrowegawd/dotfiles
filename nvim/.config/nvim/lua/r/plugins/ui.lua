@@ -217,10 +217,11 @@ return {
     },
     opts = true,
   },
-  -- SMEAR-CURSOR
+  -- SMEAR-CURSOR (disabled)
   {
-    "sphamba/smear-cursor.nvim",
+    "sphamba/smear-cursor.nvim", -- disabled karena slow
     event = "LazyFile",
+    enabled = false,
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = {},
   },
@@ -239,55 +240,25 @@ return {
     },
     opts = {},
   },
-  -- BEACON (disabled)
+  -- BEACON
   {
-    -- flash cursor when jumps or moves between windows.
-    "rainbowhxch/beacon.nvim",
+    "rainbowhxch/beacon.nvim", -- (alternative smear-cursor)
     event = "LazyFile",
-    enabled = false,
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
-    opts = function()
-      local Highlight = require "r.settings.highlights"
-      Highlight.plugin("beaconHiC", {
-        theme = {
-          ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
-          ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
-          ["base46-aylin"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
-          ["base46-chocolate"] = { { ["BeaconDefault"] = { bg = "#c8bAA4" } } },
-          ["base46-default-dark"] = { { ["BeaconDefault"] = { bg = "#9e0e06" } } },
-          ["base46-doomchad"] = { { ["BeaconDefault"] = { bg = "#81A1C1" } } },
-          ["base46-horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
-          ["base46-jabuti"] = { { ["BeaconDefault"] = { bg = "#c0cbe3" } } },
-          ["base46-jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
-          ["base46-kanagawa"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
-          ["base46-material-darker"] = { { ["BeaconDefault"] = { bg = "#16afca" } } },
-          ["base46-onenord"] = { { ["BeaconDefault"] = { bg = "#3879C5" } } },
-          ["base46-oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
-          ["base46-rosepine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
-          ["base46-seoul256_dark"] = { { ["BeaconDefault"] = { bg = "#d75f87" } } },
-          ["base46-solarized_dark"] = { { ["BeaconDefault"] = { bg = "#708284" } } },
-          ["base46-zenburn"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
-          ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
-          ["nord"] = { { ["BeaconDefault"] = { bg = "#eceff4" } } },
-          ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
-        },
-      })
-
-      return {
-        ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
-        ignore_filetypes = {
-          "qf",
-          "dap_watches",
-          "dap_scopes",
-          -- "neo-tree",
-          "fzf",
-          "lazy",
-          "NeogitCommitMessage",
-          "NeogitPopup",
-          "NeogitStatus",
-        },
-      }
-    end,
+    opts = {
+      ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
+      ignore_filetypes = {
+        "qf",
+        "dap_watches",
+        "dap_scopes",
+        -- "neo-tree",
+        "fzf",
+        "lazy",
+        "NeogitCommitMessage",
+        "NeogitPopup",
+        "NeogitStatus",
+      },
+    },
   },
   -- BUFDELETE
   {
