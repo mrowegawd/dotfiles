@@ -135,7 +135,7 @@ return {
             return { "buffer" }
           end
           if type == ":" or type == "@" then
-            return { "cmdline" }
+            return { "cmdline", "path" }
           end
           return {}
         end,
