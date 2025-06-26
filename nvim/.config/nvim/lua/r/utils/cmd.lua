@@ -706,7 +706,7 @@ end
 function M.change_colors()
   local Highlight = require "r.settings.highlights"
 
-  local KeywordNC_bg = Highlight.get("KeywordNC", "bg") -- 16
+  local KeywordNC_bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.5)
   local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
   local tmux_bg = Highlight.get("Normal", "bg")
@@ -718,7 +718,7 @@ function M.change_colors()
 
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
-  local lazygit_active_border = Highlight.get("KeywordNC", "fg")
+  local lazygit_active_border = KeywordNC_bg
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2) --> colorline zshrc
 
   local gitadd = Highlight.get("diffAdd", "bg")
@@ -732,18 +732,18 @@ function M.change_colors()
 
   local yazi_cwd = Highlight.get("Comment", "fg")
   local yazi_hovered = Highlight.get("CursorLine", "bg")
-  local yazi_tab_active_fg = Highlight.get("KeywordNC", "fg")
-  local yazi_tab_active_bg = Highlight.get("KeywordNC", "bg")
+  local yazi_tab_active_fg = KeywordNC_fg
+  local yazi_tab_active_bg = KeywordNC_bg
   local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
   local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
   local yazi_statusline_bg = Highlight.get("StatusLine", "bg")
   local yazi_statusline_active_fg = Highlight.get("StatusLine", "fg")
-  local yazi_statusline_active_bg = Highlight.get("StatusLineNC", "bg")
+  local yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLine", "bg"), 0.2)
   local yazi_directory = Highlight.get("Directory", "fg")
   local yazi_filename_fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 1.4)
   local yazi_which_bg = Highlight.get("Pmenu", "bg")
 
-  local zsh_background_bg = Highlight.get("StatusLineNC", "bg")
+  local zsh_background_bg = yazi_statusline_active_bg
 
   local fzf_header = Highlight.get("FzfLuaHeaderText", "fg")
 

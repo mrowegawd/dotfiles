@@ -760,18 +760,6 @@ local general_overrides = function()
       },
     },
 
-    {
-      KeywordNC = {
-        fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.1),
-        bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.5),
-      },
-    },
-    {
-      KeywordBlur = {
-        bg = { from = "StatusLineNC", attr = "bg", alter = 0.6 },
-      },
-    },
-
     -- HEIRLINE
     {
       StatusLineFilepath = {
@@ -1468,10 +1456,6 @@ local general_overrides = function()
         fg = { from = "GitSignsChange", attr = "fg", alter = 0.6 },
       },
     },
-    -- { DapStoppedMod = { bg = yellowlow, fg = yellowhi } },
-    -- { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
-    -- { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
-    -- { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
 
     --  ─────────────────────────────[ COVERAGE ]──────────────────────────
     { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
@@ -1770,18 +1754,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 5 },
-          bg = { from = "Normal", attr = "bg", alter = 1.4 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.45 },
-        },
-      },
-
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
@@ -1860,17 +1832,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
@@ -1976,17 +1937,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.54 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
@@ -2075,17 +2025,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.25 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
@@ -2152,17 +2091,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
@@ -2256,17 +2184,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
@@ -2363,17 +2280,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.13 },
@@ -2464,27 +2370,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.54 }, bg = "NONE" } },
 
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
@@ -2549,17 +2434,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
@@ -2650,17 +2524,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.54 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
@@ -2783,17 +2646,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.45 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
@@ -2885,17 +2737,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
@@ -2969,17 +2810,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.45 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
@@ -3060,17 +2890,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
@@ -3174,17 +2993,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
@@ -3269,17 +3077,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.65 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
@@ -3390,17 +3187,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.52 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
@@ -3508,18 +3294,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.65 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 0.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
@@ -3602,17 +3376,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.4 },
@@ -3679,17 +3442,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
@@ -3794,17 +3546,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
@@ -3911,17 +3652,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
@@ -3949,12 +3679,6 @@ local function colorscheme_overrides()
         },
       },
 
-      {
-        KeywordNC = {
-          fg = Highlight.tint(Highlight.get("Keyword", "fg"), 0.3),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.3),
-        },
-      },
       { Directory = { fg = "#7788aa", bg = "NONE" } },
 
       { NonText = { inherit = "NonText", fg = { from = "NonText", attr = "fg", alter = 1 } } },
@@ -4147,18 +3871,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 5.7 },
-          bg = { from = "Normal", attr = "bg", alter = 1.54 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-        },
-      },
-
-      {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 3.7 },
           bg = { from = "Normal", attr = "bg", alter = 1.4 },
@@ -4242,17 +3954,6 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
       {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.8 },
-          bg = { from = "Normal", attr = "bg", alter = 0.55 },
-        },
-      },
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.3 },
-        },
-      },
-      {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
@@ -4333,13 +4034,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
-      { KeywordBlur = { bg = { from = "StatusLineNC", attr = "bg", alter = 0.2 } } },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
@@ -4483,13 +4177,6 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
-      { KeywordBlur = { bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 } } },
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
