@@ -195,21 +195,23 @@ set_dunst() {
 
   cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
 
-  sed -i -e "s/%%color_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%frame_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  DUNST_BG=$GET_COL_16
+  DUNST_FG=$GET_COL_17
+  DUNST_FRAME=$GET_COL_17
 
-  sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
-
-  sed -i -e "s/%%normal_bg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_frame_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_bg%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_fg%%/$DUNST_FG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_frame_fg%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%critical_bg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%critical_frame_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%critical_frame_fg%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
 
-  sed -i -e "s/%%background%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%foreground%%/$GET_FG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%background%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%color_border%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%foreground%%/$DUNST_FG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%frame_border%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%font_size%%/$NEW_FONTS_SIZE/g" "$_DUNST_PATH/dunstrc"
