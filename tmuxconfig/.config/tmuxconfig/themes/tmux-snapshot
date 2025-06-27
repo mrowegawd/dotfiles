@@ -69,7 +69,7 @@ set-option -g window-status-current-format "\
 #{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
 #[fg=$BORDER_FG_ACTIVE,bg=$ACTIVE_BG,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$BORDER_FG_ACTIVE]#[bold] 󰁌,} \
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
-#[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] COPY \
+#[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] #[fg=$WHITE]COPY \
 #{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
 #[bg=$WHITE]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
 #[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]}"
