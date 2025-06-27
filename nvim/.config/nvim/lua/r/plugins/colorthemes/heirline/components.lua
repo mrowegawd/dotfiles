@@ -236,6 +236,9 @@ M.Mode = {
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       local fg = colors.normal_bg
+      if mode == "V" or mode == "v" or mode == "vs" then
+        fg = colors.normal_fg_white
+      end
       return { bg = self.mode_colors[mode], fg = fg, bold = true }
     end,
   },

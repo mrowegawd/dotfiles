@@ -315,16 +315,17 @@ reset_base_alter({ "tokyonight-night" }, {
   winseparator_alter = 0.85,
 })
 reset_base_alter({ "tokyonight-storm" }, {
+  comment_fg_alter = 0.6,
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
-  fzfluasel_bg_alter = -0.3,
+  fzfluasel_bg_alter = -0.1,
   linenr_fg_alter = 0.45,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
-  pmenusel_bg_alter = 0.8,
+  pmenusel_bg_alter = 0.6,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -395,6 +396,13 @@ local general_overrides = function()
 
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
+
+    {
+      Visual = {
+        bg = Highlight.tint(Highlight.darken(Highlight.get("String", "fg"), 0.3, Highlight.get("Normal", "bg")), -0.1),
+        fg = "NONE",
+      },
+    },
 
     {
       StatusLine = {
@@ -1183,41 +1191,23 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "diffAdd", attr = "fg", alter = 1 },
-        bg = { from = "diffAdd", attr = "fg", alter = -0.5 },
+        fg = Highlight.tint(Highlight.darken(Highlight.get("Function", "fg"), 0.8, Highlight.get("Normal", "bg")), 0.9),
+        bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.5 },
+        fg = Highlight.tint(
+          Highlight.darken(Highlight.get("Function", "fg"), 0.3, Highlight.get("Normal", "bg")),
+          -0.1
+        ),
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleInfo = {
-        fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.7 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
-        bold = true,
-      },
-    },
-
-    -- ERROR
-    {
-      SnacksNotifierError = {
-        fg = { from = "diffDelete", attr = "fg", alter = 1 },
-        bg = { from = "diffDelete", attr = "fg", alter = -0.5 },
-      },
-    },
-    {
-      SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 },
-        bg = { from = "SnacksNotifierError", attr = "bg" },
-      },
-    },
-    {
-      SnacksNotifierTitleError = {
-        fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.2 },
-        bg = { from = "SnacksNotifierError", attr = "bg" },
         bold = true,
       },
     },
@@ -1225,19 +1215,39 @@ local general_overrides = function()
     {
       SnacksNotifierWarn = {
         fg = { from = "diffChange", attr = "fg", alter = 1 },
-        bg = { from = "diffChange", attr = "fg", alter = -0.5 },
+        bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.5 },
+        fg = { from = "diffChange", attr = "fg" },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleWarn = {
-        fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.5 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
+        bold = true,
+      },
+    },
+    -- ERROR
+    {
+      SnacksNotifierError = {
+        fg = { from = "diffDelete", attr = "fg", alter = 0.5 },
+        bg = { from = "Normal", attr = "bg" },
+      },
+    },
+    {
+      SnacksNotifierBorderError = {
+        fg = { from = "diffDelete", attr = "fg" },
+        bg = { from = "SnacksNotifierError", attr = "bg" },
+      },
+    },
+    {
+      SnacksNotifierTitleError = {
+        fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.5 },
+        bg = { from = "SnacksNotifierError", attr = "bg" },
         bold = true,
       },
     },
@@ -1648,12 +1658,6 @@ local function colorscheme_overrides()
         },
       },
 
-      {
-        Visual = {
-          bg = Highlight.tint(Highlight.darken(Highlight.get("Visual", "bg"), 0.1, Highlight.get("Error", "fg")), -0.6),
-        },
-      },
-
       -- DIFFIVIEW
       { DiffviewFilePanelCounter = { fg = { from = "GitSignsAdd", attr = "fg", alter = -0.5 } } },
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.25 } } },
@@ -1766,15 +1770,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.9 } } },
     },
     ["base46-aylin"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -1846,15 +1841,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.9 } } },
     },
     ["base46-ayu_dark"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -1933,15 +1919,6 @@ local function colorscheme_overrides()
     },
     ["base46-catppuccin"] = {
       {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
-      {
         Folded = {
           fg = { from = "Keyword", attr = "fg", alter = -0.54 },
           bg = { from = "Keyword", attr = "fg", alter = -0.75 },
@@ -2012,15 +1989,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
     },
     ["base46-chocolate"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.35 } } },
@@ -2087,15 +2055,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 3 } } },
     },
     ["base46-default-dark"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2180,15 +2139,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-doomchad"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Visual", "bg"), 0.35, Highlight.get("Keyword", "fg")),
-            -0.35
-          ),
-        },
-      },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2264,15 +2214,6 @@ local function colorscheme_overrides()
     },
     ["base46-everforest"] = {
       {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
-      {
         Folded = {
           inherit = "Folded",
           fg = { from = "Folded", attr = "fg", alter = -0.2 },
@@ -2346,15 +2287,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
     },
     ["base46-horizon"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Boolean", "fg"), 0.3, Highlight.get("Keyword", "fg")),
-            -0.65
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2368,16 +2300,6 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.increase_saturation(
-            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.7, Highlight.get("Boolean", "fg")), 0.3),
-            0.5
-          ),
         },
       },
 
@@ -2430,15 +2352,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-jabuti"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2452,16 +2365,6 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.55, Highlight.get("Error", "bg")),
-            0.1
-          ),
         },
       },
 
@@ -2520,15 +2423,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
     },
     ["base46-jellybeans"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -2603,31 +2497,12 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-kanagawa"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Boolean", "fg"), 0.35, Highlight.get("Keyword", "fg")),
-            -0.65
-          ),
-        },
-      },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
           inherit = "GrugFarResultsLineNr",
           fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.1 },
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.increase_saturation(
-            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.7, Highlight.get("Boolean", "fg")), 0.3),
-            0.5
-          ),
         },
       },
 
@@ -2702,15 +2577,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-material-darker"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
@@ -2776,15 +2642,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-melange"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Boolean", "fg"), 0.35, Highlight.get("Keyword", "fg")),
-            -0.62
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2857,15 +2714,6 @@ local function colorscheme_overrides()
     },
     ["base46-onenord"] = {
       {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
-      {
         Folded = {
           inherit = "Folded",
           fg = { from = "Folded", attr = "fg", alter = -0.2 },
@@ -2896,16 +2744,6 @@ local function colorscheme_overrides()
           inherit = "GrugFarResultsLineNr",
           fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.05 },
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.05 },
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")),
-            0.1
-          ),
         },
       },
 
@@ -2950,15 +2788,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-oxocarbon"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -2981,16 +2810,6 @@ local function colorscheme_overrides()
           inherit = "GrugFarResultsLineNr",
           fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.5 },
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.4 },
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.increase_saturation(
-            Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.9, dark_yellow), 0.1),
-            0.5
-          ),
         },
       },
 
@@ -3043,15 +2862,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
     },
     ["base46-rosepine"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.3
-          ),
-        },
-      },
-
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 2.2 },
@@ -3127,12 +2937,6 @@ local function colorscheme_overrides()
     },
     ["base46-seoul256_dark"] = {
       {
-        Visual = {
-          bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, dark_yellow), -0.55),
-        },
-      },
-
-      {
         Folded = {
           inherit = "Folded",
           fg = { from = "Folded", attr = "fg", alter = -0.25 },
@@ -3164,13 +2968,6 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, dark_yellow), 0.5),
         },
       },
 
@@ -3216,15 +3013,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
     },
     ["base46-solarized_dark"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Boolean", "fg")),
-            -0.55
-          ),
-        },
-      },
-
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
@@ -3297,15 +3085,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-wombat"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Boolean", "fg")),
-            -0.65
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -3319,13 +3098,6 @@ local function colorscheme_overrides()
         TelescopeSelection = {
           bg = { from = "FzfLuaSel", attr = "bg" },
           bold = true,
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, dark_yellow), 0.3),
         },
       },
 
@@ -3382,15 +3154,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
     },
     ["base46-zenburn"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-        },
-      },
-
       {
         Folded = {
           inherit = "Folded",
@@ -3469,15 +3232,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
     },
     ["kanso"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Boolean", "fg")),
-            -0.6
-          ),
-        },
-      },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
@@ -3500,13 +3254,6 @@ local function colorscheme_overrides()
           inherit = "GrugFarResultsLineNr",
           fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.6 },
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.5 },
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, dark_yellow), 0.5),
         },
       },
 
@@ -3579,13 +3326,6 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.45 }, bg = "NONE" } },
-
-      {
-        Visual = {
-          bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, dark_yellow), -0.7),
-          fg = "NONE",
-        },
-      },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
@@ -3713,16 +3453,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["tokyonight-night"] = {
-      {
-        Visual = {
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Boolean", "fg")),
-            -0.6
-          ),
-          fg = "NONE",
-        },
-      },
-
       -- FZF
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
@@ -3745,16 +3475,6 @@ local function colorscheme_overrides()
           inherit = "GrugFarResultsLineNr",
           fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")),
-            0.1
-          ),
         },
       },
 
@@ -3804,8 +3524,6 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 3 } } },
     },
     ["tokyonight-storm"] = {
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
@@ -3828,16 +3546,6 @@ local function colorscheme_overrides()
       -- DIFFVIEW
       { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = 0.5 } } },
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 } } },
-
-      -- OUTLINE
-      {
-        OutlineCurrent = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Boolean", "fg")),
-            0.1
-          ),
-        },
-      },
 
       -- STATUSLINE
       {
@@ -3899,7 +3607,6 @@ local function colorscheme_overrides()
       },
 
       { Conceal = { bg = "None", fg = { from = "Function", attr = "fg", alter = -0.1 } } },
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.15 } } },
 
       {
         Search = {
