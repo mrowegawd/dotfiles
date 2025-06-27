@@ -189,7 +189,6 @@ return {
         elseif position == "down" or position == "right" then
           minus_or_plus = (win_position > 0) and "-" or "+"
         end
-
         if curwinnr > 1 then
           minus_or_plus = get_direction(minus_or_plus, position)
         end
@@ -198,17 +197,17 @@ return {
       end
 
       local check_split_or_vsplit = function()
-        local bufnr = vim.api.nvim_get_current_buf()
         local winid = vim.api.nvim_get_current_win()
-        if vim.bo[bufnr].filetype == "noice" then
-          return true
-        end
 
         local windows = vim.api.nvim_list_wins()
         for _, win in ipairs(windows) do
           local config = vim.api.nvim_win_get_config(win)
           if win == winid then
+            -- print(vim.inspect(config))
             if config.split == "below" then
+              return true
+            end
+            if config.split == "above" then
               return true
             end
           end
