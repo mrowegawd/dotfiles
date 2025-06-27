@@ -28,10 +28,8 @@ return {
     enabled = function()
       local base46_theme = {
         "base46-aylin",
-        "base46-ayu_dark",
         "base46-catppuccin",
         "base46-chocolate",
-        "base46-default-dark",
         "base46-doomchad",
         "base46-everforest",
         "base46-horizon",
