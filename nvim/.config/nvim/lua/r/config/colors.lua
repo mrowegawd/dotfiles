@@ -1191,7 +1191,7 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = Highlight.tint(Highlight.darken(Highlight.get("Function", "fg"), 0.8, Highlight.get("Normal", "bg")), 0.9),
+        fg = Highlight.tint(Highlight.darken(Highlight.get("Function", "fg"), 0.9, Highlight.get("Normal", "bg")), 0.9),
         bg = { from = "Normal", attr = "bg" },
       },
     },

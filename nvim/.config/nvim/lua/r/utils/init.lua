@@ -8,7 +8,6 @@ local LazyUtil = require "lazy.core.util"
 ---@field lsp r.utils.lsp
 ---@field root r.utils.root
 ---@field fold r.utils.fold
----@field colortbl r.utils.colortbl
 ---@field fzf_diffview r.utils.fzf_diffview
 ---@field fzflua r.utils.fzflua
 ---@field session r.utils.session
