@@ -424,12 +424,11 @@ return {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
       workspaces = {
         {
-          name = "obsidian",
+          name = "journal",
           date_format = "%d-%m-%Y %A",
           time_format = "%H:%M",
-          path = "~/Dropbox/neorg",
+          path = "~/Dropbox/neorg/journal",
         },
-
         {
           name = "work",
           path = "~/Dropbox/neorg/work",
@@ -443,6 +442,7 @@ return {
         -- Optional, if you want to change the date format of the default alias of daily notes.
         -- alias_format = "%B %-d, %Y",
       },
+      notes_subdir = "journal",
       note_id_func = function(title)
         -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
         -- In this case a note with the title 'My new note' will be given an ID that looks
@@ -534,12 +534,12 @@ return {
           end,
           opts = { buffer = true },
         },
-        ["gf"] = {
-          action = function()
-            return require("obsidian").util.gf_passthrough()
-          end,
-          opts = { noremap = false, expr = true, buffer = true },
-        },
+        -- ["gf"] = {
+        --   action = function()
+        --     return require("obsidian").util.gf_passthrough()
+        --   end,
+        --   opts = { noremap = false, expr = true, buffer = true },
+        -- },
         -- ["<cr>"] = {
         --   action = function()
         --     return require("obsidian").util.smart_action()
