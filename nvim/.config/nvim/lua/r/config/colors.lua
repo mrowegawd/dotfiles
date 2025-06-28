@@ -93,6 +93,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.7,
   pmenusel_bg_alter = 0.3,
+  winbarfilepath_fg_alter = 0.7,
   winseparator_alter = 1.05,
 })
 reset_base_alter({ "base46-chocolate" }, {

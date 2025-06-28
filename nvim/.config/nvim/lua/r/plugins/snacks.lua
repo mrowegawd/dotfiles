@@ -183,7 +183,7 @@ return {
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
       { "gK", function() Snacks.image.hover() end, desc = "Snackspicker: hover image" },
       { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snackspicker: notification history" },
-      { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss all notifications" },
+      { "<Localleader>sd", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss all notifications" },
       ---@diagnostic disable-next-line: missing-fields
     },
     config = function(_, opts)
