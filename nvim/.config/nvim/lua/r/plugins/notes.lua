@@ -153,7 +153,7 @@ return {
             org_agenda_year_view = "vy",
 
             org_agenda_switch_to = "<TAB>",
-            org_agenda_goto_today = "@",
+            org_agenda_goto_today = "~",
             org_agenda_goto = "<CR>",
             org_agenda_goto_date = "<prefix>D",
 
