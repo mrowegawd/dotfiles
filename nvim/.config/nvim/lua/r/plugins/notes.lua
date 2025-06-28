@@ -564,6 +564,36 @@ return {
       })
     end,
   },
+  -- SUPER-KANBAN
+  {
+    "hasansujon786/super-kanban.nvim",
+    cmd = "SuperKanban",
+    keys = {
+      {
+        "<Leader>oc",
+        "<CMD>SuperKanban todo.md<CR>",
+        desc = "Open: todo kanban [super-kanban.nvim]",
+      },
+    },
+    dependencies = { "folke/snacks.nvim" },
+    opts = {
+      markdown = {
+        notes_dir = RUtils.config.path.wiki_path .. "/kanban",
+        list_heading = "h2",
+        default_template = {
+          "## Backlog\n",
+          "## Todo\n",
+          "## Work in progress\n",
+          "## Completed\n",
+        },
+      },
+      mappings = {
+        ["<cr>"] = "open_note",
+        ["gD"] = "delete_card",
+        ["<C-t>"] = "toggle_complete",
+      },
+    },
+  },
   -- SNIPRUN
   {
     "michaelb/sniprun",
