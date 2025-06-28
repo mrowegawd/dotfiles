@@ -9,7 +9,7 @@ return {
     lazy = false,
     keys = {
       {
-        "<Localleader>aN",
+        "<Localleader>aA",
         function()
           return RUtils.notes.open_agenda_file_lists()
         end,
