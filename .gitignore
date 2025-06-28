@@ -23,8 +23,6 @@ wuzz
 
 mpd/.config/mpd/playlist/*
 
-ansible*
-
 .zcompdump
 .chpwd-recent-dirs
 .suave
