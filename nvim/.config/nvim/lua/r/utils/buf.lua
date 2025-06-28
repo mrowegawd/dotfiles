@@ -71,7 +71,7 @@ function M.magic_quit()
   local buf_fts = {
     ["fugitive"] = "bd",
     ["Trouble"] = "bd",
-    ["help"] = "bd",
+    ["help"] = "q!",
     ["octo"] = "q!",
     ["log"] = "bd",
     ["git"] = function()

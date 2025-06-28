@@ -40,7 +40,7 @@ RUtils.cmd.augroup("SmartClose", {
     "filetree",
     "fugitive",
     "gitsigns.blame",
-    "help",
+    -- "help",
     "lspinfo",
     "man",
     "neotest-output",

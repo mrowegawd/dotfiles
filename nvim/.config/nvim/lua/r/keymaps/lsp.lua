@@ -227,6 +227,13 @@ function M.get()
       desc = "Action: code action [rustaceanvim]",
       buffer = vim.api.nvim_get_current_buf(),
     }
+  elseif RUtils.has "tiny-code-action.nvim" then
+    M._keys[#M._keys + 1] = {
+      "<Leader>ca",
+      require("tiny-code-action").code_action,
+      has = "codeAction",
+      desc = "Action: code action [tiny-code-action]",
+    }
   else
     M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "Action: code action" }
   end

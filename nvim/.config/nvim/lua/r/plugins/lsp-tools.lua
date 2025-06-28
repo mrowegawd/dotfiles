@@ -108,4 +108,10 @@ return {
       },
     },
   },
+  -- TINY-CODE-ACTION
+  {
+    "rachartier/tiny-code-action.nvim",
+    event = "LspAttach",
+    opts = {},
+  },
 }

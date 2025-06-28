@@ -1227,7 +1227,8 @@ local general_overrides = function()
 
     {
       ["@org.agenda.today"] = {
-        fg = Highlight.darken("#fccf3e", 0.8, Highlight.get("Normal", "bg")),
+        fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        bg = { from = "Normal", attr = "bg", alter = 0.05 },
         bold = true,
         italic = true,
       },
