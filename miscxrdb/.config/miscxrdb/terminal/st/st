@@ -1,8 +1,8 @@
 ! Download font: https://monaspace.githubnext.com/
-st.font:              CommitMono:Regular:pixelsize=15
-st.boldFont:          CommitMono:Bold:pixelsize=15
-st.italicFont:        Maple Mono:Italic:pixelsize=15
-st.italicBoldFont:    Maple Mono:ItalicBold:pixelsize=15
+st.font:              CommitMono:Regular:pixelsize=16
+st.boldFont:          CommitMono:Bold:pixelsize=16
+st.italicFont:        Maple Mono:Italic:pixelsize=16
+st.italicBoldFont:    Maple Mono:ItalicBold:pixelsize=16
 
 ! st.borderperc:              100
 ! st.cursorshape:               2

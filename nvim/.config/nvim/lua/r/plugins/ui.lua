@@ -245,20 +245,27 @@ return {
     "rainbowhxch/beacon.nvim", -- (alternative smear-cursor)
     event = "LazyFile",
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
-    opts = {
-      ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
-      ignore_filetypes = {
-        "qf",
-        "dap_watches",
-        "dap_scopes",
-        -- "neo-tree",
-        "fzf",
-        "lazy",
-        "NeogitCommitMessage",
-        "NeogitPopup",
-        "NeogitStatus",
-      },
-    },
+    opts = function()
+      local Highlight = require "r.settings.highlights"
+      Highlight.plugin(
+        "beaconHiC",
+        { theme = { ["*"] = { { ["BeaconDefault"] = { bg = { from = "Cursor", attr = "bg" } } } } } }
+      )
+      return {
+        ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
+        ignore_filetypes = {
+          "qf",
+          "dap_watches",
+          "dap_scopes",
+          -- "neo-tree",
+          "fzf",
+          "lazy",
+          "NeogitCommitMessage",
+          "NeogitPopup",
+          "NeogitStatus",
+        },
+      }
+    end,
   },
   -- BUFDELETE
   {

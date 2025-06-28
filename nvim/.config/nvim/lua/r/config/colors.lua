@@ -16,7 +16,7 @@ local base_cl = {
   cursorline_alter = 0.04,
   dapstopped_bg_alter = 0.25,
   fzflua_bg_cursorline_alter = -0.22,
-  fzfluaborder_fg_alter = 0.05,
+  fzfluaborder_fg_alter = 0.1,
   fzfluasel_fg_alter = 0,
   linenr_fg_alter = 0.55,
   nontext_fg_alter = 1.5,
@@ -27,8 +27,8 @@ local base_cl = {
   quickfixline_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
-  winbarfilepath_fg_alter = 1.1,
-  winseparator_alter = 0.4,
+  winbarfilepath_fg_alter = 0.9,
+  winseparator_alter = 0.65,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -79,13 +79,13 @@ reset_base_alter({ "ashen" }, {
   cursorline_alter = 0.1,
   linenr_fg_alter = 1.35,
   nontext_fg_alter = 3.2,
-  winseparator_alter = 1.3,
+  winseparator_alter = 1.87,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
-  normalfloat_bg_alter = -0.1,
+  normalfloat_bg_alter = -0.05,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
@@ -93,13 +93,12 @@ reset_base_alter({ "base46-catppuccin" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.7,
   pmenusel_bg_alter = 0.3,
-  winseparator_alter = 0.6,
+  winseparator_alter = 1.05,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
   cursorline_alter = 0.1,
   pmenusel_bg_alter = 0.15,
-  winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-doomchad" }, {
   comment_fg_name = "WinSeparator",
@@ -110,8 +109,7 @@ reset_base_alter({ "base46-doomchad" }, {
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
   search_bg_alter = 0.95,
-  winbarfilepath_fg_alter = 0.8,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-everforest" }, {
   comment_fg_name = "WinSeparator",
@@ -121,8 +119,7 @@ reset_base_alter({ "base46-everforest" }, {
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
   pmenusel_bg_alter = 0.15,
-  winbarfilepath_fg_alter = 0.75,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-horizon" }, {
   comment_fg_name = "WinSeparator",
@@ -131,12 +128,13 @@ reset_base_alter({ "base46-horizon" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.65,
   nontext_fg_alter = 1.9,
-  winseparator_alter = 0.55,
+  winseparator_alter = 0.95,
 })
 reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
   nontext_fg_alter = 1.25,
+  winseparator_alter = 0.63,
 })
 reset_base_alter({ "base46-jellybeans" }, {
   comment_fg_name = "WinSeparator",
@@ -147,7 +145,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.5,
   pmenusel_bg_alter = 0.35,
-  winseparator_alter = 0.95,
+  winseparator_alter = 1.75,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -160,7 +158,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.3,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.95,
 })
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
@@ -168,6 +166,7 @@ reset_base_alter({ "base46-material-darker" }, {
   dapstopped_bg_alter = 0.2,
   fzfluasel_fg_alter = -0.1,
   pmenusel_bg_alter = 0.3,
+  winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-melange" }, {
   comment_fg_alter = 0.6,
@@ -175,7 +174,7 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
@@ -186,7 +185,7 @@ reset_base_alter({ "base46-onenord" }, {
   fzfluasel_fg_alter = -0.1,
   linenr_fg_alter = 0.37,
   nontext_fg_alter = 1.2,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   comment_fg_name = "WinSeparator",
@@ -197,7 +196,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.7,
   pmenusel_bg_alter = 0.35,
-  winseparator_alter = 0.9,
+  winseparator_alter = 1.53,
 })
 reset_base_alter({ "base46-rosepine" }, {
   comment_fg_name = "WinSeparator",
@@ -208,7 +207,7 @@ reset_base_alter({ "base46-rosepine" }, {
   linenr_fg_alter = 1,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winseparator_alter = 0.9,
+  winseparator_alter = 1.5,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   comment_fg_alter = 0.25,
@@ -222,14 +221,14 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.08,
-  winseparator_alter = 0.27,
+  winseparator_alter = 0.28,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
   cursor_fg = "#708284",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.15,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-wombat" }, {
   comment_fg_name = "WinSeparator",
@@ -237,7 +236,7 @@ reset_base_alter({ "base46-wombat" }, {
   cursorline_alter = 0.52,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.25,
-  winseparator_alter = 0.45,
+  winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-zenburn" }, {
   cursor_fg = "#f3eadb",
@@ -250,8 +249,7 @@ reset_base_alter({ "base46-zenburn" }, {
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.09,
-  winbarfilepath_fg_alter = 0.7,
-  winseparator_alter = 0.2,
+  winseparator_alter = 0.3,
 })
 reset_base_alter({ "kanso-ink" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -262,7 +260,7 @@ reset_base_alter({ "kanso-ink" }, {
   nontext_fg_alter = 2.8,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 0.3,
-  winseparator_alter = 1,
+  winseparator_alter = 1.65,
 })
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
@@ -272,7 +270,7 @@ reset_base_alter({ "lackluster" }, {
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
-  winseparator_alter = 1.5,
+  winseparator_alter = 1.85,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
@@ -281,7 +279,7 @@ reset_base_alter({ "tokyonight-night" }, {
   linenr_fg_alter = 0.95,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winseparator_alter = 0.85,
+  winseparator_alter = 1.1,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   comment_fg_alter = 0.6,
@@ -292,6 +290,8 @@ reset_base_alter({ "tokyonight-storm" }, {
   linenr_fg_alter = 0.45,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
+  winbarfilepath_fg_alter = 0.55,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -304,7 +304,7 @@ reset_base_alter({ "vscode_modern" }, {
   pmenusel_bg_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
-  winseparator_alter = 0.55,
+  winseparator_alter = 0.85,
 })
 
 local general_overrides = function()
@@ -770,7 +770,7 @@ local general_overrides = function()
     { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = 0.2 } } },
 
     -- WINBAR
-    { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
+    { WinbarFilepath = { fg = { from = "WinSeparator", attr = "fg", alter = winbarfilepath_fg_alter } } },
     { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
 
     -- ╔═════════════════════════════════════════════════════════╗
@@ -1024,7 +1024,7 @@ local general_overrides = function()
         fg = { from = "WinSeparator", attr = "fg", alter = fzfluaborder_fg_alter },
       },
     },
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.5 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.4 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
     {
