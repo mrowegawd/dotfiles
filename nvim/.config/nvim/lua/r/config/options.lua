@@ -290,11 +290,6 @@ vim.filetype.add {
     ["requirements-.*%.txt"] = "requirements",
     [".*/templates/.*%.ya?ml"] = "helm",
     [".*/templates/.*%.tpl"] = "helm",
-    [".*/playbooks/.*%.ya?ml"] = "yaml.ansible",
-    [".*/roles/.*/tasks/.*%.ya?ml"] = "yaml.ansible",
-    [".*/roles/.*/molecule/*.*%.ya?ml"] = "yaml.ansible",
-    [".*/roles/.*/handlers/.*%.ya?ml"] = "yaml.ansible",
-    [".*/inventory/.*%.ini"] = "ansible_hosts",
   },
 }
 -- }}}
