@@ -5,10 +5,10 @@ return {
     -- enabled = false,
     -- lazy = false, -- Important
     keys = {
-      { "<Leader>AA", "<CMD>Other<CR>", desc = "Alternate: edit [other]" },
-      { "<Leader>AV", "<Cmd>OtherVSplit`<CR>", desc = "Alternate: vsplit [other]" },
-      { "<Leader>AS", "<Cmd>OtherSplit<CR>", desc = "Alternate: split test [other]" },
-      { "<Leader>AT", "<Cmd>OtherTabNew<CR>", desc = "Alternate: tab test [other]" },
+      { "<Leader>AA", "<CMD>Other<CR>", desc = "Alternate: edit [other.nvim]" },
+      { "<Leader>AV", "<Cmd>OtherVSplit`<CR>", desc = "Alternate: vsplit [other.nvim]" },
+      { "<Leader>AS", "<Cmd>OtherSplit<CR>", desc = "Alternate: split test [other.nvim]" },
+      { "<Leader>AT", "<Cmd>OtherTabNew<CR>", desc = "Alternate: tab test [other.nvim]" },
     },
     config = function()
       require("other-nvim").setup {

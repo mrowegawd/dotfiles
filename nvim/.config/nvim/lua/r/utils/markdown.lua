@@ -84,8 +84,49 @@ end
 local function check_for_link_or_tag()
   local line = vim.api.nvim_get_current_line()
   local col = vim.fn.col "."
-  -- TODO: ini adalah yang salah
-  return is_tag_or_link_at(line, col, {})
+  return is_tag_or_link_at(line, col, {}) -- TODO: ini adalah yang salah
+end
+
+function M.open_with_mvp_or_sxiv(is_selection)
+  is_selection = is_selection or false
+
+  local url = vim.fn.expand "<cWORD>"
+
+  -- check jika terdapat `https` pada `url`
+  local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+
+  -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
+  --   url = string.format("https://github.com/%s", url)
+  if uri ~= "" then
+    url = uri
+  else
+    print "fasdfa"
+    if not is_selection then
+      url = string.format("https://google.com/search?q=%s", url)
+    end
+
+    vim.cmd "normal yy"
+    title = vim.fn.getreg '"0'
+    title = title:gsub("^(%[)(.+)(%])$", "%2")
+    title = RUtils.cmd.remove_alias(title)
+
+    local parts = vim.split(title, "#")
+    if #parts > 0 then
+      url = string.format("https://google.com/search?q=%s", parts[1])
+    end
+    -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
+    local browser = os.getenv "NUBROWSER"
+    local notif_msg = "Open with browser: "
+    local cmds = { browser, url }
+    if vim.bo.filetype == "octo" then
+      notif_msg = "Open with mpv: "
+      cmds =
+        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
+    end
+
+    vim.fn.jobstart(cmds, { detach = true })
+    RUtils.info(notif_msg .. url, { title = "Open With" })
+  end
 end
 
 function M.follow_link(is_selection)
