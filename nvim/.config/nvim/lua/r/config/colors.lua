@@ -9,11 +9,11 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
   comment_fg_alter = 0.65,
-  comment_fg_name = "Keyword",
   cursearch_bg_alter = 0.8,
   cursearch_fg_alter = 0.1,
   cursor_fg = "#c7063c",
   cursorline_alter = 0.04,
+  cursorline_fg_alter = "Keyword",
   dapstopped_bg_alter = 0.25,
   fzflua_bg_cursorline_alter = -0.22,
   fzfluaborder_fg_alter = 0.1,
@@ -47,11 +47,11 @@ local function reset_base_alter(themes, alter_base)
   local variable_map = {
     cmpdocnormal_fg_alter = "cmpdocnormal_fg_alter",
     comment_fg_alter = "comment_fg_alter",
-    comment_fg_name = "comment_fg_name",
     cursearch_bg_alter = "cursearch_bg_alter",
     cursearch_fg_alter = "cursearch_fg_alter",
     cursor_fg = "cursor_fg",
     cursorline_alter = "cursorline_alter",
+    cursorline_fg_alter = "cursorline_fg_alter",
     dapstopped_bg_alter = "dapstopped_bg_alter",
     fzflua_bg_cursorline_alter = "fzflua_bg_cursorline_alter",
     fzfluaborder_fg_alter = "fzfluaborder_fg_alter",
@@ -102,10 +102,10 @@ reset_base_alter({ "base46-chocolate" }, {
   pmenusel_bg_alter = 0.15,
 })
 reset_base_alter({ "base46-doomchad" }, {
-  comment_fg_name = "WinSeparator",
   cursearch_bg_alter = 0.95,
   cursor_fg = "#81A1C1",
   cursorline_alter = 0.35,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
@@ -113,9 +113,9 @@ reset_base_alter({ "base46-doomchad" }, {
   winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-everforest" }, {
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#e69875",
   cursorline_alter = 0.35,
+  cursorline_fg_alter = "WinSeparator",
   fzfluaborder_fg_alter = -0.05,
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
@@ -123,9 +123,9 @@ reset_base_alter({ "base46-everforest" }, {
   winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-horizon" }, {
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#b3276f",
   cursorline_alter = 0.4,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.65,
   nontext_fg_alter = 1.9,
@@ -138,7 +138,7 @@ reset_base_alter({ "base46-jabuti" }, {
   winseparator_alter = 0.63,
 })
 reset_base_alter({ "base46-jellybeans" }, {
-  comment_fg_name = "WinSeparator",
+  cursorline_fg_alter = "WinSeparator",
   cursor_fg = "#ffa560",
   cursorline_alter = 0.65,
   dapstopped_bg_alter = 0.2,
@@ -150,9 +150,9 @@ reset_base_alter({ "base46-jellybeans" }, {
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#b3276f",
   cursorline_alter = 0.75,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.1,
@@ -189,9 +189,9 @@ reset_base_alter({ "base46-onenord" }, {
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#ffffff",
   cursorline_alter = 0.45,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.3,
   linenr_fg_alter = 1.2,
@@ -200,9 +200,9 @@ reset_base_alter({ "base46-oxocarbon" }, {
   winseparator_alter = 1.53,
 })
 reset_base_alter({ "base46-rosepine" }, {
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#e0def4",
   cursorline_alter = 0.8,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.28,
   linenr_fg_alter = 1,
@@ -232,14 +232,15 @@ reset_base_alter({ "base46-solarized_dark" }, {
   winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-wombat" }, {
-  comment_fg_name = "WinSeparator",
   cursor_fg = "#bbbbbb",
   cursorline_alter = 0.52,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.25,
   winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-zenburn" }, {
+  comment_fg_alter = 0.55,
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
@@ -353,7 +354,11 @@ local general_overrides = function()
 
     {
       CursorLine = {
-        bg = Highlight.darken(Highlight.get(comment_fg_name, "fg"), cursorline_alter, Highlight.get("Normal", "bg")),
+        bg = Highlight.darken(
+          Highlight.get(cursorline_fg_alter, "fg"),
+          cursorline_alter,
+          Highlight.get("Normal", "bg")
+        ),
       },
     },
     {
@@ -787,6 +792,16 @@ local general_overrides = function()
         bg = { from = "StatusLine", attr = "bg" },
       },
     },
+
+    { LspSignatureActiveParameter = { fg = "black", bg = "yellow", bold = true } },
+    -- {
+    --   LspSignatureActiveParameter = {
+    --     fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+    --     bg = { from = "Boolean", attr = "fg", alter = -0.5 },
+    --     bold = true,
+    --   },
+    -- },
+
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
     { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
     {
