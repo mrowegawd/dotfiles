@@ -2,9 +2,21 @@ return {
   -- CRONEX
   {
     -- ex: (gunakan tanda kurung ya!) -> "* * * * *" bukan * * * * *
+    -- dan juga format cronex adalah lewat diagnostic, check lewat trouble
     "fabridamicelli/cronex.nvim",
     ft = { "yaml", "yml", "tf", "cfg", "config", "conf", "crontab" },
-    opts = {},
+    config = function()
+      require("cronex").setup {
+        -- Add *.crontab to supported file patterns
+        file_patterns = { "*.yaml", "*.yml", "*.tf", "*.cfg", "*.config", "*.conf", "*.crontab" },
+
+        -- Use custom extractor to support unquoted cron expressions
+        extractor = {
+          cron_from_line = require("cronex.cron_from_line").cron_from_line_crontab,
+          extract = require("cronex.extract").extract,
+        },
+      }
+    end,
   },
   -- BLOAT
   {

@@ -11,6 +11,7 @@ ICON_LEARNING_PATH="$HOME/.config/miscxrdb/icons/knowledge.png"
 TASK="$("$HOME/.cargo/bin/rg" -i "\*\sPROGRES" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
 LEARNING="$("$HOME/.cargo/bin/rg" -i "\*\sLEARNING" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
 GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
+RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
 
 if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
   /usr/local/bin/dunstify -i "$ICON_PATH" "No active task, progress or learning session detected" "<b><span foreground=\"$GREEN\">What are you doing bodoh?? FOCUS!!</span></b>"
@@ -22,7 +23,7 @@ else
     # Array baru untuk menyimpan elemen yang dimodifikasi
     new_array=()
     for element in "${array[@]}"; do
-      new_array+=("<b><span foreground=\"$GREEN\">$element</span></b> ")
+      new_array+=("<span foreground=\"$RED\"></span> <b><span foreground=\"$GREEN\">$element</span></b>")
     done
 
     concatenated_string=$(
@@ -38,7 +39,7 @@ else
     # Array baru untuk menyimpan elemen yang dimodifikasi
     new_array=()
     for element in "${array[@]}"; do
-      new_array+=("<b><span foreground=\"$GREEN\">$element</span></b> ")
+      new_array+=(" <b><span foreground=\"$GREEN\">$element</span></b>")
     done
 
     concatenated_string=$(

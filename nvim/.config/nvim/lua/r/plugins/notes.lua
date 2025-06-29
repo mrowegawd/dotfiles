@@ -583,7 +583,7 @@ return {
     dependencies = { "folke/snacks.nvim" },
     opts = {
       markdown = {
-        notes_dir = RUtils.config.path.wiki_path .. "/kanban",
+        notes_dir = RUtils.config.path.wiki_path .. "/kanban-notes",
         list_heading = "h2",
         default_template = {
           "## Backlog\n",
