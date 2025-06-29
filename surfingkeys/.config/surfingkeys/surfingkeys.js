@@ -10,14 +10,15 @@ const {
   Hints,
   RUNTIME,
   Visual,
-  iunmap,
   addSearchAlias,
-  map,
-  imap,
   cmap,
+  imap,
+  iunmap,
+  map,
   mapkey,
   tabOpenLink,
   unmap,
+  vmap,
 } = api;
 
 unmap("H");
@@ -46,6 +47,9 @@ function scrollToSmooth(position) {
   });
 }
 
+// ╭─────────────────────────────────────────────────────────╮
+// │ GENERAL                                                 │
+// ╰─────────────────────────────────────────────────────────╯
 mapkey("<Ctrl-d>", "#2Scroll down of half", () => {
   scrollBySmooth(window.innerHeight / 2, 2);
 });
@@ -60,27 +64,12 @@ mapkey("gg", "#2Jump to the top of the page", () => {
   scrollToSmooth(-1000000000);
 });
 
-// mapkey("gg", "Jump to the top of the page", function () {
-//   window.scrollTo(0, window.pageYOffset - 1000000000);
-// });
-// mapkey("G", "Jump to the bottom of the page", function () {
-//   window.scrollTo(0, window.pageYOffset + 1000000000);
-// });
-
 mapkey("k", "#2Scroll up of line", () => {
   scrollBySmooth(window.innerHeight / 10, -2);
 });
 mapkey("j", "#2Scroll down of line", () => {
   scrollBySmooth(window.innerHeight / 10, 2);
 });
-
-mapkey("K", "#2Scroll up of line", () => {
-  scrollBySmooth(window.innerHeight / 10, -3);
-});
-// NOTE: conflict dengan mapping fast forward di youtube video
-// mapkey("J", "#2Scroll down of line", () => {
-//   scrollBySmooth(window.innerHeight / 10, 3);
-// });
 
 mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
   scrollBySmooth(window.innerHeight * 10, 3);
@@ -92,30 +81,13 @@ mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
 // ╭─────────────────────────────────────────────────────────╮
 // │ EDITING                                                 │
 // ╰─────────────────────────────────────────────────────────╯
-
-unmap("/"); // should do the trick, using it myself.
-// unmap("<ctrl-f>"); // should do the trick, using it myself.
-// WARN: niatnya ingin run search, tapi ini salah
-// mapkey("<Ctrl-g>", "Search", function () {
-//   RUNTIME("openFinder");
-// });
-
+unmap("/");
 map("<Ctrl-g>", "/");
-// mapkey("n", "Next search result", function () {
-//   Visual.next(false);
-// });
-// mapkey("N", "Previous search result", function () {
-//   Visual.next(true);
-// });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
-
-// map("mf", "cf");
 map("F", "gf");
-
-// Edit current link
 map("C", ";u");
 
 mapkey("<Alt-f>", "Open Links With simulates Zen's Glance", () => {
@@ -164,20 +136,19 @@ mapkey("yk", "#8Open link in split view", function () {
   });
 });
 
-// mapkey("s", "Search in google in current tab", function () {
-//   Front.openOmnibar({ type: "SearchEngine", extra: "g", tabbed: false });
-// });
-// mapkey("S", "Search in google in new tab", function () {
-//   Front.openOmnibar({ type: "SearchEngine", extra: "g" });
-// });
+mapkey(
+  "Q",
+  "#1Click on an Image or a button in background, multiple",
+  function () {
+    Hints.create("img, button", Hints.dispatchMouseClick, {
+      multipleHits: true,
+      tabbed: true,
+      active: false,
+    });
+  },
+);
 
 // TEST ============================================================
-// Forcing keymap H to remap arrowLeft?
-// map("H", "<ArrowLeft>");
-
-// Attempted to exit with hh -> <esc>, but it failed."
-// imap("hh", "<Esc>");
-//
 // mapkey(";dv", "#1Download video", function () {
 //   Hints.create("video", function (element) {
 //     var src = element.src || element.querySelector(`source[src$="mp4"]`).src;
@@ -187,22 +158,15 @@ mapkey("yk", "#8Open link in split view", function () {
 //   });
 // });
 
-// END TEST ========================================================
-
 // ╭─────────────────────────────────────────────────────────╮
 // │ OMNIBAR                                                 │
 // ╰─────────────────────────────────────────────────────────╯
-
-// The default is using <Tab> but in nvim I use `<c-j/k>` for item selection
-// with these remappings, I can use them now
 cmap("<Ctrl-j>", "<Tab>");
 cmap("<Ctrl-k>", "<Shift-Tab>");
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ TAB                                                     │
 // ╰─────────────────────────────────────────────────────────╯
-
-// Move TAB to the left/right
 mapkey("<Alt-ArrowLeft>", "#3Move current tab to left", function () {
   RUNTIME("moveTab", { step: -1 });
 });
@@ -219,7 +183,7 @@ mapkey("<Alt-ArrowDown>", "#3Move current tab to down", function () {
 mapkey("<Space>bO", "#3Close all tabs except current one", function () {
   RUNTIME("tabOnly");
 });
-mapkey("<Alt-b>", "#3Close alternate the tabs or go to last tab", function () {
+mapkey("<Alt-b>", "#3Close alternate the tabs", function () {
   RUNTIME("goToLastTab");
 });
 mapkey("M", "Mute/unmute current tab", function () {
@@ -227,14 +191,10 @@ mapkey("M", "Mute/unmute current tab", function () {
 });
 
 map("<Space>ff", "T");
-
+map("<Space>fF", "t"); // include bookmark search
 map("<Ctrl-l>", "R");
 map("<Ctrl-h>", "E");
 
-// map("<Ctrl-j>", "<Ctrl-Tab>");
-// map("<Ctrl-k>", "<Ctrl-Shift-Tab>");
-
-// Gunakan mapping "pinning tab", jika c-j/k tidak jalan, di zen-browser
 mapkey(
   "<Ctrl-j>",
   "Go one tab right",
@@ -251,6 +211,28 @@ mapkey(
   },
   { repeatIgnore: true },
 );
+mapkey(
+  "<Ctrl-n>",
+  "Go one tab right",
+  function () {
+    RUNTIME("nextTab");
+  },
+  { repeatIgnore: true },
+);
+mapkey(
+  "<Ctrl-p>",
+  "Go one tab left",
+  function () {
+    RUNTIME("previousTab");
+  },
+  { repeatIgnore: true },
+);
+
+map("gH", ":feedkeys 99E", 0, "#3Go to the first tab");
+map("gL", ":feedkeys 99R", 0, "#3Go to the last tab");
+map("gK", ":feedkeys 99E", 0, "#3Go to the first tab");
+map("gJ", ":feedkeys 99R", 0, "#3Go to the last tab");
+map("<Space>R", ":feedkeys 99r", 0, "#3Reload all tab");
 
 mapkey("<Ctrl-o>", "backward", function () {
   history.go(-1);
@@ -259,7 +241,6 @@ mapkey("<Ctrl-i>", "forward", function () {
   history.go(1);
 });
 
-// close tab
 mapkey("q", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
@@ -270,9 +251,8 @@ mapkey("<Space><Tab>", "#3Close current tab", () => {
 // ╭─────────────────────────────────────────────────────────╮
 // │ HISTORY                                                 │
 // ╰─────────────────────────────────────────────────────────╯
-
 // open current history tab
-mapkey("<Space>fo", "#8Open RecentlyClosed", () => {
+mapkey("<Space>fo", "#8Open Recently Closed", () => {
   Front.openOmnibar({ type: "RecentlyClosed" });
 });
 // open global history tab
@@ -283,7 +263,6 @@ mapkey("<Space>fO", "#8Open History", () => {
 // ╭─────────────────────────────────────────────────────────╮
 // │ BOOKMARKS                                               │
 // ╰─────────────────────────────────────────────────────────╯
-
 // Open bookmark
 mapkey("<Alt-B>", "#8Open a bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
@@ -292,7 +271,6 @@ mapkey("<Alt-B>", "#8Open a bookmark", function () {
 // ╭─────────────────────────────────────────────────────────╮
 // │ ZOOM                                                    │
 // ╰─────────────────────────────────────────────────────────╯
-
 mapkey("<Ctrl-0>", "#3zoom reset", function () {
   RUNTIME("setZoom", {
     zoomFactor: 0,
@@ -302,16 +280,6 @@ mapkey("<Ctrl-0>", "#3zoom reset", function () {
 // ╭─────────────────────────────────────────────────────────╮
 // │ SEARCH                                                  │
 // ╰─────────────────────────────────────────────────────────╯
-
-// Search engines (see https://github.com/b0o/surfingkeys-conf to add extra
-// completions)
-// mapkey('s', 'Search in google in current tab', function () {
-//     Front.openOmnibar({ type: 'SearchEngine', extra: 'g', tabbed: false });
-// });
-//
-// mapkey('S', 'Search in google in new tab', function () {
-//     Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
-
 addSearchAlias(
   "s",
   "StackOverflow",
@@ -330,7 +298,6 @@ addSearchAlias(
   },
 );
 
-// Alias for search on google
 addSearchAlias(
   "g",
   "Google",
@@ -390,299 +357,300 @@ addSearchAlias(
 );
 
 // ╭─────────────────────────────────────────────────────────╮
-// │ THEMES                                                  │
+// │ HINT                                                    │
 // ╰─────────────────────────────────────────────────────────╯
+// Link Hints
+Hints.style(`
+    font-family: 'JetBrainsMono Nerd Font Mono', 'SF Pro', monospace;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: lowercase;
+    color: #FFFF00 !important;
+    background: #3B4252 !important;
+    border: solid 1px #4C566A !important;
+    text-align: center;
+    padding: 5px;
+    line-height: 1;
+  `);
 
+// Text Hints
 Hints.style(
-  "border: solid 1px #3D3E3E; color:#F92660; background: initial; background-color: #272822; font-family: Maple Mono Freeze; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);",
-);
-Hints.style(
-  "border: solid 1px #3D3E3E !important; padding: 1px !important; color: #A6E22E !important; background: #272822 !important; font-family: Maple Mono Freeze !important; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8) !important;",
+  `
+    font-family: 'JetBrainsMono Nerd Font Mono', 'SF Pro', monospace;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: lowercase;
+    color: #FFFF00 !important;
+    background: #6272a4 !important;
+    border: solid 2px #4C566A !important;
+    text-align: center;
+    padding: 5px;
+    line-height: 1;
+  `,
   "text",
 );
-Visual.style("marks", "background-color: #A6E22E99;");
-Visual.style("cursor", "background-color: #F92660;");
 
-/* set theme */
+// set visual-mode style
+Visual.style(
+  "marks",
+  "background-color: #A3BE8C; border: 1px solid #3B4252 !important; text-decoration: underline;",
+);
+Visual.style(
+  "cursor",
+  "background-color: #E5E9F0 !important; border: 1px solid #6272a4 !important; border-bottom: 2px solid green !important; padding: 2px !important; outline: 1px solid rgba(255,255,255,.75) !important;",
+);
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ THEMES                                                  │
+// ╰─────────────────────────────────────────────────────────╯
 settings.theme = `
-.sk_theme {
-    font-family: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
-    font-size: 14px;
-    background: #282828;
-    color: #ebdbb2;
-}
-.sk_theme tbody {
-    color: #b8bb26;
-}
-.sk_theme input {
-    color: #d9dce0;
-}
-.sk_theme .url {
-    color: #38971a;
-}
-.sk_theme .annotation {
-    color: #b16286;
-}
+  :root {
+    --font: "JetBrainsMono Nerd Font Mono", Arial, sans-serif;
+    --font-size: 16px;
+    --font-weight: bold;
+    --fg: #E5E9F0;
+    --bg: #3B4252;
+    --bg-dark: #2E3440;
+    --border: #4C566A;
+    --main-fg: #88C0D0;
+    --accent-fg: #A3BE8C;
+    --info-fg: #5E81AC;
+    --select: #4C566A;
+    --orange: #D08770;
+    --red: #BF616A;
+    --yellow: #EBCB8B;
+  }
+  /* ---------- Generic ---------- */
+  .sk_theme {
+  background: var(--bg);
+  color: var(--fg);
+    background-color: var(--bg);
+    border-color: var(--border);
+    font-family: var(--font);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+  }
+  input {
+    font-family: var(--font);
+    font-weight: var(--font-weight);
+  }
 
-#sk_omnibar {
-    width: 60%;
-    left:20%;
-    box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
-}
+  div.surfingkeys_cursor {
+    background-color: #0642CE;
+    color: red;
+  }
+  .sk_theme tbody {
+    color: var(--fg);
+  }
+  .sk_theme input {
+    color: var(--fg);
+  }
+  /* Hints */
+  #sk_hints .begin {
+    color: var(--accent-fg) !important;
+  }
+  #sk_tabs .sk_tab {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+  }
+  #sk_tabs .sk_tab_title {
+    color: var(--fg);
+  }
+  #sk_tabs .sk_tab_url {
+    color: var(--main-fg);
+  }
+  #sk_tabs .sk_tab_hint {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--accent-fg);
+  }
+  .sk_theme #sk_frame {
+    background: var(--bg);
+    opacity: 0.2;
+    color: var(--accent-fg);
+  }
 
-.sk_omnibar_middle {
-	top: 15%;
-	border-radius: 10px;
-}
-
-
-.sk_theme .omnibar_highlight {
-    color: #ebdbb2;
-}
-.sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
-    background: #282828;
-}
-
-.sk_theme #sk_omnibarSearchResult {
-    max-height: 60vh;
-    overflow: hidden;
-    margin: 0rem 0rem;
-}
-
-
-
-#sk_omnibarSearchResult > ul {
-	padding: 1.0em;
-}
-
-.sk_theme #sk_omnibarSearchResult ul li {
-    margin-block: 0.5rem;
-    padding-left: 0.4rem;
-}
-
-.sk_theme #sk_omnibarSearchResult ul li.focused {
-	background: #181818;
-	border-color: #181818;
-	border-radius: 12px;
-	position: relative;
-	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8);
-}
-
-
-#sk_omnibarSearchArea > input {
-	display: inline-block;
-	width: 100%;
-	flex: 1;
-	font-size: 20px;
-	margin-bottom: 0;
-	padding: 0px 0px 0px 0.5rem;
-	background: transparent;
-	border-style: none;
-	outline: none;
-	padding-left: 18px;
-}
-
-
-#sk_tabs {
-	position: fixed;
-	top: 0;
-	left: 0;
-    background-color: rgba(0, 0, 0, 0);
-	overflow: auto;
-	z-index: 2147483000;
-    box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
-	margin-left: 1rem;
-	margin-top: 1.5rem;
-    border: solid 1px #282828;
-    border-radius: 15px;
-    background-color: #282828;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-}
-
-#sk_tabs div.sk_tab {
-	vertical-align: bottom;
-	justify-items: center;
-	border-radius: 0px;
-    background: #282828;
-    //background: #181818 !important;
-
-	margin: 0px;
-	box-shadow: 0px 0px 0px 0px rgba(245, 245, 0, 0.3);
-	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.8) !important;
-
-	/* padding-top: 2px; */
-	border-top: solid 0px black;
-	margin-block: 0rem;
-}
-
-
-#sk_tabs div.sk_tab:not(:has(.sk_tab_hint)) {
-	background-color: #181818 !important;
-	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8) !important;
-	border: 1px solid #181818;
-	border-radius: 20px;
-	position: relative;
-	z-index: 1;
-	margin-left: 1.8rem;
-	padding-left: 0rem;
-	margin-right: 0.7rem;
-}
-
-
-#sk_tabs div.sk_tab_title {
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 10pt;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	padding-left: 5px;
-	color: #ebdbb2;
-}
-
-
-
-#sk_tabs.vertical div.sk_tab_hint {
-    position: inherit;
-    left: 8pt;
-    margin-top: 3px;
-    border: solid 1px #3D3E3E; color:#F92660; background: initial; background-color: #272822; font-family: Maple Mono Freeze;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
-}
-
-#sk_tabs.vertical div.sk_tab_wrap {
-	display: inline-block;
-	margin-left: 0pt;
-	margin-top: 0px;
-	padding-left: 15px;
-}
-
-#sk_tabs.vertical div.sk_tab_title {
-	min-width: 100pt;
-	max-width: 20vw;
-}
-
-#sk_usage, #sk_popup, #sk_editor {
-	overflow: auto;
-	position: fixed;
-	width: 80%;
-	max-height: 80%;
-	top: 10%;
-	left: 10%;
-	text-align: left;
-	box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
-	z-index: 2147483298;
-	padding: 1rem;
-	border: 1px solid #282828;
-	border-radius: 10px;
-}
-
-#sk_keystroke {
-	padding: 6px;
-	position: fixed;
-	float: right;
-	bottom: 0px;
-	z-index: 2147483000;
-	right: 0px;
-	background: #282828;
-	color: #fff;
-	border: 1px solid #181818;
-	border-radius: 10px;
-	margin-bottom: 1rem;
-	margin-right: 1rem;
-	box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
-}
-
-#sk_status {
-	position: fixed;
-	/* top: 0; */
-	bottom: 0;
-	right: 39%;
-	z-index: 2147483000;
-	padding: 8px 8px 4px 8px;
-	border-radius: 5px;
-	border: 1px solid #282828;
-	font-size: 14px;
-	box-shadow: 0px 20px 40px 2px rgba(0, 0, 0, 1);
-	/* margin-bottom: 1rem; */
-	width: 20%;
-	margin-bottom: 1rem;
-}
-
-
-#sk_omnibarSearchArea {
-    border-bottom: 0px solid #282828;
-}
-
-
-#sk_omnibarSearchArea .resultPage {
-	display: inline-block;
-    font-size: 14pt;
-    font-style: italic;
-	width: auto;
-}
-
-#sk_omnibarSearchResult li div.url {
-	font-weight: normal;
-	white-space: nowrap;
-	color: #aaa;
-}
-
-.sk_theme .omnibar_highlight {
-	color: #11eb11;
-	font-weight: bold;
-}
-
-.sk_theme .omnibar_folder {
-	border: 1px solid #188888;
-	border-radius: 5px;
-	background: #188888;
-	color: #aaa;
-	box-shadow: 1px 1px 5px rgba(0, 8, 8, 1);
-}
-.sk_theme .omnibar_timestamp {
-	background: #cc4b9c;
-	border: 1px solid #cc4b9c;
-	border-radius: 5px;
-	color: #aaa;
-	box-shadow: 1px 1px 5px rgb(0, 8, 8);
-}
-#sk_omnibarSearchResult li div.title {
-	text-align: left;
-	max-width: 100%;
-	white-space: nowrap;
-	overflow: auto;
-}
-
-.sk_theme .separator {
-	color: #282828;
-}
-
-.sk_theme .prompt{
-	color: #aaa;
-	background-color: #181818;
-	border-radius: 10px;
-	padding-left: 22px;
-	padding-right: 21px;
-	/* padding: ; */
-	font-weight: bold;
-	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8);
-}
-
-
-
-#sk_status, #sk_find {
-	font-size: 14px;
-	font-weight: bold;
-    text-align: center;
-    padding-right: 8px;
-}
-
-
-#sk_status span[style*="border-right: 1px solid rgb(153, 153, 153);"] {
+  /* ---------- Omnibar ---------- */
+  /* Uncomment this and use settings.omnibarPosition = 'bottom' for Pentadactyl/Tridactyl style bottom bar */
+  /* .sk_theme#sk_omnibar {
+    width: 100%;
+    left: 0;
+  } */
+  .sk_theme .title {
+    color: var(--accent-fg);
+  }
+  .sk_theme .url {
+    color: var(--main-fg);
+  }
+  .sk_theme .annotation {
+    color: var(--accent-fg);
+  }
+  .sk_theme .omnibar_highlight {
+    color: var(--accent-fg);
+  }
+  .sk_theme .omnibar_timestamp {
+    color: var(--info-fg);
+  }
+  .sk_theme .omnibar_visitcount {
+    color: var(--accent-fg);
+  }
+  .sk_theme #sk_omnibarSearchResult ul li .url {
+    font-size: calc(var(--font-size) - 2px);
+  }
+  .sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
+    background: var(--border);
+    padding: 5px;
+  }
+  .sk_theme #sk_omnibarSearchResult ul li:nth-child(even) {
+    background: var(--border);
+    padding: 5px;
+  }
+  .sk_theme #sk_omnibarSearchResult ul li.focused {
+    background: var(--bg-dark);
+    border-left: 2px solid var(--orange);
+    padding: 5px;
+    padding-left: 15px;
+  }
+  .sk_theme #sk_omnibarSearchArea {
+    border-top-color: var(--border);
+    border-bottom-color: transparent;
+    margin: 0;
+    padding: 5px 10px;
+  }
+  .sk_theme #sk_omnibarSearchArea:before {
+    content: "󱋤";
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 22px;
+  }
+  .sk_theme #sk_omnibarSearchArea input,
+  .sk_theme #sk_omnibarSearchArea span {
+    font-size: 20px;
+    padding:10px 0;
+  }
+  .sk_theme #sk_omnibarSearchArea .prompt {
+    text-transform: uppercase;
+    padding-left: 10px;
+  }
+  .sk_theme #sk_omnibarSearchArea .prompt:after {
+    content: "";
+    display: inline-block;
+    margin-right: 5px;
+    color: var(--accent-fg);
+  }
+  .sk_theme #sk_omnibarSearchArea .separator {
+    color: var(--bg);
     display: none;
-}
+  }
+  .sk_theme #sk_omnibarSearchArea .separator:after {
+    content: "";
+    display: inline-block;
+    margin-right: 5px;
+    color: var(--accent-fg);
+  }
 
-`;
+  /* ---------- Popup Notification Banner ---------- */
+  #sk_banner {
+    font-family: var(--font);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--fg);
+    opacity: 0.9;
+  }
+
+  /* ---------- Popup Keys ---------- */
+  #sk_keystroke {
+    background-color: var(--bg);
+  }
+  .sk_theme kbd .candidates {
+    color: var(--info-fg);
+  }
+  .sk_theme span.annotation {
+    color: var(--accent-fg);
+  }
+
+  /* ---------- Popup Translation Bubble ---------- */
+  #sk_bubble {
+    background-color: var(--bg) !important;
+    color: var(--fg) !important;
+    border-color: var(--border) !important;
+  }
+  #sk_bubble * {
+    color: var(--fg) !important;
+  }
+  #sk_bubble div.sk_arrow div:nth-of-type(1) {
+    border-top-color: var(--border) !important;
+    border-bottom-color: var(--border) !important;
+  }
+  #sk_bubble div.sk_arrow div:nth-of-type(2) {
+    border-top-color: var(--bg) !important;
+    border-bottom-color: var(--bg) !important;
+  }
+
+  /* ---------- Search ---------- */
+  #sk_status,
+  #sk_find {
+    font-size: var(--font-size);
+    border-color: var(--border);
+  }
+  .sk_theme kbd {
+    background: var(--bg-dark);
+    border-color: var(--border);
+    box-shadow: none;
+    color: var(--fg);
+  }
+  .sk_theme .feature_name span {
+    color: var(--main-fg);
+  }
+
+  /* ---------- ACE Editor ---------- */
+  #sk_editor {
+    background: var(--bg-dark) !important;
+    height: 50% !important;
+    /* Remove this to restore the default editor size */
+  }
+  .ace_dialog-bottom {
+    border-top: 1px solid var(--bg) !important;
+  }
+  .ace-chrome .ace_print-margin,
+  .ace_gutter,
+  .ace_gutter-cell,
+  .ace_dialog {
+    background: var(--bg) !important;
+  }
+  .ace-chrome {
+    color: var(--fg) !important;
+  }
+  .ace_gutter,
+  .ace_dialog {
+    color: var(--fg) !important;
+  }
+  .ace_cursor {
+    color: var(--fg) !important;
+  }
+  .normal-mode .ace_cursor {
+    background-color: var(--fg) !important;
+    border: var(--fg) !important;
+    opacity: 0.7 !important;
+  }
+  .ace_marker-layer .ace_selection {
+    background: var(--select) !important;
+  }
+  .ace_editor,
+  .ace_dialog span,
+  .ace_dialog input {
+    font-family: var(--font);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+  }
+
+  /* Disable RichHints CSS animation */
+  .expandRichHints {
+      animation: 0s ease-in-out 1 forwards expandRichHints;
+  }
+  .collapseRichHints {
+      animation: 0s ease-in-out 1 forwards collapseRichHints;
+  }
+  `;
