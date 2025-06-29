@@ -21,7 +21,7 @@ adw-toolbar-style               = flat
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = vscode_modern
+theme = base46-zenburn
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
@@ -34,12 +34,12 @@ window-padding-balance          = false
 window-step-resize              = false
 window-theme                    = ghostty
 
-gtk-adwaita                     = false
+#gtk-adwaita                     = false
 
 # +-----------------------------------------------------------+
 # | MISC                                                      |
 # +-----------------------------------------------------------+
-# custom-shader = "~/.config/ghostty/test.glsl"
+custom-shader = "./shaders/cursor_blaze_no_trail.glsl"
 
 # adjust-cell-width = 0
 # adjust-cell-height = 20%
