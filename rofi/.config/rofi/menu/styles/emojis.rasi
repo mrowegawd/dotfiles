@@ -38,7 +38,7 @@ window {
 prompt {
     enabled: 						            true;
 	  padding: 						            1.25% 0.75% 1.25% 0.75%;
-	  background-color: 				      @border;
+	  background-color: 				      @keyword;
 	  text-color: 					          @foreground;
 }
 
@@ -47,17 +47,17 @@ textbox-prompt-colon {
     background-color: 				      @border;
     text-color: 					          @border;
     expand:                         false;
-    str:                            " ";
+    str:                            "";
 }
 
 entry {
-	  background-color: 				      @border;
+	  background-color: 				      @keyword;
     text-color:                     @foreground;
     placeholder-color:              @foreground;
     spacing:                        0;
     expand:                         true;
     horizontal-align:               0;
-    placeholder:                    "Search";
+    placeholder:                    "";
 	  padding: 						            1.5% 0.5% 1% 0%;
     blink:                          true;
 }

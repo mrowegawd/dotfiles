@@ -13,4 +13,6 @@
     red:                            %%red%%;
     blue:                           %%blue%%;
     yellow:                         %%yellow%%;
+
+    keyword:                        %%keyword%%;
 }

@@ -67,7 +67,7 @@ mainbox {
 
 element {
     background-color:               @background;
-    text-color:                     @red;
+    text-color:                     @selected-alt;
     orientation:                    horizontal;
     border-radius:                  35px;
 }
@@ -97,7 +97,7 @@ element alternate.active {
 
 element selected {
     background-color:               @selected-alt;
-    text-color:                     @red;
+    text-color:                     @keyword;
     border:                  		    0.2% 0% 0.2% 0%;
     border-radius:                  100px;
     border-color:                  	@background;
