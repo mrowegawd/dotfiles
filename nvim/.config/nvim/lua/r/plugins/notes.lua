@@ -382,9 +382,14 @@ return {
         desc = "Note: find note files [obsidian]",
       },
       {
-        "<Localleader>an",
+        "<Localleader>aN",
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
+      },
+      {
+        "<Localleader>an",
+        ":ObsidianToday<CR>",
+        desc = "Note: add note today [obsidian]",
       },
       {
         "<Localleader>ad",
