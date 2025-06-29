@@ -6,6 +6,7 @@
 [manager]
 prepend_keymap = [
   { on = [ "l", ], run = "plugin smart-enter", desc = "Enter child or file" },
+  { on = [ "o", ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [ "L", ], run = "plugin smart-enter -- open", desc = "Open the selected files" },
   { on = [ "<c-v>", ], run = "plugin smart-enter -- vsplit", desc = "Open vsplit the selected item" },
   { on = [ "<c-s>", ], run = "plugin smart-enter -- split", desc = "Open split the selected item" },
