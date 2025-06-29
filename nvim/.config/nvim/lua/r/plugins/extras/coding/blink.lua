@@ -73,6 +73,10 @@ return {
               },
               label = {
                 text = function(item)
+                  -- add suffix `_` for snippet kind
+                  if item.kind == "Snippet" then
+                    return item.item.label .. "_"
+                  end
                   return item.label
                 end,
                 highlight = function(item)
