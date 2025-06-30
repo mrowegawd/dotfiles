@@ -43,6 +43,7 @@ return {
   },
   {
     "mason-org/mason.nvim",
+    optional = true,
     opts = { ensure_installed = { "erb-formatter", "erb-lint" } },
   },
   {

@@ -1,11 +1,11 @@
 return {
   "mfussenegger/nvim-dap",
+  optional = true,
   dependencies = {
     {
       "jbyuki/one-small-step-for-vimkind",
-      -- stylua: ignore
       config = function()
-        local dap = require("dap")
+        local dap = require "dap"
         dap.adapters.nlua = function(callback, conf)
           local adapter = {
             type = "server",
@@ -14,6 +14,7 @@ return {
           }
           if conf.start_neovim then
             local dap_run = dap.run
+            ---@diagnostic disable-next-line: duplicate-set-field
             dap.run = function(c)
               adapter.port = c.port
               adapter.host = c.host

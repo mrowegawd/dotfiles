@@ -65,9 +65,7 @@ return {
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = {
-      "nvim-neotest/neotest-python",
-    },
+    dependencies = { "nvim-neotest/neotest-python" },
     keys = {
       {
         "<Leader>dam",
@@ -103,8 +101,8 @@ return {
       "mfussenegger/nvim-dap-python",
       -- stylua: ignore
       keys = {
-        { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method", ft = "python" },
-        { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
+        { "<leader>dPt", function() require("dap-python").test_method() end, desc = "Debug Method", ft = "python" },
+        { "<leader>dPc", function() require("dap-python").test_class() end, desc = "Debug Class", ft = "python" },
       },
       config = function()
         -- require("dap-python").setup "debugpy-adapter"

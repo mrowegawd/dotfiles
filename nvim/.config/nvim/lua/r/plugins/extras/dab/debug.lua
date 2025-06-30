@@ -30,225 +30,218 @@ return {
         opts = {},
       },
     },
-    keys = function()
-      local dap = require "dap"
+    --stylua: ignore
+    keys = {
+      {
+        "<Leader>dB",
+        function()
+          local dap = require "dap"
 
-      local function edit_breakpoint()
-        -- Search for an existing breakpoint on this line in this buffer
-        ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
-        local function find_bp()
-          local buf_bps = require("dap.breakpoints").get(vim.fn.bufnr())[vim.fn.bufnr()]
-          ---@type dap.SourceBreakpoint
-          local bp = { condition = "", logMessage = "", hitCondition = "", line = vim.fn.line "." }
-          for _, candidate in ipairs(buf_bps) do
-            if candidate.line and candidate.line == vim.fn.line "." then
-              bp = candidate
-              break
-            end
-          end
-          return bp
-        end
-
-        -- Elicit customization via a UI prompt
-        ---@param bp dap.SourceBreakpoint a breakpoint
-        local function customize_bp(bp)
-          local props = {
-            ["Condition"] = {
-              value = bp.condition,
-              setter = function(v)
-                bp.condition = v
-              end,
-            },
-            ["Hit Condition"] = {
-              value = bp.hitCondition,
-              setter = function(v)
-                bp.hitCondition = v
-              end,
-            },
-            ["Log Message"] = {
-              value = bp.logMessage,
-              setter = function(v)
-                bp.logMessage = v
-              end,
-            },
-          }
-          local menu_options = {}
-          for k, v in pairs(props) do
-            table.insert(menu_options, ("%s: %s"):format(k, v.value))
-          end
-          vim.ui.select(menu_options, {
-            prompt = "Edit Breakpoint",
-          }, function(choice)
-            local prompt = (tostring(choice)):gsub(":.*", "")
-            props[prompt].setter(vim.fn.input {
-              prompt = prompt,
-              default = props[prompt].value,
-            })
-
-            -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
-            dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
-          end)
-        end
-
-        customize_bp(find_bp())
-      end
-
-    -- stylua: ignore
-      return  {
-        { "<Leader>dB", edit_breakpoint, desc = "Debug: breakpoint condition" },
-        -- { "<Leader>dB", function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
-        { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
-        { "<Leader>dC", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
-
-        { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: run/continue [dd]" },
-        { "<Leader>da", function() require("dap").continue { before = get_args } end, desc = "Debug: run with args" },
-
-        { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
-        { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
-        { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
-
-        { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
-        { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
-        { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
-
-        -- +----------------------------------------------------------+
-        -- Step-in, step-out, step-over | Stack-up Stack-down
-        -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
-        -- +----------------------------------------------------------+
-        { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
-        { "<S-Up>", function() require("dap").up() end, desc = "Debug: setup up" },
-
-        {
-          "H",
-          function()
-            local function status_dap(req)
-              return req.status()
-            end
-
-            if #status_dap(require "dap") > 0 then
-              require("dap").step_out()
-            else
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("H", true, true, true), "n", true)
-            end
-          end,
-          desc = "Debug: step out",
-        },
-
-        {
-          "L",
-          function()
-            local function status_dap(req)
-              return req.status()
-            end
-
-            if #status_dap(require "dap") > 0 then
-              require("dap").step_into()
-            else
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("L", true, true, true), "n", true)
-            end
-          end,
-          desc = "Debug: step into",
-        },
-
-        {
-          "J",
-          function()
-            local function status_dap(req)
-              return req.status()
-            end
-
-            if #status_dap(require "dap") > 0 then
-              require("dap").step_over()
-            else
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("J", true, true, true), "n", true)
-            end
-          end,
-          desc = "Debug: step over",
-        },
-
-        -- +----------------------------------------------------------+
-        -- Run and close the debug
-        -- +----------------------------------------------------------+
-        {
-          "<Leader><F5>",
-          function()
-            require("dap").terminate()
-            require("dapui").close()
-          end,
-          desc = "Debug: close/quit",
-        },
-        {
-          "<F5>",
-          function()
-            local function status_dap(req)
-              local ok, _ = pcall(require, req)
-              if not ok then
-                return ""
+          -- Search for an existing breakpoint on this line in this buffer
+          ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
+          local function find_bp()
+            local buf_bps = require("dap.breakpoints").get(vim.fn.bufnr())[vim.fn.bufnr()]
+            ---@type dap.SourceBreakpoint
+            local bp = { condition = "", logMessage = "", hitCondition = "", line = vim.fn.line "." }
+            for _, candidate in ipairs(buf_bps) do
+              if candidate.line and candidate.line == vim.fn.line "." then
+                bp = candidate
+                break
               end
-              return req.status()
             end
+            return bp
+          end
 
-            if #status_dap(require "dap") > 0 then
-              return require("dap").disconnect()
-            else
-              if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
-                -- return require("osv").run_this()
-                return require("osv").launch { port = 8086 }
-              end
-              -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
-              --   return vim.cmd.RustLsp "debuggables"
-              -- end
+          -- Elicit customization via a UI prompt
+          ---@param bp dap.SourceBreakpoint a breakpoint
+          local function customize_bp(bp)
+            local props = {
+              ["Condition"] = {
+                value = bp.condition,
+                setter = function(v)
+                  bp.condition = v
+                end,
+              },
+              ["Hit Condition"] = {
+                value = bp.hitCondition,
+                setter = function(v)
+                  bp.hitCondition = v
+                end,
+              },
+              ["Log Message"] = {
+                value = bp.logMessage,
+                setter = function(v)
+                  bp.logMessage = v
+                end,
+              },
+            }
+            local menu_options = {}
+            for k, v in pairs(props) do
+              table.insert(menu_options, ("%s: %s"):format(k, v.value))
+            end
+            vim.ui.select(menu_options, {
+              prompt = "Edit Breakpoint",
+            }, function(choice)
+              local prompt = (tostring(choice)):gsub(":.*", "")
+              props[prompt].setter(vim.fn.input {
+                prompt = prompt,
+                default = props[prompt].value,
+              })
+
+              -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
+              dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
+            end)
+          end
+
+          customize_bp(find_bp())
+        end,
+        desc = "Debug: breakpoint condition",
+      },
+      -- { "<Leader>dB", function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
+      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
+      { "<Leader>dC", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
+
+      { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: run/continue [dd]" },
+      { "<Leader>da", function() require("dap").continue { before = get_args } end, desc = "Debug: run with args" },
+
+      { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
+      { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
+      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
+
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
+      { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
+      { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
+
+      -- +----------------------------------------------------------+
+      -- Step-in, step-out, step-over | Stack-up Stack-down
+      -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
+      -- +----------------------------------------------------------+
+      { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
+      { "<S-Up>", function() require("dap").up() end, desc = "Debug: setup up" },
+
+      {
+        "H",
+        function()
+          local function status_dap(req)
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            require("dap").step_out()
+          else
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("H", true, true, true), "n", true)
+          end
+        end,
+        desc = "Debug: step out",
+      },
+
+      {
+        "L",
+        function()
+          local function status_dap(req)
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            require("dap").step_into()
+          else
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("L", true, true, true), "n", true)
+          end
+        end,
+        desc = "Debug: step into",
+      },
+
+      {
+        "J",
+        function()
+          local function status_dap(req)
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            require("dap").step_over()
+          else
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("J", true, true, true), "n", true)
+          end
+        end,
+        desc = "Debug: step over",
+      },
+
+      -- +----------------------------------------------------------+
+      -- Run and close the debug
+      -- +----------------------------------------------------------+
+      { "<Leader><F5>", function() require("dap").terminate() require("dapui").close() end, desc = "Debug: close/quit" },
+      {
+        "<F5>",
+        function()
+          local function status_dap(req)
+            local ok, _ = pcall(require, req)
+            if not ok then
+              return ""
+            end
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            return require("dap").disconnect()
+          else
+            if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
+              -- return require("osv").run_this()
+              return require("osv").launch { port = 8086 }
+            end
+            -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
+            --   return vim.cmd.RustLsp "debuggables"
+            -- end
+            return require("dap").continue()
+          end
+        end,
+        desc = "Debug: run/continue [F5]",
+      },
+      -- +----------------------------------------------------------+
+      -- Misc commands
+      -- +----------------------------------------------------------+
+      {
+        "<Leader>df",
+        function()
+          local col, row = RUtils.fzflua.rectangle_win_pojokan()
+
+          RUtils.fzflua.send_cmds({
+            breakpoint_set = function()
+              return require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
+            end,
+            breakpoint_clear_all = function()
+              return require("dap").clear_breakpoints()
+            end,
+            breakpoint_lists = function()
+              return require("dap").list_breakpoints(true)
+            end,
+            dap_run_to_cursor = function()
+              return require("dap").run_to_cursor()
+            end,
+            dap_run_last = function()
+              return require("dap").run_last()
+            end,
+            dap_continue_or_run = function()
               return require("dap").continue()
-            end
-          end,
-          desc = "Debug: run/continue [F5]",
-        },
-        -- +----------------------------------------------------------+
-        -- Misc commands
-        -- +----------------------------------------------------------+
-        {
-          "<Leader>df",
-          function()
-            local col, row = RUtils.fzflua.rectangle_win_pojokan()
-
-            RUtils.fzflua.send_cmds({
-              breakpoint_set = function()
-                return require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
-              end,
-              breakpoint_clear_all = function()
-                return require("dap").clear_breakpoints()
-              end,
-              breakpoint_lists = function()
-                return require("dap").list_breakpoints(true)
-              end,
-              dap_run_to_cursor = function()
-                return require("dap").run_to_cursor()
-              end,
-              dap_run_last = function()
-                return require("dap").run_last()
-              end,
-              dap_continue_or_run = function()
-                return require("dap").continue()
-              end,
-              dap_printout_session = function()
-                return print(vim.inspect(require("dap").session()))
-              end,
-              dap_close_or_quit = function()
-                require("dap").terminate()
-                require("dapui").close()
-              end,
-              dap_GUI_toggle = function()
-                return require("dapui").toggle()
-              end,
-              dap_GUI_reset = function()
-                return require("dapui").open { reset = true }
-              end,
-            }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
-          end,
-          desc = "Debug: list command of debug",
-        },
-      }
-    end,
+            end,
+            dap_printout_session = function()
+              return print(vim.inspect(require("dap").session()))
+            end,
+            dap_close_or_quit = function()
+              require("dap").terminate()
+              require("dapui").close()
+            end,
+            dap_GUI_toggle = function()
+              return require("dapui").toggle()
+            end,
+            dap_GUI_reset = function()
+              return require("dapui").open { reset = true }
+            end,
+          }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
+        end,
+        desc = "Debug: list command of debug",
+      },
+    },
     config = function()
       -- load mason-nvim-dap here, after all adapters have been setup
       if RUtils.has "mason-nvim-dap.nvim" then
@@ -273,6 +266,7 @@ return {
       -- setup dap config by VsCode launch.json file
       local vscode = require "dap.ext.vscode"
       local json = require "plenary.json"
+      ---@diagnostic disable-next-line: duplicate-set-field
       vscode.json_decode = function(str)
         return vim.json.decode(json.json_strip_comments(str))
       end
