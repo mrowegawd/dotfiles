@@ -147,6 +147,10 @@ super + End
 super + shift + t
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
+# misc: open snipets
+super + shift + a
+        zsh -c "$HOME/.config/rofi/menu/_snippet"
+
 # misc: open rmpc (music)
 super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat rmpc

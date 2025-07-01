@@ -542,7 +542,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[CTRL-O: open browser | CTRL-Y: hash copy | CTRL-X: open with diffview  | CTRL-S/V/T: open with fugitive]],
+      ["--header"] = [[CTRL-O:browser  CTRL-Y:copyhash  CTRL-X:diffview  CTRL-S/V/T:fugitive]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {

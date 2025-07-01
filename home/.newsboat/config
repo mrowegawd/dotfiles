@@ -112,4 +112,4 @@ bind-key   v            toggle-article-read
 
 # macro mapping use `,`
 
-macro v set browser "tsp mpv --no-terminal -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 %u"; open-in-browser ; set browser "$BROWSER"
+macro v set browser "dunstify 'Newsboat' 'Open mpv - %u' && tsp mpv --no-terminal -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 %u"; open-in-browser ; set browser "$BROWSER"

@@ -102,40 +102,6 @@ mapkey("<Alt-f>", "Open Links With simulates Zen's Glance", () => {
   });
 });
 
-mapkey("ys", "#8Open link in split view", function () {
-  Hints.create("*[href]", (element) => {
-    const event = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      button: 2, // 2 represents the right mouse button
-    });
-    element.dispatchEvent(event);
-  });
-});
-
-mapkey("yd", "#8Debug hint", function () {
-  Hints.create("*[href]", function (element) {
-    RUNTIME("openLink", {
-      url: element.href,
-      tab: { tabbed: true, split: true },
-    });
-    console.log("Mencoba membuka:", element.href);
-  });
-});
-
-mapkey("yk", "#8Open link in split view", function () {
-  Hints.create("*[href]", function (element) {
-    window.postMessage(
-      {
-        type: "cmd_zenSplitViewLinkInNewTab",
-        url: element.href,
-      },
-      "*",
-    );
-  });
-});
-
 mapkey(
   "Q",
   "#1Click on an Image or a button in background, multiple",
@@ -155,6 +121,40 @@ mapkey(
 //     RUNTIME("download", {
 //       url: src,
 //     });
+//   });
+// });
+
+// mapkey("ys", "#8Open link in split view", function () {
+//   Hints.create("*[href]", (element) => {
+//     const event = new MouseEvent("click", {
+//       bubbles: true,
+//       cancelable: true,
+//       view: window,
+//       button: 2, // 2 represents the right mouse button
+//     });
+//     element.dispatchEvent(event);
+//   });
+// });
+//
+// mapkey("yd", "#8Debug hint", function () {
+//   Hints.create("*[href]", function (element) {
+//     RUNTIME("openLink", {
+//       url: element.href,
+//       tab: { tabbed: true, split: true },
+//     });
+//     console.log("Mencoba membuka:", element.href);
+//   });
+// });
+//
+// mapkey("yk", "#8Open link in split view", function () {
+//   Hints.create("*[href]", function (element) {
+//     window.postMessage(
+//       {
+//         type: "cmd_zenSplitViewLinkInNewTab",
+//         url: element.href,
+//       },
+//       "*",
+//     );
 //   });
 // });
 
@@ -179,7 +179,6 @@ mapkey("<Alt-ArrowUp>", "#3Move current tab to up", function () {
 mapkey("<Alt-ArrowDown>", "#3Move current tab to down", function () {
   RUNTIME("moveTab", { step: 1 });
 });
-
 mapkey("<Space>bO", "#3Close all tabs except current one", function () {
   RUNTIME("tabOnly");
 });
@@ -194,6 +193,19 @@ map("<Space>ff", "T");
 map("<Space>fF", "t"); // include bookmark search
 map("<Ctrl-l>", "R");
 map("<Ctrl-h>", "E");
+
+mapkey("gxk", "#3Close tab on up", function () {
+  RUNTIME("closeTabLeft");
+});
+mapkey("gxj", "#3Close tab on down", function () {
+  RUNTIME("closeTabRight");
+});
+mapkey("gxK", "#3Close all tabs on up", function () {
+  RUNTIME("closeTabsToLeft");
+});
+mapkey("gxJ", "#3Close all tabs on down", function () {
+  RUNTIME("closeTabsToRight");
+});
 
 mapkey(
   "<Ctrl-j>",
@@ -234,12 +246,15 @@ map("gK", ":feedkeys 99E", 0, "#3Go to the first tab");
 map("gJ", ":feedkeys 99R", 0, "#3Go to the last tab");
 map("<Space>R", ":feedkeys 99r", 0, "#3Reload all tab");
 
-mapkey("<Ctrl-o>", "backward", function () {
-  history.go(-1);
-});
-mapkey("<Ctrl-i>", "forward", function () {
-  history.go(1);
-});
+// mapkey("<Ctrl-o>", "backward", function () {
+//   history.go(-1);
+// });
+// mapkey("<Ctrl-i>", "forward", function () {
+//   history.go(1);
+// });
+
+map("<Ctrl-o>", "S");
+map("<Ctrl-i>", "D");
 
 mapkey("q", "#3Close current tab", () => {
   RUNTIME("closeTab");
@@ -248,9 +263,6 @@ mapkey("<Space><Tab>", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
 
-// ╭─────────────────────────────────────────────────────────╮
-// │ HISTORY                                                 │
-// ╰─────────────────────────────────────────────────────────╯
 // open current history tab
 mapkey("<Space>fo", "#8Open Recently Closed", () => {
   Front.openOmnibar({ type: "RecentlyClosed" });

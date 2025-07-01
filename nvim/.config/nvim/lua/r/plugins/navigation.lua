@@ -431,6 +431,8 @@ return {
             ["zO"] = "expand_all_nodes",
             ["th"] = "prev_source",
             ["tl"] = "next_source",
+            ["gh"] = "prev_source",
+            ["gl"] = "next_source",
             [",c"] = { "order_by_created", nowait = false },
             [",d"] = { "order_by_diagnostics", nowait = false },
             [",m"] = { "order_by_modified", nowait = false },

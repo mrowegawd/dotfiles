@@ -6,7 +6,7 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
 
-options="@\nEmojis\nEarnings\nGames\nGhosted\nSnippet\nThemes\nTools\nRasp-on"
+options="@\nEmojis\nEarnings\nGames\nGhosted\nSnippet\nThemes\nTools\nRaspberry"
 
 chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 

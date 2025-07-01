@@ -20,11 +20,13 @@ set adjust-open "best-fit"
 # │ MISC                                                     │
 # └──────────────────────────────────────────────────────────┘
 # Disable default mapping
+
 unmap +
 unmap -
 # unmap f
 
 # zoom-in/out/reset
+
 map <C-=>               zoom in
 map <C-->               zoom out
 map <C-0>               zoom reset
@@ -48,13 +50,20 @@ map i                   recolor
 # ┌──────────────────────────────────────────────────────────┐
 # │ BOOKMARKS                                                │
 # └──────────────────────────────────────────────────────────┘
+
+# check bookmark
 map <C-s>               focus_inputbar ":bmark "
+
+# check blis
 map b                   focus_inputbar ":blist "
+
+# delete bookmark
 map B                   focus_inputbar ":bdelete "
 
 # ┌──────────────────────────────────────────────────────────┐
 # │ SCROLL                                                   │
 # └──────────────────────────────────────────────────────────┘
+
 unmap y
 unmap e
 map <C-e>               scroll down 2
@@ -83,23 +92,24 @@ map [fullscreen] J      scroll half-down
 # ┌──────────────────────────────────────────────────────────┐
 # │ THEMES                                                   │
 # └──────────────────────────────────────────────────────────┘
-set default-bg "#1f1f1f"
-set default-fg "#cccccc"
+
+set default-bg "#212121"
+set default-fg "#eeffff"
 
 set statusbar-bg "#202020"
 set statusbar-fg "#eee4e5"
 
-set inputbar-bg "#608b4e"
+set inputbar-bg "#c3e88d"
 set inputbar-fg "#202020"
 
-set highlight-color "#f44747"
+set highlight-color "#f07178"
 set highlight-active-color "#6A9FB5"
 
 set completion-highlight-fg "#151515"
 set completion-highlight-bg "#90A959"
 
-set notification-bg "#1f1f1f"
-set notification-fg "#cccccc"
+set notification-bg "#212121"
+set notification-fg "#eeffff"
 
 set notification-error-bg "#AC4142"
 set notification-error-fg "#151515"
@@ -107,7 +117,7 @@ set notification-error-fg "#151515"
 set notification-warning-bg "#AC4142"
 set notification-warning-fg "#151515"
 
-set recolor-lightcolor "#1f1f1f"
+set recolor-lightcolor "#212121"
 set recolor-darkcolor "#E0E0E0"
 set recolor-reverse-video "true"
 set recolor-keephue "false"

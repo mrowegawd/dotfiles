@@ -836,17 +836,7 @@ return {
       },
     },
     opts = function()
-      -- Highlight.plugin("neogit_hi", {
-      --   { NeogitDiffDeleteCursor = { bg = "NONE" } },
-      --   { NeogitDiffAddCursor = { bg = "NONE" } },
-      --   { NeogitDiffContextCursor { bg = "NONE" } },
-      -- })
       return {
-        -- disable_signs = false,
-        -- disable_hint = true,
-        -- disable_commit_confirmation = true,
-        -- disable_builtin_notifications = true,
-        -- disable_insert_on_commit = false,
         signs = {
           section = { "", "" }, -- "󰁙", "󰁊"
           item = { "▸", "▾" },
@@ -865,17 +855,11 @@ return {
             h,
           },
           popup = {
-            --   -- mapping nya ini
             ["t"] = false,
             ["m"] = false,
 
             ["M"] = "MergePopup",
-            --   ["v"] = false,
-            --
-            --   -- ["gO"] = "DiffPopup",
-            --
             ["T"] = "TagPopup",
-            --   -- ["V"] = "RevertPopup",
           },
         },
         integrations = {
