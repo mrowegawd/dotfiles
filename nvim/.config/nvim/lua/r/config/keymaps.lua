@@ -475,9 +475,9 @@ local func_cmds = function()
     end,
   }, { winopts = { title = "fz-ctrlo", row = row, col = col } })
 end
-RUtils.map.nnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
-RUtils.map.tnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
-RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
+RUtils.map.nnoremap("<a-Y>", func_cmds, { desc = "Misc: list commands" })
+RUtils.map.tnoremap("<a-Y>", func_cmds, { desc = "Misc: list commands" })
+RUtils.map.vnoremap("<a-Y>", func_cmds, { desc = "Misc: list commands" })
 
 RUtils.map.nnoremap("<Leader>of", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()

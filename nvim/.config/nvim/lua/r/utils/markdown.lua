@@ -578,7 +578,7 @@ local function picker(contents, actions)
     },
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = format_prompt_strings() },
-    fzf_opts = { ["--header"] = [[CTRL-X:filter-by-tag  CTRL-Y:add-tag  CTRL-R:reload  CTRL-G:grep-filter]] },
+    fzf_opts = { ["--header"] = [[CTRL-Y:addtag  CTRL-X:filtertag  CTRL-R:reload  CTRL-G:grep]] },
     actions = actions,
   })
 end

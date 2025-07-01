@@ -409,18 +409,18 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copypath  CTRL-F:ignore  CTRL-A:hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copypath  CTRL-F:ignore  CTRL-B:hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
             ["ctrl-f"] = actions.toggle_ignore,
-            -- ["ctrl-a"] = actions.toggle_hidden,
-            ["ctrl-a"] = function(_, opts)
-              actions.toggle_opt(opts, "hidden")
-              actions.toggle_opt(opts, "no_ignore")
-            end,
+            ["ctrl-b"] = actions.toggle_hidden,
+            -- ["ctrl-b"] = function(_, opts)
+            --   actions.toggle_opt(opts, "hidden")
+            --   actions.toggle_opt(opts, "no_ignore")
+            -- end,
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -696,7 +696,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  CTRL-x:grepcwd  CTRL-F:ignore  CTRL-A:hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  CTRL-x:grepcwd  CTRL-F:ignore  CTRL-B:hidden]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -719,10 +719,11 @@ return {
           },
           actions = {
             ["ctrl-f"] = actions.toggle_ignore,
-            ["ctrl-a"] = function(_, opts)
-              actions.toggle_opt(opts, "hidden")
-              actions.toggle_opt(opts, "no_ignore")
-            end,
+            ["ctrl-b"] = actions.toggle_hidden,
+            -- ["ctrl-b"] = function(_, opts)
+            --   actions.toggle_opt(opts, "hidden")
+            --   actions.toggle_opt(opts, "no_ignore")
+            -- end,
             ["ctrl-x"] = function()
               require("fzf-lua").files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],

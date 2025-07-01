@@ -30,16 +30,16 @@ return {
           virtual_lines = false,
           signs = {
             text = {
-              -- [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,
-              -- [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
-              -- [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
-              -- [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
+              [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,
+              [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
+              [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
+              [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
 
               -- If you want to disable the sign column for diagnostics, uncomment these
-              [vim.diagnostic.severity.ERROR] = "",
-              [vim.diagnostic.severity.WARN] = "",
-              [vim.diagnostic.severity.HINT] = "",
-              [vim.diagnostic.severity.INFO] = "",
+              -- [vim.diagnostic.severity.ERROR] = "",
+              -- [vim.diagnostic.severity.WARN] = "",
+              -- [vim.diagnostic.severity.HINT] = "",
+              -- [vim.diagnostic.severity.INFO] = "",
             },
             numhl = {
               [vim.diagnostic.severity.ERROR] = "DiagnosticsErrorNumHl",

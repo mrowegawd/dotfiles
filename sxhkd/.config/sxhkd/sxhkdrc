@@ -153,11 +153,11 @@ super + shift + a
 
 # misc: open rmpc (music)
 super + shift + m
-        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat rmpc
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float rmpc
 
 # misc: open note inbox (capture notes)
 super + shift + e
-        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float inbox
 
 # misc: open bookmark and pass
 super + shift + b
@@ -183,10 +183,6 @@ super + shift + Home
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff
 
-# misc: open youtube with mpv
-super + shift + y
-        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
-
 # misc: open translate with nvim
 super + shift + o
         bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
@@ -201,15 +197,15 @@ super + shift + Return
 
 # misc: call firefox (side by side)
 super + F8
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall firefox 2
 
 # misc: call zathura (side by side)
 super + F9
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall zathura 4
 
-# misc: open link video with proxychains
-super + y
-        dunstify "Running vid with proxychains" "$(xclip -o -sel clip)" && tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
+# misc: open link with mpv (or with proxychains)
+super + shift + y
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_mpv
 
 # misc: run clipmenu
 # super + shift + c

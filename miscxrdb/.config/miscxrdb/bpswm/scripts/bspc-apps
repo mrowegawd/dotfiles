@@ -1,0 +1,48 @@
+#!/bin/bash
+
+MPV_LISTS="open\nopen with proxychains"
+dir="$HOME/.config/rofi/menu"
+theme="styles/snippets"
+rofi_command="rofi -theme $dir/$theme"
+
+open_float() {
+  # Open a command in float mode
+  if [ "$1" == "calcurse" ]; then
+    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
+  elif [ "$1" == 'ncmpcpp-ueberzug' ]; then
+    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
+  elif [ "$1" == 'ncmpcpp' ] || [ "$1" == 'rmpc' ]; then
+    bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $TERMINAL -e "$1"
+  elif [ "$1" == 'inbox' ]; then
+    # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
+    # zsh -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
+    bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \
+      zsh -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org"
+  else
+    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
+  fi
+}
+
+open_mpv() {
+  SELECT="$(echo -e "$MPV_LISTS" | sort | $rofi_command -p " 🗂  MPV" -dmenu -i)"
+
+  [[ -z $SELECT ]] && exit
+
+  MSG_DUNST="MPV"
+  MSG_PROXYCHAINS=""
+  MSG_ICON="->"
+  CLIPBOARD_SEL="$(xclip -o -sel clip)"
+
+  [[ -z "$CLIPBOARD_SEL" ]] && exit
+
+  if [[ $SELECT == "open with proxychains" ]]; then
+    MSG_PROXYCHAINS="with proxychains"
+    tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" "$CLIPBOARD_SEL"
+  else
+    tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$CLIPBOARD_SEL"
+  fi
+
+  dunstify "Bspwmfloat" "$MSG_DUNST $MSG_PROXYCHAINS $MSG_ICON $CLIPBOARD_SEL"
+}
+
+"$@"
