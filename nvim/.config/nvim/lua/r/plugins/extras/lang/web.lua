@@ -8,16 +8,12 @@ return {
   -- Formatter for html django
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "djlint" } },
+    opts = { ensure_installed = { "djlint", "html-lsp", "emmet-language-server" } },
   },
   {
     "stevearc/conform.nvim",
     optional = true,
-    opts = {
-      formatters_by_ft = {
-        htmldjango = { "djlint" },
-      },
-    },
+    opts = { formatters_by_ft = { htmldjango = { "djlint" } } },
   },
 
   {
@@ -25,9 +21,7 @@ return {
     opts = {
       servers = {
         emmet_language_server = {},
-        html = {
-          filetypes = { "html", "htmldjango" },
-        },
+        html = { filetypes = { "html", "htmldjango" } },
         -- cssls = {
         --   settings = {
         --     css = {
