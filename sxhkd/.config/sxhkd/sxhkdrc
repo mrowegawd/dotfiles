@@ -8,25 +8,28 @@
 # state: fullscreen
 super + f
         bspc node -t {fullscreen,tiled}
-
-# state: float/tiled
+# state: toggle float or tiled
 super + t
         bspc node -t {floating,tiled}
 
-# state: parent,brother
-super + {p,b}
+# state: parent, brother
+super + {B,b}
         bspc node -f @{parent,brother}
+
+# state: sticky
+super + F9
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state sticky
+
+# state: locked
+super + F10
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
 
 ########################################
 # WINDOW
 ########################################
-# window: select (backward/below)/z-index
-super + i
-	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
-
 # window: navigate hjkl
 # super + ctrl + {h,l,k,j}
-#         dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
+#       dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
 # window: navigate h,l
 super + ctrl + {h, l}
@@ -44,24 +47,40 @@ super + {h,j,k,l}
 super + R
 	      bspc node @parent -R 90
 
+# window: expand vertically
+super + shift + k
+	      bspc node -z top 0 -20; bspc node -z bottom 0 20
+
+# window: shrink vertically
+super + shift + j
+	      bspc node -z top 0 20; bspc node -z bottom 0 -20
+
+# window: expand horizontally
+super + shift + h
+	      bspc node -z left 20 0; bspc node -z right -20 0
+
+# window: shrink horizontally
+super + shift + l
+	      bspc node -z left -20 0; bspc node -z right 20 0
+
 ########################################
 # WORKSPACE
 ########################################
 # workspace: focus next/prev workspace
 # super + {Tab,shift+Tab}
-# 	      bspc node -d {next,prev} -f
+# 	    bspc node -d {next,prev} -f
 
 # focus the next/previous node in the current desktop
 # super + {_,shift + }c
-# 	      bspc node -f {next,prev}.local
+# 	    bspc node -f {next,prev}.local
 
 # workspace: focus next/prev workspace
 # super + {H,L}
-# 	      bspc desktop -f {prev,next}.local
+# 	    bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
 # alt + {shift+Tab,Tab}
-# 	      bspc desktop -f {prev,next}.local
+# 	    bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
 super + {shift+p,shift+n}
@@ -71,35 +90,17 @@ super + {shift+p,shift+n}
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 
-########################################
-# RESIZE, FLOATING
-########################################
-# resize: expand vertically
-super + shift + k
-	      bspc node -z top 0 -20; bspc node -z bottom 0 20
-
-# resize: shrink vertically
-super + shift + j
-	      bspc node -z top 0 20; bspc node -z bottom 0 -20
-
-# resize: expand horizontally
-super + shift + h
-	      bspc node -z left 20 0; bspc node -z right -20 0
-
-# resize: shrink horizontally
-super + shift + l
-	      bspc node -z left -20 0; bspc node -z right 20 0
 
 ########################################
 # BRIGHTNESS
 ########################################
 # misc: increase brightness
 # XF86MonBrightnessUp
-#         xbacklight -inc 5
+#       xbacklight -inc 5
 
 # misc: decrease brightness
 # XF86MonBrightnessDown
-#         xbacklight -dec 5
+#       xbacklight -dec 5
 
 ########################################
 # MULTIMEDIA
@@ -135,77 +136,79 @@ super + shift + ctrl + p
 super + Return
         $TERMINAL
 
-# misc: open rofi_menu
-super + u
+# misc: open neovide
+super + shift + Return
+        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
+
+# misc: open rofi menu
+super + r
         $HOME/.config/rofi/menu/menu
 
 # misc: close/kill current app/window
-super + End
+super + w
         xdo close
 
 # misc: open tools
-super + shift + t
+super + e
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
 # misc: open snipets
 super + shift + a
-        zsh -c "$HOME/.config/rofi/menu/_snippet"
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps remember_me_snippet
+
+        # zsh -c "$HOME/.config/rofi/menu/_snippet"
 
 # misc: open rmpc (music)
 super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float rmpc
 
 # misc: open note inbox (capture notes)
-super + shift + e
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float inbox
+super + i
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
 
 # misc: open bookmark and pass
-super + shift + b
+super + p
         $HOME/.config/miscxrdb/bpswm/scripts/bookmark-pass
 
 # misc: reload/restart sxhkd config
-super + shift + F8
-        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
+super + F5
+        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD" "Reload config.."
 
 # misc: quit/stop record video
-super + shift + F9
-        pkill ffmpeg; dunstify "Record" "Quit ffmpeg.."
+super + F6
+        pkill ffmpeg; dunstify "Quit ffmpeg.."
 
 # misc: reload/restart bspwm config
-super + shift + F12
-        bspc wm -r && SLEEP=2 && dunstify "Reload BSPWM"  "Reload config.."
+super + F7
+        bspc wm -r && SLEEP=2 && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
 
 # misc: change wallpaper
-super + shift + Home
+super + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
-# misc: open poweroff
-super + shift + q
-        $HOME/.config/rofi/powermenu/poweroff
-
 # misc: open translate with nvim
-super + shift + o
+super + o
         bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
 
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
         #
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
 
-# misc: open neovide
-super + shift + Return
-        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
+# misc: call window firefox (side by side)
+super + d
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win firefox 2
 
-# misc: call firefox (side by side)
-super + F8
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall firefox 2
-
-# misc: call zathura (side by side)
-super + F9
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall zathura 4
+# misc: call window zathura (side by side)
+super + a
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
 
 # misc: open link with mpv (or with proxychains)
 super + shift + y
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_mpv
+
+# misc: open poweroff
+super + shift + q
+        $HOME/.config/rofi/powermenu/poweroff
 
 # misc: run clipmenu
 # super + shift + c

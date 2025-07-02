@@ -5,6 +5,13 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
+is_path_exits() {
+  if [[ ! -f "$1" ]]; then
+    dunstify "[!] Showlinuxhelp" "path $1 not exists or deleted!"
+    exit
+  fi
+}
+
 open_float() {
   # Open a command in float mode
   if [ "$1" == "calcurse" ]; then
@@ -13,14 +20,21 @@ open_float() {
     bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
   elif [ "$1" == 'ncmpcpp' ] || [ "$1" == 'rmpc' ]; then
     bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $TERMINAL -e "$1"
-  elif [ "$1" == 'inbox' ]; then
-    # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
-    # zsh -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
-    bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \
-      zsh -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org"
   else
     bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
   fi
+}
+
+open_note() {
+  # elif [ "$1" == 'addnote' ]; then
+  # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
+  # zsh -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
+
+  # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \ %%
+  #   zsh -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org" %%
+
+  bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \
+    zsh -c "source ~/.fzf.zsh; nvim -c \"Obsidian today\""
 }
 
 open_mpv() {
@@ -43,6 +57,20 @@ open_mpv() {
   fi
 
   dunstify "Bspwmfloat" "$MSG_DUNST $MSG_PROXYCHAINS $MSG_ICON $CLIPBOARD_SEL"
+}
+
+remember_me_snippet() {
+  SPAWN_TERMINAL=$TERMINAL
+  [[ $TERMINAL == "wezterm" ]] && SPAWN_TERMINAL="st"
+
+  SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet"
+  is_path_exits "$SNIPPET_PATH"
+  bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
+
+  # test
+  # SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet_test"
+  # is_path_exits "$SNIPPET_PATH"
+  # bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && st -e zsh -c "$SNIPPET_PATH"
 }
 
 "$@"

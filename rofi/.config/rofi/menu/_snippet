@@ -2,7 +2,7 @@
 
 set -e -u
 
-SNIPPETS_MENU="aliases\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura"
+SNIPPETS_MENU="aliases\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura\nfzf"
 
 dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
@@ -12,6 +12,8 @@ SELECT="$(echo -e "$SNIPPETS_MENU" | $rofi_command -p "  " -dmenu -i)"
 
 (
   [[ -z $SELECT ]] && exit
+
+  # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
 
   "$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECT"
 

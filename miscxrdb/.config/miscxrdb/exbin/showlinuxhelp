@@ -7,6 +7,15 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
+COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 |
+  cut -d":" -f2 | xargs)"
+TITLE_DUNST="Show Linux Help"
+
+FZF_COMMAND="fzf --no-border "
+if ! not_in_tmux; then
+  FZF_COMMAND="fzf-tmux -xC -w 80% -h 80% -y 43% "
+fi
+
 is_path_exits() {
   if [[ ! -f "$1" ]]; then
     dunstify "[!] Showlinuxhelp" "path $1 not exists or deleted!"
@@ -14,52 +23,92 @@ is_path_exits() {
   fi
 }
 
+is_mac() {
+  uname | grep -q "Darwin"
+}
+
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+
+copy_selected() {
+  [[ -z $1 ]] && exit
+
+  if is_mac; then
+    echo -n "$1" | pbcopy
+  else
+    echo -n "$1" | xclip -selection clipboard
+  fi
+
+  MSG_="<b><span foreground='$COL_MSG_SUCCSS'>Copied !</span></b>"
+  dunstify "$TITLE_DUNST" "$MSG_"
+}
+
 aliases() {
   BASHRC_PATH="$HOME/.config/bashrc/aliases.bashrc"
   is_path_exits "$BASHRC_PATH"
-  awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' | sed 's/()//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+
+  # SELECT=$(awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' | sed 's/()//' |
+  #   column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  SELECT=$(rg --pretty bash | awk '/\(\)/&& last {print last,"\n",$1,"\n"} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' |
+    perl -0 -pe 's/\n\n/\0/gm' | $FZF_COMMAND --read0 --gap --multi --highlight-line --pointer='▌' --prompt="Snippets[$1] " |
+    awk NF | tail -1)
+
+  copy_selected "$SELECT"
 }
 surfingkeys() {
   SURFINGKEYS_PATH="$HOME/.config/surfingkeys/guidekeys.conf"
   is_path_exits "$SURFINGKEYS_PATH"
-  awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 vimiumc() {
   VIMIUMC_PATH="$HOME/.config/vimmum-c/vimium_c.rc"
   is_path_exits "$VIMIUMC_PATH"
-  awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$VIMIUMC_PATH" | sed 's/#//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$VIMIUMC_PATH" | sed 's/#//' |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 calcurse() {
   CALCURE_PATH="$HOME/.calcurse/keys"
   is_path_exits "$CALCURE_PATH"
-  awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^/{last=$0}' "$CALCURE_PATH" |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^/{last=$0}' "$CALCURE_PATH" |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 ncmpcpp() {
   NCMPCPP_PATH="$HOME/.config/ncmpcpp/bindings"
   is_path_exits "$NCMPCPP_PATH"
-  awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NCMPCPP_PATH" | sed 's/#//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NCMPCPP_PATH" | sed 's/#//' |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 newsboat() {
   NEWSBOAT_PATH="$HOME/.newsboat/helpmappings"
   is_path_exits "$NEWSBOAT_PATH"
-  awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NEWSBOAT_PATH" | sed 's/#//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NEWSBOAT_PATH" | sed 's/#//' |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 sxhkdrc() {
   SXHKDRC_PATH="$HOME/.config/sxhkd/sxhkdrc"
   is_path_exits "$SXHKDRC_PATH"
-  awk '/^[a-zA-Z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' <"$SXHKDRC_PATH" | sed 's/#//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-zA-Z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' <"$SXHKDRC_PATH" | sed 's/#//' |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 tmux() {
   TMUX_PATH="$HOME/.tmux.conf"
   is_path_exits "$TMUX_PATH"
-  awk '/^[a-z]/ && last {
+  SELECT=$(awk '/^[a-z]/ && last {
   if ($2 == "-n")
     print $1,$3,"\t",last;
   else if ($2 == "-r")
@@ -69,15 +118,19 @@ tmux() {
   else
     print $1,$2,"\t",last;
   }
-  {last=""} /^#/{last=$0}' "$TMUX_PATH" |
-    awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' | sort |
-    column -t -s ")" | $rofi_command -dmenu -p "snippet[$1]"
+  {last=""} /^#/{last=$0}' "$TMUX_PATH" | sort |
+    awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
+    column -t -s ")" | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 zathura() {
   ZATHURA_PATH="$HOME/.config/zathura/zathurarc"
   is_path_exits "$ZATHURA_PATH"
-  awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$ZATHURA_PATH" | sed 's/#//' |
-    column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
+  SELECT=$(awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$ZATHURA_PATH" | sed 's/#//' |
+    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
 }
 terminal_st() {
   ST_TERMINAL_PATH="$HOME/.config/miscxrdb/terminal/st/binding"
@@ -99,12 +152,12 @@ terminal_kitty() {
 }
 vim() {
   OUT="$HOME/.cache/vimsnipets.sh"
-  mystat=$(grep -i "^Plug" <"$HOME/.config/nvim/plugins.vim" | cut -d"/" -f2 | cut -d"'" -f1 | xargs)
+  MYSTAT=$(grep -i "^Plug" <"$HOME/.config/nvim/plugins.vim" | cut -d"/" -f2 | cut -d"'" -f1 | xargs)
 
-  filepath=""
-  for v in $mystat; do
+  FILEPATH=""
+  for v in $MYSTAT; do
     if [ -f "$HOME/.config/nvim/after/plugin/$v.vim" ]; then
-      filepath+="$HOME/.config/nvim/after/plugin/$v.vim "
+      FILEPATH+="$HOME/.config/nvim/after/plugin/$v.vim "
     fi
   done
 
@@ -126,7 +179,7 @@ vim() {
 		    }
 		  {last=""}
 		  /keymap/ {last=\$0}' ~/.config/vimlocal/mapping.vim \\
-		    $filepath \\
+		    $FILEPATH \\
 		    ~/.config/nvim/plugin/after/*.vim \\
 		    ~/Dropbox/data.programming.forprivate/vim-guide/*.vim |
 		    sort |
@@ -141,12 +194,63 @@ vim() {
   [[ -f $OUT ]] && bash "$OUT"
 }
 
+bulk_snippets() {
+  case "$1" in
+  "fzf")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/fzf.txt"
+    ;;
+  "octo")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/octo.txt"
+    ;;
+  "quickfix")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/quickfix.txt"
+    ;;
+  "search-and-replace")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/search-and-replace.txt"
+    ;;
+  "buffers")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/buffers.txt"
+    ;;
+  "git-fork")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/git-fork.txt"
+    ;;
+  *)
+    TARGET_PATH=""
+    ;;
+  esac
+
+  is_path_exits "$TARGET_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TARGET_PATH'"
+  RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
+
+  SELECT=$(
+    rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | fzf-tmux -xC -w 80% -h 80% -y 43% \
+      --read0 --multi --highlight-line --gap \
+      --pointer='▌' \
+      --header="^e:edit ^r:reload" \
+      --bind="ctrl-e:execute($EDIT_CMD)" \
+      --bind="ctrl-r:execute($RELOAD_CMD)" \
+      --border-label=" Snippet Bulk [$1] " |
+      awk NF | tail -1
+  )
+
+  copy_selected "$SELECT"
+
+}
+
 main() {
   case $1 in
   "aliases") aliases "aliases" ;;
+  "buffers") bulk_snippets "buffers" ;;
   "calcurse") calcurse "calcurse" ;;
+  "fzf") bulk_snippets "fzf" ;;
   "ncmpcpp") ncmpcpp "ncmpcpp" ;;
   "newsboat") newsboat "newsboat" ;;
+  "octo") bulk_snippets "octo" ;;
+  "quickfix") bulk_snippets "quickfix" ;;
+  "search-and-replace") bulk_snippets "search-and-replace" ;;
+  "git-fork") bulk_snippets "git-fork" ;;
   "surfingkeys") surfingkeys "surfingkeys" ;;
   "sxhkdrc") sxhkdrc "sxhkdrc" ;;
   "term-alacritty") terminal_alacritty "term-alacritty" ;;
@@ -157,7 +261,7 @@ main() {
   "vim") vim "vim" ;;
   "vimium") vimiumc "vimium_c" ;;
   "zathura") zathura "zathura" ;;
-  *) dunstify "...what are you doing?" ;;
+  *) dunstify "[!] $TITLE_DUNST" "Can't find the snippet for '$1'\nor is it not implemented yet?" ;;
 
   esac
 }

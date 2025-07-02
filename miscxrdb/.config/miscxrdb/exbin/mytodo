@@ -12,46 +12,46 @@ DATENOW=$(date +%-u)
 MYMOXCONF="$HOME/Dropbox/mytodo"
 
 notifysend_msg() {
-    notifysend_fgh="$(xrdb -query | grep "color4" | cut -d":" -f2 |
-        head -1 | xargs)"
-    notifysend_fg="$(xrdb -query | grep "color3" | cut -d":" -f2 |
-        head -1 | xargs)"
-    notifysend_fgc="$(xrdb -query | grep "color5" | cut -d":" -f2 |
-        head -1 | xargs)"
+  notifysend_fgh="$(xrdb -query | grep "color4" | cut -d":" -f2 |
+    head -1 | xargs)"
+  notifysend_fg="$(xrdb -query | grep "color3" | cut -d":" -f2 |
+    head -1 | xargs)"
+  notifysend_fgc="$(xrdb -query | grep "color5" | cut -d":" -f2 |
+    head -1 | xargs)"
 
-    dunstify "M Y T O D O" "\n<span foreground='$notifysend_fgh'>Today?</span> <span foreground='$notifysend_fgc'>$1</span>\n<span foreground='$notifysend_fg'>$2</span>" \
-        -i ~/Dropbox/mytodo/icons/todo.png
+  dunstify "M Y T O D O" "\n<span foreground='$notifysend_fgh'>Today?</span> <span foreground='$notifysend_fgc'>$1</span>\n<span foreground='$notifysend_fg'>$2</span>" \
+    -i ~/Dropbox/mytodo/icons/todo.png
 }
 
 catme() {
-    maintodo=$(jq -r ."$1".todo <"$MYMOXCONF/todo.json")
+  maintodo=$(jq -r ."$1".todo <"$MYMOXCONF/todo.json")
 
-    msg=""
-    if [ -f "$MYMOXCONF/todos/$maintodo" ]; then
-        msg=$(grep -i "summary" <"$MYMOXCONF/todos/$maintodo" |
-            awk -F":" '{print "- "$2}')
-        # | awk -F":" '{print $2 $1}')
-    else
-        msg="file $MYMOXCONF/todos/$maintodo, not found"
-    fi
+  msg=""
+  if [ -f "$MYMOXCONF/todos/$maintodo" ]; then
+    msg=$(grep -i "summary" <"$MYMOXCONF/todos/$maintodo" |
+      awk -F":" '{print "- "$2}')
+    # | awk -F":" '{print $2 $1}')
+  else
+    msg="file $MYMOXCONF/todos/$maintodo, not found"
+  fi
 
-    notifysend_msg "$1" "$msg"
+  notifysend_msg "$1" "$msg"
 }
 
 (
-    [[ -z "$DATENOW" ]] && exit
+  [[ -z "$DATENOW" ]] && exit
 
-    HARI=""
-    case $DATENOW in
-    1) HARI="senin" ;;
-    2) HARI="selasa" ;;
-    3) HARI="rabu" ;;
-    4) HARI="kamis" ;;
-    5) HARI="jumat" ;;
-    6) HARI="sabtu" ;;
-    7) HARI="minggu" ;;
-    esac
+  HARI=""
+  case $DATENOW in
+  1) HARI="senin" ;;
+  2) HARI="selasa" ;;
+  3) HARI="rabu" ;;
+  4) HARI="kamis" ;;
+  5) HARI="jumat" ;;
+  6) HARI="sabtu" ;;
+  7) HARI="minggu" ;;
+  esac
 
-    [[ -z "$HARI" ]] && exit
-    catme "$HARI"
+  [[ -z "$HARI" ]] && exit
+  catme "$HARI"
 )

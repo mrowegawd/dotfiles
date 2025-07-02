@@ -37,4 +37,35 @@ toggle_call_win() {
   done
 }
 
-toggle_call_win "$@"
+set_win_state() {
+  # Original: bspc node -g {locked,sticky}
+  MSG_BSPC_TITLE="BSPC-WINCALL"
+  MSG_STATE="State ="
+
+  if [[ $1 == "locked" ]]; then
+    STATUS="locked"
+    if [[ ! -f /tmp/bspwm-locked-status ]]; then
+      STATUS="Unlocked"
+      touch /tmp/bspwm-locked-status
+    else
+      rm /tmp/bspwm-locked-status
+    fi
+    bspc node -g locked
+    dunstify "$MSG_BSPC_TITLE" "$MSG_STATE $STATUS"
+  fi
+
+  if [[ $1 == "sticky" ]]; then
+    STATUS="unsticky"
+    if [[ ! -f /tmp/bspwm-sticky-status ]]; then
+      STATUS="sticky"
+      touch /tmp/bspwm-sticky-status
+    else
+      rm /tmp/bspwm-sticky-status
+    fi
+    bspc node -g sticky
+    dunstify "$MSG_BSPC_TITLE" "$MSG_STATE $STATUS"
+  fi
+
+}
+
+"$@"

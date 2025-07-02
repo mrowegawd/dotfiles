@@ -65,7 +65,7 @@ RUtils.cmd.augroup("SmartClose", {
     end
 
     vim.bo[event.buf].buflisted = false
-    if vim.api.nvim_buf_is_valid(event.buf) then
+    if vim.api.nvim_buf_is_valid(event.buf) and (#vim.api.nvim_list_wins() > 1) then
       vim.keymap.set("n", "q", function()
         vim.cmd "close"
         pcall(vim.api.nvim_buf_delete, event.buf, { force = true })

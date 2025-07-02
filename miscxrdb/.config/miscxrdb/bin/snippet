@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# SNIPPETS_MENU="aliases\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura\nfzf"
+#
+# dir="$HOME/.config/rofi/menu"
+# theme="styles/snippets"
+# rofi_command="rofi -theme $dir/$theme"
+#
+# SELECT="$(echo -e "$SNIPPETS_MENU" | $rofi_command -p "  " -dmenu -i)"
+#
+# (
+#   [[ -z $SELECT ]] && exit
+#
+#   # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
+#
+#   "$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECT"
+#
+#   exit
+# )
+
+SNIPPETS=("aliases"
+  "awk+grep+rg+sed"
+  "buffers"
+  "cargo-dev"
+  "cargo-extends"
+  "cronjob"
+  "curl+wget"
+  "extract-bootmsg"
+  "extract-jurnalctl"
+  "extract-log-sys"
+  "ffmpeg"
+  "fzf"
+  "git-fork"
+  "git-misc"
+  "gravana+prometheus"
+  "httpdump"
+  "log-edc"
+  "log-ell"
+  "mpv"
+  "newsboat"
+  "octo"
+  "quickfix"
+  "rust-stuff"
+  "search-and-replace"
+  "sql"
+  "strace"
+  "surfingkeys"
+  "sxhkdrc"
+  "timer"
+  "tmux"
+  "vscode+zed"
+  "zathura"
+)
+
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+
+# bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "nvim -c ''"
+SNIPPET_SCRIPT_PATH="$HOME/.config/miscxrdb/bin/snippet"
+
+EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $SNIPPET_SCRIPT_PATH'"
+RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
+
+SELECTED=$(
+  echo "${SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
+    --header="^e:edit ^r:reload" \
+    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --bind="ctrl-r:execute($RELOAD_CMD)" \
+    --border-label=" Snippet Bulk "
+)
+
+[[ -z "$SELECTED" ]] && exit
+
+"$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECTED"

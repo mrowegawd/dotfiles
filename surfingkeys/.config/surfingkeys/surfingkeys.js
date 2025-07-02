@@ -418,7 +418,7 @@ Visual.style(
 settings.theme = `
   :root {
     --font: "JetBrainsMono Nerd Font Mono", Arial, sans-serif;
-    --font-size: 16px;
+    --font-size: 18px;
     --font-weight: bold;
     --fg: #E5E9F0;
     --bg: #3B4252;

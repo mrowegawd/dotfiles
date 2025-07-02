@@ -2783,14 +2783,6 @@ local function colorscheme_overrides()
     ["lackluster"] = {
       { Directory = { fg = "#7788aa", bg = "NONE" } },
 
-      {
-        Folded = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.65 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.8 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.45 }, bg = "NONE" } },
-
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
@@ -2914,6 +2906,14 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = 1.4 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.45 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },

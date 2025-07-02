@@ -314,6 +314,7 @@ return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
+    cmd = "Obsidian",
     ft = "markdown",
     keys = {
       {
@@ -441,7 +442,7 @@ return {
       daily_notes = {
         folder = "Drafts",
         -- Optional, if you want to change the date format for the ID of daily notes.
-        date_format = "%d-%m-%Y",
+        date_format = "%Y-%B-%d",
         -- date_format = "%Y-%m-%d",
         -- Optional, if you want to change the date format of the default alias of daily notes.
         -- alias_format = "%B %-d, %Y",
