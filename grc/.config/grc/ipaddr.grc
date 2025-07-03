@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # IP4
 regexp=inet\s([^\/]+)\/(\d+)
 colours=default,bold yellow,bold magenta

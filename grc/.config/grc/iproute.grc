@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # DEV
 regexp=dev\s(\S+)
 colours=default,cyan

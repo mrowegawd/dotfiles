@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Blk
 regexp=^(/dev/)(.+):\s
 colours=default,green,bright_green

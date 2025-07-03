@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Address
 regexp=^(..):(..).(.)
 colours=default,bright_green,bright_yellow,red

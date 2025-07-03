@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # /full/path
 regexp=(\s|^)/[-\w\d.]+/[-\w\d./]+
 colours=bold white

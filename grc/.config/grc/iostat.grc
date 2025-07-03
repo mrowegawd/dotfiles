@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Averages Title
 regexp=\s+(%user)\s+(%nice)\s+(%system)\s+(%iowait)\s+(%steal)\s+(%idle)
 colours=default,blue,cyan,magenta,green,red,yellow

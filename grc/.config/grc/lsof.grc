@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # device major minor numbers
 regexp=\s(\d+),(\d+)\s
 colours=unchanged,bright_yellow ,yellow

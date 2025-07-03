@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Values
 regexp=^\s([^:]+):(.+)$
 colours=default,cyan

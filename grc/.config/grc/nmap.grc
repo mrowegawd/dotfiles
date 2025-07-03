@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Scan Title
 regexp=Nmap scan report for (\S+)\s\(([^\)]+)\)
 colours=default,bold green, bold magenta

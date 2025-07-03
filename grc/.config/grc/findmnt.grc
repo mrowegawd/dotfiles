@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Devices
 regexp=\s\/dev(?:\/([^\/ ]+))+
 colours=green, bold green

@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # REPO, TAG, IMAGE ID
 regexp=^([a-z]+\/?[^\s]+)\s+([^\s]+)\s+(\w+)
 colours=default,bold white,bright_cyan,bright_black

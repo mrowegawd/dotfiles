@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # STATUS - STALE
 regexp=^(\S+)\s.*(STALE)$
 colours=default,bright_red,bold red

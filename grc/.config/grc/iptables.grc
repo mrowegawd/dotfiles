@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # Chains Custom name
 regexp=^Chain\s(\S+)\s\(.*$
 colours=white, bold bright_blue

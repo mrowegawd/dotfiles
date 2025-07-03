@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 #
 regexp=\b(g?cc|[gc]\+\+|g?as|ld)\b
 colours=white bold

@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
+
 # HEADERS
 regexp=\scheck:|run:|watch:|misc:|docker:|yarn:|npm:|download:|ps:|fzf:|pipenv:|pip:|gpg:
 colours=green
