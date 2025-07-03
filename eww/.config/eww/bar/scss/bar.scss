@@ -5,9 +5,9 @@
 
 .bar {
   font-family: $altfont;
-  font-size: 1.1rem;
+  font-size: 1rem;
   // margin: -2;
-  margin: 1px 1.2px 1px 1px;
+  // margin: 1px 1.2px 1px 1px;
   background-color: $bg;
   color: $fg;
   border-radius: 20px;
@@ -17,18 +17,21 @@
 .logo {
   font-family: inherit;
   .icon {
-    font-size: 1.5rem;
-    padding: 1em 1em 1em;
+    font-size: 1.4rem;
+    padding: 1rem 1rem 1rem;
     color: $magenta;
   }
 }
 
 .icon {
-  margin: 1px 8px 0 1px;
+  // margin: 1px 8px 0 1px;
   color: $magenta;
   font-family: $altfont;
-  font-size: 1.5rem;
-  padding: 1px 1px 1px 1px;
+  // padding: 1px 1px 1px 0.5px;
+  margin: 1px 5px 1px 1px;
+  // font-size: 1rem;
+  // margin: 1em 0.1em 1em 1em;
+  // padding: 1px 1px 1px 1px;
 }
 
 .texting {
@@ -57,9 +60,9 @@ tooltip {
 
 .ws {
   background-color: $bg;
-  border-radius: 20px;
+  // border-radius: 1px;
   // padding: 1em 0.5em;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-family: $altfont;
 
   button {
@@ -128,8 +131,9 @@ tooltip {
 .volume-control-center {
   // background-color: $bg;
   // margin: 1px 1.2px 1px 1px;
-  padding: 1px 2px 0 4px;
+  padding: 1px 1px 1px 6px;
   margin: 1em 0.7em 1em 1em;
+  // font-size: 1.3em;
   // margin-top: 1rem;
 }
 
@@ -199,7 +203,7 @@ tooltip {
 
 .clock {
   // background-color: $altbg;
-  border-radius: 15px;
+  // border-radius: 15px;
   // padding: 8px 2px 0 2px;
   font-size: 1.3em;
   color: $fg2;

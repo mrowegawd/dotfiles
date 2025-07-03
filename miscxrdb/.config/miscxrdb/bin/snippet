@@ -18,20 +18,28 @@
 #   exit
 # )
 
-SNIPPETS=("aliases"
-  "awk+grep+rg+sed"
+SNIPPETS=("SSH"
+  "SSH-GUI"
+  "aliases"
+  "awk"
   "buffers"
   "cargo-dev"
   "cargo-extends"
   "cronjob"
-  "curl+wget"
+  "curl"
+  "docker"
+  "docker-container"
+  "docker-image"
   "extract-bootmsg"
   "extract-jurnalctl"
   "extract-log-sys"
+  "fd"
   "ffmpeg"
+  "find"
   "fzf"
   "git-fork"
   "git-misc"
+  "gpg"
   "gravana+prometheus"
   "httpdump"
   "log-edc"
@@ -39,16 +47,26 @@ SNIPPETS=("aliases"
   "mpv"
   "newsboat"
   "octo"
+  "podman"
+  "py-pip"
+  "py-poetry"
+  "py-uv"
   "quickfix"
+  "rg"
   "rust-stuff"
   "search-and-replace"
+  "sed"
   "sql"
+  "sql-connection"
+  "sql-security"
   "strace"
   "surfingkeys"
   "sxhkdrc"
+  "sync"
   "timer"
   "tmux"
   "vscode+zed"
+  "wget"
   "zathura"
 )
 
@@ -67,7 +85,7 @@ SELECTED=$(
     --header="^e:edit ^r:reload" \
     --bind="ctrl-e:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
-    --border-label=" Snippet Bulk "
+    --border-label=" Bulk Snippet "
 )
 
 [[ -z "$SELECTED" ]] && exit

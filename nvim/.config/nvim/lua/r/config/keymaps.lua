@@ -432,6 +432,11 @@ RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo 
 RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
+
+vim.api.nvim_create_user_command("Cfilter", function(opts)
+  vim.cmd.packadd "cfilter"
+  vim.cmd.Cfilter { args = opts.fargs, bang = opts.bang }
+end, { force = true, bang = true, nargs = "*" })
 -- }}}
 -- {{{ Bulk commands
 -- These commands run outside tmux

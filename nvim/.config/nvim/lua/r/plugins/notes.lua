@@ -2,10 +2,10 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "LazyFile",
-    ft = { "org" },
-    -- event = "VeryLazy",
-    -- lazy = false,
+    -- event = "LazyFile",
+    -- ft = { "org" },
+    event = "VeryLazy",
+    lazy = false,
     keys = {
       {
         "<Localleader>aA",

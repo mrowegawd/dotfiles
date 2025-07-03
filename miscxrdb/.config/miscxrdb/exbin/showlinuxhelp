@@ -10,6 +10,7 @@ rofi_command="rofi -theme $dir/$theme"
 COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 |
   cut -d":" -f2 | xargs)"
 TITLE_DUNST="Show Linux Help"
+TITLE_BORDER_LABEL="Bulk Snippet"
 
 FZF_COMMAND="fzf --no-border "
 if ! not_in_tmux; then
@@ -34,14 +35,16 @@ not_in_tmux() {
 copy_selected() {
   [[ -z $1 ]] && exit
 
-  if is_mac; then
-    echo -n "$1" | pbcopy
-  else
-    echo -n "$1" | xclip -selection clipboard
-  fi
+  if [[ $2 == "true" ]]; then
+    if is_mac; then
+      echo -n "$1" | pbcopy
+    else
+      echo -n "$1" | xclip -selection clipboard
+    fi
 
-  MSG_="<b><span foreground='$COL_MSG_SUCCSS'>Copied !</span></b>"
-  dunstify "$TITLE_DUNST" "$MSG_"
+    MSG_="<b><span foreground='$COL_MSG_SUCCSS'>Copied !</span></b>"
+    dunstify "$TITLE_DUNST" "$MSG_"
+  fi
 }
 
 aliases() {
@@ -51,17 +54,33 @@ aliases() {
   # SELECT=$(awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' | sed 's/()//' |
   #   column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
 
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $BASHRC_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'Surfingkeys snippet updated'"
+
   SELECT=$(rg --pretty bash | awk '/\(\)/&& last {print last,"\n",$1,"\n"} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' |
-    perl -0 -pe 's/\n\n/\0/gm' | $FZF_COMMAND --read0 --gap --multi --highlight-line --pointer='▌' --prompt="Snippets[$1] " |
+    perl -0 -pe 's/\n\n/\0/gm' | $FZF_COMMAND --read0 --gap --multi --highlight-line --pointer='▌' \
+    --header="^e:edit ^r:reload" \
+    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --bind="ctrl-r:execute($RELOAD_CMD)" \
+    --border-label=" $TITLE_BORDER_LABEL [$1] " |
     awk NF | tail -1)
 
-  copy_selected "$SELECT"
+  copy_selected "$SELECT" "true"
 }
 surfingkeys() {
   SURFINGKEYS_PATH="$HOME/.config/surfingkeys/guidekeys.conf"
   is_path_exits "$SURFINGKEYS_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $SURFINGKEYS_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'Surfingkeys snippet updated'"
+
   SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
-    column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+    column -t -s $'\t' | $FZF_COMMAND \
+    --header="^e:edit ^r:reload" \
+    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --bind="ctrl-r:execute($RELOAD_CMD)" \
+    --border-label=" $TITLE_BORDER_LABEL [$1] " |
+    awk NF | tail -1)
 
   copy_selected "$SELECT"
 }
@@ -108,7 +127,12 @@ sxhkdrc() {
 tmux() {
   TMUX_PATH="$HOME/.tmux.conf"
   is_path_exits "$TMUX_PATH"
-  SELECT=$(awk '/^[a-z]/ && last {
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TMUX_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'Tmux snippet updated'"
+
+  SELECT=$(
+    awk '/^[a-z]/ && last {
   if ($2 == "-n")
     print $1,$3,"\t",last;
   else if ($2 == "-r")
@@ -119,8 +143,14 @@ tmux() {
     print $1,$2,"\t",last;
   }
   {last=""} /^#/{last=$0}' "$TMUX_PATH" | sort |
-    awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
-    column -t -s ")" | $FZF_COMMAND --prompt="Snippets[$1] ")
+      awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
+      column -t -s ")" | fzf-tmux -xC -w 80% -h 80% -y 43% \
+      --header="^e:edit ^r:reload" \
+      --bind="ctrl-e:execute($EDIT_CMD)" \
+      --bind="ctrl-r:execute($RELOAD_CMD)" \
+      --border-label=" $TITLE_BORDER_LABEL [$1] " |
+      awk NF | tail -1
+  )
 
   copy_selected "$SELECT"
 }
@@ -214,28 +244,41 @@ bulk_snippets() {
   "git-fork")
     TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/git-fork.txt"
     ;;
+  "cronjob")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/cronjob.txt"
+    ;;
+  "py-uv")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/py-uv.txt"
+    ;;
+  "py-poetry")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/py-poetry.txt"
+    ;;
+  "py-pip")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/py-pip.txt"
+    ;;
   *)
-    TARGET_PATH=""
+    exit
     ;;
   esac
 
   is_path_exits "$TARGET_PATH"
 
   EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TARGET_PATH'"
-  RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'All current snippets updated'"
 
   SELECT=$(
-    rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | fzf-tmux -xC -w 80% -h 80% -y 43% \
-      --read0 --multi --highlight-line --gap \
-      --pointer='▌' \
-      --header="^e:edit ^r:reload" \
-      --bind="ctrl-e:execute($EDIT_CMD)" \
-      --bind="ctrl-r:execute($RELOAD_CMD)" \
-      --border-label=" Snippet Bulk [$1] " |
+    rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | grcat bulksnip.grc |
+      fzf-tmux -xC -w 80% -h 80% -y 43% \
+        --read0 --multi --highlight-line --gap \
+        --pointer='▌' \
+        --header="^e:edit ^r:reload" \
+        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --bind="ctrl-r:execute($RELOAD_CMD)" \
+        --border-label=" $TITLE_BORDER_LABEL [$1] " |
       awk NF | tail -1
   )
 
-  copy_selected "$SELECT"
+  copy_selected "$SELECT" "true"
 
 }
 
@@ -244,13 +287,17 @@ main() {
   "aliases") aliases "aliases" ;;
   "buffers") bulk_snippets "buffers" ;;
   "calcurse") calcurse "calcurse" ;;
+  "cronjob") bulk_snippets "cronjob" ;;
   "fzf") bulk_snippets "fzf" ;;
+  "git-fork") bulk_snippets "git-fork" ;;
   "ncmpcpp") ncmpcpp "ncmpcpp" ;;
   "newsboat") newsboat "newsboat" ;;
   "octo") bulk_snippets "octo" ;;
+  "py-pip") bulk_snippets "py-pip" ;;
+  "py-poetry") bulk_snippets "py-poetry" ;;
+  "py-uv") bulk_snippets "py-uv" ;;
   "quickfix") bulk_snippets "quickfix" ;;
   "search-and-replace") bulk_snippets "search-and-replace" ;;
-  "git-fork") bulk_snippets "git-fork" ;;
   "surfingkeys") surfingkeys "surfingkeys" ;;
   "sxhkdrc") sxhkdrc "sxhkdrc" ;;
   "term-alacritty") terminal_alacritty "term-alacritty" ;;
