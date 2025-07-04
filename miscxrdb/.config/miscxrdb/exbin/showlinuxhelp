@@ -101,9 +101,9 @@ calcurse() {
   copy_selected "$SELECT"
 }
 ncmpcpp() {
-  NCMPCPP_PATH="$HOME/.config/ncmpcpp/bindings"
+  NCMPCPP_PATH="$HOME/.ncmpcpp/bindings"
   is_path_exits "$NCMPCPP_PATH"
-  SELECT=$(awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NCMPCPP_PATH" | sed 's/#//' |
+  SELECT=$(awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NCMPCPP_PATH" | sed 's/#//' | sed 's/"//g' |
     column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
 
   copy_selected "$SELECT"
@@ -231,11 +231,35 @@ bulk_note_snippets() {
   "grep")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-grep.md"
     ;;
+  "apt")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-apt.md"
+    ;;
+  "user")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-user.md"
+    ;;
+  "dpkg")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-dpkg.md"
+    ;;
+  "ppa")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-ppa.md"
+    ;;
+  "systemctl")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-systemctl.md"
+    ;;
+  "journalctl")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-journalctl.md"
+    ;;
+  "rg")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-rg.md"
+    ;;
   "find")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-find.md"
     ;;
   "curl")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-curl.md"
+    ;;
+  "stow")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-stow.md"
     ;;
   "awk")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-awk.md"
@@ -246,6 +270,15 @@ bulk_note_snippets() {
   "cut")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-cut.md"
     ;;
+  "npm")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/_tools/npm.md"
+    ;;
+  "yarn")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/_tools/yarn.md"
+    ;;
+  "cargo")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/_tools/cargo.md"
+    ;;
   "sed")
     TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-sed.md"
     ;;
@@ -254,6 +287,27 @@ bulk_note_snippets() {
     ;;
   "molecule")
     TARGET_PATH="$HOME/Dropbox/neorg/learning/ansible/ansible-test.md"
+    ;;
+  "docker-hub")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-hub.md"
+    ;;
+  "docker-image")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-image.md"
+    ;;
+  "docker-container")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-container.md"
+    ;;
+  "docker-network")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-network.md"
+    ;;
+  "docker-volume")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-volume.md"
+    ;;
+  "docker-dockerfile")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-dockerfile.md"
+    ;;
+  "docker-compose")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/docker/docker-compose.md"
     ;;
   *)
     exit
@@ -370,6 +424,9 @@ bulk_snippets() {
   "py-pip")
     TARGET_PATH="$HOME/Dropbox/neorg/snippets/py-pip.txt"
     ;;
+  "http-status")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/http-status.txt"
+    ;;
   *)
     exit
     ;;
@@ -400,38 +457,57 @@ main() {
   case $1 in
   "aliases") aliases "aliases" ;;
   "ansible") bulk_note_snippets "ansible" ;;
+  "apt") bulk_note_snippets "apt" ;;
   "asdf") bulk_note_snippets "asdf" ;;
   "awk") bulk_note_snippets "awk" ;;
   "buffers") bulk_snippets "buffers" ;;
   "calcurse") calcurse "calcurse" ;;
+  "cargo") bulk_note_snippets "cargo" ;;
   "cronjob") bulk_snippets "cronjob" ;;
   "curl") bulk_note_snippets "curl" ;;
   "cut") bulk_note_snippets "cut" ;;
+  "docker-compose") bulk_note_snippets "docker-compose" ;;
+  "docker-container") bulk_note_snippets "docker-container" ;;
+  "docker-dockerfile") bulk_note_snippets "docker-dockerfile" ;;
+  "docker-hub") bulk_note_snippets "docker-hub" ;;
+  "docker-image") bulk_note_snippets "docker-image" ;;
+  "docker-network") bulk_note_snippets "docker-network" ;;
+  "docker-volume") bulk_note_snippets "docker-volume" ;;
+  "dpkg") bulk_note_snippets "dpkg" ;;
   "find") bulk_note_snippets "find" ;;
   "fzf") bulk_snippets "fzf" ;;
   "git-fork") bulk_snippets "git-fork" ;;
   "grep") bulk_note_snippets "grep" ;;
+  "journalctl") bulk_note_snippets "journalctl" ;;
   "lazygit") bulk_show_snippets "lazygit" ;;
   "molecule") bulk_note_snippets "molecule" ;;
   "ncmpcpp") ncmpcpp "ncmpcpp" ;;
   "newsboat") newsboat "newsboat" ;;
+  "npm") bulk_note_snippets "npm" ;;
   "octo") bulk_snippets "octo" ;;
+  "ppa") bulk_note_snippets "ppa" ;;
   "py-pip") bulk_snippets "py-pip" ;;
   "py-poetry") bulk_snippets "py-poetry" ;;
+  "http-status") bulk_snippets "http-status" ;;
   "py-uv") bulk_snippets "py-uv" ;;
   "quickfix") bulk_snippets "quickfix" ;;
+  "rg") bulk_note_snippets "rg" ;;
   "search-and-replace") bulk_snippets "search-and-replace" ;;
   "sed") bulk_note_snippets "sed" ;;
+  "stow") bulk_note_snippets "stow" ;;
   "surfingkeys") surfingkeys "surfingkeys" ;;
   "sxhkdrc") sxhkdrc "sxhkdrc" ;;
+  "systemctl") bulk_note_snippets "systemctl" ;;
   "term-alacritty") terminal_alacritty "term-alacritty" ;;
   "term-kitty") terminal_kitty "term-kitty" ;;
   "term-st") terminal_st "term-st" ;;
   "term-termite") terminal_termite "term-termite" ;;
   "tmux") tmux "tmux" ;;
+  "user") bulk_note_snippets "user" ;;
   "vim") vim "vim" ;;
   "vimium") vimiumc "vimium_c" ;;
   "wget") bulk_note_snippets "wget" ;;
+  "yarn") bulk_note_snippets "yarn" ;;
   "zathura") zathura "zathura" ;;
   *) dunstify "[!] $TITLE_DUNST" "Can't find the snippet for '$1'\nor is it not implemented yet?" ;;
 

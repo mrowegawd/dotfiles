@@ -203,7 +203,7 @@ function M.follow_link(is_selection)
     if vim.bo.filetype == "octo" then
       notif_msg = "Open with mpv: "
       cmds =
-        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
+        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-15-60", url }
     end
 
     vim.fn.jobstart(cmds, { detach = true })

@@ -115,11 +115,11 @@ return {
     },
     opts = true,
   },
-  -- SMEAR-CURSOR (disabled)
+  -- SMEAR-CURSOR
   {
     "sphamba/smear-cursor.nvim", -- disabled karena slow
     event = "LazyFile",
-    enabled = false,
+    -- enabled = false,
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = {},
   },
@@ -138,9 +138,10 @@ return {
     },
     opts = {},
   },
-  -- BEACON
+  -- BEACON (disabled)
   {
     "rainbowhxch/beacon.nvim", -- (alternative smear-cursor)
+    enabled = false,
     event = "LazyFile",
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = function()

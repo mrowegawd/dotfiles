@@ -160,7 +160,7 @@ super + shift + a
 
 # misc: open rmpc (music)
 super + shift + m
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float rmpc
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float ncmpcpp
 
 # misc: open note inbox (capture notes)
 super + i

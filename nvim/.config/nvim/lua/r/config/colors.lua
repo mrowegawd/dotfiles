@@ -146,7 +146,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.5,
   pmenusel_bg_alter = 0.35,
-  winseparator_alter = 1.75,
+  winseparator_alter = 1.7,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -1903,7 +1903,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
       {
         TabLine = {

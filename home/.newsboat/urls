@@ -25,16 +25,14 @@ MISC---------------------------------------------------------------------------
 
 FORUMS-------------------------------------------------------------------------
 # https://www.reddit.com/r/unixporn.rss "~REDDIT: Unixporn" tool
-https://www.reddit.com/r/commandline.rss "~REDDIT: Commandline" tool
-https://www.reddit.com/r/zsh+tmux.rss "~REDDIT: ZshTmux" tool
-https://www.reddit.com/r/ScriptSwap.rss "~REDDIT: ScriptSwap" tool
-https://www.reddit.com/r/usefulscripts.rss "~REDDIT: UsefulScripts" tool
+https://www.reddit.com/r/zsh+tmux+commandline.rss "~REDDIT: ZshTmuxCommandline" tool
+https://www.reddit.com/r/ScriptSwap+UsefulScripts.rss "~REDDIT: ScriptSwapUsefulscripts" tool
+
 https://www.reddit.com/r/opendirectories.rss "~REDDIT: Opendirectories" storage tool
 https://www.reddit.com/r/coolgithubprojects.rss "~REDDIT: CoolGithubprojects" tool
 https://www.reddit.com/r/UnixProTips+linux+linuxquestions+linuxadmin.rss "~REDDIT: LinuxAll" linux
 
 https://www.reddit.com/r/askprogramming+programming.rss "~REDDIT: Programming" learnprogramming programming
-https://www.reddit.com/r/coding.rss "~REDDIT: Coding" learnprogramming programming
 
 https://www.reddit.com/r/golang.rss "~REDDIT: Golang" golang programming
 https://www.reddit.com/r/javascript.rss "~REDDIT: Javascript" javascript programming
@@ -42,22 +40,16 @@ https://www.reddit.com/r/kotlin.rss "~REDDIT: Kotlin" kotlin programming
 https://www.reddit.com/r/php.rss "~REDDIT: Php" php programming
 https://www.reddit.com/r/python.rss "~REDDIT: Python" python programming
 
-https://www.reddit.com/r/PythonJobs.rss "~REDDIT: PythonJobs" job python
-https://www.reddit.com/r/BigDataJobs.rss "~REDDIT: BigDataJobs" job python
+https://www.reddit.com/r/PythonJobs+BigDataJobs.rss "~REDDIT: PythonJobsBigDataJobs" job python
 
 https://www.reddit.com/r/rust.rss "~REDDIT: Rust" rust programming
 https://www.reddit.com/r/typescript.rss "~REDDIT: Typescript" typescript programming
 
 https://www.reddit.com/r/django.rss "~REDDIT: Django" webdev framework
-https://www.reddit.com/r/sveltejs.rss "~REDDIT: Svelte" webdev framework
 
-https://www.reddit.com/r/webdev.rss "~REDDIT: Webdev" webdev programming
-https://www.reddit.com/r/web_design.rss "~REDDIT: Webdesign" webdev programming
+https://www.reddit.com/r/webdev+web_design.rss "~REDDIT: WebdevWebDesign" webdev programming
 
-https://www.reddit.com/r/webpack.rss "~REDDIT: Webpack" bundler
-
-https://www.reddit.com/r/reactjs.rss "~REDDIT: Reactjs" react webdev
-https://www.reddit.com/r/react.rss "~REDDIT: React" react webdev
+https://www.reddit.com/r/reactjs+react+sveltejs.rss "~REDDIT: ReactjsSvelte" react webdev
 
 https://www.reddit.com/r/tailwindcss.rss "~REDDIT: Tailwindcss" css framework webdev
 https://www.reddit.com/r/frontend.rss "~REDDIT: Frontend" webdev programming
@@ -65,19 +57,15 @@ https://www.reddit.com/r/frontend.rss "~REDDIT: Frontend" webdev programming
 https://www.reddit.com/r/firefox.rss "~REDDIT: Firefox" browser tool
 https://www.reddit.com/r/nginx.rss "~REDDIT: Nginx" webdev tool
 
-https://www.reddit.com/r/vimporn.rss "~REDDIT: Vimporn" vim editor
-
-https://www.reddit.com/r/vim.rss "~REDDIT: Vim" vim editor
-https://www.reddit.com/r/neovim.rss "~REDDIT: Neovim" vim editor
-https://www.reddit.com/r/orgmode.rss "~REDDIT: Orgmode" orgmode editor
-https://www.reddit.com/r/HelixEditor.rss "~REDDIT: Helix" helix editor
+https://www.reddit.com/r/vim+neovim+vimporn.rss "~REDDIT: VimNeovimVimporn" vim editor
+https://www.reddit.com/r/orgmode+HelixEditor.rss "~REDDIT: OrgmodeHelixEditor" orgmode editor
 
 https://www.reddit.com/r/docker.rss "~REDDIT: Docker" docker webdev tool security
 https://www.reddit.com/r/webscrapping.rss "~REDDIT: webscrapping" webdev webscrapping
 
 https://www.reddit.com/r/privacytoolsIO.rss "~REDDIT: PrivacytoolsIO" privacy security
-https://www.reddit.com/r/selenium.rss "~REDDIT: Selenium" browser tool
-https://www.reddit.com/r/puppeteer.rss "~REDDIT: Puppeteer" browser tool
+https://www.reddit.com/r/selenium+puppeteer.rss "~REDDIT: SeleniumPuppeteer" browser tool
+
 https://www.reddit.com/r/burp_suite+netsec+HowToHack+Hacking_Tutorials+Pentesting+LiveOverflow.rss "~REDDIT: Burp Suite" browser pantest python
 https://www.reddit.com/r/torrents.rss "~REDDIT: Torrents" tool
 https://www.reddit.com/r/TOR.rss "~REDDIT: Tor" tor tool

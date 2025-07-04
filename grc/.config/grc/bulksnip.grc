@@ -4,4 +4,4 @@ regexp=##;.*$
 colours=bold white
 
 regexp=##.*$
-colours=bold blue
+colours=bold white
