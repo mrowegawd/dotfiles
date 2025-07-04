@@ -18,15 +18,32 @@
 #   exit
 # )
 
+SNIPPETS_PROGRAMMING=("ansible"
+  "py-pip"
+  "py-poetry"
+  "py-uv"
+  "python-func"
+  "python-requests"
+  "molecule"
+)
+
+SNIPPETS_GIT=(
+  "git-fork"
+  "git-misc"
+  "lazygit"
+)
+
 SNIPPETS=("SSH"
   "SSH-GUI"
   "aliases"
+  "asdf"
   "awk"
   "buffers"
   "cargo-dev"
   "cargo-extends"
   "cronjob"
   "curl"
+  "cut"
   "docker"
   "docker-container"
   "docker-image"
@@ -37,10 +54,9 @@ SNIPPETS=("SSH"
   "ffmpeg"
   "find"
   "fzf"
-  "git-fork"
-  "git-misc"
   "gpg"
   "gravana+prometheus"
+  "grep"
   "httpdump"
   "log-edc"
   "log-ell"
@@ -48,11 +64,9 @@ SNIPPETS=("SSH"
   "newsboat"
   "octo"
   "podman"
-  "py-pip"
-  "py-poetry"
-  "py-uv"
   "quickfix"
   "rg"
+  "rsync"
   "rust-stuff"
   "search-and-replace"
   "sed"
@@ -70,6 +84,8 @@ SNIPPETS=("SSH"
   "zathura"
 )
 
+ALL_SNIPPETS=("${SNIPPETS_PROGRAMMING[@]}" "${SNIPPETS[@]}" "${SNIPPETS_GIT[@]}")
+
 not_in_tmux() {
   [ -z "$TMUX" ]
 }
@@ -81,7 +97,7 @@ EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 &&
 RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
 
 SELECTED=$(
-  echo "${SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
+  echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
     --header="^e:edit ^r:reload" \
     --bind="ctrl-e:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \

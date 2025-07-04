@@ -223,7 +223,121 @@ vim() {
 
   [[ -f $OUT ]] && bash "$OUT"
 }
+bulk_note_snippets() {
+  case "$1" in
+  "asdf")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/_tools/asdf.md"
+    ;;
+  "grep")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-grep.md"
+    ;;
+  "find")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-find.md"
+    ;;
+  "curl")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-curl.md"
+    ;;
+  "awk")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-awk.md"
+    ;;
+  "wget")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-wget.md"
+    ;;
+  "cut")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-cut.md"
+    ;;
+  "sed")
+    TARGET_PATH="$HOME/Dropbox/neorg/OS/linux/linux-sed.md"
+    ;;
+  "ansible")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/ansible/ansible-commands.md"
+    ;;
+  "molecule")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/ansible/ansible-test.md"
+    ;;
+  *)
+    exit
+    ;;
+  esac
 
+  is_path_exits "$TARGET_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TARGET_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'All current note snippets updated'"
+
+  SELECT=$(
+    rg --pretty bash | awk '/^[a-zA-Z]/ && last { printf "%s\n%s\n", last, $0; }
+  {last=""} /^#;/{last=$0}' "$TARGET_PATH" |
+      perl -0 -pe 's/#; /\0/gm' | grcat bulksnip.grc | sed 's/## //' |
+      fzf-tmux -xC -w 80% -h 80% -y 43% \
+        --read0 --multi --highlight-line --gap \
+        --pointer='▌' \
+        --header="^e:edit ^r:reload" \
+        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --bind="ctrl-r:execute($RELOAD_CMD)" \
+        --border-label=" $TITLE_BORDER_LABEL [$1] " |
+      awk NF | tail -1
+  )
+
+  copy_selected "$SELECT" "true"
+}
+bulk_show_snippets() {
+  case "$1" in
+  "lazygit")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/lazygit.txt"
+    ;;
+  *)
+    exit
+    ;;
+  esac
+
+  is_path_exits "$TARGET_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TARGET_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'All current note snippets updated'"
+
+  # perl -0 -pe 's/#; /\0/gm' | grcat bulksnip.grc | sed 's/## //' |
+
+  #SELECT=$(
+  #  rg --pretty bash | awk '/^[a-zA-Z]/ && last { printf "%s\n%s\n", last, $0; }
+  #{last=""} /^```/{last=$0}' "$TARGET_PATH" |
+  #    fzf-tmux -xC -w 80% -h 80% -y 43% \
+  #      --read0 --multi --highlight-line --gap \
+  #      --pointer='▌' \
+  #      --header="^e:edit ^r:reload" \
+  #      --bind="ctrl-e:execute($EDIT_CMD)" \
+  #      --bind="ctrl-r:execute($RELOAD_CMD)" \
+  #      --border-label=" $TITLE_BORDER_LABEL [$1] " |
+  #    awk NF | tail -1
+
+  # SELECT=$(rg --pretty bash | awk '
+  #       /^#\s/ { print; next }                  # Cetak baris yang diawali "#" (judul)
+  #       in_block && /^```/ { in_block=0; next }   # Jika dalam blok dan ketemu ``` maka akhiri blok
+  #       in_block { print; next }              # Jika dalam blok, cetak baris
+  #       /^```comment/ { in_block=1 }          # Jika ketemu awal blok comment, mulai cetak
+  # ' "$TARGET_PATH" |
+  #   fzf-tmux -xC -w 80% -h 80% -y 43% \
+  #     --read0 --multi --highlight-line --gap \
+  #     --pointer='▌' \
+  #     --header="^e:edit ^r:reload" \
+  #     --bind="ctrl-e:execute($EDIT_CMD)" \
+  #     --bind="ctrl-r:execute($RELOAD_CMD)" \
+  #     --border-label=" $TITLE_BORDER_LABEL [$1] " |
+  #   awk NF | tail -1)
+
+  SELECT=$(
+    rg --pretty bash | grep -v '^>>' "$TARGET_PATH" | perl -0 -pe 's/\n\n/\0/gm' | grcat bulksnip.grc | sed 's/##; //' |
+      fzf-tmux -xC -w 80% -h 80% -y 43% \
+        --read0 --multi --highlight-line --gap \
+        --pointer='▌' \
+        --header="^e:edit ^r:reload" \
+        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --bind="ctrl-r:execute($RELOAD_CMD)" \
+        --border-label=" $TITLE_BORDER_LABEL [$1] " |
+      awk NF | tail -1
+  )
+  copy_selected "$SELECT"
+}
 bulk_snippets() {
   case "$1" in
   "fzf")
@@ -267,7 +381,7 @@ bulk_snippets() {
   RELOAD_CMD="dunstify '$TITLE_DUNST' 'All current snippets updated'"
 
   SELECT=$(
-    rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | grcat bulksnip.grc |
+    rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | grcat bulksnip.grc | sed 's/##; //' |
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
@@ -285,11 +399,20 @@ bulk_snippets() {
 main() {
   case $1 in
   "aliases") aliases "aliases" ;;
+  "ansible") bulk_note_snippets "ansible" ;;
+  "asdf") bulk_note_snippets "asdf" ;;
+  "awk") bulk_note_snippets "awk" ;;
   "buffers") bulk_snippets "buffers" ;;
   "calcurse") calcurse "calcurse" ;;
   "cronjob") bulk_snippets "cronjob" ;;
+  "curl") bulk_note_snippets "curl" ;;
+  "cut") bulk_note_snippets "cut" ;;
+  "find") bulk_note_snippets "find" ;;
   "fzf") bulk_snippets "fzf" ;;
   "git-fork") bulk_snippets "git-fork" ;;
+  "grep") bulk_note_snippets "grep" ;;
+  "lazygit") bulk_show_snippets "lazygit" ;;
+  "molecule") bulk_note_snippets "molecule" ;;
   "ncmpcpp") ncmpcpp "ncmpcpp" ;;
   "newsboat") newsboat "newsboat" ;;
   "octo") bulk_snippets "octo" ;;
@@ -298,6 +421,7 @@ main() {
   "py-uv") bulk_snippets "py-uv" ;;
   "quickfix") bulk_snippets "quickfix" ;;
   "search-and-replace") bulk_snippets "search-and-replace" ;;
+  "sed") bulk_note_snippets "sed" ;;
   "surfingkeys") surfingkeys "surfingkeys" ;;
   "sxhkdrc") sxhkdrc "sxhkdrc" ;;
   "term-alacritty") terminal_alacritty "term-alacritty" ;;
@@ -307,6 +431,7 @@ main() {
   "tmux") tmux "tmux" ;;
   "vim") vim "vim" ;;
   "vimium") vimiumc "vimium_c" ;;
+  "wget") bulk_note_snippets "wget" ;;
   "zathura") zathura "zathura" ;;
   *) dunstify "[!] $TITLE_DUNST" "Can't find the snippet for '$1'\nor is it not implemented yet?" ;;
 

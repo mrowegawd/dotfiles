@@ -374,7 +374,7 @@ addSearchAlias(
 // Link Hints
 Hints.style(`
     font-family: 'JetBrainsMono Nerd Font Mono', 'SF Pro', monospace;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
     text-transform: lowercase;
     color: #FFFF00 !important;
@@ -389,7 +389,7 @@ Hints.style(`
 Hints.style(
   `
     font-family: 'JetBrainsMono Nerd Font Mono', 'SF Pro', monospace;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
     text-transform: lowercase;
     color: #FFFF00 !important;
