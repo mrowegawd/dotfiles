@@ -409,15 +409,15 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copypath  CTRL-F:ignore  CTRL-B:hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copypath  CTRL-F:ignore  CTRL-E:hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
             ["ctrl-f"] = actions.toggle_ignore,
-            ["ctrl-b"] = actions.toggle_hidden,
-            -- ["ctrl-b"] = function(_, opts)
+            ["ctrl-e"] = actions.toggle_hidden,
+            -- ["ctrl-e"] = function(_, opts)
             --   actions.toggle_opt(opts, "hidden")
             --   actions.toggle_opt(opts, "no_ignore")
             -- end,
@@ -513,7 +513,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-Y:copyhash  CTRL-E:compare  CTRL-X:historycommit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-X:historycommit  CTRL-Y:copyhash  CTRL-E:compare]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -583,7 +583,7 @@ return {
               title_pos = "left",
             },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-Y:copyhash  CTRL-E:compare  CTRL-X:historycommit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-X:historycommit  CTRL-Y:copyhash  CTRL-E:compare]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -696,7 +696,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  CTRL-x:grepcwd  CTRL-F:ignore  CTRL-B:hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  CTRL-X:grepcwd  CTRL-F:ignore  CTRL-E:hidden]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -719,8 +719,8 @@ return {
           },
           actions = {
             ["ctrl-f"] = actions.toggle_ignore,
-            ["ctrl-b"] = actions.toggle_hidden,
-            -- ["ctrl-b"] = function(_, opts)
+            ["ctrl-e"] = actions.toggle_hidden,
+            -- ["ctrl-e"] = function(_, opts)
             --   actions.toggle_opt(opts, "hidden")
             --   actions.toggle_opt(opts, "no_ignore")
             -- end,
