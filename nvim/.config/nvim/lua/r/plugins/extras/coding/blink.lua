@@ -126,6 +126,14 @@ return {
             border = RUtils.config.icons.border.line,
             winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
+          -- draw = function(opts)
+          --   opts.default_implementation()
+          --   RUtils.lsp.highlight_doc_patterns(opts.window.buf)
+          --   local win_id = opts.window:get_win()
+          --   if win_id then
+          --     require("render-markdown.core.ui").update(opts.window.buf, win_id, "BlinkDraw", true)
+          --   end
+          -- end,
         },
         ghost_text = {
           enabled = false,
@@ -220,11 +228,23 @@ return {
               end,
             },
           },
+          lsp = {
+            name = "lsp",
+            module = "blink.cmp.sources.lsp",
+            fallbacks = {},
+            transform_items = function(_, items)
+              local cmp_kind = require("blink.cmp.types").CompletionItemKind
+              return vim.tbl_filter(function(item)
+                -- Don't show lsp text and snippets
+                return item.kind ~= cmp_kind.Text and item.kind ~= cmp_kind.Snippet
+              end, items)
+            end,
+          },
           git = {
             module = "blink-cmp-git",
             name = "Git",
             enabled = function()
-              return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
+              return vim.tbl_contains({ "octo", "gitcommit" }, vim.bo.filetype)
             end,
           },
         },
