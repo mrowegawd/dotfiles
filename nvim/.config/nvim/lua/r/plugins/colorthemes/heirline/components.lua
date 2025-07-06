@@ -659,6 +659,9 @@ M.LSPActive = {
   {
     provider = function(self)
       local lsp_clients_str = table.concat(self.names, ", ") -- "  "
+      if not Conditions.width_percent_below(#lsp_clients_str, 0.33) then
+        return "~too many~"
+      end
       return lsp_clients_str
     end,
     hl = { fg = colors.normal_fg_white, bold = true },
