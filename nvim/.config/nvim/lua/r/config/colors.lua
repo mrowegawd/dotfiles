@@ -2105,18 +2105,6 @@ local function colorscheme_overrides()
         },
       },
 
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.75 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
-
       -- STATUSLINE
       {
         StatusLine = {
@@ -2137,6 +2125,18 @@ local function colorscheme_overrides()
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.2 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
+          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          italic = true,
+          bold = false,
         },
       },
 
