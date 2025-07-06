@@ -58,7 +58,8 @@ keymap.set("n", "o", function()
   vim.schedule(function()
     local folded_line = vim.fn.foldclosed(vim.fn.line ".")
     if folded_line ~= -1 then
-      vim.cmd [[normal! zO]] -- buka fold
+      -- vim.cmd [[normal! zO]]
+      vim.cmd "normal! zv" -- buka fold
     end
   end)
 end, {
