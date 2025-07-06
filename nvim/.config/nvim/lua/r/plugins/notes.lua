@@ -28,6 +28,20 @@ return {
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
+      {
+        "<Localleader>at",
+        function()
+          RUtils.notes.grep_title()
+        end,
+        desc = "Note: grep title orgmode [orgmode]",
+      },
+      {
+        "<Localleader>aT",
+        function()
+          RUtils.notes.grep_title(true)
+        end,
+        desc = "Note: grep orgmode [orgmode]",
+      },
     },
     dependencies = { "akinsho/org-bullets.nvim" },
     opts = function()
@@ -407,6 +421,7 @@ return {
         "<Localleader>aft",
         function()
           if vim.bo.filetype ~= "markdown" then
+            ---@diagnostic disable-next-line: undefined-field
             RUtils.warn("Cannot continue..\nThis not wiki or markdown file!", { title = "Obsidian" })
             return
           end

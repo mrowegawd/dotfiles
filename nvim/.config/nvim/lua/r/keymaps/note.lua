@@ -1,6 +1,10 @@
 local M = {}
 
 function M.neorg_mappings_ft(bufnr)
+  RUtils.cmd.create_command("NotePrintOutTags", function()
+    RUtils.markdown.find_note_by_tag({}, is_set, true)
+  end, { desc = "Note: print out tags" })
+
   local mappings = {
     ["n"] = {
       ["gs"] = {

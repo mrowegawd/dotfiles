@@ -125,6 +125,7 @@ function M.open_with_mvp_or_sxiv(is_selection)
     end
 
     vim.fn.jobstart(cmds, { detach = true })
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info(notif_msg .. url, { title = "Open With" })
   end
 end
@@ -207,6 +208,7 @@ function M.follow_link(is_selection)
     end
 
     vim.fn.jobstart(cmds, { detach = true })
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info(notif_msg .. url, { title = "Open With" })
   end
 end
@@ -279,7 +281,8 @@ local function json_output_wrapper(json_str)
   end
 end
 
-local function collect_all_tags_async(data, cb)
+local function collect_all_tags_async(data, cb, is_for_tags)
+  is_for_tags = is_for_tags or false
   data = data or {}
 
   local rg_optsc = "--no-config --json --type=md --ignore-case"
@@ -349,6 +352,13 @@ local function collect_all_tags_async(data, cb)
 
     if #data_tags_out > 0 then
       local data_tags = RUtils.cmd.remove_duplicates_tbl(data_tags_out)
+
+      if is_for_tags then
+        for _, x in pairs(data_tags) do
+          vim.api.nvim_put({ x }, "l", false, true)
+        end
+        return
+      end
       cb(data_tags)
     end
   end)()
@@ -366,34 +376,6 @@ end
 local builtin = require "fzf-lua.previewer.builtin"
 local Tagpreviewer = builtin.buffer_or_file:extend()
 
-function Tagpreviewer:new(o, opts, fzf_win)
-  Tagpreviewer.super.new(self, o, opts, fzf_win)
-  setmetatable(self, Tagpreviewer)
-  return self
-end
-
-function Tagpreviewer:parse_entry(entry_str)
-  local text = vim.split(entry_str, "|")
-
-  local data
-  if text then
-    for _, x in pairs(data_tags_table) do
-      if x.title == text[2] then
-        data = {
-          path = x.path,
-          line = x.line_number,
-          col = 1,
-        }
-      end
-    end
-  end
-
-  if data then
-    return data
-  end
-  return {}
-end
-
 local function picker(contents, actions)
   actions = actions
     or {
@@ -404,6 +386,7 @@ local function picker(contents, actions)
           if x.title == sel[2] then
             vim.cmd("e " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            vim.cmd "normal! zv"
           end
         end
       end,
@@ -415,6 +398,7 @@ local function picker(contents, actions)
           if x.title == sel[2] then
             vim.cmd("vsplit " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            vim.cmd "normal! zv"
             break
           end
         end
@@ -427,6 +411,7 @@ local function picker(contents, actions)
           if x.title == sel[2] then
             vim.cmd("split " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            vim.cmd "normal! zv"
             break
           end
         end
@@ -439,24 +424,65 @@ local function picker(contents, actions)
           if x.title == sel[2] then
             vim.cmd("tabe " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            vim.cmd "normal! zv"
             break
           end
         end
       end,
 
-      ["ctrl-y"] = function(selected, _)
+      ["ctrl-f"] = function(selected, _)
+        local path_items = {}
+
+        local check_tbl_element = function(tbl, _path)
+          for _, x in pairs(tbl) do
+            if x == _path then
+              return true
+            end
+          end
+          return false
+        end
+
+        if #selected > 1 then
+          for _, sel in pairs(selected) do
+            local seltitle = vim.split(sel, "|")
+            for _, x in pairs(data_tags_table) do
+              if x.title == seltitle[2] then
+                if not check_tbl_element(path_items, x.path) then
+                  path_items[#path_items + 1] = x.path
+                end
+              end
+            end
+          end
+        else
+          local sel = selected[1]
+          sel = vim.split(sel, "|")
+          for _, x in pairs(data_tags_table) do
+            if x.title == sel[2] then
+              if not check_tbl_element(path_items, x.path) then
+                path_items[#path_items + 1] = x.path
+              end
+            end
+          end
+        end
+
+        M.find_local_titles(path_items)
+      end,
+
+      ["ctrl-x"] = function(selected, _)
         local sel = selected[1]
         sel = vim.split(sel, " ")
-        -- sel = vim.split(sel[1], " ")
 
         table.insert(insert_tags, sel[1])
-        print("Add tag: " .. vim.inspect(insert_tags))
+        insert_tags = RUtils.cmd.remove_duplicates_tbl(insert_tags)
 
+        ---@diagnostic disable-next-line: undefined-field
+        RUtils.info("Add tag: " .. vim.inspect(insert_tags), { title = "Markdown" })
         require("fzf-lua").actions.resume()
       end,
 
-      ["ctrl-x"] = function()
+      ["ctrl-e"] = function()
         if #insert_tags == 0 then
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
           require("fzf-lua").actions.resume()
           return
@@ -570,15 +596,39 @@ local function picker(contents, actions)
       end,
     }
 
+  function Tagpreviewer:new(o, opts, fzf_win)
+    Tagpreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, Tagpreviewer)
+    return self
+  end
+
+  function Tagpreviewer:parse_entry(entry_str)
+    local text = vim.split(entry_str, "|")
+
+    local data
+    if text then
+      for _, x in pairs(data_tags_table) do
+        if x.title == text[2] then
+          data = {
+            path = x.path,
+            line = x.line_number,
+            col = 1,
+          }
+        end
+      end
+    end
+
+    if data then
+      return data
+    end
+    return {}
+  end
+
   return fzf_lua.fzf_exec(contents, {
-    previewer = {
-      _ctor = function()
-        return Tagpreviewer
-      end,
-    },
+    previewer = Tagpreviewer,
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = format_prompt_strings() },
-    fzf_opts = { ["--header"] = [[CTRL-Y:addtag  CTRL-X:filtertag  CTRL-R:reload  CTRL-G:grep]] },
+    fzf_opts = { ["--header"] = [[CTRL-X:addtag  CTRL-G:grep  CTRL-R:reload  CTRL-F:greptitle  CTRL-E:filtertag]] },
     actions = actions,
   })
 end
@@ -706,8 +756,9 @@ end
 local regex_title = [[^#{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
 local regex_title_org = [[^\*{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
 
-function M.find_note_by_tag(data, is_set)
+function M.find_note_by_tag(data, is_set, is_for_tags)
   is_set = is_set or false
+  is_for_tags = is_for_tags or false
   data = data or {}
   local tags = data.fargs or {}
 
@@ -737,9 +788,8 @@ function M.find_note_by_tag(data, is_set)
     collect_all_tags_async(tags, function(all_tags)
       -- print(vim.inspect(all_tags))
       -- vim.schedule(function()
-      list_tags_async(all_tags)
-      -- end)
-    end)
+      list_tags_async(all_tags, is_set)
+    end, is_for_tags)
   end
 end
 
@@ -764,9 +814,23 @@ function M.find_global_titles()
   }
 end
 
-function M.find_local_titles()
-  local starting_bufname = vim.api.nvim_buf_get_name(0)
-  local fullname = vim.fn.fnamemodify(starting_bufname, ":p")
+function M.find_local_titles(item_paths)
+  item_paths = item_paths or {}
+
+  local _is_single = true
+  local filename = ""
+
+  if #item_paths == 0 then
+    local starting_bufname = vim.api.nvim_buf_get_name(0)
+    filename = vim.fn.fnamemodify(starting_bufname, ":p")
+  else
+    if #item_paths == 1 then
+      filename = item_paths[1]
+    else
+      _is_single = false
+      filename = table.concat(item_paths, " ")
+    end
+  end
 
   function Tagpreviewer:new(o, opts, fzf_win)
     Tagpreviewer.super.new(self, o, opts, fzf_win)
@@ -779,15 +843,31 @@ function M.find_local_titles()
     if not idx then
       return {}
     end
-    local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
-    if entry_str_strip then
-      local x = vim.split(entry_str_strip, ":")
-      return {
-        path = fullname,
-        line = idx,
-        col = 1,
-      }
+
+    if not _is_single then
+      local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
+      if entry_str_strip then
+        local entry_str_strip_split = vim.split(entry_str_strip, ":")[1]
+        local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+
+        if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
+          local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
+          local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+
+          for _, x in pairs(item_paths) do
+            if x == str_fmt_fullname then
+              filename = x
+            end
+          end
+        end
+      end
     end
+
+    return {
+      path = filename,
+      line = idx,
+      col = 1,
+    }
   end
 
   return fzf_lua.grep {
@@ -795,9 +875,10 @@ function M.find_local_titles()
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    -- search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    search = regex_title,
     rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
-      .. fullname
+      .. filename
       .. " -e ",
     fzf_opts = {
       ["--delimiter"] = "[:\t]",
@@ -810,7 +891,7 @@ function M.find_local_titles()
     winopts = {
       -- fullscreen = true,
       title = RUtils.fzflua.format_title("Local titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
-      width = 0.80,
+      width = 1,
       height = 0.90,
       preview = {
         vertical = "down:55%", -- up|down:size
@@ -821,8 +902,11 @@ function M.find_local_titles()
       ["enter"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then
+          vim.cmd("e " .. filename)
           sel = vim.split(sel, ":")
-          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+          local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
+          vim.api.nvim_win_set_cursor(0, { row, 1 })
+          vim.cmd "normal! zv"
         end
       end,
 
@@ -830,8 +914,10 @@ function M.find_local_titles()
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then
           sel = vim.split(sel, ":")
-          vim.cmd("vsplit " .. fullname)
-          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+          local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
+          vim.cmd("vsplit " .. filename)
+          vim.api.nvim_win_set_cursor(0, { row, 1 })
+          vim.cmd "normal! zv"
         end
       end,
 
@@ -839,16 +925,20 @@ function M.find_local_titles()
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then
           sel = vim.split(sel, ":")
-          vim.cmd("split " .. fullname)
-          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+          local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
+          vim.cmd("split " .. filename)
+          vim.api.nvim_win_set_cursor(0, { row, 1 })
+          vim.cmd "normal! zv"
         end
       end,
       ["ctrl-t"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then
           sel = vim.split(sel, ":")
-          vim.cmd("tabe " .. fullname)
-          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+          local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
+          vim.cmd("tabe " .. filename)
+          vim.api.nvim_win_set_cursor(0, { row, 1 })
+          vim.cmd "normal! zv"
         end
       end,
     },
@@ -903,6 +993,7 @@ function M.find_backlinks()
 
   if not is_str then
     local char_under_cursor = vim.fn.expand "<cWORD>"
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.warn("'" .. char_under_cursor .. "' is not the link, this is the link --> [[ ... ]]", { title = "Markdown" })
     return
   end
@@ -1054,6 +1145,7 @@ M.go_to_heading = function(anchor_text, reverse)
       end
       row = (reverse and row - 1) or row + 1
       if row == starting_row + 1 then
+        ---@diagnostic disable-next-line: cast-local-type
         continue = nil
         if anchor_text == nil then
           local message = "⬇️  Couldn't find a heading to go to!"
@@ -1073,6 +1165,7 @@ M.go_to_heading = function(anchor_text, reverse)
         row = (reverse and vim.api.nvim_buf_line_count(0)) or 1
         in_fenced_code_block = false
       else
+        ---@diagnostic disable-next-line: cast-local-type
         continue = nil
         local place = (reverse and "beginning") or "end"
         local preposition = (reverse and "after") or "before"
