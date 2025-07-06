@@ -1,8 +1,56 @@
 ---@class r.utils.notes
 local M = {}
 
-local scan = require "plenary.scandir"
-local Path = require "plenary.path"
+local load_plenary_plugin = function()
+  local scan = require "plenary.scandir"
+  local Path = require "plenary.path"
+  return Path, scan
+end
+
+local load_opts_orgmode = function()
+  local plugin = require("lazy.core.config").plugins["orgmode"]
+  local Plugin = require "lazy.core.plugin"
+  local opts_plugin = Plugin.values(plugin, "opts", false)
+  return opts_plugin
+end
+
+local get_tbl_backup_and_todos = function(scan, is_ignore_file)
+  is_ignore_file = is_ignore_file or false
+
+  local opts_plugin = load_opts_orgmode()
+
+  local org_backup = {}
+  local org_todos = {}
+  for _, x in pairs(opts_plugin.org_agenda_files) do
+    local path
+    if string.match(x, [[%*%*]], 1) then
+      path = string.gsub(x, [[%/%*%*/%*$]], "")
+    else
+      path = string.gsub(x, [[%/%*$]], "")
+    end
+    local dirs = scan.scan_dir(path)
+    for _, file_path in pairs(dirs) do
+      if is_ignore_file and (not string.match(file_path, "org_archive")) then
+        local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org$")
+        if check_org_ext then
+          local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
+          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+          table.insert(org_todos, basename_file)
+        end
+      else
+        -- include file org_archive
+        local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org")
+        if check_org_ext then
+          local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
+          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+          table.insert(org_todos, basename_file)
+        end
+      end
+    end
+  end
+
+  return org_backup, org_todos
+end
 
 local function opts_fzf(title, maps)
   vim.validate {
@@ -39,32 +87,55 @@ local function opts_fzf(title, maps)
   }
 end
 
-function M.open_agenda_file_lists()
-  local plugin = require("lazy.core.config").plugins["orgmode"]
-  local Plugin = require "lazy.core.plugin"
-  local opts_plugin = Plugin.values(plugin, "opts", false)
+function M.grep_title(is_live_grep)
+  is_live_grep = is_live_grep or false
 
-  local org_backup = {}
-  local org_todos = {}
-  for _, x in pairs(opts_plugin.org_agenda_files) do
-    local path
-    if string.match(x, [[%*%*]], 1) then
-      path = string.gsub(x, [[%/%*%*/%*$]], "")
-    else
-      path = string.gsub(x, [[%/%*$]], "")
+  local _, scan = load_plenary_plugin()
+  local org_backup, _ = get_tbl_backup_and_todos(scan)
+
+  local extract_str_rg = function(tbl)
+    local newtbl = {}
+    for _, x in pairs(tbl) do
+      newtbl[#newtbl + 1] = x.full_path
     end
-    local dirs = scan.scan_dir(path)
-    for _, file_path in pairs(dirs) do
-      if not string.match(file_path, "org_archive") then
-        local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org$")
-        if check_org_ext then
-          local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
-          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
-          table.insert(org_todos, basename_file)
-        end
-      end
-    end
+    return newtbl
   end
+
+  local regex_title = [[^\*{1,}\s[\w<`].*$]]
+  local cas = extract_str_rg(org_backup)
+
+  local rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+    .. table.concat(cas, " ")
+    .. " -e "
+
+  if is_live_grep then
+    return require("fzf-lua").live_grep {
+      no_esc = true,
+      rg_glob = false,
+      rg_opts = rg_opts,
+      winopts = {
+        title = RUtils.fzflua.format_title("Grep Orgmode", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)),
+      },
+    }
+  end
+
+  return require("fzf-lua").grep {
+    no_esc = true,
+    rg_glob = false,
+    rg_opts = rg_opts,
+    search = regex_title,
+    winopts = {
+      title = RUtils.fzflua.format_title(
+        "Grep Title Orgmode",
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)
+      ),
+    },
+  }
+end
+
+function M.open_agenda_file_lists()
+  local Path, scan = load_plenary_plugin()
+  local org_backup, org_todos = get_tbl_backup_and_todos(scan, true)
 
   local contains_match = function(str_path, str)
     if str_path:match(str) then
@@ -148,4 +219,5 @@ function M.open_agenda_file_lists()
 
   require("fzf-lua").fzf_exec(org_todos, opts_fzf(opts.title, opts))
 end
+
 return M
