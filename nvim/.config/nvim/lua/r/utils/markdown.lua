@@ -100,7 +100,6 @@ function M.open_with_mvp_or_sxiv(is_selection)
   if uri ~= "" then
     url = uri
   else
-    print "fasdfa"
     if not is_selection then
       url = string.format("https://google.com/search?q=%s", url)
     end
@@ -908,6 +907,90 @@ function M.find_local_titles(item_paths)
           vim.api.nvim_win_set_cursor(0, { row, 1 })
           vim.cmd "normal! zv"
         end
+      end,
+
+      ["ctrl-q"] = function(selected, _)
+        local items = {}
+        local _text, lnum
+        if #selected > 1 then
+          for _, sel in pairs(selected) do
+            local sel_strip = RUtils.fzflua.__strip_str(sel)
+            if sel_strip then
+              local split_sel = vim.split(sel_strip, ":")
+              if _is_single then
+                _text = split_sel[3]
+                lnum = split_sel[1]
+              else
+                _text = split_sel[4]
+                lnum = split_sel[2]
+
+                local entry_str_strip_split = vim.split(sel_strip, ":")[1]
+                local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+
+                if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
+                  local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
+                  local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+
+                  for _, x in pairs(item_paths) do
+                    if x == str_fmt_fullname then
+                      filename = x
+                    end
+                  end
+                end
+              end
+            end
+
+            items[#items + 1] = {
+              filename = filename,
+              lnum = lnum,
+              col = 1,
+              text = _text,
+            }
+          end
+        else
+          local sel_strip = RUtils.fzflua.__strip_str(selected[1])
+          if sel_strip then
+            local split_sel = vim.split(sel_strip, ":")
+
+            if _is_single then
+              _text = split_sel[3]
+              lnum = split_sel[1]
+            else
+              _text = split_sel[4]
+              lnum = split_sel[2]
+
+              local entry_str_strip_split = split_sel[1]
+              local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+
+              if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
+                local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
+                local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+
+                for _, x in pairs(item_paths) do
+                  if x == str_fmt_fullname then
+                    filename = x
+                  end
+                end
+              end
+            end
+          end
+
+          items[#items + 1] = {
+            filename = filename,
+            lnum = lnum,
+            col = 1,
+            text = _text,
+          }
+        end
+
+        local what = {
+          idx = "$",
+          items = items,
+          title = "Tags Note Random",
+        }
+
+        vim.fn.setqflist({}, "r", what)
+        vim.cmd "copen"
       end,
 
       ["ctrl-v"] = function(selected, _)
