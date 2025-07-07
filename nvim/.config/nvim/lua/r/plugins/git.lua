@@ -634,7 +634,7 @@ return {
           vim.cmd(str_cmds)
         end,
         mode = "v",
-        desc = "Git: line hash history [diffview]",
+        desc = "Git: line hash history (visual) [diffview]",
       },
     },
     opts = function()

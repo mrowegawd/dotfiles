@@ -151,6 +151,7 @@ RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close buffer (forc
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete buffer" })
 RUtils.map.nnoremap("<Leader>bO", function()
   Snacks.bufdelete.other()
+  ---@diagnostic disable-next-line: undefined-field
   RUtils.info("Purge buffers", { title = "Buffers" })
 end, { desc = "Buffer: delete all other buffers" })
 RUtils.map.nnoremap("gh", function()
@@ -252,7 +253,7 @@ end, {
 })
 
 RUtils.map.vnoremap(
-  "<Leader>gV",
+  "<Leader>gd",
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
@@ -319,6 +320,7 @@ RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
 RUtils.map.nnoremap("<Leader>P", function()
   local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
+  ---@diagnostic disable-next-line: undefined-field
   RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
 end, { desc = "Misc: printout current path" })
 local function replace_keymap(confirmation, visual)
@@ -543,18 +545,21 @@ RUtils.map.nnoremap("<Leader>of", function()
       if RUtils.has "resession.nvim" then
         return require("resession").load()
       end
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.info "no session to load. abort it"
     end,
     session_load_cwd = function()
       if RUtils.has "resession.nvim" then
         return require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
       end
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.info "no session cwd to load. abort it"
     end,
     session_delete = function()
       if RUtils.has "resession.nvim" then
         return require("resession").delete()
       end
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.info "no plugin session actived. abort it"
     end,
     session_save = function()
@@ -564,12 +569,14 @@ RUtils.map.nnoremap("<Leader>of", function()
       if RUtils.has "resession.nvim" then
         return require("resession").save()
       end
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.info "no session to save or no plugin session actived. abort it"
     end,
     session_save_cwd = function()
       if RUtils.has "resession.nvim" then
         return require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
       end
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.info "no session cwd to save or no plugin session actived. abort it"
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
@@ -612,14 +619,17 @@ RUtils.map.nnoremap("<Leader>gof", function()
         vim.cmd [[GitConflictListQf]]
       end,
       git_conflict_pilih_current_ours = function()
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing ours (current)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseOurs]]
       end,
       git_conflict_pilih_theirs = function()
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseTheirs]]
       end,
       git_conflict_pilih_none = function()
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseNone]]
       end,

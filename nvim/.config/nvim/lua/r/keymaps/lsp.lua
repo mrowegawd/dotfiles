@@ -140,6 +140,7 @@ function M.get()
       "<Leader>uD",
       function()
         local new_value = not vim.diagnostic.config().virtual_lines
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })
         vim.diagnostic.config { virtual_lines = new_value }
         return new_value
