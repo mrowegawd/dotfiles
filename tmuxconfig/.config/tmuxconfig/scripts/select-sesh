@@ -5,7 +5,7 @@
 set -- 'tmux capture-pane -pe -S' \
   '$(start=$(( $(tmux display-message -t {1} -p "#{pane_height}")' \
   '- 10 ));' \
-  '(( start>0 )) && echo $start || echo 0) -t {2} || echo -e "\n" && toilet -f mono12 "Session inactive"'
+  '(( start>0 )) && echo $start || echo 0) -t {2} || echo -e "\nSession\ninactive !!" | toilet -f pagga'
 
 preview_cmd=$*
 
