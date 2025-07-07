@@ -7,7 +7,7 @@ return {
       bigfile = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
-      scroll = { enabled = true },
+      scroll = { enabled = false },
       input = {
         -- https://github.com/folke/snacks.nvim/blob/bc0630e43be5699bb94dadc302c0d21615421d93/lua/snacks/input.lua#L53
         enabled = true,
@@ -76,7 +76,7 @@ return {
         },
       },
       words = { enabled = true },
-      image = { enabled = false },
+      image = { enabled = true },
       dashboard = {
         pane_gap = 5, -- empty columns between vertical panes
         row = nil,

@@ -24,6 +24,16 @@ return {
           filetypes_include = {},
           -- to fully override the default_config, change the below
           -- filetypes = {}
+
+          settings = {
+            tailwindCSS = {
+              includeLanguages = {
+                elixir = "html-eex",
+                eelixir = "html-eex",
+                heex = "html-eex",
+              },
+            },
+          },
         },
       },
       setup = {
@@ -41,15 +51,15 @@ return {
           end, opts.filetypes)
 
           -- Additional settings for Phoenix projects
-          opts.settings = {
-            tailwindCSS = {
-              includeLanguages = {
-                elixir = "html-eex",
-                eelixir = "html-eex",
-                heex = "html-eex",
-              },
-            },
-          }
+          -- opts.settings = {
+          --   tailwindCSS = {
+          --     includeLanguages = {
+          --       elixir = "html-eex",
+          --       eelixir = "html-eex",
+          --       heex = "html-eex",
+          --     },
+          --   },
+          -- }
 
           -- Add additional filetypes
           vim.list_extend(opts.filetypes, opts.filetypes_include or {})

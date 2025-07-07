@@ -4,6 +4,8 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 opt.buflisted = false
 opt.winfixheight = true
 opt.cursorline = true
+opt.number = false
+opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 
 keymap.set("n", "<c-i>", "<Nop>", {

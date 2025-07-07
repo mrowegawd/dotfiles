@@ -159,7 +159,7 @@ return {
             winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
             cwd = codecompanion_cwd,
             fzf_opts = {
-              ["--header"] = [[CTRL-R:rgflow  CTRL-G:Grep_codecompanion  CTRL-G:DeleteFile_codecompanion  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-U:toggle-hidden]],
+              ["--header"] = [[CTRL-R:rgflow  CTRL-G:grep  CTRL-X:delete  CTRL-Y:yank  CTRL-G:ignore  CTRL-E:hidden]],
             },
 
             actions = {
@@ -172,6 +172,7 @@ return {
               ["ctrl-x"] = function(selected, _)
                 local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(selected[1])
                 if vim.fn.filereadable(file_path) ~= 1 then
+                  ---@diagnostic disable-next-line: undefined-field
                   RUtils.error("File does not exist: " .. file_path, { title = "Codecompanion File Saved" })
                   return
                 end
@@ -182,6 +183,7 @@ return {
                   return
                 end
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
                 require("fzf-lua").actions.resume()
               end,
