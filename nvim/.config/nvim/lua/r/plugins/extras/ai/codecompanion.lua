@@ -130,6 +130,7 @@ return {
       -- "jellydn/spinner.nvim", -- Show loading spinner when request is started
       "nvim-treesitter/nvim-treesitter",
       { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
+      { "franco-ruggeri/codecompanion-spinner.nvim", opts = {} },
     },
     keys = {
       {
@@ -167,21 +168,28 @@ return {
                 }
               end,
               ["ctrl-x"] = function(selected, _)
-                local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(selected[1])
-                if vim.fn.filereadable(file_path) ~= 1 then
-                  ---@diagnostic disable-next-line: undefined-field
-                  RUtils.error("File does not exist: " .. file_path, { title = "Codecompanion File Saved" })
-                  return
+                local del_tbl = {}
+                if #selected > 1 then
+                  del_tbl = selected
+                else
+                  del_tbl[#del_tbl + 1] = selected[1]
                 end
 
-                local ok, err = os.remove(file_path)
-                if not ok then
-                  RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
-                  return
+                if #del_tbl > 0 then
+                  for _, dir in pairs(del_tbl) do
+                    local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(dir)
+                    if vim.fn.filereadable(file_path) == 1 then
+                      local ok, err = os.remove(file_path)
+                      if ok then
+                        ---@diagnostic disable-next-line: undefined-field
+                        RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
+                      else
+                        RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
+                      end
+                    end
+                  end
                 end
 
-                ---@diagnostic disable-next-line: undefined-field
-                RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
                 require("fzf-lua").actions.resume()
               end,
             },
@@ -1031,7 +1039,7 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
     end,
     config = function(_, opts)
       require("codecompanion").setup(opts)
-      RUtils.codecompanion_fidget:init()
+      -- RUtils.codecompanion_fidget:init()
     end,
   },
   -- RENDER-MARKDOWN
