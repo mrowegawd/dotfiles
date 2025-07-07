@@ -315,7 +315,7 @@ local function picker(contents, actions)
         end,
       },
 
-      ["ctrl-q"] = function(selected, _)
+      ["alt-q"] = function(selected, _)
         local function check_tbl_element(tbl, element)
           for _, x in pairs(tbl) do
             if x["text"] == element then
@@ -698,7 +698,7 @@ function M.find_local_titles(item_paths)
         end
       end,
 
-      ["ctrl-q"] = function(selected, _)
+      ["alt-q"] = function(selected, _)
         local items = {}
         local _text, lnum
         if #selected > 1 then

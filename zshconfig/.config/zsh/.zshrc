@@ -650,8 +650,9 @@ bindkey -r "^s"
 autoload -U edit-command-line
 zle -N edit-command-line
 
-bindkey -M viins '^[q' edit-command-line # alt-q
-bindkey -M viins 'hh' vi-cmd-mode        # 'jk' for Escape
+# bindkey -M viins '^[q' edit-command-line # alt-q
+bindkey -M viins '^q' edit-command-line   # c-q
+bindkey -M viins 'hh' vi-cmd-mode         # 'jk' for Escape
 
 bindkey '^R' history-incremental-search-backward
 bindkey '^P' up-history

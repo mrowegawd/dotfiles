@@ -421,7 +421,7 @@ return {
             --   actions.toggle_opt(opts, "hidden")
             --   actions.toggle_opt(opts, "no_ignore")
             -- end,
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -500,7 +500,7 @@ return {
               -- },
               ["left"] = false,
               ["right"] = false,
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = { actions.git_stage_unstage, actions.resume },
               ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
@@ -516,7 +516,7 @@ return {
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
@@ -586,7 +586,7 @@ return {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-g"] = function()
                 local bufnr = vim.fn.bufnr()
@@ -653,7 +653,7 @@ return {
             },
             actions = {
               ["default"] = actions.git_switch,
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
             },
           },
           stash = {
@@ -773,7 +773,7 @@ return {
                 },
               }
             end,
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
@@ -803,7 +803,7 @@ return {
           files_only = true,
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
           },
         },
         jumps = { prompt = RUtils.fzflua.default_title_prompt() },
@@ -841,7 +841,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = { ["--with-nth"] = "-1.." },
-          actions = { ["ctrl-q"] = actions.file_sel_to_qf },
+          actions = { ["alt-q"] = actions.file_sel_to_qf },
         },
         highlights = {
           prompt = RUtils.fzflua.default_title_prompt(),
@@ -860,7 +860,7 @@ return {
           actions = {
             -- actions inherit from 'actions.buffers' and merge
             ["default"] = actions.buf_switch,
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-x"] = { actions.buf_del, actions.resume },
           },
           fzf_opts = {
@@ -891,7 +891,7 @@ return {
           actions = {
             ["default"] = actions.buf_edit_or_qf,
 
-            ["ctrl-q"] = actions.buf_sel_to_qf,
+            ["alt-q"] = actions.buf_sel_to_qf,
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -936,7 +936,7 @@ return {
             ["default"] = actions.buf_edit_or_qf,
 
             ["alt-l"] = actions.buf_sel_to_ll,
-            ["ctrl-q"] = actions.buf_sel_to_qf,
+            ["alt-q"] = actions.buf_sel_to_qf,
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -1016,7 +1016,7 @@ return {
             }
           end,
           actions = {
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-v"] = actions.file_vsplit,
             ["ctrl-s"] = actions.file_split,
             ["ctrl-t"] = actions.file_tabedit,
@@ -1048,7 +1048,7 @@ return {
               ["--reverse"] = false,
             },
             actions = {
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-g"] = actions.grep_lgrep,
               ["ctrl-x"] = function()
                 local opts = {
@@ -1124,7 +1124,7 @@ return {
               }
             end,
             actions = {
-              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["alt-q"] = actions.file_sel_to_qf,
             },
           },
         },
@@ -1137,7 +1137,7 @@ return {
           diag_icons = true,
           icon_padding = "", -- add padding for wide diagnostics signs
           actions = {
-            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = actions.file_sel_to_qf,
           },
         },
         complete_path = {
