@@ -5,45 +5,48 @@ local M = {}
 local executable = "maim"
 local file_options = "-s"
 
-M.build_dir_img = function(input_png)
+local build_dir_img = function(input_png)
   assert(input_png ~= nil, "output_path must be a provided")
   assert(type(input_png) == "string", "output_path must be a string")
 
-  local img_dir_path, img_for
+  local image_subdir, filetype_label
   if vim.bo.filetype == "norg" then
-    img_dir_path = "img"
-    img_for = "norg"
+    image_subdir = "img"
+    filetype_label = "norg"
   elseif vim.bo.filetype == "markdown" then
-    img_dir_path = "assets"
-    img_for = "markdown"
+    image_subdir = "assets"
+    filetype_label = "markdown"
   else
     RUtils.warn("unsupported filetype (" .. vim.bo.filetype .. ")", { title = "Maim: Insert Image" })
     return
   end
 
-  local current_buffer = vim.api.nvim_buf_get_name(0)
-  local current_directory = vim.fs.dirname(current_buffer)
-  local fullpath = current_directory .. "/" .. img_dir_path
-  RUtils.file.create_dir(fullpath) -- will create dir if not exists
+  local buffer_path = vim.api.nvim_buf_get_name(0)
+  local buffer_directory = vim.fs.dirname(buffer_path)
+  local image_directory_path = buffer_directory .. "/" .. image_subdir
 
-  local locate_img_path = "./" .. img_dir_path .. "/" .. input_png -- neorg
-  fullpath = fullpath .. "/" .. input_png
-  local command = executable .. " " .. file_options .. " " .. fullpath
-  local add_string_img = ".image " .. locate_img_path
-  if img_for == "markdown" then
-    locate_img_path = "./" .. img_dir_path .. "/" .. input_png
-    command = executable .. " " .. file_options .. " " .. fullpath
-    add_string_img = "![" .. input_png .. "](" .. locate_img_path .. ")" -- markdown
+  RUtils.file.create_dir(image_directory_path) -- will create dir if not exists
+
+  local relative_image_path = "./" .. image_subdir .. "/" .. input_png
+  local absolute_image_path = image_directory_path .. "/" .. input_png
+  local maim_command = executable .. " " .. file_options .. " " .. absolute_image_path
+  local image_insert_syntax = ".image " .. relative_image_path
+
+  if filetype_label == "markdown" then
+    relative_image_path = "./" .. image_subdir .. "/" .. input_png
+    maim_command = executable .. " " .. file_options .. " " .. absolute_image_path
+    image_insert_syntax = "![" .. input_png .. "](" .. relative_image_path .. ")" -- markdown
   end
 
-  if RUtils.file.exists(fullpath) then
+  if RUtils.file.exists(absolute_image_path) then
     RUtils.warn "image name already exists"
     return
   end
 
-  vim.fn.systemlist(command)
+  print(maim_command)
+  vim.fn.systemlist(maim_command)
 
-  return add_string_img
+  return image_insert_syntax
 end
 
 M.insert = function()
@@ -57,7 +60,7 @@ M.insert = function()
     input = input:gsub("%s", "_")
     input = input:gsub("%.", "_")
     local input_png = input .. ".png"
-    local add_string_img = M.build_dir_img(input_png)
+    local add_string_img = build_dir_img(input_png)
     if add_string_img then
       vim.cmd("normal A" .. add_string_img)
     end

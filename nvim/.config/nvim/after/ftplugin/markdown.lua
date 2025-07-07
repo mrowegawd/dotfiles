@@ -1,9 +1,15 @@
 local keymap, opt = vim.keymap, vim.opt_local
-
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
+
+local notif_msg = ""
+local command_markdown = {
+  MarkdownPreviewToggle = { cmd = "MarkdownPreviewToggle" },
+  SnipRun = { cmd = "SnipRun" },
+  ImgInsert = { cmd = "ImgInsert" },
+}
 
 keymap.set("n", "<Leader>rf", function()
   local opts = {
@@ -20,50 +26,32 @@ keymap.set("n", "<Leader>rf", function()
   opts.actions = vim.tbl_extend("keep", {
     ["default"] = function(selected, _)
       local sel = selected[1]
-      if sel == "MarkdownPreviewToggle" then
-        local notif_msg = ""
-        if vim.g.is_preview_markdown_off then
-          vim.g.is_preview_markdown_off = false
-          notif_msg = "turn ON the preview"
-        else
-          vim.g.is_preview_markdown_off = true
-          notif_msg = "turn OFF the preview"
+      for i, x in pairs(command_markdown) do
+        if i == sel then
+          if sel == "MarkdownPreviewToggle" then
+            if vim.g.is_preview_markdown_off then
+              vim.g.is_preview_markdown_off = false
+              notif_msg = "turn ON the preview"
+            else
+              vim.g.is_preview_markdown_off = true
+              notif_msg = "turn OFF the preview"
+            end
+
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.info(notif_msg, { title = "Tasks" })
+          end
+          vim.cmd(x.cmd)
         end
-
-        RUtils.info(notif_msg, { title = "Tasks" })
-        --       local lang_conf = {}
-        --       lang_conf["markdown"] = { "```", "```" }
-        --       lang_conf["vimwiki"] = { "{{{", "}}}" }
-        --       lang_conf["norg"] = { "@code", "@end" }
-        --       lang_conf["org"] = { "#+BEGIN_SRC", "#+END_SRC" }
-        --       lang_conf["markdown.pandoc"] = { "```", "```" }
-        --
-        --       local function code_block_start()
-        --         return lang_conf[vim.bo.filetype][1]
-        --       end
-        --
-        --       local function code_block_end()
-        --         return lang_conf[vim.bo.filetype][2]
-        --       end
-        --
-        --       local linenr_from = vim.fn.search(code_block_start() .. ".\\+$", "bnW")
-        --       local linenr_until = vim.fn.search(code_block_end() .. ".*$", "nW")
-        --
-        --       vim.cmd("normal! " .. linenr_from + 1 .. "G")
-        --       vim.cmd "normal! V"
-        --       vim.cmd("normal! " .. linenr_until - 1 .. "G")
-        --       RUtils.map.feedkey("<Leader>rf", "v")
-
-        vim.cmd(selected[1])
-      end
-
-      if sel == "Sniprun" then
-        vim.cmd [[SnipRun]]
       end
     end,
   }, {})
 
-  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert" }, opts)
+  local tbl_cmds = {}
+  for i, _ in pairs(command_markdown) do
+    tbl_cmds[#tbl_cmds + 1] = i
+  end
+
+  fzf_lua.fzf_exec(tbl_cmds, opts)
 end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false
