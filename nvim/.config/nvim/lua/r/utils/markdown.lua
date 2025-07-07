@@ -1,244 +1,25 @@
 ---@class r.utils.markdown
 local M = {}
 
-local title, kind
-
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
-local function is_tag_or_link_at(line, col, opts)
-  opts = opts or {}
-  local initial_col = col
-
-  local char
-  local is_tagline = opts.tag_notation == "yaml-bare" and line:sub(1, 4) == "tags"
-
-  local seen_bracket = false
-  local seen_parenthesis = false
-  local seen_hashtag = false
-  local cannot_be_tag = false
-
-  -- Solves [[Link]]
-  --     at ^
-  -- In this case we try to move col forward to match the link.
-  if "[" == line:sub(col, col) then
-    col = math.max(col + 1, string.len(line))
-  end
-
-  while col >= 1 do
-    char = line:sub(col, col)
-
-    if seen_bracket then
-      if char == "[" then
-        return "link", col + 2
-      end
-    end
-
-    if seen_parenthesis then
-      -- Media link, currently identified by not link nor tag
-      if char == "]" then
-        return nil, nil
-      end
-    end
-
-    if char == "[" then
-      seen_bracket = true
-    elseif char == "(" then
-      seen_parenthesis = true
-    end
-
-    if is_tagline == true then
-      if char == " " or char == "\t" or char == "," or char == ":" then
-        if col ~= initial_col then
-          return "tag", col + 1
-        end
-      end
-    else
-      if char == "#" then
-        seen_hashtag = true
-      end
-      if char == "@" then
-        seen_hashtag = true
-      end
-      -- Tags should have a space before #, if not we are likely in a link
-      if char == " " and seen_hashtag and opts.tag_notation == "#tag" then
-        if not cannot_be_tag then
-          return "tag", col
-        end
-      end
-
-      if char == ":" and opts.tag_notation == ":tag:" then
-        if not cannot_be_tag then
-          return "tag", col
-        end
-      end
-    end
-
-    if char == " " or char == "\t" then
-      cannot_be_tag = true
-    end
-    col = col - 1
-  end
-  return nil, nil
-end
-
-local function check_for_link_or_tag()
-  local line = vim.api.nvim_get_current_line()
-  local col = vim.fn.col "."
-  return is_tag_or_link_at(line, col, {}) -- TODO: ini adalah yang salah
-end
-
-function M.open_with_mvp_or_sxiv(is_selection)
-  is_selection = is_selection or false
-
-  local url = vim.fn.expand "<cWORD>"
-
-  -- check jika terdapat `https` pada `url`
-  local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
-
-  -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-  --   url = string.format("https://github.com/%s", url)
-  if uri ~= "" then
-    url = uri
-  else
-    if not is_selection then
-      url = string.format("https://google.com/search?q=%s", url)
-    end
-
-    vim.cmd "normal yy"
-    title = vim.fn.getreg '"0'
-    title = title:gsub("^(%[)(.+)(%])$", "%2")
-    title = RUtils.cmd.remove_alias(title)
-
-    local parts = vim.split(title, "#")
-    if #parts > 0 then
-      url = string.format("https://google.com/search?q=%s", parts[1])
-    end
-    -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
-    local browser = os.getenv "NUBROWSER"
-    local notif_msg = "Open with browser: "
-    local cmds = { browser, url }
-    if vim.bo.filetype == "octo" then
-      notif_msg = "Open with mpv: "
-      cmds =
-        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
-    end
-
-    vim.fn.jobstart(cmds, { detach = true })
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.info(notif_msg .. url, { title = "Open With" })
-  end
-end
-
-function M.follow_link(is_selection)
-  is_selection = is_selection or false
-
-  local saved_reg = vim.fn.getreg '"0'
-  kind, _ = check_for_link_or_tag()
-
-  if kind == "link" then
-    vim.cmd "normal yi]"
-    title = vim.fn.getreg '"0'
-    title = title:gsub("^(%[)(.+)(%])$", "%2")
-    title = RUtils.cmd.remove_alias(title)
-  end
-
-  if kind ~= nil then
-    vim.fn.setreg('"0', saved_reg)
-
-    local parts = vim.split(title, "#")
-
-    -- if there is a #
-    if #parts ~= 1 then
-      title = parts[2]
-      parts = vim.split(title, "%^")
-      if #parts ~= 1 then
-        title = parts[2]
-      end
-      -- local search = require "obsidian.search"
-      -- search.find_notes_async(".", title .. ".md")
-      local rg_opts =
-        [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
-
-      fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
-    else
-      if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
-        vim.cmd "ObsidianFollowLink"
-      end
-    end
-  else
-    local url = vim.fn.expand "<cWORD>"
-
-    -- check jika terdapat `https` pada `url`
-    local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
-
-    -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-    --   url = string.format("https://github.com/%s", url)
-    if uri ~= "" then
-      if vim.bo.filetype == "markdown" then
-        if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
-          return vim.cmd "ObsidianFollowLink"
-        end
-      end
-      url = uri
-    else
-      if not is_selection then
-        url = string.format("https://google.com/search?q=%s", url)
-      end
-
-      vim.cmd "normal yy"
-      title = vim.fn.getreg '"0'
-      title = title:gsub("^(%[)(.+)(%])$", "%2")
-      title = RUtils.cmd.remove_alias(title)
-
-      local parts = vim.split(title, "#")
-      if #parts > 0 then
-        url = string.format("https://google.com/search?q=%s", parts[1])
-      end
-    end
-
-    -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
-    local browser = os.getenv "NUBROWSER"
-    local notif_msg = "Open with browser: "
-    local cmds = { browser, url }
-    if vim.bo.filetype == "octo" then
-      notif_msg = "Open with mpv: "
-      cmds =
-        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-15-60", url }
-    end
-
-    vim.fn.jobstart(cmds, { detach = true })
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.info(notif_msg .. url, { title = "Open With" })
-  end
-end
-
--- local TagCharsOptional = "[A-Za-z0-9_/-]*"
-local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
-
-local rg_opts =
-  "--column --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 "
-rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
-
--- local function cursor_tag(line, col)
---   local current_line = line and line or vim.api.nvim_get_current_line()
---   local _, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
---   cur_col = col or cur_col + 1 -- nvim_win_get_cursor returns 0-indexed column
---
---   for match in iter(search.find_tags(current_line)) do
---     local open, close, _ = unpack(match)
---     if open <= cur_col and cur_col <= close then
---       return string.sub(current_line, open + 1, close)
---     end
---   end
---
---   return nil
--- end
-
 local data_tags_table = {}
 local data_tags_out = {}
 local data_title_out = {}
-
 local insert_tags = {}
+
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
+local regex_title = [[^#{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
+local regex_title_org = [[^\*{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
+
+local builtin = require "fzf-lua.previewer.builtin"
+local Tagpreviewer = builtin.buffer_or_file:extend()
+
+-- local TagCharsOptional = "[A-Za-z0-9_/-]*"
+local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
+local rg_opts =
+  "--column --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 "
+
+rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 
 local function format_data_tags(data_tag)
   local line = string.gsub(data_tag.lines.text, '"(%d+)"', "%1")
@@ -292,8 +73,6 @@ local function collect_all_tags_async(data, cb, is_for_tags)
     .. ' -e "^#\\s[A-Za-z]+[A-Za-z0-9_/-]*[a-z0-9].*"'
     .. " "
     .. RUtils.config.path.wiki_path
-
-  -- print(msg_cmds)
 
   coroutine.wrap(function()
     local co = coroutine.running()
@@ -371,9 +150,6 @@ local function format_prompt_strings()
   end
   return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
 end
-
-local builtin = require "fzf-lua.previewer.builtin"
-local Tagpreviewer = builtin.buffer_or_file:extend()
 
 local function picker(contents, actions)
   actions = actions
@@ -752,8 +528,20 @@ local function list_tags_async(all_tags, is_set)
   return picker(contents)
 end
 
-local regex_title = [[^#{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
-local regex_title_org = [[^\*{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
+local function get_sel_text()
+  local title = vim.fn.expand "<cWORD>"
+  local stitle = title
+
+  if string.find(title, "%[") or string.find(title, "%]") then
+    vim.cmd "normal yi]"
+    title = vim.fn.getreg '"0'
+    stitle = string.gsub(stitle, "%[", "")
+    stitle = string.gsub(stitle, "%]", "")
+    return true, stitle
+  end
+
+  return false, stitle
+end
 
 function M.find_note_by_tag(data, is_set, is_for_tags)
   is_set = is_set or false
@@ -1055,21 +843,6 @@ function M.find_local_sitelink()
   }
 end
 
-local function get_sel_text()
-  title = vim.fn.expand "<cWORD>"
-  local stitle = title
-
-  if string.find(title, "%[") or string.find(title, "%]") then
-    vim.cmd "normal yi]"
-    title = vim.fn.getreg '"0'
-    stitle = string.gsub(stitle, "%[", "")
-    stitle = string.gsub(stitle, "%]", "")
-    return true, stitle
-  end
-
-  return false, stitle
-end
-
 function M.find_backlinks()
   local is_str, curr_line_func = get_sel_text()
   local stitle = curr_line_func
@@ -1170,7 +943,7 @@ function M.insert_global_titles()
   }
 end
 
-M.cursor_in_code_block = function(cursor_row, reverse)
+function M.cursor_in_code_block(cursor_row, reverse)
   if reverse == nil or reverse == false then
     reverse = false
   else
@@ -1189,8 +962,9 @@ M.cursor_in_code_block = function(cursor_row, reverse)
   return true
 end
 
--- Taken from and credit: https://github.com/jakewvincent/mkdnflow.nvim/blob/0fa1e682e35d46cd1a0102cedd05b0283e41d18d/lua/mkdnflow/cursor.lua#L138
-M.go_to_heading = function(anchor_text, reverse)
+function M.go_to_heading(anchor_text, reverse)
+  -- Taken from and credit: https://github.com/jakewvincent/mkdnflow.nvim/blob/0fa1e682e35d46cd1a0102cedd05b0283e41d18d/lua/mkdnflow/cursor.lua#L138
+
   -- Record which line we're on; chances are the link goes to something later,
   -- so we'll start looking from here onwards and then circle back to the beginning
   local position = vim.api.nvim_win_get_cursor(0)
