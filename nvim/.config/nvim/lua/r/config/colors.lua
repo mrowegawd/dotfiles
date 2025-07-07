@@ -1242,8 +1242,8 @@ local general_overrides = function()
 
     {
       ["@org.agenda.today"] = {
-        fg = { from = "@org.agenda.day", attr = "fg", alter = 0.6 },
-        bg = { from = "LineNr", attr = "fg", alter = 0.1 },
+        fg = { from = "@org.headline.level2.org", attr = "fg" },
+        -- bg = { from = "LineNr", attr = "fg", alter = 0.1 },
         bold = true,
         italic = true,
       },

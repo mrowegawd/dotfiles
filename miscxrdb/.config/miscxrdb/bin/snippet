@@ -121,7 +121,7 @@ RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
 
 SELECTED=$(
   echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
-    --header="^x:edit ^r:reload" \
+    --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" Bulk Snippet "

@@ -59,7 +59,7 @@ aliases() {
 
   SELECT=$(rg --pretty bash | awk '/\(\)/&& last {print last,"\n",$1,"\n"} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' |
     perl -0 -pe 's/\n\n/\0/gm' | $FZF_COMMAND --read0 --gap --multi --highlight-line --pointer='▌' \
-    --header="^x:edit ^r:reload" \
+    --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -76,7 +76,7 @@ surfingkeys() {
 
   SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
     column -t -s $'\t' | $FZF_COMMAND \
-    --header="^x:edit ^r:reload" \
+    --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -145,7 +145,7 @@ tmux() {
   {last=""} /^#/{last=$0}' "$TMUX_PATH" | sort |
       awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
       column -t -s ")" | fzf-tmux -xC -w 80% -h 80% -y 43% \
-      --header="^x:edit ^r:reload" \
+      --header="^x:edit  ^r:reload" \
       --bind="ctrl-x:execute($EDIT_CMD)" \
       --bind="ctrl-r:execute($RELOAD_CMD)" \
       --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -326,7 +326,7 @@ bulk_note_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^x:edit ^r:reload" \
+        --header="^x:edit  ^r:reload" \
         --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -358,7 +358,7 @@ bulk_show_snippets() {
   #    fzf-tmux -xC -w 80% -h 80% -y 43% \
   #      --read0 --multi --highlight-line --gap \
   #      --pointer='▌' \
-  #      --header="^x:edit ^r:reload" \
+  #      --header="^x:edit  ^r:reload" \
   #      --bind="ctrl-x:execute($EDIT_CMD)" \
   #      --bind="ctrl-r:execute($RELOAD_CMD)" \
   #      --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -373,7 +373,7 @@ bulk_show_snippets() {
   #   fzf-tmux -xC -w 80% -h 80% -y 43% \
   #     --read0 --multi --highlight-line --gap \
   #     --pointer='▌' \
-  #     --header="^x:edit ^r:reload" \
+  #     --header="^x:edit  ^r:reload" \
   #     --bind="ctrl-x:execute($EDIT_CMD)" \
   #     --bind="ctrl-r:execute($RELOAD_CMD)" \
   #     --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -384,7 +384,7 @@ bulk_show_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^x:edit ^r:reload" \
+        --header="^x:edit  ^r:reload" \
         --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -415,7 +415,7 @@ bulk_code_snippets() {
   #    fzf-tmux -xC -w 80% -h 80% -y 43% \
   #      --read0 --multi --highlight-line --gap \
   #      --pointer='▌' \
-  #      --header="^x:edit ^r:reload" \
+  #      --header="^x:edit  ^r:reload" \
   #      --bind="ctrl-x:execute($EDIT_CMD)" \
   #      --bind="ctrl-r:execute($RELOAD_CMD)" \
   #      --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -430,7 +430,7 @@ bulk_code_snippets() {
   ' "$TARGET_PATH" |
     fzf-tmux -xC -w 80% -h 80% -y 43% \
       --pointer='▌' \
-      --header="^x:edit ^r:reload" \
+      --header="^x:edit  ^r:reload" \
       --bind="ctrl-x:execute($EDIT_CMD)" \
       --bind="ctrl-r:execute($RELOAD_CMD)" \
       --border-label=" $TITLE_BORDER_LABEL [$1] " |
@@ -491,7 +491,7 @@ bulk_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^x:edit ^r:reload" \
+        --header="^x:edit  ^r:reload" \
         --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
