@@ -361,7 +361,7 @@ return {
         map("n", "<Leader>gub", function()
           gs.blame()
         end, "Toggle: git blame [gitsigns]")
-        map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: git deleted [gitsigns]")
+        map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: to check diff changes [gitsigns]")
         map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
 
         -- Sending to qf

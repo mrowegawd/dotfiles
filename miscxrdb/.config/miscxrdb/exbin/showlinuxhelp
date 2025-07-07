@@ -473,6 +473,9 @@ bulk_snippets() {
   "http-status")
     TARGET_PATH="$HOME/Dropbox/neorg/snippets/http-status.txt"
     ;;
+  "fugitive")
+    TARGET_PATH="$HOME/Dropbox/neorg/snippets/nvim/fugitive.txt"
+    ;;
   *)
     exit
     ;;
@@ -521,9 +524,11 @@ main() {
   "docker-volume") bulk_note_snippets "docker-volume" ;;
   "dpkg") bulk_note_snippets "dpkg" ;;
   "find") bulk_note_snippets "find" ;;
+  "fugitive") bulk_snippets "fugitive" ;;
   "fzf") bulk_snippets "fzf" ;;
   "git-fork") bulk_snippets "git-fork" ;;
   "grep") bulk_note_snippets "grep" ;;
+  "http-status") bulk_snippets "http-status" ;;
   "journalctl") bulk_note_snippets "journalctl" ;;
   "lazygit") bulk_show_snippets "lazygit" ;;
   "molecule") bulk_note_snippets "molecule" ;;
@@ -534,7 +539,6 @@ main() {
   "ppa") bulk_note_snippets "ppa" ;;
   "py-pip") bulk_snippets "py-pip" ;;
   "py-poetry") bulk_snippets "py-poetry" ;;
-  "http-status") bulk_snippets "http-status" ;;
   "py-uv") bulk_snippets "py-uv" ;;
   "quickfix") bulk_snippets "quickfix" ;;
   "rg") bulk_note_snippets "rg" ;;
