@@ -57,8 +57,6 @@ return {
           return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype == ""
         end,
       },
-      -- statuscolumn = { enabled = false }, -- we set this in options.lua
-      -- toggle = { map = LazyVim.safe_keymap_set },
       lazygit = {
         theme_path = os.getenv "HOME" .. "/.config/lazygit/theme/fla.yml",
         theme = {
@@ -76,7 +74,16 @@ return {
         },
       },
       words = { enabled = true },
-      image = { enabled = true },
+      styles = {
+        snacks_image = {
+          relative = "editor",
+          col = -1,
+        },
+      },
+      image = {
+        enabled = true,
+        doc = { inline = false, float = true, max_width = 60, max_height = 30 },
+      },
       dashboard = {
         pane_gap = 5, -- empty columns between vertical panes
         row = nil,

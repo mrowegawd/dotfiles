@@ -86,7 +86,7 @@ show_apt_search() {
 open_url() {
   get_fzf_options() {
     local fzf_options
-    local fzf_default_options='-w 70% -h 50% --multi -0 --no-preview --bind ctrl-a:toggle-all --prompt="Open URL> "'
+    local fzf_default_options='-w 70% -h 50% --multi -0 --no-preview --bind alt-a:toggle-all --prompt="Open URL> "'
     fzf_options="$(tmux show -gqv '@fzf-url-fzf-options')"
     [ -n "$fzf_options" ] && echo "$fzf_options" || echo "$fzf_default_options"
   }

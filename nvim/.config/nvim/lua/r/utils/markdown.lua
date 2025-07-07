@@ -255,7 +255,7 @@ local function picker(contents, actions)
         require("fzf-lua").actions.resume()
       end,
 
-      ["ctrl-e"] = function()
+      ["ctrl-o"] = function()
         if #insert_tags == 0 then
           ---@diagnostic disable-next-line: undefined-field
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
@@ -403,7 +403,8 @@ local function picker(contents, actions)
     previewer = Tagpreviewer,
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = format_prompt_strings() },
-    fzf_opts = { ["--header"] = [[CTRL-X:addtag  CTRL-G:grep  CTRL-R:reload  CTRL-F:greptitle  CTRL-E:filtertag]] },
+    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
+    fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^o:filtertag]] },
     actions = actions,
   })
 end

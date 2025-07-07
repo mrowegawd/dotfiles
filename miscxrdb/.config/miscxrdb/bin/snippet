@@ -49,6 +49,10 @@ SNIPPETS_GIT=(
   "lazygit"
 )
 
+SNIPPETS_CODE_PATTERN=(
+  "facade-python"
+)
+
 SNIPPETS=("SSH"
   "SSH-GUI"
   "aliases"
@@ -102,7 +106,7 @@ SNIPPETS=("SSH"
   "zathura"
 )
 
-ALL_SNIPPETS=("${SNIPPETS_PROGRAMMING[@]}" "${SNIPPETS[@]}" "${SNIPPETS_GIT[@]}")
+ALL_SNIPPETS=("${SNIPPETS_PROGRAMMING[@]}" "${SNIPPETS[@]}" "${SNIPPETS_GIT[@]}" "${SNIPPETS_CODE_PATTERN[@]}")
 
 not_in_tmux() {
   [ -z "$TMUX" ]
@@ -116,8 +120,8 @@ RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
 
 SELECTED=$(
   echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
-    --header="^e:edit ^r:reload" \
-    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --header="^x:edit ^r:reload" \
+    --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" Bulk Snippet "
 )

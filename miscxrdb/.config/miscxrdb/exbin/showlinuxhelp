@@ -59,8 +59,8 @@ aliases() {
 
   SELECT=$(rg --pretty bash | awk '/\(\)/&& last {print last,"\n",$1,"\n"} {last=""} /^#/{last=$0}' "$BASHRC_PATH" | sed 's/#//' |
     perl -0 -pe 's/\n\n/\0/gm' | $FZF_COMMAND --read0 --gap --multi --highlight-line --pointer='▌' \
-    --header="^e:edit ^r:reload" \
-    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --header="^x:edit ^r:reload" \
+    --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" $TITLE_BORDER_LABEL [$1] " |
     awk NF | tail -1)
@@ -76,8 +76,8 @@ surfingkeys() {
 
   SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
     column -t -s $'\t' | $FZF_COMMAND \
-    --header="^e:edit ^r:reload" \
-    --bind="ctrl-e:execute($EDIT_CMD)" \
+    --header="^x:edit ^r:reload" \
+    --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
     --border-label=" $TITLE_BORDER_LABEL [$1] " |
     awk NF | tail -1)
@@ -145,8 +145,8 @@ tmux() {
   {last=""} /^#/{last=$0}' "$TMUX_PATH" | sort |
       awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
       column -t -s ")" | fzf-tmux -xC -w 80% -h 80% -y 43% \
-      --header="^e:edit ^r:reload" \
-      --bind="ctrl-e:execute($EDIT_CMD)" \
+      --header="^x:edit ^r:reload" \
+      --bind="ctrl-x:execute($EDIT_CMD)" \
       --bind="ctrl-r:execute($RELOAD_CMD)" \
       --border-label=" $TITLE_BORDER_LABEL [$1] " |
       awk NF | tail -1
@@ -326,8 +326,8 @@ bulk_note_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^e:edit ^r:reload" \
-        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --header="^x:edit ^r:reload" \
+        --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
       awk NF | tail -1
@@ -358,8 +358,8 @@ bulk_show_snippets() {
   #    fzf-tmux -xC -w 80% -h 80% -y 43% \
   #      --read0 --multi --highlight-line --gap \
   #      --pointer='▌' \
-  #      --header="^e:edit ^r:reload" \
-  #      --bind="ctrl-e:execute($EDIT_CMD)" \
+  #      --header="^x:edit ^r:reload" \
+  #      --bind="ctrl-x:execute($EDIT_CMD)" \
   #      --bind="ctrl-r:execute($RELOAD_CMD)" \
   #      --border-label=" $TITLE_BORDER_LABEL [$1] " |
   #    awk NF | tail -1
@@ -373,8 +373,8 @@ bulk_show_snippets() {
   #   fzf-tmux -xC -w 80% -h 80% -y 43% \
   #     --read0 --multi --highlight-line --gap \
   #     --pointer='▌' \
-  #     --header="^e:edit ^r:reload" \
-  #     --bind="ctrl-e:execute($EDIT_CMD)" \
+  #     --header="^x:edit ^r:reload" \
+  #     --bind="ctrl-x:execute($EDIT_CMD)" \
   #     --bind="ctrl-r:execute($RELOAD_CMD)" \
   #     --border-label=" $TITLE_BORDER_LABEL [$1] " |
   #   awk NF | tail -1)
@@ -384,12 +384,58 @@ bulk_show_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^e:edit ^r:reload" \
-        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --header="^x:edit ^r:reload" \
+        --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
       awk NF | tail -1
   )
+  copy_selected "$SELECT"
+}
+bulk_code_snippets() {
+  case "$1" in
+  "facade-python")
+    TARGET_PATH="$HOME/Dropbox/neorg/learning/python/python-facade-pattern.md"
+    ;;
+  *)
+    exit
+    ;;
+  esac
+
+  is_path_exits "$TARGET_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $TARGET_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'All current note snippets updated'"
+
+  # perl -0 -pe 's/#; /\0/gm' | grcat bulksnip.grc | sed 's/## //' |
+
+  #SELECT=$(
+  #  rg --pretty bash | awk '/^[a-zA-Z]/ && last { printf "%s\n%s\n", last, $0; }
+  #{last=""} /^```/{last=$0}' "$TARGET_PATH" |
+  #    fzf-tmux -xC -w 80% -h 80% -y 43% \
+  #      --read0 --multi --highlight-line --gap \
+  #      --pointer='▌' \
+  #      --header="^x:edit ^r:reload" \
+  #      --bind="ctrl-x:execute($EDIT_CMD)" \
+  #      --bind="ctrl-r:execute($RELOAD_CMD)" \
+  #      --border-label=" $TITLE_BORDER_LABEL [$1] " |
+  #    awk NF | tail -1
+
+  # --read0 --multi --highlight-line --gap \
+  SELECT=$(rg --pretty bash | awk '
+        /^##\s/ { print; next }                   # Cetak baris yang diawali "#" (judul)
+        in_block && /^```/ { in_block=0; next }   # Jika dalam blok dan ketemu ``` maka akhiri blok
+        in_block { print; next }                  # Jika dalam blok, cetak baris
+        /^```/ { in_block=1 }                     # Jika ketemu awal blok comment, mulai cetak
+  ' "$TARGET_PATH" |
+    fzf-tmux -xC -w 80% -h 80% -y 43% \
+      --pointer='▌' \
+      --header="^x:edit ^r:reload" \
+      --bind="ctrl-x:execute($EDIT_CMD)" \
+      --bind="ctrl-r:execute($RELOAD_CMD)" \
+      --border-label=" $TITLE_BORDER_LABEL [$1] " |
+    awk NF | tail -1)
+
   copy_selected "$SELECT"
 }
 bulk_snippets() {
@@ -442,8 +488,8 @@ bulk_snippets() {
       fzf-tmux -xC -w 80% -h 80% -y 43% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
-        --header="^e:edit ^r:reload" \
-        --bind="ctrl-e:execute($EDIT_CMD)" \
+        --header="^x:edit ^r:reload" \
+        --bind="ctrl-x:execute($EDIT_CMD)" \
         --bind="ctrl-r:execute($RELOAD_CMD)" \
         --border-label=" $TITLE_BORDER_LABEL [$1] " |
       awk NF | tail -1
@@ -509,6 +555,8 @@ main() {
   "wget") bulk_note_snippets "wget" ;;
   "yarn") bulk_note_snippets "yarn" ;;
   "zathura") zathura "zathura" ;;
+
+  "facade-python") bulk_code_snippets "facade-python" ;;
   *) dunstify "[!] $TITLE_DUNST" "Can't find the snippet for '$1'\nor is it not implemented yet?" ;;
 
   esac

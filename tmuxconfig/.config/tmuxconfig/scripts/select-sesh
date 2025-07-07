@@ -14,12 +14,12 @@ SELECT=$(
     --no-sort --ansi --border-label ' SELECT|START SESS|TMUX ' --prompt '⚡ ' \
     --header ' ^a all ^t tmux ^g configs ^z zoxide ^x tmux kill ^f find' \
     --bind 'tab:down,btab:up' \
-    --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)' \
-    --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
-    --bind 'ctrl-g:change-prompt(⚙️ )+reload(sesh list -c --icons)' \
-    --bind 'ctrl-z:change-prompt(📁 )+reload(sesh list -z --icons)' \
+    --bind 'alt-a:change-prompt(⚡ )+reload(sesh list --icons)' \
     --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+    --bind 'ctrl-g:change-prompt(⚙️ )+reload(sesh list -c --icons)' \
+    --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
     --bind 'ctrl-x:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list -d --icons)' \
+    --bind 'ctrl-z:change-prompt(📁 )+reload(sesh list -z --icons)' \
     --preview-window 'right:nohidden:55%:border-none' \
     --preview "$preview_cmd"
   # --preview "sesh preview")

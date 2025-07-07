@@ -126,6 +126,7 @@ return {
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, true, true), "n", false)
           vim.schedule(function()
             if not visual_selection or not visual_selection.selection or visual_selection.selection == "" then
+              ---@diagnostic disable-next-line: undefined-field
               RUtils.warn("cannot execute: an error occurred..?", { title ="Fzflua Blines" } )
               return
             end
@@ -272,6 +273,7 @@ return {
             end)
 
             if err then
+              ---@diagnostic disable-next-line: undefined-field
               RUtils.warn(selection .. " -> Not found ", { title = "FzfLua Help" })
             end
           end
@@ -391,7 +393,7 @@ return {
             ["<c-Down>"] = "preview-page-down",
           },
           fzf = {
-            ["ctrl-a"] = "toggle-all",
+            ["alt-a"] = "toggle-all",
 
             ["ctrl-d"] = "preview-page-down",
             ["ctrl-u"] = "preview-page-up",
@@ -407,17 +409,15 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = {
-            -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copypath  CTRL-F:ignore  CTRL-E:hidden]],
-          },
+          -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^s:ignore  ^o:hidden]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
-            ["ctrl-f"] = actions.toggle_ignore,
-            ["ctrl-e"] = actions.toggle_hidden,
-            -- ["ctrl-e"] = function(_, opts)
+            ["ctrl-s"] = actions.toggle_ignore,
+            ["ctrl-o"] = actions.toggle_hidden,
+            -- ["ctrl-o"] = function(_, opts)
             --   actions.toggle_opt(opts, "hidden")
             --   actions.toggle_opt(opts, "no_ignore")
             -- end,
@@ -464,6 +464,7 @@ return {
               local pth = selected[1]:sub(slice_num_str)
               vim.fn.setreg([[+]], pth)
 
+              ---@diagnostic disable-next-line: undefined-field
               RUtils.info(pth .. " copied to clipboard", { title = "Path Copy" })
 
               require("fzf-lua").actions.resume()
@@ -512,9 +513,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
-            fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-X:historycommit  CTRL-Y:copyhash  CTRL-E:compare]],
-            },
+            fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-q"] = actions.file_sel_to_qf,
@@ -530,6 +529,7 @@ return {
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
 
                 vim.cmd("GBrowse " .. commit_hash)
@@ -548,9 +548,10 @@ return {
                 local cmdmsg = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
                 vim.cmd(cmdmsg)
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Diffopen: HEAD~1.." .. commit_hash .. "~1", { title = "FZFGit" })
               end,
-              ["ctrl-e"] = function(selected, _)
+              ["ctrl-r"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 -- With gitsigns
@@ -566,6 +567,7 @@ return {
                 -- local cmdmsg = "Gvdiffsplit " .. commit_hash
                 -- vim.cmd(cmdmsg)
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Compare diff: current commit --> " .. commit_hash, { title = "FZFGit" })
               end,
             },
@@ -578,13 +580,8 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = {
-              title = RUtils.fzflua.format_title("BCommits", ""),
-              title_pos = "left",
-            },
-            fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-G:grep  CTRL-X:historycommit  CTRL-Y:copyhash  CTRL-E:compare]],
-            },
+            winopts = { title = RUtils.fzflua.format_title("BCommits", ""), title_pos = "left" },
+            fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
@@ -601,6 +598,7 @@ return {
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
 
                 vim.cmd("GBrowse " .. commit_hash)
@@ -619,9 +617,10 @@ return {
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
                 vim.cmd(cmdmsg)
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Diffopen: " .. commit_hash .. " -- ", { title = "FZFGit" })
               end,
-              ["ctrl-e"] = function(selected, _)
+              ["ctrl-r"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 -- With gitsigns
@@ -637,6 +636,7 @@ return {
                 -- local cmdmsg = "Gvdiffsplit " .. commit_hash
                 -- vim.cmd(cmdmsg)
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info("Compare diff: current commit --> " .. commit_hash, { title = "FZFGit" })
               end,
             },
@@ -658,23 +658,10 @@ return {
           },
           stash = {
             prompt = RUtils.fzflua.default_title_prompt(),
-            --     cmd = "git --no-pager stash list",
-            --     preview = "git --no-pager stash show --patch --color {1}",
             winopts = {
               title = RUtils.fzflua.format_title("Stash", ""),
               title_pos = "left",
             },
-            --     actions = {
-            --         ["default"] = actions.git_stash_apply,
-            --         ["ctrl-x"] = {
-            --             actions.git_stash_drop,
-            --             actions.resume,
-            --         },
-            --     },
-            --     fzf_opts = {
-            --         ["--no-multi"] = "",
-            --         ["--delimiter"] = "'[:]'",
-            --     },
           },
           icons = {
             ["M"] = { icon = "M", color = "yellow" },
@@ -695,9 +682,7 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  CTRL-X:grepcwd  CTRL-F:ignore  CTRL-E:hidden]],
-          },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd  ^s:ignore  ^o:hidden]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -718,9 +703,9 @@ return {
             },
           },
           actions = {
-            ["ctrl-f"] = actions.toggle_ignore,
-            ["ctrl-e"] = actions.toggle_hidden,
-            -- ["ctrl-e"] = function(_, opts)
+            ["ctrl-s"] = actions.toggle_ignore,
+            ["ctrl-o"] = actions.toggle_hidden,
+            -- ["ctrl-o"] = function(_, opts)
             --   actions.toggle_opt(opts, "hidden")
             --   actions.toggle_opt(opts, "no_ignore")
             -- end,
@@ -838,7 +823,7 @@ return {
         oldfiles = {
           prompt = RUtils.fzflua.default_title_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
-          fzf_opts = { ["--header"] = [[CTRL-O:Oldfiles-all  CTRL-R:Oldfiles-current]] },
+          fzf_opts = { ["--header"] = [[^o:oldfiles-all  ^r:oldfiles-current]] },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
@@ -1059,7 +1044,7 @@ return {
               backdrop = 60,
             },
             fzf_opts = {
-              ["--header"] = [[CTRL-X:filter  CTRL-R:workspace-symbols]],
+              ["--header"] = [[^x:filter  ^r:workspace-symbols]],
               ["--reverse"] = false,
             },
             actions = {
