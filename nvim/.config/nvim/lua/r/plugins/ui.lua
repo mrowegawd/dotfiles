@@ -119,8 +119,8 @@ return {
   {
     "sphamba/smear-cursor.nvim", -- disabled karena slow
     event = "LazyFile",
-    -- enabled = false,
-    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
+    enabled = false,
+    -- cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = {},
   },
   -- BLOCK.NVIM

@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0
+
 local KeymapUtil = require("keymaps.utils")
 local Constant = require("constant")
 
@@ -10,10 +12,52 @@ local mod_key = wezterm.target_triple:find("windows") and "SHIFT|CTRL" or "ALT"
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 
 return {
-
-	-- ┌─────────────────────────────────────────────────────────┐
-	-- │ PANE                                                    │
-	-- └─────────────────────────────────────────────────────────┘
+  -- General --------------------------------------------------------------- {{{
+  --
+	{ -- enter copy mode
+		key = "V",
+		mods = "LEADER",
+		action = act.Multiple({
+			act.CopyMode("ClearSelectionMode"),
+			act.ActivateCopyMode,
+		}),
+	},
+	-- { key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay }, -- show debug relay
+	{ key = "c", mods = "CTRL|SHIFT", action = wezterm.action({ CopyTo = "Clipboard" }) },
+	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action({ PasteFrom = "Clipboard" }) },
+	{ key = "=", mods = "CTRL", action = "IncreaseFontSize" },
+	{ key = "-", mods = "CTRL", action = "DecreaseFontSize" },
+	{ key = "0", mods = "CTRL", action = "ResetFontSize" },
+	{ key = "P", mods = mod_key, action = act.ActivateCommandPalette },
+  --
+  -- }}}
+	-- Session --------------------------------------------------------------- {{{
+  --
+	{ -- select session
+		key = "y",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "y", mods = mod_key } }, pane)
+			else
+				window:perform_action(workspace_switcher.switch_workspace(), pane)
+			end
+		end),
+	},
+	{ -- last session
+		key = "b",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
+			else
+				KeymapUtil.switch_to_previous_workspace(window, pane)
+			end
+		end),
+	},
+  --
+  -- }}}
+	-- Pane ------------------------------------------------------------------ {{{
 	-- { -- smart split pane
 	-- 	key = "Enter",
 	-- 	mods = mod_key,
@@ -230,9 +274,8 @@ return {
 		end),
 	},
 
-	-- ╭─────────────────────────────────────────────────────────╮
-	-- │ WINDOW                                                  │
-	-- ╰─────────────────────────────────────────────────────────╯
+	-- }}}
+	-- Window ---------------------------------------------------------------- {{{ 
 	{ -- new window
 		key = "N",
 		mods = mod_key,
@@ -299,25 +342,9 @@ return {
 			end
 		end),
 	},
-
-	-- ┌─────────────────────────────────────────────────────────┐
-	-- │ MISC                                                    │
-	-- └─────────────────────────────────────────────────────────┘
-	{ key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay }, -- show debug relay
-	{ key = "c", mods = "CTRL|SHIFT", action = wezterm.action({ CopyTo = "Clipboard" }) },
-	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action({ PasteFrom = "Clipboard" }) },
-	{ key = "=", mods = "CTRL", action = "IncreaseFontSize" },
-	{ key = "-", mods = "CTRL", action = "DecreaseFontSize" },
-	{ key = "0", mods = "CTRL", action = "ResetFontSize" },
-	{ mods = mod_key, key = "P", action = act.ActivateCommandPalette },
-	{ -- enter copy mode
-		key = "F5",
-		mods = mod_key,
-		action = act.Multiple({
-			act.CopyMode("ClearSelectionMode"),
-			act.ActivateCopyMode,
-		}),
-	},
+  -- }}} 
+	-- Misc ------------------------------------------------------------------ {{{
+  -- 
 	{ -- open file tree manager
 		key = "e",
 		mods = mod_key,
@@ -341,9 +368,30 @@ return {
 			end
 		end),
 	},
+	{ -- open lazydocker
+		key = "d",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "g", mods = "LEADER" } }, pane)
+			else
+				local cwd_uri = pane:get_current_working_dir()
+				-- window:toast_notification("wezterm", cwd_uri.file_path, nil, 4000)
+				KeymapUtil.spawn_child_process({
+					"wezterm",
+					"start",
+					"--cwd",
+					cwd_uri.file_path,
+					"--class",
+					"if-select",
+					"lazydocker",
+				})
+			end
+		end),
+	},
 	{ -- open lazygit
 		key = "g",
-		mods = "LEADER",
+		mods = mod_key,
 		action = wezterm.action_callback(function(window, pane)
 			if KeymapUtil.is_in_tmux(pane) then
 				window:perform_action({ SendKey = { key = "g", mods = "LEADER" } }, pane)
@@ -387,8 +435,8 @@ return {
 		end),
 	},
 	{ -- open btop
-		key = "h",
-		mods = "LEADER",
+		key = "o",
+		mods = mod_key,
 		action = wezterm.action_callback(function(window, pane)
 			if KeymapUtil.is_in_tmux(pane) then
 				window:perform_action({ SendKey = { key = "b", mods = "LEADER" } }, pane)
@@ -450,7 +498,7 @@ return {
 		end),
 	},
 	{ -- open calc
-		key = "c",
+		key = "A",
 		mods = "LEADER",
 		action = wezterm.action_callback(function(window, pane)
 			if KeymapUtil.is_in_tmux(pane) then
@@ -471,36 +519,6 @@ return {
 			end
 		end),
 	},
-
-	-- ╭─────────────────────────────────────────────────────────╮
-	-- │ SESSION                                                 │
-	-- ╰─────────────────────────────────────────────────────────╯
-	{ -- select session
-		key = "y",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "y", mods = mod_key } }, pane)
-			else
-				window:perform_action(workspace_switcher.switch_workspace(), pane)
-			end
-		end),
-	},
-	{ -- last session
-		key = "b",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
-			else
-				KeymapUtil.switch_to_previous_workspace(window, pane)
-			end
-		end),
-	},
-
-	-- ┌─────────────────────────────────────────────────────────┐
-	-- │ TERMINAL                                                │
-	-- └─────────────────────────────────────────────────────────┘
 	{ -- open terminal <a-f>
 		mods = mod_key,
 		key = "f",
@@ -634,4 +652,6 @@ return {
 			end
 		end),
 	},
+  --
+  -- }}}
 }

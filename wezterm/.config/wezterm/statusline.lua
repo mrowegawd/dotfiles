@@ -78,7 +78,7 @@ end
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
 	local edge_background = Color.bg
 	local background = Color.bg
-	local foreground = Color.statusline_inactive_fg
+	local foreground = Color.statusline_fg
 	local dim_foreground = Color.red_alt
 	local zoom_foreground = Color.statusline_inactive_fg
 

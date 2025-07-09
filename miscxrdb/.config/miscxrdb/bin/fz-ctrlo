@@ -308,10 +308,29 @@ open_systemctl_ui() {
     -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
 }
 open_lazydocker() {
-  tmux display-popup -d '#{pane_current_path}' \
-    -S bg="$GET_BG",fg="$GET_FG" \
-    -E -w 90% -h 90% \
-    "lazydocker"
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  program_tool="lazydocker"
+  session="tmp_$program_tool"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q $program_tool;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E "tmux attach -t $session"
+    fi
+  fi
 }
 open_lazygit() {
   tmux display-popup -d '#{pane_current_path}' \

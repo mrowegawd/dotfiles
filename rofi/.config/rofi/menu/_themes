@@ -182,7 +182,7 @@ set_rofi() {
   sed -i -e "s/%%urgent%%/$GET_MAGENTA/g" "$_ROFI_PATH/colors/nightly.rasi"
 
   sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%red%%/$RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
