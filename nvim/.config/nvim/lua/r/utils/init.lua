@@ -29,6 +29,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field map r.utils.map
 ---@field cmp r.utils.cmp
+---@field navigate_window r.utils.navigate_window
 ---@field pick r.utils.pick
 ---@field todocomments r.utils.todocomments
 ---@field codecompanion_fidget r.utils.codecompanion_fidget

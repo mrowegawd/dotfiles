@@ -56,81 +56,69 @@ return {
   -- KITTY NAVIGATOR (disabled)
   {
     "MunsMan/kitty-navigator.nvim",
-    -- enabled = os.getenv "TERMINAL" == "kitty",
     enabled = false,
-    dependencies = { "mrjones2014/smart-splits.nvim" },
+    -- enabled = os.getenv "TERMINAL" == "kitty",
+    -- dependencies = { "mrjones2014/smart-splits.nvim" },
     keys = {
       {
         "<C-h>",
         function()
           require("kitty-navigator").navigateLeft()
         end,
-        desc = "Kitty-navigator: move right a split",
+        desc = "Window: move cursor left [kitty-navigator]",
       },
       {
         "<C-j>",
         function()
           require("kitty-navigator").navigateDown()
         end,
-        desc = "Kitty-navigator: move down a split",
+        desc = "Window: move cursor down [kitty-navigator]",
       },
       {
         "<C-k>",
         function()
           require("kitty-navigator").navigateUp()
         end,
-        desc = "Kitty-navigator: move up a split",
+        desc = "Window: move cursor up [kitty-navigator]",
       },
       {
         "<C-l>",
         function()
           require("kitty-navigator").navigateRight()
         end,
-        desc = "Kitty-navigator: move left a split",
+        desc = "Window: move cursor right [kitty-navigator]",
       },
       {
         "<a-H>",
         function()
-          local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
-          if exclude_win.found then
-            local resizer_h = "+5"
-            if vim.api.nvim_win_get_number(0) == 1 then
-              resizer_h = "-5"
-            end
-            return vim.cmd("vertical resize " .. resizer_h)
-          end
-          require("smart-splits").resize_left()
+          vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
         end,
-        desc = "Kitty-navigator: resize right",
-      },
-      {
-        "<a-L>",
-        function()
-          local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
-          if exclude_win.found then
-            local resizer_l = "-5"
-            if vim.api.nvim_win_get_number(0) == 1 then
-              resizer_l = "+5"
-            end
-            return vim.cmd("vertical resize " .. resizer_l)
-          end
-          require("smart-splits").resize_right()
-        end,
-        desc = "Kitty-navigator: resize left",
-      },
-      {
-        "<a-K>",
-        function()
-          require("smart-splits").resize_up()
-        end,
-        desc = "Kitty-navigator: resize up",
+        desc = "Window: resize window left [kitty-navigator]",
       },
       {
         "<a-J>",
         function()
-          require("smart-splits").resize_down()
+          if RUtils.navigate_window.check_split_or_vsplit "down" then
+            vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "down")
+          end
         end,
-        desc = "Kitty-navigator: resize down",
+        desc = "Window: resize window down [kitty-navigator]",
+      },
+      {
+        "<a-K>",
+        function()
+          if RUtils.navigate_window.check_split_or_vsplit "down" then
+            vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "up")
+          end
+        end,
+        desc = "Window: resize window up [kitty-navigator]",
+      },
+      {
+        "<a-L>",
+        function()
+          vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
+        end,
+        desc = "window: resize window right [kitty-navigator]",
       },
     },
 
@@ -144,139 +132,66 @@ return {
     event = "LazyFile",
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     keys = function()
-      local resize_plus_or_mines = function(position)
-        local win_position = require("smart-splits.api").win_position(position)
-        local winid = vim.api.nvim_get_current_win()
-        local curwinnr = vim.api.nvim_win_get_number(0)
-        local ft_exclude = { "aerial", "Outline", "neo-tree" }
-        local size = 7
-
-        local function get_direction(minus_or_plus, posisi)
-          if not posisi then
-            return minus_or_plus
-          end
-
-          local exclude_win = RUtils.cmd.windows_is_opened(ft_exclude)
-          local windows = vim.api.nvim_list_wins()
-          if curwinnr > 1 then
-            for _, win in ipairs(windows) do
-              local config = vim.api.nvim_win_get_config(win)
-              if win == winid then
-                if config.split == "left" or config.split == "right" then
-                  if
-                    (config.split == "left" and posisi == "right") or (config.split == "right" and posisi == "left")
-                  then
-                    minus_or_plus = (win_position > 0) and "+" or "-"
-                    if exclude_win.found and not (vim.tbl_contains(ft_exclude, vim.bo[0].filetype)) then
-                      minus_or_plus = "-"
-                    end
-                  else
-                    minus_or_plus = (win_position > 0) and "-" or "+"
-                    if exclude_win.found and not (vim.tbl_contains(ft_exclude, vim.bo[0].filetype)) then
-                      minus_or_plus = "+"
-                    end
-                  end
-                end
-              end
-            end
-          end
-          return minus_or_plus
-        end
-
-        local minus_or_plus
-        if position == "up" or position == "left" then
-          minus_or_plus = (win_position > 0) and "+" or "-"
-        elseif position == "down" or position == "right" then
-          minus_or_plus = (win_position > 0) and "-" or "+"
-        end
-        if curwinnr > 1 then
-          minus_or_plus = get_direction(minus_or_plus, position)
-        end
-
-        return minus_or_plus .. size
-      end
-
-      local check_split_or_vsplit = function()
-        local winid = vim.api.nvim_get_current_win()
-
-        local windows = vim.api.nvim_list_wins()
-        for _, win in ipairs(windows) do
-          local config = vim.api.nvim_win_get_config(win)
-          if win == winid then
-            -- print(vim.inspect(config))
-            if config.split == "below" then
-              return true
-            end
-            if config.split == "above" then
-              return true
-            end
-          end
-        end
-
-        return false
-      end
-
       return {
         {
           "<C-h>",
           function()
             require("smart-splits").move_cursor_left()
           end,
-          desc = "window: move cursor left [smart-splits]",
+          desc = "Window: move cursor left [smart-splits]",
         },
         {
           "<C-j>",
           function()
             require("smart-splits").move_cursor_down()
           end,
-          desc = "window: move cursor down [smart-splits]",
+          desc = "Window: move cursor down [smart-splits]",
         },
         {
           "<C-k>",
           function()
             require("smart-splits").move_cursor_up()
           end,
-          desc = "window: move cursor up [smart-splits]",
+          desc = "Window: move cursor up [smart-splits]",
         },
         {
           "<C-l>",
           function()
             require("smart-splits").move_cursor_right()
           end,
-          desc = "window: move cursor right [smart-splits]",
+          desc = "Window: move cursor right [smart-splits]",
         },
-
         {
           "<a-H>",
           function()
-            vim.cmd("vertical resize " .. resize_plus_or_mines "left")
+            vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
           end,
-          desc = "window: resize window left [smart-splits]",
+          desc = "Window: resize window left [smart-splits]",
         },
         {
           "<a-J>",
           function()
-            if check_split_or_vsplit() then
-              vim.cmd("resize " .. resize_plus_or_mines "down")
+            if RUtils.navigate_window.check_split_or_vsplit() then
+              vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "down")
             end
           end,
-          desc = "window: resize window down [smart-splits]",
+          desc = "Window: resize window down [smart-splits]",
         },
         {
           "<a-K>",
           function()
-            if check_split_or_vsplit() then
-              vim.cmd("resize " .. resize_plus_or_mines "up")
+            if RUtils.navigate_window.check_split_or_vsplit() then
+              vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "up")
             end
           end,
-          desc = "window: resize window up [smart-splits]",
+          desc = "Window: resize window up [smart-splits]",
         },
         {
           "<a-L>",
           function()
-            vim.cmd("vertical resize " .. resize_plus_or_mines "right")
+            vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
           end,
-          desc = "window: resize window right [smart-splits]",
+          desc = "Window: resize window right [smart-splits]",
         },
       }
     end,

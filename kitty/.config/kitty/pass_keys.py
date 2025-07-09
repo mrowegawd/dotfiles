@@ -1,6 +1,7 @@
 import re
 
 from kittens.tui.handler import result_handler
+
 from kitty.key_encoding import KeyEvent, parse_shortcut
 
 VIM_ID = "n?vim"
@@ -50,6 +51,7 @@ def handle_result(args, _, target_window_id, boss):
     if window is None:
         return
     if is_window_vim(window):
+        # send_notification("handle_result", direction)
         for keymap in key_mapping.split(">"):
             encoded = encode_key_mapping(window, keymap)
             window.write_to_child(encoded)
