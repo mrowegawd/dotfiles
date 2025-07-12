@@ -698,11 +698,12 @@ end
 RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
-  local TMUX = os.getenv "TMUX"
-  local TERMINAL = os.getenv "TERMINAL"
+  local tmux = os.getenv "TMUX"
+  local terminal = os.getenv "TERMINAL"
+  local pane_size = 30 -- 45 for normal window, tapi jika kecil 30 saja
 
-  if not TMUX then
-    if TERMINAL ~= "wezterm" then
+  if not tmux then
+    if terminal ~= "wezterm" then
       if RUtils.has "neo-tree.nvim" then
         vim.cmd "Neotree focus reveal"
       end
@@ -731,7 +732,7 @@ RUtils.map.nnoremap("<a-E>", function()
     -- local get_total_active_panes = normalize_return(vim.fn.system [[ tmux display-message -p '#{window_panes}']])
     local main_pane_id = get_current_pane_id()
     local cmd_open_filemanager =
-      fmt("tmux split-window -h -p 30 -l 45 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
+      fmt("tmux split-window -h -p 30 -l %s -c '#{pane_current_path}' '%s %s'", pane_size, fm_manager, dirname)
 
     go_left()
 
