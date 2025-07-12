@@ -79,9 +79,8 @@ local function is_in_wezterm()
 	return false
 end
 
-local function get_output_string_cmd(cmd, args)
-	local child, _ =
-		Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
+local function get_output_string_cmd(cmd, arg)
+	local child, _ = Command(cmd):arg(arg):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
 
 	if not child then
 		return fail("OPEN_WITH_WEZTERM: Get pane_id went wrong", err)
@@ -89,18 +88,17 @@ local function get_output_string_cmd(cmd, args)
 	return child.stdout:gsub("\n$", "")
 end
 
-local function get_output_string_cmd_pipe(cmd, args)
-	local child, _ =
-		Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+local function get_output_string_cmd_pipe(cmd, arg)
+	local child, _ = Command(cmd):arg(arg):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	local output, err = child:wait_with_output()
 	if not output then
-		return fail("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(args, " "), err)
+		return fail("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(arg, " "), err)
 	elseif not output.status.success and output.status.code ~= 130 then
 		return fail(
 			"Command failed! Command: %s, Args: %s, Exit status code: %s",
 			cmd,
-			table.concat(args, " "),
+			table.concat(arg, " "),
 			output.status.code
 		)
 	end
@@ -117,7 +115,7 @@ local function open_with_tmux(action, fpath, fpath_ext)
 	os.execute([[tmux select-pane -R]])
 
 	local child, err = Command("tmux")
-		:args({ "display-message", "-p", "'#{pane_current_command}'" })
+		:arg({ "display-message", "-p", "'#{pane_current_command}'" })
 		:stdin(Command.INHERIT)
 		:stdout(Command.PIPED)
 		:stderr(Command.INHERIT)
@@ -157,9 +155,9 @@ end
 local function open_with_wezterm(action, fpath, fpath_ext)
 	if fpath_ext == "pdf" then
 		local get_pane_id_right = get_output_string_cmd("wezterm", { "cli", "get-pane-direction", "right" })
-		local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
+		local wezterm_list = Command("wezterm"):arg({ "cli", "list" }):stdout(Command.PIPED):spawn()
 		local child, _ = Command("awk")
-			:args({
+			:arg({
 				"-v",
 				"pane_id=" .. get_pane_id_right,
 				"$3==pane_id { print $6 }",

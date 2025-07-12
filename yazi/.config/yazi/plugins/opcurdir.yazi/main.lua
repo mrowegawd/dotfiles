@@ -22,7 +22,7 @@ end
 
 local function send_command(prefix_cmd, tbl_cmds)
 	local child, err =
-		Command(prefix_cmd):args(tbl_cmds):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+		Command(prefix_cmd):arg(tbl_cmds):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail("check pane_current_command went wrong", err)
@@ -73,9 +73,9 @@ local function open_with_wezterm(cwd)
 
 	local pane_id_right = output.stdout:gsub("\n$", "")
 
-	local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
+	local wezterm_list = Command("wezterm"):arg({ "cli", "list" }):stdout(Command.PIPED):spawn()
 	local child, err = Command("awk")
-		:args({
+		:arg({
 			"-v",
 			"pane_id=" .. tostring(pane_id_right),
 			"$3==pane_id { print $6 }",

@@ -21,7 +21,7 @@ local function open_with_tmux(cwd_bookmark)
 	local echocwd = Command("cat"):arg(cwd_bookmark):stdout(Command.PIPED):spawn()
 
 	local child, err = Command("fzf-tmux")
-		:args({
+		:arg({
 			-- "--preview",
 			-- "'eza --tree --long --all --git --color=always --group-directories-first --icons {1}'",
 			-- "--preview-window",
@@ -55,7 +55,7 @@ local function open_with_wezterm(cwd_bookmark)
 	local echocwd = Command("cat"):arg(cwd_bookmark):stdout(Command.PIPED):spawn()
 
 	local child, err = Command("fzf-tmux")
-		:args({
+		:arg({
 			"-xC",
 			"-w",
 			"60%",
@@ -80,7 +80,7 @@ local function open_with_wezterm(cwd_bookmark)
 	-- 	"cat ~/Dropbox/data.programming.forprivate/marked-pwd | fzf-tmux -xC -w 60% -h 50%",
 	-- }
 	-- local child, err =
-	-- 	Command("wezterm"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+	-- 	Command("wezterm"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail("Spawn `rfzf` failed with error code %s. Do you have it installed?", err)
@@ -100,7 +100,7 @@ end
 
 return {
 	entry = function()
-		ya.hide()
+		ui.hide()
 
 		local homeuser = os.getenv("HOME")
 		local path_bookmark_cwd = homeuser .. "/Dropbox/data.programming.forprivate/marked-pwd"

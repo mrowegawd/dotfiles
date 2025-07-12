@@ -60,7 +60,7 @@ local function open_with_tmux(action, cwd)
 	end
 
 	local child, err =
-		Command("tmux"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+		Command("tmux"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail(tostring(action) .. " not  open?", err)
@@ -90,7 +90,7 @@ local function open_with_wezterm(action, cwd)
 	end
 
 	local child, err =
-		Command("wezterm"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+		Command("wezterm"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail(tostring(action) .. " not  open?", err)

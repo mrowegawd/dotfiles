@@ -14,7 +14,7 @@ end
 
 local function jump(cwd)
 	local child, err = Command("cat")
-		:args({
+		:arg({
 			cwd,
 		})
 		:stdin(Command.INHERIT)
@@ -63,7 +63,7 @@ local save_alternate = function()
 	local echocwd = Command("ls"):arg(path_alternate):stdout(Command.PIPED):spawn()
 
 	local child, err = Command(shell_value)
-		:args({
+		:arg({
 			"-c",
 			fzf_args,
 		})
