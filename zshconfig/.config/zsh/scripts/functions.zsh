@@ -23,7 +23,7 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   if ! command -v xinput >/dev/null; then
     echo "Installing: xinput - Fixing mouse lagging..?"
-    sudo apt install xinput
+    sudo apt install xinput -y
   fi
 
   if ! command -v pass >/dev/null; then
@@ -33,29 +33,29 @@ build-install() {
 
   if ! command -v urlview >/dev/null; then
     echo "Installing: urlview"
-    sudo apt install urlview
+    sudo apt install urlview -y
   fi
 
-  if ! command -v betterlockscreen >/dev/null; then
-    echo "Installing: i3lock - screen lock"
-    sudo apt install autoconf gcc make pkg-config libpam0g-dev \
-      libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
-      libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
-      libxcb-randr0-dev libxcb-image0-dev libxcb-util0-dev libxcb-xrm-dev \
-      libxkbcommon-dev libxkbcommon-x11-dev libjpeg-dev
-    git clone https://github.com/Raymo111/i3lock-color.git && cd i3lock-color && ./install-i3lock-color.sh
-    wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
-  fi
+  # if ! command -v betterlockscreen >/dev/null; then
+  #   echo "Installing: i3lock - screen lock"
+  #   sudo apt install autoconf gcc make pkg-config libpam0g-dev \
+  #     libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
+  #     libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
+  #     libxcb-randr0-dev libxcb-image0-dev libxcb-util0-dev libxcb-xrm-dev \
+  #     libxkbcommon-dev libxkbcommon-x11-dev libjpeg-dev -y
+  #   git clone https://github.com/Raymo111/i3lock-color.git && cd i3lock-color && ./install-i3lock-color.sh
+  #   wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
+  # fi
 
   if ! command -v fd >/dev/null; then
     echo "Installing: fd - Blazingly fast for search folder name"
-    sudo apt install fd-find
+    sudo apt install fd-find -y
     sudo ln -s /usr/bin/fdfind $HOME/.local/bin/fd
   fi
 
   if ! command -v proxychains >/dev/null; then
     echo "Installing: proxychains - Wrapper for tor"
-    sudo apt install proxychains4
+    sudo apt install proxychains4 -y
   fi
 
   # if ! command -v btop >/dev/null; then
@@ -63,17 +63,16 @@ build-install() {
   #   wget https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
   # fi
 
-  if ! command -v ueberzugpp >/dev/null; then
-    echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
-    echo 'deb http://download.opensuse.org/repositories/home:/justkidding/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:justkidding.list
-    curl -fsSL https://download.opensuse.org/repositories/home:justkidding/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_justkidding.gpg > /dev/null
-    sudo apt update
-    sudo apt install ueberzugpp
-  fi
+  # if ! command -v ueberzugpp >/dev/null; then
+  #   echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
+  #   echo 'deb http://download.opensuse.org/repositories/home:/justkidding/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:justkidding.list
+  #   curl -fsSL https://download.opensuse.org/repositories/home:justkidding/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_justkidding.gpg > /dev/null
+  #   sudo apt update -y && sudo apt install ueberzugpp -y
+  # fi
 
   if ! command -v toilet >/dev/null; then
     echo "Installing: play - Funny color command"
-    sudo apt install toilet
+    sudo apt install toilet -y
   fi
 
   # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
@@ -85,130 +84,129 @@ build-install() {
 
   if ! command -v play >/dev/null; then
     echo "Installing: play - Play sound from the terminal"
-    sudo apt install sox
-    sudo apt install libsox-fmt-all
+    sudo apt install sox libsox-fmt-all -y
   fi
 
   if ! command -v hub >/dev/null; then
     echo "Installing: hub - An extensions to cmdline git"
-    sudo apt install hub
+    sudo apt install hub -y
   fi
 
   # ──────────────────────────────────────────────────────────────────────
   # RUST, cargo
   # ──────────────────────────────────────────────────────────────────────
-  if ! command -v bat >/dev/null; then
+  # if ! command -v bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     cargo install bat
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v viu >/dev/null; then
+  # if ! command -v viu >/dev/null; then
     echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
     cargo install viu
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v rmpc >/dev/null; then
+  # if ! command -v rmpc >/dev/null; then
     echo "Installing: rmpc - Terminal mp3 (alternatif dari nncmpc)"
     cargo install --git https://github.com/mierak/rmpc --locked   # install latest
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v gifski >/dev/null; then
+  # if ! command -v gifski >/dev/null; then
     # Install: gifski
     # gihtub: https://github.com/sindresorhus/Gifski
     # install binary langsung dari link https://gif.ski/
     echo "Installing: gifski - Gif encoder"
     cargo install gifski
     asdf reshim rust
-  fi
+  # fi
 
 
-  if ! command -v dua >/dev/null; then
+  # if ! command -v dua >/dev/null; then
     echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
     cargo install dua-cli
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v procs >/dev/null; then
+  # if ! command -v procs >/dev/null; then
     echo "Installing: procs - Better than use 'ps' command"
     cargo install procs
     asdf reshim rust
-  fi
+  # fi
 
 
-  if ! command -v eza >/dev/null; then
+  # if ! command -v eza >/dev/null; then
     echo "Installing: eza - ls colors"
     cargo install eza
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v zoxide >/dev/null; then
+  # if ! command -v zoxide >/dev/null; then
     echo "Installing: zoxide - A smarter cd commands"
     cargo install zoxide --locked
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v delta >/dev/null; then
+  # if ! command -v delta >/dev/null; then
     echo "Installing: delta - Color for git hunk/chommits"
     cargo install git-delta
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v rg >/dev/null; then
+  # if ! command -v rg >/dev/null; then
     echo "Installing: rg - Grep drugs"
     cargo install ripgrep
     asdf reshim rust
-  fi
+  # fi
 
   # https://github.com/race604/clock-tui
-  if ! command -v tclock >/dev/null; then
+  # if ! command -v tclock >/dev/null; then
     echo "Installing: tclock - Clock tui"
     cargo install clock-tui
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v tree-sitter >/dev/null; then
+  # if ! command -v tree-sitter >/dev/null; then
     echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
     cargo install tree-sitter-cli
     asdf reshim rust
-  fi
+  # fi
 
-  if ! command -v yazi >/dev/null; then
+  # if ! command -v yazi >/dev/null; then
     echo "Installing: yazi - File manager tui"
     cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
     asdf reshim rust
     # yazi git integration
     # ya pack -a yazi-rs/plugins:git
-  fi
+  # fi
 
-  if ! command -v rust-analyzer >/dev/null; then
+  # if ! command -v rust-analyzer >/dev/null; then
     echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
     rustup component add rust-analyzer
     asdf reshim rust
-  fi
+  # fi
 
   # ──────────────────────────────────────────────────────────────────────
   # GO install
   # ──────────────────────────────────────────────────────────────────────
-  if ! command -v dive >/dev/null; then
+  # if ! command -v dive >/dev/null; then
     echo "Installing: dive - Explore docker layer"
     go install github.com/wagoodman/dive@latest
     asdf reshim golang
-  fi
+  # fi
 
-  if ! command -v sesh >/dev/null; then
+  # if ! command -v sesh >/dev/null; then
     echo "Installing: sesh - Handle tmux session"
     go install github.com/joshmedeski/sesh@latest
     asdf reshim golang
-  fi
+  # fi
 
-  if ! command -v lazydocker >/dev/null; then
+  # if ! command -v lazydocker >/dev/null; then
     echo "Installing: lazydocker - Docker TUI"
     go install github.com/jesseduffield/lazydocker@latest
     asdf reshim golang
-  fi
+  # fi
 
   if ! command -v gowall >/dev/null; then
     echo "Installing: gowall - Convert wallpaper theme (just like pywall)"
@@ -230,51 +228,51 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # Pip, pipx
   # ──────────────────────────────────────────────────────────────────────
-  if ! command -v pipx >/dev/null; then
+  # if ! command -v pipx >/dev/null; then
     echo "Installing: pipx"
     pip install pipx
     asdf reshim python
-  fi
+  # fi
 
-  if ! command -v calcure >/dev/null; then
+  # if ! command -v calcure >/dev/null; then
     echo "Installing: calcure - Calendar TUI"
     pipx install calcure
     asdf reshim python
-  fi
+  # fi
 
-  if ! command -v img2art >/dev/null; then
+  # if ! command -v img2art >/dev/null; then
     # https://github.com/Asthestarsfalll/img2art
     echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
     pipx install img2art
     asdf reshim python
-  fi
+  # fi
 
-  if ! command -v yt-dlp >/dev/null; then
+  # if ! command -v yt-dlp >/dev/null; then
     echo "Installing: yt-dlp - A tool for download youtube video"
     pipx install yt-dlp
     asdf reshim python
-  fi
+  # fi
 
   # ──────────────────────────────────────────────────────────────────────
   # NPM
   # ──────────────────────────────────────────────────────────────────────
-  if ! command -v mmdc >/dev/null; then
+  # if ! command -v mmdc >/dev/null; then
     echo "Installing: mmdc - A tool for the mermaid library nvim"
     npm install -g @mermaid-js/mermaid-cli
     asdf reshim nodejs
-  fi
+  # fi
 
-  if ! command -v cronstrue >/dev/null; then
+  # if ! command -v cronstrue >/dev/null; then
     echo "Installing: cronstrue - parses a cron expression and outputs a human readable"
     npm install -g cronstrue
     asdf reshim nodejs
-  fi
+  # fi
 
-  if ! command -v yarn >/dev/null; then
+  # if ! command -v yarn >/dev/null; then
     echo "Installing: yarn - another package managers for JavaScript"
     npm install -g yarn
     asdf reshim nodejs
-  fi
+  # fi
 }
 
 Green=$(tput setaf 2)  # Green

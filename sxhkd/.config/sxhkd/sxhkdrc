@@ -83,8 +83,9 @@ super + shift + l
 # 	    bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
-super + {shift+p,shift+n}
+alt + {shift+Tab,Tab}
 	      bspc desktop -f {prev,next}.local
+
 
 # workspace: select workspace by number 1-9
 super + {_,shift + }{1-9,0}

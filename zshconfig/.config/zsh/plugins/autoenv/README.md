@@ -34,10 +34,10 @@ whoa
 
 ```sh
 # with cURL
-curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/master/scripts/install.sh' | sh
+curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
 
 # with wget
-wget --show-progress -o /dev/null -O- 'https://raw.githubusercontent.com/hyperupcall/autoenv/master/scripts/install.sh' | sh
+wget --show-progress -o /dev/null -O- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
 ```
 
 If you encounter some variant of a `curl: command not found` or `wget: command not found` error, please install either cURL or wget (with your package manager) and try again.
@@ -139,14 +139,30 @@ $ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bash_profile
 _Before_ `source`ing `activate.sh`, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Files authorized to be sourced; defaults to `~/.autoenv_authorized` if it exists, otherwise, `~/.local/state/autoenv/authorized_list`
-- `AUTOENV_NOTAUTH_FILE`: Files not authorized to be sourced; defaults to `~/.autoenv_not_authorized` if it exists, otherwise, `~/.local/state/autoenv/not_authorized_list` (`master` branch only)
+- `AUTOENV_NOTAUTH_FILE`: Files not authorized to be sourced; defaults to `~/.autoenv_not_authorized` if it exists, otherwise, `~/.local/state/autoenv/not_authorized_list`
 - `AUTOENV_ENV_FILENAME`: Name of the `.env` file; defaults to `.env`
 - `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of `.env` files executed
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
-- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat` (`master` branch only)
-- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own) (`master` branch only)
+- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat`
+- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own)
+
+We recommend setting the following configuration variables:
+
+```bash
+AUTOENV_ENABLE_LEAVE=yes
+AUTOENV_VIEWER=cat
+```
+
+These options are not set by default as to conform to the expectations of backwards-compatible behavior.
+
+### API
+
+Inside the `.env` file, two _environment variables_ can be accessed:
+
+- `AUTOENV_CUR_FILE` - The file being sourced
+- `AUTOENV_CUR_DIR` - Equivalent to `dirname "$AUTOENV_CUR_FILE"`
 
 ## Shells
 
@@ -161,6 +177,10 @@ autoenv is tested on:
 ## Disclaimer
 
 Autoenv overrides `cd` (unless `AUTOENV_PRESERVE_CD` is set to a non-empty string). If you already do this, invoke `autoenv_init` within your custom `cd` after sourcing `activate.sh`.
+
+If you define a `cd` alias, `autoenv` will (properly) show an error except when using Zsh. We recommend removing any aliases to `cd`! (`unalias cd`).
+
+If you are using `dash`, `autoenv` will work. However, `dash` does not support `builtin`. As a result, in `dash`, `autoenv` invokes `chdir` instead of `cd` to prevent infinite loops.
 
 Autoenv can be disabled via `unset -f cd` if you experience I/O issues with certain file systems, particularly those that are FUSE-based (such as `smbnetfs`).
 

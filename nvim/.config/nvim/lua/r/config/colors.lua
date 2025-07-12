@@ -1326,14 +1326,14 @@ local general_overrides = function()
 
     {
       ["@markup.link.label.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+        fg = { from = "Keyword", attr = "fg" },
         bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
         bold = true,
       },
     },
     {
       ["@markup.quote.markdown"] = {
-        fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        fg = { from = "Boolean", attr = "fg" },
         bg = Highlight.darken(Highlight.get("Boolean", "fg"), 0.2, Highlight.get("Normal", "bg")),
         italic = true,
         bold = false,
@@ -1341,14 +1341,14 @@ local general_overrides = function()
     },
     {
       ["@markup.strong.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+        fg = { from = "Keyword", attr = "fg" },
         bg = "NONE",
         bold = true,
       },
     },
     {
       ["@markup.italic.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.4 },
+        fg = { from = "Keyword", attr = "fg" },
         bg = "NONE",
         bold = false,
         italic = true,
@@ -1356,7 +1356,7 @@ local general_overrides = function()
     },
     {
       ["@markup.raw.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+        fg = { from = "Keyword", attr = "fg" },
         bg = { from = "Normal", attr = "bg", alter = 0.6 },
         bold = true,
         reverse = false,
@@ -1376,12 +1376,12 @@ local general_overrides = function()
     },
     {
       markdownBold = {
-        fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        fg = { from = "Boolean", attr = "fg" },
         bold = true,
       },
     },
 
-    { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+    { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
     {
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = 0.2 },
@@ -1740,14 +1740,14 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.1 } } },
+      -- { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
