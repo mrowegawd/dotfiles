@@ -921,7 +921,7 @@ function M.change_colors()
   local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
   local tmux_bg = Highlight.get("Normal", "bg")
-  local tmux_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.5)
+  local tmux_fg = Highlight.tint(Highlight.get("WinbarFilepath", "fg"), -0.1)
 
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
@@ -959,7 +959,7 @@ function M.change_colors()
   local fzf_header = Highlight.get("FzfLuaHeaderText", "fg")
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    tmux_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
+    tmux_fg = Highlight.tint(Highlight.get("WinbarFilepath", "fg"), 0.1)
     statusline_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
 
     lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29

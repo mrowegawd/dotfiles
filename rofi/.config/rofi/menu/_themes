@@ -533,6 +533,7 @@ set_eww() {
   sed -i -e "s/^\$magenta: .*/\$magenta: $GET_COL_19;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
 
+  sed -i -e "s/^\$keyword: .*/\$keyword: $GET_COL_17;/g" "$EWW_PATH/eww.scss"
 }
 set_firefox() {
   IGET_CUS="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"

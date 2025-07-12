@@ -76,8 +76,6 @@ return {
           formatting_options = nil,
           timeout_ms = nil,
         },
-        -- LSP Server Settings
-        ---@type lspconfig.options
         servers = {
           lua_ls = {
             -- mason = false, -- set to false if you don't want this server to be installed with mason
@@ -110,7 +108,6 @@ return {
         },
         -- you can do any additional lsp server setup here
         -- return true if you don't want this server to be setup with lspconfig
-        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
         setup = {
           -- example to setup with typescript.nvim
           -- tsserver = function(_, opts)
@@ -157,6 +154,7 @@ return {
       if vim.fn.has "nvim-0.10" == 1 then
         -- inlay hints
         if opts.inlay_hints.enabled then
+          ---@diagnostic disable-next-line: unused-local
           RUtils.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
             if
               vim.api.nvim_buf_is_valid(buffer)
@@ -170,6 +168,7 @@ return {
 
         -- code lens
         if opts.codelens.enabled and vim.lsp.codelens then
+          ---@diagnostic disable-next-line: unused-local
           RUtils.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
             vim.lsp.codelens.refresh()
             vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
