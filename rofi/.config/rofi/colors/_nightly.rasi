@@ -1,5 +1,4 @@
 * {
-
     background:                     %%background%%;
     foreground:                     %%foreground%%;
     background-alt:                 %%background_alt%%;

@@ -1,13 +1,12 @@
+@import "colors/colorsdock.rasi"
+
 configuration {
-    font:                           "JetBrainsMono NF 20";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
     disable-history:                false;
     sidebar-mode: 					        false;
 }
-
-@import "colors/colors.rasi"
 
 window {
     transparency:                   "screenshot";

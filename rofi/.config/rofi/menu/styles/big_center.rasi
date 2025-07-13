@@ -1,5 +1,6 @@
+@import "colors/colors.rasi"
+
 configuration {
-    font: 						            "JetBrainsMono NF 14";
     /* padding: 					            0; */
     fixed-num-lines: 	            true;
     show-icons: 			            false;
@@ -25,8 +26,6 @@ configuration {
     kb-row-up:                    "Up,Control+p";
     kb-row-down:                  "Down,Control+n";
 }
-
-@import "colors/colors.rasi"
 
 * {
     background-color:             @background;

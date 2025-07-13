@@ -1,0 +1,6 @@
+
+configuration {
+    font:                           "JetBrains Mono 20";
+}
+
+@import "nightly.rasi"

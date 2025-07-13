@@ -1,5 +1,6 @@
+@import "colors/colors.rasi"
+
 configuration {
-    font:							              "JetBrainsMono NF 14";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
@@ -20,8 +21,6 @@ configuration {
     kb-row-down:                    "Down,Control+n";
 }
 
-@import "colors/colors.rasi"
-
 * {
     background-color:               @background;
 }
@@ -35,8 +34,8 @@ window {
     border-radius:                  12px;
     width: 						              20%;
     height: 					              50%;
-    y-offset:                       -10em;
-    x-offset:                       -23em;
+    y-offset:                       -8.5em;
+    x-offset:                       -22em;
 }
 
 prompt {

@@ -1,6 +1,6 @@
+@import "colors/colors.rasi"
 
 configuration {
-	  font:							              "SF Mono 14";
 	  icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
     disable-history:                false;
@@ -14,8 +14,6 @@ configuration {
     kb-row-up:                      "Up,Control+p";
     kb-row-down:                    "Down,Control+n";
 }
-
-@import "colors/colors.rasi"
 
 * {
     background-color:               @background;

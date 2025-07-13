@@ -1,14 +1,12 @@
-
-@import "colors/colors.rasi"
+@import "colors/colorsdock.rasi"
 
 * {
     background-color:       @background;
     text-color:             @border;
-    font:                   "JetBrainsMono NF 18";
 }
 
 window {
-    width:      		        650px;
+    width:      		        660px;
     padding:    		        25px;
     border:					        1px;
     border-radius:          10px;
