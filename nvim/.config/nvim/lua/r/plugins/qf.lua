@@ -12,7 +12,10 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
       { "mm" },
-      { "mt" },
+      -- { "mt" },
+      { "<Leader>fn" },
+      { "<Leader>fN" },
+      -- { "mn" },
       { "mf" },
       { "<Leader>wn" },
       { "<Leader>wp" },
@@ -77,7 +80,10 @@ return {
       },
       keymap = {
         todo = {
-          add_todo = "mt",
+          add_todo = "<Leader>fn",
+          add_todo_global = "<Leader>fN",
+          add_link_capture = "mc",
+          goto_link_capture = "g<cr>",
         },
         marks = {
           next_mark = "<Leader>wn",
