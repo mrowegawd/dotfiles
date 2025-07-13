@@ -3123,7 +3123,7 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.05
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
@@ -3169,8 +3169,8 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.68 } } },
 
-      { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.4 } } },
-      { WinbarFontWhite = { inherit = "StatusLineFontWhite" } },
+      { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.35 } } },
+      { WinbarFontWhite = { fg = { from = "StatusLineFontWhite", attr = "fg", alter = -0.2 } } },
     },
   }
 

@@ -1,7 +1,8 @@
 # vim: set ft:conf
 
 auto-reload                 yes
-browser                     zen-browser
+# browser                     firefox
+browser                     "xdg-open %u"
 datetime-format             "%F"  # ISO 8601
 refresh-on-startup          yes
 player                      "mpv"

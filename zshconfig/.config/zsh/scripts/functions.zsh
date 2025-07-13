@@ -61,6 +61,11 @@ build-install() {
   # if ! command -v btop >/dev/null; then
   #   echo "Installing: btop - A monitor of resources"
   #   wget https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
+  #   extract di path /src
+  #   lalu 'sudo make install'.. and done!
+  #
+  #   Install newsboat: `sudo snap install newsboat`
+  #
   # fi
 
   # if ! command -v ueberzugpp >/dev/null; then
