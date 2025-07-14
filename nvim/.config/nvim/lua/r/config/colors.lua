@@ -314,6 +314,7 @@ reset_base_alter({ "vscode_modern" }, {
   pmenusel_bg_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.55,
   winseparator_alter = 0.85,
 })
 
@@ -1117,8 +1118,13 @@ local general_overrides = function()
     { SnacksPickerManSection = { link = "FzfLuaFzfMatchFuzzy" } },
     { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
-    { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
     { SnacksPickerBorder = { link = "FzfLuaBorder" } },
+
+    { SnacksPickerList = { inherit = "NormalFloat" } },
+    { SnacksPickerPrompt = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerListBorder = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerInput = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
 
     -- ╭──────────────────╮
     -- │ SNACKS DASHBOARD │
@@ -3168,7 +3174,6 @@ local function colorscheme_overrides()
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.68 } } },
-
       { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.35 } } },
       { WinbarFontWhite = { fg = { from = "StatusLineFontWhite", attr = "fg", alter = -0.2 } } },
     },

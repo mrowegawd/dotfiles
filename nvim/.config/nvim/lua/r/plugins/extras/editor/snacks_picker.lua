@@ -122,6 +122,24 @@ return {
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
       { "<Localleader>sf", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
       { "<Localleader>sF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
+      {
+        "<Localleader>sN",
+        function()
+          Snacks.win({
+            file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
+            width = 0.6,
+            height = 0.6,
+            wo = {
+              spell = false,
+              wrap = false,
+              signcolumn = "yes",
+              statuscolumn = " ",
+              conceallevel = 3,
+            },
+          })
+        end,
+        desc = "Snackspicker: neovim news [snackspicker]",
+      },
 
       -- Buffers
       { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Buffer: buffer lines [snackspicker]", },
@@ -130,7 +148,7 @@ return {
       { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
       { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
-      { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Picker: projects [snackspicker]", },
+      -- { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Picker: projects [snackspicker]", },
       -- Git
       { "<Leader>gc", function() Snacks.picker.git_log() end, desc = "Git: git log [snackspicker]", },
       { "<Leader>gd", function() Snacks.picker.git_diff() end, desc = "Git: git diff (hunks) [snackspicker]", },

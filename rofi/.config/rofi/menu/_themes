@@ -6,7 +6,7 @@ DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
 MISCXRDB_PATH="$HOME/.config/miscxrdb"
 ERROR_MSG="[!] Sorry..we abort it"
 
-NEW_FONTS="JetBrainsMono NF"
+NEW_FONTS="JetBrains Mono"
 NEW_FONTS_SIZE=16
 
 GET_FG=$(xrdb -query | grep -i foreground | cut -d':' -f2 | xargs)

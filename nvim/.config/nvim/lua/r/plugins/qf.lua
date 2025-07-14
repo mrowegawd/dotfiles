@@ -15,6 +15,7 @@ return {
       -- { "mt" },
       { "<Leader>fn" },
       { "<Leader>fN" },
+      { "<Leader>fp" },
       -- { "mn" },
       { "mf" },
       { "<Leader>wn" },
@@ -41,10 +42,6 @@ return {
         title_global = "MESSAGE BOX",
         winhighlight = "Normal:NormalBoxComment,FloatBorder:FloatBoxComment,EndOfBuffer:NormalBoxComment,Visual:VisualBoxComment",
         higroup_title = "FzfLuaPreviewTitle",
-        todo = {
-          local_use = "orgmode", -- orgmode or custom
-          global_use = "default",
-        },
       },
       theme_list = { enabled = false },
       marks = {
@@ -80,8 +77,10 @@ return {
       },
       keymap = {
         todo = {
-          add_todo = "<Leader>fn",
-          add_todo_global = "<Leader>fN",
+          add_local = "<Leader>fp",
+          add_global = "<Leader>fn",
+          add_message = "<Leader>fN",
+
           add_link_capture = "mc",
           goto_link_capture = "g<cr>",
         },
