@@ -1,7 +1,6 @@
 return {
   -- TREESITTER
   {
-
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     branch = "main",
@@ -44,24 +43,6 @@ return {
         "yaml",
         "zathurarc",
       },
-      -- incremental_selection = {
-      --   enable = true,
-      --   keymaps = {
-      --     init_selection = "<C-a>",
-      --     node_incremental = "<C-a>",
-      --     scope_incremental = false,
-      --     node_decremental = "<bs>",
-      --   },
-      -- },
-      -- textobjects = {
-      --   move = {
-      --     enable = true,
-      --     goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-      --     goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
-      --     goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-      --     goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
-      --   },
-      -- },
     },
     config = function(_, opts)
       if type(opts.ensure_installed) == "table" then
@@ -130,39 +111,6 @@ return {
       end, { desc = "LSP: swap parameter prev" })
     end,
   },
-  -- NVIM-TREESITTER-TEXTOBJECTS
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-textobjects",
-  --   event = "LazyFile",
-  --   config = function()
-  --     -- If treesitter is already loaded, we need to run config again for textobjects
-  --     if RUtils.is_loaded "nvim-treesitter" then
-  --       local opts = RUtils.opts "nvim-treesitter"
-  --       ---@diagnostic disable-next-line: missing-fields
-  --       require("nvim-treesitter.configs").setup { textobjects = opts.textobjects }
-  --     end
-  --     -- When in diff mode, we want to use the default
-  --     -- vim text objects c & C instead of the treesitter ones.
-  --     local move = require "nvim-treesitter.textobjects.move" ---@type table<string,fun(...)>
-  --     local configs = require "nvim-treesitter.configs"
-  --     for name, fn in pairs(move) do
-  --       if name:find "goto" == 1 then
-  --         move[name] = function(q, ...)
-  --           if vim.wo.diff then
-  --             local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-  --             for key, query in pairs(config or {}) do
-  --               if q == query and key:find "[%]%[][cC]" then
-  --                 vim.cmd("normal! " .. key)
-  --                 return
-  --               end
-  --             end
-  --           end
-  --           return fn(q, ...)
-  --         end
-  --       end
-  --     end
-  --   end,
-  -- },
   -- NVIM-TREESITTER-CONTEXT
   {
     "mrowegawd/nvim-treesitter-context",
@@ -208,14 +156,6 @@ return {
               bg = { from = "TreesitterContext" },
             },
           },
-          -- {
-          --   TreesitterContextLineNumberBottom = {
-          --     fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = -0.3 },
-          --     underline = false,
-          --     undercurl = false,
-          --     sp = "NONE",
-          --   },
-          -- },
         },
       }
       Highlight.plugin("treesitter-context", {
@@ -230,7 +170,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.55 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.58 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -240,6 +180,21 @@ return {
                 underline = false,
                 undercurl = false,
                 sp = "NONE",
+              },
+            },
+          },
+          ["base46-everforest"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.45 },
+                bg = { from = "TreesitterContext" },
               },
             },
           },
@@ -343,7 +298,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.95 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.6 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -358,7 +313,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.6 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -389,7 +344,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.45 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.5 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -404,7 +359,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.5 },
                 bg = { from = "TreesitterContext" },
               },
             },

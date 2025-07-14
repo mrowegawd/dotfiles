@@ -23,19 +23,6 @@ end
 -- local ft_left_exclude = { "qf", "neo-tree", "trouble", "Outline", "dashboard" }
 -- local ft_left_exclude = { "qf", "neo-tree", "dashboard" }
 
-local function get_hl_as_hex(opts, ns)
-  ns, opts = ns or 0, opts or {}
-  opts.link = opts.link ~= nil and opts.link or false
-  local hl = vim.api.nvim_get_hl(ns, opts)
-  hl.fg = hl.fg and ("#%06x"):format(hl.fg)
-  hl.bg = hl.bg and ("#%06x"):format(hl.bg)
-  return hl
-end
-
-local function h(name)
-  return get_hl_as_hex { name = name }
-end
-
 local state = { lsp_clients_visible = true }
 
 local function stl_lsp_clients()
@@ -75,6 +62,20 @@ local function stl_lsp_clients()
   end, clients)
 end
 
+local rmux_pane = function()
+  local watch = ""
+  local run_with = ""
+  local rmux = require("rmux").status_panes_targeted()
+  if type(rmux) == "table" and (rmux.watch and #rmux.watch > 0) then
+    watch = table.concat(rmux.watch, " ")
+  end
+  if type(rmux) == "table" and (rmux.run_with and #rmux.run_with > 0) then
+    run_with = rmux.run_with
+  end
+
+  return run_with, watch
+end
+
 local set_conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
@@ -98,43 +99,58 @@ local set_conditions = {
   end,
 }
 
-local colors = {
-  statusline_bg = h("StatusLine").bg,
-  statusline_fg = h("StatusLine").fg,
+local function __colors()
+  local H = require "r.settings.highlights"
 
-  normal_bg = h("Normal").bg,
-  normal_fg_white = h("StatusLineFontWhite").fg,
+  local set_col_light = { fg_normal = 2, fg_branch = 4 }
+  local set_col_normal = { fg_normal = 3, fg_branch = 2 }
+  local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
-  filepath = h("StatusLineFilepath").fg,
+  return {
+    statusline_fg = H.get("StatusLine", "fg"),
+    statusline_bg = H.get("StatusLine", "bg"),
 
-  winbar_filepath = h("WinbarFilepath").fg,
-  winbar_fontwhite = h("WinbarFontWhite").fg,
-  winbar_dap = "lightgray",
+    -- keyword = H.get("Keyword", "fg"),
+    keyword = H.tint(H.get("StatusLine", "fg"), 4),
 
-  mode_bg = h("Keyword").fg,
+    normal_bg = H.get("Normal", "bg"),
 
-  branch_fg = h("StatusLineBranchName").fg,
-  modified_fg = h("KeywordMatch").fg,
-  coldisorent = h("LineNr").fg,
+    block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.fg_normal),
+    block_bg = H.tint(H.get("StatusLine", "bg"), 0.5),
+    block_fg_darken = H.tint(H.get("StatusLine", "bg"), 1.4),
+    block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
 
-  notif = h("StatusLineFontNotice").fg,
+    block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
+    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Folded", "bg")), 2),
 
-  mode_insert_bg = h("KeywordMatch").fg,
+    winbar_fg = H.get("WinbarFilepath", "fg"),
+    -- winbar_keyword = H.get("Keyword", "fg"),
+    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Folded", "bg")), 0.5),
+    winbar_dap = "lightgray",
 
-  mode_term_bg = h("Boolean").fg,
-  mode_visual_bg = h("Visual").bg,
+    modified_fg = H.get("KeywordMatch", "fg"),
+    coldisorent = H.get("LineNr", "fg"),
 
-  boolean = h("Boolean").fg,
+    mode_insert_bg = H.get("KeywordMatch", "fg"),
 
-  diff_add = h("GitSignsAdd").fg,
-  diff_change = h("GitSignsChange").fg,
-  diff_delete = h("GitSignsDelete").fg,
+    mode_term_bg = H.get("Boolean", "fg"),
+    mode_visual_bg = H.get("Visual", "bg"),
 
-  diagnostic_err = h("DiagnosticSignError").fg,
-  diagnostic_hint = h("DiagnosticSignHint").fg,
-  diagnostic_info = h("DiagnosticSignInfo").fg,
-  diagnostic_warn = h("DiagnosticSignWarn").fg,
-}
+    branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.fg_branch, H.get("WinSeparator", "fg")),
+    branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
+
+    diff_add = H.get("GitSignsAdd", "fg"),
+    diff_change = H.get("GitSignsChange", "fg"),
+    diff_delete = H.get("GitSignsDelete", "fg"),
+
+    diagnostic_err = H.get("DiagnosticSignError", "fg"),
+    diagnostic_hint = H.get("DiagnosticSignHint", "fg"),
+    diagnostic_info = H.get("DiagnosticSignInfo", "fg"),
+    diagnostic_warn = H.get("DiagnosticSignWarn", "fg"),
+  }
+end
+
+local colors = __colors()
 
 local exclude = {
   ["NvimTree"] = true,
@@ -195,7 +211,7 @@ local mode_icons = {
 }
 
 local mode_colors = {
-  n = colors.mode_bg,
+  n = colors.keyword,
   i = colors.mode_insert_bg,
   v = colors.mode_visual_bg,
   V = colors.mode_visual_bg,
@@ -237,7 +253,7 @@ M.Mode = {
       local mode = self.mode:sub(1, 1)
       local fg = colors.normal_bg
       if mode == "V" or mode == "v" or mode == "vs" then
-        fg = colors.normal_fg_white
+        fg = colors.keyword
       end
       return { bg = self.mode_colors[mode], fg = fg, bold = true }
     end,
@@ -246,10 +262,15 @@ M.Mode = {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      return { fg = self.mode_colors[mode], bg = colors.statusline_bg }
+      local bg = colors.branch_bg
+
+      if not Conditions.is_git_repo() then
+        bg = tostring(colors.statusline_bg)
+      end
+
+      return { fg = self.mode_colors[mode], bg = bg }
     end,
   },
-  { provider = "  " },
 }
 
 local function git_branch()
@@ -260,21 +281,14 @@ M.Branch = {
     return Conditions.is_git_repo() and git_branch() ~= nil
   end,
   {
-    provider = function()
-      return " " .. git_branch() .. " "
-    end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
     end,
-    hl = { fg = colors.branch_fg, bold = true },
+    provider = function()
+      return "  " .. git_branch() .. " "
+    end,
+    hl = { fg = colors.branch_fg, bg = colors.branch_bg, bold = true },
   },
-  -- {
-  --   provider = function(self)
-  --     if #self.status_dict.head > 0 then
-  --       return "  "
-  --     end
-  --   end,
-  -- },
 }
 M.FilePath = {
   init = function(self)
@@ -285,6 +299,21 @@ M.FilePath = {
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
   end,
+  {
+    provider = function(self)
+      if #self.filename == 0 then
+        return ""
+      end
+      return RUtils.config.icons.misc.separator_up .. " "
+    end,
+    hl = function()
+      local fg = colors.branch_bg
+      if not Conditions.is_git_repo() then
+        fg = tostring(colors.statusline_bg)
+      end
+      return { fg = fg, bg = colors.block_bg }
+    end,
+  },
   {
     provider = function(self)
       local opts = {
@@ -351,22 +380,31 @@ M.FilePath = {
       -- return statusline path untuk non active window
       return self.filename .. "  "
     end,
-    hl = { fg = colors.filepath },
+    hl = { fg = colors.block_fg, bg = colors.block_bg },
   },
   {
     provider = function(self)
       if #self.filename == 0 then
-        return vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
+        return vim.api.nvim_get_option_value("filetype", { buf = 0 })
       end
-      return RUtils.file.basename(self.filename)
+      return RUtils.file.basename(self.filename) .. " "
     end,
     hl = function(self)
-      local fg = colors.normal_fg_white
+      local fg = tostring(colors.keyword)
       if self.exclude_ft then
-        fg = colors.statusline_fg
+        fg = colors.block_fg
       end
-      return { fg = fg, bold = true, italic = true }
+      return { fg = fg, bg = colors.block_bg, bold = true }
     end,
+  },
+  {
+    provider = function(self)
+      if #self.filename == 0 then
+        return ""
+      end
+      return RUtils.config.icons.misc.separator_up
+    end,
+    hl = { bg = colors.statusline_bg, fg = colors.block_bg },
   },
 }
 M.FileIcon = {
@@ -386,20 +424,6 @@ M.FileIcon = {
     return { fg = self.icon_color }
   end,
 }
-M.Filetype = {
-  condition = function()
-    return (vim.bo.filetype ~= "fzf")
-      and (vim.bo.filetype ~= "qf")
-      and (not vim.bo.modifiable or vim.bo.readonly)
-      and not (vim.bo.filetype == "DiffviewFiles")
-  end,
-  {
-    provider = function()
-      return vim.bo.filetype .. "  "
-    end,
-    hl = { fg = colors.coldisorent },
-  },
-}
 M.Git = {
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
@@ -408,6 +432,16 @@ M.Git = {
   condition = function()
     return Conditions.is_git_repo()
   end,
+  {
+    provider = function(self)
+      local count_add = self.status_dict.added or 0
+      local count_changed = self.status_dict.changed or 0
+      local count_removed = self.status_dict.removed or 0
+      if count_add > 0 or count_changed > 0 or count_removed > 0 then
+        return " "
+      end
+    end,
+  },
   {
     provider = function(self)
       local count = self.status_dict.added or 0
@@ -437,6 +471,7 @@ M.Git = {
       if count_add > 0 or count_changed > 0 or count_removed > 0 then
         return " "
       end
+      return ""
     end,
   },
 }
@@ -460,10 +495,10 @@ M.QuickfixStatus = {
       return qflists
     end
   end,
-  {
-    provider = "Index: ",
-    hl = { fg = colors.statusline_fg },
-  },
+  -- {
+  --   provider = "  ",
+  --   hl = { fg = colors.statusline_fg },
+  -- },
   {
     provider = function(self)
       local msg
@@ -472,9 +507,9 @@ M.QuickfixStatus = {
       else
         msg = string.format("%s/%s", vim.fn.getqflist({ id = 0 }).id, #self.qflists())
       end
-      return msg .. " "
+      return " " .. msg .. " "
     end,
-    hl = { fg = colors.normal_fg_white },
+    hl = { fg = colors.keyword },
   },
   {
     provider = "Title: ",
@@ -490,7 +525,7 @@ M.QuickfixStatus = {
       end
       return msg .. " "
     end,
-    hl = { fg = colors.normal_fg_white },
+    hl = { fg = colors.keyword },
   },
 }
 M.FileFlags = {
@@ -505,13 +540,12 @@ M.FileFlags = {
     condition = function()
       return (not vim.bo.modifiable or vim.bo.readonly) and not (vim.bo.filetype == "DiffviewFiles")
     end,
-    provider = RUtils.config.icons.misc.readonly,
+    provider = " " .. RUtils.config.icons.misc.readonly,
     hl = function()
       local fg = colors.diagnostic_err
       if Conditions.is_not_active() then
         fg = colors.coldisorent
       end
-
       return { fg = fg }
     end,
   },
@@ -632,7 +666,7 @@ M.virtualenv = {
         return self.venv .. "  "
       end
     end,
-    hl = { fg = colors.boolean, bold = false },
+    hl = { fg = colors.mode_term_bg, bold = false },
   },
 }
 M.LSPActive = {
@@ -664,7 +698,7 @@ M.LSPActive = {
       end
       return lsp_clients_str
     end,
-    hl = { fg = colors.normal_fg_white, bold = true },
+    hl = { fg = colors.keyword, bold = true },
   },
   {
     provider = function(self)
@@ -812,55 +846,6 @@ M.Diagnostics = {
     end,
   },
 }
-M.RmuxTargetPane = {
-  condition = function()
-    return set_conditions.hide_in_col_width(120)
-  end,
-  init = function(self)
-    self.watch = ""
-    self.run_with = ""
-
-    local rmux = require("rmux").status_panes_targeted()
-    if type(rmux) == "table" and (rmux.watch and #rmux.watch > 0) then
-      self.watch = table.concat(rmux.watch, " ")
-    end
-    if type(rmux) == "table" and (rmux.run_with and #rmux.run_with > 0) then
-      self.run_with = rmux.run_with
-    end
-  end,
-  {
-    provider = function(self)
-      if #self.watch > 0 then
-        return self.run_with
-      end
-    end,
-    hl = { fg = colors.statusline_fg, bold = true },
-  },
-
-  {
-    provider = function(self)
-      if #self.watch > 0 then
-        return " Watch: "
-      end
-    end,
-    hl = { fg = colors.statusline_fg, italic = true },
-  },
-  {
-    provider = function(self)
-      if #self.watch > 0 then
-        return self.watch
-      end
-    end,
-    hl = { fg = colors.notif, bold = true },
-  },
-  {
-    provider = function(self)
-      if #self.watch > 0 then
-        return "  "
-      end
-    end,
-  },
-}
 M.LazyStatus = {
   condition = function()
     return require("lazy.status").has_updates() and set_conditions.hide_in_col_width(150)
@@ -876,7 +861,7 @@ M.LazyStatus = {
         return status_lazy .. "  "
       end
     end,
-    hl = { fg = colors.notif, bold = true },
+    hl = { fg = colors.block_notice, bold = true },
   },
 }
 M.Sessions = {
@@ -981,6 +966,99 @@ M.BufferCwd = {
     hl = { fg = colors.statusline_fg },
   },
 }
+M.RmuxTargetPane = {
+  init = function(self)
+    self.run_with, self.watch = rmux_pane()
+  end,
+  condition = function()
+    return set_conditions.hide_in_col_width(120)
+  end,
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return RUtils.config.icons.misc.separator_down .. " "
+      end
+    end,
+    hl = { fg = colors.statusline_bg, bg = colors.block_notice },
+  },
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return self.run_with
+      end
+    end,
+    hl = { fg = colors.normal_bg, bg = colors.block_notice },
+  },
+
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return " W "
+      end
+    end,
+    hl = { fg = colors.normal_bg, bg = colors.block_notice },
+  },
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return self.watch
+      end
+    end,
+    hl = { fg = colors.block_notice_keyword, bg = colors.block_notice, bold = true },
+  },
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return RUtils.config.icons.misc.separator_down
+      end
+    end,
+    hl = { fg = colors.block_notice, bg = colors.block_notice },
+  },
+}
+M.Filetype = {
+  init = function(self)
+    local filetype = vim.bo.filetype
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    self.path = vim.fn.expand "%:p" --[[@as string]]
+    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+    self.filetype = filetype
+
+    self.run_with, self.watch = rmux_pane()
+  end,
+  {
+    provider = RUtils.config.icons.misc.separator_down .. " ",
+    hl = function(self)
+      local fg = colors.statusline_bg
+      if #self.watch > 0 then
+        fg = colors.block_notice
+      end
+      return { fg = fg, bg = colors.block_bg_darken }
+    end,
+  },
+  {
+    provider = function(self)
+      if self.path == "" then
+        return ""
+      end
+      return self.icon and (self.icon .. " ")
+    end,
+    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+  },
+  {
+    provider = function(self)
+      return self.filetype
+    end,
+    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+  },
+  {
+    provider = function(self)
+      if #self.filetype > 0 then
+        return " "
+      end
+    end,
+    hl = { fg = colors.block_fg, bg = colors.block_bg_darken },
+  },
+}
 M.Ruler = {
   condition = function()
     return set_conditions.hide_in_col_width(150)
@@ -995,6 +1073,10 @@ M.Ruler = {
     self.rhs = rhs
   end,
   {
+    provider = RUtils.config.icons.misc.separator_down .. " ",
+    hl = { fg = colors.block_bg_darken, bg = colors.block_bg },
+  },
+  {
     provider = function(self)
       local rhs = ""
 
@@ -1005,22 +1087,23 @@ M.Ruler = {
       end
       return rhs
     end,
+    hl = { bg = colors.block_bg },
   },
-  {
-    provider = function(self)
-      local rhs = self.rhs
-      rhs = rhs .. "ℓ: " -- (Literal, \ℓ "SCRIPT SMALL L").
-      return rhs
-    end,
-    hl = { fg = colors.statusline_fg, bold = true },
-  },
+  -- {
+  --   provider = function(self)
+  --     -- local rhs = self.rhs
+  --     -- rhs = rhs .. "ℓ: " -- (Literal, \ℓ "SCRIPT SMALL L").
+  --     return self.rhs
+  --   end,
+  --   hl = { fg = colors.statusline_fg, bold = true },
+  -- },
   {
     provider = function(self)
       local rhs = self.rhs
       rhs = rhs .. self.line
       return rhs
     end,
-    hl = { fg = colors.normal_fg_white },
+    hl = { fg = colors.keyword, bg = colors.block_bg },
   },
   {
     provider = function(self)
@@ -1030,32 +1113,29 @@ M.Ruler = {
       rhs = rhs .. self.height
       return rhs
     end,
-    hl = { fg = colors.statusline_fg },
+    hl = { fg = colors.block_fg, bg = colors.block_bg },
   },
-  {
-    provider = function(self)
-      local rhs = self.rhs
-      rhs = rhs .. " Col: " -- (Literal, \ℓ "SCRIPT SMALL L").
-      return rhs
-    end,
-    hl = { fg = colors.statusline_fg, bold = true },
-  },
+  -- {
+  --   provider = function(self)
+  --     local rhs = self.rhs
+  --     rhs = rhs .. " Col: " -- (Literal, \ℓ "SCRIPT SMALL L").
+  --     return rhs
+  --   end,
+  --   hl = { fg = colors.statusline_fg, bold = true },
+  -- },
   {
     provider = function(self)
       -- Add padding to stop RHS from changing too much as we move the cursor.
       local rhs = self.rhs
-      rhs = rhs .. self.column
+      -- rhs = rhs .. self.column
 
       -- Add padding to stop rhs from changing too much as we move the cursor.
-      if #tostring(self.column) < 2 then
-        rhs = rhs .. " "
-      end
-      return rhs
+      -- if #tostring(self.column) < 2 then
+      --   rhs = rhs .. " "
+      -- end
+      return rhs .. " "
     end,
-    hl = { fg = colors.normal_fg_white },
-  },
-  {
-    provider = " ",
+    hl = { fg = colors.keyword, bg = colors.block_bg },
   },
 }
 M.Clock = {
@@ -1133,10 +1213,10 @@ M.Separator = {
 -- ╙
 M.status_active_left = {
   condition = Conditions.is_active,
-  M.Mode,
+  -- M.Mode,
   M.Branch,
   M.FilePath,
-  M.FileIcon,
+  -- M.FileIcon,
   M.Git,
   M.QuickfixStatus,
   M.FileFlags,
@@ -1146,8 +1226,7 @@ M.status_active_left = {
   M.LazyStatus,
   M.Tasks,
   M.Dap,
-  M.RmuxTargetPane,
-  M.LSPActive,
+  -- M.LSPActive,
   M.Diagnostics,
   M.virtualenv,
   -- M.SnacksProfile,
@@ -1155,10 +1234,11 @@ M.status_active_left = {
   M.PinnedBuffer,
   M.Marks,
   M.Sessions,
-  -- M.Filetype,
   M.BufferCwd,
+  M.RmuxTargetPane,
+  M.Filetype,
   M.Ruler,
-  M.Clock,
+  -- M.Clock,
 
   hl = { fg = colors.statusline_fg, bg = colors.statusline_bg },
 }
@@ -1237,17 +1317,17 @@ M.WinbarFilePath = {
       -- return statusline path untuk non active window
       return self.filename
     end,
-    hl = { fg = colors.winbar_filepath, bold = true },
+    hl = { fg = colors.winbar_fg, bold = true },
   },
   {
     provider = function(self)
       return RUtils.file.basename(self.filename)
     end,
     hl = function()
-      local fg = colors.winbar_filepath
+      local fg = colors.winbar_fg
       local italic = true
       if Conditions.is_active() then
-        fg = colors.winbar_fontwhite
+        fg = colors.winbar_keyword
         italic = true
       end
       return { fg = fg, bold = true, italic = italic }
@@ -1266,7 +1346,7 @@ M.WinbarIcons = {
     if self.path == "" then
       return ""
     end
-    return self.icon and (self.icon .. " ")
+    return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
     return { fg = self.icon_color }
@@ -1285,7 +1365,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     if vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype) then
-      return { fg = colors.winbar_filepath, bg = colors.winbar_dap, bold = true }
+      return { fg = colors.winbar_fg, bg = colors.winbar_dap, bold = true }
     end
     return { fg = colors.statusline_fg, bg = colors.normal_bg }
   end,

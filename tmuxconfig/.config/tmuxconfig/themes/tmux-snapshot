@@ -2,16 +2,16 @@ ACTIVE_BG="#212c36"
 ACTIVE_FG="#2b4e6b"
 
 STATUSLINE_BG_MESSAGE="#dcdcaa"
-STATUSLINE_FG="#4c4c4c"
+STATUSLINE_FG="#2e5473"
 
 SESSION_BG="#d4d4d4"
 SESSION_FG="#1f1f1f"
 
 TMUX_BG="#1f1f1f"
-TMUX_FG="#565656"
+TMUX_FG="#385e7d"
 
 BORDER_FG_ACTIVE="#569cd6"
-BORDER_FG_NC="#393939"
+BORDER_FG_NC="#3a3a3a"
 
 RED="#f44747"
 BLUE="#569cd6"
@@ -53,10 +53,10 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 #  ╙
 set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
-#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
+#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
 #[fg=$RED]#[bold]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
-#[fg=$BORDER_FG_ACTIVE,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$TMUX_FG,bold] #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
 

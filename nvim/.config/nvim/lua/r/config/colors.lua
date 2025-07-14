@@ -16,7 +16,6 @@ local base_cl = {
   cursorline_fg_alter = "Keyword",
   dapstopped_bg_alter = 0.25,
   fzflua_bg_cursorline_alter = -0.22,
-  fzfluaborder_fg_alter = 0.1,
   fzfluasel_fg_alter = 0,
   linenr_fg_alter = 0.55,
   nontext_fg_alter = 1.5,
@@ -27,7 +26,8 @@ local base_cl = {
   quickfixline_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
-  winbarfilepath_fg_alter = 0.7,
+  -- winbarfilepath_fg_alter = 0.7,
+  winbarfilepath_fg_alter = 0.05,
   winseparator_alter = 0.65,
 }
 
@@ -54,7 +54,6 @@ local function reset_base_alter(themes, alter_base)
     cursorline_fg_alter = "cursorline_fg_alter",
     dapstopped_bg_alter = "dapstopped_bg_alter",
     fzflua_bg_cursorline_alter = "fzflua_bg_cursorline_alter",
-    fzfluaborder_fg_alter = "fzfluaborder_fg_alter",
     fzfluasel_fg_alter = "fzfluasel_fg_alter",
     linenr_fg_alter = "linenr_fg_alter",
     nontext_fg_alter = "nontext_fg_alter",
@@ -93,15 +92,17 @@ reset_base_alter({ "base46-catppuccin" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.7,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = 0.6,
+  winbarfilepath_fg_alter = -0.1,
   winseparator_alter = 1.1,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
   cursorline_alter = 0.1,
   pmenusel_bg_alter = 0.15,
+  winbarfilepath_fg_alter = -0.08,
 })
 reset_base_alter({ "base46-doomchad" }, {
+  comment_fg_alter = 0.5,
   cursearch_bg_alter = 0.95,
   cursor_fg = "#81A1C1",
   cursorline_alter = 0.35,
@@ -110,6 +111,7 @@ reset_base_alter({ "base46-doomchad" }, {
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
   search_bg_alter = 0.95,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-everforest" }, {
@@ -117,10 +119,10 @@ reset_base_alter({ "base46-everforest" }, {
   cursor_fg = "#e69875",
   cursorline_alter = 0.35,
   cursorline_fg_alter = "WinSeparator",
-  fzfluaborder_fg_alter = -0.05,
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
   pmenusel_bg_alter = 0.15,
+  winbarfilepath_fg_alter = -0.1,
   winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-horizon" }, {
@@ -136,6 +138,7 @@ reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
   nontext_fg_alter = 1.25,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 0.65,
 })
 reset_base_alter({ "base46-jellybeans" }, {
@@ -147,7 +150,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.5,
   pmenusel_bg_alter = 0.35,
-  winbarfilepath_fg_alter = 0.72,
+  winbarfilepath_fg_alter = 0.1,
   winseparator_alter = 1.7,
 })
 reset_base_alter({ "base46-kanagawa" }, {
@@ -169,7 +172,7 @@ reset_base_alter({ "base46-material-darker" }, {
   dapstopped_bg_alter = 0.2,
   fzfluasel_fg_alter = -0.1,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = 0.74,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-melange" }, {
@@ -178,7 +181,7 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  winbarfilepath_fg_alter = -0.2,
+  winbarfilepath_fg_alter = 0.05,
   winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-onenord" }, {
@@ -190,6 +193,7 @@ reset_base_alter({ "base46-onenord" }, {
   fzfluasel_fg_alter = -0.1,
   linenr_fg_alter = 0.37,
   nontext_fg_alter = 1.2,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
@@ -212,6 +216,7 @@ reset_base_alter({ "base46-rosepine" }, {
   linenr_fg_alter = 1,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 1.5,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
@@ -220,13 +225,12 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluaborder_fg_alter = -0.1,
   fzfluasel_fg_alter = -0.15,
   linenr_fg_alter = 0.3,
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.08,
-  winbarfilepath_fg_alter = 0.6,
+  winbarfilepath_fg_alter = -0.13,
   winseparator_alter = 0.28,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
@@ -234,6 +238,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.15,
+  winbarfilepath_fg_alter = -0.15,
   winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-wombat" }, {
@@ -251,12 +256,12 @@ reset_base_alter({ "base46-zenburn" }, {
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.15,
-  fzfluaborder_fg_alter = -0.03,
   fzfluasel_fg_alter = -0.15,
   linenr_fg_alter = 0.3,
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.09,
+  winbarfilepath_fg_alter = -0.15,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "kanso-ink" }, {
@@ -268,6 +273,7 @@ reset_base_alter({ "kanso-ink" }, {
   nontext_fg_alter = 2.8,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 0.3,
+  winbarfilepath_fg_alter = 0.1,
   winseparator_alter = 1.65,
 })
 reset_base_alter({ "lackluster" }, {
@@ -278,7 +284,7 @@ reset_base_alter({ "lackluster" }, {
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
-  winbarfilepath_fg_alter = 1,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 1.85,
 })
 reset_base_alter({ "tokyonight-night" }, {
@@ -288,7 +294,7 @@ reset_base_alter({ "tokyonight-night" }, {
   linenr_fg_alter = 0.95,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = 0.85,
+  winbarfilepath_fg_alter = -0.1,
   winseparator_alter = 1.1,
 })
 reset_base_alter({ "tokyonight-storm" }, {
@@ -300,7 +306,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   linenr_fg_alter = 0.45,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
-  winbarfilepath_fg_alter = 0.55,
+  winbarfilepath_fg_alter = -0.1,
   winseparator_alter = 0.6,
 })
 reset_base_alter({ "vscode_modern" }, {
@@ -314,8 +320,7 @@ reset_base_alter({ "vscode_modern" }, {
   pmenusel_bg_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
-  winbarfilepath_fg_alter = 0.55,
-  winseparator_alter = 0.85,
+  winseparator_alter = 0.9,
 })
 
 local general_overrides = function()
@@ -775,14 +780,10 @@ local general_overrides = function()
     },
 
     -- HEIRLINE
-    { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.2 } } },
     { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 4 } } },
-    { StatusLineBranchName = { fg = { from = "GitSignsAdd", attr = "fg", alter = 0.2 } } },
     { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = 0.2 } } },
 
     -- WINBAR
-    { WinbarFilepath = { fg = { from = "WinSeparator", attr = "fg", alter = winbarfilepath_fg_alter } } },
-    { WinbarFontWhite = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
     { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
 
     -- ╔═════════════════════════════════════════════════════════╗
@@ -1021,13 +1022,7 @@ local general_overrides = function()
     { FzfLuaFzfMatch = { fg = { from = "SearchEdit", attr = "bg", alter = 0.2 }, bg = "NONE" } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
 
-    {
-      FzfLuaSel = {
-        fg = "NONE",
-        bg = { from = "PmenuSel", attr = "bg", alter = fzfluasel_fg_alter },
-        bold = true,
-      },
-    },
+    { FzfLuaSel = { bg = { from = "PmenuSel", attr = "bg", alter = fzfluasel_fg_alter }, fg = "NONE", bold = true } },
     { FzfLuaCursorLine = { bg = { from = "FzfLuaSel", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
     {
       FzfLuaCursorLineNr = {
@@ -1040,13 +1035,8 @@ local general_overrides = function()
     -- │ PRPOMPT │
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-    {
-      FzfLuaBorder = {
-        inherit = "FloatBorder",
-        fg = { from = "WinSeparator", attr = "fg", alter = fzfluaborder_fg_alter },
-      },
-    },
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.3 } } },
+    { FzfLuaBorder = { fg = { from = "FloatBorder", attr = "fg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = -0.1 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
     {
@@ -1176,10 +1166,7 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = Highlight.tint(
-          Highlight.darken(Highlight.get("Function", "fg"), 0.3, Highlight.get("Normal", "bg")),
-          -0.1
-        ),
+        fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
@@ -1689,7 +1676,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.65 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
         },
       },
@@ -1715,7 +1702,7 @@ local function colorscheme_overrides()
       },
 
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.4 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-aylin"] = {
       -- STATUSLINE
@@ -1742,7 +1729,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
@@ -1756,7 +1743,6 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      -- { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1769,10 +1755,9 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.6 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-catppuccin"] = {
-
       -- STATUSLINE
       {
         StatusLine = {
@@ -1797,8 +1782,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -1824,7 +1809,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.55 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-chocolate"] = {
       -- STATUSLINE
@@ -1846,7 +1831,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -1872,7 +1857,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.4 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-doomchad"] = {
       -- GRUG-FAR
@@ -1910,7 +1895,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.15 }, bg = "NONE" } },
 
       {
         TabLine = {
@@ -1929,7 +1914,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.6 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-everforest"] = {
       {
@@ -1979,14 +1964,14 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.32 },
         },
       },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.55 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-horizon"] = {
       -- SNACKS
@@ -2010,15 +1995,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2037,7 +2022,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.68 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jabuti"] = {
       -- STATUSLINE
@@ -2091,7 +2076,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jellybeans"] = {
       {
@@ -2129,7 +2114,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.7 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
@@ -2148,7 +2133,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.7 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-kanagawa"] = {
       -- SNACKS
@@ -2214,7 +2199,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.65 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-material-darker"] = {
       -- MARKDOWN
@@ -2261,7 +2246,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.6 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-melange"] = {
       -- MARKDOWN
@@ -2315,8 +2300,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.6 } } },
-      { WinbarFilepath = { fg = { from = "StatusLineFilepath", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-onenord"] = {
       {
@@ -2374,7 +2358,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-oxocarbon"] = {
       -- GRUG-FAR
@@ -2412,7 +2396,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.02 }, bg = "NONE" } },
 
       {
         TabLine = {
@@ -2431,7 +2415,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.7 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-rosepine"] = {
       {
@@ -2452,7 +2436,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2488,7 +2472,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.65 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-seoul256_dark"] = {
       {
@@ -2546,7 +2530,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.08 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.3 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-solarized_dark"] = {
       {
@@ -2601,7 +2585,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-wombat"] = {
       -- STATUSLINE
@@ -2652,14 +2636,13 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.55 } } },
-      { WinbarFilepath = { fg = { from = "StatusLineFilepath", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-zenburn"] = {
       {
         Folded = {
           inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.1 },
+          fg = { from = "Folded", attr = "fg", alter = -0.15 },
           bg = { from = "Folded", attr = "bg", alter = -0.3 },
         },
       },
@@ -2678,7 +2661,7 @@ local function colorscheme_overrides()
       { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.25, Highlight.get("Normal", "bg")) } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.07 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2701,7 +2684,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.02 }, bg = "NONE" } },
 
       {
         TabLine = {
@@ -2712,8 +2695,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.17 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.3 } } },
-      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["kanso"] = {
       -- GRUG-FAR
@@ -2760,13 +2742,13 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
@@ -2774,7 +2756,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["lackluster"] = {
       { Directory = { fg = "#7788aa", bg = "NONE" } },
@@ -2898,7 +2880,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3.7 },
+          fg = { from = "Normal", attr = "bg", alter = 3.8 },
           bg = { from = "Normal", attr = "bg", alter = 1.4 },
         },
       },
@@ -2913,10 +2895,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.6 } } },
-
-      { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.5 } } },
-      { WinbarFontWhite = { inherit = "StatusLineFontWhite" } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-night"] = {
       -- GRUG-FAR
@@ -2953,14 +2932,14 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
@@ -2970,7 +2949,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-storm"] = {
       -- ORGMODE
@@ -3007,7 +2986,7 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
         },
       },
@@ -3018,7 +2997,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.65 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["vscode_modern"] = {
       {
@@ -3138,6 +3117,14 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
+
+      {
+        StatusLineFile = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          reverse = false,
+        },
+      },
+
       {
         NoiceCmdline = {
           fg = { from = "StatusLine", attr = "fg", alter = 1.2 },
@@ -3149,14 +3136,14 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.14 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.22 }, bg = "NONE" } },
@@ -3173,9 +3160,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.68 } } },
-      { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg", alter = 0.35 } } },
-      { WinbarFontWhite = { fg = { from = "StatusLineFontWhite", attr = "fg", alter = -0.2 } } },
+      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
   }
 

@@ -106,6 +106,68 @@ local function get_hl_as_hex(opts, ns)
   return hl
 end
 
+-- local function get_hl_as_hex(opts, ns)
+--   ns, opts = ns or 0, opts or {}
+--   opts.link = opts.link ~= nil and opts.link or false
+--   local hl = vim.api.nvim_get_hl(ns, opts)
+--   hl.fg = hl.fg and ("#%06x"):format(hl.fg)
+--   hl.bg = hl.bg and ("#%06x"):format(hl.bg)
+--   return hl
+-- end
+
+function M.h(name)
+  return get_hl_as_hex { name = name }
+end
+
+-- Converts a hex color string to RGB values (0-255)
+-- local function hex_to_rgb(hex)
+--   hex = hex:gsub("#", "")
+--   return tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16)
+-- end
+
+local hex_to_rgb = function(hex_str)
+  local hex = "[abcdef0-9][abcdef0-9]"
+  local pat = "^#(" .. hex .. ")(" .. hex .. ")(" .. hex .. ")$"
+
+  if hex_str == "NONE" then
+    hex_str = "#000000" -- create base hex
+  end
+
+  hex_str = string.lower(hex_str)
+  assert(string.find(hex_str, pat) ~= nil, "hex_to_rgb: invalid hex_str: " .. tostring(hex_str))
+
+  local red, green, blue = string.match(hex_str, pat)
+  return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
+end
+
+-- Converts RGB values (0-255) to a hex color string
+local function rgb_to_hex(r, g, b)
+  return string.format("#%02x%02x%02x", r, g, b)
+end
+
+-- Clamp value between 0 and 255
+local function clamp(val)
+  return math.max(0, math.min(255, math.floor(val + 0.5)))
+end
+
+-- Darken a color by a percentage (0.0 to 1.0)
+function M.darkenun(color, amount)
+  local r, g, b = hex_to_rgb(color)
+  r = clamp(r * (1 - amount))
+  g = clamp(g * (1 - amount))
+  b = clamp(b * (1 - amount))
+  return rgb_to_hex(r, g, b)
+end
+
+-- Lighten a color by a percentage (0.0 to 1.0)
+function M.lighten(color, amount)
+  local r, g, b = hex_to_rgb(color)
+  r = clamp(r + (255 - r) * amount)
+  g = clamp(g + (255 - g) * amount)
+  b = clamp(b + (255 - b) * amount)
+  return rgb_to_hex(r, g, b)
+end
+
 --- Change the brightness of a color, negative numbers darken and positive ones brighten
 ---see:
 --- 1. https://stackoverflow.com/q/5560248
@@ -123,22 +185,6 @@ function M.tint(color, percent)
     return math.min(math.max(component, 0), 255)
   end
   return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
-end
-
----@param hex_str string hexadecimal value of a color
-local hex_to_rgb = function(hex_str)
-  local hex = "[abcdef0-9][abcdef0-9]"
-  local pat = "^#(" .. hex .. ")(" .. hex .. ")(" .. hex .. ")$"
-
-  if hex_str == "NONE" then
-    hex_str = "#000000" -- create base hex
-  end
-
-  hex_str = string.lower(hex_str)
-  assert(string.find(hex_str, pat) ~= nil, "hex_to_rgb: invalid hex_str: " .. tostring(hex_str))
-
-  local red, green, blue = string.match(hex_str, pat)
-  return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
 end
 
 ---@param fg string forecrust color
