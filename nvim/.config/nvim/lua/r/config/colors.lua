@@ -1,10 +1,14 @@
 local UIPallette = require("r.utils").uisec
 
-local Highlight = require "r.settings.highlights"
+local H = require "r.settings.highlights"
 
-local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
-local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
-local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
+local dark_green = H.tint(UIPallette.palette.green, 0.3)
+local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
+local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+
+local set_col_light = { fg_floatborder = 0.15, fg_branch = 4 }
+local set_col_normal = { fg_floatborder = 0.4, fg_branch = 2 }
+local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
@@ -84,7 +88,8 @@ reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
-  normalfloat_bg_alter = -0.05,
+  normalfloat_bg_alter = 0.05,
+  winbarfilepath_fg_alter = 0.45,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
@@ -92,7 +97,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.7,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = -0.1,
+  winbarfilepath_fg_alter = 0.5,
   winseparator_alter = 1.1,
 })
 reset_base_alter({ "base46-chocolate" }, {
@@ -122,7 +127,7 @@ reset_base_alter({ "base46-everforest" }, {
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1,
   pmenusel_bg_alter = 0.15,
-  winbarfilepath_fg_alter = -0.1,
+  winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-horizon" }, {
@@ -132,13 +137,14 @@ reset_base_alter({ "base46-horizon" }, {
   dapstopped_bg_alter = 0.2,
   linenr_fg_alter = 0.65,
   nontext_fg_alter = 1.9,
+  winbarfilepath_fg_alter = -0.05,
   winseparator_alter = 0.95,
 })
 reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
   nontext_fg_alter = 1.25,
-  winbarfilepath_fg_alter = -0.05,
+  winbarfilepath_fg_alter = 0.4,
   winseparator_alter = 0.65,
 })
 reset_base_alter({ "base46-jellybeans" }, {
@@ -150,7 +156,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.5,
   pmenusel_bg_alter = 0.35,
-  winbarfilepath_fg_alter = 0.1,
+  winbarfilepath_fg_alter = 0.5,
   winseparator_alter = 1.7,
 })
 reset_base_alter({ "base46-kanagawa" }, {
@@ -164,6 +170,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.3,
+  winbarfilepath_fg_alter = 0.62,
   winseparator_alter = 0.95,
 })
 reset_base_alter({ "base46-material-darker" }, {
@@ -181,7 +188,7 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
-  winbarfilepath_fg_alter = 0.05,
+  winbarfilepath_fg_alter = 0.4,
   winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-onenord" }, {
@@ -193,7 +200,7 @@ reset_base_alter({ "base46-onenord" }, {
   fzfluasel_fg_alter = -0.1,
   linenr_fg_alter = 0.37,
   nontext_fg_alter = 1.2,
-  winbarfilepath_fg_alter = -0.05,
+  winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
@@ -205,6 +212,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 2.7,
   pmenusel_bg_alter = 0.35,
+  winbarfilepath_fg_alter = 0.43,
   winseparator_alter = 1.53,
 })
 reset_base_alter({ "base46-rosepine" }, {
@@ -216,7 +224,7 @@ reset_base_alter({ "base46-rosepine" }, {
   linenr_fg_alter = 1,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = -0.05,
+  winbarfilepath_fg_alter = 0.38,
   winseparator_alter = 1.5,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
@@ -230,7 +238,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.08,
-  winbarfilepath_fg_alter = -0.13,
+  winbarfilepath_fg_alter = 0.25,
   winseparator_alter = 0.28,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
@@ -238,7 +246,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.15,
-  winbarfilepath_fg_alter = -0.15,
+  winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-wombat" }, {
@@ -247,7 +255,7 @@ reset_base_alter({ "base46-wombat" }, {
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.25,
-  winbarfilepath_fg_alter = -0.05,
+  winbarfilepath_fg_alter = 0.45,
   winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-zenburn" }, {
@@ -261,7 +269,7 @@ reset_base_alter({ "base46-zenburn" }, {
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.09,
-  winbarfilepath_fg_alter = -0.15,
+  winbarfilepath_fg_alter = 0.28,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "kanso-ink" }, {
@@ -273,7 +281,7 @@ reset_base_alter({ "kanso-ink" }, {
   nontext_fg_alter = 2.8,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = 0.1,
+  winbarfilepath_fg_alter = 0.45,
   winseparator_alter = 1.65,
 })
 reset_base_alter({ "lackluster" }, {
@@ -294,7 +302,7 @@ reset_base_alter({ "tokyonight-night" }, {
   linenr_fg_alter = 0.95,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = -0.1,
+  winbarfilepath_fg_alter = 0.45,
   winseparator_alter = 1.1,
 })
 reset_base_alter({ "tokyonight-storm" }, {
@@ -306,7 +314,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   linenr_fg_alter = 0.45,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
-  winbarfilepath_fg_alter = -0.1,
+  winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.6,
 })
 reset_base_alter({ "vscode_modern" }, {
@@ -320,11 +328,12 @@ reset_base_alter({ "vscode_modern" }, {
   pmenusel_bg_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.55,
   winseparator_alter = 0.9,
 })
 
 local general_overrides = function()
-  Highlight.all {
+  H.all {
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                          BASE                           ║
     -- ╚═════════════════════════════════════════════════════════╝
@@ -350,14 +359,9 @@ local general_overrides = function()
         bg = { from = "Normal", attr = "bg", alter = 0.7 },
       },
     },
-    {
-      FoldedMarkdown = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = "NONE",
-      },
-    },
-
+    { FoldedMarkdown = { fg = { from = "Normal", attr = "bg" }, bg = "NONE" } },
     { FoldedSign = { inherit = "Folded", bg = "NONE" } },
+
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "bg", alter = nontext_fg_alter } } },
@@ -366,15 +370,7 @@ local general_overrides = function()
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
 
-    {
-      CursorLine = {
-        bg = Highlight.darken(
-          Highlight.get(cursorline_fg_alter, "fg"),
-          cursorline_alter,
-          Highlight.get("Normal", "bg")
-        ),
-      },
-    },
+    { CursorLine = { bg = H.darken(H.get(cursorline_fg_alter, "fg"), cursorline_alter, H.get("Normal", "bg")) } },
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
@@ -384,15 +380,15 @@ local general_overrides = function()
     },
     {
       Visual = {
-        bg = Highlight.tint(Highlight.darken(Highlight.get("String", "fg"), 0.3, Highlight.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), -0.1),
         fg = "NONE",
       },
     },
 
     {
       StatusLine = {
-        fg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg")), -0.2),
-        bg = Highlight.tint(Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")), -0.2),
+        fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.8, H.get("Normal", "bg")), -0.2),
+        bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.3, H.get("Normal", "bg")), -0.2),
         reverse = false,
       },
     },
@@ -413,10 +409,6 @@ local general_overrides = function()
     {
       PmenuSel = {
         fg = "NONE",
-        -- bg = Highlight.tint(
-        --   Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg")),
-        --   pmenusel_bg_alter
-        -- ),
         bg = { from = "CursorLine", attr = "bg", alter = pmenusel_bg_alter },
         bold = true,
         reverse = false,
@@ -431,15 +423,15 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+        fg = { from = "WinSeparator", attr = "fg", alter = col_opts.fg_floatborder },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
 
     {
       FloatTitle = {
-        bg = { from = "Keyword", attr = "fg", alter = -0.1 },
         fg = { from = "Normal", attr = "bg" },
+        bg = { from = "Keyword", attr = "fg", alter = -0.1 },
         bold = true,
       },
     },
@@ -465,21 +457,21 @@ local general_overrides = function()
 
     {
       Search = {
-        fg = Highlight.darken(dark_yellow, search_fg_alter, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(Highlight.get("Keyword", "fg"), search_bg_alter, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, search_fg_alter, H.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), search_bg_alter, H.get("Normal", "bg")),
       },
     },
     { -- SearchEdit dibuat untuk mendapatkan color 'red', untuk FzfLuaFzfMatch dan blink stuff
       SearchEdit = {
-        fg = Highlight.darken(dark_yellow, search_fg_alter, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_yellow, search_bg_alter, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, search_fg_alter, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, search_bg_alter, H.get("Normal", "bg")),
       },
     },
 
     {
       CurSearch = {
-        fg = Highlight.darken(dark_yellow, cursearch_fg_alter, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_yellow, cursearch_bg_alter, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, cursearch_fg_alter, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, cursearch_bg_alter, H.get("Normal", "bg")),
       },
     },
     { IncSearch = { inherit = "CurSearch" } },
@@ -642,32 +634,32 @@ local general_overrides = function()
     {
       -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
       diffAdd = {
-        fg = Highlight.darken(dark_green, 0.8, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_green, 0.2, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_green, 0.8, H.get("Normal", "bg")),
+        bg = H.darken(dark_green, 0.2, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
     },
     {
       diffChange = {
-        fg = Highlight.darken(dark_yellow, 0.8, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, 0.8, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, 0.2, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
     },
     {
       diffDelete = {
-        fg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_red, 0.8, H.get("Normal", "bg")),
+        bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
     },
     {
       diffText = {
-        fg = Highlight.darken(dark_yellow, 1, Highlight.get("Normal", "bg")),
-        bg = Highlight.darken(dark_yellow, 0.5, Highlight.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, 1, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, 0.5, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
@@ -801,13 +793,6 @@ local general_overrides = function()
     },
 
     { LspSignatureActiveParameter = { fg = "black", bg = "yellow", bold = true } },
-    -- {
-    --   LspSignatureActiveParameter = {
-    --     fg = { from = "Boolean", attr = "fg", alter = 0.2 },
-    --     bg = { from = "Boolean", attr = "fg", alter = -0.5 },
-    --     bold = true,
-    --   },
-    -- },
 
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
     { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
@@ -1060,13 +1045,7 @@ local general_overrides = function()
     { TelescopeMatching = { link = "FzfLuaFzfMatch" } },
     { TelescopeTitle = { inherit = "FzfLuaTitle" } },
 
-    {
-      TelescopeSelection = {
-        -- fg = { from = "PmenuSel", attr = "fg" },
-        bg = { from = "FzfLuaSel", attr = "bg" },
-        bold = true,
-      },
-    },
+    { TelescopeSelection = { bg = { from = "FzfLuaSel", attr = "bg" }, bold = true } },
     { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
 
     -- ╭────────╮
@@ -1119,40 +1098,16 @@ local general_overrides = function()
     -- ╭──────────────────╮
     -- │ SNACKS DASHBOARD │
     -- ╰──────────────────╯
-    {
-      SnacksDashboardTitle = {
-        fg = { from = "Keyword", attr = "fg" },
-        bg = "NONE",
-        bold = true,
-      },
-    },
-    {
-      SnacksDashboardDesc = {
-        fg = { from = "Keyword", attr = "fg" },
-        bg = "NONE",
-        bold = true,
-      },
-    },
+    { SnacksDashboardTitle = { fg = { from = "Keyword", attr = "fg" }, bg = "NONE", bold = true } },
+    { SnacksDashboardDesc = { fg = { from = "Keyword", attr = "fg" }, bg = "NONE", bold = true } },
 
-    {
-      SnacksDashboardTerminal = {
-        fg = { from = "NonText", attr = "fg" },
-        bg = "NONE",
-        bold = false,
-      },
-    },
-    {
-      SnacksDashboardFooter = {
-        fg = { from = "NonText", attr = "fg" },
-        bg = "NONE",
-        bold = true,
-      },
-    },
+    { SnacksDashboardTerminal = { fg = { from = "NonText", attr = "fg" }, bg = "NONE", bold = false } },
+    { SnacksDashboardFooter = { fg = { from = "NonText", attr = "fg" }, bg = "NONE", bold = true } },
 
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.25, Highlight.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")) } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
@@ -1160,7 +1115,7 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = Highlight.tint(Highlight.darken(Highlight.get("Function", "fg"), 0.9, Highlight.get("Normal", "bg")), 0.9),
+        fg = H.tint(H.darken(H.get("Function", "fg"), 0.9, H.get("Normal", "bg")), 0.9),
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -1224,12 +1179,8 @@ local general_overrides = function()
     { SnacksNotifierHistory = { link = "NormalFloat" } },
 
     --  ──────────────────────────────[ ORGMODE ]──────────────────────────────
-    { ["@org.agenda.scheduled"] = { fg = Highlight.darken("#3f9f31", 0.8, Highlight.get("Normal", "bg")) } },
-    {
-      ["@org.agenda.scheduled_past"] = {
-        fg = Highlight.darken(dark_yellow, -0.6, Highlight.get("Normal", "bg")),
-      },
-    },
+    { ["@org.agenda.scheduled"] = { fg = H.darken("#3f9f31", 0.8, H.get("Normal", "bg")) } },
+    { ["@org.agenda.scheduled_past"] = { fg = H.darken(dark_yellow, -0.6, H.get("Normal", "bg")) } },
 
     { ["@org.headline.level1.org"] = { fg = "#4d85c3", bold = true, italic = true } },
     { ["@org.headline.level2.org"] = { fg = "#389674", bold = true, italic = true } },
@@ -1325,14 +1276,14 @@ local general_overrides = function()
     {
       ["@markup.link.label.markdown_inline"] = {
         fg = { from = "Keyword", attr = "fg" },
-        bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
         bold = true,
       },
     },
     {
       ["@markup.quote.markdown"] = {
         fg = { from = "Boolean", attr = "fg" },
-        bg = Highlight.darken(Highlight.get("Boolean", "fg"), 0.2, Highlight.get("Normal", "bg")),
+        bg = H.darken(H.get("Boolean", "fg"), 0.2, H.get("Normal", "bg")),
         italic = true,
         bold = false,
       },
@@ -1383,7 +1334,7 @@ local general_overrides = function()
     {
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-        bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -1443,19 +1394,19 @@ local general_overrides = function()
     --  ─────────────────────────────[ DEBUG:DAP ]─────────────────────────────
     {
       DapBreakpoint = {
-        fg = Highlight.tint(Highlight.darken(dark_red, 0.7, Highlight.get("Normal", "bg")), -0.1),
+        fg = H.tint(H.darken(dark_red, 0.7, H.get("Normal", "bg")), -0.1),
         bg = "NONE",
       },
     },
     {
       DapStopped = {
-        bg = Highlight.tint(Highlight.darken(dark_yellow, dapstopped_bg_alter, Highlight.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_yellow, dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
         fg = "NONE",
       },
     },
     {
       DapStoppedIcon = {
-        bg = Highlight.tint(Highlight.darken(dark_yellow, dapstopped_bg_alter, Highlight.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_yellow, dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
         fg = { from = "GitSignsChange", attr = "fg", alter = 0.6 },
       },
     },
@@ -1497,7 +1448,7 @@ local general_overrides = function()
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.8 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.4 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
@@ -1551,8 +1502,6 @@ local general_overrides = function()
     { OutlineGuides = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.05 }, bg = "NONE" } },
     {
       OutlineCurrent = {
-        -- fg = Highlight.blend(Highlight.get("Function", "fg"), Highlight.get("Keyword", "fg"), 0.5),
-        -- fg = Highlight.blend(Highlight.get("Function", "fg"), Highlight.get("Keyword", "fg"), 0.5),
         fg = { from = "diffDelete", attr = "fg", alter = 0.3 },
         bold = true,
         reverse = false,
@@ -1561,7 +1510,7 @@ local general_overrides = function()
     { OutlineDetails = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 }, bg = "NONE", italic = true } },
     { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
     { OutlineLineno = { bg = "NONE" } },
-    { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+    { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
 
     --  ──────────────────────────────[ AVANTE ]───────────────────────────
     {
@@ -1580,7 +1529,7 @@ local general_overrides = function()
 end
 
 local function set_sidebar_highlight()
-  Highlight.all {
+  H.all {
     { PanelDarkBackground = { bg = { from = "Normal", alter = -0.1 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
     { PanelBackground = { bg = { from = "Normal" } } },
@@ -1655,14 +1604,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.32, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.32, H.get("Normal", "bg")), -0.2),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -1694,8 +1637,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1708,14 +1651,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.35, Highlight.get("Normal", "bg")),
-            -0.05
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.12, Highlight.get("Normal", "bg")),
-            -0.15
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.35, H.get("Normal", "bg")), -0.05),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.12, H.get("Normal", "bg")), -0.15),
           reverse = false,
         },
       },
@@ -1742,12 +1679,13 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      -- MARKDOWN
+      -- MARKDOWNH
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1755,20 +1693,14 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-catppuccin"] = {
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.43, Highlight.get("Normal", "bg")),
-            -0.05
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
-            -0.27
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.43, H.get("Normal", "bg")), -0.05),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.18, H.get("Normal", "bg")), -0.27),
           reverse = false,
         },
       },
@@ -1800,8 +1732,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1809,7 +1741,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-chocolate"] = {
       -- STATUSLINE
@@ -1848,8 +1780,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1874,8 +1806,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1939,8 +1871,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -1971,11 +1903,11 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-horizon"] = {
       -- SNACKS
-      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.3, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.3, H.get("Normal", "bg")) } },
 
       -- STATUSLINE
       {
@@ -1995,7 +1927,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
@@ -2013,8 +1945,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2028,14 +1960,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.43, Highlight.get("Normal", "bg")),
-            0.05
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.43, H.get("Normal", "bg")), 0.05),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.18, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -2067,8 +1993,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2076,7 +2002,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jellybeans"] = {
       {
@@ -2120,12 +2046,12 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.44 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.55 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(dark_red, 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2133,11 +2059,11 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-kanagawa"] = {
       -- SNACKS
-      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.3, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.3, H.get("Normal", "bg")) } },
 
       -- GRUG-FAR
       {
@@ -2153,8 +2079,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Error", "bg"), 0.6, Highlight.get("Normal", "fg")), 0.55),
-          bg = Highlight.darken(Highlight.get("Error", "bg"), 0.35, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(H.get("Error", "bg"), 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(H.get("Error", "bg"), 0.35, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2163,14 +2089,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            0.05
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), 0.05),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.18, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -2199,15 +2119,15 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-material-darker"] = {
       -- MARKDOWN
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.5),
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.5),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2254,8 +2174,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.tint(Highlight.darken(dark_red, 0.6, Highlight.get("Normal", "fg")), 0.5),
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.5),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2264,14 +2184,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Normal", "bg")),
-            -0.26
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.17, Highlight.get("Normal", "bg")),
-            -0.3
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), -0.26),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.17, H.get("Normal", "bg")), -0.3),
           reverse = false,
         },
       },
@@ -2300,7 +2214,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-onenord"] = {
       {
@@ -2327,7 +2241,7 @@ local function colorscheme_overrides()
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
           fg = { from = "Error", attr = "bg", alter = 0.8 },
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2358,7 +2272,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-oxocarbon"] = {
       -- GRUG-FAR
@@ -2376,7 +2290,7 @@ local function colorscheme_overrides()
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
           fg = "white",
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2400,7 +2314,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2408,14 +2322,14 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-rosepine"] = {
       {
@@ -2436,12 +2350,12 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.darken(dark_red, 0.5, Highlight.get("Normal", "fg")),
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          fg = H.darken(dark_red, 0.5, H.get("Normal", "fg")),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2472,7 +2386,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-seoul256_dark"] = {
       {
@@ -2499,7 +2413,7 @@ local function colorscheme_overrides()
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
           fg = "white",
-          bg = Highlight.darken(dark_red, 0.3, Highlight.get("Normal", "bg")),
+          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
           italic = true,
           bold = false,
         },
@@ -2530,7 +2444,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.08 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-solarized_dark"] = {
       {
@@ -2556,7 +2470,7 @@ local function colorscheme_overrides()
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
           fg = { from = "Error", attr = "bg", alter = 1 },
-          bg = Highlight.darken(Highlight.get("Error", "bg"), 0.3, Highlight.get("Normal", "bg")),
+          bg = H.darken(H.get("Error", "bg"), 0.3, H.get("Normal", "bg")),
         },
       },
 
@@ -2574,7 +2488,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
       {
         TabLine = {
@@ -2585,20 +2499,14 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-wombat"] = {
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
-            -0.3
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.2),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")), -0.3),
           reverse = false,
         },
       },
@@ -2626,23 +2534,24 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
-          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
+          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
         },
       },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-zenburn"] = {
       {
         Folded = {
           inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.15 },
+          fg = { from = "Folded", attr = "fg", alter = -0.18 },
           bg = { from = "Folded", attr = "bg", alter = -0.3 },
         },
       },
@@ -2658,15 +2567,15 @@ local function colorscheme_overrides()
       },
 
       -- SNACKS
-      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.25, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")) } },
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
-          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
+          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
         },
       },
 
@@ -2684,7 +2593,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.02 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
       {
         TabLine = {
@@ -2695,7 +2604,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.17 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["kanso"] = {
       -- GRUG-FAR
@@ -2712,22 +2621,16 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
-          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
+          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
         },
       },
 
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -2756,7 +2659,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["lackluster"] = {
       { Directory = { fg = "#7788aa", bg = "NONE" } },
@@ -2810,7 +2713,7 @@ local function colorscheme_overrides()
       },
       {
         ["@markup.italic.markdown_inline"] = {
-          fg = Highlight.tint(Highlight.darken(Highlight.get("Error", "fg"), 0.5, Highlight.get("Normal", "fg")), -0.2),
+          fg = H.tint(H.darken(H.get("Error", "fg"), 0.5, H.get("Normal", "fg")), -0.2),
           bg = "NONE",
           bold = false,
           italic = true,
@@ -2819,8 +2722,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = Highlight.darken(dark_red, 0.4, Highlight.get("Normal", "fg")),
-          bg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")),
+          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
+          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
         },
       },
 
@@ -2859,14 +2762,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.75, Highlight.get("Normal", "bg")),
-            -0.15
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.25, Highlight.get("Normal", "bg")),
-            -0.25
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.75, H.get("Normal", "bg")), -0.15),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.25, H.get("Normal", "bg")), -0.25),
           reverse = false,
         },
       },
@@ -2910,14 +2807,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.12, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.12, H.get("Normal", "bg")), -0.1),
           reverse = false,
         },
       },
@@ -2945,11 +2836,11 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-storm"] = {
       -- ORGMODE
@@ -2958,14 +2849,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.1
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -2993,16 +2878,16 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.32 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["vscode_modern"] = {
       {
         CursorLine = {
-          bg = Highlight.darken(Highlight.get("Keyword", "fg"), cursorline_alter, Highlight.get("Normal", "bg")),
+          bg = H.darken(H.get("Keyword", "fg"), cursorline_alter, H.get("Normal", "bg")),
         },
       },
       {
@@ -3037,7 +2922,7 @@ local function colorscheme_overrides()
       { ["@org.plan"] = { inherit = "Error", bg = "NONE", underline = false } },
 
       -- SNACKS
-      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.3, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.3, H.get("Normal", "bg")) } },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
@@ -3106,14 +2991,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Normal", "bg")),
-            -0.05
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), -0.05),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -3135,7 +3014,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
         },
       },
@@ -3154,19 +3033,19 @@ local function colorscheme_overrides()
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
           fg = { from = "Error", attr = "fg", alter = 0.5 },
-          bg = Highlight.darken(Highlight.get("Error", "fg"), 0.3, Highlight.get("Normal", "bg")),
+          bg = H.darken(H.get("Error", "fg"), 0.3, H.get("Normal", "bg")),
         },
       },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
-      { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
   }
 
   local hls = overrides[vim.g.colors_name]
   if hls then
-    Highlight.all(hls)
+    H.all(hls)
   end
 end
 

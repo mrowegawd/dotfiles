@@ -4,7 +4,6 @@ set -e -u
 
 DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
 MISCXRDB_PATH="$HOME/.config/miscxrdb"
-ERROR_MSG="[!] Sorry..we abort it"
 
 NEW_FONTS="JetBrains Mono"
 NEW_FONTS_SIZE=16
@@ -99,8 +98,8 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
+  GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_51=$(grep -i color51 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
@@ -161,11 +160,19 @@ darken_color() {
   printf "#%02x%02x%02x\n" "$r" "$g" "$b"
 }
 
+send_notify() {
+  if command -v dunstify >/dev/null; then
+    dunstify -i ~/.config/miscxrdb/icons/bell.png "Change Themes" "$1"
+  else
+    notify-send "Change Themes" "$1"
+  fi
+}
+
 set_rofi() {
   _ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 
   if [ ! -d "$_ROFI_PATH" ]; then
-    dunstify "$ERROR_MSG" "Path $_ROFI_PATH do not exists!" && exit 1
+    send_notify "set_rofi: path $_ROFI_PATH does not exists!" && exit 1
   fi
 
   cat "$_ROFI_PATH/colors/_nightly.rasi" >"$_ROFI_PATH/colors/nightly.rasi"
@@ -193,7 +200,7 @@ set_rofi() {
 set_dunst() {
   _DUNST_PATH="$DOTFILES_PATH/dunst/.config/dunst"
 
-  [[ ! -d "$_DUNST_PATH" ]] && dunstify "<br>Path dunst: $_DUNST_PATH do not exists!" && exit 1
+  [[ ! -d "$_DUNST_PATH" ]] && send_notify "set_dunst: path $_DUNST_PATH does not exists!" && exit 1
 
   cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
 
@@ -257,7 +264,7 @@ set_tmux() {
 
     sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$GET_YELLOW\"/g" "$_PATH_TMUX_THEMES"
   else
-    dunstify "$_PATH_TMUX_THEMES not found"
+    send_notify "set_tmux: path $_PATH_TMUX_THEMES not ex"
   fi
 
 }
@@ -265,7 +272,7 @@ set_delta() {
   _DELTA_PATH="$HOME/.config/delta/themes"
 
   if [ ! -f "$_DELTA_PATH" ]; then
-    dunstify "$ERROR_MSG:<br>Path delta: $_DELTA_PATH do not exists!" && exit 1
+    send_notify "set_delta: $_DELTA_PATH does not exists!" && exit 1
   fi
 
   # For line number
@@ -285,7 +292,7 @@ set_zathura() {
   _ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
 
   if [ ! -d "$_ZATHURA_PATH" ]; then
-    dunstify "$ERROR_MSG:<br>Path zathura: $_ZATHURA_PATH do not exists!" && exit 1
+    send_notify "set_zathura: $_ZATHURA_PATH does not exists!" && exit 1
   fi
 
   sed -i -e "s/^set default-bg.*/set default-bg \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
@@ -389,7 +396,7 @@ set_btop() {
     sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
     sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
   else
-    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!"
+    send_notify "set_btop: path $_BTOP_PATH does not exists!"
   fi
 }
 set_yazi() {
@@ -397,7 +404,7 @@ set_yazi() {
   YAZI_FLAVORS_THEMES_PATH="$YAZI_FLAVORS_THEME_FOLDER/themes.yazi"
 
   if [ ! -d "$YAZI_FLAVORS_THEME_FOLDER" ]; then
-    dunstify "$ERROR_MSG" "Path $YAZI_FLAVORS_THEME_FOLDER do not exists!" && exit 1
+    send_notify "set_yazi: path $YAZI_FLAVORS_THEME_FOLDER does not exists!" && exit 1
   fi
 
   TARGET_YAZI_THEME="$YAZI_FLAVORS_THEMES_PATH/flavor.toml"
@@ -438,7 +445,7 @@ set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
 
   if [ ! -d "$FZF_PATH_CONFIG" ]; then
-    dunstify "$ERROR_MSG" "Path $FZF_PATH_CONFIG do not exists!" && exit 1
+    send_notify "set_fzf: path $FZF_PATH_CONFIG does not exists!" && exit 1
   fi
 
   cat "$FZF_PATH_CONFIG/_fzf.config" >"$FZF_PATH_CONFIG/fzf.config"
@@ -455,7 +462,7 @@ set_fzf() {
   sed -i -e "s/%%color_gutter%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
   sed -i -e "s/%%color_pointer%%/$GET_COL_17/g" "$FZF_PATH_CONFIG/fzf.config"
 
-  sed -i -e "s/%%color_header%%/$GET_COL_51/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_header%%/$GET_COL_37/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
 set_zsh_p10k() {
@@ -476,14 +483,11 @@ set_zsh_p10k() {
 set_zshrc() {
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
   if [ ! -f "$ZSHRC_PATH" ]; then
-    dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
+    send_notify "set_zshrc: path $ZSHRC_PATH does not exists!" && exit 1
   fi
 
-  colorline="$GET_COL_31"
-  colorsugest="$GET_COL_37"
-
-  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$colorsugest\"/g" "$ZSHRC_PATH"
-  sed -i -e "s/^colorline=.*/colorline=\"$colorline\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$GET_COL_50\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorline=.*/colorline=\"$GET_COL_51\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
@@ -509,7 +513,7 @@ set_eww() {
   EWW_PATH="$HOME/.config/eww"
 
   if [ ! -d "$EWW_PATH" ]; then
-    dunstify "$ERROR_MSG" "Path $EWW_PATH do not exists!" && exit 1
+    send_notify "set_eww: path $EWW_PATH does not exists!" && exit 1
   fi
 
   BG_DARKEN_1=$(darken_color "$GET_BG" 5) # Misalnya, mengurangi 50 untuk menggelapkan
@@ -553,20 +557,18 @@ set_firefox() {
 
     sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
   else
-    dunstify "$ERROR_MSG" "Path $FIREFOX_DEFAULT_PATH do not exists!"
+    send_notify "set_firefox: path $FIREFOX_DEFAULT_PATH does not exists!"
   fi
 
 }
 set_ncmpcpp() {
   NCMPCPP_PATH="$HOME/.ncmpcpp/config"
 
-  if [ -f "$NCMPCPP_PATH" ]; then
-    dunstify "not implemented yet"
-
+  if [ ! -f "$NCMPCPP_PATH" ]; then
+    send_notify "Not impelemented yet"
   else
-    dunstify "$ERROR_MSG" "File $NCMPCPP_PATH do not exists!"
+    send_notify "set_ncmpcpp: path $NCMPCPP_PATH do not exists!"
   fi
-
 }
 set_polybar() {
   _POLYBAR_PATH="$DOTFILES_PATH/polybar/.config/polybar"
@@ -646,12 +648,9 @@ setup() {
   # "awesome") wm_awesome ;;
   # esac
 
-  bspc wm -r && sleep 2 && dunstify "Reload BSPWM" "Reload config.."
-
+  bspc wm -r && sleep 2 && send_notify "Reload bspwm config.."
   "$HOME/.config/miscxrdb/exbin/fehbg" "$1"
-
-  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $1" \
-    "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
+  send_notify "Load theme: $1\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 }
 
 main() {
@@ -659,7 +658,7 @@ main() {
   theme="styles/big_center"
   rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
 
-  [[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
+  [[ ! -d $MISCXRDB_PATH ]] && send_notify "Path: $MISCXRDB_PATH not found!" && exit 1
   _NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
   [[ -z $_NAMETHEME ]] && exit 1
 
@@ -678,7 +677,7 @@ main() {
   done
 
   if [[ $STHEM == "false" ]]; then
-    notify-send "Load theme: $_NAMETHEME" "Not found, abort it"
+    send_notify "Load theme: $_NAMETHEME\nNot found, abort it"
     exit 1
   fi
 

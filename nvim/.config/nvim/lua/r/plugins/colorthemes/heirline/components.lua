@@ -2,30 +2,36 @@ local Conditions = require "heirline.conditions"
 
 local M = {}
 
--- local Spacer = { provider = "   " }
 local function rpad(child)
-  return {
-    condition = child.condition,
-    child,
-    -- Spacer,
-  }
+  return { condition = child.condition, child }
 end
 
--- local function lpad(child)
---   return {
---     condition = child.condition,
---     Spacer,
---     child,
---   }
--- end
-
--- local ft_right_exclude = { "qf", "trouble", "Outline", "aerial", "neo-tree", "DiffviewFiles" }
--- local ft_left_exclude = { "qf", "neo-tree", "trouble", "Outline", "dashboard" }
--- local ft_left_exclude = { "qf", "neo-tree", "dashboard" }
-
 local state = { lsp_clients_visible = true }
+local dap_ft_include = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
+local set_conditions = {
+  buffer_not_empty = function()
+    return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+  end,
+  hide_in_width = function(size)
+    size = size or 120
+    return vim.fn.winwidth(0) > size
+  end,
+  hide_in_col_width = function(size)
+    size = size or 120
+    local col = RUtils.cmd.get_option "columns"
+    return col > size
+  end,
+  hide_in_laststatus = function()
+    return vim.opt.laststatus == 2
+  end,
+  check_git_workspace = function()
+    local filepath = vim.fn.expand "%:p:h"
+    local gitdir = vim.fn.finddir(".git", filepath .. ";")
+    return gitdir and #gitdir > 0 and #gitdir < #filepath
+  end,
+}
 
-local function stl_lsp_clients()
+local stl_lsp_clients = function()
   local clients = vim.lsp.get_clients { bufnr = 0 }
   if not state.lsp_clients_visible then
     return { { name = fmt("%d attached", #clients), priority = 7 } }
@@ -61,7 +67,27 @@ local function stl_lsp_clients()
     return { name = client.name, priority = 4 }
   end, clients)
 end
-
+local OverseerTasksForStatus = function(status)
+  return {
+    condition = function(self)
+      return self.tasks[status]
+    end,
+    provider = function(self)
+      return string.format("%s%d", self.symbols[status], #self.tasks[status])
+    end,
+    hl = function()
+      local fg
+      if status == "RUNNING" then
+        fg = colors.diff_delete
+      elseif status == "SUCCESS" then
+        fg = colors.diff_add
+      else
+        fg = colors.diagnostic_err
+      end
+      return { fg = fg, bold = true }
+    end,
+  }
+end
 local rmux_pane = function()
   local watch = ""
   local run_with = ""
@@ -75,31 +101,10 @@ local rmux_pane = function()
 
   return run_with, watch
 end
-
-local set_conditions = {
-  buffer_not_empty = function()
-    return vim.fn.empty(vim.fn.expand "%:t") ~= 1
-  end,
-  hide_in_width = function(size)
-    size = size or 120
-    return vim.fn.winwidth(0) > size
-  end,
-  hide_in_col_width = function(size)
-    size = size or 120
-    local col = RUtils.cmd.get_option "columns"
-    return col > size
-  end,
-  hide_in_laststatus = function()
-    return vim.opt.laststatus == 2
-  end,
-  check_git_workspace = function()
-    local filepath = vim.fn.expand "%:p:h"
-    local gitdir = vim.fn.finddir(".git", filepath .. ";")
-    return gitdir and #gitdir > 0 and #gitdir < #filepath
-  end,
-}
-
-local function __colors()
+local git_branch = function()
+  return vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
+end
+local __colors = function()
   local H = require "r.settings.highlights"
 
   local set_col_light = { fg_normal = 2, fg_branch = 4 }
@@ -149,10 +154,9 @@ local function __colors()
     diagnostic_warn = H.get("DiagnosticSignWarn", "fg"),
   }
 end
-
 local colors = __colors()
 
-local exclude = {
+local mode_exclude = {
   ["NvimTree"] = true,
   ["capture"] = true,
   ["dap-repl"] = true,
@@ -172,7 +176,6 @@ local exclude = {
   ["toggleterm"] = true,
   ["TelescopePrompt"] = true,
 } -- Ignore float windows and exclude filetype
-
 local mode_icons = {
   n = "",
   no = "",
@@ -209,7 +212,6 @@ local mode_icons = {
   ["!"] = "",
   t = "",
 }
-
 local mode_colors = {
   n = colors.keyword,
   i = colors.mode_insert_bg,
@@ -272,10 +274,6 @@ M.Mode = {
     end,
   },
 }
-
-local function git_branch()
-  return vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
-end
 M.Branch = {
   condition = function()
     return Conditions.is_git_repo() and git_branch() ~= nil
@@ -550,30 +548,7 @@ M.FileFlags = {
     end,
   },
 }
-
 M.Gap = { { provider = "%=" } }
-
-local function OverseerTasksForStatus(status)
-  return {
-    condition = function(self)
-      return self.tasks[status]
-    end,
-    provider = function(self)
-      return string.format("%s%d", self.symbols[status], #self.tasks[status])
-    end,
-    hl = function()
-      local fg
-      if status == "RUNNING" then
-        fg = colors.diff_delete
-      elseif status == "SUCCESS" then
-        fg = colors.diff_add
-      else
-        fg = colors.diagnostic_err
-      end
-      return { fg = fg, bold = true }
-    end,
-  }
-end
 M.Tasks = {
   condition = function()
     return package.loaded.overseer and set_conditions.hide_in_col_width(120)
@@ -617,7 +592,6 @@ M.Tasks = {
     end,
   },
 }
-local dap_ft_include = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
 M.Dap = {
   condition = function()
     if package.loaded.dap == nil then
@@ -1154,11 +1128,11 @@ M.Clock = {
   },
 }
 
--- Not longer used..
+-- no longer used..
 M.Mixindent = {
   {
     provider = function()
-      if not vim.o.modifiable or exclude[vim.bo.filetype] then
+      if not vim.o.modifiable or mode_exclude[vim.bo.filetype] then
         return ""
       end
 
@@ -1208,6 +1182,7 @@ M.SnacksProfile = {
 M.Separator = {
   { provider = " " },
 }
+
 -- ╓
 -- ║ STATUSLINE
 -- ╙
@@ -1243,8 +1218,9 @@ M.status_active_left = {
   hl = { fg = colors.statusline_fg, bg = colors.statusline_bg },
 }
 
---  ─────────────────────────────── winbar ────────────────────────────
-
+-- ╓
+-- ║ WINBAR
+-- ╙
 M.WinbarSeparator = {
   { provider = " " },
 }
@@ -1309,9 +1285,12 @@ M.WinbarFilePath = {
       end
 
       table.remove(parts, #parts)
-      local tbl_concat = table.concat(parts, sep)
-      if #tbl_concat > 0 then
-        return tbl_concat .. sep
+      path = table.concat(parts, sep)
+      if #path > 0 then
+        if path:find(RUtils.config.path.home, 1, true) == 1 then
+          path = path:sub(#RUtils.config.path.home + 2)
+        end
+        return path .. sep
       end
 
       -- return statusline path untuk non active window
@@ -1334,7 +1313,6 @@ M.WinbarFilePath = {
     end,
   },
 }
-
 M.WinbarIcons = {
   init = function(self)
     local filename = vim.api.nvim_buf_get_name(0)
@@ -1353,9 +1331,6 @@ M.WinbarIcons = {
   end,
 }
 
--- ╓
--- ║ WINBAR
--- ╙
 M.status_winbar_active_left = {
   M.WinbarSeparator,
   M.WinbarIcons,

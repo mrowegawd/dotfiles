@@ -198,6 +198,21 @@ return {
               },
             },
           },
+          ["base46-jellybeans"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.65 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+          },
           ["base46-material-darker"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {
@@ -208,7 +223,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.6 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.55 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -328,7 +343,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 1.2 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
                 bg = { from = "TreesitterContext" },
               },
             },

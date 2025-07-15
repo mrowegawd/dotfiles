@@ -915,67 +915,67 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
-  local Highlight = require "r.settings.highlights"
+  local H = require "r.settings.highlights"
 
-  local KeywordNC_bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.5)
-  local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
+  local KeywordNC_bg = H.tint(H.get("Keyword", "fg"), -0.5)
+  local KeywordNC_fg = H.get("Keyword", "fg") -- 17
 
-  local tmux_bg = Highlight.get("Normal", "bg")
-  local tmux_fg = Highlight.tint(Highlight.get("WinbarFilepath", "fg"), -0.1)
+  local tmux_bg = H.get("Normal", "bg")
+  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.1)
 
-  local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
+  local statusline_fg = H.tint(H.get("WinSeparator", "fg"), 0.7)
 
-  local winseparator = Highlight.get("WinSeparator", "fg")
+  local winseparator = H.get("WinSeparator", "fg")
 
-  local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
-  local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
+  local lazygit_selected_line_bg = H.get("LazygitselectedLineBgColor", "bg")
+  local lazygit_inactive_border = H.get("LazygitInactiveBorderColor", "fg")
   local lazygit_active_border = KeywordNC_bg
-  local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2) --> colorline zshrc
+  local lazygit_border_fg = H.tint(H.get("WinSeparator", "fg"), 0.2) --> colorline zshrc
 
-  local gitadd = Highlight.get("diffAdd", "bg")
-  local gitlinenumber_add = Highlight.darken(Highlight.get("GitSignsAdd", "fg"), 0.4, Highlight.get("Normal", "bg"))
+  local gitadd = H.get("diffAdd", "bg")
+  local gitlinenumber_add = H.darken(H.get("GitSignsAdd", "fg"), 0.4, H.get("Normal", "bg"))
 
-  local gitdelete = Highlight.get("diffDelete", "bg")
-  local gitlinenumber_delete =
-    Highlight.darken(Highlight.get("GitSignsDelete", "fg"), 0.6, Highlight.get("Normal", "bg"))
+  local gitdelete = H.get("diffDelete", "bg")
+  local gitlinenumber_delete = H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg"))
 
-  local sugest_highlight = Highlight.tint(Highlight.get("Comment", "fg"), -0.05)
+  local fzf_headertext = H.get("FzfLuaHeaderText", "fg")
 
-  local yazi_cwd = Highlight.get("Comment", "fg")
-  local yazi_hovered = Highlight.get("CursorLine", "bg")
+  local yazi_cwd = H.get("Comment", "fg")
+  local yazi_hovered = H.get("CursorLine", "bg")
   local yazi_tab_active_fg = KeywordNC_fg
   local yazi_tab_active_bg = KeywordNC_bg
-  local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
-  local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
-  local yazi_statusline_bg = Highlight.get("StatusLine", "bg")
-  local yazi_statusline_active_fg = Highlight.get("StatusLine", "fg")
-  local yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLine", "bg"), 0.2)
-  local yazi_directory = Highlight.get("Directory", "fg")
-  local yazi_filename_fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 1.4)
-  local yazi_which_bg = Highlight.get("Pmenu", "bg")
+  local yazi_tab_inactive_fg = H.get("TabLine", "fg")
+  local yazi_tab_inactive_bg = H.get("TabLine", "bg")
+  local yazi_statusline_bg = H.get("StatusLine", "bg")
+  local yazi_statusline_active_fg = H.get("StatusLine", "fg")
+  local yazi_statusline_active_bg = H.tint(H.get("StatusLine", "bg"), 0.2)
+  local yazi_directory = H.get("Directory", "fg")
+  local yazi_filename_fg = H.tint(H.get("StatusLine", "fg"), 1.4)
+  local yazi_which_bg = H.get("Pmenu", "bg")
 
-  local zsh_background_bg = yazi_statusline_active_bg
-
-  local fzf_header = Highlight.get("FzfLuaHeaderText", "fg")
+  local zsh_lines = H.tint(H.get("WinSeparator", "fg"), 0.5)
+  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), 0.4)
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    tmux_fg = Highlight.tint(Highlight.get("WinbarFilepath", "fg"), 0.1)
-    statusline_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
+    statusline_fg = H.tint(H.get("Comment", "fg"), 0)
 
-    lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
-    lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0)
-    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 0) -- 30
-    lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
+    lazygit_active_border = H.tint(H.get("WinSeparator", "fg"), -0.5) -- 29
+    lazygit_border_fg = H.tint(H.get("WinSeparator", "fg"), 0)
+    lazygit_inactive_border = H.tint(H.get("Keyword", "fg"), 0) -- 30
+    lazygit_selected_line_bg = H.darken(H.get("Keyword", "fg"), 0.8, H.get("Normal", "bg"))
 
-    yazi_hovered = Highlight.get("CursorLine", "bg")
-    yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLine", "bg"), 0)
-    yazi_tab_inactive_fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.3)
+    yazi_hovered = H.get("CursorLine", "bg")
+    yazi_statusline_active_bg = H.tint(H.get("StatusLine", "bg"), 0)
+    yazi_tab_inactive_fg = H.tint(H.get("TabLine", "fg"), -0.3)
 
-    sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
+    fzf_headertext = H.tint(H.get("FzfLuaHeaderText", "fg"), 0.2)
+
+    zsh_lines = H.tint(H.get("Normal", "bg"), 0.6)
+    zsh_sugest = H.tint(H.get("Normal", "bg"), 0.55)
   end
 
   if vim.g.colorscheme == "rose-pine-dawn" then
-    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -0.5)
+    yazi_filename_fg = H.tint(H.get("LineNr", "fg"), -0.5)
   end
 
   local master_colors = string.format(
@@ -1061,17 +1061,17 @@ function M.change_colors()
     tmux_fg, -- 21
 
     string.format "! FZF-NORMAL: bg, fg, match",
-    Highlight.get("FzfLuaNormal", "bg"), -- 22
-    Highlight.get("FzfLuaFilePart", "fg"), -- 23
-    Highlight.get("FzfLuaFzfMatchFuzzy", "fg"), --24
+    H.get("FzfLuaNormal", "bg"), -- 22
+    H.get("FzfLuaFilePart", "fg"), -- 23
+    H.get("FzfLuaFzfMatchFuzzy", "fg"), --24
 
     string.format "! FZF-SELECTION: bg, fg, match",
-    Highlight.get("FzfLuaSel", "bg"), -- 25
-    Highlight.get("FzfLuaFilePart", "fg"), -- 26
-    Highlight.get("FzfLuaFzfMatch", "fg"), --27
+    H.get("FzfLuaSel", "bg"), -- 25
+    H.get("FzfLuaFilePart", "fg"), -- 26
+    H.get("FzfLuaFzfMatch", "fg"), --27
 
     string.format "! FZF: border",
-    Highlight.get("FzfLuaBorder", "fg"), -- 28
+    H.get("FzfLuaBorder", "fg"), -- 28
 
     string.format "! LAZYGIT: active_border_color, inactive_border_color, options_text_color, selected_line_bg_color",
     lazygit_active_border, -- 29
@@ -1087,8 +1087,8 @@ function M.change_colors()
     gitdelete, -- 36
     gitlinenumber_delete, -- 35
 
-    string.format "! zsh-autosuggestions: fg",
-    sugest_highlight, -- 37
+    string.format "! fzf-headertext: fg",
+    fzf_headertext, -- 37
 
     string.format "! yazi: cwd, hovered, tab_active_fg, tab_active_bg, tab_inactive_bg, tab_inactive_fg",
     yazi_cwd, -- 38
@@ -1106,10 +1106,9 @@ function M.change_colors()
     yazi_which_bg, -- 48
     yazi_filename_fg, -- 49
 
-    string.format "! zsh: zsh_background_bg",
-    zsh_background_bg, -- 50
-
-    fzf_header -- 51
+    string.format "! zsh: zsh_line bro",
+    zsh_sugest, -- 50
+    zsh_lines -- 51
   )
 
   local master_color_path = "/tmp/master-colors-themes"

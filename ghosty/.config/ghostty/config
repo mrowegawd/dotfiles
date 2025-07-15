@@ -24,14 +24,14 @@ mouse-hide-while-typing         = true
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = vscode_modern
+theme = base46-aylin
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
 # +-----------------------------------------------------------+
 window-decoration               = none
-window-padding-x                = 0
-window-padding-y                = 0
+window-padding-x                = 5
+window-padding-y                = 5
 window-colorspace               = display-p3
 window-padding-balance          = false
 window-step-resize              = false
