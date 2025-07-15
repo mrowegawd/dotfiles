@@ -415,13 +415,10 @@ return {
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
-            ["ctrl-s"] = actions.toggle_ignore,
-            ["ctrl-o"] = actions.toggle_hidden,
-            -- ["ctrl-o"] = function(_, opts)
-            --   actions.toggle_opt(opts, "hidden")
-            --   actions.toggle_opt(opts, "no_ignore")
-            -- end,
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
+            ["ctrl-o"] = actions.toggle_hidden,
+            ["ctrl-s"] = actions.toggle_ignore,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -500,6 +497,7 @@ return {
               -- },
               ["left"] = false,
               ["right"] = false,
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = { actions.git_stage_unstage, actions.resume },
               ["ctrl-x"] = { actions.git_reset, actions.resume },
@@ -516,6 +514,7 @@ return {
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
@@ -584,10 +583,11 @@ return {
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
-              ["ctrl-s"] = actions.git_buf_split,
-              ["ctrl-v"] = actions.git_buf_vsplit,
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
+              ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-t"] = actions.git_buf_tabedit,
+              ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-g"] = function()
                 local bufnr = vim.fn.bufnr()
                 require("fzf-lua").fzf_live(function(query)
@@ -653,6 +653,7 @@ return {
             },
             actions = {
               ["default"] = actions.git_switch,
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
             },
           },
@@ -773,6 +774,7 @@ return {
                 },
               }
             end,
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
@@ -803,6 +805,7 @@ return {
           files_only = true,
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
           },
         },
@@ -841,7 +844,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = { ["--with-nth"] = "-1.." },
-          actions = { ["alt-q"] = actions.file_sel_to_qf },
+          actions = { ["alt-q"] = actions.file_sel_to_qf, ["alt-l"] = actions.file_sel_to_ll },
         },
         highlights = {
           prompt = RUtils.fzflua.default_title_prompt(),
@@ -860,6 +863,7 @@ return {
           actions = {
             -- actions inherit from 'actions.buffers' and merge
             ["default"] = actions.buf_switch,
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-x"] = { actions.buf_del, actions.resume },
           },
@@ -891,6 +895,7 @@ return {
           actions = {
             ["default"] = actions.buf_edit_or_qf,
 
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.buf_sel_to_qf,
 
             ["ctrl-s"] = actions.buf_split,
@@ -1016,6 +1021,7 @@ return {
             }
           end,
           actions = {
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
             ["ctrl-v"] = actions.file_vsplit,
             ["ctrl-s"] = actions.file_split,
@@ -1048,6 +1054,7 @@ return {
               ["--reverse"] = false,
             },
             actions = {
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
               ["ctrl-g"] = actions.grep_lgrep,
               ["ctrl-x"] = function()
@@ -1124,6 +1131,7 @@ return {
               }
             end,
             actions = {
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
             },
           },
@@ -1137,6 +1145,7 @@ return {
           diag_icons = true,
           icon_padding = "", -- add padding for wide diagnostics signs
           actions = {
+            ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
           },
         },

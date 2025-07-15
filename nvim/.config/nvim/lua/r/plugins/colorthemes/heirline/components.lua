@@ -995,6 +995,10 @@ M.Filetype = {
     local extension = vim.fn.fnamemodify(filename, ":e")
     self.path = vim.fn.expand "%:p" --[[@as string]]
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+
+    if RUtils.qf.is_loclist() then
+      filetype = "loclist"
+    end
     self.filetype = filetype
 
     self.run_with, self.watch = rmux_pane()
@@ -1014,13 +1018,7 @@ M.Filetype = {
       if self.path == "" then
         return ""
       end
-      return self.icon and (self.icon .. " ")
-    end,
-    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
-  },
-  {
-    provider = function(self)
-      return self.filetype
+      return self.icon and (self.icon .. " " .. self.filetype .. " ")
     end,
     hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
   },
