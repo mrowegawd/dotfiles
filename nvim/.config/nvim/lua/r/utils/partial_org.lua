@@ -20,25 +20,23 @@ return {
         local date = task.time:to_string()
         local time = vim.split(date, " ")
 
-        if vim.fn.executable "dunstify" == 1 then
-          vim.uv.spawn("dunstify", {
-            args = {
-              "-t",
-              "12000",
-              fmt("%s - %s", tostring(time[3]), subtitle),
-              fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
-            },
-          })
+        if vim.fn.executable "dunstify" then
+          vim.system {
+            "dunstify",
+            "-t",
+            "12000",
+            fmt("%s - %s", time[3], subtitle),
+            fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
+          }
         end
 
-        if vim.fn.executable "mpv" == 1 then
-          vim.uv.spawn("mpv", {
-            args = {
-              "--audio-display=no",
-              fmt("%s/.config/miscxrdb/mp3-wav/notif-me.mp3", os.getenv "HOME"),
-              "--volume=50",
-            },
-          })
+        if vim.fn.executable "mpv" then
+          vim.system {
+            "mpv",
+            "--audio-display=no",
+            "--volume=50",
+            fmt("%s/.config/miscxrdb/mp3-wav/notif-me.mp3", os.getenv "HOME"),
+          }
         end
       end
     end,

@@ -16,6 +16,10 @@ return {
       preset = "helix",
       defaults = {},
       plugins = { registers = false }, -- registers disabled
+      keys = {
+        scroll_down = "<c-d>",
+        scroll_up = "<c-u>",
+      },
       spec = {
         {
           mode = { "n", "v" },

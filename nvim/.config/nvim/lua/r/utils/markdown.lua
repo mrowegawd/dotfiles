@@ -663,8 +663,7 @@ function M.find_local_titles(item_paths)
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    -- search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
-    search = regex_title,
+    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
     rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. filename
       .. " -e ",
@@ -889,7 +888,7 @@ function M.insert_local_titles()
     },
     rg_glob = false,
     no_esc = true,
-    search = regex_title,
+    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
     formatter = false,
     actions = {
       ["enter"] = function(selected, _)

@@ -1330,6 +1330,7 @@ local general_overrides = function()
     },
 
     { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
+    { CodeBlock = { inherit = "RenderMarkdownCode" } }, -- headlines.nvim (orgmode codeblock)
     {
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = 0.2 },
@@ -1633,6 +1634,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.22 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1680,6 +1682,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWNH
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1728,6 +1731,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1776,6 +1780,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1802,6 +1807,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.11 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1867,6 +1873,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1941,6 +1948,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.22 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1989,6 +1997,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2046,6 +2055,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.55 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2075,6 +2085,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2170,6 +2181,7 @@ local function colorscheme_overrides()
     ["base46-melange"] = {
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2236,6 +2248,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2350,6 +2363,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2408,6 +2422,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.05 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2534,6 +2549,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2570,6 +2586,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2617,6 +2634,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.65 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2703,6 +2721,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.85 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.strong.markdown_inline"] = {
           fg = { from = "Keyword", attr = "fg", alter = 0.5 },
@@ -2836,6 +2855,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2878,6 +2898,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
@@ -3028,6 +3049,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.19 } } },
+      { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",

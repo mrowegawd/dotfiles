@@ -1,11 +1,6 @@
 local is_render_markdown = true
+
 return {
-  recommended = function()
-    return RUtils.extras.wants {
-      ft = "markdown",
-      root = "README.md",
-    }
-  end,
   {
     "stevearc/conform.nvim",
     optional = true,
@@ -99,7 +94,7 @@ return {
     ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
     keys = {
       {
-        "<Localleader>nr",
+        "<Leader>uR",
         function()
           local m = require "render-markdown"
           if not is_render_markdown then
@@ -117,8 +112,8 @@ return {
     },
     opts = function()
       vim.cmd [[hi RenderMarkdownH1Bg guibg=NONE]] -- disable the background color for H1bg
-      local Highlight = require "r.settings.highlights"
-      Highlight.plugin("RenderMarkdownHi", {
+      local H = require "r.settings.highlights"
+      H.plugin("RenderMarkdownHi", {
         { RenderMarkdownH1Bg = { fg = "NONE", bg = "NONE", reverse = false } },
         { RenderMarkdownH2Bg = { fg = "NONE", bg = "NONE", reverse = false } },
         { RenderMarkdownH3Bg = { fg = "NONE", bg = "NONE", reverse = false } },
@@ -156,7 +151,7 @@ return {
         },
         heading = {
           enabled = true,
-          sign = false,
+          sign = true,
           -- icons = {},
           icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
           -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },

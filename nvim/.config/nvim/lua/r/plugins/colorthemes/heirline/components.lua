@@ -1034,9 +1034,6 @@ M.Filetype = {
   },
 }
 M.Ruler = {
-  condition = function()
-    return set_conditions.hide_in_col_width(150)
-  end,
   init = function(self)
     self.column = vim.fn.virtcol "."
     self.width = vim.fn.virtcol "$"
