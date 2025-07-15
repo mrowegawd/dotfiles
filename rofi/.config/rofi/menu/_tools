@@ -16,6 +16,14 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 # FILE_RECORDING_BLUR_BAK="$PATH_VIDEOS/$FILE_NAME_RECORD_BLUR"
 # COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
 
+send_notify() {
+  if command -v dunstify >/dev/null; then
+    dunstify -i "$HOME/.config/miscxrdb/icons/rec-button.png" "RECORDING" "$1"
+  else
+    notify-send "RECORDING" "$1"
+  fi
+}
+
 (
   SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
 
@@ -32,20 +40,38 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
     FPS="30"
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
 
-      ffmpeg -f x11grab -s "$GEOMETRY" -r "$FPS" -i :0 -f alsa -ac 2 \
-        -i default -vcodec libx264 -s "$GEOMETRY" \
-        -acodec libmp3lame -ab 128k -ar 44100 \
-        -threads 0 -f flv "$FILE_RECORDING_BAK"
+      ffmpeg \
+        -f x11grab \
+        -s "$GEOMETRY" \
+        -r "$FPS" \
+        -i $DISPLAY \
+        -f alsa \
+        -ac 2 \
+        -i default \
+        -vcodec libx264 \
+        -s "$GEOMETRY" \
+        -acodec libmp3lame \
+        -ab 128k \
+        -ar 44100 \
+        -threads 0 \
+        -f flv \
+        "$FILE_RECORDING_BAK"
 
       # For telegram
-      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac -pix_fmt yuv420p "$FILE_RECORDING"
+      ffmpeg \
+        -i "$FILE_RECORDING_BAK" \
+        -crf 23 \
+        -preset veryfast \
+        -vcodec libx264 \
+        -acodec aac \
+        -pix_fmt yuv420p \
+        "$FILE_RECORDING"
 
       if [ -f "$FILE_RECORDING_BAK" ]; then
         rm -rf "$FILE_RECORDING_BAK"
-        dunstify "Saving record:" "$FILE_NAME_RECORD"
+        send_notify "Saved: $FILE_NAME_RECORD"
       fi
     fi
   }
@@ -61,22 +87,39 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
     read -r blur_x blur_y blur_width blur_height <<<"$SLOP_BLUR"
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
 
-      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
-        -i default -vcodec libx264 -s "$GEOMETRY" \
-        -acodec libmp3lame -ab 128k -ar 44100 \
-        -threads 0 -f flv "$FILE_RECORDING_BAK"
+      ffmpeg \
+        -f x11grab \
+        -s "$GEOMETRY" \
+        -r 30 \
+        -i $DISPLAY"$OFFSET" \
+        -f alsa \
+        -ac 2 \
+        -i default \
+        -vcodec libx264 \
+        -s "$GEOMETRY" \
+        -acodec libmp3lame \
+        -ab 128k \
+        -ar 44100 \
+        -threads 0 \
+        -f flv \
+        "$FILE_RECORDING_BAK"
 
       # For telegram (for blur: use boxblur)
-      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+      ffmpeg \
+        -i "$FILE_RECORDING_BAK" \
+        -crf 23 \
+        -preset veryfast \
+        -vcodec libx264 \
+        -acodec aac \
         -vf "split [main][blur]; [blur] crop=${blur_width}:${blur_height}:${blur_x}:${blur_y}, boxblur=10 [blurred]; [main][blurred] overlay=${blur_x}:${blur_y},scale=-2:min(1080\,bitand(ih\,-2))" \
-        -pix_fmt yuv420p "$FILE_RECORDING"
+        -pix_fmt yuv420p \
+        "$FILE_RECORDING"
 
       if [ -f "$FILE_RECORDING_BAK" ]; then
         rm -rf "$FILE_RECORDING_BAK"
-        dunstify "Saving record:" "$FILE_NAME_RECORD"
+        send_notify "Saved: $FILE_NAME_RECORD"
       fi
     fi
   }
@@ -90,21 +133,39 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
       FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
+      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
 
-      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
-        -i default -vcodec libx264 -s "$GEOMETRY" \
-        -acodec libmp3lame -ab 128k -ar 44100 \
-        -threads 0 -f flv "$FILE_RECORDING_BAK"
+      ffmpeg \
+        -f x11grab \
+        -s "$GEOMETRY" \
+        -r 30 \
+        -i $DISPLAY"$OFFSET" \
+        -f alsa \
+        -ac 2 \
+        -i default \
+        -vcodec libx264 \
+        -s "$GEOMETRY" \
+        -acodec libmp3lame \
+        -ab 128k \
+        -ar 44100 \
+        -threads 0 \
+        -f flv \
+        "$FILE_RECORDING_BAK"
 
       # For telegram
-      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+      ffmpeg \
+        -i "$FILE_RECORDING_BAK" \
+        -crf 23 \
+        -preset veryfast \
+        -vcodec libx264 \
+        -acodec aac \
         -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
-        -pix_fmt yuv420p "$FILE_RECORDING"
+        -pix_fmt yuv420p \
+        "$FILE_RECORDING"
 
       if [ -f "$FILE_RECORDING_BAK" ]; then
         rm -rf "$FILE_RECORDING_BAK"
-        dunstify "Saving record:" "$FILE_NAME_RECORD"
+        send_notify "Saved: $FILE_NAME_RECORD"
       fi
     fi
   }
@@ -122,7 +183,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
     OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      dunstify -t 2800 "Recording GIF has started.." -i "$ICON"
+      send_notify "Record gif start.."
 
       # -s "$(getdim)" \
       ffmpeg \
@@ -130,11 +191,21 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
         -framerate 30 \
         -s "$GEOMETRY" \
         -i "$DISPLAY""$OFFSET" \
-        -c:v libx264 -qp 0 -r 30 \
+        -c:v libx264 \
+        -qp 0 \
+        -r 30 \
         "$OUTPUT_MKV"
 
-      ffmpeg -i "$OUTPUT_MKV" -c:v libx264 -crf 23 -profile:v baseline -level 3.0 \
-        -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -an \
+      ffmpeg \
+        -i "$OUTPUT_MKV" \
+        -c:v libx264 \
+        -crf 23 \
+        -profile:v baseline \
+        -level 3.0 \
+        -movflags faststart \
+        -pix_fmt yuv420p \
+        -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+        -an \
         "$OUTPUT_MKV.mp4"
 
       OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
@@ -142,14 +213,14 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 
       if [ -f "$OUTPUT_MKV" ]; then
         rm -rf "$OUTPUT_MKV" "$OUTPUT_MKV.mp4"
-        dunstify "Saving record GIF:" "$OUTPUT_GIF" -i "$ICON"
+        send_notify "Saved: $OUTPUT_GIF"
       fi
     fi
   }
 
   run_ffmpeg_stop() {
     pkill ffmpeg
-    dunstify "Record" "quit.."
+    send_notify "Recording stoped"
   }
 
   run_simplegif() {
@@ -160,24 +231,41 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
     OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && dunstify "Record Gif" "starting.." -i "$FILE_ICONS"
+      [[ -f "$FILE_ICONS" ]] && send_notify "Record gif start.."
 
-      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
-        -i default -vcodec libx264 -s "$GEOMETRY" \
-        -acodec libmp3lame -ab 128k -ar 44100 \
-        -threads 0 -f flv "$FILE_RECORDING_BAK"
+      ffmpeg \
+        -f x11grab \
+        -s "$GEOMETRY" \
+        -r 30 \
+        -i $DISPLAY"$OFFSET" \
+        -f alsa \
+        -ac 2 \
+        -i default \
+        -vcodec libx264 \
+        -s "$GEOMETRY" \
+        -acodec libmp3lame \
+        -ab 128k \
+        -ar 44100 \
+        -threads 0 \
+        -f flv \
+        "$FILE_RECORDING_BAK"
 
       # For telegram
-      ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+      ffmpeg \
+        -i "$FILE_RECORDING_BAK" \
+        -crf 23 \
+        -preset veryfast \
+        -vcodec libx264 \
+        -acodec aac \
         -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
-        -pix_fmt yuv420p "$FILE_RECORDING"
+        -pix_fmt yuv420p \
+        "$FILE_RECORDING"
 
       if [[ -f $FILE_RECORDING ]]; then
         PATHGIF="$FILE_RECORDING.gif"
+
         "$HOME/.config/miscxrdb/exbin/gifgenerator" -o "$PATHGIF" "$FILE_RECORDING"
-        # ffmpeg -i "$FILE_RECORDING" -pix_fmt yuv420p - | gifski -o "$PATHGIF" -
-        dunstify "Gif created:" "$PATHGIF"
+        send_notify "Saved: $PATHGIF"
       fi
 
       if [ -f "$FILE_RECORDING_BAK" ]; then
@@ -206,21 +294,12 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
     [[ -f "$HOME/.local/bin/vv" ]] && "$HOME/.local/bin/vv"
   }
 
-  run_pomodoro() {
-    script_pomodoro_path="$HOME/.config/polybar/scripts/pomodoro"
-
-    [[ ! -f $script_pomodoro_path ]] && dunstify "file pomodoro not found"
-
-    "$HOME/.config/polybar/scripts/pomodoro" --toggle
-  }
-
   case "$SELECT" in
   "Calendar") gnome-calendar ;;
   "Drawing") gromit-mpx ;; # install: sudo apt install gromit-mpx
   "File manager [UI]") run_filemanager ;;
   "Keyboard") run_screenkey ;;
   "Neovide") run_neovide ;;
-  "Pomodoro") run_pomodoro ;;
   "Record Video Fullscreen") run_ffmpeg_record_fullscreen ;;
   "Record Video Rectangle Blur") run_ffmpeg_record_with_rectangle_blurred ;;
   "Record Video Rectangle") run_ffmpeg_record_with_rectangle ;;
@@ -229,7 +308,5 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
   "Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
   "Stop Record") run_ffmpeg_stop ;;
   "SyncUpdate") sync_update ;;
-
   esac
-
 )
