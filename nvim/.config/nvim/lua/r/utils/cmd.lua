@@ -921,7 +921,7 @@ function M.change_colors()
   local KeywordNC_fg = H.get("Keyword", "fg") -- 17
 
   local tmux_bg = H.get("Normal", "bg")
-  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.1)
+  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.07)
 
   local statusline_fg = H.tint(H.get("WinSeparator", "fg"), 0.7)
 
@@ -1106,7 +1106,7 @@ function M.change_colors()
     yazi_which_bg, -- 48
     yazi_filename_fg, -- 49
 
-    string.format "! zsh: zsh_line bro",
+    string.format "! zsh: zsh_line",
     zsh_sugest, -- 50
     zsh_lines -- 51
   )

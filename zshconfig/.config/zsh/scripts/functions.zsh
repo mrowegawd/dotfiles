@@ -36,6 +36,11 @@ build-install() {
     sudo apt install urlview -y
   fi
 
+  if ! command -v rg >/dev/null; then
+    echo "Installing: rg"
+    sudo apt install ripgrep -y
+  fi
+
   # if ! command -v betterlockscreen >/dev/null; then
   #   echo "Installing: i3lock - screen lock"
   #   sudo apt install autoconf gcc make pkg-config libpam0g-dev \
@@ -160,9 +165,9 @@ build-install() {
   # fi
 
   # if ! command -v rg >/dev/null; then
-    echo "Installing: rg - Grep drugs"
-    cargo install ripgrep
-    asdf reshim rust
+    # echo "Installing: rg - Grep drugs"
+    # cargo install ripgrep
+    # asdf reshim rust
   # fi
 
   # https://github.com/race604/clock-tui

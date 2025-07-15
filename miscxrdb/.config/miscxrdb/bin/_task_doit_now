@@ -1,57 +1,59 @@
 #!/usr/bin/bash
 
 # Usage example (crontab -e):
-# */35 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_task_doit_now >/dev/null 2>&1
+#
+# */35 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:1 bash ~/.config/miscxrdb/bin/_task_doit_now >/dev/null 2>&1
 
-NORG_PATH="$HOME/Dropbox/neorg/orgmode"
+ORG_PATH="$HOME/Dropbox/neorg/orgmode"
 ICON_PATH="$HOME/.config/miscxrdb/icons/checklist.png"
 ICON_LEARNING_PATH="$HOME/.config/miscxrdb/icons/knowledge.png"
 
-# find 'inprogress' tasks
-TASK="$("$HOME/.cargo/bin/rg" -i "\*\sPROGRES" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
-LEARNING="$("$HOME/.cargo/bin/rg" -i "\*\sLEARNING" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
-GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
+GREEN="$(xrdb -query | grep 'color3:' | awk '{print $NF}' | head -1)"
 RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
 
+TASK="$(/usr/bin/rg -i "\*\sPROGRES" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
+LEARNING="$(/usr/bin/rg -i "\*\sLEARNING" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
+
 if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
-  /usr/local/bin/dunstify -i "$ICON_PATH" "No active task, progress or learning session detected" "<b><span foreground=\"$GREEN\">What are you doing bodoh?? FOCUS!!</span></b>"
+  /usr/local/bin/dunstify -i "$ICON_PATH" "TODO/LEARNING" "<b><span foreground=\"$GREEN\">What are you doing, bodoh!?\nNo todo or no task??</span></b>"
   sound_man="$HOME/.config/miscxrdb/mp3-wav/wrong-answer-129254.mp3"
-else
-  if [[ -n $TASK ]]; then
-    IFS=$'\n' read -r -d '' -a array <<<"$TASK"
+  exit 1
+fi
 
-    # Array baru untuk menyimpan elemen yang dimodifikasi
-    new_array=()
-    for element in "${array[@]}"; do
-      new_array+=("<span foreground=\"$RED\"></span> <b><span foreground=\"$GREEN\">$element</span></b>")
-    done
+if [[ -n $TASK ]]; then
+  IFS=$'\n' read -r -d '' -a array <<<"$TASK"
 
-    concatenated_string=$(
-      IFS=$'\n'
-      echo "${new_array[*]}"
-    )
-    /usr/local/bin/dunstify -t 10000 -i "$ICON_PATH" "Progress Task" "$concatenated_string"
-  fi
+  # Array baru untuk menyimpan elemen yang dimodifikasi
+  new_array=()
+  for element in "${array[@]}"; do
+    new_array+=("<span foreground=\"$RED\"></span> <b><span foreground=\"$GREEN\">$element</span></b>")
+  done
 
-  if [[ -n $LEARNING ]]; then
-    IFS=$'\n' read -r -d '' -a array <<<"$LEARNING"
+  concatenated_string=$(
+    IFS=$'\n'
+    echo "${new_array[*]}"
+  )
+  /usr/local/bin/dunstify -t 10000 -i "$ICON_PATH" "TaskDoitNow: TODO" "$concatenated_string"
+fi
 
-    # Array baru untuk menyimpan elemen yang dimodifikasi
-    new_array=()
-    for element in "${array[@]}"; do
-      new_array+=(" <b><span foreground=\"$GREEN\">$element</span></b>")
-    done
+if [[ -n $LEARNING ]]; then
+  IFS=$'\n' read -r -d '' -a array <<<"$LEARNING"
 
-    concatenated_string=$(
-      IFS=$'\n'
-      echo "${new_array[*]}"
-    )
-    /usr/local/bin/dunstify -t 10000 -i "$ICON_LEARNING_PATH" "Learning" "$concatenated_string"
-  fi
+  # Array baru untuk menyimpan elemen yang dimodifikasi
+  new_array=()
+  for element in "${array[@]}"; do
+    new_array+=(" <b><span foreground=\"$GREEN\">$element</span></b>")
+  done
 
-  sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
+  concatenated_string=$(
+    IFS=$'\n'
+    echo "${new_array[*]}"
+  )
+  /usr/local/bin/dunstify -t 10000 -i "$ICON_LEARNING_PATH" "TaskDoitNow: LEARNING" "$concatenated_string"
+fi
 
-  if [ -f "$sound_man" ]; then
-    /usr/bin/play "$sound_man" 2>/dev/null
-  fi
+sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
+
+if [ -f "$sound_man" ]; then
+  /usr/bin/play "$sound_man" 2>/dev/null
 fi

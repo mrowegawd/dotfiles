@@ -30,7 +30,6 @@ local base_cl = {
   quickfixline_alter = 0.3,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
-  -- winbarfilepath_fg_alter = 0.7,
   winbarfilepath_fg_alter = 0.05,
   winseparator_alter = 0.65,
 }
@@ -89,7 +88,7 @@ reset_base_alter({ "base46-aylin" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
   normalfloat_bg_alter = 0.05,
-  winbarfilepath_fg_alter = 0.45,
+  winbarfilepath_fg_alter = 0.5,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",

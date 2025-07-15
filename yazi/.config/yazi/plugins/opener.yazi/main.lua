@@ -114,9 +114,9 @@ return {
 		if action == "terminal" then
 			local termopen = os.getenv("TERMINAL")
 
-			if termopen == "ghostty" or termopen == "kitty" then
-				termopen = "st"
-			end
+			-- if termopen == "ghostty" or termopen == "kitty" then
+			-- 	termopen = "ghostty"
+			-- end
 
 			os.execute([[bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && ]] .. termopen)
 

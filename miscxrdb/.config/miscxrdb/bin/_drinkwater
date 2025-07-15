@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage example (crontab -e):
-# 0 */2 * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_drinkwater >/dev/null 2>&1
+# 0 */2 * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=$DISPLAY bash ~/.config/miscxrdb/bin/_drinkwater >/dev/null 2>&1
 
 /usr/local/bin/dunstify --replace 31341 -i ~/.config/miscxrdb/icons/drinks.png "Jangan lupa minum"
 
