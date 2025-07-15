@@ -211,6 +211,7 @@ case $instance.$class in
 *.xdman-Main) xcalc ;;
 *.SimpleScreenRecorder) videos ;;
 *.[Ff]irefox) browser ;;
+*.firefox_firefox) browser ;;
 *.mpv) mpv ;;
 *.[zZ]athura) zathura ;;
 *.Peek) misc_floating ;;
