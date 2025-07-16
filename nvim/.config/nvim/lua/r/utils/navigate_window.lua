@@ -3,6 +3,7 @@ local M = {}
 
 -- Taken from https://github.com/mrjones2014/smart-splits.nvim/blob/c088d64c6e0e3221d24ef1f9337b5fe15557ddcc/lua/smart-splits/api.lua#L4
 
+local size = 3.5 -- to resize
 local WinPosition = {
   start = 0,
   middle = 1,
@@ -146,7 +147,6 @@ end
 function M.resize_plus_or_mines(position)
   local win_position = M.win_position(position)
   local curwinnr = vim.api.nvim_win_get_number(0)
-  local size = 7
 
   local minus_or_plus
   if position == "up" or position == "left" then
