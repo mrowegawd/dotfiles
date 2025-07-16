@@ -8,6 +8,27 @@ end
 
 local state = { lsp_clients_visible = true }
 local dap_ft_include = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
+local get_vars = {
+  filetype = function()
+    local filetype = vim.bo.filetype
+    if RUtils.qf.is_loclist() then
+      filetype = "loclist"
+    end
+    return filetype
+  end,
+  path = function()
+    return vim.fn.expand "%:p" --[[@as string]]
+  end,
+  bufname = function()
+    return vim.api.nvim_buf_get_name(0)
+  end,
+  filename = function(bufname)
+    return vim.fn.fnamemodify(bufname, ":.")
+  end,
+  extension = function(filename)
+    return vim.fn.fnamemodify(filename, ":e")
+  end,
+}
 local set_conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
@@ -67,7 +88,7 @@ local stl_lsp_clients = function()
     return { name = client.name, priority = 4 }
   end, clients)
 end
-local OverseerTasksForStatus = function(status)
+local overseer_tasks_for_status = function(status)
   return {
     condition = function(self)
       return self.tasks[status]
@@ -101,11 +122,9 @@ local rmux_pane = function()
 
   return run_with, watch
 end
-local git_branch = function()
-  return vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
-end
 local __colors = function()
   local H = require "r.settings.highlights"
+  local UIPallette = require("r.utils").uisec
 
   local set_col_light = { fg_normal = 2, fg_branch = 4 }
   local set_col_normal = { fg_normal = 3, fg_branch = 2 }
@@ -118,12 +137,18 @@ local __colors = function()
     -- keyword = H.get("Keyword", "fg"),
     keyword = H.tint(H.get("StatusLine", "fg"), 4),
 
-    normal_bg = H.get("Normal", "bg"),
+    normal_bg = H.get("Normal", "bg") or "#000000",
 
     block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.fg_normal),
     block_bg = H.tint(H.get("StatusLine", "bg"), 0.5),
     block_fg_darken = H.tint(H.get("StatusLine", "bg"), 1.4),
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
+    block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
+    --
+    block_fg_qf = H.tint(UIPallette.palette.light_gray, -0.2),
+    block_bg_qf = H.tint(UIPallette.palette.light_gray, 1),
+    block_fg_loclist = H.tint(UIPallette.palette.light_gray, -0.2),
+    block_bg_loclist = H.tint(UIPallette.palette.light_gray, 1),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Folded", "bg")), 2),
@@ -133,8 +158,8 @@ local __colors = function()
     winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Folded", "bg")), 0.5),
     winbar_dap = "lightgray",
 
-    modified_fg = H.get("KeywordMatch", "fg"),
-    coldisorent = H.get("LineNr", "fg"),
+    modified_fg = H.get("KeywordMatch", "fg") or "#000000",
+    coldisorent = H.get("LineNr", "fg") or "#000000",
 
     mode_insert_bg = H.get("KeywordMatch", "fg"),
 
@@ -155,6 +180,34 @@ local __colors = function()
   }
 end
 local colors = __colors()
+
+local function get_branch_name(buf)
+  buf = buf or 0
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return ""
+  end
+  if vim.bo[buf].buftype == "nofile" then
+    return ""
+  end
+
+  local branch = vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
+  if branch then
+    return branch
+  end
+
+  local branch_cmd = "git rev-parse --abbrev-ref HEAD"
+  branch = vim.fn.system(branch_cmd)
+  if vim.v.shell_error ~= 0 then
+    return ""
+  end
+
+  if #branch == 0 then
+    return ""
+  end
+
+  -- trim white space off branch
+  return string.gsub(branch, "%s+", "")
+end
 
 local mode_exclude = {
   ["NvimTree"] = true,
@@ -275,39 +328,34 @@ M.Mode = {
   },
 }
 M.Branch = {
-  condition = function()
-    return Conditions.is_git_repo() and git_branch() ~= nil
+  init = function(self)
+    self.branch = get_branch_name()
   end,
   {
-    condition = function()
-      return vim.bo[0].filetype ~= "qf"
-    end,
-    provider = function()
-      return "  " .. git_branch() .. " "
+    provider = function(self)
+      if #self.branch > 0 then
+        return "  " .. self.branch .. " "
+      end
+      return ""
     end,
     hl = { fg = colors.branch_fg, bg = colors.branch_bg, bold = true },
   },
 }
 M.FilePath = {
   init = function(self)
-    self.bufname = vim.api.nvim_buf_get_name(0)
-    self.filename = vim.fn.fnamemodify(self.bufname, ":.")
+    self.bufname = get_vars.bufname()
+    self.filename = get_vars.filename(self.bufname)
     self.exclude_ft = vim.tbl_contains(
       { "neo-tree", "Outline", "trouble", "qf" },
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
   end,
   {
-    provider = function(self)
-      if #self.filename == 0 then
-        return ""
-      end
-      return RUtils.config.icons.misc.separator_up .. " "
-    end,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local fg = colors.branch_bg
-      if not Conditions.is_git_repo() then
-        fg = tostring(colors.statusline_bg)
+      local fg = colors.block_bg
+      if Conditions.is_git_repo() or (#get_branch_name() > 0) then
+        fg = colors.branch_bg
       end
       return { fg = fg, bg = colors.block_bg }
     end,
@@ -353,70 +401,69 @@ M.FilePath = {
       if not Conditions.width_percent_below(#self.filename, 0.47) and set_conditions.hide_in_col_width(30) then
         path = table.concat(parts, sep)
         if #path > 0 then
-          return path .. sep
+          return " " .. path .. sep
         end
       end
 
       if Conditions.is_active() then
         parts = vim.split(self.filename, "[\\/]")
         table.remove(parts, #parts)
-        local tbl_concat = table.concat(parts, sep)
-        if #tbl_concat > 0 then
-          return tbl_concat .. sep
-        end
-        return ""
-      end
-
-      if not Conditions.width_percent_below(#self.filename, 0.90) then
         path = table.concat(parts, sep)
         if #path > 0 then
-          return path .. sep .. RUtils.file.basename(self.filename) .. "  "
+          if path:find(RUtils.config.path.home, 1, true) == 1 then
+            path = path:sub(#RUtils.config.path.home + 2)
+          end
+          return " " .. path .. sep
         end
-        return RUtils.file.basename(self.filename) .. " "
       end
-
-      -- return statusline path untuk non active window
-      return self.filename .. "  "
     end,
     hl = { fg = colors.block_fg, bg = colors.block_bg },
   },
   {
     provider = function(self)
       if #self.filename == 0 then
-        return vim.api.nvim_get_option_value("filetype", { buf = 0 })
+        return vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
+      end
+
+      if vim.bo.filetype == "qf" then
+        local path = self.bufname
+        if path:find(RUtils.config.path.home, 1, true) == 1 then
+          path = path:sub(#RUtils.config.path.home + 2)
+        end
+        return " " .. path .. " "
       end
       return RUtils.file.basename(self.filename) .. " "
     end,
     hl = function(self)
       local fg = tostring(colors.keyword)
-      if self.exclude_ft then
+      local bg = colors.block_bg
+      if self.exclude_ft or #self.filename == 0 then
         fg = colors.block_fg
       end
-      return { fg = fg, bg = colors.block_bg, bold = true }
+      return { fg = fg, bg = bg }
     end,
   },
   {
-    provider = function(self)
-      if #self.filename == 0 then
-        return ""
-      end
-      return RUtils.config.icons.misc.separator_up
-    end,
-    hl = { bg = colors.statusline_bg, fg = colors.block_bg },
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = { fg = colors.block_bg, bg = colors.statusline_bg },
   },
 }
 M.FileIcon = {
   init = function(self)
-    local filename = vim.api.nvim_buf_get_name(0)
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.path = vim.fn.expand "%:p" --[[@as string]]
+    local bufname = get_vars.bufname()
+    local filename = get_vars.filename(bufname)
+    local extension = get_vars.extension(filename)
+    self.path = get_vars.path()
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+  end,
+  condition = function()
+    return vim.bo.filetype ~= "qf"
   end,
   provider = function(self)
     if self.path == "" then
       return ""
     end
-    return self.icon and (" " .. self.icon .. "  ")
+    return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
     return { fg = self.icon_color }
@@ -474,56 +521,120 @@ M.Git = {
   },
 }
 M.QuickfixStatus = {
-  condition = function()
-    return vim.bo[0].filetype == "qf"
-  end,
   init = function(self)
-    self.bufname = vim.api.nvim_buf_get_name(0)
-    self.qflists = function()
+    self.height = vim.api.nvim_buf_line_count(0)
+
+    self.title_qflist = vim.fn.getqflist({ title = 0 }).title
+    self.stack_qflists = function()
       -- Taken from fzflua internal
       local qflists = {}
       for i = 1, 10 do -- (n)vim keeps at most 10 quickfix lists in full
-        -- qf weirdness: id = 0 gets id of quickfix list nr
         local qflist = vim.fn.getqflist { nr = i, id = 0, title = true, items = true }
         if not vim.tbl_isempty(qflist.items) then
           table.insert(qflists, qflist)
         end
       end
-
       return qflists
     end
-  end,
-  -- {
-  --   provider = "  ",
-  --   hl = { fg = colors.statusline_fg },
-  -- },
-  {
-    provider = function(self)
-      local msg
-      if RUtils.qf.is_loclist() then
-        msg = vim.fn.getloclist(0, { title = 0 }).title
-      else
-        msg = string.format("%s/%s", vim.fn.getqflist({ id = 0 }).id, #self.qflists())
+
+    self.title_loclist = vim.fn.getloclist(0, { title = 0 }).title
+    self.stack_loclists = function()
+      local loclists = {}
+      for i = 1, 10 do
+        local loclist = vim.fn.getloclist(0, { all = "", nr = tonumber(i) })
+        if not vim.tbl_isempty(loclist.items) then
+          table.insert(loclists, loclist)
+        end
       end
-      return " " .. msg .. " "
-    end,
-    hl = { fg = colors.keyword },
-  },
-  {
-    provider = "Title: ",
-    hl = { fg = colors.statusline_fg },
-  },
+      return loclists
+    end
+  end,
+  condition = function()
+    return vim.bo[0].filetype == "qf"
+  end,
   {
     provider = function()
-      local msg
       if RUtils.qf.is_loclist() then
-        msg = vim.fn.getloclist(0, { title = 0 }).title
+        return " LF "
       else
-        msg = vim.fn.getqflist({ title = 0 }).title
+        return " QF "
       end
-      return msg .. " "
     end,
-    hl = { fg = colors.keyword },
+    hl = function()
+      local fg = colors.block_fg_qf
+      local bg = colors.block_bg_qf
+      if RUtils.qf.is_loclist() then
+        fg = colors.block_fg_loclist
+        bg = colors.block_bg_loclist
+      end
+      return { fg = fg, bg = bg }
+    end,
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local fg = colors.block_bg_qf
+      if RUtils.qf.is_loclist() then
+        fg = colors.block_bg_loclist
+      end
+      return { fg = fg, bg = colors.normal_bg }
+    end,
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local fg = colors.normal_bg
+      -- if RUtils.qf.is_loclist() then
+      --   fg = colors.block_bg_loclist
+      -- end
+      return { fg = fg, bg = colors.block_bg_darken }
+    end,
+  },
+  {
+    provider = function(self)
+      local parts = {}
+      if RUtils.qf.is_loclist() then
+        -- set index_loclist harus di bagian block provider, jangan di block init
+        -- begitu juga deang index_qf
+        local index_loclist = vim.fn.getloclist(0, { nr = 0 }).nr
+        table.insert(parts, string.format("  %d/%d 󱗿 %d ", self.height, index_loclist, #self.stack_loclists()))
+      else
+        local index_qf = vim.fn.getqflist({ id = 0 }).id
+        table.insert(parts, string.format("  %d/%d 󱗿 %d ", self.height, index_qf, #self.stack_qflists()))
+      end
+      return table.concat(parts, " ")
+    end,
+    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = { fg = colors.block_bg_darken, bg = colors.normal_bg },
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local fg = colors.normal_bg
+      -- if RUtils.qf.is_loclist() then
+      --   fg = colors.block_bg_loclist
+      -- end
+      return { fg = fg, bg = colors.block_bg_darken }
+    end,
+  },
+  {
+    provider = function(self)
+      local parts = {}
+      if RUtils.qf.is_loclist() then
+        table.insert(parts, string.format(" %s ", self.title_loclist))
+      else
+        table.insert(parts, string.format(" %s ", self.title_qflist))
+      end
+      return table.concat(parts, " ")
+    end,
+    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = { fg = colors.block_bg_darken, bg = colors.normal_bg },
   },
 }
 M.FileFlags = {
@@ -578,10 +689,10 @@ M.Tasks = {
       return { fg = colors.statusline_fg }
     end,
   },
-  rpad(OverseerTasksForStatus "CANCELED"),
-  rpad(OverseerTasksForStatus "RUNNING"),
-  rpad(OverseerTasksForStatus "SUCCESS"),
-  rpad(OverseerTasksForStatus "FAILURE"),
+  rpad(overseer_tasks_for_status "CANCELED"),
+  rpad(overseer_tasks_for_status "RUNNING"),
+  rpad(overseer_tasks_for_status "SUCCESS"),
+  rpad(overseer_tasks_for_status "FAILURE"),
   {
     provider = function(self)
       for i, _ in pairs(self.symbols) do
@@ -991,20 +1102,19 @@ M.RmuxTargetPane = {
 }
 M.Filetype = {
   init = function(self)
-    local filetype = vim.bo.filetype
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.path = vim.fn.expand "%:p" --[[@as string]]
+    local bufname = get_vars.bufname()
+    local filename = get_vars.filename(bufname)
+    local extension = get_vars.extension(filename)
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-
-    if RUtils.qf.is_loclist() then
-      filetype = "loclist"
-    end
-    self.filetype = filetype
-
     self.run_with, self.watch = rmux_pane()
+    self.filetype = get_vars.filetype()
   end,
   {
-    provider = RUtils.config.icons.misc.separator_down .. " ",
+    provider = function(self)
+      if self.filetype and #self.filetype > 0 then
+        return RUtils.config.icons.misc.separator_down .. " "
+      end
+    end,
     hl = function(self)
       local fg = colors.statusline_bg
       if #self.watch > 0 then
@@ -1015,20 +1125,11 @@ M.Filetype = {
   },
   {
     provider = function(self)
-      if self.path == "" then
-        return ""
+      if self.filetype and #self.filetype > 0 then
+        return self.icon and (self.icon .. " " .. self.filetype .. " ")
       end
-      return self.icon and (self.icon .. " " .. self.filetype .. " ")
     end,
     hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
-  },
-  {
-    provider = function(self)
-      if #self.filetype > 0 then
-        return " "
-      end
-    end,
-    hl = { fg = colors.block_fg, bg = colors.block_bg_darken },
   },
 }
 M.Ruler = {
@@ -1188,7 +1289,7 @@ M.status_active_left = {
   M.FilePath,
   -- M.FileIcon,
   M.Git,
-  M.QuickfixStatus,
+  -- M.QuickfixStatus,
   M.FileFlags,
 
   M.Gap,
@@ -1221,14 +1322,12 @@ M.WinbarSeparator = {
 }
 M.WinbarFilePath = {
   init = function(self)
-    self.bufname = vim.api.nvim_buf_get_name(0)
-    self.filename = vim.fn.fnamemodify(self.bufname, ":.")
-    self.exclude_ft = vim.tbl_contains(
-      { "neo-tree", "Outline", "trouble", "qf" },
-      vim.api.nvim_get_option_value("filetype", { buf = 0 })
-    )
+    self.bufname = get_vars.bufname()
+    self.filename = get_vars.filename(self.bufname)
   end,
-
+  condition = function()
+    return vim.bo[0].filetype ~= "qf"
+  end,
   {
     provider = function(self)
       local opts = {
@@ -1295,41 +1394,23 @@ M.WinbarFilePath = {
   },
   {
     provider = function(self)
-      return RUtils.file.basename(self.filename)
+      return RUtils.file.basename(self.filename) .. " "
     end,
     hl = function()
       local fg = colors.winbar_fg
-      local italic = true
       if Conditions.is_active() then
         fg = colors.winbar_keyword
-        italic = true
       end
-      return { fg = fg, bold = true, italic = italic }
+      return { fg = fg, bg = colors.normal_bg, bold = true, italic = true }
     end,
   },
 }
-M.WinbarIcons = {
-  init = function(self)
-    local filename = vim.api.nvim_buf_get_name(0)
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.path = vim.fn.expand "%:p" --[[@as string]]
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-  end,
-  provider = function(self)
-    if self.path == "" then
-      return ""
-    end
-    return self.icon and (" " .. self.icon .. " ")
-  end,
-  hl = function(self)
-    return { fg = self.icon_color }
-  end,
-}
 
 M.status_winbar_active_left = {
-  M.WinbarSeparator,
-  M.WinbarIcons,
+  -- M.WinbarSeparator,
+  M.FileIcon,
   M.WinbarFilePath,
+  M.QuickfixStatus,
 
   M.Gap,
 

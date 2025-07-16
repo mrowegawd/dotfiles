@@ -43,7 +43,7 @@ return {
               )
             end
 
-            local buftype = vim.tbl_contains({ "help", "prompt", "nofile", "quickfix" }, vim.bo[buf].buftype)
+            local buftype = vim.tbl_contains({ "help", "prompt", "nofile" }, vim.bo[buf].buftype)
             local filetype = vim.tbl_contains({
               "gitcommit",
               "fugitive",
