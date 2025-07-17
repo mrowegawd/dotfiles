@@ -54,13 +54,22 @@ function M.neorg_mappings_ft(bufnr)
       },
       ["gD"] = {
         function()
-          vim.cmd "vsplit | ObsidianFollowLink"
+          if vim.bo.filetype == "org" then
+            vim.cmd "vsplit"
+            require("orgmode").action "org_mappings.open_at_point"
+          else
+            vim.cmd "vsplit | ObsidianFollowLink"
+          end
         end,
         "Note: followlink vertical split",
       },
       ["gd"] = {
         function()
-          vim.cmd "ObsidianFollowLink"
+          if vim.bo.filetype == "org" then
+            require("orgmode").action "org_mappings.open_at_point"
+          else
+            vim.cmd "ObsidianFollowLink"
+          end
         end,
         "Note: followlink",
       },
