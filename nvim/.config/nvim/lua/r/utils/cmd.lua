@@ -1,5 +1,10 @@
 ---@class r.utils.cmd
-local M = {}
+local M = {
+  quickfix = {
+    copen = "belowright copen",
+    lopen = "belowright lopen", -- :botright :topleft :aboveleft :belowright :leftabove :rightbelow
+  },
+}
 
 function M.remove_alias(link)
   local split_index = string.find(link, "%s*|")

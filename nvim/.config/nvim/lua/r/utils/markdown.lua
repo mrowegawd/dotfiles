@@ -367,7 +367,7 @@ local function picker(contents, actions)
         }
 
         vim.fn.setqflist({}, "r", what)
-        vim.cmd "copen"
+        vim.cmd(RUtils.cmd.quickfix.copen)
       end,
 
       ["alt-l"] = function(selected, _)
@@ -420,7 +420,7 @@ local function picker(contents, actions)
           items = items,
           title = "Tags Note ",
         })
-        vim.cmd "lopen"
+        vim.cmd(RUtils.cmd.quickfix.lopen)
       end,
     }
 
@@ -837,7 +837,7 @@ function M.find_local_titles(item_paths)
         }
 
         vim.fn.setqflist({}, "r", what)
-        vim.cmd "copen"
+        vim.cmd(RUtils.cmd.quickfix.copen)
       end,
 
       ["ctrl-v"] = function(selected, _)

@@ -111,7 +111,7 @@ local function picker(contents, tbl_cts, fzf_opts)
         end
       end,
 
-      ["alt-L"] = function(selected, _)
+      ["alt-L"] = function()
         RUtils.warn "Not implemented yet"
       end,
       ["alt-l"] = function(selected, _)
@@ -149,7 +149,7 @@ local function picker(contents, tbl_cts, fzf_opts)
           items = items,
           title = "TODO Comments Note",
         })
-        vim.cmd "lopen"
+        vim.cmd(RUtils.cmd.quickfix.lopen)
       end,
 
       ["alt-G"] = function()
@@ -192,7 +192,7 @@ local function picker(contents, tbl_cts, fzf_opts)
         }
 
         vim.fn.setqflist({}, "r", what)
-        vim.cmd "copen"
+        vim.cmd(RUtils.cmd.quickfix.copen)
       end,
     },
   })

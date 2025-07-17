@@ -23,7 +23,7 @@ return {
   -- HEIRLINE
   {
     "rebelot/heirline.nvim",
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = function()
       local comp = require "r.plugins.colorthemes.heirline.components"
       return {

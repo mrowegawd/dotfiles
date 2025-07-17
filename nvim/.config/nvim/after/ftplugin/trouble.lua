@@ -40,7 +40,7 @@ keymap.set("n", "<a-q>", function()
 
     local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
     if not is_qf_opened.found then
-      vim.cmd "copen"
+      vim.cmd(RUtils.cmd.quickfix.copen)
     end
   end
 end, { buffer = api.nvim_get_current_buf(), desc = "Trouble: convert into quickfix (qf)" })
@@ -57,7 +57,7 @@ keymap.set("n", "<a-l>", function()
 
     local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
     if not is_qf_opened.found then
-      vim.cmd "lopen"
+      vim.cmd(RUtils.cmd.quickfix.lopen)
     end
   end
 end, { buffer = api.nvim_get_current_buf(), desc = "Trouble: convert into loclist" })

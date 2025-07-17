@@ -67,7 +67,10 @@ RUtils.cmd.augroup("SmartClose", {
     vim.bo[event.buf].buflisted = false
     if vim.api.nvim_buf_is_valid(event.buf) and (#vim.api.nvim_list_wins() > 1) then
       vim.keymap.set("n", "q", function()
-        vim.cmd "close"
+        if vim.bo[event.buf] == "qf" then
+          vim.cmd "close"
+          return
+        end
         pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
       end, {
         buffer = event.buf,
@@ -87,7 +90,7 @@ RUtils.cmd.augroup("WindowBehaviour", {
     "orgagenda",
     "capture",
     "gitcommit",
-    "qf",
+    -- "qf",
     "NeogitCommitMessage",
     "NeogitPopup",
     -- "help",

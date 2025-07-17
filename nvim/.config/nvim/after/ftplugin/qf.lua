@@ -8,8 +8,20 @@ opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 
-local title_notify = "QF"
-
+local __get_vars = {
+  title_list = function()
+    if RUtils.qf.is_loclist() then
+      return "LF"
+    end
+    return "QF"
+  end,
+  title_icon = function()
+    if RUtils.qf.is_loclist() then
+      return " "
+    end
+    return ""
+  end,
+}
 -- vim.api.nvim_create_autocmd("FileType", {
 --   pattern = "qf",
 --   callback = function()
@@ -78,17 +90,23 @@ end, {
 
 keymap.set("n", "<Leader>ff", function()
   local actions = require "fzf-lua.actions"
-  fzf_lua.quickfix {
+  local opts = {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = RUtils.fzflua.format_title("[QF] Select List", "󰈙") },
+    winopts = { title = RUtils.fzflua.format_title("Select Quickfix", __get_vars.title_icon()) },
     actions = {
-      ["ctrl-s"] = actions.git_buf_split,
-      ["ctrl-v"] = actions.git_buf_vsplit,
-      ["alt-q"] = actions.file_sel_to_qf,
       ["alt-l"] = actions.file_sel_to_ll,
+      ["alt-q"] = actions.file_sel_to_qf,
+      ["ctrl-s"] = actions.git_buf_split,
       ["ctrl-t"] = actions.git_buf_tabedit,
+      ["ctrl-v"] = actions.git_buf_vsplit,
     },
   }
+
+  if RUtils.qf.is_loclist() then
+    fzf_lua.loclist(opts)
+  else
+    fzf_lua.quickfix(opts)
+  end
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: select items [fzflua]",
@@ -97,7 +115,12 @@ end, {
 keymap.set("n", "<Leader>fg", function()
   local path = require "fzf-lua.path"
   local actions = require "fzf-lua.actions"
+
   local qf_items = vim.fn.getqflist()
+  local title_ = __get_vars.title_list() .. " Grep"
+  if RUtils.qf.is_loclist() then
+    qf_items = vim.fn.getloclist(0)
+  end
 
   local qf_ntbl = {}
   for _, qf_item in pairs(qf_items) do
@@ -110,7 +133,7 @@ keymap.set("n", "<Leader>fg", function()
 
   return fzf_lua.live_grep_glob {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = RUtils.fzflua.format_title("[QF] Grep", "") },
+    winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
     cmd = pcmd,
     actions = {
       ["ctrl-s"] = actions.git_buf_split,
@@ -133,6 +156,9 @@ keymap.set("n", "<a-l>", function()
       end
       vim.cmd "Trouble loclist toggle focus=true"
     else
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.warn("convert dari qf ke loclist belum diimplementasikan", { title = __get_vars.title_list() })
+    end
   end
 end, {
   buffer = api.nvim_get_current_buf(),
@@ -143,7 +169,7 @@ keymap.set("n", "<a-q>", function()
   local qf_win = RUtils.cmd.windows_is_opened { "qf" }
   if RUtils.qf.is_loclist() then
     ---@diagnostic disable-next-line: undefined-field
-    RUtils.warn("convert dari loclist ke qf belum diimplementasikan", { title = title_notify })
+    RUtils.warn("convert dari loclist ke qf belum diimplementasikan", { title = __get_vars.title_list() })
   else
     if qf_win.found then
       vim.cmd [[cclose]]

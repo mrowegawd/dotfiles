@@ -402,6 +402,10 @@ return {
             -- ["ctrl-down"] = "preview-page-down",
           },
         },
+        defaults = {
+          copen = RUtils.cmd.quickfix.copen,
+          lopen = RUtils.cmd.quickfix.lopen,
+        },
         fzf_opts = { ["--no-separator"] = "" }, -- remove separator line
         files = {
           -- debug = true,

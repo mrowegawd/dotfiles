@@ -1022,7 +1022,7 @@ return {
 
               local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
               if not is_qf_opened.found then
-                vim.cmd "copen"
+                vim.cmd(RUtils.cmd.quickfix.copen)
               end
             end
           end,

@@ -25,7 +25,7 @@ return {
           if RUtils.has "trouble.nvim" then
             require("trouble").open { mode = "quickfix", focus = false }
           else
-            vim.cmd "copen"
+            vim.cmd(RUtils.cmd.quickfix.copen)
           end
         end,
       },

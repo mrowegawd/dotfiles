@@ -593,7 +593,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
         }
 
         vim.fn.setqflist({}, "r", what)
-        vim.cmd "copen"
+        vim.cmd(RUtils.cmd.quickfix.copen)
       end,
       ["ctrl-s"] = function(selected, _)
         local selection = selected[1]

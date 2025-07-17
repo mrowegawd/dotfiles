@@ -43,7 +43,13 @@ return {
         winhighlight = "Normal:NormalBoxComment,FloatBorder:FloatBoxComment,EndOfBuffer:NormalBoxComment,Visual:VisualBoxComment",
         higroup_title = "FzfLuaPreviewTitle",
       },
-      theme_list = { enabled = false },
+      theme_list = {
+        enabled = false,
+        quickfix = {
+          copen = RUtils.cmd.quickfix.copen,
+          lopen = RUtils.cmd.quickfix.lopen,
+        },
+      },
       marks = {
         excluded = {
           buftypes = {},
@@ -76,6 +82,13 @@ return {
         },
       },
       keymap = {
+        quickfix = {
+          toggle_open_qf = "<Leader>qj",
+          toggle_open_loclist = "<Leader>ql",
+          save_local = "<Leader>qs",
+          load_local = "<Leader>qL",
+          add_item_to_qf = "<Leader>qy",
+        },
         todo = {
           add_local = "<Leader>fp",
           add_global = "<Leader>fn",

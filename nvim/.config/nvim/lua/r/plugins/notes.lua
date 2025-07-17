@@ -1,40 +1,39 @@
 return {
   -- HEADLINES
-  {
-    "lukas-reineke/headlines.nvim",
-    ft = { "org" },
-    opts = {
-      markdown = {
-        headline_highlights = false,
-        codeblock_highlight = false,
-        quote_highlight = false,
-        bullet_highlights = false,
-      },
-      org = {
-        headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5", "Headline6" },
-        codeblock_highlight = "CodeBlock",
-        dash_highlight = "Dash",
-        dash_string = "-",
-        doubledash_highlight = "DoubleDash",
-        doubledash_string = "=",
-        quote_highlight = "Quote",
-        quote_string = "┃",
-        fat_headlines = false,
-        fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
-      },
-    },
-  },
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    -- event = "LazyFile",
+    event = "LazyFile",
     -- ft = { "org" },
-    event = "VeryLazy",
-    lazy = false,
+    -- event = "VeryLazy",
+    -- lazy = false,
     dependencies = {
       "akinsho/org-bullets.nvim",
-      "lukas-reineke/headlines.nvim",
+      {
+        "lukas-reineke/headlines.nvim",
+        -- ft = { "org" },
+        opts = {
+          markdown = {
+            headline_highlights = false,
+            codeblock_highlight = false,
+            quote_highlight = false,
+            bullet_highlights = false,
+          },
+          org = {
+            headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5", "Headline6" },
+            codeblock_highlight = "CodeBlock",
+            dash_highlight = "Dash",
+            dash_string = "-",
+            doubledash_highlight = "DoubleDash",
+            doubledash_string = "=",
+            quote_highlight = "Quote",
+            quote_string = "┃",
+            fat_headlines = false,
+            fat_headline_upper_string = "▃",
+            fat_headline_lower_string = "🬂",
+          },
+        },
+      },
     },
     keys = {
       {

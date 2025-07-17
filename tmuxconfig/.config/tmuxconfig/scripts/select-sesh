@@ -11,7 +11,7 @@ preview_cmd=$*
 
 SELECT=$(
   sesh list --icons | fzf-tmux -p 80%,70% \
-    --no-sort --ansi --border-label ' SELECT|START SESS|TMUX ' --prompt '⚡ ' \
+    --no-sort --ansi --border-label ' SELECT|START SESS|TMUX ' --prompt '⚡' \
     --header ' ^a all ^t tmux ^g configs ^z zoxide ^x tmux kill ^f find' \
     --bind 'tab:down,btab:up' \
     --bind 'alt-a:change-prompt(⚡ )+reload(sesh list --icons)' \
