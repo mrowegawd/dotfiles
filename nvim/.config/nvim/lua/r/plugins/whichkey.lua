@@ -25,6 +25,8 @@ return {
           mode = { "n", "v" },
           { "<Leader>a", group = "ai" },
 
+          { "<Leader>q", group = "quickfix" },
+
           { "<Leader>A", group = "projectionist" },
 
           { "<Leader>c", group = "code/action" },

@@ -14,16 +14,16 @@ hunk-header-style = syntax bold italic 237
 line-numbers = true
 line-numbers-left-format = "{nm:>1}┊"
 line-numbers-left-style = red
-line-numbers-minus-style = "#A34E49" italic
-line-numbers-plus-style = "#647C5A" italic
+line-numbers-minus-style = "#A14B43" italic
+line-numbers-plus-style = "#617851" italic
 line-numbers-right-format = "{np:>1}┊"
 line-numbers-right-style = green
 line-numbers-zero-style = "#545474" italic
 
-minus-emph-style = syntax bold "#A34E49"
-minus-style = syntax "#4e3337"
-plus-emph-style = syntax bold "#647C5A"
-plus-style = syntax "#445144"
+minus-emph-style = syntax bold "#A14B43"
+minus-style = syntax "#4a2e2b"
+plus-emph-style = syntax bold "#617851"
+plus-style = syntax "#404b38"
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse
 

@@ -117,7 +117,7 @@ keymap.set("n", "<Leader>fg", function()
   local actions = require "fzf-lua.actions"
 
   local qf_items = vim.fn.getqflist()
-  local title_ = __get_vars.title_list() .. " Grep"
+  local title_ = "Grep" .. __get_vars.title_list()
   if RUtils.qf.is_loclist() then
     qf_items = vim.fn.getloclist(0)
   end
@@ -138,7 +138,6 @@ keymap.set("n", "<Leader>fg", function()
     actions = {
       ["ctrl-s"] = actions.git_buf_split,
       ["ctrl-v"] = actions.git_buf_vsplit,
-      ["ctrl-q"] = actions.file_sel_to_qf,
       ["ctrl-t"] = actions.git_buf_tabedit,
     },
   }

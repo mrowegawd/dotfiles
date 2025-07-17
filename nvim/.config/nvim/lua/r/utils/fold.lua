@@ -100,47 +100,54 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
   end
 
   local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-  if is_qf_opened.found and not (vim.tbl_contains({ "git", "NeogitCommitView" }, vim.bo.filetype)) then
-    local cmd_msg_qf = "cnext"
-    local cmd_msg_qf_end = "cfirst"
+  if vim.bo.filetype == "qf" and is_qf_opened.found then
+    local cmd_next_or_prev, cmd_go_first_or_last
 
-    if is_jump_prev then
-      cmd_msg_qf = "cprevious"
-      cmd_msg_qf_end = "clast"
+    if not RUtils.qf.is_loclist() then
+      cmd_next_or_prev = "cnext"
+      cmd_go_first_or_last = "cfirst"
+
+      if is_jump_prev then
+        cmd_next_or_prev = "cprevious"
+        cmd_go_first_or_last = "clast"
+      end
+    else
+      cmd_next_or_prev = "lnext"
+      cmd_go_first_or_last = "lfirst"
+
+      if is_jump_prev then
+        cmd_next_or_prev = "lprevious"
+        cmd_go_first_or_last = "llast"
+      end
     end
 
     vim.schedule(function()
       local _, err = pcall(function()
-        if vim.bo.filetype == "qf" then
-          vim.cmd "wincmd p"
-        end
-
-        local winbufnr = vim.api.nvim_get_current_buf()
-
-        vim.cmd(cmd_msg_qf)
-        -- vim.cmd "redraw!"
+        vim.cmd(cmd_next_or_prev)
         vim.cmd "normal! zz"
 
-        if vim.bo[winbufnr].filetype ~= "qf" then
-          vim.cmd "copen"
-        else
+        local buf = vim.api.nvim_get_current_buf()
+        if vim.bo[buf].filetype ~= "qf" then
           vim.cmd "wincmd p"
         end
       end)
 
       if err and string.match(err, "E553") then
-        vim.cmd(cmd_msg_qf_end)
+        -- vim.cmd [[normal! gg]]
+        -- RUtils.map.feedkey("<CR>", "n")
+
+        vim.cmd(cmd_go_first_or_last)
         vim.cmd "wincmd p"
       end
     end)
     return
   end
 
-  local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
-  if is_qf_trouble.found then
-    vim.api.nvim_set_current_win(is_qf_trouble.winid)
-    return
-  end
+  -- local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
+  -- if is_qf_trouble.found then
+  --   vim.api.nvim_set_current_win(is_qf_trouble.winid)
+  --   return
+  -- end
 
   -- if vim.bo[0].filetype == "markdown" then
   --   if is_jump_prev then
@@ -171,6 +178,11 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
       if is_next then
         cmd_msg = "colder"
       end
+    else
+      cmd_msg = "lnewer"
+      if is_next then
+        cmd_msg = "lolder"
+      end
     end
     vim.schedule(function()
       local _, err = pcall(function()
@@ -178,7 +190,7 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
       end)
 
       if err and (string.match(err, "E380") or string.match(err, "E381")) then
-        local msg = "stack qf list dah mentok"
+        local msg = "stack qf list sudah mentok"
         RUtils.warn(msg, { title = "Quickfix" })
         return
       end

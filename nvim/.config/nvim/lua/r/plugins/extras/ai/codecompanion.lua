@@ -159,7 +159,7 @@ return {
             prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
             cwd = codecompanion_cwd,
-            fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  ^y:yank  ^g:ignore  ^o:hidden]] },
+            fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  ^y:yank  ^q:ignore  ^o:hidden]] },
             actions = {
               ["ctrl-g"] = function()
                 require("fzf-lua").live_grep_glob {

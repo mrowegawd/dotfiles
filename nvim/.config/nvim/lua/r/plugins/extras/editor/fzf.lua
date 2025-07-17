@@ -414,7 +414,7 @@ return {
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^s:ignore  ^o:hidden]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
@@ -424,7 +424,8 @@ return {
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["ctrl-o"] = actions.toggle_hidden,
-            ["ctrl-s"] = actions.toggle_ignore,
+            ["ctrl-q"] = actions.toggle_ignore,
+            -- ["ctrl-s"] = actions.toggle_ignore,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -523,9 +524,9 @@ return {
             actions = {
               ["default"] = actions.git_buf_edit,
               ["alt-l"] = actions.file_sel_to_ll,
+              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
               ["alt-q"] = actions.file_sel_to_qf,
               ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
@@ -697,7 +698,7 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd  ^s:ignore  ^o:hidden]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd  ^q:ignore  ^o:hidden]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -718,7 +719,7 @@ return {
             },
           },
           actions = {
-            ["ctrl-s"] = actions.toggle_ignore,
+            ["ctrl-q"] = actions.toggle_ignore,
             ["ctrl-o"] = actions.toggle_hidden,
             -- ["ctrl-o"] = function(_, opts)
             --   actions.toggle_opt(opts, "hidden")

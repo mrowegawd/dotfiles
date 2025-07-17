@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/base46-aylin"
+#include ".config/miscxrdb/xresource-theme/vscode_modern"
 
 ! --------------
 ! XFT SETTINGS
