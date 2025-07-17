@@ -373,7 +373,7 @@ return {
               vim.api.nvim_set_current_win(is_qf_trouble.winid)
             end
           end)
-        end, "Exec: git hunks all quickfix [gitsigns] [trouble]")
+        end, "Exec: git hunks all quickfix (qf) [gitsigns] [trouble]")
         map("n", "<Leader>xg", function()
           gs.setqflist()
           vim.schedule(function()

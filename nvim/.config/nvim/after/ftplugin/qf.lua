@@ -8,13 +8,20 @@ opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 
-keymap.set("n", "<c-i>", "<Nop>", {
-  buffer = api.nvim_get_current_buf(),
-})
+local title_notify = "QF"
 
-keymap.set("n", "<c-o>", "<Nop>", {
-  buffer = api.nvim_get_current_buf(),
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "qf",
+--   callback = function()
+--     -- tandai ftplugin sudah di-handle agar tidak dijalankan lagi
+--     RUtils.info "ini wyes"
+--     vim.b.did_ftplugin = 1
+--   end,
+-- })
+
+-- these keys disabled
+keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 
 vim.keymap.set("v", "<c-v>", function()
   local items = vim.fn.getqflist()
@@ -77,7 +84,8 @@ keymap.set("n", "<Leader>ff", function()
     actions = {
       ["ctrl-s"] = actions.git_buf_split,
       ["ctrl-v"] = actions.git_buf_vsplit,
-      ["ctrl-q"] = actions.file_sel_to_qf,
+      ["alt-q"] = actions.file_sel_to_qf,
+      ["alt-l"] = actions.file_sel_to_ll,
       ["ctrl-t"] = actions.git_buf_tabedit,
     },
   }
@@ -114,4 +122,35 @@ keymap.set("n", "<Leader>fg", function()
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: live grep items [fzflua]",
+})
+
+keymap.set("n", "<a-l>", function()
+  local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+  if qf_win.found then
+    if RUtils.qf.is_loclist() then
+      if qf_win.found then
+        vim.cmd [[lclose]]
+      end
+      vim.cmd "Trouble loclist toggle focus=true"
+    else
+  end
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: convert loclist into trouble",
+})
+
+keymap.set("n", "<a-q>", function()
+  local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+  if RUtils.qf.is_loclist() then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn("convert dari loclist ke qf belum diimplementasikan", { title = title_notify })
+  else
+    if qf_win.found then
+      vim.cmd [[cclose]]
+    end
+    vim.cmd "Trouble quickfix toggle focus=true"
+  end
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: convert qf into trouble",
 })

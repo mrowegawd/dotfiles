@@ -343,8 +343,8 @@ return {
       { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
       { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
-      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
-      { "<Leader>rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
+      { "<Leader>ri", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
+      { "<Leader>rI", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
       { "<Leader>rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
     },
     opts = {

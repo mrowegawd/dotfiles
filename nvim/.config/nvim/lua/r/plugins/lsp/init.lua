@@ -126,7 +126,7 @@ return {
       RUtils.format.register(RUtils.lsp.formatter())
 
       -- disable default keybindings
-      for _, bind in ipairs { "grn", "gra", "gri", "grr", "gO" } do
+      for _, bind in ipairs { "grn", "gra", "gri", "grr", "gO", "grt" } do
         vim.keymap.del("n", bind)
       end
 

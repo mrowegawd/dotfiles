@@ -73,19 +73,6 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
         desc = "Exec: references LSP [trouble]",
       },
-      {
-        "<c-q>",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-
-          vim.cmd "Trouble quickfix toggle focus=true"
-        end,
-        ft = "qf",
-        desc = "Exec: open qf in trouble [trouble]",
-      },
       -- {
       --   "gi",
       --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
@@ -156,11 +143,13 @@ return {
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
-            vim.cmd [[cclose]]
+            if RUtils.qf.is_loclist() then
+              vim.cmd [[lclose]]
+            end
           end
           vim.cmd "Trouble loclist toggle"
         end,
-        desc = "Exec: open location list with [trouble]",
+        desc = "Exec: open loclist with [trouble]",
       },
       {
         "<Leader>xq",
@@ -171,7 +160,7 @@ return {
           end
           vim.cmd "Trouble qflist toggle"
         end,
-        desc = "Exec: open quickfix (qf) list with [trouble]",
+        desc = "Exec: open quickfix (qf) with [trouble]",
       },
     },
     opts = function()

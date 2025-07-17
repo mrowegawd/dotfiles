@@ -201,7 +201,7 @@ return {
       -- { "<Leader>sM", function() Snacks.picker.man() end, desc = "Snackspicker: man pages", },
       -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },
       { "<Localleader>sL", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
-      -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: Quickfix List", },
+      -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: quickfix (qf) ", },
       { "<Leader>fu", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree [snackspicker]", },
       -- ui
       { "<Localleader>sc", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes [snackspicker]", },

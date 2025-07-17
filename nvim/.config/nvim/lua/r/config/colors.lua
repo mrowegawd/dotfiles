@@ -27,7 +27,7 @@ local base_cl = {
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = -0.1,
   pmenusel_bg_alter = 0.2,
-  quickfixline_alter = 0.3,
+  quickfixline_alter = 0.35,
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
   winbarfilepath_fg_alter = 0.05,
@@ -1333,15 +1333,15 @@ local general_overrides = function()
     { CodeBlock = { inherit = "RenderMarkdownCode" } }, -- headlines.nvim (orgmode codeblock)
     {
       RenderMarkdownCodeInline = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-        bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
+        fg = { from = "Keyword", attr = "fg", alter = 0.1 },
+        bg = H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")),
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
 
     --  ───────────────────────────────[ FLASH ]───────────────────────────────
     { FlashMatch = { fg = "white", bg = "red", bold = true } },
-    { FlashLabel = { fg = "yellow", bg = "black", bold = true, strikethrough = false } },
+    { FlashLabel = { fg = "black", bg = "yellow", bold = true, strikethrough = false } },
     { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
 
     --  ─────────────────────────────[ GRUG FAR ]──────────────────────────
@@ -1681,7 +1681,7 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWNH
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {
