@@ -13,23 +13,27 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
       { "mm" },
-      -- { "mt" },
       { "<Leader>fn" },
       { "<Leader>fN" },
       { "<Leader>fp" },
-      -- { "mn" },
       { "mf" },
       { "<Leader>wn" },
       { "<Leader>wp" },
       {
-        "<Leader>oq",
-        "<CMD>SaveQf<CR>",
-        desc = "OPEN: save qf [qfsilet]",
+        "<Leader>qJ",
+        function()
+          vim.cmd(RUtils.cmd.quickfix.copen)
+          vim.cmd "wincmd p"
+        end,
+        desc = "Qf: force copen [qfsilet]",
       },
       {
-        "<Leader>oQ",
-        "<CMD>LoadQf<CR>",
-        desc = "OPEN: load qf [qfsilet]",
+        "<Leader>qL",
+        function()
+          vim.cmd(RUtils.cmd.quickfix.lopen)
+          vim.cmd "wincmd p"
+        end,
+        desc = "Qf: force lopen [qfsilet]",
       },
     },
     opts = {
@@ -84,11 +88,14 @@ return {
       },
       keymap = {
         quickfix = {
+          save_local = "<Leader>qs",
+          load_local = "<Leader>qS",
+
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",
-          save_local = "<Leader>qs",
-          load_local = "<Leader>qL",
+
           add_item_to_qf = "<Leader>qy",
+          add_item_to_loc = "<Leader>qo",
         },
         todo = {
           add_local = "<Leader>fp",

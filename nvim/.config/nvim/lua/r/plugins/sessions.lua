@@ -26,8 +26,7 @@ return {
 
         return true
       end,
-      -- extensions = { quickfix = {} },
-      extensions = {},
+      extensions = { qforlf = {} },
       options = { -- remove `cmdheight` from this
         "binary",
         "bufhidden",

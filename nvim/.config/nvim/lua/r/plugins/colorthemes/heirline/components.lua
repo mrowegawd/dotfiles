@@ -422,7 +422,7 @@ M.FilePath = {
   {
     provider = function(self)
       if #self.filename == 0 then
-        return vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
+        return " " .. vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
       end
 
       if vim.bo.filetype == "qf" then
@@ -480,9 +480,7 @@ M.Git = {
   {
     provider = function(self)
       local count_add = self.status_dict.added or 0
-      local count_changed = self.status_dict.changed or 0
-      local count_removed = self.status_dict.removed or 0
-      if count_add > 0 or count_changed > 0 or count_removed > 0 then
+      if count_add > 0 then
         return " "
       end
     end,
@@ -490,21 +488,37 @@ M.Git = {
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("A+" .. count .. " ")
+      return count > 0 and ("A+" .. count)
     end,
     hl = { fg = colors.diff_add },
   },
   {
     provider = function(self)
+      local count_removed = self.status_dict.removed or 0
+      if count_removed > 0 then
+        return " "
+      end
+    end,
+  },
+  {
+    provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and ("D-" .. count .. " ")
+      return count > 0 and ("D-" .. count)
     end,
     hl = { fg = colors.diff_delete },
   },
   {
     provider = function(self)
+      local count_changed = self.status_dict.changed or 0
+      if count_changed > 0 then
+        return " "
+      end
+    end,
+  },
+  {
+    provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and ("M~" .. count .. " ")
+      return count > 0 and ("M~" .. count)
     end,
     hl = { fg = colors.diff_change },
   },
@@ -516,7 +530,6 @@ M.Git = {
       if count_add > 0 or count_changed > 0 or count_removed > 0 then
         return " "
       end
-      return ""
     end,
   },
 }
@@ -640,9 +653,9 @@ M.QuickfixStatus = {
 M.FileFlags = {
   {
     condition = function()
-      return vim.bo.modified
+      return vim.bo.modified and not (vim.bo.filetype == "TelescopePrompt")
     end,
-    provider = RUtils.config.icons.misc.modified .. " ",
+    provider = " " .. RUtils.config.icons.misc.modified,
     hl = { fg = colors.modified_fg },
   },
   {

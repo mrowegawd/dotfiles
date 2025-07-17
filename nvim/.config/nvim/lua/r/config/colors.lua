@@ -291,8 +291,8 @@ reset_base_alter({ "lackluster" }, {
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
-  winbarfilepath_fg_alter = -0.05,
-  winseparator_alter = 1.85,
+  winbarfilepath_fg_alter = 0.02,
+  winseparator_alter = 2.2,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
@@ -2679,6 +2679,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["lackluster"] = {
+      {
+        Visual = {
+          bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), 0.1),
+          fg = "NONE",
+        },
+      },
       { Directory = { fg = "#7788aa", bg = "NONE" } },
 
       -- FZFLUA
