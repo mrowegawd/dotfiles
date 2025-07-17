@@ -126,6 +126,8 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
         vim.cmd(cmd_next_or_prev)
         vim.cmd "normal! zz"
 
+        -- RUtils.info(cmd_next_or_prev)
+
         local buf = vim.api.nvim_get_current_buf()
         if vim.bo[buf].filetype ~= "qf" then
           vim.cmd "wincmd p"
@@ -136,11 +138,59 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
         -- vim.cmd [[normal! gg]]
         -- RUtils.map.feedkey("<CR>", "n")
 
+        -- RUtils.info(cmd_go_first_or_last)
         vim.cmd(cmd_go_first_or_last)
         vim.cmd "wincmd p"
       end
+      --
+      -- TESTE
+      --
+
+      -- local _, err = pcall(function()
+      --   -- simpan jendela aktif sebelum loncat
+      --
+      --   local current_win = vim.api.nvim_get_current_win()
+      -- RUtils.warn(current_win .. " >> " .. cmd_next_or_prev)
+
+      -- jalankan perintah loncat quickfix
+      --     vim.cmd(cmd_next_or_prev)
+      --     vim.cmd "normal! zz"
+      --
+      --     -- ambil buffer aktif setelah loncat
+      --     local new_buf = vim.api.nvim_get_current_buf()
+      --
+      --     -- cek apakah jendela sekarang buffer-nya quickfix
+      --     if vim.bo[new_buf].filetype ~= "qf" then
+      --       -- cek apakah buffer ini juga sudah terbuka di jendela lain
+      --       local wins = vim.api.nvim_list_wins()
+      --       local found = false
+      --
+      --       for _, win in ipairs(wins) do
+      --         if win ~= current_win then
+      --           local buf_in_win = vim.api.nvim_win_get_buf(win)
+      --           if buf_in_win == new_buf then
+      --             found = true
+      --             break
+      --           end
+      --         end
+      --       end
+      --
+      --       -- kalau buffer ditemukan di jendela lain, jangan tukar kembali
+      --       if not found then
+      --         -- kembali ke jendela sebelumnya
+      --         vim.cmd "wincmd p"
+      --       end
+      --       vim.cmd "wincmd p"
+      --     end
+      --   end)
+      --
+      --   if err and string.match(err, "E553") then
+      --     -- tidak ada entry lagi di quickfix/liste
+      --     vim.cmd(cmd_go_first_or_last)
+      --     vim.cmd "wincmd p"
+      --   end
     end)
-    return
+    -- return
   end
 
   -- local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }

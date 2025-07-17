@@ -164,32 +164,36 @@ return {
         {
           "<a-H>",
           function()
-            vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
+            require("smart-splits").resize_left()
+            -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
           end,
           desc = "Window: resize window left [smart-splits]",
         },
         {
           "<a-J>",
           function()
-            if RUtils.navigate_window.check_split_or_vsplit() then
-              vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "down")
-            end
+            require("smart-splits").resize_down()
+            -- if RUtils.navigate_window.check_split_or_vsplit() then
+            --   vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "down")
+            -- end
           end,
           desc = "Window: resize window down [smart-splits]",
         },
         {
           "<a-K>",
           function()
-            if RUtils.navigate_window.check_split_or_vsplit() then
-              vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "up")
-            end
+            require("smart-splits").resize_up()
+            -- if RUtils.navigate_window.check_split_or_vsplit() then
+            --   vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "up")
+            -- end
           end,
           desc = "Window: resize window up [smart-splits]",
         },
         {
           "<a-L>",
           function()
-            vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
+            require("smart-splits").resize_right()
+            -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
           end,
           desc = "Window: resize window right [smart-splits]",
         },
@@ -198,7 +202,7 @@ return {
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },
       ignored_buftypes = { "NvimTree" },
-      default_amount = 6,
+      default_amount = 4,
       at_edge = "wrap",
       move_cursor_same_row = false,
       cursor_follows_swapped_bufs = false,

@@ -43,7 +43,6 @@ local Direction = {
 --   },
 -- }
 
----@enum DirectionKeys
 -- local DirectionKeys = {
 --   left = "h",
 --   right = "l",
