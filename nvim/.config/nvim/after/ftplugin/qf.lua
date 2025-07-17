@@ -3,6 +3,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 opt.buflisted = false
 opt.winfixheight = true
+opt.scrolloff = 2
 opt.cursorline = true
 opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler

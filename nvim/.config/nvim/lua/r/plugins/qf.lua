@@ -20,21 +20,59 @@ return {
       { "<Leader>wn" },
       { "<Leader>wp" },
       {
-        "<Leader>qJ",
+        "<Leader>qK",
         function()
-          vim.cmd(RUtils.cmd.quickfix.copen)
-          vim.cmd "wincmd p"
+          local _qf = RUtils.cmd.windows_is_opened { "qf" }
+          if _qf.found then
+            if RUtils.qf.is_loclist() then
+              vim.cmd "lclose"
+              vim.cmd "wincmd p"
+              vim.cmd "aboveleft lopen"
+            else
+              vim.cmd "cclose"
+              vim.cmd "wincmd p"
+              vim.cmd "aboveleft copen"
+            end
+          end
         end,
-        desc = "Qf: force copen [qfsilet]",
+        ft = "qf",
+        desc = "Qf: force open above left [qfsilet]",
       },
       {
-        "<Leader>qL",
+        "<Leader>qJ",
         function()
-          vim.cmd(RUtils.cmd.quickfix.lopen)
-          vim.cmd "wincmd p"
+          local _qf = RUtils.cmd.windows_is_opened { "qf" }
+          if _qf.found then
+            if RUtils.qf.is_loclist() then
+              vim.cmd "lclose"
+              vim.cmd "wincmd p"
+              vim.cmd "belowright lopen"
+            else
+              vim.cmd "cclose"
+              vim.cmd "wincmd p"
+              vim.cmd "belowright copen"
+            end
+          end
         end,
-        desc = "Qf: force lopen [qfsilet]",
+        ft = "qf",
+        desc = "Qf: force open below right [qfsilet]",
       },
+      -- {
+      --   "<Leader>qJ",
+      --   function()
+      --     vim.cmd(RUtils.cmd.quickfix.copen)
+      --     vim.cmd "wincmd p"
+      --   end,
+      --   desc = "Qf: force copen [qfsilet]",
+      -- },
+      -- {
+      --   "<Leader>qL",
+      --   function()
+      --     vim.cmd(RUtils.cmd.quickfix.lopen)
+      --     vim.cmd "wincmd p"
+      --   end,
+      --   desc = "Qf: force lopen [qfsilet]",
+      -- },
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",
@@ -49,7 +87,6 @@ return {
         higroup_title = "FzfLuaPreviewTitle",
       },
       theme_list = {
-        enabled = false,
         quickfix = {
           copen = RUtils.cmd.quickfix.copen,
           lopen = RUtils.cmd.quickfix.lopen,

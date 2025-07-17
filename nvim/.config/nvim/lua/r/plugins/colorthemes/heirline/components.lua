@@ -145,10 +145,10 @@ local __colors = function()
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
-    block_fg_qf = H.tint(UIPallette.palette.light_gray, -0.2),
-    block_bg_qf = H.tint(UIPallette.palette.light_gray, 1),
-    block_fg_loclist = H.tint(UIPallette.palette.grey, -0.25),
-    block_bg_loclist = H.tint(UIPallette.palette.grey, 1.5),
+    block_fg_qf = H.tint(UIPallette.palette.magenta, -0.3),
+    block_bg_qf = H.tint(UIPallette.palette.magenta, 0.8),
+    block_fg_loclist = H.tint(UIPallette.palette.bright_blue, -0.25),
+    block_bg_loclist = H.tint(UIPallette.palette.bright_blue, 1.5),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Folded", "bg")), 2),
@@ -156,7 +156,8 @@ local __colors = function()
     winbar_fg = H.get("WinbarFilepath", "fg"),
     -- winbar_keyword = H.get("Keyword", "fg"),
     winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Folded", "bg")), 0.5),
-    winbar_dap = "lightgray",
+    winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
+    winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
@@ -1411,10 +1412,21 @@ M.WinbarFilePath = {
     end,
     hl = function()
       local fg = colors.winbar_fg
+      local bg = colors.normal_bg
       if Conditions.is_active() then
         fg = colors.winbar_keyword
       end
-      return { fg = fg, bg = colors.normal_bg, bold = true, italic = true }
+
+      if
+        vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype)
+      then
+        fg = colors.winbar_dap_fg
+        if Conditions.is_active() then
+          fg = colors.winbar_keyword
+        end
+        bg = colors.winbar_dap_bg
+      end
+      return { fg = fg, bg = bg, bold = true, italic = true }
     end,
   },
 }
@@ -1429,7 +1441,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     if vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype) then
-      return { fg = colors.winbar_fg, bg = colors.winbar_dap, bold = true }
+      return { fg = colors.winbar_fg, bg = colors.winbar_dap_bg, bold = true }
     end
     return { fg = colors.statusline_fg, bg = colors.normal_bg }
   end,
