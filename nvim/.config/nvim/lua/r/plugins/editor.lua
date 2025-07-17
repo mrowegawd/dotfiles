@@ -173,7 +173,7 @@ return {
     opts = function()
       local icons_lsp = RUtils.config.icons.kinds
       return {
-        focus = true, -- Focus the window when opened
+        win = { position = "bottom", relative = "win" },
         icons = {
           kinds = {
             Array = icons_lsp.Array,
