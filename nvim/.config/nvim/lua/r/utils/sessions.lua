@@ -106,8 +106,12 @@ function M.load_ses_dashboard(last)
       require("resession").load()
     end
 
-    -- require("qfsilet.note").get_todo()
+    if #vim.fn.getqflist() > 0 then
+      vim.cmd(RUtils.cmd.quickfix.copen)
+      vim.cmd [[wincmd p]]
+    end
   else
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.warn(
       "Cannot load session. Maybe the plugins are not installed or something went wrong..",
       { title = "Sessions" }
