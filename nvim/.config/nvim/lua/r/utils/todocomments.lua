@@ -111,6 +111,50 @@ local function picker(contents, tbl_cts, fzf_opts)
         end
       end,
 
+      ["alt-L"] = function(selected, _)
+        RUtils.warn "Not implemented yet"
+      end,
+      ["alt-l"] = function(selected, _)
+        local items = {}
+
+        if #selected > 1 then
+          for _, sel in pairs(selected) do
+            for _, x in pairs(tbl_cts) do
+              if x.text == sel then
+                items[#items + 1] = {
+                  filename = x.filename,
+                  lnum = x.lnum,
+                  col = x.col,
+                  text = x.text,
+                }
+              end
+            end
+          end
+        else
+          local sel = selected[1]
+          for _, x in pairs(tbl_cts) do
+            if x.text == sel then
+              items[#items + 1] = {
+                filename = x.filename,
+                lnum = x.lnum,
+                col = x.col,
+                text = x.text,
+              }
+            end
+          end
+        end
+
+        vim.fn.setloclist(0, {}, " ", {
+          nr = "$",
+          items = items,
+          title = "TODO Comments Note",
+        })
+        vim.cmd "lopen"
+      end,
+
+      ["alt-G"] = function()
+        RUtils.warn "Not implemented yet"
+      end,
       ["alt-q"] = function(selected, _)
         local items = {}
 

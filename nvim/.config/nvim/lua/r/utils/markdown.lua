@@ -363,11 +363,64 @@ local function picker(contents, actions)
         local what = {
           idx = "$",
           items = items,
-          title = "Tags Note Random",
+          title = "Tags Note",
         }
 
         vim.fn.setqflist({}, "r", what)
         vim.cmd "copen"
+      end,
+
+      ["alt-l"] = function(selected, _)
+        local function check_tbl_element(tbl, element)
+          for _, x in pairs(tbl) do
+            if x["text"] == element then
+              return true
+            end
+          end
+          return false
+        end
+
+        local items = {}
+        if #selected > 1 then
+          for _, sel in pairs(selected) do
+            local sel_str = vim.split(sel, "|")[2]
+
+            for _, tbl_tags in pairs(data_tags_table) do
+              if tbl_tags.title == sel_str then
+                if not check_tbl_element(items, tbl_tags.title) then
+                  items[#items + 1] = {
+                    filename = tbl_tags.path,
+                    lnum = tbl_tags.line_number,
+                    col = 1,
+                    text = tbl_tags.title,
+                  }
+                end
+              end
+            end
+          end
+        else
+          local sel_str = vim.split(selected[1], "|")[2]
+          for _, tbl_tags in pairs(data_tags_table) do
+            if tbl_tags.title == sel_str then
+              if not check_tbl_element(items, tbl_tags.title) then
+                items[#items + 1] = {
+                  filename = tbl_tags.path,
+                  lnum = tbl_tags.line_number,
+                  col = 1,
+                  text = tbl_tags.title,
+                }
+                break
+              end
+            end
+          end
+        end
+
+        vim.fn.setloclist(0, {}, " ", {
+          nr = "$",
+          items = items,
+          title = "Tags Note ",
+        })
+        vim.cmd "lopen"
       end,
     }
 
@@ -544,6 +597,13 @@ local function get_sel_text()
   return false, stitle
 end
 
+local function is_markdown_file(path)
+  if type(path) == "string" then
+    return path:match "%.md$" or path:match "%.markdown$"
+  end
+  return true
+end
+
 function M.find_note_by_tag(data, is_set, is_for_tags)
   is_set = is_set or false
   is_for_tags = is_for_tags or false
@@ -585,8 +645,7 @@ function M.find_global_titles()
   fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     cwd = RUtils.config.path.wiki_path,
-    -- search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
-    search = regex_title,
+    search = is_markdown_file() and regex_title or regex_title_org,
     rg_glob = false,
     no_esc = true,
     -- file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
@@ -663,7 +722,7 @@ function M.find_local_titles(item_paths)
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    search = is_markdown_file(filename) and regex_title or regex_title_org,
     rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. filename
       .. " -e ",
@@ -888,7 +947,7 @@ function M.insert_local_titles()
     },
     rg_glob = false,
     no_esc = true,
-    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    search = is_markdown_file(filename) and regex_title or regex_title_org,
     formatter = false,
     actions = {
       ["enter"] = function(selected, _)
@@ -916,7 +975,7 @@ function M.insert_global_titles()
     },
     rg_glob = false,
     no_esc = true,
-    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    search = is_markdown_file() and regex_title or regex_title_org,
     cwd = RUtils.config.path.wiki_path,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     actions = {

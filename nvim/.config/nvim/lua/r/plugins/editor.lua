@@ -94,6 +94,13 @@ return {
       --   desc = "LSP: type definitions [trouble]",
       -- },
       {
+        "<Leader>xx",
+        function()
+          vim.cmd [[Trouble]]
+        end,
+        desc = "Exec: trouble [trouble]",
+      },
+      {
         "<Leader>xt",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
