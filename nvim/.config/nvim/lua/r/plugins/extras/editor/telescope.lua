@@ -338,8 +338,8 @@ return {
               ["<PageUp>"] = actions.preview_scrolling_up,
               ["<PageDown>"] = actions.preview_scrolling_down,
 
-              ["<C-a>"] = actions.toggle_all,
-              ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+              ["<a-a>"] = actions.toggle_all,
+              ["<a-Q>"] = actions.send_to_qflist + actions.open_qflist,
 
               ["<CR>"] = stopinsert(actions.select_default),
               ["<C-s>"] = stopinsert(actions.select_horizontal),

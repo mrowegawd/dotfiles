@@ -28,13 +28,14 @@ return {
           input = {
             keys = {
               ["<a-c>"] = { "toggle_cwd", mode = { "n", "i" } },
-              ["<a-u>"] = { "toggle_hidden", mode = { "i", "n" } },
+              ["<c-o>"] = { "toggle_hidden", mode = { "i", "n" } },
               ["<F5>"] = { "toggle_preview", mode = { "i", "n" } },
               ["<F4>"] = { "cycle_win", mode = { "i", "n" } },
               ["<F3>"] = { "toggle_maximize", mode = { "i", "n" } },
 
               ["<c-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
               ["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["<a-q>"] = { "qflist", mode = { "i", "n" } },
             },
           },
           list = {
@@ -120,8 +121,8 @@ return {
     keys = {
       -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
-      { "<Localleader>sf", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
-      { "<Localleader>sF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
+      { "<Localleader>ss", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
+      { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
       {
         "<Localleader>sN",
         function()

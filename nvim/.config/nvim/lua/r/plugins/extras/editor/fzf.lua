@@ -406,7 +406,10 @@ return {
           copen = RUtils.cmd.quickfix.copen,
           lopen = RUtils.cmd.quickfix.lopen,
         },
-        fzf_opts = { ["--no-separator"] = "" }, -- remove separator line
+        fzf_opts = {
+          ["--no-separator"] = "",
+          ["--history"] = vim.fn.stdpath "data" .. "/fzf-lua-history",
+        }, -- remove separator line
         files = {
           -- debug = true,
           prompt = RUtils.fzflua.default_title_prompt(),
