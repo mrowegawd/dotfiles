@@ -145,10 +145,10 @@ local __colors = function()
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
-    block_fg_qf = H.tint(UIPallette.palette.magenta, -0.3),
-    block_bg_qf = H.tint(UIPallette.palette.magenta, 0.8),
-    block_fg_loclist = H.tint(UIPallette.palette.bright_blue, -0.25),
-    block_bg_loclist = H.tint(UIPallette.palette.bright_blue, 1.5),
+    block_fg_qf = H.tint(UIPallette.palette.grey, 1),
+    block_bg_qf = H.tint(UIPallette.palette.grey, -0.05),
+    block_fg_loclist = H.tint(UIPallette.palette.light_gray, 1),
+    block_bg_loclist = H.tint(UIPallette.palette.light_gray, -0.2),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Folded", "bg")), 2),

@@ -134,7 +134,7 @@ STARTUP_LOCK_FILE=/tmp/bspwm-startup.lock
 if [ ! -f $STARTUP_LOCK_FILE ]; then
   echo "dummy" >$STARTUP_LOCK_FILE
 
-  pkill mpdris2-rs || "$HOME/.local/bin/mpdris2-rs" &
+  [ -f "$HOME/.local/bin/mpdris2-rs" ] && pkill mpdris2-rs && "$HOME/.local/bin/mpdris2-rs" &
 
   run_once firefox
   # run_once zen-browser
@@ -142,8 +142,7 @@ if [ ! -f $STARTUP_LOCK_FILE ]; then
   [ -f ~/.lesskey ] && run_once lesskey
   [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
   [ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
-  [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
-    [ -f "$HOME/.dropbox-dist/dropboxd" ] && run_once "$HOME/.dropbox-dist/dropboxd" start
+  [ -f "$HOME/.dropbox-dist/dropboxd" ] && "$HOME/.dropbox-dist/dropboxd" start &
   run_once "$TERMINAL"
 fi
 

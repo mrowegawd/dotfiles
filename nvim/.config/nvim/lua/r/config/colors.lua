@@ -2034,7 +2034,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.95 },
           reverse = false,
         },
       },
@@ -2048,13 +2048,13 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.7 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.55 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } },
       { CodeBlock = { inherit = "RenderMarkdownCode" } },
       {
         ["@markup.quote.markdown"] = {

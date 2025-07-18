@@ -202,7 +202,7 @@ return {
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },
       ignored_buftypes = { "NvimTree" },
-      default_amount = 4,
+      default_amount = 5,
       at_edge = "wrap",
       move_cursor_same_row = false,
       cursor_follows_swapped_bufs = false,

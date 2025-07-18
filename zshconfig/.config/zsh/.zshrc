@@ -100,8 +100,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#575757"
-colorsuggest="fg=#515151"
+colorline="#545454"
+colorsuggest="fg=#4e4e4e"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
