@@ -2,7 +2,7 @@
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
 # font-family    = "CommitMono"
-font-family = "SFMono"
+font-family = "Cousins hug"
 # font-family = "Cousins hug" # "JetBrainsMono NF"
 # font-family = "JetBrainsMono NF"
 # font-family-bold = "SF Mono"
@@ -10,21 +10,18 @@ font-family = "SFMono"
 # font-family-bold-italic = "Maple Mono Bold Italic"
 
 # 11.8
-font-size      =  13.8
-
-# font-feature = "-calt"
-font-thicken   = true
+font-size                       = 13.8
+font-thicken                    = true
 
 # +-----------------------------------------------------------+
 # | MOUSE                                                     |
 # +-----------------------------------------------------------+
 mouse-hide-while-typing         = true
-# adw-toolbar-style               = flat
 
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = base46-jellybeans
+theme = vscode_modern
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
@@ -36,7 +33,6 @@ window-colorspace               = display-p3
 window-padding-balance          = false
 window-step-resize              = false
 window-theme                    = ghostty
-
 #gtk-adwaita                     = false
 
 # +-----------------------------------------------------------+
@@ -44,35 +40,31 @@ window-theme                    = ghostty
 # +-----------------------------------------------------------+
 custom-shader = "./shaders/cursor_blaze_no_trail.glsl"
 
-# adjust-cell-width = 0
-# adjust-cell-height = 20%
-
+resize-overlay                  = never
 cursor-style                    = block
 cursor-style-blink              = false
-shell-integration-features      = no-cursor
-
 gtk-titlebar                    = false
 confirm-close-surface           = false
 
-unfocused-split-opacity         = 0.5
+# unfocused-split-opacity         = 0.5
+# adjust-cell-width               = 0
+# adjust-cell-height              = 20%
+# shell-integration-features      = no-cursor
+# background-blur-radius          = 20
+# macos-titlebar-style            = tabs
 
 # NOTE: jika background-opacity ini active dan picom juga active
 # maka akam mempengaruhi color background, menjadikan color background terminal
 # ghostty ini tidak sama dengan color terminal lain (wezterm, kitty),
 # recommended: gunakan picom untuk transparant nya, disable `background-opacity`
-# background-opacity            = 0.85
+# background-opacity              = 0.85
 
-# blur radis only works for Mac
-# background-blur-radius        = 20
-# macos-titlebar-style          = tabs
 
 # +-----------------------------------------------------------+
 # | MAPPINGS                                                  |
 # +-----------------------------------------------------------+
 # clear all default mappings, to unbind specific mapping --> use ex: ctrl+enter=unbind
 # keybind = clear
-
-# NOTE: keybind dibawah ini hanya digunakan ketika di luar tmux-only (commented jika perlu)
 
 # ┏╍╍╍╍╍╍┓
 # ╏ MISC ╏
