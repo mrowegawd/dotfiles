@@ -42,6 +42,14 @@ return {
         end,
       },
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
+      fuzzy = {
+        implementation = "rust",
+        sorts = {
+          "exact",
+          "score",
+          "sort_text",
+        },
+      },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
@@ -61,39 +69,42 @@ return {
           draw = {
             treesitter = { "lsp" },
             -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            columns = { { "kind_icon" }, { "label", "kind", gap = 0 } },
+            columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
             components = {
               kind_icon = {
-                text = function(item)
-                  return RUtils.config.icons.kinds[item.kind] or ""
+                text = function(ctx)
+                  return (" " .. RUtils.cmd.strip_whitespace(RUtils.config.icons.kinds[ctx.kind]) .. " ") or ""
                 end,
-                highlight = function(item)
-                  return "CmpItemKind" .. item.kind
+                highlight = function(ctx)
+                  if ctx.deprecated then
+                    return "BlinkCmpLabelDeprecated"
+                  end
+                  return "CmpItemKind" .. ctx.kind
                 end,
               },
               label = {
-                text = function(item)
-                  -- add suffix `_` for snippet kind
-                  if item.kind == "Snippet" then
-                    return item.item.label .. "_"
+                width = { fill = true, max = 60 },
+                text = function(ctx)
+                  if ctx.kind == "Snippet" then
+                    return ctx.item.label .. "_" -- add suffix `_` for snippet kind
                   end
-                  return item.label
+                  return ctx.label
                 end,
-                highlight = function(item)
+                highlight = function(ctx)
                   -- https://github.com/saghen/blink.cmp/blob/033fbcc7ec55546aa0c3889aa50b6e76915c3f62/doc/configuration/reference.md#completion-menu-draw
                   local highlights = {
                     {
                       0,
-                      #item.label,
-                      group = item.deprecated and "BlinkCmpLabelDeprecated" or "CmpItemKind" .. item.kind,
+                      #ctx.label,
+                      group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "LspKind" .. ctx.kind,
                     },
                   }
 
-                  if item.label_detail then
-                    table.insert(highlights, { #item.label, #item.label + #item.label_detail, group = "Comment" })
+                  if ctx.label_detail then
+                    table.insert(highlights, { #ctx.label, #ctx.label + #ctx.label_detail, group = "Comment" })
                   end
 
-                  for _, item_idx in ipairs(item.label_matched_indices) do
+                  for _, item_idx in ipairs(ctx.label_matched_indices) do
                     table.insert(highlights, { item_idx, item_idx + 1, group = "BlinkCmpLabelMatch" })
                   end
 
@@ -110,10 +121,13 @@ return {
                   return ("(%s)"):format(item.kind)
                 end,
                 highlight = function(item)
+                  if item.deprecated then
+                    return "BlinkCmpLabelDeprecated"
+                  end
                   if item.kind == "Color" then
                     return item.kind_hl
                   end
-                  return "CmpItemKind" .. item.kind
+                  return "LspKind" .. item.kind
                 end,
               },
             },

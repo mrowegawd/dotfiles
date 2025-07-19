@@ -6,8 +6,8 @@ local dark_green = H.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
-local set_col_light = { fg_floatborder = 0.15, fg_branch = 4 }
-local set_col_normal = { fg_floatborder = 0.4, fg_branch = 2 }
+local set_col_light = { fg_floatborder = 0.15, fg_branch = 4, fg_fzfheadertext = -0.05 }
+local set_col_normal = { fg_floatborder = 0.2, fg_branch = 2, fg_fzfheadertext = 0.08 }
 local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
 local base_cl = {
@@ -31,7 +31,7 @@ local base_cl = {
   search_bg_alter = 0.8,
   search_fg_alter = 0.01,
   winbarfilepath_fg_alter = 0.05,
-  winseparator_alter = 0.65,
+  winseparator_alter = 0.8,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -79,9 +79,9 @@ end
 reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.1,
-  linenr_fg_alter = 1.35,
+  linenr_fg_alter = 1.4,
   nontext_fg_alter = 3.2,
-  winseparator_alter = 1.87,
+  winseparator_alter = 2,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -152,7 +152,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   cursorline_alter = 0.65,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.28,
-  linenr_fg_alter = 1.2,
+  linenr_fg_alter = 1.35,
   nontext_fg_alter = 2.5,
   pmenusel_bg_alter = 0.35,
   winbarfilepath_fg_alter = 0.5,
@@ -166,6 +166,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.1,
+  linenr_fg_alter = 0.65,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.3,
@@ -188,7 +189,7 @@ reset_base_alter({ "base46-melange" }, {
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
   winbarfilepath_fg_alter = 0.4,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.63,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
@@ -208,11 +209,11 @@ reset_base_alter({ "base46-oxocarbon" }, {
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.3,
-  linenr_fg_alter = 1.2,
+  linenr_fg_alter = 1.3,
   nontext_fg_alter = 2.7,
   pmenusel_bg_alter = 0.35,
   winbarfilepath_fg_alter = 0.43,
-  winseparator_alter = 1.53,
+  winseparator_alter = 1.85,
 })
 reset_base_alter({ "base46-rosepine" }, {
   cursor_fg = "#e0def4",
@@ -220,11 +221,11 @@ reset_base_alter({ "base46-rosepine" }, {
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.28,
-  linenr_fg_alter = 1,
+  linenr_fg_alter = 1.17,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
   winbarfilepath_fg_alter = 0.38,
-  winseparator_alter = 1.5,
+  winseparator_alter = 1.65,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   comment_fg_alter = 0.25,
@@ -233,7 +234,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_fg_alter = -0.15,
-  linenr_fg_alter = 0.3,
+  linenr_fg_alter = 0.28,
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = 0.08,
@@ -254,11 +255,12 @@ reset_base_alter({ "base46-wombat" }, {
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.25,
+  linenr_fg_alter = 0.72,
   winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 0.75,
+  winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-zenburn" }, {
-  comment_fg_alter = 0.55,
+  comment_fg_alter = 0.5,
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
@@ -276,33 +278,33 @@ reset_base_alter({ "kanso-ink" }, {
   cursor_fg = "#c5c9c7",
   cursorline_alter = 0.15,
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 1.2,
+  linenr_fg_alter = 1.25,
   nontext_fg_alter = 2.8,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 0.3,
   winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 1.65,
+  winseparator_alter = 1.75,
 })
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.25,
-  linenr_fg_alter = 1.5,
+  linenr_fg_alter = 1.8,
   nontext_fg_alter = 3.5,
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
   winbarfilepath_fg_alter = 0.02,
-  winseparator_alter = 2.2,
+  winseparator_alter = 2.5,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.1,
   fzfluasel_fg_alter = -0.1,
-  linenr_fg_alter = 0.95,
+  linenr_fg_alter = 1.15,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
   winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 1.1,
+  winseparator_alter = 1.6,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   comment_fg_alter = 0.6,
@@ -310,7 +312,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 0.45,
+  linenr_fg_alter = 0.53,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
   winbarfilepath_fg_alter = 0.35,
@@ -322,6 +324,7 @@ reset_base_alter({ "vscode_modern" }, {
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
+  linenr_fg_alter = 0.7,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.3,
@@ -559,8 +562,7 @@ local general_overrides = function()
     { LspKindValue = { link = "@string" } },
     { LspInlayHint = { link = "@string" } },
 
-    { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
-
+    { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" }, f } },
     {
       LspReferenceText = {
         bg = { from = "LspReferenceText", attr = "bg" },
@@ -794,6 +796,13 @@ local general_overrides = function()
     { LspSignatureActiveParameter = { fg = "black", bg = "yellow", bold = true } },
 
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
+    {
+      BlinkCmpLabelDeprecated = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.5 },
+        strikethrough = true,
+        italic = true,
+      },
+    },
     { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
     {
       BlinkCmpDocSeparator = {
@@ -857,43 +866,213 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ CMPKIND │
     -- ╰─────────╯
-    { CmpItemKindArray = { link = "LspKindArray" } },
+    {
+      CmpItemKindArray = {
+        inherit = "LspKindArray",
+        bg = { from = "LspKindArray", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindFunction = {
+        inherit = "LspKindFunction",
+        bg = { from = "LspKindFunction", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindBoolean = {
+        inherit = "LspKindBoolean",
+        bg = { from = "LspKindBoolean", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindVariable = {
+        inherit = "LspKindVariable",
+        bg = { from = "LspKindVariable", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindMethod = {
+        inherit = "LspKindMethod",
+        bg = { from = "LspKindMethod", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindModule = {
+        inherit = "LspKindModule",
+        bg = { from = "LspKindModule", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindText = {
+        inherit = "LspKindText",
+        bg = { from = "LspKindText", attr = "fg", alter = -0.5 },
+      },
+    },
+    -- {
+    --   CmpItemKindClass = {
+    --     inherit = "LspKindClass",
+    --     bg = { from = "LspKindClass", attr = "fg", alter = -0.5 },
+    --   },
+    -- },
+    -- {
+    --   CmpItemKindColor = {
+    --     inherit = "LspKindColor",
+    --     bg = { from = "LspKindColor", attr = "fg", alter = -0.5 },
+    --   },
+    -- },
+    {
+      CmpItemKindConstant = {
+        inherit = "LspKindConstant",
+        bg = { from = "LspKindConstant", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindStruct = {
+        inherit = "LspKindStruct",
+        bg = { from = "LspKindStruct", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindSnippet = {
+        inherit = "LspKindSnippet",
+        bg = { from = "LspKindSnippet", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindString = {
+        inherit = "LspKindString",
+        bg = { from = "LspKindString", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindNumber = {
+        inherit = "LspKindNumber",
+        bg = { from = "LspKindNumber", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindPackage = {
+        inherit = "LspKindPackage",
+        bg = { from = "LspKindPackage", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindObject = {
+        inherit = "LspKindObject",
+        bg = { from = "LspKindObject", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindNamespace = {
+        inherit = "LspKindNamespace",
+        bg = { from = "LspKindNamespace", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindEvent = {
+        inherit = "LspKindEvent",
+        bg = { from = "LspKindEvent", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindField = {
+        inherit = "LspKindField",
+        bg = { from = "LspKindField", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindFile = {
+        inherit = "LspKindFile",
+        bg = { from = "LspKindFile", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindFolder = {
+        inherit = "LspKindFolder",
+        bg = { from = "LspKindFolder", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindInterface = {
+        inherit = "LspKindInterface",
+        bg = { from = "LspKindInterface", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindUnit = {
+        inherit = "LspKindUnit",
+        bg = { from = "LspKindUnit", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindKey = {
+        inherit = "LspKindKey",
+        bg = { from = "LspKindKey", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindKeyword = {
+        inherit = "LspKindKeyword",
+        bg = { from = "LspKindKeyword", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindNull = {
+        inherit = "LspKindNull",
+        bg = { from = "LspKindNull", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindOperator = {
+        inherit = "LspKindOperator",
+        bg = { from = "LspKindOperator", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindProperty = {
+        inherit = "LspKindProperty",
+        bg = { from = "LspKindProperty", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindReference = {
+        inherit = "LspKindReference",
+        bg = { from = "LspKindReference", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindValue = {
+        inherit = "LspKindValue",
+        bg = { from = "LspKindValue", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindEnum = {
+        inherit = "LspKindEnum",
+        bg = { from = "LspKindEnum", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindEnumMember = {
+        inherit = "LspKindEnumMember",
+        bg = { from = "LspKindEnumMember", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindConstructor = {
+        inherit = "LspKindConstructor",
+        bg = { from = "LspKindConstructor", attr = "fg", alter = -0.5 },
+      },
+    },
+    {
+      CmpItemKindTypeParameter = {
+        inherit = "LspKindTypeParameter",
+        bg = { from = "LspKindTypeParameter", attr = "fg", alter = -0.5 },
+      },
+    },
     { CmpItemKindCopilot = { bg = "NONE", fg = "#118c74" } },
     { CmpItemKindDefault = { bg = "NONE", fg = "#6172b0" } },
-    { CmpItemKindFunction = { link = "LspKindFunction" } },
-    { CmpItemKindBoolean = { link = "LspKindBoolean" } },
-    { CmpItemKindVariable = { link = "LspKindVariable" } },
-    { CmpItemKindMethod = { link = "LspKindMethod" } },
-    { CmpItemKindModule = { link = "LspKindModule" } },
-    { CmpItemKindText = { link = "LspKindText" } },
-    { CmpItemKindClass = { link = "LspKindClass" } },
     { CmpItemKindCodeium = { bg = "NONE", fg = "#118c74" } },
-    { CmpItemKindColor = { link = "LspKindColor" } },
-    { CmpItemKindConstant = { link = "LspKindConstant" } },
-    { CmpItemKindStruct = { link = "LspKindStruct" } },
-    { CmpItemKindSnippet = { link = "LspKindSnippet" } },
-    { CmpItemKindString = { link = "LspKindString" } },
-    { CmpItemKindNumber = { link = "LspKindNumber" } },
-    { CmpItemKindPackage = { link = "LspKindPackage" } },
-    { CmpItemKindObject = { link = "LspKindObject" } },
-    { CmpItemKindNamespace = { link = "LspKindNamespace" } },
-    { CmpItemKindEvent = { link = "LspKindEvent" } },
-    { CmpItemKindField = { link = "LspKindField" } },
-    { CmpItemKindFile = { link = "LspKindFile" } },
-    { CmpItemKindFolder = { link = "LspKindFolder" } },
-    { CmpItemKindInterface = { link = "LspKindInterface" } },
-    { CmpItemKindUnit = { link = "LspKindUnit" } },
-    { CmpItemKindKey = { link = "LspKindKey" } },
-    { CmpItemKindKeyword = { link = "LspKindKeyword" } },
-    { CmpItemKindNull = { link = "LspKindNull" } },
-    { CmpItemKindOperator = { link = "LspKindOperator" } },
-    { CmpItemKindProperty = { link = "LspKindProperty" } },
-    { CmpItemKindReference = { link = "LspKindReference" } },
-    { CmpItemKindValue = { link = "LspKindValue" } },
-    { CmpItemKindEnum = { link = "LspKindEnum" } },
-    { CmpItemKindEnumMember = { link = "LspKindEnumMember" } },
-    { CmpItemKindConstructor = { link = "LspKindConstructor" } },
-    { CmpItemKindTypeParameter = { link = "LspKindTypeParameter" } },
     { CmpItemKindTabNine = { bg = "NONE", fg = "#118c74" } },
 
     --  ──────────────────────────────[ AERIALS ]──────────────────────────────
@@ -1020,7 +1199,7 @@ local general_overrides = function()
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     { FzfLuaBorder = { fg = { from = "FloatBorder", attr = "fg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = -0.1 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = col_opts.fg_fzfheadertext } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
     {
@@ -1303,14 +1482,6 @@ local general_overrides = function()
       },
     },
     {
-      ["@markup.raw.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = 0.6 },
-        bold = true,
-        reverse = false,
-      },
-    },
-    {
       ["@punctuation.special.markdown"] = {
         fg = { from = "@markup.quote.markdown", attr = "fg" },
       },
@@ -1330,11 +1501,11 @@ local general_overrides = function()
     },
 
     { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
-    { CodeBlock = { inherit = "RenderMarkdownCode" } }, -- headlines.nvim (orgmode codeblock)
+    { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
     {
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-        bg = H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), 0.12, H.get("Normal", "bg")),
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -1605,7 +1776,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.32, H.get("Normal", "bg")), -0.2),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")), -0.2),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")), -0.2),
           reverse = false,
         },
       },
@@ -1619,8 +1790,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.65 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
 
@@ -1633,8 +1804,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.51 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "TabLine", attr = "bg", alter = -0.22 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1653,7 +1824,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.35, H.get("Normal", "bg")), -0.05),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.12, H.get("Normal", "bg")), -0.15),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.13, H.get("Normal", "bg")), -0.15),
           reverse = false,
         },
       },
@@ -1668,7 +1839,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.16 },
         },
       },
 
@@ -1681,8 +1852,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWNH
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.28 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1701,8 +1872,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.43, H.get("Normal", "bg")), -0.05),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.18, H.get("Normal", "bg")), -0.27),
+          fg = { from = "Normal", attr = "bg", alter = 1.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
           reverse = false,
         },
       },
@@ -1730,8 +1901,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.26 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1751,7 +1922,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.33 },
           reverse = false,
         },
       },
@@ -1765,8 +1936,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
         },
       },
 
@@ -1779,8 +1950,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.28 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1806,8 +1977,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.11 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1872,8 +2043,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1902,7 +2073,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.3 },
+          fg = { from = "Normal", attr = "bg", alter = 1.35 },
           bg = { from = "Normal", attr = "bg", alter = 0.32 },
         },
       },
@@ -1934,7 +2105,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -1947,8 +2118,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.22 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.45 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -1967,8 +2138,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.43, H.get("Normal", "bg")), 0.05),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.18, H.get("Normal", "bg")), -0.2),
+          fg = { from = "Normal", attr = "bg", alter = 1.35 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
       },
@@ -1996,8 +2167,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.19 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2013,6 +2184,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jellybeans"] = {
+      {
+        Visual = {
+          bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), 0.05),
+          fg = "NONE",
+        },
+      },
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -2034,7 +2211,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.95 },
+          bg = { from = "Normal", attr = "bg", alter = 1.1 },
           reverse = false,
         },
       },
@@ -2048,14 +2225,14 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.13 },
         },
       },
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2084,8 +2261,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.37 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2114,8 +2291,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
         },
       },
 
@@ -2159,10 +2336,23 @@ local function colorscheme_overrides()
       },
       { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
 
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.28 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = H.tint(H.darken(H.get("Error", "bg"), 0.6, H.get("Normal", "fg")), 0.55),
+          bg = H.darken(H.get("Error", "bg"), 0.35, H.get("Normal", "bg")),
+          italic = true,
+          bold = false,
+        },
+      },
+
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 
@@ -2180,8 +2370,8 @@ local function colorscheme_overrides()
     },
     ["base46-melange"] = {
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.23 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2195,8 +2385,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), -0.26),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.17, H.get("Normal", "bg")), -0.3),
+          fg = { from = "Normal", attr = "bg", alter = 1.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
       },
@@ -2210,8 +2400,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.17 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -2247,8 +2437,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2263,7 +2453,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.25 },
-          bg = { from = "Normal", attr = "bg", alter = 0.25 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
           reverse = false,
         },
       },
@@ -2297,7 +2487,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.45 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.85 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2312,7 +2503,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 2.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = 0.9 },
           reverse = false,
         },
       },
@@ -2362,8 +2553,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.58 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2393,7 +2584,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.45 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -2421,8 +2612,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.05 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.07 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2437,7 +2628,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.1 },
           reverse = false,
         },
       },
@@ -2479,7 +2670,6 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      -- { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2519,8 +2709,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.2),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")), -0.3),
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.35 },
           reverse = false,
         },
       },
@@ -2534,8 +2724,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.28 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.24 },
         },
       },
 
@@ -2548,8 +2738,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2586,7 +2776,7 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2599,7 +2789,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.16 },
           reverse = false,
         },
       },
@@ -2613,8 +2803,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.31 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
         },
       },
 
@@ -2633,8 +2823,8 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.65 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.85 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
@@ -2647,7 +2837,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")), -0.2),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")), -0.05),
           reverse = false,
         },
       },
@@ -2662,7 +2852,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -2726,8 +2916,8 @@ local function colorscheme_overrides()
       { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.1 } } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.85 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.35 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.strong.markdown_inline"] = {
           fg = { from = "Keyword", attr = "fg", alter = 0.5 },
@@ -2787,7 +2977,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.75, H.get("Normal", "bg")), -0.15),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.25, H.get("Normal", "bg")), -0.25),
+          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.3, H.get("Normal", "bg")), -0.05),
           reverse = false,
         },
       },
@@ -2801,8 +2991,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3.8 },
-          bg = { from = "Normal", attr = "bg", alter = 1.4 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 
@@ -2831,8 +3021,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.12, H.get("Normal", "bg")), -0.1),
+          fg = { from = "Normal", attr = "bg", alter = 1.9 },
+          bg = { from = "Normal", attr = "bg", alter = 0.6 },
           reverse = false,
         },
       },
@@ -2846,7 +3036,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.35 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2860,8 +3050,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.52 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2874,8 +3064,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")), -0.1),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")), -0.2),
+          fg = { from = "Normal", attr = "bg", alter = 1.9 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
       },
@@ -2903,8 +3093,8 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.32 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.16 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
@@ -3017,8 +3207,8 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), -0.05),
-          bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")), -0.2),
+          fg = { from = "Normal", attr = "bg", alter = 1.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
           reverse = false,
         },
       },
@@ -3040,22 +3230,22 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.22 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.22 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.19 } } },
-      { CodeBlock = { inherit = "RenderMarkdownCode" } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.37 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",

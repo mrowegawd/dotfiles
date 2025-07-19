@@ -1,6 +1,9 @@
 local keymap, api, opt = vim.keymap, vim.api, vim.opt_local
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
+local builtin = require "fzf-lua.previewer.builtin"
+local QFPreviewer = builtin.buffer_or_file:extend()
+
 opt.buflisted = false
 opt.winfixheight = true
 opt.scrolloff = 2
@@ -8,6 +11,10 @@ opt.cursorline = true
 opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
+
+-- these keys disabled
+keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 
 local __get_vars = {
   title_list = function()
@@ -23,30 +30,51 @@ local __get_vars = {
     return ""
   end,
 }
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "qf",
---   callback = function()
---     -- tandai ftplugin sudah di-handle agar tidak dijalankan lagi
---     RUtils.info "ini wyes"
---     vim.b.did_ftplugin = 1
---   end,
--- })
+local get_items_list = function()
+  local items = {}
+  if RUtils.qf.is_loclist() then
+    items = vim.tbl_map(function(item)
+      return {
+        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
+        bufnr = item.bufnr,
+        module = item.module,
+        lnum = item.lnum,
+        end_lnum = item.end_lnum,
+        col = item.col,
+        end_col = item.end_col,
+        vcol = item.vcol,
+        nr = item.nr,
+        pattern = item.pattern,
+        text = item.text,
+        type = item.type,
+        valid = item.valid,
+      }
+    end, vim.fn.getloclist(0))
+  else
+    items = vim.tbl_map(function(item)
+      return {
+        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
+        bufnr = item.bufnr,
+        module = item.module,
+        lnum = item.lnum,
+        -- end_lnum = item.end_lnum,
+        col = item.col,
+        -- end_col = item.end_col,
+        -- vcol = item.vcol,
+        -- nr = item.nr,
+        -- pattern = item.pattern,
+        text = item.text,
+        type = item.type,
+        -- valid = item.valid,
+      }
+    end, vim.fn.getqflist())
+  end
 
--- these keys disabled
-keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
-keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+  return items
+end
 
 vim.keymap.set("v", "<c-v>", function()
-  local items = vim.fn.getqflist()
-  if #items == 0 then
-    print "qf item kosong"
-    return
-  end
-
-  if not (vim.bo.filetype == "qf") then
-    print "not qf window"
-    return
-  end
+  local items = get_items_list()
 
   -- local from, to = vim.fn.line ".", vim.fn.line "v"
   local from, to = vim.fn.line ".", vim.fn.line "v"
@@ -89,7 +117,9 @@ keymap.set("n", "<Leader>ff", function()
   local actions = require "fzf-lua.actions"
   local opts = {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = RUtils.fzflua.format_title("Select Quickfix", __get_vars.title_icon()) },
+    winopts = {
+      title = RUtils.fzflua.format_title(string.format("Select%s", __get_vars.title_list()), __get_vars.title_icon()),
+    },
     actions = {
       ["alt-l"] = actions.file_sel_to_ll,
       ["alt-q"] = actions.file_sel_to_qf,
@@ -140,7 +170,7 @@ keymap.set("n", "<Leader>fg", function()
   }
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: live grep items [fzflua]",
+  desc = "QF: live grep list of items [fzflua]",
 })
 
 keymap.set("n", "<a-l>", function()
@@ -152,28 +182,7 @@ keymap.set("n", "<a-l>", function()
       end
       vim.cmd "Trouble loclist toggle focus=true"
     else
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.warn("Convert from qf into loclist failed\nNot implemented yet", { title = __get_vars.title_list() })
-
-      local items = vim.tbl_map(function(item)
-        return {
-          filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-          bufnr = item.bufnr,
-          module = item.module,
-          lnum = item.lnum,
-          -- end_lnum = item.end_lnum,
-          col = item.col,
-          -- end_col = item.end_col,
-          -- vcol = item.vcol,
-          -- nr = item.nr,
-          -- pattern = item.pattern,
-          text = item.text,
-          type = item.type,
-          -- valid = item.valid,
-        }
-      end, vim.fn.getqflist())
-
-      vim.fn.setloclist(1, items)
+      vim.fn.setloclist(1, get_items_list())
 
       -- vim.fn.setloclist(0, {}, " ", {
       --   nr = "$",
@@ -195,39 +204,11 @@ keymap.set("n", "<a-l>", function()
   end
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert loclist into trouble",
+  desc = "QF: convert loclist into trouble/qf",
 })
 
 keymap.set("n", "<a-q>", function()
-  local qf_win = RUtils.cmd.windows_is_opened { "qf" }
   if RUtils.qf.is_loclist() then
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.info("convert loclist into qf", { title = __get_vars.title_list() })
-
-    local items = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        bufnr = item.bufnr,
-        module = item.module,
-        lnum = item.lnum,
-        end_lnum = item.end_lnum,
-        col = item.col,
-        end_col = item.end_col,
-        vcol = item.vcol,
-        nr = item.nr,
-        pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        valid = item.valid,
-      }
-    end, vim.fn.getloclist(0))
-
-    local what = {
-      idx = "$",
-      items = items,
-      title = vim.fn.getloclist(0, { title = 0 }).title,
-    }
-
     local _qf = RUtils.cmd.windows_is_opened { "qf" }
     if _qf.found then
       if RUtils.qf.is_loclist() then
@@ -237,9 +218,16 @@ keymap.set("n", "<a-q>", function()
       end
     end
 
+    local what = {
+      idx = "$",
+      items = get_items_list(),
+      title = vim.fn.getloclist(0, { title = 0 }).title,
+    }
+
     vim.fn.setqflist({}, "r", what)
     vim.cmd(RUtils.cmd.quickfix.copen)
   else
+    local qf_win = RUtils.cmd.windows_is_opened { "qf" }
     if qf_win.found then
       vim.cmd [[cclose]]
     end
@@ -247,5 +235,132 @@ keymap.set("n", "<a-q>", function()
   end
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert qf into trouble",
+  desc = "QF: convert qf into trouble/lf",
+})
+
+keymap.set("n", "<Leader>fw", function()
+  local items = get_items_list()
+  local title = RUtils.qf.is_loclist() and vim.fn.getloclist(0, { title = 0 }).title
+    or vim.fn.getqflist({ title = 0 }).title
+
+  local _tbl = {}
+  for _, x in pairs(items) do
+    if #x.text == 0 then
+      RUtils.warn("No text, abort", { title = "QF" })
+      return
+    end
+    _tbl[#_tbl + 1] = x.text
+  end
+
+  function QFPreviewer:new(o, opts, fzf_win)
+    QFPreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, QFPreviewer)
+    return self
+  end
+
+  function QFPreviewer:parse_entry(entry_str)
+    local data = {}
+    for _, x in pairs(items) do
+      if x.text == entry_str then
+        data = {
+          path = x.filename,
+          line = x.lnum,
+          col = x.col,
+        }
+      end
+    end
+
+    if data then
+      return data
+    end
+    return {}
+  end
+
+  local send_data = function(selected)
+    selected = selected or {}
+    local data = {}
+    for _, _sel in pairs(selected) do
+      for _, item in pairs(items) do
+        if item.text == _sel then
+          data[#data + 1] = item
+        end
+      end
+    end
+    return data
+  end
+
+  fzf_lua.fzf_exec(_tbl, {
+    previewer = QFPreviewer,
+    -- prompt = RUtils.fzflua.default_title_prompt(),
+    winopts = {
+      title = RUtils.fzflua.format_title(
+        string.format("Grep%s Word >> %s", __get_vars.title_list(), title),
+        __get_vars.title_icon()
+      ),
+    },
+    -- winopts = { title = format_prompt_strings() },
+    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
+    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^o:filtertag]] },
+    actions = {
+      ["default"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("e " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["ctrl-v"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("vsplit " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["ctrl-s"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("split " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["alt-l"] = function(selected, _)
+        vim.fn.setloclist(0, {}, " ", {
+          nr = "$",
+          items = send_data(selected),
+          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
+        })
+        vim.cmd(RUtils.cmd.quickfix.lopen)
+      end,
+      ["alt-q"] = function(selected, _)
+        local what = {
+          idx = "$",
+          items = send_data(selected),
+          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
+        }
+        vim.fn.setqflist({}, " ", what)
+        vim.cmd(RUtils.cmd.quickfix.copen)
+      end,
+    },
+  })
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: grep text of items [fzflua]",
 })

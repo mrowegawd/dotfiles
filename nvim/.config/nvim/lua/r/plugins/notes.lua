@@ -337,19 +337,6 @@ return {
           require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
         end,
       })
-
-      -- POSTPONE: perbaiki completion pada input orgmode, kenapa ga muncul dengan blink?
-      -- completion muncul hanya pada default key completion yakni <tab> ?
-      -- vim.fn.input = function(prompt, default, completion)
-      --   print(vim.inspect(prompt)) -- ???
-      --   -- Output:
-      --   -- {
-      --   --   cancelreturn = vim.NIL,
-      --   --   completion = "customlist,v:lua.orgmode.__input_completion",
-      --   --   default = "",
-      --   --   prompt = "Enter destination: "
-      --   -- }
-      -- end
     end,
   },
   -- OBSIDIAN.NVIM

@@ -190,10 +190,11 @@ return {
       {
         "<Leader>fw",
         function()
+          local fzf_cword= require("fzf-lua.utils").rg_escape(vim.fn.expand("<cword>"))
           require("fzf-lua").grep_cword {
             winopts = {
               title = RUtils.fzflua.format_title(
-                "Grep word",
+                string.format("Grep cword >> %s", fzf_cword),
                 RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
               ),
               width = 0.90,
@@ -212,10 +213,11 @@ return {
       {
         "<Leader>fw",
         function()
+          local fzf_visual= require("fzf-lua.utils").get_visual_selection()
           require("fzf-lua").grep_visual {
             winopts = {
               title = RUtils.fzflua.format_title(
-                "Grep word visual",
+                string.format("Grep word visual >> %s", fzf_visual),
                 RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
               ),
               width = 0.95,
