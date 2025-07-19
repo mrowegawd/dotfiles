@@ -3240,7 +3240,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.35 },
           reverse = false,
         },
       },

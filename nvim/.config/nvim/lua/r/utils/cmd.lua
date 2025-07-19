@@ -371,7 +371,10 @@ function M.lstrip_whitespace(str, limit)
 end
 
 function M.strip_whitespace(str)
-  return rstrip_whitespace(M.lstrip_whitespace(str))
+  if str then
+    return rstrip_whitespace(M.lstrip_whitespace(str))
+  end
+  return ""
 end
 
 function M.p_table(map)

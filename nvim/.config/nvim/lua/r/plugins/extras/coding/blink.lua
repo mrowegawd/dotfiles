@@ -73,7 +73,13 @@ return {
             components = {
               kind_icon = {
                 text = function(ctx)
-                  return (" " .. RUtils.cmd.strip_whitespace(RUtils.config.icons.kinds[ctx.kind]) .. " ") or ""
+                  local kind = ""
+                  if ctx.kind == "Commit" then
+                    kind = RUtils.config.icons.git.unmerged
+                  else
+                    kind = RUtils.config.icons.kinds[ctx.kind] or ""
+                  end
+                  return " " .. RUtils.cmd.strip_whitespace(kind) .. " "
                 end,
                 highlight = function(ctx)
                   if ctx.deprecated then
