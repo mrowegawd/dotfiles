@@ -127,7 +127,8 @@ return {
                   if item.kind == "Color" then
                     return item.kind_hl
                   end
-                  return "LspKind" .. item.kind
+                  -- return "LspKind" .. item.kind
+                  return "Comment"
                 end,
               },
             },
