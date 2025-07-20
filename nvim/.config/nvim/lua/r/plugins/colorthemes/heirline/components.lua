@@ -544,7 +544,7 @@ M.QuickfixStatus = {
       for i = 1, 10 do -- (n)vim keeps at most 10 quickfix lists in full
         local qflist = vim.fn.getqflist { nr = i, id = 0, title = true, items = true }
         if not vim.tbl_isempty(qflist.items) then
-          table.insert(qflists, qflist)
+          qflists[#qflists + 1] = qflist
         end
       end
       return qflists
@@ -556,7 +556,7 @@ M.QuickfixStatus = {
       for i = 1, 10 do
         local loclist = vim.fn.getloclist(0, { all = "", nr = tonumber(i) })
         if not vim.tbl_isempty(loclist.items) then
-          table.insert(loclists, loclist)
+          loclists[#loclists + 1] = loclist
         end
       end
       return loclists
@@ -595,13 +595,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.normal_bg
-      -- if RUtils.qf.is_loclist() then
-      --   fg = colors.block_bg_loclist
-      -- end
-      return { fg = fg, bg = colors.block_bg_darken }
-    end,
+    hl = { fg = colors.normal_bg, bg = colors.block_bg_darken },
   },
   {
     provider = function(self)
@@ -625,13 +619,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.normal_bg
-      -- if RUtils.qf.is_loclist() then
-      --   fg = colors.block_bg_loclist
-      -- end
-      return { fg = fg, bg = colors.block_bg_darken }
-    end,
+    hl = { fg = colors.normal_bg, bg = colors.block_bg_darken },
   },
   {
     provider = function(self)
