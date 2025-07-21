@@ -76,6 +76,8 @@ local function opts_fzf(title, maps)
         height = win_height - 10,
         row = row,
         col = col,
+        fullscreen = false,
+        border = RUtils.config.icons.border.rectangle,
         preview = {
           vertical = "down:55%", -- `up|down:size`
           horizontal = "right:45%", -- `right|left:size`
@@ -125,6 +127,7 @@ function M.grep_title(is_live_grep)
     rg_opts = rg_opts,
     search = regex_title,
     winopts = {
+      fullscreen = false,
       title = RUtils.fzflua.format_title(
         "Grep Title Orgmode",
         RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)

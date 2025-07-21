@@ -1,14 +1,20 @@
 local term_count = 1
 
 return {
-  -- FLOATERM
+  -- ERGOTERM
+  {
+    "waiting-for-dev/ergoterm.nvim",
+    opts = {
+      picker = "telescope",
+    },
+  },
+  -- FLOATERM (disabled)
   {
     "nvzone/floaterm",
     cmd = "FloatermToggle",
+    enabled = false,
     dependencies = "nvzone/volt",
-    opts = {
-      mappings = { sidebar = nil, term = nil },
-    },
+    opts = { mappings = { sidebar = nil, term = nil } },
     keys = {
       {
         "<Localleader>t",

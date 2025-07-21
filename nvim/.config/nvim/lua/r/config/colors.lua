@@ -7,7 +7,7 @@ local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
 local set_col_light = { fg_floatborder = 0.15, fg_branch = 4, fg_fzfheadertext = -0.05 }
-local set_col_normal = { fg_floatborder = 0.3, fg_branch = 2, fg_fzfheadertext = 0.08 }
+local set_col_normal = { fg_floatborder = 1.7, fg_branch = 2, fg_fzfheadertext = 0.08 }
 local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
 local base_cl = {
@@ -169,7 +169,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.45,
   winbarfilepath_fg_alter = 0.62,
-  winseparator_alter = 0.9,
+  winseparator_alter = 0.8,
 })
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
@@ -409,7 +409,7 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "WinSeparator", attr = "fg", alter = col_opts.fg_floatborder },
+        fg = { from = "NormalFloat", attr = "bg", alter = col_opts.fg_floatborder },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -846,7 +846,7 @@ local general_overrides = function()
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
     {
       CmpItemFloatBorder = {
-        fg = { from = "WinSeparator", attr = "fg", alter = 0.15 },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -2329,7 +2329,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
         },
       },

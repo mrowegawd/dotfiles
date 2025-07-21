@@ -101,11 +101,11 @@ return {
                 row = row,
                 col = col,
                 backdrop = 60,
-                preview = {
-                  vertical = "down:55%", -- up|down:size
-                  horizontal = "right:45%", -- right|left:size
-                  hidden = "hidden",
-                },
+                -- preview = {
+                --   vertical = "down:55%", -- up|down:size
+                --   horizontal = "right:45%", -- right|left:size
+                --   hidden = "hidden",
+                -- },
               }
             end,
           }
@@ -341,10 +341,14 @@ return {
             row = row,
             col = col,
             backdrop = 100,
+            border = { "", "-", "", "", "", "", "", "" },
             preview = {
-              vertical = "down:55%", -- up|down:size
-              horizontal = "right:45%", -- right|left:size
+              layout = "vertical",
+              border = { "", "-", "", "", "", "", "", "" },
+              vertical = "up:55%", -- up|down:size
+              horizontal = "down:45%", -- right|left:size
             },
+            fullscreen = true,
           }
         end,
         hls = { cursor = "CurSearch" },
@@ -718,10 +722,10 @@ return {
             height = 0.90,
             row = 0.50,
             col = 0.50,
-            preview = {
-              vertical = "down:40%", -- up|down:size
-              horizontal = "up:60%", -- right|left:size
-            },
+            -- preview = {
+            --   vertical = "down:40%", -- up|down:size
+            --   horizontal = "up:60%", -- right|left:size
+            -- },
           },
           actions = {
             ["ctrl-q"] = actions.toggle_ignore,
@@ -920,7 +924,7 @@ return {
             width = 0.90,
             col = 0.50,
             row = 0.50,
-            preview = { vertical = "down:40%", horizontal = "up:50%" },
+            -- preview = { vertical = "up:50%", horizontal = "down:45%", },
           },
           -- actions inherit from 'actions.buffers' and merge
           actions = {
@@ -968,7 +972,7 @@ return {
             width = 0.90,
             col = 0.50,
             row = 0.50,
-            preview = { vertical = "down:40%", horizontal = "up:50%" },
+            -- preview = { vertical = "up:55%", horizontal = "down:45%" },
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -1056,11 +1060,14 @@ return {
             local win_height = math.ceil(lines * 0.65)
             local win_width = math.ceil(columns * 2)
             return {
-              -- title = RUtils.fzflua.format_title("Finder", RUtils.config.icons.misc.lsp),
               width = win_width,
               height = win_height,
               row = 0.50,
+              fullscreen = false,
+              border = { "", "━", "", "", "", "━", "", "" },
               preview = {
+                border = { "", "━", "", "", "", "━", "", "" },
+                layout = "horizontal",
                 vertical = "down:45%", -- up|down:size
                 horizontal = "left:55%", -- right|left:size
               },
@@ -1095,7 +1102,11 @@ return {
               width = 0.90,
               row = 0.50,
               col = 0.50,
-              backdrop = 60,
+              border = { "", "", "", "", "", "━", "", "" },
+              preview = {
+                border = { "", "━", "", "", "", "", "", "" },
+              },
+              -- backdrop = 60,
             },
             fzf_opts = {
               ["--header"] = [[^x:filter  ^r:workspace-symbols]],

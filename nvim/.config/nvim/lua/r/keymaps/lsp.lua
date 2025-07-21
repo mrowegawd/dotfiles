@@ -325,7 +325,10 @@ function M.get()
             width = 0.60,
             row = 0.50,
             col = 0.50,
+            border = RUtils.config.icons.border.rectangle,
+            fullscreen = false,
             preview = {
+              border = RUtils.config.icons.border.rectangle,
               vertical = "up:80%", -- up|down:size
               layout = "vertical", -- horizontal|vertical|flex
             },

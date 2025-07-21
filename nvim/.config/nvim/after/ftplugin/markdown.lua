@@ -2,7 +2,6 @@ local keymap, opt = vim.keymap, vim.opt_local
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
--- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
 
 local notif_msg = ""
 local command_markdown = {
@@ -14,12 +13,13 @@ local command_markdown = {
 keymap.set("n", "<Leader>rf", function()
   local opts = {
     winopts = {
+      border = RUtils.config.icons.border.rectangle,
+      col = 0.50,
+      fullscreen = false,
+      height = 0.25,
+      row = 0.50,
       title = RUtils.fzflua.format_title("Task Runner", "󰈙"),
       width = 0.60,
-      height = 0.25,
-      col = 0.50,
-      row = 0.50,
-      backdrop = 60,
     },
   }
 

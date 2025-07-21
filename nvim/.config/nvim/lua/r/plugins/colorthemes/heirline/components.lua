@@ -603,11 +603,26 @@ M.QuickfixStatus = {
       if RUtils.qf.is_loclist() then
         -- set index_loclist harus di bagian block provider, jangan di block init
         -- begitu juga deang index_qf
-        local index_loclist = vim.fn.getloclist(0, { nr = 0 }).nr
-        table.insert(parts, string.format("  %d/%d 󱗿 %d ", self.height, index_loclist, #self.stack_loclists()))
+        --
+        local index_loclist = vim.fn.getloclist(0, { idx = 0 }).idx
+        local current_stack_loclist = vim.fn.getloclist(0, { nr = 0 }).nr
+        table.insert(
+          parts,
+          string.format(
+            "  %d/%d 󱗿 %d/%d ",
+            index_loclist,
+            self.height,
+            current_stack_loclist,
+            #self.stack_loclists()
+          )
+        )
       else
-        local index_qf = vim.fn.getqflist({ id = 0 }).id
-        table.insert(parts, string.format("  %d/%d 󱗿 %d ", self.height, index_qf, #self.stack_qflists()))
+        local index_qf = vim.fn.getqflist({ idx = 0 }).idx
+        local current_stack_qf = vim.fn.getqflist({ id = 0 }).id
+        table.insert(
+          parts,
+          string.format("  %d/%d 󱗿 %d/%d ", index_qf, self.height, current_stack_qf, #self.stack_qflists())
+        )
       end
       return table.concat(parts, " ")
     end,

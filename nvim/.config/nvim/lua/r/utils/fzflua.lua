@@ -39,6 +39,7 @@ function M.dropdown(opts)
       height = 20,
       width = math.floor(vim.o.columns / 2 + 8),
       col = 0.50,
+      fullscreen = false,
       preview = {
         hidden = "hidden",
         layout = "vertical",
@@ -73,6 +74,7 @@ function M.cursor_random(opts)
   return M.dropdown(vim.tbl_deep_extend("force", {
     winopts = {
       width = math.floor(math.min(60, vim.o.columns / 2)),
+      border = RUtils.config.icons.border.rectangle,
       height = height,
     },
   }, opts))
@@ -88,7 +90,9 @@ function M.send_cmds(opts, opts_cmds)
     cmds,
     M.cursor_random(vim.tbl_deep_extend("force", {
       prompt = RUtils.fzflua.default_title_prompt(),
-      winopts = { title = opts_cmds.title and opts_cmds.title or "" },
+      winopts = {
+        title = opts_cmds.title and opts_cmds.title or "",
+      },
       actions = {
         ["default"] = function(selected, _)
           local sel = selected[1]
@@ -228,13 +232,13 @@ function M.cmd_filter_kind_lsp(opts)
     no_esc = true,
     fzf_opts = { ["--layout"] = "reverse" },
     winopts = {
+      border = RUtils.config.icons.border.rectangle,
       title = M.format_title(string.format("%s Filter", opts.title), "󰈙"),
-      -- relative = "cursor",
-      row = 0.50,
+      fullscreen = false,
       col = 0.50,
-      height = 20,
+      row = 0.50,
       width = 0.20,
-      backdrop = 60,
+      height = 20,
     },
     actions = opts.actions,
   })

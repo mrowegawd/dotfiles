@@ -739,10 +739,10 @@ function M.find_local_titles(item_paths)
       title = RUtils.fzflua.format_title("Local titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
       width = 1,
       height = 0.90,
-      preview = {
-        vertical = "down:55%", -- up|down:size
-        horizontal = "right:45%", -- right|left:size
-      },
+      -- preview = {
+      --   vertical = "down:55%", -- up|down:size
+      --   horizontal = "right:45%", -- right|left:size
+      -- },
     },
     actions = {
       ["enter"] = function(selected, _)

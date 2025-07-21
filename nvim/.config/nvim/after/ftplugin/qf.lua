@@ -298,9 +298,7 @@ keymap.set("n", "<Leader>fw", function()
         __get_vars.title_icon()
       ),
     },
-    -- winopts = { title = format_prompt_strings() },
     -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
-    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^o:filtertag]] },
     actions = {
       ["default"] = function(selected, _)
         local sel
