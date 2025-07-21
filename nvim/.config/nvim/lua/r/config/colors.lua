@@ -1506,7 +1506,7 @@ local general_overrides = function()
     },
     {
       ["@markup.strong.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg" },
+        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.7),
         bg = "NONE",
         bold = true,
       },
@@ -2956,13 +2956,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.35 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
-      {
-        ["@markup.strong.markdown_inline"] = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.5 },
-          bg = "NONE",
-          bold = true,
-        },
-      },
       {
         ["@markup.italic.markdown_inline"] = {
           fg = H.tint(H.darken(H.get("Error", "fg"), 0.5, H.get("Normal", "fg")), -0.2),

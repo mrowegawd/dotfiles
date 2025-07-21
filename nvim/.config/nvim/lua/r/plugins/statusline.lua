@@ -37,6 +37,11 @@ return {
             end
 
             if vim.bo[buf].buftype == "nofile" then
+              local path = vim.fn.expand "%:p"
+              if #path > 0 then
+                return false
+              end
+
               return not vim.tbl_contains(
                 { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" },
                 vim.bo[buf].filetype

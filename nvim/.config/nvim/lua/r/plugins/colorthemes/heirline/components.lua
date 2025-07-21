@@ -368,6 +368,7 @@ M.FilePath = {
       }
 
       local path = vim.fn.expand "%:p" --[[@as string]]
+      -- RUtils.info(path)
       if path == "" then
         return ""
       end
@@ -1352,6 +1353,8 @@ M.WinbarFilePath = {
       }
 
       local path = vim.fn.expand "%:p" --[[@as string]]
+      -- RUtils.info("BRO >> " .. path)
+
       if path == "" then
         return ""
       end

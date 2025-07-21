@@ -452,7 +452,7 @@ M.git_diff_content_previewer = function(opts)
 
       if prompt and prompt ~= "" and prompt ~= '""' then
         preview_command = preview_command
-          .. string.format(" | GREP_COLOR='3;30;105' grep -A 999999 -B 999999 --color=always '%s'", prompt)
+          .. string.format(" | GREP_COLORS='mt=3;30;43' grep -A 999999 -B 999999 --color=always '%s'", prompt)
       end
 
       return preview_command
