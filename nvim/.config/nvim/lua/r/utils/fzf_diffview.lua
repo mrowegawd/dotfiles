@@ -138,7 +138,8 @@ end
 local split_query_from_author = function(query)
   local author = nil
   local prompt = nil
-  if query ~= nil and query ~= "" then
+  query = query[1]
+  if query ~= nil and query ~= "" and #query ~= 0 then
     -- starts with @
     if query:sub(1, 1) == "@" then
       author = query:sub(2)
@@ -154,6 +155,11 @@ local split_query_from_author = function(query)
     end
 
     author = split[2]
+
+    -- if #prompt == 0 then
+    -- prompt = query
+    -- RUtils.info(prompt)
+    -- end
   end
 
   prompt = prompt or ""
@@ -431,25 +437,28 @@ end
 M.git_diff_content_previewer = function(opts)
   opts = opts or { bufnr = nil }
 
-  return fzf_lua.shell.raw_preview_action_cmd(function(items)
+  return fzf_lua.shell.stringify_cmd(function(items)
     local selection = items[1]
-    local hash = string.sub(selection, 1, 7)
+    if selection then
+      local hash = string.sub(selection, 1, 7)
 
-    local prev_commit = previous_commit_hash(hash)
-    local prompt, _ = split_query_from_author(get_last_query())
+      local prev_commit = previous_commit_hash(hash)
+      local prompt, _ = split_query_from_author(get_last_query())
 
-    local preview_command = table.concat(
-      M.git_diff_content(prev_commit, hash, string.format('"%s"', escape_term(prompt)), { bufnr = opts.bufnr }),
-      " "
-    )
+      local preview_command = table.concat(
+        M.git_diff_content(prev_commit, hash, string.format('"%s"', escape_term(prompt)), { bufnr = opts.bufnr }),
+        " "
+      )
 
-    if prompt and prompt ~= "" and prompt ~= '""' then
-      preview_command = preview_command
-        .. string.format(" | GREP_COLOR='3;30;105' grep -A 999999 -B 999999 --color=always '%s'", prompt)
+      if prompt and prompt ~= "" and prompt ~= '""' then
+        preview_command = preview_command
+          .. string.format(" | GREP_COLOR='3;30;105' grep -A 999999 -B 999999 --color=always '%s'", prompt)
+      end
+
+      return preview_command
     end
-
-    return preview_command
-  end)
+    return ""
+  end, {}, "{} {q}")
 end
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -512,9 +521,7 @@ local get_browse_command = function(commit_hash)
 end
 
 M.opts_diffview_log = function(is_repo, title, bufnr)
-  vim.validate {
-    is_repo = { is_repo, "string" },
-  }
+  vim.validate { is_repo = { is_repo, "string" } }
 
   title = title or "Search > "
   bufnr = bufnr or vim.fn.bufnr()
@@ -544,7 +551,14 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
       ["--preview"] = preview_command(),
       ["--header"] = [[^o:browser  ^y:copyhash  ^x:diffview  ^s/v/t:fugitive]],
     },
-    winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
+    winopts = {
+      title = RUtils.fzflua.format_title(title, "󰈙"),
+      preview = {
+        layout = "horizontal",
+        vertical = "left:55%", -- up|down:size
+        horizontal = "right:45%", -- right|left:size
+      },
+    },
     actions = {
       -- TODO: open hash items qf -> open dengan gedit?
       ["alt-l"] = function(selected, _)

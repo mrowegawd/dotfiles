@@ -502,6 +502,11 @@ return {
             winopts = {
               title = RUtils.fzflua.format_title("Git Status", ""),
               title_pos = "left",
+              preview = {
+                layout = "horizontal",
+                vertical = "left:55%", -- up|down:size
+                horizontal = "right:45%", -- right|left:size
+              },
             },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
@@ -528,7 +533,15 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
+            winopts = {
+              title = RUtils.fzflua.format_title("Commits", ""),
+              title_pos = "left",
+              preview = {
+                layout = "horizontal",
+                vertical = "left:55%", -- up|down:size
+                horizontal = "right:45%", -- right|left:size
+              },
+            },
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -599,7 +612,15 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = RUtils.fzflua.format_title("BCommits", ""), title_pos = "left" },
+            winopts = {
+              title = RUtils.fzflua.format_title("BCommits", ""),
+              title_pos = "left",
+              preview = {
+                layout = "horizontal",
+                vertical = "left:55%", -- up|down:size
+                horizontal = "right:45%", -- right|left:size
+              },
+            },
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -1104,7 +1125,7 @@ return {
               col = 0.50,
               border = { "", "", "", "", "", "━", "", "" },
               preview = {
-                border = { "", "━", "", "", "", "", "", "" },
+                border = { "", "━", "", "", "", "-", "", "" },
               },
               -- backdrop = 60,
             },
