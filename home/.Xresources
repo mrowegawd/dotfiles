@@ -9,17 +9,17 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/base46-jellybeans"
+#include ".config/miscxrdb/xresource-theme/vscode_modern"
 
 ! --------------
 ! XFT SETTINGS
 ! --------------
 Xft.dpi:                    96
-Xft.antialias:              true
-Xft.rgba:                   rgb
-Xft.hinting:                true
-Xft.hintstyle:              hintmedium
-Xft.lcdfilter:              lcddefault
+! Xft.antialias:              true
+! Xft.rgba:                   rgb
+! Xft.hinting:                true
+! Xft.hintstyle:              hintmedium
+! Xft.lcdfilter:              lcddefault
 Xft.autohint:               0
 
 ! Transparancy (0 - 255)
