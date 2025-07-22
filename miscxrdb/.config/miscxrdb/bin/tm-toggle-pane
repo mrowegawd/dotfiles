@@ -1,6 +1,7 @@
 #!/bin/bash
 
-EXTRA_SIZE=12
+EXTRA_SIZE=15
+RED="red"
 
 session_exists() {
   tmux has-session -t "=$1"
@@ -19,6 +20,16 @@ _check_pane_is_zsh() {
 }
 _check_pane_is_tclock() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
+}
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+
+notifme_to_run_in_tmux() {
+  if not_in_tmux; then
+    dunstify "$1"
+    exit
+  fi
 }
 
 current_session=$(tmux display-message -p '#S')
@@ -308,6 +319,36 @@ split_term() {
   __split_term_cleanup_update_and_remove_data_json
 
   rm -rf "$TEMP_FILES"
+}
+
+float_term() {
+  TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+  if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+    GET_FG=$(grep -i ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+    RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  fi
+
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  session="tmp_btop"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session zsh;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
+        -E -d "#{pane_current_path}" \
+        -E "tmux attach -t $session"
+    fi
+  fi
 }
 
 "$@"

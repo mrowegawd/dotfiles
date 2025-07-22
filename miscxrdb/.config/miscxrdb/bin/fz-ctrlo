@@ -32,7 +32,7 @@ not_in_tmux_2() {
 notifme_to_run_in_tmux() {
   if not_in_tmux; then
     echo "$1"
-    exit 1
+    exit
   fi
 }
 

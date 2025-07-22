@@ -2,23 +2,43 @@
 
 # Get the number of panes in the current tmux window
 pane_count=$(tmux list-panes | wc -l)
+TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+
+TMUX_BG="#1f1f1f"
+TMUX_FG_ACTIVE="#569cd6"
+TMUX_FG_NC="#3a3a3a"
+
+if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+  TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  TMUX_FG_ACTIVE=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  TMUX_FG_NC=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+fi
 
 auto_toggle() {
-
-  # Check if there is only one pane or if the pane is zoomed
   if [ "$pane_count" -eq 1 ] || [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
-    tmux set-option -g pane-border-status off
-
+    if [[ "$1" == 1 ]]; then
+      tmux set-option -g pane-border-status off
+    fi
+    tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_FG_NC"
   else
-    tmux set-option -g pane-border-status top
+    if [[ "$1" == 1 ]]; then
+      tmux set-option -g pane-border-status top
+    fi
+    tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_FG_ACTIVE"
   fi
 }
 
 hide_bar_pane() {
   if [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
-    tmux set-option -g pane-border-status top
+    if [[ "$1" == 1 ]]; then
+      tmux set-option -g pane-border-status top
+    fi
+    tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_FG_ACTIVE"
   else
-    tmux set-option -g pane-border-status off
+    if [[ "$1" == 1 ]]; then
+      tmux set-option -g pane-border-status off
+    fi
+    tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_FG_NC"
   fi
   tmux resize-pane -Z
 }

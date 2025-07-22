@@ -28,7 +28,7 @@ setw -g pane-border-status top # bottom, top
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$RED]$left_slant_separator,}\
-#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_ACTIVE],}#{pane_index}.#{pane_id} \
+#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_NC],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
 
