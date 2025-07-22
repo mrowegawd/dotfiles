@@ -101,11 +101,9 @@ return {
                 row = row,
                 col = col,
                 backdrop = 60,
-                -- preview = {
-                --   vertical = "down:55%", -- up|down:size
-                --   horizontal = "right:45%", -- right|left:size
-                --   hidden = "hidden",
-                -- },
+                preview = { hidden = true },
+                border = RUtils.config.icons.border.rectangle,
+                fullscreen = false,
               }
             end,
           }
@@ -866,11 +864,19 @@ return {
         },
         commands = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("Commands", RUtils.config.icons.misc.tools) },
+          winopts = {
+            title = RUtils.fzflua.format_title("Commands", RUtils.config.icons.misc.tools),
+            fullscreen = false,
+            preview = { hidden = true },
+          },
         },
         command_history = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("History Commands", RUtils.config.icons.misc.tools) },
+          winopts = {
+            title = RUtils.fzflua.format_title("History Commands", RUtils.config.icons.misc.tools),
+            fullscreen = false,
+            preview = { hidden = true },
+          },
         },
         oldfiles = {
           prompt = RUtils.fzflua.default_title_prompt(),
@@ -890,7 +896,11 @@ return {
         },
         buffers = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
+          winopts = {
+            title = RUtils.fzflua.format_title("Buffers", "󰈙"),
+            fullscreen = false,
+            preview = { hidden = false },
+          },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = { ["--with-nth"] = "-1.." },
           actions = {
@@ -1124,10 +1134,7 @@ return {
               row = 0.50,
               col = 0.50,
               border = { "", "", "", "", "", "━", "", "" },
-              preview = {
-                border = { "", "━", "", "", "", "-", "", "" },
-              },
-              -- backdrop = 60,
+              preview = { border = { "", "━", "", "", "", "-", "", "" } },
             },
             fzf_opts = {
               ["--header"] = [[^x:filter  ^r:workspace-symbols]],
