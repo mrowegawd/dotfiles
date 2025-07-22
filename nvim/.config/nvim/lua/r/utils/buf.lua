@@ -112,7 +112,7 @@ function M.magic_quit()
     end,
     ["grug-far"] = function()
       local j = function()
-        return RUtils.warn([[To close gruf-far, use "q"]], { title = "Gruf-far" })
+        return vim.cmd "q"
       end
       return true, j
     end,
@@ -148,7 +148,11 @@ function M.magic_quit()
       end
 
       if vim.bo.filetype == "git" then
-        notif_msg = "[!] use manual quit"
+        local filepath = vim.fn.expand "%:p:h"
+        if filepath:match "fugitive" then
+          M.smart_quit()
+          return
+        end
       end
 
       is_closed = false
