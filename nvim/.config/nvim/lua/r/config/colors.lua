@@ -321,7 +321,7 @@ reset_base_alter({ "vscode_modern" }, {
   cursor_fg = "#fa1919",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  fzflua_bg_cursorline_alter = -0.05,
+  fzflua_bg_cursorline_alter = 0.1,
   linenr_fg_alter = 0.7,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
@@ -629,7 +629,12 @@ local general_overrides = function()
     -- { diffBDiffer = { link = 'WarningMsg' } },
     -- { diffCommon = { link = 'WarningMsg' } },
     -- { diffDiffer = { link = 'WarningMsg' } },
-    { diffFile = { inherit = "Directory", bg = { from = "Directory", attr = "fg", alter = -0.7 } } },
+    {
+      diffFile = {
+        fg = { from = "Directory", attr = "fg" },
+        bg = { from = "Directory", attr = "fg", alter = -0.6 },
+      },
+    },
     -- { diffIdentical = { link = 'WarningMsg' } },
     -- { diffIndexLine = { link = 'Number' } },
     -- { diffIsA = { link = 'WarningMsg' } },
@@ -640,32 +645,30 @@ local general_overrides = function()
     {
       -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
       diffAdd = {
-        fg = H.darken(dark_green, 0.8, H.get("Normal", "bg")),
-        bg = H.darken(dark_green, 0.2, H.get("Normal", "bg")),
-        bold = true,
+        fg = H.darken(dark_green, 0.7, H.get("Normal", "bg")),
+        bg = H.darken(dark_green, 0.1, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
       diffChange = {
-        fg = H.darken(dark_yellow, 0.8, H.get("Normal", "bg")),
-        bg = H.darken(dark_yellow, 0.2, H.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, 0.7, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, 0.1, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
     },
     {
       diffDelete = {
-        fg = H.darken(dark_red, 0.8, H.get("Normal", "bg")),
-        bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
-        bold = true,
+        fg = H.darken(dark_red, 0.7, H.get("Normal", "bg")),
+        bg = H.darken(dark_red, 0.1, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
       diffText = {
-        fg = H.darken(dark_yellow, 1, H.get("Normal", "bg")),
-        bg = H.darken(dark_yellow, 0.5, H.get("Normal", "bg")),
+        fg = H.darken(dark_yellow, 0.9, H.get("Normal", "bg")),
+        bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
         bold = true,
         reverse = false,
       },
@@ -1506,7 +1509,7 @@ local general_overrides = function()
     },
     {
       ["@markup.strong.markdown_inline"] = {
-        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.7),
+        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.9),
         bg = "NONE",
         bold = true,
       },
@@ -2915,6 +2918,14 @@ local function colorscheme_overrides()
       },
       { Directory = { fg = "#7788aa", bg = "NONE" } },
 
+      -- GIT
+      {
+        diffFile = {
+          fg = { from = "Directory", attr = "fg" },
+          bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        },
+      },
+
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
@@ -3162,6 +3173,14 @@ local function colorscheme_overrides()
 
       { Directory = { fg = "#569cd6", bg = "NONE" } },
 
+      -- GIT
+      {
+        diffFile = {
+          fg = { from = "Directory", attr = "fg" },
+          bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        },
+      },
+
       -- WHICHKEY
       { WhichKeyGroup = { inherit = "WhichKeyGroup", fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.1 } } },
 
@@ -3239,7 +3258,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
           reverse = false,
         },
       },
@@ -3262,13 +3281,13 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },

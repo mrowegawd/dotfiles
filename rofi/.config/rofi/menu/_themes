@@ -285,13 +285,19 @@ set_delta() {
   sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$GET_COL_36\" italic/g" "$_DELTA_PATH"
   sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$GET_COL_34\" italic/g" "$_DELTA_PATH"
 
-  # For hunk minus
-  sed -i -e "s/^minus-style.*/minus-style = syntax \"$GET_COL_35\"/g" "$_DELTA_PATH"
-  sed -i -e "s/^minus-emph-style.*/minus-emph-style = syntax bold \"$GET_COL_36\"/g" "$_DELTA_PATH"
-
   # For hunk plus
-  sed -i -e "s/^plus-style.*/plus-style = syntax \"$GET_COL_33\"/g" "$_DELTA_PATH"
-  sed -i -e "s/^plus-emph-style.*/plus-emph-style = syntax bold \"$GET_COL_34\"/g" "$_DELTA_PATH"
+  PLUS_STYLE_FG=$(darken_color "$GET_COL_34" 10)
+  sed -i -e "s/^plus-style.*/plus-style = \"$PLUS_STYLE_FG\" bold \"$GET_COL_33\"/g" "$_DELTA_PATH" # color for hunk added
+  PLUS_EMPH_STYLE_FG=$(lighten_color "$GET_COL_34" 35)
+  PLUS_EMPH_STYLE_BG=$(darken_color "$GET_COL_34" 30)
+  sed -i -e "s/^plus-emph-style.*/plus-emph-style = \"$PLUS_EMPH_STYLE_FG\" bold \"$PLUS_EMPH_STYLE_BG\"/g" "$_DELTA_PATH"
+
+  # For hunk minus
+  MINUS_STYLE_FG=$(darken_color "$GET_COL_36" 15)
+  sed -i -e "s/^minus-style.*/minus-style = \"$MINUS_STYLE_FG\" bold \"$GET_COL_35\"/g" "$_DELTA_PATH" # color for hunk deleted
+  MINUS_EMPH_STYLE_FG=$(lighten_color "$GET_COL_36" 35)
+  MINUS_EMPH_STYLE_BG=$(darken_color "$GET_COL_36" 30)
+  sed -i -e "s/^minus-emph-style.*/minus-emph-style = \"$MINUS_EMPH_STYLE_FG\" bold \"$MINUS_EMPH_STYLE_BG\"/g" "$_DELTA_PATH"
 
 }
 set_zathura() {

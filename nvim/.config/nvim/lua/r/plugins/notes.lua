@@ -1,5 +1,4 @@
 return {
-  -- HEADLINES
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
