@@ -7,26 +7,6 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["gs"] = {
-        function()
-          RUtils.markdown.find_local_titles()
-          vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
-        end,
-        desc = "Note: search local titles [markdown]",
-      },
-      ["gS"] = {
-        function()
-          RUtils.markdown.find_global_titles()
-          vim.cmd "normal! zRzz"
-        end,
-        desc = "Note: search global titles [markdown]",
-      },
-      ["grr"] = {
-        function()
-          RUtils.markdown.find_backlinks()
-        end,
-        desc = "Note: find backlinks (like references)",
-      },
       ["<Leader>fl"] = {
         function()
           RUtils.info("Find links current buffer", { title = "Notes" })
@@ -51,6 +31,26 @@ function M.neorg_mappings_ft(bufnr)
           }
         end,
         "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
+      },
+      ["gs"] = {
+        function()
+          RUtils.markdown.find_local_titles()
+          vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
+        end,
+        desc = "Note: search local titles [markdown]",
+      },
+      ["gS"] = {
+        function()
+          RUtils.markdown.find_global_titles()
+          vim.cmd "normal! zRzz"
+        end,
+        desc = "Note: search global titles [markdown]",
+      },
+      ["grr"] = {
+        function()
+          RUtils.markdown.find_backlinks()
+        end,
+        desc = "Note: find backlinks (like references)",
       },
       ["gD"] = {
         function()

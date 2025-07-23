@@ -339,14 +339,14 @@ return {
             row = row,
             col = col,
             backdrop = 100,
-            border = { "", "-", "", "", "", "", "", "" },
+            border = RUtils.config.icons.border.line,
+            -- fullscreen = true,
             preview = {
-              layout = "vertical",
-              border = { "", "-", "", "", "", "", "", "" },
+              layout = "horizontal",
+              border = RUtils.config.icons.border.line,
               vertical = "up:55%", -- up|down:size
-              horizontal = "down:45%", -- right|left:size
+              horizontal = "right:50%", -- right|left:size
             },
-            fullscreen = true,
           }
         end,
         hls = { cursor = "CurSearch" },
@@ -419,7 +419,13 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           cwd_prompt = false,
           no_header = true, -- disable default header
-          winopts = { title = RUtils.fzflua.format_title("Files", "") },
+          winopts = {
+            title = RUtils.fzflua.format_title("Files", ""),
+            -- border = { "", "-", "", "", "", "", "", "" },
+            -- preview = {
+            --   border = { "", "-", "", "", "", "", "", "" },
+            -- },
+          },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
           fd_opts = fd_opts,
@@ -741,10 +747,12 @@ return {
             height = 0.90,
             row = 0.50,
             col = 0.50,
-            -- preview = {
-            --   vertical = "down:40%", -- up|down:size
-            --   horizontal = "up:60%", -- right|left:size
-            -- },
+            fullscreen = false,
+            preview = {
+              layout = "horizontal",
+              vertical = "down:50%", -- up|down:size
+              horizontal = "up:45%", -- right|left:size
+            },
           },
           actions = {
             ["ctrl-q"] = actions.toggle_ignore,
@@ -955,7 +963,6 @@ return {
             width = 0.90,
             col = 0.50,
             row = 0.50,
-            -- preview = { vertical = "up:50%", horizontal = "down:45%", },
           },
           -- actions inherit from 'actions.buffers' and merge
           actions = {
@@ -1003,7 +1010,6 @@ return {
             width = 0.90,
             col = 0.50,
             row = 0.50,
-            -- preview = { vertical = "up:55%", horizontal = "down:45%" },
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -1129,12 +1135,10 @@ return {
             winopts = {
               title = extend_title.title,
               fullscreen = false,
-              height = 0.85,
+              height = 0.90,
               width = 0.90,
               row = 0.50,
               col = 0.50,
-              border = { "", "", "", "", "", "━", "", "" },
-              preview = { border = { "", "━", "", "", "", "-", "", "" } },
             },
             fzf_opts = {
               ["--header"] = [[^x:filter  ^r:workspace-symbols]],

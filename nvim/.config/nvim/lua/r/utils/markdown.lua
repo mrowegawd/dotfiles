@@ -48,6 +48,18 @@ local function format_title_tag(data_tag)
   }
 end
 
+local function get_height_width_row_col_window()
+  local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+  local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+  local win_height = math.ceil(lines * 0.5)
+  local win_width = math.ceil(columns * 1)
+  local col = math.ceil((columns - win_width) * 1)
+  local row = math.ceil((lines - win_height) * 1 - 3)
+
+  return win_height, win_width, row, col
+end
+
 local function json_output_wrapper(json_str)
   local output
   local ok, decoded = pcall(vim.json.decode, json_str)
@@ -142,8 +154,14 @@ local function collect_all_tags_async(data, cb, is_for_tags)
   end)()
 end
 
-local function format_prompt_strings()
-  local title_fzf = "Obsidian > Search By Tag"
+local function format_prompt_strings(msg)
+  msg = msg or ""
+
+  local title_fzf = "Obsidian"
+  if #msg > 0 then
+    title_fzf = title_fzf .. " > " .. msg
+  end
+
   if #insert_tags > 0 then
     local tags = "[" .. table.concat(insert_tags, ", ") .. "]"
     title_fzf = string.format("%s > %s", title_fzf, tags)
@@ -151,7 +169,9 @@ local function format_prompt_strings()
   return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
 end
 
-local function picker(contents, actions)
+local function picker(contents, actions, opts)
+  opts = opts or {}
+
   actions = actions
     or {
       ["enter"] = function(selected, _)
@@ -424,8 +444,8 @@ local function picker(contents, actions)
       end,
     }
 
-  function Tagpreviewer:new(o, opts, fzf_win)
-    Tagpreviewer.super.new(self, o, opts, fzf_win)
+  function Tagpreviewer:new(o, optsc, fzf_win)
+    Tagpreviewer.super.new(self, o, optsc, fzf_win)
     setmetatable(self, Tagpreviewer)
     return self
   end
@@ -452,14 +472,33 @@ local function picker(contents, actions)
     return {}
   end
 
-  return fzf_lua.fzf_exec(contents, {
-    previewer = Tagpreviewer,
-    prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = format_prompt_strings() },
-    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
-    fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^o:filtertag]] },
-    actions = actions,
-  })
+  local win_height, win_width, row, col = get_height_width_row_col_window()
+  return fzf_lua.fzf_exec(
+    contents,
+    vim.tbl_deep_extend("force", {}, {
+      previewer = Tagpreviewer,
+      prompt = RUtils.fzflua.default_title_prompt(),
+      winopts = {
+        title = format_prompt_strings "Search By Tag",
+        width = win_width,
+        height = win_height,
+        row = row,
+        col = col,
+        backdrop = 100,
+        fullscreen = false,
+        -- border = { "", "-", "", "", "", "", "", "" },
+        preview = {
+          -- border = { "", "-", "", "", "", "", "", "" },
+          lazyout = "horizontal",
+          vertical = "up:50%", -- up|down:size
+          horizontal = "right:50%", -- right|left:size
+        },
+      },
+      -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
+      fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^o:filtertag]] },
+      actions = actions,
+    }, opts)
+  )
 end
 
 local function is_valid_json(str)
@@ -649,14 +688,15 @@ function M.find_global_titles()
     rg_glob = false,
     no_esc = true,
     -- file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
-    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     winopts = {
-      title = RUtils.fzflua.format_title("Global titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
-      preview = {
-        vertical = "down:55%", -- up|down:size
-        horizontal = "right:45%", -- right|left:size
-      },
+      title = format_prompt_strings "Jump Global Title",
+      fullscreen = false,
+      height = 0.90,
+      width = 0.90,
+      row = 0.50,
+      col = 0.50,
     },
   }
 end
@@ -735,14 +775,12 @@ function M.find_local_titles(item_paths)
       ["--nth"] = "1..",
     },
     winopts = {
-      -- fullscreen = true,
-      title = RUtils.fzflua.format_title("Local titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
-      width = 1,
+      title = format_prompt_strings "Jump Local Title",
+      fullscreen = false,
       height = 0.90,
-      -- preview = {
-      --   vertical = "down:55%", -- up|down:size
-      --   horizontal = "right:45%", -- right|left:size
-      -- },
+      width = 0.90,
+      row = 0.50,
+      col = 0.50,
     },
     actions = {
       ["enter"] = function(selected, _)
@@ -1007,12 +1045,18 @@ function M.find_backlinks()
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     fzf_opts = { ["--header"] = false }, -- do not display our custom header
     winopts = {
-      title = RUtils.fzflua.format_title("Find Backlinks: [[" .. stitle .. "]]", ""),
+      title = format_prompt_strings("Find Backlinks > [[" .. stitle .. "]]"),
+      fullscreen = false,
+      height = 0.90,
+      width = 0.90,
+      row = 0.50,
+      col = 0.50,
     },
   }
 end
 
 function M.insert_by_categories()
+  local win_height, win_width, row, col = get_height_width_row_col_window()
   collect_all_tags_async(tags, function(all_tags)
     vim.schedule(function()
       picker(all_tags, {
@@ -1020,6 +1064,16 @@ function M.insert_by_categories()
           local selection = selected[1]
           vim.api.nvim_put({ selection }, "c", false, true)
         end,
+      }, {
+        winopts = {
+          width = win_width,
+          height = win_height,
+          row = row,
+          col = col,
+          title = format_prompt_strings "Insert By Tag",
+          fullscreen = false,
+          preview = { hidden = true },
+        },
       })
     end)
   end)
@@ -1029,7 +1083,17 @@ function M.insert_local_titles()
   fzf_lua.lgrep_curbuf {
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
-      title = RUtils.fzflua.format_title("Note: title curbuf", ""),
+      title = format_prompt_strings "Insert By Local Title",
+      width = 0.90,
+      height = 0.90,
+      row = 0.50,
+      col = 0.50,
+      fullscreen = true,
+      preview = {
+        layout = "horizontal",
+        vertical = "down:50%",
+        horizontal = "up:45%",
+      },
     },
     rg_glob = false,
     no_esc = true,
@@ -1056,9 +1120,7 @@ end
 function M.insert_global_titles()
   fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = {
-      title = RUtils.fzflua.format_title("Note: title global", ""),
-    },
+    winopts = { title = format_prompt_strings "Insert By Global Title" },
     rg_glob = false,
     no_esc = true,
     search = is_markdown_file() and regex_title or regex_title_org,
