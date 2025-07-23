@@ -246,6 +246,21 @@ reset_base_alter({ "base46-solarized_dark" }, {
   winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.7,
 })
+reset_base_alter({ "base46-vscode_dark" }, {
+  cmpdocnormal_fg_alter = 0.1,
+  cursor_fg = "#dfdfe0",
+  cursorline_alter = 0.1,
+  dapstopped_bg_alter = 0.2,
+  fzflua_bg_cursorline_alter = -0.22,
+  linenr_fg_alter = 0.4,
+  nontext_fg_alter = 1.8,
+  pmenu_fg_alter = 0.1,
+  pmenusel_bg_alter = 0.6,
+  search_bg_alter = 0.8,
+  search_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 0.3,
+})
 reset_base_alter({ "base46-wombat" }, {
   cursor_fg = "#bbbbbb",
   cursorline_alter = 0.52,
@@ -761,6 +776,7 @@ local general_overrides = function()
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
     { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
+    { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
     {
       MyCodeUsage = {
         fg = { from = "Keyword", attr = "fg", alter = 0.1 },
@@ -2739,6 +2755,62 @@ local function colorscheme_overrides()
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.45 },
+        },
+      },
+
+      -- CREATED HIGHLIGHTS
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
+    },
+    ["base46-vscode_dark"] = {
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.8 },
+          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.38 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "bg", alter = 1 },
+          bg = H.darken(H.get("Error", "bg"), 0.3, H.get("Normal", "bg")),
+        },
+      },
+
+      -- STATUSLINE
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+
+      {
+        TabLine = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
 

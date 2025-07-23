@@ -43,6 +43,7 @@ return {
         "base46-rosepine",
         "base46-seoul256_dark",
         "base46-solarized_dark",
+        "base46-vscode_dark",
         "base46-wombat",
         "base46-zenburn",
       }
@@ -118,13 +119,11 @@ return {
       end
       return false
     end,
-    config = function()
-      require("vscode_modern").setup {
-        cursorline = true,
-        transparent_background = false,
-        nvim_tree_darker = true,
-      }
-    end,
+    opts = {
+      cursorline = true,
+      transparent_background = false,
+      nvim_tree_darker = true,
+    },
   },
   -- TOKYONIGHT
   {
