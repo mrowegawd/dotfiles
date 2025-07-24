@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- TECHBASE
+  {
+    "mcauley-penney/techbase.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local techbase_theme = { "techbase" }
+      if vim.tbl_contains(techbase_theme, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- KANSO.NVIM
   {
     "webhooked/kanso.nvim",
@@ -32,6 +45,7 @@ return {
         "base46-chocolate",
         "base46-doomchad",
         "base46-everforest",
+        "base46-gruvchad",
         "base46-horizon",
         "base46-jabuti",
         "base46-jellybeans",

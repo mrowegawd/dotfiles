@@ -379,6 +379,21 @@ return {
               },
             },
           },
+          ["base46-gruvchad"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.35 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+          },
           ["tokyonight-storm"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {

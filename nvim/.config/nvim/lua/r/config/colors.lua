@@ -143,6 +143,25 @@ reset_base_alter({ "base46-everforest" }, {
   winbarfilepath_fg_alter = 0.35,
   winseparator_alter = 0.18,
 })
+reset_base_alter({ "base46-gruvchad" }, {
+  cmpdocnormal_fg_alter = 0.1,
+  comment_fg_alter = 0.8,
+  cursor_fg = "#dfdfe0",
+  cursorline_alter = 0.1,
+  dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 0.8,
+  fzfheadertext_fg_alter = 0.4,
+  fzflua_bg_cursorline_alter = -0.25,
+  fzfluasel_fg_alter = -0.2,
+  linenr_fg_alter = 0.3,
+  nontext_fg_alter = 1.8,
+  pmenu_fg_alter = 0.1,
+  pmenusel_bg_alter = 0.6,
+  search_bg_alter = 0.8,
+  search_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.55,
+  winseparator_alter = 0.35,
+})
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.4,
@@ -228,11 +247,11 @@ reset_base_alter({ "base46-onenord" }, {
   fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.2,
   fzfluasel_fg_alter = -0.1,
-  linenr_fg_alter = 0.25,
+  linenr_fg_alter = 0.12,
   nontext_fg_alter = 1.2,
   pmenusel_bg_alter = 0.2,
   winbarfilepath_fg_alter = 0.35,
-  winseparator_alter = 0.15,
+  winseparator_alter = 0.17,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   cursor_fg = "#ffffff",
@@ -360,6 +379,24 @@ reset_base_alter({ "lackluster" }, {
   pmenu_fg_alter = 2,
   winbarfilepath_fg_alter = 0.02,
   winseparator_alter = 1.8,
+})
+reset_base_alter({ "techbase" }, {
+  cmpdocnormal_fg_alter = 0.1,
+  comment_fg_alter = 0.8,
+  cursor_fg = "#dfdfe0",
+  cursorline_alter = 0.1,
+  dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 1.4,
+  fzfheadertext_fg_alter = 0.2,
+  fzflua_bg_cursorline_alter = -0.22,
+  linenr_fg_alter = 0.5,
+  nontext_fg_alter = 1.8,
+  pmenu_fg_alter = 0.1,
+  pmenusel_bg_alter = 0.6,
+  search_bg_alter = 0.8,
+  search_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.72,
+  winseparator_alter = 0.7,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
@@ -935,7 +972,6 @@ local general_overrides = function()
     },
 
     { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
-    { CmpItemAbbrMatch = { fg = { from = "Error", attr = "fg", alter = 0.2 } } },
 
     -- ╭─────────╮
     -- │ CMPITEM │
@@ -1413,7 +1449,7 @@ local general_overrides = function()
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.4, H.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.2, H.get("Normal", "bg")) } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
@@ -2201,6 +2237,69 @@ local function colorscheme_overrides()
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 0.22 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- CREATED HIGHLIGHTS
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
+    },
+    ["base46-gruvchad"] = {
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "bg", alter = 0.6 },
+          bg = H.darken(H.get("Error", "bg"), 0.25, H.get("Normal", "bg")),
+        },
+      },
+      {
+        RenderMarkdownCodeInline = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")),
+        },
+      },
+      { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
+
+      -- STATUSLINE
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+
+      {
+        TabLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.33 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -3188,6 +3287,62 @@ local function colorscheme_overrides()
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
+    },
+    ["techbase"] = {
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.45 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "Error", attr = "fg", alter = 1 },
+          bg = H.darken(H.get("Error", "bg"), 0.3, H.get("Normal", "bg")),
+        },
+      },
+
+      -- STATUSLINE
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 1.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+
+      {
+        TabLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+        },
+      },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      -- CREATED HIGHLIGHTS
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-night"] = {
       -- GRUG-FAR

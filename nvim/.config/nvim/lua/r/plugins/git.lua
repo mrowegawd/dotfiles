@@ -292,15 +292,15 @@ return {
       -- debug_mode = true,
       attach_to_untracked = true,
       signs_staged = {
-        add = { text = "▌" }, --  "▎" "▌" "┆"
-        change = { text = "▌" },
+        add = { text = "+" }, --  "▎" "▌" "┆"
+        change = { text = "m" },
         delete = { text = "_" },
         topdelete = { text = "‾" },
         changedelete = { text = "~" },
       },
       signs = {
-        add = { text = "▌" },
-        change = { text = "▌" },
+        add = { text = "+" },
+        change = { text = "m" },
         delete = { text = "_" },
         topdelete = { text = "‾" },
         changedelete = { text = "~" },
