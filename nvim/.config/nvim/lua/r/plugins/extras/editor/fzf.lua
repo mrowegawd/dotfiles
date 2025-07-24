@@ -1095,11 +1095,12 @@ return {
             local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
             local win_height = math.ceil(lines * 0.65)
-            local win_width = math.ceil(columns * 2)
+            -- local win_width = math.ceil(columns * 2)
             return {
-              width = win_width,
+              width = 0.90,
               height = win_height,
               row = 0.50,
+              col = 0.50,
               fullscreen = false,
               border = { "", "━", "", "", "", "━", "", "" },
               preview = {

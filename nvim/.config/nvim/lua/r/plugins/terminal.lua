@@ -4,6 +4,9 @@ return {
   -- ERGOTERM
   {
     "waiting-for-dev/ergoterm.nvim",
+    keys = {
+      { "<Localleader>t", mode = { "n", "t", "v" } },
+    },
     opts = {
       picker = {
         picker = "fzf-lua",
