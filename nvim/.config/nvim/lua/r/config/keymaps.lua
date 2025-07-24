@@ -700,7 +700,7 @@ RUtils.map.nnoremap("<a-E>", function()
 
   local tmux = os.getenv "TMUX"
   local terminal = os.getenv "TERMINAL"
-  local pane_size = 30 -- 45 for normal window, tapi jika kecil 30 saja
+  local pane_size = 35 -- 45 for normal window, tapi jika kecil 30 saja
 
   if not tmux then
     if terminal ~= "wezterm" then

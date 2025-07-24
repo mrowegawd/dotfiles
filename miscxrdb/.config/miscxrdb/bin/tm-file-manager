@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FILE_MANAGER="$TERM_FILEMANAGER"
-SIZE_PANE=30 # 45 for normal window, tapi jika kecil 30 saja
+SIZE_PANE=35 # 45 for normal window, tapi jika kecil 30 saja
 
 [ -z "$TMUX" ] && exit
 

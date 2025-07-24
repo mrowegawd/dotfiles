@@ -149,7 +149,7 @@ reset_base_alter({ "base46-gruvchad" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 0.8,
+  floatborder_fg_alter = 0.9,
   fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.2,
@@ -556,13 +556,15 @@ local general_overrides = function()
     {
       Search = {
         fg = H.darken(dark_yellow, search_fg_alter, H.get("Normal", "bg")),
-        bg = H.darken(H.get("Keyword", "fg"), search_bg_alter, H.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), search_bg_alter, H.get("Boolean", "fg")),
+        bold = true,
       },
     },
     { -- SearchEdit dibuat untuk mendapatkan color 'red', untuk FzfLuaFzfMatch dan blink stuff
       SearchEdit = {
         fg = H.darken(dark_yellow, search_fg_alter, H.get("Normal", "bg")),
         bg = H.darken(dark_yellow, search_bg_alter, H.get("Normal", "bg")),
+        bold = true,
       },
     },
 
@@ -570,6 +572,7 @@ local general_overrides = function()
       CurSearch = {
         fg = H.darken(dark_yellow, cursearch_fg_alter, H.get("Normal", "bg")),
         bg = H.darken(dark_yellow, cursearch_bg_alter, H.get("Normal", "bg")),
+        bold = true,
       },
     },
     { IncSearch = { inherit = "CurSearch" } },
