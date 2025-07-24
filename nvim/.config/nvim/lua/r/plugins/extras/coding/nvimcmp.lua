@@ -63,20 +63,20 @@ return {
         end,
         window = {
           completion = cmp.config.window.bordered {
-            winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
             col_offset = -4, -- To fit `lspkind` icon
             side_padding = 1, -- One character margin
             scrolloff = 0,
             scrollbar = true,
             border = {
               { "󱐋", "CmpItemIconWarningMsg" },
-              { "─", "CmpItemFloatBorder" },
-              { "╮", "CmpItemFloatBorder" },
-              { "│", "CmpItemFloatBorder" },
-              { "╯", "CmpItemFloatBorder" },
-              { "─", "CmpItemFloatBorder" },
-              { "╰", "CmpItemFloatBorder" },
-              { "│", "CmpItemFloatBorder" },
+              { "─", "FloatBorder" },
+              { "╮", "FloatBorder" },
+              { "│", "FloatBorder" },
+              { "╯", "FloatBorder" },
+              { "─", "FloatBorder" },
+              { "╰", "FloatBorder" },
+              { "│", "FloatBorder" },
             },
           },
           documentation = cmp.config.window.bordered {

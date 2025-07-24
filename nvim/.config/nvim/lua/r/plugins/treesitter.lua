@@ -170,7 +170,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.58 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.45 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -208,7 +208,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.65 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.45 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -223,7 +223,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.55 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.35 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -238,7 +238,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.65 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.5 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -313,7 +313,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.45 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -328,7 +328,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.55 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.4 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -343,7 +343,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.6 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.52 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -374,7 +374,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.58 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.4 },
                 bg = { from = "TreesitterContext" },
               },
             },

@@ -35,7 +35,7 @@ return {
           cmdline_popupmenu = {
             position = { row = -2.1, col = "1%" },
             size = { width = "auto", height = "auto" },
-            win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "CmpItemFloatBorder" } },
+            win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
           },
           popupmenu = {
             border = {},

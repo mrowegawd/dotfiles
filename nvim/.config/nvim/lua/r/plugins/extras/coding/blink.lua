@@ -65,7 +65,7 @@ return {
         },
         menu = {
           border = RUtils.config.icons.border.line,
-          winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
+          winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
             -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },

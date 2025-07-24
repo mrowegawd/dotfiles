@@ -6,10 +6,6 @@ local dark_green = H.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
-local set_col_light = { fg_floatborder = 0.15, fg_branch = 4, fg_fzfheadertext = -0.05 }
-local set_col_normal = { fg_floatborder = 1.7, fg_branch = 2, fg_fzfheadertext = 0.08 }
-local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
-
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
   comment_fg_alter = 0.65,
@@ -19,6 +15,8 @@ local base_cl = {
   cursorline_alter = 0.04,
   cursorline_fg_alter = "Keyword",
   dapstopped_bg_alter = 0.25,
+  floatborder_fg_alter = 0.7,
+  fzfheadertext_fg_alter = 0.3,
   fzflua_bg_cursorline_alter = -0.22,
   fzfluasel_fg_alter = -0.1,
   linenr_fg_alter = 0.55,
@@ -56,6 +54,8 @@ local function reset_base_alter(themes, alter_base)
     cursorline_alter = "cursorline_alter",
     cursorline_fg_alter = "cursorline_fg_alter",
     dapstopped_bg_alter = "dapstopped_bg_alter",
+    floatborder_fg_alter = "floatborder_fg_alter",
+    fzfheadertext_fg_alter = "fzfheadertext_fg_alter",
     fzflua_bg_cursorline_alter = "fzflua_bg_cursorline_alter",
     fzfluasel_fg_alter = "fzfluasel_fg_alter",
     linenr_fg_alter = "linenr_fg_alter",
@@ -79,30 +79,41 @@ end
 reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.1,
-  linenr_fg_alter = 1.4,
+  floatborder_fg_alter = 3.8,
+  fzfheadertext_fg_alter = 0.08,
+  linenr_fg_alter = 1.2,
   nontext_fg_alter = 3.2,
-  winseparator_alter = 2,
+  normalfloat_fg_alter = 9,
+  winseparator_alter = 1.6,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
+  linenr_fg_alter = 0.35,
   normalfloat_bg_alter = 0.05,
-  winbarfilepath_fg_alter = 0.5,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 0.35,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 0.75,
-  winbarfilepath_fg_alter = 0.5,
-  winseparator_alter = 1.1,
+  floatborder_fg_alter = 1.5,
+  fzfheadertext_fg_alter = 0.15,
+  linenr_fg_alter = 0.5,
+  winbarfilepath_fg_alter = 0.55,
+  winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
   cursorline_alter = 0.1,
+  floatborder_fg_alter = 1.3,
+  fzfheadertext_fg_alter = 0.15,
+  linenr_fg_alter = 0.4,
   pmenusel_bg_alter = 0.4,
-  winbarfilepath_fg_alter = -0.08,
+  winbarfilepath_fg_alter = -0.14,
+  winseparator_alter = 0.35,
 })
 reset_base_alter({ "base46-doomchad" }, {
   comment_fg_alter = 0.5,
@@ -111,50 +122,61 @@ reset_base_alter({ "base46-doomchad" }, {
   cursorline_alter = 0.35,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 0.4,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.1,
+  linenr_fg_alter = 0.25,
   nontext_fg_alter = 1,
   search_bg_alter = 0.95,
-  winbarfilepath_fg_alter = -0.05,
-  winseparator_alter = 0.55,
+  winbarfilepath_fg_alter = -0.1,
+  winseparator_alter = 0.2,
 })
 reset_base_alter({ "base46-everforest" }, {
   comment_fg_alter = 0.62,
   cursor_fg = "#e69875",
   cursorline_alter = 0.35,
   cursorline_fg_alter = "WinSeparator",
-  linenr_fg_alter = 0.4,
+  floatborder_fg_alter = 0.65,
+  fzfheadertext_fg_alter = 0.15,
+  linenr_fg_alter = 0.2,
   nontext_fg_alter = 1,
   pmenusel_bg_alter = 0.4,
   winbarfilepath_fg_alter = 0.35,
-  winseparator_alter = 0.46,
+  winseparator_alter = 0.18,
 })
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.4,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 0.65,
+  floatborder_fg_alter = 1.8,
+  fzfheadertext_fg_alter = 0.05,
+  linenr_fg_alter = 0.5,
   nontext_fg_alter = 1.9,
   winbarfilepath_fg_alter = -0.05,
-  winseparator_alter = 0.95,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.1,
+  linenr_fg_alter = 0.3,
   nontext_fg_alter = 1.25,
   winbarfilepath_fg_alter = 0.4,
-  winseparator_alter = 0.55,
+  winseparator_alter = 0.25,
 })
 reset_base_alter({ "base46-jellybeans" }, {
-  cursorline_fg_alter = "WinSeparator",
   cursor_fg = "#ffa560",
   cursorline_alter = 0.65,
+  cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 2.2,
   fzflua_bg_cursorline_alter = -0.28,
-  linenr_fg_alter = 1.38,
+  linenr_fg_alter = 0.9,
   nontext_fg_alter = 2.5,
-  winbarfilepath_fg_alter = 0.5,
-  winseparator_alter = 1.7,
+  normalfloat_bg_alter = -0.05,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 1.5,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -162,161 +184,194 @@ reset_base_alter({ "base46-kanagawa" }, {
   cursorline_alter = 0.75,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 1.5,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.1,
-  linenr_fg_alter = 0.8,
   nontext_fg_alter = 1.8,
+  normalfloat_fg_alter = 1,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.45,
-  winbarfilepath_fg_alter = 0.62,
-  winseparator_alter = 0.8,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
+  linenr_fg_alter = 0.35,
+  floatborder_fg_alter = 1.3,
+  fzfheadertext_fg_alter = 0.15,
   fzfluasel_fg_alter = -0.1,
   pmenusel_bg_alter = 0.4,
   winbarfilepath_fg_alter = -0.05,
-  winseparator_alter = 0.8,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-melange" }, {
   comment_fg_alter = 0.6,
   cursor_fg = "#ece1d7",
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
+  floatborder_fg_alter = 1.2,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.08,
+  linenr_fg_alter = 0.3,
   winbarfilepath_fg_alter = 0.4,
-  winseparator_alter = 0.63,
+  winseparator_alter = 0.2,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
+  comment_fg_alter = 0.5,
   cursor_fg = "#3879C5",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.2,
   fzfluasel_fg_alter = -0.1,
-  linenr_fg_alter = 0.37,
+  linenr_fg_alter = 0.25,
   nontext_fg_alter = 1.2,
+  pmenusel_bg_alter = 0.2,
   winbarfilepath_fg_alter = 0.35,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.15,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   cursor_fg = "#ffffff",
   cursorline_alter = 0.45,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 3,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.3,
-  linenr_fg_alter = 1.35,
+  linenr_fg_alter = 0.85,
   nontext_fg_alter = 2.7,
   pmenusel_bg_alter = 0.5,
-  winbarfilepath_fg_alter = 0.43,
-  winseparator_alter = 1.85,
+  winbarfilepath_fg_alter = 0.65,
+  winseparator_alter = 1.4,
 })
 reset_base_alter({ "base46-rosepine" }, {
   cursor_fg = "#e0def4",
   cursorline_alter = 0.8,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 2.5,
+  fzfheadertext_fg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.28,
-  linenr_fg_alter = 1.17,
+  linenr_fg_alter = 0.75,
   nontext_fg_alter = 2.2,
-  winbarfilepath_fg_alter = 0.38,
-  winseparator_alter = 1.71,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 1.2,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   comment_fg_alter = 0.25,
   cursor_fg = "#d75f87",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 0.3,
+  fzfheadertext_fg_alter = 0.05,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluasel_fg_alter = -0.15,
-  linenr_fg_alter = 0.26,
+  fzfluasel_fg_alter = -0.18,
+  linenr_fg_alter = 0.1,
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.12,
   quickfixline_alter = 0.08,
   winbarfilepath_fg_alter = 0.25,
-  winseparator_alter = 0.28,
+  winseparator_alter = 0.15,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
   cursor_fg = "#708284",
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.15,
-  winbarfilepath_fg_alter = 0.35,
-  winseparator_alter = 0.7,
+  linenr_fg_alter = 0.2,
+  winbarfilepath_fg_alter = 0.55,
+  winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-vscode_dark" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 2,
+  fzfheadertext_fg_alter = 0.02,
   fzflua_bg_cursorline_alter = -0.22,
-  linenr_fg_alter = 0.4,
+  linenr_fg_alter = 0.5,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.6,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-wombat" }, {
   cursor_fg = "#bbbbbb",
   cursorline_alter = 0.52,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.15,
+  floatborder_fg_alter = 1.2,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.25,
-  linenr_fg_alter = 0.72,
+  linenr_fg_alter = 0.45,
+  normalfloat_bg_alter = 0.05,
   winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 0.9,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-zenburn" }, {
   comment_fg_alter = 0.5,
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.15,
+  floatborder_fg_alter = 0.6,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.15,
   fzfluasel_fg_alter = -0.15,
-  linenr_fg_alter = 0.3,
+  linenr_fg_alter = 0.15,
   nontext_fg_alter = 0.8,
   pmenusel_bg_alter = 0.25,
   quickfixline_alter = 0.09,
   winbarfilepath_fg_alter = 0.28,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.15,
 })
 reset_base_alter({ "kanso-ink" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#c5c9c7",
   cursorline_alter = 0.18,
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 1.45,
+  floatborder_fg_alter = 2,
+  fzfheadertext_fg_alter = 0.1,
+  linenr_fg_alter = 1,
   nontext_fg_alter = 2.8,
   normalfloat_bg_alter = 0.2,
   pmenusel_bg_alter = 0.4,
-  winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 1.85,
+  winbarfilepath_fg_alter = 0.8,
+  winseparator_alter = 1.4,
 })
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.25,
-  linenr_fg_alter = 1.8,
+  floatborder_fg_alter = 1.8,
+  fzfheadertext_fg_alter = 0.1,
+  linenr_fg_alter = 1.4,
   nontext_fg_alter = 3.5,
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
   pmenu_fg_alter = 2,
   winbarfilepath_fg_alter = 0.02,
-  winseparator_alter = 2.5,
+  winseparator_alter = 1.8,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.1,
+  floatborder_fg_alter = 2.5,
+  fzfheadertext_fg_alter = -0.05,
   fzfluasel_fg_alter = -0.1,
-  linenr_fg_alter = 1.1,
+  linenr_fg_alter = 0.7,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
-  winbarfilepath_fg_alter = 0.45,
-  winseparator_alter = 1.5,
+  winbarfilepath_fg_alter = 0.6,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.15,
@@ -324,27 +379,32 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
-  linenr_fg_alter = 0.55,
+  floatborder_fg_alter = 1.2,
+  fzfheadertext_fg_alter = 0.05,
+  fzfluasel_fg_alter = -0.1,
+  linenr_fg_alter = 0.4,
   nontext_fg_alter = 1.2,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.35,
   winbarfilepath_fg_alter = 0.35,
-  winseparator_alter = 0.65,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#fa1919",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = 0.1,
-  linenr_fg_alter = 0.7,
+  linenr_fg_alter = 0.5,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.6,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winbarfilepath_fg_alter = 0.55,
-  winseparator_alter = 0.9,
+  winseparator_alter = 0.3,
 })
 
 local general_overrides = function()
@@ -401,9 +461,30 @@ local general_overrides = function()
       },
     },
     {
+      NormalFloat = {
+        fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
+        bg = { from = "Normal", attr = "bg", alter = normalfloat_bg_alter },
+        reverse = false,
+      },
+    },
+    {
+      FloatBorder = {
+        fg = { from = "NormalFloat", attr = "bg", alter = floatborder_fg_alter },
+        bg = { from = "NormalFloat", attr = "bg" },
+      },
+    },
+    {
+      FloatTitle = {
+        fg = { from = "Normal", attr = "bg" },
+        bg = { from = "Keyword", attr = "fg", alter = -0.1 },
+        bold = true,
+      },
+    },
+
+    {
       Pmenu = {
         fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
-        bg = { from = "Normal", attr = "bg" },
+        bg = { from = "NormalFloat", attr = "bg" },
         reverse = false,
       },
     },
@@ -413,27 +494,6 @@ local general_overrides = function()
         bg = { from = "CursorLine", attr = "bg", alter = pmenusel_bg_alter },
         bold = true,
         reverse = false,
-      },
-    },
-    {
-      NormalFloat = {
-        fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = normalfloat_bg_alter },
-        reverse = false,
-      },
-    },
-    {
-      FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = col_opts.fg_floatborder },
-        bg = { from = "NormalFloat", attr = "bg" },
-      },
-    },
-
-    {
-      FloatTitle = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "Keyword", attr = "fg", alter = -0.1 },
-        bold = true,
       },
     },
 
@@ -696,7 +756,25 @@ local general_overrides = function()
     { GitSignsAdd = { bg = "NONE", fg = dark_green } },
     { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
-    { GitSignsChangeDelete = { bg = "NONE", fg = dark_red } },
+
+    {
+      GitSignsAddInline = {
+        fg = { from = "diffAdded", attr = "bg", alter = 3 },
+        bg = { from = "diffAdded", attr = "bg", alter = 1 },
+      },
+    },
+    {
+      GitSignsChangeDelete = {
+        fg = { from = "diffChanged", attr = "bg", alter = 3 },
+        bg = { from = "diffChanged", attr = "bg", alter = 1 },
+      },
+    },
+    {
+      GitSignsDeleteInline = {
+        fg = { from = "diffDelete", attr = "bg", alter = 3 },
+        bg = { from = "diffDelete", attr = "bg", alter = 1 },
+      },
+    },
 
     { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
     { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
@@ -863,14 +941,7 @@ local general_overrides = function()
     -- │ CMPITEM │
     -- ╰─────────╯
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
-    {
-      CmpItemFloatBorder = {
-        fg = { from = "FloatBorder", attr = "fg" },
-        bg = { from = "Pmenu", attr = "bg" },
-      },
-    },
-
-    { PmenuThumb = { bg = { from = "CmpItemFloatBorder", attr = "fg" } } },
+    { PmenuThumb = { bg = { from = "FloatBorder", attr = "fg" } } },
 
     -- ╭────────╮
     -- │ CMPDOC │
@@ -883,7 +954,7 @@ local general_overrides = function()
     },
     {
       CmpDocFloatBorder = {
-        fg = { from = "CmpItemFloatBorder", attr = "fg" },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -1256,7 +1327,7 @@ local general_overrides = function()
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     { FzfLuaBorder = { fg = { from = "FloatBorder", attr = "fg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = col_opts.fg_fzfheadertext } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaBorder", attr = "fg", alter = fzfheadertext_fg_alter } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
     {
@@ -1342,7 +1413,7 @@ local general_overrides = function()
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.6, H.get("Normal", "bg")) } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
@@ -1847,21 +1918,21 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.51 }, bg = "NONE" } },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.12 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
       {
         ["@markup.quote.markdown"] = {
@@ -1895,15 +1966,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.16 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.85 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.16 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -1944,15 +2015,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.85 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -1993,15 +2064,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "TabLine", attr = "bg", alter = 0.6 },
-          bg = { from = "TabLine", attr = "bg", alter = -0.12 },
+          fg = { from = "TabLine", attr = "bg", alter = 0.3 },
+          bg = { from = "TabLine", attr = "bg", alter = -0.19 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2064,15 +2135,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.15 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.13 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.85 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2082,15 +2153,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-everforest"] = {
-      {
-        Folded = {
-          inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.1 },
-          bg = { from = "Folded", attr = "bg", alter = -0.25 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2115,7 +2177,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.25 },
+          fg = { from = "Normal", attr = "bg", alter = 0.85 },
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
           reverse = false,
         },
@@ -2130,10 +2192,18 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.35 },
-          bg = { from = "Normal", attr = "bg", alter = 0.32 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.23 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.22 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2146,7 +2216,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.75 },
+          fg = { from = "Normal", attr = "bg", alter = 1.7 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           reverse = false,
         },
@@ -2161,15 +2231,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2210,15 +2280,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.65 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.03 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.17 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2249,8 +2319,8 @@ local function colorscheme_overrides()
       },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
-          bg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.8 },
+          bg = { from = "Normal", attr = "bg", alter = 0.65 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
@@ -2282,13 +2352,13 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.13 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.95 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
@@ -2333,7 +2403,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.8 },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.51 },
           reverse = false,
         },
@@ -2348,15 +2418,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2380,7 +2450,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
@@ -2408,15 +2478,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.08 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2442,7 +2512,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.4 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
@@ -2457,15 +2527,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.01 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2475,15 +2545,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-onenord"] = {
-      {
-        Folded = {
-          inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.2 },
-          bg = { from = "Folded", attr = "bg", alter = -0.27 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2509,7 +2570,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.25 },
+          fg = { from = "Normal", attr = "bg", alter = 0.9 },
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
           reverse = false,
         },
@@ -2520,14 +2581,22 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = 0.01 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.18 }, bg = "NONE" } },
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.04 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.11 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2574,15 +2643,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2594,8 +2663,8 @@ local function colorscheme_overrides()
     ["base46-rosepine"] = {
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 2.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.67 },
+          fg = { from = "Normal", attr = "bg", alter = 1.48 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2610,7 +2679,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.58 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.55 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
@@ -2640,7 +2709,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.45 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2650,15 +2719,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-seoul256_dark"] = {
-      {
-        Folded = {
-          inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.25 },
-          bg = { from = "Folded", attr = "bg", alter = -0.3 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2684,7 +2744,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
           bg = { from = "Normal", attr = "bg", alter = 0.1 },
           reverse = false,
         },
@@ -2699,24 +2759,24 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.6 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.18 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.08 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.08 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-solarized_dark"] = {
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.32 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2738,7 +2798,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.25 },
           reverse = false,
         },
@@ -2753,24 +2813,24 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.45 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.38 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.16 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-vscode_dark"] = {
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.8 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2794,7 +2854,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           reverse = false,
         },
@@ -2809,10 +2869,18 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.16 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
@@ -2837,15 +2905,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.24 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.43 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2866,15 +2934,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-zenburn"] = {
-      {
-        Folded = {
-          inherit = "Folded",
-          fg = { from = "Folded", attr = "fg", alter = -0.25 },
-          bg = { from = "Folded", attr = "bg", alter = -0.32 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2916,10 +2975,18 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.65 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
         },
       },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.08 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.17 } } },
@@ -2964,15 +3031,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.6 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.45 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -3106,14 +3173,14 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.45 }, bg = "NONE" } },
@@ -3150,15 +3217,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.35 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
@@ -3329,7 +3396,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.7 },
+          fg = { from = "Normal", attr = "bg", alter = 1.4 },
           bg = { from = "Normal", attr = "bg", alter = 0.4 },
           reverse = false,
         },
@@ -3352,15 +3419,15 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.23 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.22 }, bg = "NONE" } },

@@ -929,7 +929,7 @@ function M.change_colors()
   local KeywordNC_fg = H.get("Keyword", "fg") -- 17
 
   local tmux_bg = H.get("Normal", "bg")
-  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.07)
+  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.02)
 
   local statusline_fg = H.tint(H.get("WinSeparator", "fg"), 0.7)
 
