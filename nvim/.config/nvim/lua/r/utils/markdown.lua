@@ -154,6 +154,15 @@ local function collect_all_tags_async(data, cb, is_for_tags)
   end)()
 end
 
+local function check_tbl_element(tbl, element)
+  for _, x in pairs(tbl) do
+    if x["text"] == element then
+      return true
+    end
+  end
+  return false
+end
+
 local function format_prompt_strings(msg)
   msg = msg or ""
 
@@ -227,16 +236,6 @@ local function picker(contents, actions, opts)
 
       ["ctrl-f"] = function(selected, _)
         local path_items = {}
-
-        local check_tbl_element = function(tbl, _path)
-          for _, x in pairs(tbl) do
-            if x == _path then
-              return true
-            end
-          end
-          return false
-        end
-
         if #selected > 1 then
           for _, sel in pairs(selected) do
             local seltitle = vim.split(sel, "|")
@@ -295,15 +294,6 @@ local function picker(contents, actions, opts)
       ["ctrl-g"] = {
         prefix = "select-all",
         fn = function(selected, _)
-          local check_tbl_element = function(tbl, path)
-            for _, x in pairs(tbl) do
-              if x.title == path then
-                return true
-              end
-            end
-            return false
-          end
-
           local newtbl = {}
           for _, sel in pairs(selected) do
             local seltitle = vim.split(sel, "|")
@@ -336,15 +326,6 @@ local function picker(contents, actions, opts)
       },
 
       ["alt-q"] = function(selected, _)
-        local function check_tbl_element(tbl, element)
-          for _, x in pairs(tbl) do
-            if x["text"] == element then
-              return true
-            end
-          end
-          return false
-        end
-
         local items = {}
         if #selected > 1 then
           for _, sel in pairs(selected) do
@@ -390,16 +371,39 @@ local function picker(contents, actions, opts)
         vim.cmd(RUtils.cmd.quickfix.copen)
       end,
 
-      ["alt-l"] = function(selected, _)
-        local function check_tbl_element(tbl, element)
-          for _, x in pairs(tbl) do
-            if x["text"] == element then
-              return true
+      ["alt-Q"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, sel in pairs(selected) do
+            local sel_str = vim.split(sel, "|")[2]
+
+            for _, tbl_tags in pairs(data_tags_table) do
+              if tbl_tags.title == sel_str then
+                if not check_tbl_element(items, tbl_tags.title) then
+                  items[#items + 1] = {
+                    filename = tbl_tags.path,
+                    lnum = tbl_tags.line_number,
+                    col = 1,
+                    text = tbl_tags.title,
+                  }
+                end
+              end
             end
           end
-          return false
-        end
 
+          local what = {
+            idx = "$",
+            items = items,
+            title = "Tags Note",
+          }
+
+          vim.fn.setqflist({}, "r", what)
+          vim.cmd(RUtils.cmd.quickfix.copen)
+        end,
+      },
+
+      ["alt-l"] = function(selected, _)
         local items = {}
         if #selected > 1 then
           for _, sel in pairs(selected) do
@@ -442,6 +446,36 @@ local function picker(contents, actions, opts)
         })
         vim.cmd(RUtils.cmd.quickfix.lopen)
       end,
+
+      ["alt-L"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, sel in pairs(selected) do
+            local sel_str = vim.split(sel, "|")[2]
+
+            for _, tbl_tags in pairs(data_tags_table) do
+              if tbl_tags.title == sel_str then
+                if not check_tbl_element(items, tbl_tags.title) then
+                  items[#items + 1] = {
+                    filename = tbl_tags.path,
+                    lnum = tbl_tags.line_number,
+                    col = 1,
+                    text = tbl_tags.title,
+                  }
+                end
+              end
+            end
+          end
+
+          vim.fn.setloclist(0, {}, " ", {
+            nr = "$",
+            items = items,
+            title = "Tags Note",
+          })
+          vim.cmd(RUtils.cmd.quickfix.lopen)
+        end,
+      },
     }
 
   function Tagpreviewer:new(o, optsc, fzf_win)

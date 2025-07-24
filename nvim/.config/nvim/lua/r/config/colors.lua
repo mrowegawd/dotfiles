@@ -1413,7 +1413,7 @@ local general_overrides = function()
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.6, H.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = H.darken(dark_yellow, 0.4, H.get("Normal", "bg")) } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
