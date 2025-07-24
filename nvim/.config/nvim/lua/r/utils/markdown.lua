@@ -607,23 +607,25 @@ local function list_tags_async(all_tags, is_set)
                               end
                             end
 
-                            data_tags.title = title_s
-                            data_tags_table[#data_tags_table + 1] = data_tags
-                            -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
+                            if title_s then
+                              data_tags.title = title_s
+                              data_tags_table[#data_tags_table + 1] = data_tags
+                              -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
 
-                            -- local fzf_str =
-                            --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+                              -- local fzf_str =
+                              --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
 
-                            local fzf_str = string.format(
-                              "%-30s %-4s |%s",
-                              data_tags.tag,
-                              "[" .. data_tags.line_number .. "]",
-                              data_tags.title
-                            )
+                              local fzf_str = string.format(
+                                "%-30s %-4s |%s",
+                                data_tags.tag,
+                                "[" .. data_tags.line_number .. "]",
+                                data_tags.title
+                              )
 
-                            cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
-                              coroutine.resume(co, 0)
-                            end)
+                              cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+                                coroutine.resume(co, 0)
+                              end)
+                            end
                           end
                         end
                       end

@@ -404,7 +404,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.5 },
                 bg = { from = "TreesitterContext" },
               },
             },
