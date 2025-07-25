@@ -149,12 +149,12 @@ reset_base_alter({ "base46-gruvchad" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 0.9,
+  floatborder_fg_alter = 0.95,
   fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.2,
   linenr_fg_alter = 0.3,
-  nontext_fg_alter = 1.8,
+  nontext_fg_alter = 1.25,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.6,
   search_bg_alter = 0.8,
@@ -610,7 +610,7 @@ local general_overrides = function()
     { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
     {
       QuickFixLine = {
-        fg = "NONE",
+        fg = { from = "Directory", attr = "fg", alter = 0.3 },
         bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
         underline = false,
         reverse = false,
@@ -936,7 +936,13 @@ local general_overrides = function()
       },
     },
 
-    { LspSignatureActiveParameter = { fg = "black", bg = "yellow", bold = true } },
+    {
+      LspSignatureActiveParameter = {
+        fg = H.darken(dark_yellow, 0.8, H.get("Normal", "fg")),
+        bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
+        bold = true,
+      },
+    },
 
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
     {

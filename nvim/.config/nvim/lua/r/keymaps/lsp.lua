@@ -204,8 +204,14 @@ function M.get()
         end
 
         local defaultCmds = vim.tbl_deep_extend("force", {
-          show_info_formatlspinfo = function()
+          ["Lazy - show format info"] = function()
             vim.cmd [[LazyFormatInfo]]
+          end,
+          ["LSP - show info log"] = function()
+            vim.cmd [[LspInfo]]
+          end,
+          ["Toggle -LSP lines"] = function()
+            require("lsp_lines").toggle()
           end,
         }, unpack(newCmds) or {})
 

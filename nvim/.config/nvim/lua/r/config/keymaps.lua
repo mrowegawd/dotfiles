@@ -490,95 +490,24 @@ RUtils.map.vnoremap("<a-Y>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.nnoremap("<Leader>of", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
-    oprhans_check_plugins_last_update = function()
-      vim.cmd [[Orphans]]
-    end,
-    loadqf = function()
+    ["Qf - Load qf/lf list"] = function()
       cmd "LoadQf"
     end,
-    saveqf = function()
+    ["Qf - Save qf/lf list"] = function()
       cmd "SaveQf"
     end,
-    open_url_tailwindcss = function()
+    ["Browser - open tailwindcss"] = function()
       cmd "!open https://tailwindcss.com"
-    end,
-    lazy = function()
-      cmd "Lazy"
-    end,
-    sourcegraph_sg = function()
-      cmd "SourcegraphSearch"
-    end,
-    cheat = function()
-      cmd "Cheat"
-    end,
-    cheatlist = function()
-      cmd "CheatList"
     end,
     kulala = function()
       require("kulala").run()
     end,
-    search_devdocs = function()
+    ["Browser - search devdocs!"] = function()
       local query = vim.fn.input "Search DevDocs: "
       if #query > 0 then
         local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
         os.execute(encodedURL)
       end
-    end,
-    toggle_undotree = function()
-      cmd "UndotreeToggle"
-    end,
-    refresh_symbol_usage = function()
-      require("symbol-usage").refresh()
-    end,
-    resume_telescope = function()
-      vim.cmd [[Telescope resume]]
-    end,
-    resume_fzf = function()
-      vim.cmd [[FzfLua resume]]
-    end,
-    diagnostic_lsp_lines_toggle = function()
-      require("lsp_lines").toggle()
-    end,
-    session_load = function()
-      if RUtils.has "persistence.nvim" then
-        return require("persistence").load()
-      end
-      if RUtils.has "resession.nvim" then
-        return require("resession").load()
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info "no session to load. abort it"
-    end,
-    session_load_cwd = function()
-      if RUtils.has "resession.nvim" then
-        return require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info "no session cwd to load. abort it"
-    end,
-    session_delete = function()
-      if RUtils.has "resession.nvim" then
-        return require("resession").delete()
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info "no plugin session actived. abort it"
-    end,
-    session_save = function()
-      if RUtils.has "persistence.nvim" then
-        return require("persistence").save()
-      end
-      if RUtils.has "resession.nvim" then
-        return require("resession").save()
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info "no session to save or no plugin session actived. abort it"
-    end,
-    session_save_cwd = function()
-      if RUtils.has "resession.nvim" then
-        return require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info "no session cwd to save or no plugin session actived. abort it"
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
 end, { desc = "Open: list commands of misc" })
@@ -586,25 +515,25 @@ RUtils.map.nnoremap("<Leader>gof", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds(
     vim.tbl_deep_extend("force", {
-      diffview_open = function()
+      ["Diffview - DiffviewOpen"] = function()
         vim.cmd [[DiffviewOpen]]
       end,
-      diffview_filehistory_repo = function()
+      ["Diffview - DiffviewFileHistory Repo"] = function()
         vim.cmd [[DiffviewFileHistory]]
       end,
-      diffview_filehistory_curbuf = function()
+      ["Diffview - DiffviewFileHistory Curbuf"] = function()
         vim.cmd [[DiffviewFileHistory --follow %]]
       end,
-      diffview_filehistory_line = function()
+      ["Diffview - DiffviewFileHistory Line"] = function()
         vim.cmd [[.DiffviewFileHistory --follow]]
       end,
-      diffview_windo_this = function()
+      ["Diff - windo this"] = function()
         vim.cmd [[windo diffthis]]
       end,
-      git_pr_openpr = function()
+      ["GH - Open PR"] = function()
         vim.cmd [[GHOpenPR]]
       end,
-      git_pr_openissue = function()
+      ["GH - Open Issue"] = function()
         vim.cmd [[GHOpenIssue]]
       end,
       git_worktree_create = function()
@@ -613,28 +542,28 @@ RUtils.map.nnoremap("<Leader>gof", function()
       git_worktree_manage = function()
         vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
       end,
-      git_conflict_refresh = function()
+      ["GitConflict - Refresh"] = function()
         vim.cmd [[GitConflictRefresh]]
       end,
-      git_conflict_collect_qf = function()
+      ["GitConflict - Send list to qf"] = function()
         vim.cmd [[GitConflictListQf]]
       end,
-      git_conflict_pilih_current_ours = function()
+      ["GitConflict - choosing ours (current)"] = function()
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing ours (current)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseOurs]]
       end,
-      git_conflict_pilih_theirs = function()
+      ["GitConflict - choosing theirs (incoming)"] = function()
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseTheirs]]
       end,
-      git_conflict_pilih_none = function()
+      ["GitConflict - choosing none of them (deleted)"] = function()
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
         vim.cmd [[GitConflictChooseNone]]
       end,
-      git_blame = function()
+      ["Gitsigns - show blame"] = function()
         local gs = package.loaded.gitsigns
         gs.blame()
       end,
