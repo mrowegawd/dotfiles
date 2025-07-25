@@ -50,6 +50,17 @@ local set_conditions = {
     local gitdir = vim.fn.finddir(".git", filepath .. ";")
     return gitdir and #gitdir > 0 and #gitdir < #filepath
   end,
+  is_dap_ft = function()
+    local dap_ft = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }
+    return vim.tbl_contains(dap_ft, vim.bo.filetype)
+  end,
+  is_path_git_relative = function()
+    local path = get_vars.path()
+    return path:match "fugitive:/" or path:match "diffview:/"
+  end,
+  is_readonly = function()
+    return not vim.bo.modifiable or vim.bo.readonly
+  end,
 }
 
 local stl_lsp_clients = function()
@@ -161,7 +172,11 @@ local __colors = function()
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
-    mode_insert_bg = H.get("KeywordMatch", "fg"),
+    mode_readonly_fg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.2, H.get("Normal", "bg")), 0.8),
+    mode_readonly_bg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.25, H.get("Normal", "bg")), -0.25),
+
+    mode_git_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.3, H.get("Normal", "bg")), 0.8),
+    mode_git_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.25, H.get("Normal", "bg")), 0.05),
 
     mode_term_bg = H.get("Boolean", "fg"),
     mode_visual_bg = H.get("Visual", "bg"),
@@ -1341,6 +1356,12 @@ M.WinbarFilePath = {
   init = function(self)
     self.bufname = get_vars.bufname()
     self.filename = get_vars.filename(self.bufname)
+    self.is_fugitive = function()
+      return set_conditions.is_path_git_relative()
+    end
+    self.is_readonly = function()
+      return set_conditions.is_readonly()
+    end
   end,
   condition = function()
     return vim.bo[0].filetype ~= "qf"
@@ -1409,27 +1430,50 @@ M.WinbarFilePath = {
       -- return statusline path untuk non active window
       return self.filename
     end,
-    hl = { fg = colors.winbar_fg, bold = true },
+    hl = function(self)
+      local fg = colors.winbar_fg
+      if self.is_fugitive() then
+        fg = tostring(colors.mode_git_fg)
+      end
+
+      if self.is_readonly() then
+        fg = tostring(colors.mode_readonly_fg)
+      end
+      return { fg = fg, bold = true }
+    end,
   },
   {
     provider = function(self)
       return RUtils.file.basename(self.filename) .. " "
     end,
-    hl = function()
+    hl = function(self)
       local fg = colors.winbar_fg
       local bg = colors.normal_bg
       if Conditions.is_active() then
         fg = colors.winbar_keyword
       end
 
-      if
-        vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype)
-      then
+      if set_conditions.is_dap_ft() then
         fg = colors.winbar_dap_fg
+        bg = colors.winbar_dap_bg
+
         if Conditions.is_active() then
           fg = colors.winbar_keyword
         end
-        bg = colors.winbar_dap_bg
+      end
+
+      if self.is_fugitive() then
+        bg = tostring(colors.mode_git_bg)
+        if not Conditions.is_active() then
+          fg = tostring(colors.mode_git_fg)
+        end
+      end
+
+      if self.is_readonly() then
+        bg = tostring(colors.mode_readonly_bg)
+        if not Conditions.is_active() then
+          fg = tostring(colors.mode_readonly_fg)
+        end
       end
       return { fg = fg, bg = bg, bold = true, italic = true }
     end,
@@ -1445,10 +1489,23 @@ M.status_winbar_active_left = {
   M.Gap,
 
   hl = function()
-    if vim.tbl_contains({ "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }, vim.bo.filetype) then
-      return { fg = colors.winbar_fg, bg = colors.winbar_dap_bg, bold = true }
+    local fg = colors.statusline_fg
+    local bg = colors.normal_bg
+
+    if set_conditions.is_dap_ft() then
+      fg = colors.winbar_fg
+      bg = colors.winbar_dap_bg
     end
-    return { fg = colors.statusline_fg, bg = colors.normal_bg }
+
+    if set_conditions.is_path_git_relative() then
+      bg = colors.mode_git_bg
+    end
+
+    if set_conditions.is_readonly() then
+      bg = colors.mode_readonly_bg
+    end
+
+    return { fg = fg, bg = bg }
   end,
 }
 
