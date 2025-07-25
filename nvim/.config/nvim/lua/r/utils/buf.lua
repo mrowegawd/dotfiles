@@ -67,7 +67,6 @@ local function toggle_diffview(cmd)
 end
 
 function M.magic_quit()
-  local notif_msg = "Cannot close the only window"
   local buf_fts = {
     ["fugitive"] = "bd",
     ["Trouble"] = "bd",
@@ -118,89 +117,42 @@ function M.magic_quit()
     end,
   }
 
-  if buf_fts[vim.bo[0].filetype] then
-    local is_closed = false
-    local win_count = RUtils.cmd.get_total_wins()
-    if #win_count > 1 then
-      is_closed = true
-    end
-
-    if vim.bo.filetype == "qf" then
-      is_closed = true
-    end
-
-    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-    if not is_qf_opened.found then
-      is_closed = true
-    end
-
-    if is_closed and type(buf_fts[vim.bo[0].filetype]) == "function" then
+  local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
+  local buf_ft = buf_fts[vim.bo[0].filetype]
+  if buf_ft then
+    if type(buf_ft) == "function" then
       local is_ok_cmd, call_cmd = buf_fts[vim.bo[0].filetype]()
       if is_ok_cmd and call_cmd then
-        call_cmd()
-        return
+        return call_cmd()
       end
-
-      win_count = RUtils.cmd.get_total_wins()
-      if #win_count == 1 then
-        M.smart_quit()
-        return
-      end
-
-      if vim.bo.filetype == "git" then
-        local filepath = vim.fn.expand "%:p:h"
-        if filepath:match "fugitive" then
-          M.smart_quit()
-          return
-        end
-      end
-
-      is_closed = false
     end
-
-    if is_closed then
+    if type(buf_ft) == "string" then
       return vim.cmd(buf_fts[vim.bo[0].filetype])
     end
+  end
 
-    return RUtils.info(notif_msg, { title = "Smart Quit" })
-  else
-    if vim.bo.buftype == "terminal" and vim.bo.filetype == "" then
-      if tonumber(require("sniprun.display").term.buffer) > 0 then
-        vim.cmd "SnipClose"
-        return
-      end
-    end
-
-    local win_count = RUtils.cmd.get_total_wins()
-    if #win_count > 1 then
-      return M.smart_quit()
-    end
-
-    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-    if not is_qf_opened.found then
-      return M.smart_quit()
-    end
-
-    if vim.bo.filetype == "qf" then
-      return M.smart_quit()
-    end
-
-    local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
-    if bufname and bufname:match "diffview://" then
-      toggle_diffview "DiffviewClose"
+  local filepath = vim.fn.fnamemodify(bufname, ":.")
+  if filepath then
+    if bufname:match "diffview://" then
+      RUtils.warn("❌ Switch to the Diffview window to quit or close", { title = "Magic Quit" })
       return
     end
-
-    -- if bufname and bufname:match "gitsigns://" then
-    --   return vim.cmd "close"
-    -- end
-
-    if bufname and bufname:match "gitsigns://" then
+    if filepath:match "gitsigns:/" then
       return vim.cmd "close"
     end
 
-    return RUtils.info(notif_msg, { title = "Smart Quit" })
+    if filepath:match "fugitive:/" then
+      return vim.cmd "close"
+    end
   end
+
+  if vim.bo.buftype == "terminal" and vim.bo.filetype == "" then
+    if tonumber(require("sniprun.display").term.buffer) > 0 then
+      return vim.cmd "SnipClose"
+    end
+  end
+
+  return M.smart_quit()
 end
 
 ---@param buf number?
