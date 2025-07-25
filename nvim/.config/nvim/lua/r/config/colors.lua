@@ -2934,6 +2934,9 @@ local function colorscheme_overrides()
         },
       },
 
+      -- WHICH KEY
+      { WhichKeyDesc = { fg = { from = "Boolean", attr = "fg", alter = -0.2 } } },
+
       -- STATUSLINE
       {
         StatusLine = {

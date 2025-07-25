@@ -435,6 +435,7 @@ return {
         "<Leader>gN",
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
+        mode = { "n", "v" },
       },
       {
         "<Leader>gd",
@@ -603,17 +604,17 @@ return {
     event = "LazyFile",
     keys = {
       {
-        "<Leader>god",
-        "<CMD>DiffviewOpen<CR>",
-        desc = "Open: diff view git [diffview]",
-      },
-      {
         "<Leader>goD",
-        "<CMD>DiffviewFileHistory<CR>",
-        desc = "Open: diff view file history git [diffview]",
+        "<CMD>DiffviewOpen<CR>",
+        desc = "Open: DiffviewOpen [diffview]",
       },
       {
-        "<Leader>gv",
+        "<Leader>god",
+        "<CMD>DiffviewFileHistory<CR>",
+        desc = "Open: DiffviewFileHistory repo [diffview]",
+      },
+      {
+        "<Leader>gi",
         function()
           local current_line = vim.fn.line "."
           local file = vim.fn.expand "%"
@@ -621,10 +622,10 @@ return {
           local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
           vim.cmd(str_cmds)
         end,
-        desc = "Git: line hash history [diffview]",
+        desc = "Git: DiffviewFileHistory line [diffview]",
       },
       {
-        "<Leader>gv",
+        "<Leader>gi",
         function()
           local function exit_visual_mode()
             -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
@@ -658,7 +659,7 @@ return {
           vim.cmd(str_cmds)
         end,
         mode = "v",
-        desc = "Git: line hash history (visual) [diffview]",
+        desc = "Git: DiffviewFileHistory line (visual) [diffview]",
       },
     },
     opts = function()
@@ -861,6 +862,7 @@ return {
           vim.cmd "Neogit"
         end,
         desc = "Git: open neogit [neogit]",
+        mode = { "n", "v" },
       },
     },
     opts = function()

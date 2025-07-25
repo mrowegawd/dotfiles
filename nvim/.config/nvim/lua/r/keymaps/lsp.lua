@@ -55,7 +55,7 @@ function M.get()
       "<a-q>",
       function()
         if RUtils.has "snacks.nvim" then
-          Snacks.words.jump(-vim.v.count1)
+          Snacks.words.jump(vim.v.count1)
         end
       end,
       has = "documentHighlight",
@@ -68,7 +68,7 @@ function M.get()
       "<a-Q>",
       function()
         if RUtils.has "snacks.nvim" then
-          Snacks.words.jump(vim.v.count1)
+          Snacks.words.jump(-vim.v.count1)
         end
       end,
       has = "documentHighlight",

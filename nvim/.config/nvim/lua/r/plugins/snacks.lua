@@ -82,7 +82,7 @@ return {
       },
       image = {
         enabled = true,
-        doc = { inline = false, float = true, max_width = 60, max_height = 30 },
+        doc = { inline = false, float = true, max_width = 80, max_height = 60 },
       },
       dashboard = {
         pane_gap = 5, -- empty columns between vertical panes

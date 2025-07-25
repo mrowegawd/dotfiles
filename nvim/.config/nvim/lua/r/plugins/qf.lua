@@ -16,6 +16,7 @@ return {
       { "<Leader>fn" },
       { "<Leader>fN" },
       { "<Leader>fp" },
+      { "<Leader>qc" },
       { "mf" },
       { "<Leader>wn" },
       { "<Leader>wp" },
@@ -139,7 +140,7 @@ return {
           add_global = "<Leader>fn",
           add_message = "<Leader>fN",
 
-          add_link_capture = "mc",
+          add_link_capture = "<leader>qc",
           goto_link_capture = "g<cr>",
         },
         marks = {

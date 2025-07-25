@@ -116,7 +116,10 @@ function M.grep_title(is_live_grep)
       rg_glob = false,
       rg_opts = rg_opts,
       winopts = {
-        title = RUtils.fzflua.format_title("Grep Orgmode", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)),
+        title = RUtils.fzflua.format_title(
+          "Orgmode > Grep",
+          RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)
+        ),
       },
     }
   end
@@ -129,7 +132,7 @@ function M.grep_title(is_live_grep)
     winopts = {
       fullscreen = false,
       title = RUtils.fzflua.format_title(
-        "Grep Title Orgmode",
+        "Orgmode > Jump Global Title",
         RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)
       ),
     },
@@ -153,46 +156,39 @@ function M.open_agenda_file_lists()
       ["--header"] = [[^x:deleteCleanUp]],
     },
     actions = {
-
       ["default"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         for _, x in pairs(org_backup) do
           if sel == x.basename_file then
             if RUtils.file.exists(x.full_path) then
               return vim.cmd("edit " .. x.full_path)
-            else
-              return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
             end
+            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
           end
         end
       end,
-
       ["ctrl-v"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         for _, x in pairs(org_backup) do
           if sel == x.basename_file then
             if RUtils.file.exists(x.full_path) then
               return vim.cmd("vsplit " .. x.full_path)
-            else
-              return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
             end
+            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
           end
         end
       end,
-
       ["ctrl-s"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         for _, x in pairs(org_backup) do
           if sel == x.basename_file then
             if RUtils.file.exists(x.full_path) then
               return vim.cmd("split " .. x.full_path)
-            else
-              return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
             end
+            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
           end
         end
       end,
-
       -- TODO: buat delete file, delete folder kosong
       ["ctrl-x"] = function()
         local project_todo_path = RUtils.config.path.dropbox_path .. "/neorg/orgmode/project-todo"
@@ -215,7 +211,7 @@ function M.open_agenda_file_lists()
           end
         end
 
-        RUtils.info("Clean up todos path done!", { title = "Notes" })
+        RUtils.info("✅ Clean up todos path done!", { title = "Notes" })
       end,
     },
   }

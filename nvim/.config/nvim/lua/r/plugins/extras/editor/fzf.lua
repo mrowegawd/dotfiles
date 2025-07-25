@@ -148,7 +148,7 @@ return {
 
       -- Jump To
       { "<Leader>jm", function() require("fzf-lua").marks() end, desc = "JumpTo: marks [fzflua]" },
-      { "<Leader>jj", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
+      { "<Leader>jJ", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
 
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 

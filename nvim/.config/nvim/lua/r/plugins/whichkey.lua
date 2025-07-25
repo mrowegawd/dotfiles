@@ -74,6 +74,7 @@ return {
           { "<Localleader>d", group = "database" },
           { "<Localleader>a", group = "note" },
           { "<Localleader>af", group = "find" },
+          { "<Localleader>afg", group = "orgmode/obsidian" },
           { "<Localleader>o", group = "open/misc" },
           { "<Localleader>r", group = "refactoring" },
           { "<Localleader>s", group = "snacks" },

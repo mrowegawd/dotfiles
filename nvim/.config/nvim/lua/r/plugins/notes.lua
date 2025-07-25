@@ -57,18 +57,18 @@ return {
         desc = "Note: open agenda orgmode [orgmode]",
       },
       {
-        "<Localleader>at",
+        "<Localleader>afgO",
         function()
           RUtils.notes.grep_title()
         end,
-        desc = "Note: grep title orgmode [orgmode]",
+        desc = "Note: jump global title [orgmode]",
       },
       {
-        "<Localleader>aT",
+        "<Localleader>afgo",
         function()
           RUtils.notes.grep_title(true)
         end,
-        desc = "Note: grep orgmode [orgmode]",
+        desc = "Note: grep [orgmode]",
       },
     },
     opts = function()
@@ -346,7 +346,7 @@ return {
     ft = "markdown",
     keys = {
       {
-        "<Localleader>afg",
+        "<Localleader>afgg",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.live_grep_glob {
@@ -361,10 +361,10 @@ return {
             },
           }
         end,
-        desc = "Note: live grep notes [obsidian]",
+        desc = "Note: grep [obsidian]",
       },
       {
-        "<Localleader>afg",
+        "<Localleader>afgg",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           local viz = RUtils.cmd.get_visual_selection { strict = true }
@@ -385,7 +385,7 @@ return {
             }
           end
         end,
-        desc = "Note: live grep notes (visual) [obsidian]",
+        desc = "Note: grep (visual) [obsidian]",
         mode = "v",
       },
       {
@@ -432,7 +432,7 @@ return {
         desc = "Note: find note by tags [obsidian]",
       },
       {
-        "<Localleader>aft",
+        "<Localleader>afgt",
         function()
           if vim.bo.filetype ~= "markdown" then
             ---@diagnostic disable-next-line: undefined-field
@@ -442,15 +442,15 @@ return {
           RUtils.markdown.find_local_titles()
           vim.cmd "normal! zRzz"
         end,
-        desc = "Note: search local titles [obsidian]",
+        desc = "Note: jump local title [obsidian]",
       },
       {
-        "<Localleader>afT",
+        "<Localleader>afgT",
         function()
           RUtils.markdown.find_global_titles()
           vim.cmd "normal! zRzz"
         end,
-        desc = "Note: search global titles [obsidian]",
+        desc = "Note: jump global title [obsidian]",
       },
     },
     dependencies = { "nvim-lua/plenary.nvim" },
