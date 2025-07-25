@@ -12,6 +12,15 @@ return {
   {
     "Wansmer/symbol-usage.nvim",
     event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    keys = {
+      {
+        "<Leader>us",
+        function()
+          require("symbol-usage").refresh()
+        end,
+        desc = "Toggle: symbol usage refresh [symbol-usage]",
+      },
+    },
     opts = function()
       local function h(name)
         return vim.api.nvim_get_hl(0, { name = name })
@@ -22,11 +31,11 @@ return {
       vim.api.nvim_set_hl(
         0,
         "SymbolUsageContent",
-        { bg = h("MyCodeUsage").bg, fg = h("MyCodeUsage").fg, italic = true }
+        { fg = h("MyCodeUsage").fg, bg = h("MyCodeUsage").bg, italic = true }
       )
-      vim.api.nvim_set_hl(0, "SymbolUsageRef", { fg = h("Function").fg, bg = h("MyCodeUsage").bg, italic = true })
+      vim.api.nvim_set_hl(0, "SymbolUsageRef", { fg = h("Normal").fg, bg = h("MyCodeUsage").bg, italic = true })
       vim.api.nvim_set_hl(0, "SymbolUsageDef", { fg = h("Type").fg, bg = h("MyCodeUsage").bg, italic = true })
-      vim.api.nvim_set_hl(0, "SymbolUsageImpl", { fg = h("@keyword").fg, bg = h("MyCodeUsage").bg, italic = true })
+      vim.api.nvim_set_hl(0, "SymbolUsageImpl", { fg = h("Normal").bg, bg = h("MyCodeUsage").bg, italic = true })
 
       -- vim.api.nvim_set_hl(0, "SymbolUsageRounding", { fg = h("CursorLine").bg, italic = true })
       -- vim.api.nvim_set_hl(0, "SymbolUsageContent", { bg = h("CursorLine").bg, fg = h("Comment").fg, italic = true })
@@ -74,7 +83,17 @@ return {
       return {
         hl = { link = "MyCodeUsage" },
         text_format = text_format,
-        disable = { filetypes = { "dockerfile", "markdown", "org", "neorg" } },
+        disable = {
+          filetypes = { "dockerfile", "markdown", "org", "neorg" },
+          cond = {
+            function()
+              if vim.wo.diff or vim.api.nvim_win_get_config(0).relative ~= "" then
+                return true
+              end
+              return false
+            end,
+          },
+        },
         ---@type 'above'|'end_of_line'|'textwidth'|'signcolumn' `above` by default
         vt_position = "end_of_line",
       }

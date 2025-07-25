@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXTRA_SIZE=10
+EXTRA_SIZE=15
 RED="red"
 
 session_exists() {
