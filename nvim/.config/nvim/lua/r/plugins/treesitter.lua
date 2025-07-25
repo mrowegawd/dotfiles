@@ -431,17 +431,42 @@ return {
         separator = "▁", -- alternatives: ▁ ─ ▄
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
-        on_attach = function(buf)
-          if vim.wo.diff or vim.fn.winheight(0) < 20 then
+        on_attach = function(bufnr)
+          --  -- Check if buffer or window is invalid
+          if not vim.api.nvim_buf_is_valid(bufnr) then
             return false
           end
 
-          local min_window_popup = 4
-          local tbl_winsplits = RUtils.cmd.get_total_wins()
-          if min_window_popup > #tbl_winsplits then
-            return true
+          -- Skip floating windows
+          local win_config = vim.api.nvim_win_get_config(0)
+          if win_config.relative ~= "" then
+            return false
           end
-          return false
+
+          -- Skip special buffers
+          local bt = vim.bo[bufnr].buftype
+          if bt == "nofile" or bt == "prompt" or bt == "help" then
+            return false
+          end
+
+          -- Skip certain filetypes
+          local ft = vim.bo[bufnr].filetype
+          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt" }
+          if vim.tbl_contains(excluded_fts, ft) then
+            return false
+          end
+
+          -- Skip diff mode
+          if vim.wo.diff then
+            return false
+          end
+
+          -- Skip when window height is too small
+          if vim.fn.winheight(0) < 30 then
+            return false
+          end
+
+          return true
         end,
       }
     end,

@@ -34,7 +34,7 @@ require("lazy").setup {
     -- { import = "r.plugins.extras.text" },
   },
   change_detection = { notify = false },
-  ui = { border = "rounded", size = { width = 0.8, height = 0.8 }, backdrop = 100, wrap = false },
+  ui = { border = "rounded", backdrop = 100 },
   checker = { enabled = true, notify = false }, --   automatically check for plugin updates
   performance = {
     rtp = {

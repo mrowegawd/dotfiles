@@ -356,6 +356,7 @@ local function replace_keymap(confirmation, visual)
 end
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: Search and replace under cursor" })
 RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: Search and replace under cursor (visual)" })
+RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: open lazy log [lazy]" })
 RUtils.map.nnoremap("<Leader>oO", function()
   return RUtils.cmd.open_with_mvp_or_sxiv()
 end, { desc = "Open: mpv or svix" })

@@ -27,7 +27,7 @@ return {
             ["cmp.entry.get_documentation"] = true,
           },
           signature = { enabled = false },
-          progress = { enabled = false },
+          progress = { enabled = true },
         },
         cmdline = { view = "cmdline" },
         views = {

@@ -417,12 +417,37 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "G", "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
+    cmd = {
+      "G",
+      "GBrowse",
+      "GcLog",
+      "Gclog",
+      "Gdiffsplit",
+      "Gedit",
+      "Git",
+      "GitEditChanged",
+      "GitHistory",
+      "Gwrite",
+      -- "GitEditDiff",
+    },
     keys = {
       {
         "<Leader>gN",
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
+      },
+      {
+        "<Leader>gd",
+        function()
+          local tsc = require "treesitter-context"
+          tsc.disable()
+
+          -- after 0.5 sec, run this command
+          vim.defer_fn(function()
+            vim.cmd "Gdiffsplit!"
+          end, 500)
+        end,
+        desc = "Git: open Gdiffsplit [fugitive]",
       },
       {
         "<Leader>bl",
@@ -438,26 +463,6 @@ return {
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
       vim.cmd "command! GitHistory Git! log -- %"
-
-      ---@param callback fun(err?: string, ref?: string)
-      local function merge_base(ref1, ref2, callback)
-        ref1 = ref1 or "origin/master"
-        ref2 = ref2 or "HEAD"
-        local stdout = ""
-        vim.fn.jobstart({ "git", "merge-base", ref1, ref2 }, {
-          stdout_buffered = true,
-          on_stdout = function(_, data, _)
-            stdout = vim.trim(table.concat(data, "\n"))
-          end,
-          on_exit = function(_, code)
-            if code ~= 0 then
-              return callback "Error"
-            else
-              callback(nil, stdout)
-            end
-          end,
-        })
-      end
 
       ---@param files string[]
       local function open_files(files)
@@ -554,23 +559,42 @@ return {
         end,
       })
 
-      vim.api.nvim_create_user_command("GitEditDiff", function()
-        merge_base(nil, nil, function(err, ref)
-          if err or not ref then
-            vim.notify("Error calculating merge base", vim.log.levels.ERROR)
-            return
-          end
-          run_files_cmd({ "git", "diff", "--name-only", ref }, function(files)
-            if vim.tbl_isempty(files) then
-              vim.notify("No diff from master", vim.log.levels.INFO)
-              return
-            end
-            open_files(files)
-          end)
-        end)
-      end, {
-        desc = "Edit files that differ from master",
-      })
+      -- local function merge_base(ref1, ref2, callback)
+      --   ref1 = ref1 or "origin/master"
+      --   ref2 = ref2 or "HEAD"
+      --   local stdout = ""
+      --   vim.fn.jobstart({ "git", "merge-base", ref1, ref2 }, {
+      --     stdout_buffered = true,
+      --     on_stdout = function(_, data, _)
+      --       stdout = vim.trim(table.concat(data, "\n"))
+      --     end,
+      --     on_exit = function(_, code)
+      --       if code ~= 0 then
+      --         return callback "Error"
+      --       else
+      --         callback(nil, stdout)
+      --       end
+      --     end,
+      --   })
+      -- end
+
+      -- vim.api.nvim_create_user_command("GitEditDiff", function()
+      --   merge_base(nil, nil, function(err, ref)
+      --     if err or not ref then
+      --       vim.notify("Error calculating merge base", vim.log.levels.ERROR)
+      --       return
+      --     end
+      --     run_files_cmd({ "git", "diff", "--name-only", ref }, function(files)
+      --       if vim.tbl_isempty(files) then
+      --         vim.notify("No diff from master", vim.log.levels.INFO)
+      --         return
+      --       end
+      --       open_files(files)
+      --     end)
+      --   end)
+      -- end, {
+      --   desc = "Edit files that differ from master",
+      -- })
     end,
   },
   -- DIFFVIEW
@@ -651,6 +675,10 @@ return {
             -- https://github.com/neovim/neovim/issues/9800
             vim.wo[winid].culopt = "number"
           end,
+        },
+        view = {
+          default = { disable_diagnostics = true },
+          file_history = { disable_diagnostics = true },
         },
         key_bindings = {
           disable_defaults = true, -- Disable the default key bindings
