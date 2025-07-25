@@ -574,55 +574,45 @@ end, { desc = "Open: list commands of git" })
 
 -- }}}
 -- {{{ Tmux integration
-local function normalize_return(str)
-  ---@diagnostic disable-next-line: redefined-local
-  local str_slice = string.gsub(str, "\n", "")
-  local res = vim.split(str_slice, "\n")
-  if res[1] then
-    return res[1]
-  end
-
-  return str_slice
-end
-
 local fm_manager = vim.env.TERM_FILEMANAGER
 
-local go_left = function()
-  vim.fn.system [[tmux select-pane -L]]
+local go_left_tmux = function()
+  vim.system { "tmux", "select-pane", "-L" }
+end
+local get_current_pane_tmux_id = function()
+  local get_pane_id = vim.system({ "tmux", "display-message", "-p", "#{pane_id}" }, { text = true }):wait()
+  if get_pane_id.code ~= 0 then
+    RUtils.error("Failed to get tmux pane_id", { title = "Config Keymaps" })
+    return
+  end
+  return get_pane_id.stdout
+end
+local get_current_pane_tmux_cmd = function(run_cmd)
+  vim.validate { run_cmd = { run_cmd, "string" } }
+  local get_cmd = vim
+    .system({
+      "sh",
+      "-c",
+      [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "]]
+        .. run_cmd
+        .. [[" { print $2; exit }']],
+    }, { text = true })
+    :wait()
+
+  if get_cmd.code ~= 0 or #get_cmd.stdout == 0 then
+    return false
+  end
+
+  return true
 end
 
-local get_current_pane_id = function()
-  return normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}"]])
-end
-
-local pane_left_current_cmd_nnn = function()
-  return normalize_return(
-    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
-  )
-end
-
-local pane_left_current_cmd_zsh = function()
-  return normalize_return(
-    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }']]
-  )
-end
-
-local pane_left_current_cmd_tmux = function()
-  return normalize_return(
-    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tmux" { print $2; exit }']]
-  )
-end
-
-local pane_left_current_cmd_lf = function()
-  return normalize_return(
-    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
-  )
-end
-
-local pane_left_current_cmd_yazi = function()
-  return normalize_return(
-    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }']]
-  )
+local get_current_pane_wezterm_id = function()
+  local get_pane_id = vim.system({ "wezterm", "cli", "-p", "get-pane-direction", "right" }, { text = true }):wait()
+  if get_pane_id.code ~= 0 then
+    RUtils.error("Failed to get wezterm pane_id", { title = "Config Keymaps" })
+    return
+  end
+  return get_pane_id.stdout
 end
 
 RUtils.map.nnoremap("<a-E>", function()
@@ -639,56 +629,51 @@ RUtils.map.nnoremap("<a-E>", function()
       end
     end
 
-    -- local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-    -- if pane_left_id then
-    --   vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
-    -- end
+    local pane_right_id = get_current_pane_wezterm_id()
 
-    local pane_right_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction right"))
     if pane_right_id then
-      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_right_id)
+      vim.system { "wezterm", "cli", "kill-pane", "--pane-id", tostring(pane_right_id) }
     end
 
-    vim.fn.system "wezterm cli split-pane --right --percent 22"
-    vim.fn.system "wezterm cli activate-pane-direction left"
+    vim.system { "wezterm", "cli", "split-pane", "--right", "--percent", "22" }
+    vim.system { "wezterm", "cli", "activate-pane-direction", "left" }
 
-    pane_right_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction right"))
-    vim.fn.system(
-      string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_right_id)
-    )
+    pane_right_id = get_current_pane_wezterm_id()
 
-    vim.fn.system "wezterm cli activate-pane-direction right"
+    RUtils.info "Not implemented yet"
+    -- vim.system(
+    --   string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_right_id)
+    -- )
+
+    -- vim.system { "wezterm", "cli", "activate-pane-direction", "right" }
   else
-    -- local get_total_active_panes = normalize_return(vim.fn.system [[ tmux display-message -p '#{window_panes}']])
-    local main_pane_id = get_current_pane_id()
-    local cmd_open_filemanager =
-      fmt("tmux split-window -h -p 30 -l %s -c '#{pane_current_path}' '%s %s'", pane_size, fm_manager, dirname)
+    local main_pane_id = get_current_pane_tmux_id()
 
-    go_left()
+    go_left_tmux()
 
-    if pane_left_current_cmd_nnn() == "nnn" then
-      vim.fn.system "tmux kill-pane"
+    -- Kill all file manager panes
+    if get_current_pane_tmux_cmd "nnn" or get_current_pane_tmux_cmd "yazi" or get_current_pane_tmux_cmd "lf" then
+      vim.system { "tmux", "kill-pane" }
     end
 
-    if pane_left_current_cmd_yazi() == "yazi" then
-      vim.fn.system "tmux kill-pane"
+    if get_current_pane_tmux_cmd "tmux" or get_current_pane_tmux_cmd "zsh" then
+      vim.system { "tmux", "select-pane", "-t", main_pane_id }
     end
 
-    if pane_left_current_cmd_lf() == "lf" then
-      vim.fn.system "tmux kill-pane"
-    end
-
-    local cmd_backtopane = "tmux select-pane -t " .. main_pane_id
-
-    if pane_left_current_cmd_tmux() == "tmux" then
-      vim.fn.system(cmd_backtopane)
-    end
-
-    if pane_left_current_cmd_zsh() == "zsh" then
-      vim.fn.system(cmd_backtopane)
-    end
-
-    vim.fn.system(cmd_open_filemanager)
+    local cmd_open_filemanager = {
+      "tmux",
+      "split-window",
+      "-h",
+      "-p",
+      "30",
+      "-l",
+      pane_size,
+      "-c",
+      "'#{pane_current_path}'",
+      fm_manager,
+      dirname,
+    }
+    vim.system(cmd_open_filemanager)
   end
 end)
 -- }}}

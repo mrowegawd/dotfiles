@@ -212,18 +212,14 @@ local function get_branch_name(buf)
     return branch
   end
 
-  local branch_cmd = "git rev-parse --abbrev-ref HEAD"
-  branch = vim.fn.system(branch_cmd)
-  if vim.v.shell_error ~= 0 then
+  local branch_cmd = { "git", "rev-parse", "--abbrev-ref", "HEAD" }
+  branch = vim.system(branch_cmd, { text = true }):wait()
+  if branch.code ~= 0 then
     return ""
   end
 
-  if #branch == 0 then
-    return ""
-  end
-
-  -- trim white space off branch
-  return string.gsub(branch, "%s+", "")
+  local lines = vim.split(branch.stdout or "", "\n", { plain = true })
+  return table.concat(lines, "")
 end
 
 local mode_exclude = {

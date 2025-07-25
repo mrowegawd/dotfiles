@@ -1122,7 +1122,7 @@ function M.change_colors()
   local master_color_path = "/tmp/master-colors-themes"
 
   if RUtils.file.is_file(master_color_path) then
-    vim.fn.system(string.format("rm %s", master_color_path))
+    vim.system { "rm", master_color_path }
   end
 
   local fp = io.open(master_color_path, "a")

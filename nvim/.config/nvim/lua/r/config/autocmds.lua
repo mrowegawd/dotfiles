@@ -289,17 +289,13 @@ RUtils.cmd.augroup("OpenFileImages", {
   event = "BufEnter",
   pattern = { "*.png", "*.jpg" },
   command = function()
-    local file_path = vim.fn.expand "%"
-    vim.fn.system("bspc rule -a \\* -o state=tiled focus=true && sxiv -a " .. file_path)
-    vim.cmd [[bw | vnew]]
+    vim.system { "sxiv", "-a", vim.fn.expand "%" }
   end,
 }, {
   event = "BufEnter",
-  pattern = { "*.mp4", "*.gif" },
+  pattern = { "*.mp4", "*.gif", "*.mp3" },
   command = function()
-    local file_path = vim.fn.expand "%"
-    vim.fn.system("bspc rule -a \\* -o state=tiled focus=true && mpv " .. file_path)
-    vim.cmd [[bw | vnew]]
+    vim.system { "mpv", vim.fn.expand "%" }
   end,
 })
 
