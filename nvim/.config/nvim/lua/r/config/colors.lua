@@ -746,8 +746,8 @@ local general_overrides = function()
     -- { diffDiffer = { link = 'WarningMsg' } },
     {
       diffFile = {
-        fg = { from = "Directory", attr = "fg" },
-        bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        fg = { from = "Directory", attr = "fg", alter = -0.15 },
+        bg = { from = "Directory", attr = "fg", alter = -0.68 },
       },
     },
     -- { diffIdentical = { link = 'WarningMsg' } },
@@ -3140,8 +3140,8 @@ local function colorscheme_overrides()
       -- GIT
       {
         diffFile = {
-          fg = { from = "Directory", attr = "fg" },
-          bg = { from = "Directory", attr = "fg", alter = -0.6 },
+          fg = { from = "Directory", attr = "fg", alter = -0.15 },
+          bg = { from = "Directory", attr = "fg", alter = -0.68 },
         },
       },
 
@@ -3474,8 +3474,8 @@ local function colorscheme_overrides()
       -- DIFF COLOR
       {
         diffFile = {
-          fg = { from = "Directory", attr = "fg" },
-          bg = { from = "Directory", attr = "fg", alter = -0.6 },
+          fg = { from = "Directory", attr = "fg", alter = -0.15 },
+          bg = { from = "Directory", attr = "fg", alter = -0.68 },
         },
       },
 

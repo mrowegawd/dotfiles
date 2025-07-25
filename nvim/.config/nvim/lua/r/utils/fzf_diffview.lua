@@ -560,7 +560,6 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
       },
     },
     actions = {
-      -- TODO: open hash items qf -> open dengan gedit?
       ["alt-l"] = function(selected, _)
         local items = {}
         for _, item in pairs(selected) do
@@ -613,6 +612,61 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
         })
         vim.cmd(RUtils.cmd.quickfix.lopen)
       end,
+      ["alt-L"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, item in pairs(selected) do
+            local commit_hash = M.split_string(item, " ")[1]
+            local commit_msg = vim.split(item, "_ ")[2]
+
+            local function convert_path_hash_commit(short_hash)
+              local handle = io.popen("git rev-parse " .. short_hash)
+              if not handle then
+                return ""
+              end
+
+              local full_hash = handle:read("*a"):gsub("%s+", "")
+              handle:close()
+
+              if full_hash == "" then
+                return ""
+              end
+
+              -- Fugitive
+              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
+
+              -- Neogit
+              -- local path_commmit = ??
+
+              return path_commmit
+            end
+
+            local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
+
+            items[#items + 1] = {
+              lnum = 1,
+              col = 1,
+              text = commit_msg,
+              module = commit_hash,
+              filename = fugitive_commit_filename,
+            }
+          end
+
+          local what = {
+            idx = "$",
+            items = items,
+            title = "Fzf_diffview",
+          }
+
+          vim.fn.setloclist(0, {}, " ", {
+            nr = "$",
+            items = what.items,
+            title = what.title,
+          })
+          vim.cmd(RUtils.cmd.quickfix.lopen)
+        end,
+      },
       ["alt-q"] = function(selected, _)
         local items = {}
         for _, item in pairs(selected) do
@@ -661,6 +715,57 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
         vim.fn.setqflist({}, "r", what)
         vim.cmd(RUtils.cmd.quickfix.copen)
       end,
+      ["alt-Q"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, item in pairs(selected) do
+            local commit_hash = M.split_string(item, " ")[1]
+            local commit_msg = vim.split(item, "_ ")[2]
+
+            local function convert_path_hash_commit(short_hash)
+              local handle = io.popen("git rev-parse " .. short_hash)
+              if not handle then
+                return ""
+              end
+
+              local full_hash = handle:read("*a"):gsub("%s+", "")
+              handle:close()
+
+              if full_hash == "" then
+                return ""
+              end
+
+              -- Fugitive
+              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
+
+              -- Neogit
+              -- local path_commmit = ??
+
+              return path_commmit
+            end
+
+            local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
+
+            items[#items + 1] = {
+              lnum = 1,
+              col = 1,
+              text = commit_msg,
+              module = commit_hash,
+              filename = fugitive_commit_filename,
+            }
+          end
+
+          local what = {
+            idx = "$",
+            items = items,
+            title = "Fzf_diffview",
+          }
+
+          vim.fn.setqflist({}, "r", what)
+          vim.cmd(RUtils.cmd.quickfix.copen)
+        end,
+      },
       ["ctrl-s"] = function(selected, _)
         local selection = selected[1]
         local commit_hash = M.split_string(selection, " ")[1]
