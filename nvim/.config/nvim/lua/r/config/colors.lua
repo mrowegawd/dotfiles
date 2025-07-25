@@ -312,17 +312,17 @@ reset_base_alter({ "base46-vscode_dark" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 2,
-  fzfheadertext_fg_alter = 0.02,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = -0.22,
-  linenr_fg_alter = 0.5,
+  linenr_fg_alter = 0.4,
   nontext_fg_alter = 1.8,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.6,
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 0.7,
+  winseparator_alter = 0.47,
 })
 reset_base_alter({ "base46-wombat" }, {
   cursor_fg = "#bbbbbb",
@@ -1677,8 +1677,8 @@ local general_overrides = function()
     { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
     {
       RenderMarkdownCodeInline = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-        bg = H.darken(H.get("Keyword", "fg"), 0.17, H.get("Normal", "bg")),
+        fg = { from = "Keyword", attr = "fg", alter = -0.1 },
+        bg = H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")),
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -1691,25 +1691,25 @@ local general_overrides = function()
     --  ─────────────────────────────[ GRUG FAR ]──────────────────────────
     {
       GrugFarResultsPath = {
-        fg = { from = "Directory", attr = "fg" },
+        fg = { from = "Directory", attr = "fg", alter = -0.3 },
         bold = true,
         underline = true,
       },
     },
     {
       GrugFarResultsLineNr = {
-        fg = { from = "Normal", attr = "bg", alter = 1.2 },
+        fg = { from = "Normal", attr = "bg", alter = 1 },
         bg = { from = "Normal", attr = "bg", alter = 0.3 },
       },
     },
     {
       GrugFarResultsMatch = {
-        fg = { from = "CurSearch", attr = "bg", alter = 0.35 },
-        bg = { from = "CurSearch", attr = "bg", alter = -0.5 },
+        fg = { from = "CurSearch", attr = "bg", alter = 0.3 },
+        bg = { from = "CurSearch", attr = "bg", alter = -0.65 },
         bold = true,
       },
     },
-    { GrugFarResultsNumberLabel = { fg = { from = "CurSearch", attr = "bg", alter = -0.2 } } },
+    { GrugFarResultsNumberLabel = { fg = { from = "DiagnosticError", attr = "fg", alter = -0.6 }, bold = false } },
 
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
@@ -2259,7 +2259,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
       {
         ["@markup.quote.markdown"] = {
@@ -2268,13 +2268,6 @@ local function colorscheme_overrides()
           bg = H.darken(H.get("Error", "bg"), 0.25, H.get("Normal", "bg")),
         },
       },
-      {
-        RenderMarkdownCodeInline = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")),
-        },
-      },
-      { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
 
       -- STATUSLINE
       {
@@ -2294,8 +2287,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.85 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -2944,7 +2937,7 @@ local function colorscheme_overrides()
       -- STATUSLINE
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           reverse = false,
         },
@@ -2959,8 +2952,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.85 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.12 },
         },
       },
 
@@ -3141,6 +3134,7 @@ local function colorscheme_overrides()
           fg = "NONE",
         },
       },
+
       { Directory = { fg = "#7788aa", bg = "NONE" } },
 
       -- GIT
@@ -3148,6 +3142,25 @@ local function colorscheme_overrides()
         diffFile = {
           fg = { from = "Directory", attr = "fg" },
           bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        },
+      },
+
+      -- QF
+      {
+        QuickFixLine = {
+          fg = { from = "Directory", attr = "fg", alter = 0.3 },
+          bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
+
+      -- GRUG FAR
+      {
+        GrugFarResultsPath = {
+          fg = { from = "Directory", attr = "fg", alter = -0.3 },
+          bold = true,
+          underline = true,
         },
       },
 
@@ -3449,6 +3462,41 @@ local function colorscheme_overrides()
       },
 
       { Directory = { fg = "#569cd6", bg = "NONE" } },
+
+      -- TREESITTER CONTEXT
+      {
+        LspInlayhint = {
+          bg = { from = "Normal", attr = "bg", alter = -0.4 },
+          fg = { from = "Directory", attr = "fg", alter = -0.3 },
+        },
+      },
+
+      -- DIFF COLOR
+      {
+        diffFile = {
+          fg = { from = "Directory", attr = "fg" },
+          bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        },
+      },
+
+      -- QF
+      {
+        QuickFixLine = {
+          fg = { from = "Directory", attr = "fg", alter = 0.3 },
+          bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
+
+      -- GRUG FAR
+      {
+        GrugFarResultsPath = {
+          fg = { from = "Directory", attr = "fg", alter = -0.3 },
+          bold = true,
+          underline = true,
+        },
+      },
 
       -- GIT
       {

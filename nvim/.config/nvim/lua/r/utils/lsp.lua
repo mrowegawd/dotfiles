@@ -236,6 +236,20 @@ function M.execute(opts)
   end
 end
 
+function M.validate_and_merge(default_opts, user_opts)
+  local merged = vim.deepcopy(default_opts)
+
+  for k, v in pairs(user_opts) do
+    if default_opts[k] == nil then
+      print(k)
+      error("[lazy.nvim] Invalid option: " .. k)
+    end
+    merged[k] = v
+  end
+
+  return merged
+end
+
 -- local md_docs_ns = vim.api.nvim_create_namespace "markdown_docs_highlights"
 -- function M.highlight_doc_patterns(bufnr)
 --   vim.api.nvim_buf_clear_namespace(bufnr, md_docs_ns, 0, -1)

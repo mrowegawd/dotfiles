@@ -4,26 +4,28 @@ commit-style = 232 bold italic 130
 dark = true
 file-added-label = [+]
 file-copied-label = [C]
-# file-decoration-style = "#606018" overline
 file-modified-label = [M]
 file-removed-label = [-]
 file-renamed-label = [R]
-file-style = 232 bold 184
+# file-decoration-style = "#606018" overline
+file-style = "#dcdcaa" bold "#828250"
 hunk-header-decoration-style = none
-hunk-header-style = syntax bold italic 237
+hunk-header-style = syntax bold "#6e6e3c"
 line-numbers = true
 line-numbers-left-format = "{nm:>1}┊"
 line-numbers-left-style = red
-line-numbers-minus-style = "#9D473F" italic
-line-numbers-plus-style = "#5B724B" italic
+line-numbers-minus-style = "#A04A43" italic
+line-numbers-plus-style = "#617751" italic
 line-numbers-right-format = "{np:>1}┊"
 line-numbers-right-style = green
 line-numbers-zero-style = "#545474" italic
 
-minus-emph-style = syntax bold "#9D473F"
-minus-style = syntax "#422623"
-plus-emph-style = syntax bold "#5B724B"
-plus-style = syntax "#384330"
+minus-emph-style = "#c36d66" bold "#822c25"
+minus-style = "#913b34" bold "#342524"
+
+plus-emph-style = "#849a74" bold "#435933"
+plus-style = "#576d47" bold "#2f342b"
+
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse
 

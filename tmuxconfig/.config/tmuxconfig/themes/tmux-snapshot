@@ -1,22 +1,22 @@
-ACTIVE_BG="#232323"
-ACTIVE_FG="#704570"
+ACTIVE_BG="#2d2d2d"
+ACTIVE_FG="#624360"
 
-STATUSLINE_BG_MESSAGE="#ffba7b"
-STATUSLINE_FG="#363636"
+STATUSLINE_BG_MESSAGE="#d9c97c"
+STATUSLINE_FG="#373737"
 
-SESSION_BG="#dedede"
-SESSION_FG="#121212"
+SESSION_BG="#dfdfe0"
+SESSION_FG="#1e1e1e"
 
-TMUX_BG="#151515"
-TMUX_FG="#404040"
+TMUX_BG="#1e1e1e"
+TMUX_FG="#414141"
 
-BORDER_FG_ACTIVE="#e18be1"
-BORDER_FG_NC="#383838"
+BORDER_FG_ACTIVE="#c586c0"
+BORDER_FG_NC="#2c2c2c"
 
-RED="#e27373"
-BLUE="#97bedc"
-WHITE="#dedede"
-GREEN="#94b979"
+RED="#ff8170"
+BLUE="#dcdcaa"
+WHITE="#dfdfe0"
+GREEN="#78c2b3"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -28,7 +28,7 @@ setw -g pane-border-status top # bottom, top
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$RED]$left_slant_separator,}\
-#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_NC],}#{pane_index}.#{pane_id} \
+#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$TMUX_FG],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
 

@@ -1,4 +1,4 @@
-!
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! xcodedark
 !
 *.foreground:  #d4d4d4
@@ -22,7 +22,7 @@
 *.color11:     #ffa14f
 !
 ! Blue
-*.color4:      #4eb0cc
+*.color4:      #dcdcaa
 *.color12:     #6bdfff
 !
 ! Magenta

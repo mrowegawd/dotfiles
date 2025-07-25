@@ -139,7 +139,7 @@ return {
       },
     },
     opts = {
-      search = { backend = { "snacks.pick" } },
+      -- search = { backend = { "snacks.pick" } },
       -- zen = { enabled = true, width = 120 },
       feeds = {
         "neo451/feed.nvim/releases",

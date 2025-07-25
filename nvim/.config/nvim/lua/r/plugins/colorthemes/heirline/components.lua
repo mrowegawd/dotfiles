@@ -172,9 +172,11 @@ local __colors = function()
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
+    mode_readonly_fg_active = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.2, H.get("Normal", "bg")), 2.5),
     mode_readonly_fg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.2, H.get("Normal", "bg")), 0.8),
     mode_readonly_bg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.25, H.get("Normal", "bg")), -0.25),
 
+    mode_git_fg_active = H.tint(H.darken(H.get("Boolean", "fg"), 0.3, H.get("Normal", "bg")), 2.5),
     mode_git_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.3, H.get("Normal", "bg")), 0.8),
     mode_git_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.25, H.get("Normal", "bg")), 0.05),
 
@@ -1456,7 +1458,6 @@ M.WinbarFilePath = {
       if set_conditions.is_dap_ft() then
         fg = colors.winbar_dap_fg
         bg = colors.winbar_dap_bg
-
         if Conditions.is_active() then
           fg = colors.winbar_keyword
         end
@@ -1464,15 +1465,17 @@ M.WinbarFilePath = {
 
       if self.is_fugitive() then
         bg = tostring(colors.mode_git_bg)
-        if not Conditions.is_active() then
-          fg = tostring(colors.mode_git_fg)
+        fg = tostring(colors.mode_git_fg)
+        if Conditions.is_active() then
+          fg = tostring(colors.mode_git_fg_active)
         end
       end
 
       if self.is_readonly() then
+        fg = tostring(colors.mode_readonly_fg)
         bg = tostring(colors.mode_readonly_bg)
-        if not Conditions.is_active() then
-          fg = tostring(colors.mode_readonly_fg)
+        if Conditions.is_active() then
+          fg = tostring(colors.mode_readonly_fg_active)
         end
       end
       return { fg = fg, bg = bg, bold = true, italic = true }

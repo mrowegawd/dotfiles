@@ -609,7 +609,6 @@ return {
         desc = "Open: todo kanban [super-kanban.nvim]",
       },
     },
-    dependencies = { "folke/snacks.nvim" },
     opts = {
       markdown = {
         notes_dir = RUtils.config.path.wiki_path .. "/kanban-notes",
