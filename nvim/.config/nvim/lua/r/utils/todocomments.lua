@@ -111,9 +111,6 @@ local function picker(contents, tbl_cts, fzf_opts)
         end
       end,
 
-      ["alt-L"] = function()
-        RUtils.warn "Not implemented yet"
-      end,
       ["alt-l"] = function(selected, _)
         local items = {}
 
@@ -151,10 +148,32 @@ local function picker(contents, tbl_cts, fzf_opts)
         })
         vim.cmd(RUtils.cmd.quickfix.lopen)
       end,
+      ["alt-L"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, sel in pairs(selected) do
+            for _, x in pairs(tbl_cts) do
+              if x.text == sel then
+                items[#items + 1] = {
+                  filename = x.filename,
+                  lnum = x.lnum,
+                  col = x.col,
+                  text = x.text,
+                }
+              end
+            end
+          end
 
-      ["alt-G"] = function()
-        RUtils.warn "Not implemented yet"
-      end,
+          vim.fn.setloclist(0, {}, " ", {
+            nr = "$",
+            items = items,
+            title = "TODO Comments Note",
+          })
+          vim.cmd(RUtils.cmd.quickfix.lopen)
+        end,
+      },
+
       ["alt-q"] = function(selected, _)
         local items = {}
 
@@ -194,6 +213,33 @@ local function picker(contents, tbl_cts, fzf_opts)
         vim.fn.setqflist({}, "r", what)
         vim.cmd(RUtils.cmd.quickfix.copen)
       end,
+      ["alt-Q"] = {
+        prefix = "select-all+accept",
+        fn = function(selected, _)
+          local items = {}
+          for _, sel in pairs(selected) do
+            for _, x in pairs(tbl_cts) do
+              if x.text == sel then
+                items[#items + 1] = {
+                  filename = x.filename,
+                  lnum = x.lnum,
+                  col = x.col,
+                  text = x.text,
+                }
+              end
+            end
+          end
+
+          local what = {
+            idx = "$",
+            items = items,
+            title = "TODO Comments Note",
+          }
+
+          vim.fn.setqflist({}, "r", what)
+          vim.cmd(RUtils.cmd.quickfix.copen)
+        end,
+      },
     },
   })
 end
