@@ -93,8 +93,13 @@ local defaults = {
       dots = "󰇘",
       arrow_right = " ",
       block = "▌ ",
+
       bookmark = " ",
+
       marks = "📌",
+      cross_sign = "❌",
+      checklist = "✅",
+
       bug = " ", --  'ﴫ'
       calendar = " ",
       caret_right = " ",

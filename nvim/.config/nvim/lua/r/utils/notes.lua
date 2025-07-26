@@ -64,15 +64,14 @@ local function opts_fzf(title, maps)
       local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
 
       local win_height = math.ceil(lines * 0.5)
-      local win_width = math.ceil(columns * 0.22)
-      if columns < 120 then
-        win_width = 60
-      end
-      local col = math.ceil((columns - lines) - 10)
+      local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
+      local width = math.ceil((win_width / 3) * 1 + 2)
+
+      local col = math.ceil((columns - lines) - 20)
       local row = math.ceil(lines - win_height)
       return {
         title = RUtils.fzflua.format_title(title, "󰈙"),
-        width = win_width,
+        width = width,
         height = win_height - 10,
         row = row,
         col = col,

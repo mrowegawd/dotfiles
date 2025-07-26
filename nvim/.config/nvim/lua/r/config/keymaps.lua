@@ -39,6 +39,12 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 RUtils.map.nnoremap("zk", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zo", function()
+  vim.cmd "normal! zozz"
+end, { desc = "Fold: zo" })
+RUtils.map.nnoremap("zO", function()
+  vim.cmd "normal! zOzz"
+end, { desc = "Fold: zO" })
 -- RUtils.map.nnoremap("za", function()
 --   if vim.fn.foldclosed(vim.fn.line ".") == -1 then
 --     vim.cmd "normal! za"

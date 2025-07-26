@@ -1,4 +1,11 @@
 return {
+  -- GOTO-PREVIEW
+  {
+    "rmagatti/goto-preview",
+    dependencies = { "rmagatti/logger.nvim" },
+    event = "LspAttach",
+    config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+  },
   -- INCRENAME
   {
     "smjonas/inc-rename.nvim",

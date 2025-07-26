@@ -660,7 +660,7 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+    hl = { fg = colors.mode_term_bg, bg = colors.block_bg_darken },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,

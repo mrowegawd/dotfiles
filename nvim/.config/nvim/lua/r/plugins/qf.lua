@@ -79,7 +79,6 @@ return {
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",
       extmarks = {
-        qf_crosssign = RUtils.config.icons.misc.cross_sign,
         qf_sigil = RUtils.config.icons.misc.marks,
         qf_sign_hl = { fg = "red" },
       },

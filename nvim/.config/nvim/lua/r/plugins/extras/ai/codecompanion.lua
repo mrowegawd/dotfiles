@@ -688,7 +688,7 @@ return {
                   local body = code_block_delimiter
                     .. "text"
                     .. "\n"
-                    .. vim.fn.system "xclip -o -sel clip"
+                    .. vim.system { "xclip", "-o", "-se", "clip" }
                     .. newline
                     .. code_block_delimiter
 

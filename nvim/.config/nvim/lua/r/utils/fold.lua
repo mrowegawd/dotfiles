@@ -199,13 +199,12 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
   --   return
   -- end
 
-  -- if vim.bo[0].filetype == "markdown" then
-  --   if is_jump_prev then
-  --     return RUtils.markdown.go_to_heading(nil, {})
-  --   else
-  --     return RUtils.markdown.go_to_heading(nil)
-  --   end
-  -- end
+  if vim.bo[0].filetype == "markdown" then
+    if is_jump_prev then
+      return RUtils.markdown.go_to_heading(nil, {})
+    end
+    return RUtils.markdown.go_to_heading(nil)
+  end
 
   M.go_next_prev_fold(is_jump_prev, false)
 end
@@ -241,9 +240,15 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
 
       if err and (string.match(err, "E380") or string.match(err, "E381")) then
         local msg = "stack qf list sudah mentok"
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.warn(msg, { title = "Quickfix" })
         return
       end
+
+      -- if vim.tbl_contains({ "bnext", "lnext", "cnewer", "colder" }, cmd_msg) then
+      --   ---@diagnostic disable-next-line: undefined-field
+      --   RUtils.info(cmd_msg, { title = "QF" })
+      -- end
     end)
   end
 end

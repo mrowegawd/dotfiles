@@ -80,7 +80,7 @@ local escape_term = function(x)
   )
 end
 
-function M.git_relative_path(bufnr)
+M.git_relative_path = function(bufnr)
   local abs_filename = RUtils.file.absolute_path(bufnr)
   local git_dir = find_first_ancestor_dir_or_file(abs_filename, ".git")
 
@@ -298,7 +298,7 @@ local empty_tree_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 ---@param first_commit string
 ---@param second_commit string
 ---@return string|nil prev_name, string|nil curr_name
-local function filename_commit(bufnr, first_commit, second_commit)
+local filename_commit = function(bufnr, first_commit, second_commit)
   if bufnr == nil then
     return nil, nil
   end
