@@ -3,7 +3,7 @@ return {
   {
     "folke/flash.nvim",
     opts = {
-      modes = { char = { keys = { "F", "T", ";" } }, search = { enabled = false } },
+      modes = { char = { keys = { "F", ";" } }, search = { enabled = false } },
       jump = { nohlsearch = true },
       highlight = { backdrop = false },
     },

@@ -134,7 +134,10 @@ function M.magic_quit()
   local filepath = vim.fn.fnamemodify(bufname, ":.")
   if filepath then
     if bufname:match "diffview://" then
-      RUtils.warn("❌ Switch to the Diffview window to quit or close", { title = "Magic Quit" })
+      RUtils.warn(
+        RUtils.config.icons.misc.cross_sign .. " Switch to the Diffview window to quit or close",
+        { title = "Magic Quit" }
+      )
       return
     end
     if filepath:match "gitsigns:/" then

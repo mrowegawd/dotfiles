@@ -152,7 +152,7 @@ RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete
 RUtils.map.nnoremap("<Leader>bO", function()
   Snacks.bufdelete.other()
   ---@diagnostic disable-next-line: undefined-field
-  RUtils.info("✅ Purge buffers", { title = "Buffers" })
+  RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
 end, { desc = "Buffer: delete all other buffers" })
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf(true)

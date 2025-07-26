@@ -43,9 +43,11 @@ local build_dir_img = function(input_png)
     return
   end
 
-  print(maim_command)
-  vim.fn.systemlist(maim_command)
-
+  local tbl_maim_cmds = vim.split(maim_command, " ")
+  local output = vim.system(tbl_maim_cmds, { text = true }):wait()
+  if output.code ~= 0 then
+    return nil
+  end
   return image_insert_syntax
 end
 
