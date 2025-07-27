@@ -1,5 +1,14 @@
 local cmd = vim.cmd
 
+---- Only show cursorline in the current window and save last visited window id
+local cline_acg = vim.api.nvim_create_augroup("cline", { clear = true })
+vim.api.nvim_create_autocmd("WinLeave", {
+  group = cline_acg,
+  callback = function()
+    _G.LastWinId = vim.fn.win_getid()
+  end,
+})
+
 ---------------------------------
 -- LSP
 ---------------------------------
@@ -67,8 +76,13 @@ RUtils.cmd.augroup("SmartClose", {
     vim.bo[event.buf].buflisted = false
     if vim.api.nvim_buf_is_valid(event.buf) and (#vim.api.nvim_list_wins() > 1) then
       vim.keymap.set("n", "q", function()
-        if vim.bo[event.buf] == "qf" then
-          vim.cmd "close"
+        if vim.bo[event.buf].filetype == "qf" then
+          local cmd_qf = "cclose"
+          if RUtils.qf.is_loclist() then
+            cmd_qf = "lclose"
+          end
+          vim.fn.win_gotoid(_G.LastWinId)
+          vim.cmd(cmd_qf)
           return
         end
         pcall(vim.api.nvim_buf_delete, event.buf, { force = true })

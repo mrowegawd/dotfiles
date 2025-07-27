@@ -238,6 +238,10 @@ end, {
   desc = "QF: convert qf into trouble/lf",
 })
 
+keymap.set("n", "<C-s>", "<C-w><Enter>", { buffer = true })
+
+keymap.set("n", "<C-v>", "<C-w><Enter><C-w>L", { buffer = true })
+
 keymap.set("n", "<Leader>fw", function()
   local items = get_items_list()
   local title = RUtils.qf.is_loclist() and vim.fn.getloclist(0, { title = 0 }).title
@@ -361,4 +365,15 @@ keymap.set("n", "<Leader>fw", function()
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: grep text of items [fzflua]",
+})
+
+-- Autocmds
+vim.api.nvim_create_autocmd({ "QuitPre", "BufDelete" }, {
+  group = vim.api.nvim_create_augroup("ft_qf", { clear = true }),
+  callback = function()
+    -- Automatically close corresponding loclist when quitting a window
+    if vim.bo.filetype ~= "qf" then
+      vim.cmd "silent! lclose"
+    end
+  end,
 })
