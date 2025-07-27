@@ -606,12 +606,13 @@ local general_overrides = function()
     -- ║                           QF                            ║
     -- ╚═════════════════════════════════════════════════════════╝
     { qfFileName = { bg = "NONE" } },
-    { QuickFixFileName = { bg = "NONE" } },
-    { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+    { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+    { qfSeparator2 = { link = "qfSeparator1" } },
     {
       QuickFixLine = {
-        fg = { from = "Directory", attr = "fg", alter = 0.3 },
+        -- fg = { from = "Directory", attr = "fg", alter = 0.3 },
         bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
+        bold = true,
         underline = false,
         reverse = false,
       },
@@ -1602,6 +1603,11 @@ local general_overrides = function()
 
     --  ────────────────────────────────[ BQF ]────────────────────────────
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
+
+    --  ────────────────────────────[ QUICKER ]────────────────────────────
+    { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.7 } } },
+    { Delimiter = { link = "qfSeparator1" } },
+    { QuickFixFileName = { bg = "NONE" } },
 
     --  ───────────────────────────[ TODO-COMMENT ]────────────────────────
     { TodoSignWarn = { bg = "NONE", fg = "#FBBF24" } },

@@ -3,7 +3,7 @@ return {
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "FileType qf",
-    opts = { borders = { vert = "│" } },
+    opts = {},
   },
   -- QFSILET
   {
