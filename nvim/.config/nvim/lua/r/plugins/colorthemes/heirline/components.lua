@@ -162,10 +162,10 @@ local __colors = function()
     block_bg_loclist = H.tint(UIPallette.palette.light_gray, -0.1),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
-    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Folded", "bg")), 2),
+    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 2),
 
     winbar_fg = H.get("WinbarFilepath", "fg"),
-    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Folded", "bg")), 0.5),
+    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), 0.5),
     winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
     winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
