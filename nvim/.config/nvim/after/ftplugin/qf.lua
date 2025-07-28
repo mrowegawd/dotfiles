@@ -12,9 +12,53 @@ opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 
--- these keys disabled
+-- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+
+-- Func untuk mengatasi error `no room enaough` saat open split/vsplit pada qf item,
+-- jadi dibutuhkan expand window height jika itu terjadi.
+local open_split_or_vsplit = function(vsp_or_sp)
+  if vim.bo.buftype ~= "quickfix" then
+    vim.notify("Sorry, you are not in the qf window!", vim.log.levels.WARN)
+    return
+  end
+
+  local increase_by_multiple = 3
+  local is_split = vsp_or_sp == "split"
+  -- local split_or_vsplit = is_split and "aboveleft split" or "topleft vsplit"
+
+  local qf_win = api.nvim_get_current_win()
+  local original_height = api.nvim_win_get_height(qf_win)
+
+  if original_height < 50 then
+    if original_height == 2 or original_height == 1 then
+      original_height = 6
+    end
+    api.nvim_win_set_height(qf_win, original_height * increase_by_multiple)
+  end
+
+  if is_split then
+    RUtils.map.feedkey("<C-W><CR>", "n")
+  else
+    RUtils.map.feedkey("<C-W><CR><C-W>Lzz", "n")
+  end
+
+  -- Ensure that it returns to the original QF height
+  vim.defer_fn(function()
+    if api.nvim_win_is_valid(qf_win) then
+      api.nvim_win_set_height(qf_win, original_height)
+    end
+  end, 10)
+end
+
+keymap.set("n", "<C-s>", function()
+  open_split_or_vsplit "split"
+end, { buffer = api.nvim_get_current_buf() })
+
+keymap.set("n", "<C-v>", function()
+  open_split_or_vsplit "vsplit"
+end, { buffer = api.nvim_get_current_buf() })
 
 local __get_vars = {
   title_list = function()
@@ -237,10 +281,6 @@ end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: convert qf into trouble/lf",
 })
-
-keymap.set("n", "<C-s>", "<C-w><Enter>", { buffer = true })
-
-keymap.set("n", "<C-v>", "<C-w><Enter><C-w>L", { buffer = true })
 
 keymap.set("n", "<Leader>fw", function()
   local items = get_items_list()
