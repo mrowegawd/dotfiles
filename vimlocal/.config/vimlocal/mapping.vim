@@ -223,10 +223,10 @@ imap <right> <nop>
 " nnoremap sh                     <C-W>h
 " nnoremap sl                     <C-W>l
 
-nnoremap <C-j>                  <C-W>j
-nnoremap <C-k>                  <C-W>k
-nnoremap <C-h>                  <C-W>h
-nnoremap <C-l>                  <C-W>l
+nnoremap <c-j>                  <C-W>j
+nnoremap <c-k>                  <C-W>k
+nnoremap <c-h>                  <C-W>h
+nnoremap <c-l>                  <C-W>l
 
 " Resize the window
 nnoremap <silent> <S-Up>        :resize -2<CR>

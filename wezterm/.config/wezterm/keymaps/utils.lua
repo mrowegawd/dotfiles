@@ -170,7 +170,6 @@ function M.is_in_tmux(pane)
 	-- TAKEN FROM: https://wezfurlong.org/wezterm/recipes/passing-data.html#user-vars
 	-- following file: aliases.basrc
 	local isTmux = pane:get_user_vars().PROG
-
 	if isTmux and isTmux == "tmux" or isTmux == "tm" then
 		return true
 	end
@@ -179,7 +178,8 @@ function M.is_in_tmux(pane)
 end
 
 function M.is_in_nvim(pane)
-	return pane:get_user_vars().IS_NVIM == "true" or pane:get_foreground_process_name():find("n?vim")
+	-- or pane:get_foreground_process_name():find("n?vim")
+	return pane:get_user_vars().IS_NVIM == "true"
 end
 
 function M.is_in_nnn(pane)

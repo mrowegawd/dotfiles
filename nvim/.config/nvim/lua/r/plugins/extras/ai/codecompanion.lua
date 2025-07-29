@@ -406,7 +406,7 @@ return {
               --   },
               next_header = {
                 modes = {
-                  n = "<c-n>",
+                  n = "<a-n>",
                 },
                 index = 13,
                 callback = "keymaps.next_header",
@@ -414,7 +414,7 @@ return {
               },
               previous_header = {
                 modes = {
-                  n = "<c-p>",
+                  n = "<a-p>",
                 },
                 index = 14,
                 callback = "keymaps.previous_header",

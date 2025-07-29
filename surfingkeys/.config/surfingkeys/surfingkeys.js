@@ -163,6 +163,8 @@ mapkey(
 // ╰─────────────────────────────────────────────────────────╯
 cmap("<Ctrl-j>", "<Tab>");
 cmap("<Ctrl-k>", "<Shift-Tab>");
+cmap("<Ctrl-n>", "<Tab>");
+cmap("<Ctrl-p>", "<Shift-Tab>");
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ TAB                                                     │
@@ -193,6 +195,11 @@ map("<Space>ff", "T");
 map("<Space>fF", "t"); // include bookmark search
 map("<Ctrl-l>", "R");
 map("<Ctrl-h>", "E");
+// map("<Alt-h>", "R");
+// map("<Alt-l>", "E");
+
+// map("<Alt-j>", "R");
+// map("<Alt-k>", "E");
 
 mapkey("gxk", "#3Close tab on up", function () {
   RUNTIME("closeTabLeft");
@@ -208,7 +215,7 @@ mapkey("gxJ", "#3Close all tabs on down", function () {
 });
 
 mapkey(
-  "<Ctrl-j>",
+  "<Alt-l>",
   "Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -216,7 +223,15 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Ctrl-k>",
+  "<Alt-j>",
+  "Go one tab right",
+  function () {
+    RUNTIME("nextTab");
+  },
+  { repeatIgnore: true },
+);
+mapkey(
+  "<Alt-h>",
   "Go one tab left",
   function () {
     RUNTIME("previousTab");
@@ -224,7 +239,15 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Ctrl-n>",
+  "<Alt-k>",
+  "Go one tab left",
+  function () {
+    RUNTIME("previousTab");
+  },
+  { repeatIgnore: true },
+);
+mapkey(
+  "<Alt-n>",
   "Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -232,7 +255,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Ctrl-p>",
+  "<Alt-p>",
   "Go one tab left",
   function () {
     RUNTIME("previousTab");

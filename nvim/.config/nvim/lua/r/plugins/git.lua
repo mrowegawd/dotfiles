@@ -433,7 +433,7 @@ return {
     keys = {
       {
         "<Leader>gN",
-        "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
+        "<Cmd>botright Git<CR><Cmd>wincmd K<bar>30 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
         mode = { "n", "v" },
       },
@@ -685,8 +685,8 @@ return {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
           view = {
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-view]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-view]" } },
@@ -756,8 +756,8 @@ return {
             { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-panel]" }, },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-panel]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-panel]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-panel]" }, },
@@ -825,8 +825,8 @@ return {
             { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold [diffview-history]" } },
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-history]" }, },
 
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-history]" } },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-history]" }, },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-history]" } },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-history]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-history]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-history]" } },

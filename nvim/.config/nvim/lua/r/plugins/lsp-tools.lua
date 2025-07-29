@@ -121,13 +121,13 @@ return {
       { "<Leader>ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Tasks: inspect current request [kulala]", ft = "http", },
       { "<Leader>rr", "<cmd>lua require('kulala').close()<cr>", desc = "Tasks: close window [kulala]", ft = "http" },
       {
-        "<c-p>",
+        "<a-p>",
         "<cmd>lua require('kulala').jump_prev()<cr>",
         desc = "Kulala: jump to previous request",
         ft = "http",
       },
       {
-        "<c-n>",
+        "<a-n>",
         "<cmd>lua require('kulala').jump_next()<cr>",
         desc = "Kulala: jump to next request",
         ft = "http",

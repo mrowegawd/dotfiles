@@ -60,10 +60,10 @@ RUtils.map.nnoremap("zp", function()
   return RUtils.fold.go_next_prev_fold(true, true)
 end, { desc = "Fold: close current fold when open. Always open previous fold." })
 
-RUtils.map.nnoremap("<c-n>", function()
+RUtils.map.nnoremap("<a-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
 end, { desc = "Fold: magic jump next fold/qf" })
-RUtils.map.nnoremap("<c-p>", function()
+RUtils.map.nnoremap("<a-p>", function()
   return RUtils.fold.magic_jump_qf_or_fold(true)
 end, { desc = "Fold: magic jump prev fold/qf" })
 -- }}}
@@ -100,12 +100,12 @@ end, { desc = "Terminal: new term" })
 RUtils.map.nnoremap("<Leader>wL", "<C-W>t <C-W>H", { desc = "Window: force buffers to vertical split" })
 RUtils.map.nnoremap("<Leader>wJ", "<C-W>t <C-W>K", { desc = "Window: force buffers to horizontal split" })
 
-if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
-  RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
-  RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
-  RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
-  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
-end
+-- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
+--   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
+--   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
+--   RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
+--   RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
+-- end
 
 -- Tab
 RUtils.map.nnoremap("tn", function()
@@ -176,7 +176,6 @@ RUtils.map.nnoremap("<Leader>bk", RUtils.map.show_help_buf_keymap, {
   desc = "Buffer: show keymaps curbuf",
   silent = true,
 })
-
 -- }}}
 -- {{{ Commandline
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })

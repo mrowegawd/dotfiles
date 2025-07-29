@@ -140,10 +140,10 @@ return {
 		end),
 	},
 
-	KeymapUtil.split_nav("move", "CTRL", "h", "Left"),
-	KeymapUtil.split_nav("move", "CTRL", "j", "Down"),
-	KeymapUtil.split_nav("move", "CTRL", "k", "Up"),
-	KeymapUtil.split_nav("move", "CTRL", "l", "Right"),
+	KeymapUtil.split_nav("move", "ALT", "h", "Left"),
+	KeymapUtil.split_nav("move", "ALT", "j", "Down"),
+	KeymapUtil.split_nav("move", "ALT", "k", "Up"),
+	KeymapUtil.split_nav("move", "ALT", "l", "Right"),
 
 	KeymapUtil.split_nav("resize", mod_key, "L", "Right"),
 	KeymapUtil.split_nav("resize", mod_key, "H", "Left"),

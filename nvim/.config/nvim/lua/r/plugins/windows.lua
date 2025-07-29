@@ -61,28 +61,28 @@ return {
     -- dependencies = { "mrjones2014/smart-splits.nvim" },
     keys = {
       {
-        "<C-h>",
+        "<a-h>",
         function()
           require("kitty-navigator").navigateLeft()
         end,
         desc = "Window: move cursor left [kitty-navigator]",
       },
       {
-        "<C-j>",
+        "<a-j>",
         function()
           require("kitty-navigator").navigateDown()
         end,
         desc = "Window: move cursor down [kitty-navigator]",
       },
       {
-        "<C-k>",
+        "<a-k>",
         function()
           require("kitty-navigator").navigateUp()
         end,
         desc = "Window: move cursor up [kitty-navigator]",
       },
       {
-        "<C-l>",
+        "<a-l>",
         function()
           require("kitty-navigator").navigateRight()
         end,
@@ -126,36 +126,37 @@ return {
       keybindings = {},
     },
   },
-  -- SMART-SPLITS
+  -- SMART-SPLITS (disabled)
   {
     "mrjones2014/smart-splits.nvim",
     event = "LazyFile",
+    -- enabled = false,
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     keys = function()
       return {
         {
-          "<C-h>",
+          "<a-h>",
           function()
             require("smart-splits").move_cursor_left()
           end,
           desc = "Window: move cursor left [smart-splits]",
         },
         {
-          "<C-j>",
+          "<a-j>",
           function()
             require("smart-splits").move_cursor_down()
           end,
           desc = "Window: move cursor down [smart-splits]",
         },
         {
-          "<C-k>",
+          "<a-k>",
           function()
             require("smart-splits").move_cursor_up()
           end,
           desc = "Window: move cursor up [smart-splits]",
         },
         {
-          "<C-l>",
+          "<a-l>",
           function()
             require("smart-splits").move_cursor_right()
           end,
@@ -389,5 +390,69 @@ return {
       --   end
       -- end
     end,
+  },
+  -- MULTIPLEXER (false)
+  {
+    "stevalkr/multiplexer.nvim",
+    enabled = false,
+    keys = {
+      {
+        "<a-h>",
+        function()
+          require("multiplexer").activate_pane_left()
+        end,
+        desc = "Window: move cursor left [multiplexer]",
+      },
+      {
+        "<a-j>",
+        function()
+          require("multiplexer").activate_pane_down()
+        end,
+        desc = "Window: move cursor down [multiplexer]",
+      },
+      {
+        "<a-k>",
+        function()
+          require("multiplexer").activate_pane_up()
+        end,
+        desc = "Window: move cursor up [multiplexer]",
+      },
+      {
+        "<a-l>",
+        function()
+          require("multiplexer").activate_pane_right()
+        end,
+        desc = "Window: move cursor right [multiplexer]",
+      },
+      {
+        "<a-H>",
+        function()
+          require("multiplexer").resize_pane_left(4, {})
+        end,
+        desc = "Window: resize window left [multiplexer]",
+      },
+      {
+        "<a-J>",
+        function()
+          require("multiplexer").resize_pane_down(4, {})
+        end,
+        desc = "Window: resize window down [multiplexer]",
+      },
+      {
+        "<a-K>",
+        function()
+          require("multiplexer").resize_pane_up(4, {})
+        end,
+        desc = "Window: resize window up [multiplexer]",
+      },
+      {
+        "<a-L>",
+        function()
+          require("multiplexer").resize_pane_right(4, {})
+        end,
+        desc = "Window: resize window right [multiplexer]",
+      },
+    },
+    opts = {},
   },
 }

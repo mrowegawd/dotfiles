@@ -267,8 +267,8 @@ return {
             org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
             org_insert_todo_heading_respect_content = "<c-t>", -- Add new todo headling after current heading block on same level
 
-            org_next_visible_heading = "<c-n>",
-            org_previous_visible_heading = "<c-p>",
+            org_next_visible_heading = "<a-n>",
+            org_previous_visible_heading = "<a-p>",
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
 
@@ -301,8 +301,8 @@ return {
             org_do_demote = ">",
             org_promote_subtree = "<a-<>",
             org_demote_subtree = "<a->>",
-            org_move_subtree_up = "<a-p>",
-            org_move_subtree_down = "<a-n>",
+            org_move_subtree_up = "<c-p>",
+            org_move_subtree_down = "<c-n>",
 
             org_refile = "<prefix>r",
             org_add_note = "<prefix>k",
@@ -561,26 +561,26 @@ return {
       ui = {
         enable = false, -- set to false to disable all additional syntax features
       },
-      mappings = {
-        ["<c-c>"] = {
-          action = function()
-            return require("obsidian").util.toggle_checkbox()
-          end,
-          opts = { buffer = true },
-        },
-        -- ["gf"] = {
-        --   action = function()
-        --     return require("obsidian").util.gf_passthrough()
-        --   end,
-        --   opts = { noremap = false, expr = true, buffer = true },
-        -- },
-        -- ["<cr>"] = {
-        --   action = function()
-        --     return require("obsidian").util.smart_action()
-        --   end,
-        --   opts = { buffer = true, expr = true },
-        -- },
-      },
+      -- mappings = {
+      --   ["<c-c>"] = {
+      --     action = function()
+      --       return require("obsidian").util.toggle_checkbox()
+      --     end,
+      --     opts = { buffer = true },
+      --   },
+      --   -- ["gf"] = {
+      --   --   action = function()
+      --   --     return require("obsidian").util.gf_passthrough()
+      --   --   end,
+      --   --   opts = { noremap = false, expr = true, buffer = true },
+      --   -- },
+      --   -- ["<cr>"] = {
+      --   --   action = function()
+      --   --     return require("obsidian").util.smart_action()
+      --   --   end,
+      --   --   opts = { buffer = true, expr = true },
+      --   -- },
+      -- },
       follow_url_func = function(url)
         vim.fn.jobstart { "open", url }
       end,

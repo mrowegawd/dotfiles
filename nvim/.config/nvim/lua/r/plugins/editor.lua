@@ -209,8 +209,8 @@ return {
           q = "close",
           o = "jump",
           zk = "fold_toggle",
-          ["<c-n>"] = "next",
-          ["<c-p>"] = "prev",
+          ["<a-n>"] = "next",
+          ["<a-p>"] = "prev",
           ["<TAB>"] = "fold_toggle",
         },
       }

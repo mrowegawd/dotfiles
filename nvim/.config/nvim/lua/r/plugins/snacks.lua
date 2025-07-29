@@ -163,7 +163,7 @@ return {
                 icon = " ",
                 title = "RECENT FILES",
                 section = "recent_files",
-                limit = 4,
+                limit = 5,
                 padding = 2,
                 hl = "Normal",
               },

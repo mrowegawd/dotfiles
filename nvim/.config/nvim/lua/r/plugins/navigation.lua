@@ -526,8 +526,8 @@ return {
         link_folds_to_tree = false,
         icons = RUtils.config.icons.kinds,
         keymaps = {
-          ["<c-n>"] = "actions.down_and_scroll",
-          ["<c-p>"] = "actions.up_and_scroll",
+          ["<a-n>"] = "actions.down_and_scroll",
+          ["<a-p>"] = "actions.up_and_scroll",
           ["{"] = false,
           ["<BS>"] = "actions.tree_toggle",
           ["o"] = "actions.jump",
@@ -726,8 +726,8 @@ return {
           fold_all = { "zm", "zM" },
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
-          down_and_jump = "<c-n>",
-          up_and_jump = "<c-p>",
+          down_and_jump = "<a-n>",
+          up_and_jump = "<a-p>",
         },
       }
     end,

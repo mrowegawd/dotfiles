@@ -201,7 +201,7 @@ config.hyperlink_rules = Hyperlinks
 -- Download font: https://monaspace.githubnext.com/
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
-config.font = font_with_fallback("SF Mono")
+config.font = font_with_fallback("SF Mono NF CN")
 config.font_rules = {
 	{
 		intensity = "Normal",
