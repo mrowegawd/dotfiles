@@ -206,7 +206,7 @@ config.font_rules = {
 	{
 		intensity = "Normal",
 		italic = true,
-		font = wezterm.font("Maple Mono", { style = "Italic" }),
+		font = wezterm.font("Maple Mono NF CN", { style = "Italic" }),
 	},
 }
 

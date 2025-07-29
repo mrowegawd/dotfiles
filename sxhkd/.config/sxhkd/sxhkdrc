@@ -32,8 +32,12 @@ super + F10
 #       dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
 # window: navigate h,l
-super + ctrl + {h, l}
-        bspc node -f {prev,next}.local.!hidden.window
+# super + ctrl + {h, l}
+#         bspc node -f {prev,next}.local.!hidden.window
+
+# window: navigate window
+super + ctrl + {h,j,k,l}
+    bspc node -f {west,south,north,east}
 
 # window: swap window
 super + shift + {Left,Down,Up,Right}
