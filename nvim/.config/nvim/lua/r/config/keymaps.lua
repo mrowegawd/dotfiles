@@ -612,13 +612,12 @@ local get_current_pane_tmux_cmd = function(run_cmd)
   return true
 end
 
-local get_current_pane_wezterm_id = function()
-  local get_pane_id = vim.system({ "wezterm", "cli", "-p", "get-pane-direction", "right" }, { text = true }):wait()
-  if get_pane_id.code ~= 0 then
-    RUtils.error("Failed to get wezterm pane_id", { title = "Config Keymaps" })
-    return
+local get_right_pane_id_wez = function()
+  local get_pane_right_id = vim.system({ "wezterm", "cli", "get-pane-direction", "right" }, { text = true }):wait()
+  if get_pane_right_id.code ~= 0 then
+    return nil
   end
-  return get_pane_id.stdout
+  return get_pane_right_id.stdout
 end
 
 RUtils.map.nnoremap("<a-E>", function()
@@ -635,23 +634,32 @@ RUtils.map.nnoremap("<a-E>", function()
       end
     end
 
-    local pane_right_id = get_current_pane_wezterm_id()
-
+    local pane_right_id = get_right_pane_id_wez()
     if pane_right_id then
-      vim.system { "wezterm", "cli", "kill-pane", "--pane-id", tostring(pane_right_id) }
+      ---@diagnostic disable-next-line: assign-type-mismatch
+      vim.system { "wezterm", "cli", "kill-pane", "--pane-id", tonumber(pane_right_id) }
     end
 
     vim.system { "wezterm", "cli", "split-pane", "--right", "--percent", "22" }
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    vim.system { "sleep", 0.5 }
     vim.system { "wezterm", "cli", "activate-pane-direction", "left" }
 
-    pane_right_id = get_current_pane_wezterm_id()
-
-    RUtils.info "Not implemented yet"
-    -- vim.system(
-    --   string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_right_id)
-    -- )
-
-    -- vim.system { "wezterm", "cli", "activate-pane-direction", "right" }
+    pane_right_id = get_right_pane_id_wez()
+    -- RUtils.info(pane_right_id)
+    if pane_right_id then
+      local cmd_open_filemanager_wez = {
+        "wezterm",
+        "cli",
+        "send-text",
+        "--pane-id",
+        tonumber(pane_right_id),
+        "--no-paste",
+        "" .. fm_manager .. " " .. dirname .. "\r",
+      }
+      vim.system(cmd_open_filemanager_wez)
+      vim.system { "wezterm", "cli", "activate-pane-direction", "right" }
+    end
   else
     local main_pane_id = get_current_pane_tmux_id()
 
