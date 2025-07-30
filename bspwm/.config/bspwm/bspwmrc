@@ -131,13 +131,16 @@ pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
 # [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
 
 STARTUP_LOCK_FILE=/tmp/bspwm-startup.lock
-if [ ! -f $STARTUP_LOCK_FILE ]; then
-  echo "dummy" >$STARTUP_LOCK_FILE
+if [ ! -f "$STARTUP_LOCK_FILE" ]; then
+  echo "dummy" >"$STARTUP_LOCK_FILE"
 
   [ -f "$HOME/.local/bin/mpdris2-rs" ] && pkill mpdris2-rs && "$HOME/.local/bin/mpdris2-rs" &
 
-  run_once firefox
-  # run_once zen-browser
+  if [ -f "$HOME/.local/bin/zen-browser" ]; then
+    run_once zen-browser
+  else
+    run_once firefox
+  fi
 
   [ -f ~/.lesskey ] && run_once lesskey
   [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"

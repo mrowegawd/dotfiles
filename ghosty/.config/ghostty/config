@@ -1,8 +1,8 @@
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-# font-family    = "CommitMono"
-font-family = "Cousins hug"
+font-family    = "SF Mono"
+# font-family = "Cousins hug"
 # font-family = "Cousins hug" # "JetBrainsMono NF"
 # font-family = "JetBrainsMono NF"
 # font-family-bold = "SF Mono"
