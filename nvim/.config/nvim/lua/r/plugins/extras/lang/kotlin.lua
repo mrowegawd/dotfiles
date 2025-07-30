@@ -96,7 +96,7 @@ return {
           name = "Attach to debugging session",
           port = 5005,
           args = {},
-          projectRoot = vim.fn.getcwd,
+          projectRoot = vim.uv.cwd,
           hostName = "localhost",
           timeout = 2000,
         },

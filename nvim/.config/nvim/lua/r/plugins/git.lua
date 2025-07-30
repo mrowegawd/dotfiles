@@ -551,9 +551,10 @@ return {
         command = function()
           -- If it's a new commit, start in insert mode, otherwise start in normal mode
           if vim.fn.getline(1) == "" then
-            vim.cmd "15 wincmd _"
+            -- vim.cmd "15 wincmd _"
+            vim.cmd "15 wincmd K"
             vim.cmd "normal! gg0"
-            if vim.fn.getline "." == "" then
+            if vim.api.nvim_get_current_line() == "" then
               vim.cmd "startinsert"
             end
           end

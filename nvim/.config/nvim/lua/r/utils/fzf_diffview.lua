@@ -89,7 +89,7 @@ M.git_relative_path = function(bufnr)
     return string.gsub(abs_filename, git_dir, "")
   else
     -- try with current cwd (normally a git repo)
-    git_dir = escape_chars(vim.fn.getcwd() .. "/")
+    git_dir = escape_chars(vim.uv.cwd() .. "/")
     return string.gsub(abs_filename, git_dir, "")
   end
 end
@@ -189,7 +189,7 @@ local previous_commit_hash = function(commit_hash)
 end
 
 M.git_dir = function()
-  return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.fn.getcwd()), ".git")
+  return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
 end
 
 local file_exists_on_commit = function(commit_hash, git_relative_file_path)
@@ -313,8 +313,8 @@ local filename_commit = function(bufnr, first_commit, second_commit)
 end
 
 local git_relative_path_to_relative_path = function(git_relative_path)
-  local git_dir = find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.fn.getcwd()), ".git")
-  local project_dir = RUtils.file.sanitize(vim.fn.getcwd())
+  local git_dir = find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
+  local project_dir = RUtils.file.sanitize(vim.uv.cwd())
 
   local absolute_path = git_dir .. "/" .. git_relative_path
   project_dir = escape_chars(project_dir .. "/")
@@ -381,7 +381,7 @@ end
 --- @return boolean is_commit true if hash is commit
 local is_commit = function(commit_hash)
   local git_dir = function()
-    return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.fn.getcwd()), ".git")
+    return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
   end
   local command = "cd " .. git_dir() .. " && git cat-file -t " .. commit_hash
 

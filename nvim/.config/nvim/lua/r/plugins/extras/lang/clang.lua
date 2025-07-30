@@ -144,7 +144,7 @@ return {
             request = "launch",
             name = "Launch file",
             program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+              return vim.fn.input("Path to executable: ", vim.uv.cwd() .. "/", "file")
             end,
             cwd = "${workspaceFolder}",
           },
