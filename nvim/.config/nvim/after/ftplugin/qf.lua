@@ -217,7 +217,7 @@ end, {
   desc = "QF: live grep list of items [fzflua]",
 })
 
-keymap.set("n", "<a-l>", function()
+keymap.set("n", "L", function()
   local qf_win = RUtils.cmd.windows_is_opened { "qf" }
   if qf_win.found then
     if RUtils.qf.is_loclist() then
@@ -251,7 +251,7 @@ end, {
   desc = "QF: convert loclist into trouble/qf",
 })
 
-keymap.set("n", "<a-q>", function()
+keymap.set("n", "Q", function()
   if RUtils.qf.is_loclist() then
     local _qf = RUtils.cmd.windows_is_opened { "qf" }
     if _qf.found then

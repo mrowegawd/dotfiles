@@ -28,7 +28,7 @@ local __tbl_trouble = function()
   return tbl_items, prefix_title
 end
 
-keymap.set("n", "<a-q>", function()
+keymap.set("n", "Q", function()
   local tbl_items, prefix_title = __tbl_trouble()
   if #tbl_items > 0 then
     vim.fn.setqflist({}, "r", { title = "Trouble-" .. prefix_title, items = tbl_items })
@@ -45,7 +45,7 @@ keymap.set("n", "<a-q>", function()
   end
 end, { buffer = api.nvim_get_current_buf(), desc = "Trouble: convert into quickfix (qf)" })
 
-keymap.set("n", "<a-l>", function()
+keymap.set("n", "L", function()
   local tbl_items, _ = __tbl_trouble()
   if #tbl_items > 0 then
     vim.fn.setloclist(1, tbl_items)
