@@ -1123,6 +1123,7 @@ function M.change_colors()
 
   if RUtils.file.is_file(master_color_path) then
     vim.system { "rm", master_color_path }
+    vim.system { "touch", master_color_path }
   end
 
   local fp = io.open(master_color_path, "a")

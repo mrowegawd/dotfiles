@@ -7,8 +7,8 @@ return {
   },
   -- QFSILET
   {
-    -- "mrowegawd/qfsilet",
-    dir = "~/.local/src/nvim_plugins/qfsilet",
+    "mrowegawd/qfsilet",
+    -- dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "LazyFile", -- use `LazyFile` agar sign mark bisa di load dgn benar
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {

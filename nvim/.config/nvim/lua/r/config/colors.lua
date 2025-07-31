@@ -79,41 +79,43 @@ end
 reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.1,
-  floatborder_fg_alter = 3.8,
+  floatborder_fg_alter = 4.5,
   fzfheadertext_fg_alter = 0.08,
   linenr_fg_alter = 1.2,
   nontext_fg_alter = 3.2,
   normalfloat_fg_alter = 9,
-  winseparator_alter = 1.6,
+  winseparator_alter = 1.7,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
+  floatborder_fg_alter = 1,
+  fzfheadertext_fg_alter = 0.2,
   linenr_fg_alter = 0.35,
   normalfloat_bg_alter = 0.05,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 0.35,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 1.5,
+  floatborder_fg_alter = 1.8,
   fzfheadertext_fg_alter = 0.15,
   linenr_fg_alter = 0.5,
   winbarfilepath_fg_alter = 0.55,
-  winseparator_alter = 0.48,
+  winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
   cursorline_alter = 0.1,
-  floatborder_fg_alter = 1.3,
+  floatborder_fg_alter = 1.35,
   fzfheadertext_fg_alter = 0.15,
   linenr_fg_alter = 0.4,
   pmenusel_bg_alter = 0.4,
   winbarfilepath_fg_alter = -0.14,
-  winseparator_alter = 0.35,
+  winseparator_alter = 0.38,
 })
 reset_base_alter({ "base46-doomchad" }, {
   comment_fg_alter = 0.5,
@@ -128,14 +130,14 @@ reset_base_alter({ "base46-doomchad" }, {
   nontext_fg_alter = 1,
   search_bg_alter = 0.95,
   winbarfilepath_fg_alter = -0.1,
-  winseparator_alter = 0.2,
+  winseparator_alter = 0.25,
 })
 reset_base_alter({ "base46-everforest" }, {
   comment_fg_alter = 0.62,
   cursor_fg = "#e69875",
   cursorline_alter = 0.35,
   cursorline_fg_alter = "WinSeparator",
-  floatborder_fg_alter = 0.65,
+  floatborder_fg_alter = 0.8,
   fzfheadertext_fg_alter = 0.15,
   linenr_fg_alter = 0.2,
   nontext_fg_alter = 1,
@@ -149,7 +151,7 @@ reset_base_alter({ "base46-gruvchad" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 0.95,
+  floatborder_fg_alter = 1.8,
   fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.2,
@@ -160,7 +162,7 @@ reset_base_alter({ "base46-gruvchad" }, {
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winbarfilepath_fg_alter = 0.55,
-  winseparator_alter = 0.35,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
@@ -189,13 +191,14 @@ reset_base_alter({ "base46-jellybeans" }, {
   cursorline_alter = 0.65,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 2.2,
+  floatborder_fg_alter = 2.8,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.28,
-  linenr_fg_alter = 0.9,
+  linenr_fg_alter = 1,
   nontext_fg_alter = 2.5,
   normalfloat_bg_alter = -0.05,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 1.5,
+  winseparator_alter = 1.3,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -203,7 +206,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   cursorline_alter = 0.75,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 1.5,
+  floatborder_fg_alter = 1.6,
   fzflua_bg_cursorline_alter = -0.25,
   fzfluasel_fg_alter = -0.1,
   nontext_fg_alter = 1.8,
@@ -211,7 +214,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.45,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
@@ -230,12 +233,12 @@ reset_base_alter({ "base46-melange" }, {
   cursor_fg = "#ece1d7",
   cursorline_alter = 0.06,
   dapstopped_bg_alter = 0.15,
-  floatborder_fg_alter = 1.2,
+  floatborder_fg_alter = 1.3,
   fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.08,
   linenr_fg_alter = 0.3,
   winbarfilepath_fg_alter = 0.4,
-  winseparator_alter = 0.2,
+  winseparator_alter = 0.24,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
@@ -272,7 +275,7 @@ reset_base_alter({ "base46-rosepine" }, {
   cursorline_alter = 0.8,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 2.5,
+  floatborder_fg_alter = 2.8,
   fzfheadertext_fg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.28,
   linenr_fg_alter = 0.75,
@@ -312,7 +315,7 @@ reset_base_alter({ "base46-vscode_dark" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 1,
+  floatborder_fg_alter = 1.8,
   fzfheadertext_fg_alter = 0.4,
   fzflua_bg_cursorline_alter = -0.22,
   linenr_fg_alter = 0.4,
@@ -401,14 +404,14 @@ reset_base_alter({ "techbase" }, {
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.1,
-  floatborder_fg_alter = 2.5,
-  fzfheadertext_fg_alter = -0.05,
+  floatborder_fg_alter = 2.2,
+  fzfheadertext_fg_alter = -0.1,
   fzfluasel_fg_alter = -0.1,
   linenr_fg_alter = 0.7,
   nontext_fg_alter = 2.2,
   pmenusel_bg_alter = 0.3,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.8,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.15,
@@ -431,8 +434,8 @@ reset_base_alter({ "vscode_modern" }, {
   cursor_fg = "#fa1919",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 1,
-  fzfheadertext_fg_alter = 0.4,
+  floatborder_fg_alter = 1.5,
+  fzfheadertext_fg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.1,
   linenr_fg_alter = 0.5,
   nontext_fg_alter = 1.8,
@@ -441,7 +444,7 @@ reset_base_alter({ "vscode_modern" }, {
   search_bg_alter = 0.8,
   search_fg_alter = 0.2,
   winbarfilepath_fg_alter = 0.55,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.5,
 })
 
 local general_overrides = function()
@@ -1632,15 +1635,15 @@ local general_overrides = function()
 
     {
       ["@markup.link.label.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg" },
-        bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
+        fg = { from = "Keyword", attr = "fg", alter = -0.15 },
+        bg = H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")),
         bold = true,
       },
     },
     {
       ["@markup.quote.markdown"] = {
-        fg = { from = "Boolean", attr = "fg" },
-        bg = H.darken(H.get("Boolean", "fg"), 0.2, H.get("Normal", "bg")),
+        fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.1),
+        bg = H.darken(dark_red, 0.15, H.get("Normal", "bg")),
         italic = true,
         bold = false,
       },
@@ -1924,6 +1927,9 @@ local function colorscheme_overrides()
         },
       },
 
+      -- QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
+
       -- LSP
       {
         LspReferenceText = {
@@ -1985,15 +1991,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1.12 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
@@ -2035,10 +2032,7 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.1 },
         },
       },
 
@@ -2083,10 +2077,7 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.05 },
         },
       },
 
@@ -2128,15 +2119,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.28 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- CREATED HIGHLIGHTS
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
@@ -2154,15 +2136,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.18 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2207,18 +2180,15 @@ local function colorscheme_overrides()
         },
       },
 
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2267,13 +2237,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = { from = "Error", attr = "bg", alter = 0.6 },
-          bg = H.darken(H.get("Error", "bg"), 0.25, H.get("Normal", "bg")),
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2350,10 +2313,7 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.05 },
         },
       },
 
@@ -2361,6 +2321,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jabuti"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.65 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- STATUSLINE
       {
         StatusLine = {
@@ -2395,20 +2361,17 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.19 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- CREATED HIGHLIGHTS
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-jellybeans"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       {
         Visual = {
           bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), 0.05),
@@ -2461,10 +2424,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(dark_red, 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.1 },
+          bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.05 },
         },
       },
 
@@ -2487,15 +2448,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.37 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(H.get("Error", "bg"), 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(H.get("Error", "bg"), 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2532,17 +2484,6 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-material-darker"] = {
-      -- MARKDOWN
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.5),
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
-
       -- STATUSLINE
       {
         StatusLine = {
@@ -2565,16 +2506,14 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(H.get("Error", "bg"), 0.6, H.get("Normal", "fg")), 0.55),
-          bg = H.darken(H.get("Error", "bg"), 0.35, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.1 },
+          bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2591,18 +2530,15 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-melange"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.23 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.5),
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2639,6 +2575,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-onenord"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2651,15 +2593,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.12 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = { from = "Error", attr = "bg", alter = 0.8 },
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2696,6 +2629,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-oxocarbon"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2711,10 +2650,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = "white",
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.05 },
+          bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -2753,6 +2690,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-rosepine"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.48 },
@@ -2772,14 +2715,12 @@ local function colorscheme_overrides()
 
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.55 } } },
-      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.14 } } },
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.darken(dark_red, 0.5, H.get("Normal", "fg")),
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.05 },
+          bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -2810,6 +2751,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-seoul256_dark"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2822,15 +2769,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.07 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = "white",
-          bg = H.darken(dark_red, 0.3, H.get("Normal", "bg")),
-          italic = true,
-          bold = false,
-        },
-      },
 
       -- STATUSLINE
       {
@@ -2850,7 +2788,7 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.06 },
         },
       },
@@ -2867,6 +2805,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-solarized_dark"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2879,9 +2823,10 @@ local function colorscheme_overrides()
       -- MARKDOWN
       {
         ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = { from = "Error", attr = "bg", alter = 1 },
-          bg = H.darken(H.get("Error", "bg"), 0.3, H.get("Normal", "bg")),
+          fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), 0.05),
+          bg = H.darken(dark_red, 0.25, H.get("Normal", "bg")),
+          italic = true,
+          bold = false,
         },
       },
 
@@ -2932,13 +2877,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.38 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = { from = "Error", attr = "bg", alter = 1 },
-          bg = H.darken(H.get("Error", "bg"), 0.3, H.get("Normal", "bg")),
-        },
-      },
 
       -- WHICH KEY
       { WhichKeyDesc = { fg = { from = "Boolean", attr = "fg", alter = -0.2 } } },
@@ -3012,18 +2950,17 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
-          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
-        },
-      },
 
       -- CREATED HIGHLIGHTS
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["base46-zenburn"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -3039,13 +2976,6 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.08 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.12 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
-          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
-        },
-      },
 
       -- STATUSLINE
       {
@@ -3137,6 +3067,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["lackluster"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 4.5 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 3.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       {
         Visual = {
           bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), 0.1),
@@ -3225,8 +3161,8 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = H.darken(dark_red, 0.4, H.get("Normal", "fg")),
-          bg = H.darken(dark_red, 0.2, H.get("Normal", "bg")),
+          fg = { from = "@markup.quote.markdown", attr = "bg", alter = 1.5 },
+          bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -3352,6 +3288,12 @@ local function colorscheme_overrides()
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-night"] = {
+      -- QF & QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -3395,6 +3337,12 @@ local function colorscheme_overrides()
       -- MARKDOWN
       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.52 } } },
       { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.15 },
+        },
+      },
 
       -- CREATED HIGHLIGHTS
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
@@ -3633,8 +3581,7 @@ local function colorscheme_overrides()
       {
         ["@markup.quote.markdown"] = {
           inherit = "@markup.quote.markdown",
-          fg = { from = "Error", attr = "fg", alter = 0.5 },
-          bg = H.darken(H.get("Error", "fg"), 0.3, H.get("Normal", "bg")),
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.15 },
         },
       },
 
