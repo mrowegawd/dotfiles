@@ -15,6 +15,11 @@ if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
+COLOR_MASTER="/tmp/master-colors-themes"
+if [ -f "$COLOR_MASTER" ]; then
+  GET_BG=$(grep -i color22 <"$COLOR_MASTER" | cut -d':' -f2 | head -1 | xargs)
+fi
+
 not_in_tmux() {
   [ -z "$TMUX" ]
 }

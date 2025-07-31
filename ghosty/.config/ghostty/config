@@ -16,12 +16,12 @@ font-thicken                    = true
 # +-----------------------------------------------------------+
 # | MOUSE                                                     |
 # +-----------------------------------------------------------+
-mouse-hide-while-typing         = true
+mouse-hide-while-typing         = false
 
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = base46-vscode_dark
+theme = vscode_modern
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
@@ -29,11 +29,10 @@ theme = base46-vscode_dark
 window-decoration               = none
 window-padding-x                = 5
 window-padding-y                = 5
-window-colorspace               = display-p3
+# window-colorspace               = display-p3
 window-padding-balance          = false
 window-step-resize              = false
 window-theme                    = ghostty
-#gtk-adwaita                     = false
 
 # +-----------------------------------------------------------+
 # | MISC                                                      |

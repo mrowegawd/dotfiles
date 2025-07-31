@@ -138,7 +138,7 @@ local __colors = function()
   local UIPallette = require("r.utils").uisec
 
   local set_col_light = { fg_normal = 2, fg_branch = 4 }
-  local set_col_normal = { fg_normal = 3, fg_branch = 2 }
+  local set_col_normal = { fg_normal = 2, fg_branch = 2 }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
   return {
@@ -154,6 +154,10 @@ local __colors = function()
     block_bg = H.tint(H.get("StatusLine", "bg"), 0.5),
     block_fg_darken = H.tint(H.get("StatusLine", "bg"), 1.4),
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
+
+    block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), 0.1),
+    block_bg_qfstatus = H.get("Tabline", "bg"),
+
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
     block_fg_qf = H.tint(UIPallette.palette.bright_blue, 1),
@@ -353,6 +357,17 @@ M.Branch = {
     end,
     hl = { fg = colors.branch_fg, bg = colors.branch_bg, bold = true },
   },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local fg = colors.block_bg
+      if Conditions.is_git_repo() or (#get_branch_name() > 0) then
+        fg = colors.branch_bg
+      end
+      -- return { fg = fg, bg = colors.block_bg }
+      return { fg = fg }
+    end,
+  },
 }
 M.FilePath = {
   init = function(self)
@@ -370,7 +385,8 @@ M.FilePath = {
       if Conditions.is_git_repo() or (#get_branch_name() > 0) then
         fg = colors.branch_bg
       end
-      return { fg = fg, bg = colors.block_bg }
+      -- return { fg = fg, bg = colors.block_bg }
+      return { fg = fg }
     end,
   },
   {
@@ -431,7 +447,8 @@ M.FilePath = {
         end
       end
     end,
-    hl = { fg = colors.block_fg, bg = colors.block_bg },
+    -- hl = { fg = colors.block_fg, bg = colors.block_bg },
+    hl = { fg = colors.block_fg },
   },
   {
     provider = function(self)
@@ -454,12 +471,14 @@ M.FilePath = {
       if self.exclude_ft or #self.filename == 0 then
         fg = colors.block_fg
       end
-      return { fg = fg, bg = bg }
+      -- return { fg = fg, bg = bg }
+      return { fg = fg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_bg, bg = colors.statusline_bg },
+    -- hl = { fg = colors.block_bg, bg = colors.statusline_bg },
+    hl = { fg = colors.statusline_bg },
   },
 }
 M.FileIcon = {
@@ -609,7 +628,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_bg_darken },
+    hl = { fg = colors.normal_bg, bg = colors.block_bg_qfstatus },
   },
   {
     provider = function(self)
@@ -640,15 +659,15 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+    hl = { fg = colors.block_fg_qfstatus, bg = colors.block_bg_qfstatus },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_bg_darken, bg = colors.normal_bg },
+    hl = { fg = colors.block_bg_qfstatus, bg = colors.normal_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_bg_darken },
+    hl = { fg = colors.normal_bg, bg = colors.block_bg_qfstatus },
   },
   {
     provider = function(self)
@@ -660,11 +679,11 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.mode_term_bg, bg = colors.block_bg_darken },
+    hl = { fg = colors.mode_term_bg, bg = colors.block_bg_qfstatus },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_bg_darken, bg = colors.normal_bg },
+    hl = { fg = colors.block_bg_qfstatus, bg = colors.normal_bg },
   },
 }
 M.FileFlags = {
@@ -1316,7 +1335,7 @@ M.status_active_left = {
   condition = Conditions.is_active,
   -- M.Mode,
   M.Branch,
-  M.FilePath,
+  -- M.FilePath,
   -- M.FileIcon,
   M.Git,
   -- M.QuickfixStatus,

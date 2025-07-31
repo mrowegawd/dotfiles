@@ -382,7 +382,7 @@ set_btop() {
 
     cat "$_BTOP_CONFIG_THEME_PATH" >"$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%background%%/$GET_COL_22/g" "$_BTOP_THEME_PATH"
     sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_THEME_PATH"
     sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_THEME_PATH"
     sed -i -e "s/%%red_alt%%/$GET_YELLOW_ALT/g" "$_BTOP_THEME_PATH"
@@ -604,6 +604,77 @@ set_polybar() {
     sed -i -e "s/^statusline\s=.*$/statusline = $statusline/g" "$_POLYBAR_CONFIG_MODULE_PATH"
   fi
 }
+set_shaders_color() {
+  _GHOSTTY_PATH="$DOTFILES_PATH/ghosty/.config/ghostty"
+  _SHADERS_CURSOR_SMEAR_FADE="$_GHOSTTY_PATH/shaders/cursor_smear_fade.glsl"
+
+  if [ -f "$_SHADERS_CURSOR_SMEAR_FADE" ]; then
+
+    VSCODE_SHADERS_SMEAR="vec4(1.0, 1.0, 1.0, 1.0);" # white
+
+    if [ "$1" == "base46-aylin" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
+    fi
+    if [ "$1" == "base46-catppuccin" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.780, 0.024, 0.235, 1.0);"
+    fi
+    if [ "$1" == "base46-chocolate" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.784, 0.729, 0.643, 1.0);"
+    fi
+    if [ "$1" == "base46-doomchad" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.655, 0.682, 0.733, 1.0);"
+    fi
+    if [ "$1" == "base46-everforest" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.902, 0.596, 0.459, 1.0);"
+    fi
+    if [ "$1" == "base46-gruvchad" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.922, 0.859, 0.698, 1.0);"
+    fi
+    if [ "$1" == "base46-horizon" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
+    fi
+    if [ "$1" == "base46-jabuti" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.753, 0.796, 0.89, 1.0);"
+    fi
+    if [ "$1" == "base46-jellybeans" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.753, 0.796, 0.89, 1.0);"
+    fi
+    if [ "$1" == "base46-kanagawa" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
+    fi
+    if [ "$1" == "base46-material-darker" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.086, 0.686, 0.792, 1.0);"
+    fi
+    if [ "$1" == "base46-onenord" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.219, 0.475, 0.773, 1.0);"
+    fi
+    if [ "$1" == "base46-rosepine" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.341, 0.322, 0.475, 1.0);"
+    fi
+    if [ "$1" == "base46-seoul256_dark" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.843, 0.373, 0.529, 1.0);"
+    fi
+    if [ "$1" == "base46-solarized_dark" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.439, 0.510, 0.518, 1.0);"
+    fi
+    if [ "$1" == "base46-zenburn" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.953, 0.918, 0.859, 1.0);"
+    fi
+    if [ "$1" == "lackluster" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.871, 0.933, 0.929, 1.0);"
+    fi
+    if [ "$1" == "tokyonight-night" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.620, 0.055, 0.024, 1.0);"
+    fi
+    if [ "$1" == "tokyonight-storm" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
+    fi
+    if [ "$1" == "vscode_modern" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.980, 0.098, 0.098, 1.0);"
+    fi
+    sed -i -e "s/^const vec4 TRAIL_COLOR\s=.*$/const vec4 TRAIL_COLOR = $VSCODE_SHADERS_SMEAR/g" "$_SHADERS_CURSOR_SMEAR_FADE"
+  fi
+}
 
 wm_bspwm() {
   ~/.config/bspwm/bspwmrc &>/dev/null
@@ -654,6 +725,7 @@ setup() {
   set_delta
   set_zshrc "$1"
   set_polybar "$1"
+  set_shaders_color "$1"
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;
@@ -694,7 +766,6 @@ main() {
   fi
 
   setup "$_NAMETHEME"
-
 }
 
 "$@"
