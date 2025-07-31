@@ -63,15 +63,43 @@ build-install() {
     sudo apt install proxychains4 -y
   fi
 
-  # if ! command -v btop >/dev/null; then
-  #   echo "Installing: btop - A monitor of resources"
-  #   wget https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
-  #   extract di path /src
-  #   lalu 'sudo make install'.. and done!
-  #
-  #   Install newsboat: `sudo snap install newsboat`
-  #
-  # fi
+  if ! command -v newsboat >/dev/null; then
+    echo "Installing: newsbato - Feed news"
+    chmod +x  "$HOME/.config/miscxrdb/exbin/install-newsboat"
+    bash "$HOME/.config/miscxrdb/exbin/install-newsboat"
+  fi
+
+  if ! command -v btop >/dev/null; then
+    echo "Installing: btop - fancy pid monitor"
+    VERSION="1.4.4"
+    ARCH="x86_64"
+    PLATFORM="linux"
+    LOCATION_PATH="$HOME/.local/src"
+
+    FILENAME="btop-${ARCH}-${PLATFORM}-musl.tbz"
+    BASE_URL="https://github.com/aristocratos/btop/releases/download/v${VERSION}"
+    DOWNLOAD_URL="${BASE_URL}/${FILENAME}"
+
+    EXTRACT_TO_PATH="$LOCATION_PATH/${FILENAME}"
+
+    wget "${DOWNLOAD_URL}" -O "${EXTRACT_TO_PATH}" || curl -LO "${DOWNLOAD_URL}"
+
+    if [[ -f $EXTRACT_TO_PATH ]]; then
+      tar -xvjf "$EXTRACT_TO_PATH" -C "$LOCATION_PATH"
+      cd "$LOCATION_PATH/btop"
+      sudo make install
+    fi
+  fi
+
+  if ! command -v gh >/dev/null; then
+    echo "Installing: gh - git cli tool"
+    type -p curl >/dev/null || sudo apt install curl -y
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
+      sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
+      sudo apt update &&
+      sudo apt install gh -y
+  fi
 
   # if ! command -v ueberzugpp >/dev/null; then
   #   echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
@@ -224,7 +252,7 @@ build-install() {
     asdf reshim golang
   fi
 
-  if ! command -v lazygit >/dev/null; then
+  if [ ! -f /usr/local/bin/lazygit ]; then
     echo "Installing: lazygit - Git TUI"
     # go install github.com/jesseduffield/lazygit@latest
     # asdf reshim golang

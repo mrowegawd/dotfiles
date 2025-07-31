@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# Script untuk menginstall Newsboat dari source beserta dependensinya
+# Diperuntukkan untuk sistem berbasis Debian/Ubuntu
+
+# Exit jika ada error
+set -e
+
+# Fungsi untuk mengecek apakah perintah tersedia
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Update package index
+echo "Memperbarui index paket..."
+sudo apt-get update
+
+# Install dependensi yang diperlukan
+echo "Menginstall dependensi..."
+sudo apt-get install -y \
+  git \
+  build-essential \
+  g++ \
+  cmake \
+  libcurl4-openssl-dev \
+  libjsoncpp-dev \
+  libxml2-dev \
+  libsqlite3-dev \
+  libstfl-dev \
+  libncursesw5-dev \
+  libjson-c-dev \
+  libssl-dev \
+  gettext \
+  pkg-config \
+  asciidoctor
+
+# Install Rust dan Cargo jika belum ada
+if ! command_exists rustc || ! command_exists cargo; then
+  echo "Menginstall Rust dan Cargo..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source "$HOME/.cargo/env"
+else
+  echo "Rust dan Cargo sudah terinstall."
+fi
+
+# Clone repository Newsboat
+echo "Mengkloning repository Newsboat..."
+if [ -d "/tmp/newsboat" ]; then
+  rm -rf /tmp/newsboat
+fi
+git clone https://github.com/newsboat/newsboat.git /tmp/newsboat
+cd /tmp/newsboat
+
+# Build Newsboat
+echo "Membangun Newsboat..."
+make -j"$(nproc)"
+
+# Install Newsboat
+echo "Menginstall Newsboat..."
+sudo make install prefix=/usr/local
+
+# Verifikasi instalasi
+if command_exists newsboat; then
+  echo "Newsboat berhasil diinstall! Versi: $(newsboat --version)"
+else
+  echo "Gagal menginstall Newsboat."
+  exit 1
+fi
+
+# Bersihkan direktori sementara
+rm -rf /tmp/newsboat
+cd
+
+echo "Instalasi selesai. Anda bisa menjalankan 'newsboat' dari terminal."
+echo "Konfigurasi feed di ~/.newsboat/urls atau ~/.config/newsboat/urls."
