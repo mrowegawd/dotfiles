@@ -2349,8 +2349,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.7 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.95 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 

@@ -22,7 +22,7 @@ notify-program              "/usr/local/bin/dunstify"
 
 # feedlist-title-format       "—[%u feeds with new articles]——%>——(%N %V)—"
 # feedlist-format             "%4i  %t (%c)"
-feedlist-format "%?l?│ %3U %t &├──── %t?"
+feedlist-format              "%?l?│ %3U %t &├──── %t?"
 
 # feedlist-format "%?T?║%4i %n %8u (%T) %t &╠═════════════════════════════════════════════════════%t?"
 # feedlist-format "%4i %n %8u (%T) %t &╠═════════════════════════════════════════════════════%t?"
