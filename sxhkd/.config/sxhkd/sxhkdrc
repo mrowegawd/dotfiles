@@ -36,15 +36,19 @@ super + F10
 #         bspc node -f {prev,next}.local.!hidden.window
 
 # window: navigate window
-super + ctrl + {h,j,k,l}
-    bspc node -f {west,south,north,east}
+super + {h,j,k,l}
+        bspc node -f {west,south,north,east}
+
+# window: navigate between tiling and floating window
+super + {Tab,shift+Tab}
+        bspc node -f {next,prev}.local
 
 # window: swap window
 super + shift + {Left,Down,Up,Right}
         bspc node -s {west,south,north,east}
 
 # window: move window to the left,right,up,down (float)
-super + {h,j,k,l}
+super + ctrl + {h,j,k,l}
         xdotool getwindowfocus windowmove --relative %1 {-25 0, 0 +25, 0 -25, +25 0}
 
 # window: rotate the windows
