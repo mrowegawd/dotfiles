@@ -187,7 +187,7 @@ reset_base_alter({ "base46-jabuti" }, {
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
-  cursorline_alter = 0.65,
+  cursorline_alter = 0.7,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   floatborder_fg_alter = 2.5,
@@ -196,7 +196,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 1,
   nontext_fg_alter = 2.5,
   winbarfilepath_fg_alter = 0.6,
-  winseparator_alter = 1.3,
+  winseparator_alter = 1,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -316,7 +316,7 @@ reset_base_alter({ "base46-vscode_dark" }, {
   cursorline_alter = 0.12,
   dapstopped_bg_alter = 0.2,
   floatborder_fg_alter = 1.5,
-  fzfheadertext_fg_alter = 0.15,
+  fzfheadertext_fg_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.22,
   linenr_fg_alter = 0.4,
   nontext_fg_alter = 1.8,
@@ -369,23 +369,25 @@ reset_base_alter({ "lackluster" }, {
   winbarfilepath_fg_alter = 0.02,
   winseparator_alter = 1.8,
 })
-reset_base_alter({ "techbase" }, {
+reset_base_alter({ "rose-pine-dawn" }, {
   cmpdocnormal_fg_alter = 0.1,
-  comment_fg_alter = 0.8,
+  comment_fg_alter = -0.19,
   cursor_fg = "#dfdfe0",
-  cursorline_alter = 0.1,
+  cursorline_alter = -0.12,
   dapstopped_bg_alter = 0.2,
-  floatborder_fg_alter = 1.4,
-  fzfheadertext_fg_alter = 0.2,
-  fzflua_bg_cursorline_alter = -0.22,
-  linenr_fg_alter = 0.5,
-  nontext_fg_alter = 1.8,
-  pmenu_fg_alter = 0.1,
-  pmenusel_bg_alter = 0.6,
-  search_bg_alter = 0.8,
+  floatborder_fg_alter = -0.3,
+  fzfheadertext_fg_alter = -0.2,
+  fzflua_bg_cursorline_alter = 0.08,
+  quickfixline_alter = -0.1,
+  fzfluasel_fg_alter = 0.01,
+  linenr_fg_alter = -0.12,
+  nontext_fg_alter = -0.45,
+  pmenu_fg_alter = -0.2,
+  pmenusel_bg_alter = -0.05,
+  search_bg_alter = 0.7,
   search_fg_alter = 0.2,
-  winbarfilepath_fg_alter = 0.72,
-  winseparator_alter = 0.7,
+  winbarfilepath_fg_alter = -0.15,
+  winseparator_alter = -0.12,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
@@ -1780,7 +1782,7 @@ local general_overrides = function()
 
     {
       TroubleIndent = {
-        fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+        fg = { from = "Normal", attr = "bg", alter = 1 },
         bg = "NONE",
       },
     },
@@ -1794,11 +1796,11 @@ local general_overrides = function()
 
     -- DIRECTORY
     { TroubleDirectory = { bg = "NONE" } },
-    { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
+    { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.3 } } },
     {
       TroubleFsCount = {
-        fg = { from = "Directory", attr = "fg", alter = 0.2 },
-        bg = { from = "Directory", attr = "fg", alter = -0.5 },
+        fg = { from = "Directory", attr = "fg", alter = -0.13 },
+        bg = { from = "Directory", attr = "fg", alter = -0.6 },
       },
     },
 
@@ -1813,8 +1815,8 @@ local general_overrides = function()
     { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
     {
       TroubleDiagnosticsCount = {
-        fg = { from = "DiagnosticWarn", attr = "fg", alter = 0.2 },
-        bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.5 },
+        fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.13 },
+        bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.6 },
       },
     },
 
@@ -2378,7 +2380,7 @@ local function colorscheme_overrides()
 
       {
         Visual = {
-          bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), 0.05),
+          bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), -0.1),
           fg = "NONE",
         },
       },
@@ -2417,8 +2419,8 @@ local function colorscheme_overrides()
 
       {
         TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.15 },
         },
       },
 
@@ -3234,6 +3236,304 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
       -- CREATED HIGHLIGHTS
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
+    },
+    ["rose-pine"] = {
+      -- DIAGNOSTICS
+      {
+        diffAdd = {
+          fg = H.tint(H.darken(dark_green, 0.9, H.get("Normal", "bg")), -0.1),
+          bg = H.tint(H.darken(dark_green, 0.1, H.get("Normal", "bg")), -0.1),
+          reverse = false,
+        },
+      },
+      {
+        diffChange = {
+          fg = H.darken(dark_yellow, 0.55, H.get("Normal", "bg")),
+          bg = H.darken(dark_yellow, 0.1, H.get("Normal", "bg")),
+          bold = true,
+          reverse = false,
+        },
+      },
+      {
+        diffDelete = {
+          fg = H.darken(dark_red, 0.7, H.get("Normal", "bg")),
+          bg = H.darken(dark_red, 0.1, H.get("Normal", "bg")),
+          reverse = false,
+        },
+      },
+      {
+        diffText = {
+          fg = H.darken(dark_yellow, 0.8, H.get("Normal", "bg")),
+          bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
+          bold = true,
+          reverse = false,
+        },
+      },
+
+      { diffAdded = { inherit = "DiffAdd" } },
+      { diffChanged = { inherit = "DiffChange" } },
+      { diffRemoved = { inherit = "DiffDelete" } },
+
+      {
+        GitSignsAdd = {
+          bg = "NONE",
+          fg = H.tint(H.darken(dark_green, 0.8, H.get("Normal", "bg")), -0.15),
+        },
+      },
+
+      {
+        GitSignsChange = {
+          bg = "NONE",
+          fg = H.tint(H.darken(dark_yellow, 0.8, H.get("Normal", "bg")), -0.15),
+        },
+      },
+      {
+        GitSignsDelete = {
+          bg = "NONE",
+          fg = H.tint(H.darken(dark_red, 0.8, H.get("Normal", "bg")), -0.15),
+        },
+      },
+
+      {
+        GitSignsAddInline = {
+          fg = { from = "diffAdded", attr = "bg", alter = 3 },
+          bg = { from = "diffAdded", attr = "bg", alter = 1 },
+        },
+      },
+      {
+        GitSignsChangeDelete = {
+          fg = { from = "diffChanged", attr = "bg", alter = 3 },
+          bg = "NONE",
+        },
+      },
+      {
+        GitSignsDeleteInline = {
+          fg = { from = "diffDelete", attr = "bg", alter = 3 },
+          bg = { from = "diffDelete", attr = "bg", alter = 1 },
+        },
+      },
+
+      { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
+      { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
+      { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
+
+      { NeogitDiffAdd = { link = "diffAdd" } },
+      { NeogitDiffAddHighlight = { link = "diffAdd" } },
+      { NeogitDiffDelete = { link = "diffDelete" } },
+      { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
+
+      { DiffText = { link = "diffText" } },
+
+      -- GENERAL
+      {
+        Search = {
+          fg = H.darken(dark_red, search_fg_alter, H.get("Normal", "bg")),
+          bg = H.darken(dark_red, search_bg_alter, H.get("Boolean", "fg")),
+          -- bg = H.darken(H.get("Keyword", "fg"), search_bg_alter, H.get("Boolean", "fg")),
+          bold = true,
+        },
+      },
+      {
+        SearchEdit = {
+          fg = H.darken(dark_red, search_fg_alter, H.get("Normal", "bg")),
+          bg = H.darken(dark_red, search_bg_alter, H.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+
+      {
+        CurSearch = {
+          fg = H.darken(dark_red, cursearch_fg_alter, H.get("Normal", "bg")),
+          bg = H.darken(dark_red, cursearch_bg_alter, H.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      { IncSearch = { inherit = "CurSearch" } },
+
+      { Cursor = { bg = cursor_fg, reverse = false } },
+      { TermCursor = { inherit = "Cursor" } },
+      { Substitute = { inherit = "CurSearch" } },
+
+      -- FZF
+      { FzfLuaFzfMatch = { fg = { from = "SearchEdit", attr = "bg", alter = -0.05 }, bg = "NONE" } },
+      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+
+      { BlinkCmpLabelMatch = { fg = { from = "SearchEdit", attr = "bg", alter = -0.02 } } },
+
+      -- LSP
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg" },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = 0.26 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      -- ╭─────────────────╮
+      -- │ SNACKS NOTIFIER │
+      -- ╰─────────────────╯
+      -- INFO
+      {
+        SnacksNotifierInfo = {
+          fg = H.tint(H.darken(H.get("Function", "fg"), 0.1, H.get("Normal", "bg")), -0.5),
+          bg = { from = "Normal", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierBorderInfo = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "SnacksNotifierInfo", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierTitleInfo = {
+          fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = -0.1 },
+          bg = { from = "SnacksNotifierInfo", attr = "bg" },
+          bold = true,
+        },
+      },
+      -- WARN
+      {
+        SnacksNotifierWarn = {
+          fg = { from = "diffChange", attr = "fg", alter = -0.5 },
+          bg = { from = "Normal", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierBorderWarn = {
+          fg = { from = "diffChange", attr = "fg" },
+          bg = { from = "SnacksNotifierWarn", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierTitleWarn = {
+          fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = -0.1 },
+          bg = { from = "SnacksNotifierWarn", attr = "bg" },
+          bold = true,
+        },
+      },
+      -- ERROR
+      {
+        SnacksNotifierError = {
+          fg = { from = "diffDelete", attr = "fg", alter = -0.5 },
+          bg = { from = "Normal", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierBorderError = {
+          fg = { from = "diffDelete", attr = "fg" },
+          bg = { from = "SnacksNotifierError", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierTitleError = {
+          fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.1 },
+          bg = { from = "SnacksNotifierError", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      -- SNACKS
+      { SnacksIndentScope = { fg = H.tint(H.darken(dark_yellow, 0.3, H.get("Normal", "bg")), -0.08) } },
+
+      -- QF/QUICKER
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
+      { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+      { qfSeparator2 = { link = "qfSeparator1" } },
+      { Delimiter = { link = "qfSeparator1" } },
+      {
+        QuickFixLine = {
+          fg = "NONE",
+          bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
+          bold = true,
+          underline = false,
+          reverse = false,
+        },
+      },
+
+      -- GRUG-FAR
+      {
+        GrugFarResultsLineNr = {
+          inherit = "GrugFarResultsLineNr",
+          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
+          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
+        },
+      },
+
+      -- STATUSLINE
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = -0.35 },
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.6 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "bg", alter = -0.22 }, bg = "NONE" } },
+
+      {
+        TabLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = -0.26 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.01 },
+        },
+      },
+
+      {
+        Folded = {
+          fg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.037 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
+
+      {
+        MyCodeUsage = {
+          inherit = "MyCodeUsage",
+          fg = { from = "Keyword", attr = "fg", alter = 0.5 },
+          bg = { from = "Keyword", attr = "fg", alter = 4 },
+        },
+      },
+
+      -- MARKDOWN
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.52 } } },
+      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
+      {
+        ["@markup.quote.markdown"] = {
+          inherit = "@markup.quote.markdown",
+          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.15 },
+        },
+      },
+
+      -- CREATED HIGHLIGHTS
+      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
+      { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = -0.2 } } },
+      -- { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
+      -- { WinbarFilepath = { fg = { from = "StatusLine", attr = "fg", alter = winbarfilepath_fg_alter } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = winbarfilepath_fg_alter } } },
     },
     ["tokyonight-night"] = {

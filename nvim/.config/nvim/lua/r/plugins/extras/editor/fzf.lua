@@ -147,6 +147,7 @@ return {
               row = row,
               col = col,
               backdrop = 60,
+              ---@diagnostic disable-next-line: missing-fields
               preview = { hidden = true },
             },
           }

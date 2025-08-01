@@ -13,6 +13,8 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
       { "T" },
+      { "qq" },
+      { "ql" },
       { "<Leader>qf" },
       { "<Leader>fn" },
       { "<Leader>fN" },
@@ -133,8 +135,8 @@ return {
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",
 
-          add_item_to_qf = "<Leader>qy",
-          add_item_to_loc = "<Leader>qo",
+          add_item_to_qf = "qq",
+          add_item_to_loc = "ql",
         },
         todo = {
           add_local = "<Leader>fp",

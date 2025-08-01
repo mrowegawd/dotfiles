@@ -11,6 +11,9 @@ font-family    = "SF Mono"
 
 # 11.8
 font-size                       = 13.8
+# font-feature                    = -calt
+# font-feature                    = -liga
+# font-feature                    = -dlig
 
 # +-----------------------------------------------------------+
 # | MOUSE                                                     |
@@ -20,7 +23,7 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = base46-jabuti
+theme = base46-jellybeans
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
@@ -43,6 +46,7 @@ cursor-style                    = block
 cursor-style-blink              = false
 gtk-titlebar                    = false
 confirm-close-surface           = false
+shell-integration-features      = no-cursor
 
 # unfocused-split-opacity         = 0.5
 # adjust-cell-width               = 0

@@ -433,7 +433,7 @@ return {
     keys = {
       {
         "<Leader>gN",
-        "<Cmd>botright Git<CR><Cmd>wincmd K<bar>30 wincmd _<CR>4j",
+        "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
         mode = { "n", "v" },
       },

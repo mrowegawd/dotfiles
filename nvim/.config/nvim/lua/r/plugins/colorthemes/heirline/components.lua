@@ -137,23 +137,42 @@ local __colors = function()
   local H = require "r.settings.highlights"
   local UIPallette = require("r.utils").uisec
 
-  local set_col_light = { fg_normal = 2, fg_branch = 4 }
-  local set_col_normal = { fg_normal = 2, fg_branch = 2 }
+  local set_col_light = {
+    fg_normal = -0.5,
+    bg_normal = -0.12,
+    fg_branch = 2,
+    fg_keyword = -0.2,
+    block_fg_darken = -0.25,
+    block_bg_darken = -0.05,
+    git_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
+    diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
+    diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
+  }
+  local set_col_normal = {
+    fg_normal = 2,
+    bg_normal = 0.5,
+    fg_branch = 1,
+    fg_keyword = 0,
+    block_fg_darken = 1.4,
+    block_bg_darken = 0.25,
+    git_add = H.get("GitSignsAdd", "fg"),
+    diff_change = H.get("GitSignsChange", "fg"),
+    diff_delete = H.get("GitSignsDelete", "fg"),
+  }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
   return {
     statusline_fg = H.get("StatusLine", "fg"),
     statusline_bg = H.get("StatusLine", "bg"),
 
-    -- keyword = H.get("Keyword", "fg"),
-    keyword = H.tint(H.get("StatusLine", "fg"), 4),
+    keyword = H.tint(H.get("Keyword", "fg"), col_opts.fg_keyword),
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
     block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.fg_normal),
-    block_bg = H.tint(H.get("StatusLine", "bg"), 0.5),
-    block_fg_darken = H.tint(H.get("StatusLine", "bg"), 1.4),
-    block_bg_darken = H.tint(H.get("StatusLine", "bg"), 0.25),
+    block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.bg_normal),
+    block_fg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg_darken),
+    block_bg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg_darken),
 
     block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), 0.1),
     block_bg_qfstatus = H.get("Tabline", "bg"),
@@ -190,9 +209,9 @@ local __colors = function()
     branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.fg_branch, H.get("WinSeparator", "fg")),
     branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
 
-    diff_add = H.get("GitSignsAdd", "fg"),
-    diff_change = H.get("GitSignsChange", "fg"),
-    diff_delete = H.get("GitSignsDelete", "fg"),
+    diff_add = col_opts.diff_add,
+    diff_change = col_opts.diff_change,
+    diff_delete = col_opts.diff_delete,
 
     diagnostic_err = H.get("DiagnosticSignError", "fg"),
     diagnostic_hint = H.get("DiagnosticSignHint", "fg"),
