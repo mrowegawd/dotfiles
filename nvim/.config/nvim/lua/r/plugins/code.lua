@@ -94,7 +94,7 @@ return {
     "LintaoAmons/scratch.nvim",
     cmd = { "Scratch", "ScratchOpen" },
     opts = {
-      scratch_file_dir = vim.fn.stdpath "cache" .. "/scratch.nvim", -- where your scratch files will be put
+      scratch_file_dir = RUtils.config.path.wiki_path .. "/scratch.nvim", -- where your scratch files will be put
       filetypes = { "lua", "js", "sh", "ts", "go", "txt", "md", "rs" }, -- you can simply put filetype here
     },
     keys = {
