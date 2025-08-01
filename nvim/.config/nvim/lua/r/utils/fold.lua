@@ -190,14 +190,8 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
       --     vim.cmd "wincmd p"
       --   end
     end)
-    -- return
+    return
   end
-
-  -- local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
-  -- if is_qf_trouble.found then
-  --   vim.api.nvim_set_current_win(is_qf_trouble.winid)
-  --   return
-  -- end
 
   if vim.bo[0].filetype == "markdown" then
     if is_jump_prev then

@@ -2911,7 +2911,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "StatusLine", attr = "bg", alter = 0.56 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },

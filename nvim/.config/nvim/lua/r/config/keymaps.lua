@@ -38,7 +38,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("zk", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zh", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 RUtils.map.nnoremap("zo", function()
   vim.cmd "normal! zozz"
 end, { desc = "Fold: zo" })
@@ -133,10 +133,10 @@ RUtils.map.nnoremap(
 )
 
 -- Scroll step sideways
-RUtils.map.nnoremap("zl", "z4l")
-RUtils.map.nnoremap("zh", "z4h")
-RUtils.map.nnoremap("zL", "z150l")
-RUtils.map.nnoremap("zH", "z150h")
+-- RUtils.map.nnoremap("zl", "z4l")
+-- RUtils.map.nnoremap("zh", "z4h") -- zh use for fold
+RUtils.map.nnoremap("zL", "z20l")
+RUtils.map.nnoremap("zH", "z20h")
 
 -- Scroll Up/Down
 RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })

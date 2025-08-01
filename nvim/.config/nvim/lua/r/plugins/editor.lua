@@ -208,7 +208,7 @@ return {
           ["<esc>"] = "cancel",
           q = "close",
           o = "jump",
-          zk = "fold_toggle",
+          zh = "fold_toggle",
           ["<a-n>"] = "next",
           ["<a-p>"] = "prev",
           ["<TAB>"] = "fold_toggle",

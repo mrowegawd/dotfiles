@@ -720,7 +720,7 @@ return {
           rename_symbol = {},
           code_actions = {},
           fold = "h",
-          fold_toggle = { "<tab>", "za", "zk" },
+          fold_toggle = { "<tab>", "za", "zh" },
           fold_toggle_all = "<S-tab>",
           unfold = "l",
           fold_all = { "zm", "zM" },
@@ -732,7 +732,6 @@ return {
       }
     end,
   },
-
   -- EDGY.NVIM (disabled)
   {
     "folke/edgy.nvim",
