@@ -427,7 +427,7 @@ set_yazi() {
   if [ "$1" == "rose-pine-dawn" ]; then
     HOVERED_BG=$(darken_color "$GET_COL_39" 10)
   fi
-  if [ "$1" == "lackluster" ]; then
+  if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ]; then
     HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
   fi
 

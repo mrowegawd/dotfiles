@@ -138,8 +138,8 @@ local __colors = function()
   local UIPallette = require("r.utils").uisec
 
   local set_col_light = {
-    fg_normal = -0.5,
-    bg_normal = -0.12,
+    block_fg = -0.5,
+    block_bg = -0.12,
     fg_branch = 2,
     fg_keyword = -0.2,
     block_fg_darken = -0.25,
@@ -149,10 +149,10 @@ local __colors = function()
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
   }
   local set_col_normal = {
-    fg_normal = 2,
-    bg_normal = 0.5,
+    block_fg = 2,
+    block_bg = 0.5,
     fg_branch = 1,
-    fg_keyword = 0,
+    fg_keyword = 0.85,
     block_fg_darken = 1.4,
     block_bg_darken = 0.25,
     diff_add = H.get("GitSignsAdd", "fg"),
@@ -169,8 +169,8 @@ local __colors = function()
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
-    block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.fg_normal),
-    block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.bg_normal),
+    block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg),
+    block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg),
     block_fg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg_darken),
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg_darken),
 
