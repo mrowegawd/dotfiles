@@ -265,18 +265,29 @@ return {
       task_list = {
         default_detail = 1,
         direction = "bottom",
-        min_height = 15,
+        min_height = 10,
         max_height = 15,
         bindings = {
           ["<PageUp>"] = "ScrollOutputUp",
           ["<PageDown>"] = "ScrollOutputDown",
+
+          ["<c-u>"] = "ScrollOutputUp",
+          ["<c-d>"] = "ScrollOutputDown",
+
           ["P"] = "TogglePreview",
-          ["<C-p>"] = "PrevTask",
-          ["<C-n>"] = "NextTask",
+          ["<A-p>"] = "PrevTask",
+          ["<A-n>"] = "NextTask",
+          ["dd"] = "Dispose",
+
           ["<C-h>"] = false, -- disabled because conflict with move_cursor window
           ["<C-l>"] = false,
-          ["dd"] = "Dispose",
+          ["<C-p>"] = false,
+          ["<C-n>"] = false,
+
           ["q"] = function()
+            vim.cmd "OverseerClose"
+          end,
+          ["C"] = function()
             vim.cmd "OverseerClose"
           end,
           ["<Leader><TAB>"] = function()
@@ -294,13 +305,19 @@ return {
         -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
         bindings = {
           i = {
-            ["<Tab>"] = "Next",
-            ["<S-Tab>"] = "Prev",
-            ["<a-n>"] = "Next",
-            ["<a-p>"] = "Prev",
             ["<CR>"] = "NextOrSubmit",
             ["<C-s>"] = "Submit",
             ["<C-c>"] = "Cancel",
+
+            ["<Tab>"] = "Next",
+            ["<S-Tab>"] = "Prev",
+
+            ["<A-n>"] = "Next",
+            ["<A-p>"] = "Prev",
+
+            ["<C-n>"] = false,
+            ["<C-p>"] = false,
+
             ["<C-k>"] = false,
             ["<C-j>"] = false,
             ["<C-h>"] = false,
@@ -308,16 +325,23 @@ return {
           },
           n = {
             ["<CR>"] = "NextOrSubmit",
+            ["<C-s>"] = "Submit",
+            ["q"] = "Cancel",
+
             ["<Tab>"] = "Next",
             ["<S-Tab>"] = "Prev",
-            ["<a-n>"] = "Next",
-            ["<a-p>"] = "Prev",
-            ["<C-s>"] = "Submit",
+
+            ["<A-n>"] = "Next",
+            ["<A-p>"] = "Prev",
+
+            ["<C-n>"] = false,
+            ["<C-p>"] = false,
+
             ["<C-k>"] = false,
             ["<C-j>"] = false,
             ["<C-h>"] = false,
             ["<C-l>"] = false,
-            ["q"] = "Cancel",
+
             ["?"] = "ShowHelp",
           },
         },
