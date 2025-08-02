@@ -246,4 +246,17 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
   end
 end
 
+local fold_levels = { 0, 1, 2, 3, 99 }
+local current_index = 1
+
+function M.cycle_fold_level()
+  current_index = current_index + 1
+  if current_index > #fold_levels then
+    current_index = 1
+  end
+  local new_level = fold_levels[current_index]
+  vim.o.foldlevel = new_level
+  RUtils.info("Fold level set to: " .. new_level, { title = "Folds" })
+end
+
 return M

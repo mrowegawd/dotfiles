@@ -53,6 +53,10 @@ end, { desc = "Fold: zO" })
 --   end
 -- end, { desc = "Fold: toggle fold on current line" })
 
+RUtils.map.nnoremap("zr", function()
+  return RUtils.fold.cycle_fold_level()
+end, { desc = "Fold: cycle level fold" })
+
 RUtils.map.nnoremap("zn", function()
   return RUtils.fold.go_next_prev_fold(false, true)
 end, { desc = "Fold: close current fold when open. Always open next fold." })
