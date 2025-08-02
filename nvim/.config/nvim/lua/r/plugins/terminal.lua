@@ -6,6 +6,8 @@ return {
     "waiting-for-dev/ergoterm.nvim",
     keys = {
       { "<Localleader>t", mode = { "n", "t", "v" } },
+      { "<a-f>", mode = { "n", "t", "v" } },
+      { "<a-t>", mode = { "n", "t", "v" } },
     },
     opts = {
       picker = {
@@ -41,6 +43,16 @@ return {
         base:toggle()
       end, { desc = "toggle base terminal" })
       RUtils.map.tnoremap("<a-f>", function()
+        base:toggle()
+      end, { desc = "toggle base terminal" })
+
+      RUtils.map.vnoremap("<a-t>", function()
+        base:toggle()
+      end, { desc = "toggle base terminal" })
+      RUtils.map.nnoremap("<a-t>", function()
+        base:toggle()
+      end, { desc = "toggle base terminal" })
+      RUtils.map.tnoremap("<a-t>", function()
         base:toggle()
       end, { desc = "toggle base terminal" })
     end,

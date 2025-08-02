@@ -91,7 +91,7 @@ return {
               },
             },
 
-            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 1 }, bold = false } },
+            { NeoTreeIndentMarker = { fg = { from = "TroubleIndent", attr = "fg" }, bold = false } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
 
             { NeoTreeGitAdded = { link = "GitSignsAdd" } },

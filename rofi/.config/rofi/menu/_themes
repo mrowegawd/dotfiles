@@ -234,7 +234,6 @@ set_tmux() {
     sleep 1
 
     ACTIVE_FG="$GET_COL_16"
-    # ACTIVE_BG="$GET_COL_17"
     if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
       ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
     fi
@@ -265,6 +264,33 @@ set_tmux() {
     sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$GET_YELLOW\"/g" "$_PATH_TMUX_THEMES"
   else
     send_notify "set_tmux: path $_PATH_TMUX_THEMES not ex"
+  fi
+
+}
+set_kitty() {
+  _PATH_KITTY_THEMES="$DOTFILES_PATH/kitty/.config/kitty/colors/$1.conf"
+
+  if [ -f "$_PATH_KITTY_THEMES" ]; then
+    sleep 1
+
+    ACTIVE_FG="$GET_COL_16"
+    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
+      ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
+    fi
+
+    sed -i -e "s/^active_border_color\s.*$/active_border_color $GET_COL_17/g" "$_PATH_KITTY_THEMES"
+    sed -i -e "s/^inactive_border_color\s.*$/inactive_border_color $GET_COL_18/g" "$_PATH_KITTY_THEMES"
+
+    sed -i -e "s/^active_tab_foreground.*$/active_tab_foreground $GET_COL_17/g" "$_PATH_KITTY_THEMES"
+    sed -i -e "s/^active_tab_background.*$/active_tab_background $GET_COL_44/g" "$_PATH_KITTY_THEMES"
+
+    sed -i -e "s/^inactive_tab_foreground.*$/inactive_tab_background $GET_COL_21/g" "$_PATH_KITTY_THEMES"
+    sed -i -e "s/^inactive_tab_background.*$/inactive_tab_background $GET_COL_20/g" "$_PATH_KITTY_THEMES"
+
+    sed -i -e "s/^tab_bar_background.*$/tab_bar_background $GET_COL_20/g" "$_PATH_KITTY_THEMES"
+
+  else
+    send_notify "set_kitty: path $_PATH_KITTY_THEMES not ex"
   fi
 
 }
@@ -726,6 +752,7 @@ setup() {
   set_zshrc "$1"
   set_polybar "$1"
   set_shaders_color "$1"
+  set_kitty "$1"
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;

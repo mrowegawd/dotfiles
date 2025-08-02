@@ -126,7 +126,7 @@ return {
       keybindings = {},
     },
   },
-  -- SMART-SPLITS (disabled)
+  -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
     event = "LazyFile",
@@ -391,7 +391,7 @@ return {
       -- end
     end,
   },
-  -- MULTIPLEXER (false)
+  -- MULTIPLEXER (disabled)
   {
     "stevalkr/multiplexer.nvim",
     enabled = false,

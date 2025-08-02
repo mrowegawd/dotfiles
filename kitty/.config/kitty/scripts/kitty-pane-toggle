@@ -1,4 +1,6 @@
 #!/bin/bash
 
 # kitty @ focus-window --match title:"h" 2>/dev/null |
-kitty @ launch --location=split
+kitty @ launch --cwd=current --location=hsplit
+
+# kitty @ launch --location=split --args bash

@@ -149,7 +149,7 @@ return {
               -- { section = "header", align = "center" },
               pane = 1,
               section = "terminal",
-              cmd = [[img2art ~/moxconf/development/dotfiles/img/nvim-dashboard/batman-mad-removebg-preview.png --threshold 80 --scale 0.23 --with-color --alpha --with-color]],
+              cmd = set_img_dashboard(),
               height = 28,
               align = "center",
             },

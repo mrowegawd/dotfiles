@@ -78,10 +78,10 @@ RUtils.map.tnoremap("<a-x>", function()
   local buf = vim.api.nvim_get_current_buf()
   require("bufdelete").bufdelete(buf, true)
 end, { desc = "Terminal: close terminal" })
-RUtils.map.tnoremap("<a-t>", function()
-  RUtils.map.feedkey("<C-\\><C-n>", "t")
-  require("fzf-lua").tabs()
-end, { desc = "Terminal: show tabs [fzflua]" })
+-- RUtils.map.tnoremap("<a-t>", function()
+--   RUtils.map.feedkey("<C-\\><C-n>", "t")
+--   require("fzf-lua").tabs()
+-- end, { desc = "Terminal: show tabs [fzflua]" })
 RUtils.map.tnoremap("<c-a-l>", function()
   RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
 end, { desc = "Terminal: next tab" })
@@ -633,7 +633,8 @@ RUtils.map.nnoremap("<a-E>", function()
   if not tmux then
     if terminal ~= "wezterm" then
       if RUtils.has "neo-tree.nvim" then
-        vim.cmd "Neotree focus reveal"
+        vim.cmd "Neotree focus reveal right"
+        return
       end
     end
 

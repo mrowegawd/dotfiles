@@ -138,26 +138,28 @@ local __colors = function()
   local UIPallette = require("r.utils").uisec
 
   local set_col_light = {
-    block_fg = -0.5,
     block_bg = -0.12,
-    fg_branch = 2,
-    fg_keyword = -0.2,
-    block_fg_darken = -0.25,
     block_bg_darken = -0.05,
+    block_fg = -0.5,
+    block_fg_darken = -0.25,
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
+    fg_branch = 2,
+    fg_keyword = -0.05,
+    winbar_keyword = -0.1,
   }
   local set_col_normal = {
-    block_fg = 2,
     block_bg = 0.5,
-    fg_branch = 1,
-    fg_keyword = 0.85,
-    block_fg_darken = 1.4,
     block_bg_darken = 0.25,
+    block_fg = 2,
+    block_fg_darken = 1.4,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
+    fg_branch = 1,
+    fg_keyword = 0.85,
+    winbar_keyword = 0.5,
   }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
@@ -188,7 +190,7 @@ local __colors = function()
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 2),
 
     winbar_fg = H.get("WinbarFilepath", "fg"),
-    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), 0.5),
+    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), col_opts.winbar_keyword),
     winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
     winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
