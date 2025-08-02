@@ -183,12 +183,20 @@ local logos = {
   -- },
 }
 
-return function(select_number)
+local images = { "batman-mad.png", "batman-side.jpg", "batman-mad2.png" }
+
+return function(is_from_img, select_number)
+  is_from_img = is_from_img or false
   select_number = select_number or 0
+
+  local __tbl = is_from_img and images or logos
+
   math.randomseed(os.time())
-  local check = math.random(1, #logos)
+  local check = math.random(1, #__tbl)
+
   if select_number > 0 then
-    return logos[select_number]
+    return __tbl[select_number]
   end
-  return logos[check]
+
+  return __tbl[check]
 end

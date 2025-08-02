@@ -1,3 +1,12 @@
+local function set_img_dashboard()
+  ---@diagnostic disable-next-line: undefined-field
+  local fn_img = RUtils.logo(true)
+  return [[img2art ~/moxconf/development/dotfiles/img/nvim-dashboard/]]
+    .. fn_img
+    .. " "
+    .. [[--threshold 85 --scale 0.20 --with-color --alpha --with-color]]
+end
+
 return {
   -- SNACKS
   {
