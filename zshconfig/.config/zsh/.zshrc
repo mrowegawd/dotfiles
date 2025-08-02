@@ -193,9 +193,6 @@ fi
 if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
 
-  zstyle ':fzf-tab:*' fzf-flags ${(z)FZF_DEFAULT_OPTS}
-  zstyle ':fzf-tab:*' default-color ""
-
   # Guide for adding size popup window (outside tmux):
   # https://github.com/Aloxaf/fzf-tab/issues/429#issuecomment-2189228770
   if [[ -n "$TMUX" ]]; then
@@ -210,6 +207,7 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
   zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
   zstyle ':fzf-tab:*' popup-fit-preview yes
+  zstyle ':fzf-tab:*' use-fzf-default-opts yes
 
   zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
 
