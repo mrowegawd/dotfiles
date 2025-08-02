@@ -134,25 +134,25 @@ return {
     },
     keys = {
       {
-        "<Leader>ac",
+        "<Localleader>cc",
         ":CodeCompanion ",
         desc = "Codecompanion: run :CodeCompanion command in normal or visual mode",
         mode = { "n", "v" },
       },
       {
-        "<Leader>aa",
+        "<Localleader>ca",
         function()
           focus_or_toggle_chat()
         end,
         desc = "Codecompanion: toggle open",
       },
       {
-        "<Leader>aA",
+        "<Localleader>cC",
         "<CMD>CodeCompanionActions<CR>",
         desc = "Codecompanion: select actions",
       },
       {
-        "<leader>aF",
+        "<Localleader>cF",
         function()
           local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
           return require("fzf-lua").files {
@@ -198,7 +198,7 @@ return {
         desc = "Codecompanion: find and grep previous chats",
       },
       {
-        "<Leader>af",
+        "<Localleader>cf",
         function()
           local git_ft_stuff = { "fugitive" }
           local prompt_cmds = {
