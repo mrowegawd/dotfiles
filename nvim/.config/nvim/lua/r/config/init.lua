@@ -31,7 +31,7 @@ local base_options = {
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
-    lightthemes = { "dawnfox", "rose-pine-dawn", "base46-seoul256_dark", "base46-zenburn" },
+    lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-seoul256_dark", "base46-zenburn" },
   },
 }
 

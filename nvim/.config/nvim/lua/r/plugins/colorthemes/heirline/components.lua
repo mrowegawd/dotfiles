@@ -144,7 +144,7 @@ local __colors = function()
     fg_keyword = -0.2,
     block_fg_darken = -0.25,
     block_bg_darken = -0.05,
-    git_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
+    diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
   }
@@ -155,7 +155,7 @@ local __colors = function()
     fg_keyword = 0,
     block_fg_darken = 1.4,
     block_bg_darken = 0.25,
-    git_add = H.get("GitSignsAdd", "fg"),
+    diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
   }
@@ -486,7 +486,7 @@ M.FilePath = {
     end,
     hl = function(self)
       local fg = tostring(colors.keyword)
-      local bg = colors.block_bg
+      -- local bg = colors.block_bg
       if self.exclude_ft or #self.filename == 0 then
         fg = colors.block_fg
       end
