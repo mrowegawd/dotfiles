@@ -99,7 +99,7 @@ local stl_lsp_clients = function()
     return { name = client.name, priority = 4 }
   end, clients)
 end
-local overseer_tasks_for_status = function(status)
+local overseer_tasks_for_status = function(status, colors)
   return {
     condition = function(self)
       return self.tasks[status]
@@ -379,11 +379,10 @@ M.Branch = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local fg = colors.block_bg
+      local fg = colors.statusline_bg
       if Conditions.is_git_repo() or (#get_branch_name() > 0) then
         fg = colors.branch_bg
       end
-      -- return { fg = fg, bg = colors.block_bg }
       return { fg = fg }
     end,
   },
@@ -490,7 +489,6 @@ M.FilePath = {
       if self.exclude_ft or #self.filename == 0 then
         fg = colors.block_fg
       end
-      -- return { fg = fg, bg = bg }
       return { fg = fg }
     end,
   },
@@ -757,10 +755,10 @@ M.Tasks = {
       return { fg = colors.statusline_fg }
     end,
   },
-  rpad(overseer_tasks_for_status "CANCELED"),
-  rpad(overseer_tasks_for_status "RUNNING"),
-  rpad(overseer_tasks_for_status "SUCCESS"),
-  rpad(overseer_tasks_for_status "FAILURE"),
+  rpad(overseer_tasks_for_status("CANCELED", colors)),
+  rpad(overseer_tasks_for_status("RUNNING", colors)),
+  rpad(overseer_tasks_for_status("SUCCESS", colors)),
+  rpad(overseer_tasks_for_status("FAILURE", colors)),
   {
     provider = function(self)
       for i, _ in pairs(self.symbols) do
@@ -851,7 +849,7 @@ M.LSPActive = {
       end
       return lsp_clients_str
     end,
-    hl = { fg = colors.keyword, bold = true },
+    hl = { fg = colors.block_fg_darken, bold = true },
   },
   {
     provider = function(self)
@@ -1199,6 +1197,16 @@ M.Filetype = {
     end,
     hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
   },
+  {
+    provider = RUtils.config.icons.misc.separator_down .. " ",
+    hl = function(self)
+      local fg = colors.statusline_bg
+      if self.filetype and #self.filetype > 0 then
+        fg = colors.block_bg_darken
+      end
+      return { fg = fg, bg = colors.block_bg }
+    end,
+  },
 }
 M.Ruler = {
   init = function(self)
@@ -1210,10 +1218,6 @@ M.Ruler = {
     local rhs = ""
     self.rhs = rhs
   end,
-  {
-    provider = RUtils.config.icons.misc.separator_down .. " ",
-    hl = { fg = colors.block_bg_darken, bg = colors.block_bg },
-  },
   {
     provider = function(self)
       local rhs = ""
@@ -1365,8 +1369,8 @@ M.status_active_left = {
   M.LazyStatus,
   M.Tasks,
   M.Dap,
-  -- M.LSPActive,
   M.Diagnostics,
+  M.LSPActive,
   M.virtualenv,
   -- M.SnacksProfile,
   -- M.SearchCount, -- this func make nvim slow!

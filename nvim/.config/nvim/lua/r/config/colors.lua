@@ -889,8 +889,8 @@ local general_overrides = function()
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
     {
       MyCodeUsage = {
-        fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-        bg = { from = "Keyword", attr = "fg", alter = -0.55 },
+        fg = { from = "Keyword", attr = "fg", alter = -0.45 },
+        bg = { from = "Keyword", attr = "fg", alter = -0.75 },
         italic = true,
       },
     },
