@@ -123,7 +123,7 @@ setxkbmap -option caps:backspace # switch capslock to backspace
 
 # Launch picom // If you have old hardware or encounter problems
 # uncomment the picom "--legacy-backends" line and comment the current one.
-pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
+# pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
 
 # Launch eww (I HATE THIS BAR!)
 "$HOME/.config/eww/starteww.sh"
