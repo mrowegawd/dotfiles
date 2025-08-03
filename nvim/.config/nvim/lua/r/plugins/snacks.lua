@@ -1,10 +1,15 @@
 local function set_img_dashboard()
+  local nvim_dashboard_path = vim.fs.joinpath(vim.env.HOME, "/moxconf/development/dotfiles/img/nvim-dashboard")
+  local is_img = RUtils.file.is_dir(nvim_dashboard_path) and true or false
+
   ---@diagnostic disable-next-line: undefined-field
-  local fn_img = RUtils.logo(true)
-  return [[img2art ~/moxconf/development/dotfiles/img/nvim-dashboard/]]
+  local fn_img = RUtils.logo(is_img)
+  return [[img2art ]]
+    .. nvim_dashboard_path
+    .. "/"
     .. fn_img
     .. " "
-    .. [[--threshold 85 --scale 0.20 --with-color --alpha --with-color]]
+    .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]]
 end
 
 return {

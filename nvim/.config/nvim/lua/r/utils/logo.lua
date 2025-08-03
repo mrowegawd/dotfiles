@@ -183,7 +183,7 @@ local logos = {
   -- },
 }
 
-local images = { "batman-mad.png", "batman-side.jpg", "batman-mad2.png" }
+local images = { "batman-mad.png", "batman-side.png", "batman-face.png", "joker1.png" }
 
 return function(is_from_img, select_number)
   is_from_img = is_from_img or false
