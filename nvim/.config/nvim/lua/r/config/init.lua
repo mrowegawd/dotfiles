@@ -32,7 +32,7 @@ local base_options = {
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
     -- lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-seoul256_dark", "base46-zenburn" },
-    lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine" },
+    lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-material-lighter" },
   },
 }
 

@@ -228,6 +228,21 @@ return {
               },
             },
           },
+          ["base46-material-lighter"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = -0.1 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+          },
           ["base46-rosepine"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {

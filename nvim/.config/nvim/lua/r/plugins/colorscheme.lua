@@ -51,6 +51,7 @@ return {
         "base46-jellybeans",
         "base46-kanagawa",
         "base46-material-darker",
+        "base46-material-lighter",
         "base46-melange",
         "base46-onenord",
         "base46-oxocarbon",

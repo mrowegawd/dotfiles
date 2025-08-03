@@ -301,8 +301,9 @@ set_delta() {
     send_notify "set_delta: $_DELTA_PATH does not exists!" && exit 1
   fi
 
-  FILE_STYLE_BG=$(darken_color "$GET_COL_47" 90)
-  sed -i -e "s/^file-style.*/file-style = \"$GET_COL_47\" bold \"$FILE_STYLE_BG\"/g" "$_DELTA_PATH"
+  # FILE_STYLE_FG=$(darken_color "$GET_COL_47" 90)
+  # FILE_STYLE_BG=$(darken_color "$GET_COL_47" 150)
+  sed -i -e "s/^file-style.*/file-style = \"$GET_COL_47\" bold \"$GET_BG\"/g" "$_DELTA_PATH"
 
   HUNK_HEADER_STYLE_BG=$(darken_color "$GET_COL_47" 110)
   sed -i -e "s/^hunk-header-style.*/hunk-header-style = syntax bold \"$HUNK_HEADER_STYLE_BG\"/g" "$_DELTA_PATH"

@@ -66,7 +66,6 @@ return {
           require("fzf-lua").files {
             prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙") },
-            cwd_prompt = false,
             no_header = false, -- disable default header
             cwd = "~/.config/miscxrdb/xresource-theme",
             actions = {
@@ -327,6 +326,7 @@ return {
           },
         },
         defaults = {
+          cwd_prompt = false,
           copen = RUtils.cmd.quickfix.copen,
           lopen = RUtils.cmd.quickfix.lopen,
         },
@@ -336,7 +336,6 @@ return {
         }, -- remove separator line
         files = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = {
             title = RUtils.fzflua.format_title("Files", ""),
