@@ -233,9 +233,18 @@ set_tmux() {
   if [ -f "$_PATH_TMUX_THEMES" ]; then
     sleep 1
 
-    ACTIVE_FG="$GET_COL_16"
+    ACTIVE_FG=$(darken_color "$GET_COL_16" 140)
     if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
       ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
+    fi
+    if [ "$1" == "base46-doomchad" ] || [ "$1" == "tokyonight-storm" ]; then
+      ACTIVE_FG=$(darken_color "$GET_COL_16" 30)
+    fi
+    if [ "$1" == "ashen" ]; then
+      ACTIVE_FG=$(darken_color "$GET_COL_16" 140)
+    fi
+    if [ "$1" == "base46-seoul256_dark" ]; then
+      ACTIVE_FG=$(lighten_color "$GET_COL_16" 2)
     fi
     sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$GET_COL_44\"/g" "$_PATH_TMUX_THEMES"

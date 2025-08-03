@@ -5,13 +5,13 @@ pane_count=$(tmux list-panes | wc -l)
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 
 TMUX_BG="#1f1f1f"
-TMUX_FG_ACTIVE="#569cd6"
-TMUX_FG_NC="#3a3a3a"
+BORDER_FG_ACTIVE="#569cd6"
+BORDER_FG_NC="#3a3a3a"
 
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  TMUX_FG_ACTIVE=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  TMUX_FG_NC=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  BORDER_FG_ACTIVE=$(grep -i BORDER_FG_ACTIVE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  BORDER_FG_NC=$(grep -i BORDER_FG_NC <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 auto_toggle() {

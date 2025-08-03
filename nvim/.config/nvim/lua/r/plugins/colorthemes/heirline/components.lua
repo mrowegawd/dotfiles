@@ -145,6 +145,7 @@ local __colors = function()
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
+    block_fg_qfstatus = -0.1,
     fg_branch = 2,
     fg_keyword = -0.05,
     winbar_keyword = -0.1,
@@ -153,13 +154,14 @@ local __colors = function()
     block_bg = 0.5,
     block_bg_darken = 0.25,
     block_fg = 2,
-    block_fg_darken = 1.4,
+    block_fg_darken = 0.7,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-    fg_branch = 1,
+    block_fg_qfstatus = 0.3,
+    fg_branch = -1,
     fg_keyword = 0.85,
-    winbar_keyword = 0.5,
+    winbar_keyword = -0.15,
   }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
@@ -173,43 +175,50 @@ local __colors = function()
 
     block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg),
     block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg),
-    block_fg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg_darken),
+    block_fg_darken = H.tint(H.get("StatusLine", "fg"), col_opts.block_fg_darken),
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg_darken),
 
-    block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), 0.1),
-    block_bg_qfstatus = H.get("Tabline", "bg"),
+    block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), col_opts.block_fg_qfstatus),
+    block_bg_qfstatus = H.tint(H.get("Tabline", "bg"), 0.1),
 
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
-    block_fg_qf = H.tint(UIPallette.palette.bright_blue, 1),
-    block_bg_qf = H.tint(UIPallette.palette.bright_blue, -0.5),
-    block_fg_loclist = H.tint(UIPallette.palette.light_gray, 1),
-    block_bg_loclist = H.tint(UIPallette.palette.light_gray, -0.1),
+    block_fg_qf = H.tint(H.get("Keyword", "fg"), 0.5),
+    block_bg_qf = H.tint(H.get("Keyword", "fg"), -0.5),
+    block_fg_loclist = H.tint(H.get("Keyword", "fg"), -0.8),
+    block_bg_loclist = H.tint(H.get("Keyword", "fg"), 0.35),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 2),
 
     winbar_fg = H.get("WinbarFilepath", "fg"),
-    winbar_keyword = H.tint(H.darken(H.get("Keyword", "fg"), 0.6, H.get("Normal", "bg")), col_opts.winbar_keyword),
+    winbar_bg = H.tint(H.get("Tabline", "bg"), 0),
+    winbar_keyword = H.tint(H.get("Keyword", "fg"), col_opts.winbar_keyword),
     winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
     winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
-    mode_readonly_fg_active = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.2, H.get("Normal", "bg")), 2.5),
-    mode_readonly_fg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.2, H.get("Normal", "bg")), 0.8),
-    mode_readonly_bg = H.tint(H.darken(H.get("KeywordMatch", "fg"), 0.25, H.get("Normal", "bg")), -0.25),
+    mode_readonly_fg_active = H.tint(H.get("KeywordMatch", "fg"), 0.3),
+    mode_readonly_fg = H.tint(H.get("KeywordMatch", "fg"), -0.1),
+    mode_readonly_bg = H.tint(H.get("KeywordMatch", "fg"), -0.6),
 
-    mode_git_fg_active = H.tint(H.darken(H.get("Boolean", "fg"), 0.3, H.get("Normal", "bg")), 2.5),
-    mode_git_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.3, H.get("Normal", "bg")), 0.8),
-    mode_git_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.25, H.get("Normal", "bg")), 0.05),
+    mode_git_fg_active = H.tint(H.get("Boolean", "fg"), 0.3),
+    mode_git_fg = H.tint(H.get("Boolean", "fg"), -0.1),
+    mode_git_bg = H.tint(H.get("Boolean", "fg"), -0.6),
 
     mode_term_bg = H.get("Boolean", "fg"),
     mode_visual_bg = H.get("Visual", "bg"),
 
-    branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.fg_branch, H.get("WinSeparator", "fg")),
-    branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
+    -- branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.fg_branch, H.get("WinSeparator", "fg")),
+    -- branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
+
+    -- branch_fg = H.tint(H.get("Keyword", "fg"), col_opts.fg_branch),
+    branch_fg = H.get("FzfLuaTitle", "fg"),
+    branch_bg = H.get("StatusLine", "bg"),
+    -- branch_bg = H.get("Keyword", "fg"),
+    -- branch_bg = H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")),
 
     diff_add = col_opts.diff_add,
     diff_change = col_opts.diff_change,
@@ -378,16 +387,16 @@ M.Branch = {
     end,
     hl = { fg = colors.branch_fg, bg = colors.branch_bg, bold = true },
   },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.statusline_bg
-      if Conditions.is_git_repo() or (#get_branch_name() > 0) then
-        fg = colors.branch_bg
-      end
-      return { fg = fg }
-    end,
-  },
+  -- {
+  --   provider = RUtils.config.icons.misc.separator_up,
+  --   hl = function()
+  --     local fg = colors.statusline_bg
+  --     if Conditions.is_git_repo() or (#get_branch_name() > 0) then
+  --       fg = colors.branch_bg
+  --     end
+  --     return { fg = fg }
+  --   end,
+  -- },
 }
 M.FilePath = {
   init = function(self)
@@ -632,7 +641,7 @@ M.QuickfixStatus = {
         fg = colors.block_fg_loclist
         bg = colors.block_bg_loclist
       end
-      return { fg = fg, bg = bg }
+      return { fg = fg, bg = bg, bold = true }
     end,
   },
   {
@@ -1474,14 +1483,17 @@ M.WinbarFilePath = {
     end,
     hl = function(self)
       local fg = colors.winbar_fg
+      local is_bold = true
       if self.is_fugitive() then
         fg = tostring(colors.mode_git_fg)
+        is_bold = false
       end
 
       if self.is_readonly() then
         fg = tostring(colors.mode_readonly_fg)
+        is_bold = false
       end
-      return { fg = fg, bold = true }
+      return { fg = fg, bold = is_bold }
     end,
   },
   {
@@ -1491,8 +1503,12 @@ M.WinbarFilePath = {
     hl = function(self)
       local fg = colors.winbar_fg
       local bg = colors.normal_bg
+      -- local bg = colors.winbar_bg
+      local is_italic = false
+
       if Conditions.is_active() then
         fg = colors.winbar_keyword
+        is_italic = true
       end
 
       if set_conditions.is_dap_ft() then
@@ -1504,8 +1520,8 @@ M.WinbarFilePath = {
       end
 
       if self.is_fugitive() then
-        bg = tostring(colors.mode_git_bg)
         fg = tostring(colors.mode_git_fg)
+        bg = tostring(colors.mode_git_bg)
         if Conditions.is_active() then
           fg = tostring(colors.mode_git_fg_active)
         end
@@ -1518,7 +1534,7 @@ M.WinbarFilePath = {
           fg = tostring(colors.mode_readonly_fg_active)
         end
       end
-      return { fg = fg, bg = bg, bold = true, italic = true }
+      return { fg = fg, bg = bg, bold = true, italic = is_italic }
     end,
   },
 }

@@ -38,6 +38,7 @@ return {
 
             local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
             local is_buftype = vim.tbl_contains({ "help", "prompt", "nofile" }, vim.bo[buf].buftype)
+            local is_buftype_with_nofile = vim.tbl_contains({ "help", "prompt" }, vim.bo[buf].buftype)
             local is_filetype = vim.tbl_contains({
               "DiffviewFileHistory",
               "DiffviewFiles",
@@ -56,7 +57,8 @@ return {
 
             if vim.bo[buf].buftype == "nofile" then
               local path = vim.fn.expand "%:p"
-              if #path > 0 and not is_filetype and not is_buftype and not is_float then
+              -- if #path > 0 and not is_filetype and not is_buftype and not is_float then
+              if #path > 0 and not is_float and not is_buftype_with_nofile and not is_filetype then
                 return false
               end
               return not vim.tbl_contains(

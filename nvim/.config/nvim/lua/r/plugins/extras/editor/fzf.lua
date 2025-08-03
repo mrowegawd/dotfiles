@@ -257,7 +257,7 @@ return {
 
       return {
         winopts = {
-          title_pos = "left",
+          title_pos = "center",
           width = win_width,
           height = win_height,
           row = row,
@@ -327,6 +327,7 @@ return {
         },
         defaults = {
           cwd_prompt = false,
+          no_header_i = true, -- hide interactive header?
           copen = RUtils.cmd.quickfix.copen,
           lopen = RUtils.cmd.quickfix.lopen,
         },
@@ -336,10 +337,7 @@ return {
         }, -- remove separator line
         files = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          no_header = true, -- disable default header
-          winopts = {
-            title = RUtils.fzflua.format_title("Files", ""),
-          },
+          winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
           fd_opts = fd_opts,
@@ -415,6 +413,7 @@ return {
             color_icons = true, -- colorize file|git icons
           },
           status = {
+            no_header_i = false,
             prompt = RUtils.fzflua.default_title_prompt(),
             winopts = {
               title = RUtils.fzflua.format_title("Git Status", ""),
@@ -614,6 +613,7 @@ return {
             },
           },
           stash = {
+            no_header_i = false,
             prompt = RUtils.fzflua.default_title_prompt(),
             winopts = {
               title = RUtils.fzflua.format_title("Stash", ""),
@@ -643,13 +643,14 @@ return {
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
-          formatter = "path.filename_first",
+          -- formatter = "path.filename_first",
           multiprocess = true,
           winopts = {
             title = RUtils.fzflua.format_title(
               "Grep",
               RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
             ),
+            title_pos = "center",
             width = 0.90,
             height = 0.90,
             row = 0.50,
@@ -910,7 +911,6 @@ return {
         blines = {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- hide grep|cwd header?
-          no_header_i = true, -- hide interactive header?
           winopts = {
             title = RUtils.fzflua.format_title("Blines", ""),
             height = 0.90,
@@ -999,7 +999,7 @@ return {
           cwd_only = true,
           winopts = {
             height = 0.70,
-            width = 0.90,
+            width = 0.95,
             row = 0.50,
             col = 0.50,
             fullscreen = false,

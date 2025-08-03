@@ -134,7 +134,7 @@ return {
                     return item.kind_hl
                   end
                   -- return "LspKind" .. item.kind
-                  return "Comment"
+                  return "BlinkCmpLabelKind"
                 end,
               },
             },

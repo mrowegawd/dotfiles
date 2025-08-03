@@ -1,29 +1,29 @@
 # vim: foldmethod=marker foldlevel=0 ft=cfg
 
 # Main background, empty for terminal default, need to be empty if you want transparent background
-theme[main_bg]="#1e1e1e"
+theme[main_bg]="#303030"
 
 # Main text color
-theme[main_fg]="#d4d4d4"
+theme[main_fg]="#cccccc"
 
 # Title color for boxes
-theme[title]="#b281eb"
+theme[title]="#56b6c2"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="#ff8170"
+theme[hi_fg]="#f44747"
 
 # Color cursorline
-theme[selected_fg]="#1e1e1e"
-theme[selected_bg]="#c586c0"
+theme[selected_fg]="#1f1f1f"
+theme[selected_bg]="#569cd6"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="#282828"
+theme[inactive_fg]="#292929"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="#F2D5CF"
 
 # Background color of the percentage meters
-theme[meter_bg]="#d9d9d9"
+theme[meter_bg]="#d1d1d1"
 
 # Misc colors for processes box including mini cpu graphs, details memory graph and details status text
 theme[proc_misc]="#F2D5CF"

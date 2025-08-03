@@ -929,7 +929,9 @@ function M.change_colors()
   local KeywordNC_fg = H.get("Keyword", "fg") -- 17
 
   local tmux_bg = H.get("Normal", "bg")
-  local tmux_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.02)
+  local tmux_fg = H.get("StatusLine", "fg")
+  -- local tmux_fg = H.tint(H.get("StatusLine", "fg"), 0.2)
+  -- local tmux_fg = H.tint(H.get("StatusLine", "bg"), 1.4)
 
   local statusline_fg = H.tint(H.get("WinSeparator", "fg"), 0.7)
 
@@ -962,7 +964,11 @@ function M.change_colors()
   local yazi_which_bg = H.get("Pmenu", "bg")
 
   local zsh_lines = H.tint(H.get("WinSeparator", "fg"), 0.5)
-  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), 0.4)
+  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), 0.8)
+
+  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+    tmux_fg = H.tint(H.get("StatusLine", "fg"), -0.2)
+  end
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     statusline_fg = H.tint(H.get("Comment", "fg"), 0)

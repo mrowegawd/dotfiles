@@ -1,17 +1,17 @@
 * {
-    background:                     #1e1e1e;
-    foreground:                     #1e1e1e;
+    background:                     #1f1f1f;
+    foreground:                     #1f1f1f;
     background-alt:                 #4a4a4a;
-    border:               			    #dcdcaa;
-    border-alt:               		  #d9c97c;
-    selected:               		    #dcdcaa;
-    selected-alt:               		#624360;
-    urgent:                         #ff7ab2;
+    border:               			    #569cd6;
+    border-alt:               		  #dcdcaa;
+    selected:               		    #569cd6;
+    selected-alt:               		#2b4e6b;
+    urgent:                         #c678dd;
 
-    green:                          #78c2b3;
-    red:                            #ff8170;
-    blue:                           #dcdcaa;
-    yellow:                         #d9c97c;
+    green:                          #608b4e;
+    red:                            #f44747;
+    blue:                           #569cd6;
+    yellow:                         #dcdcaa;
 
-    keyword:                        #c586c0;
+    keyword:                        #569cd6;
 }

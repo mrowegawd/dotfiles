@@ -27,8 +27,10 @@ RUtils.cmd.augroup("LSPUserBehaviour", {
     client:stop()
   end,
 }, {
-  event = "LspAttach", -- remove copilot client, fuck it
+  event = "LspAttach", -- remove copilot client (and document_color), so fuck it!
   command = function(event)
+    vim.lsp.document_color.enable(false, event.buf) -- Not needed atm
+
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client.name == "copilot" then
       -- vim.notify("Copilot has been detached", vim.log.levels.WARN)
