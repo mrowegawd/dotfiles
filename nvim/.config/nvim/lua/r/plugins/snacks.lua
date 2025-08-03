@@ -147,13 +147,31 @@ return {
           --   }
           -- end,
           key = { "" },
-          file = function(item)
-            return {
-              { item.key, hl = "Keyword" },
-              { " " },
-              { item.file:sub(2):match "^(.*[/])", hl = "NonText" },
-              { item.file:match "([^/]+)$", hl = "Normal" },
-            }
+          -- file = function(item)
+          --   return {
+          --     { item.key, hl = "Keyword" },
+          --     { " " },
+          --     { item.file:sub(2):match "^(.*[/])", hl = "NonText" },
+          --     { item.file:match "([^/]+)$", hl = "Normal" },
+          --   }
+          --
+          -- end,
+
+          file = function(item, ctx)
+            -- local fname = vim.fn.fnamemodify(item.file, ":~")
+            local fname = vim.fn.fnamemodify(item.file, ":.")
+            fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+            if #fname > ctx.width then
+              local dir = vim.fn.fnamemodify(fname, ":h")
+              local file = vim.fn.fnamemodify(fname, ":t")
+              if dir and file then
+                file = file:sub(-(ctx.width - #dir - 2))
+                fname = dir .. "/…" .. file
+              end
+            end
+            local dir, file = fname:match "^(.*)/(.+)$"
+            return dir and { { item.key, hl = "Keyword" }, { " " }, { dir .. "/", hl = "dir" }, { file, hl = "file" } }
+              or { { fname, hl = "file" } }
           end,
           icon = { "" },
         },
