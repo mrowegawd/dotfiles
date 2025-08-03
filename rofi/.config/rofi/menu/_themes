@@ -449,11 +449,11 @@ set_yazi() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
+  HOVERED_BG=$(lighten_color "$GET_COL_39" 20)
   if [ "$1" == "rose-pine-dawn" ]; then
     HOVERED_BG=$(darken_color "$GET_COL_39" 10)
   fi
-  if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ]; then
+  if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ] || [ "$1" == "vscode_modern" ]; then
     HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
   fi
 
