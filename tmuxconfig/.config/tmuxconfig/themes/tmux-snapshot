@@ -1,17 +1,17 @@
 ACTIVE_BG="#2b2b2b"
-ACTIVE_FG="#214461"
+ACTIVE_FG="#000000"
 
 STATUSLINE_BG_MESSAGE="#dcdcaa"
-STATUSLINE_FG="#373737"
+STATUSLINE_FG="#404040"
 
 SESSION_BG="#d4d4d4"
 SESSION_FG="#1f1f1f"
 
 TMUX_BG="#1f1f1f"
-TMUX_FG="#414141"
+TMUX_FG="#4a4a4a"
 
 BORDER_FG_ACTIVE="#569cd6"
-BORDER_FG_NC="#2c2c2c"
+BORDER_FG_NC="#2a2a2a"
 
 RED="#f44747"
 BLUE="#569cd6"
@@ -26,11 +26,13 @@ setw -g pane-border-style bg=$TMUX_BG,fg=$BORDER_FG_NC
 
 setw -g pane-border-status bottom # bottom, top
 
+# {?pane_active,#[fg=$RED]$left_slant_separator,}\
+
 setw -g pane-border-format "\
-#{?pane_active,#[fg=$RED]  ,}\
-#{?pane_active,#[fg=$STATUSLINE_FG],}#{pane_index}.#{pane_id} \
-#{?pane_active,#{pane_current_command} ,}\
-#{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
+#{?pane_active,#[fg=$RED] ,}\
+#{?#{==:#{window_panes},1},#[fg=$TMUX_FG]#{?pane_active,#[fg=$STATUSLINE_FG],} #{pane_index}.#{pane_id} ,\
+#[fg=$TMUX_FG]#{?pane_active,#[fg=$BORDER_FG_ACTIVE],} #{pane_index}.#{pane_id}}\
+#{?pane_active,#{pane_current_command} ,}"
 
 # setw -g pane-border-format ""
 
@@ -55,8 +57,10 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$RED]#[bold]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
-#[fg=$TMUX_FG,bold] #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$RED]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
+#[fg=$TMUX_FG]#[bold] #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  \
+#[fg=$TMUX_FG,bg=$TMUX_BG]#{?client_prefix,#[fg=$BORDER_FG_ACTIVE]#[bold]#{prefix},#{prefix}}\
+#[fg=$TMUX_FG,bg=$TMUX_BG]#[bold]  👨 #(whoami)  \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
