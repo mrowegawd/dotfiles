@@ -58,9 +58,9 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
 #[fg=$RED]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
-#[fg=$TMUX_FG]#[bold] #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  \
-#[fg=$TMUX_FG,bg=$TMUX_BG]#{?client_prefix,#[fg=$BORDER_FG_ACTIVE]#[bold]#{prefix},#{prefix}}\
-#[fg=$TMUX_FG,bg=$TMUX_BG]#[bold]  👨 #(whoami)  \
+#[fg=$STATUSLINE_FG]#[bold] #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  \
+#[fg=$STATUSLINE_FG,bg=$TMUX_BG]#{?client_prefix,#[fg=$BORDER_FG_ACTIVE]#[bold]#{prefix},#{prefix}}\
+#[fg=$STATUSLINE_FG,bg=$TMUX_BG]#[bold]  👨 #(whoami)  \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
@@ -71,21 +71,20 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 
 set-option -g window-status-current-format "\
 #{?pane_in_mode,#{?#{==:#I,1},#[fg=$WHITE]#[bg=$WHITE],#[fg=$TMUX_BG]#[bg=$WHITE]}\
-#[bg=$WHITE]#[fg=$TMUX_BG]#[bold],#{?#{==:#I,1},#[fg=$ACTIVE_FG]#[bg=$ACTIVE_FG],#[fg=$TMUX_BG]#[bg=$ACTIVE_FG]}\
-#[fg=$BORDER_FG_ACTIVE,bg=$ACTIVE_FG,bold]}#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$BORDER_FG_ACTIVE]#[bold] 󰁌,} \
-#[fg=$ACTIVE_FG,bg=$ACTIVE_FG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
-#[bg=$ACTIVE_FG]#[fg=$WHITE] #[fg=$WHITE]COPY \
-#{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
+#[bg=$WHITE]#[fg=$TMUX_BG]#[bold],#{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,bold]}#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$BORDER_FG_ACTIVE]#[bold] 󰁌,} \
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},#[bg=$ACTIVE_BG]#[fg=$WHITE] \
+#[fg=$ACTIVE_FG]COPYMODE #{?#{e|>:#{search_count},0},#[fg=$ACTIVE_BG]#[bg=$RED] #[fg=$ACTIVE_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
 #[bg=$WHITE]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
-#[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_FG,bg=$TMUX_BG,nobold]}"
+#[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]}"
 
 set-option -g window-status-format "\
 #[fg=$TMUX_BG]#[bg=$TMUX_BG]\
-#[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+#[fg=$STATUSLINE_FG,bg=$TMUX_BG,noreverse]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_FG]#[bold] 󰁌,} \
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
-#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]COPY \
-#{?#{e|>:#{search_count},0},#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]Found #{search_count} #[bg=$TMUX_BG]#[fg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
-#[bg=$TMUX_BG]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
+#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$STATUSLINE_FG]COPY \
+#{?#{e|>:#{search_count},0},#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$STATUSLINE_FG]Found #{search_count} #[bg=$TMUX_BG]#[fg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
+#[bg=$TMUX_BG]#[fg=$STATUSLINE_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
 #[fg=$TMUX_BG]#[bg=$TMUX_BG],#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]}"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
