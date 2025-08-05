@@ -93,14 +93,14 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_43=$(grep -i color43 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   GET_COL_44=$(grep -i color44 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_45=$(grep -i color45 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_51=$(grep -i color51 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_45=$(grep -i color45 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  #
+  # GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_51=$(grep -i color51 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -168,6 +168,16 @@ send_notify() {
   fi
 }
 
+set_vim() {
+  _PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
+  if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
+    PATH_NVIM="base2tone_space_dark"
+  else
+    PATH_NVIM=$_PATH_NVIM
+  fi
+
+  sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
+}
 set_rofi() {
   _ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 
@@ -177,25 +187,35 @@ set_rofi() {
 
   cat "$_ROFI_PATH/colors/_nightly.rasi" >"$_ROFI_PATH/colors/nightly.rasi"
 
-  sed -i -e "s/%%background%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
+  ROFI_BACKGROUND=$(grep -i rofi_background: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%background%%/$ROFI_BACKGROUND/g" "$_ROFI_PATH/colors/nightly.rasi"
 
-  sed -i -e "s/%%background_alt%%/$GET_COL_19/g" "$_ROFI_PATH/colors/nightly.rasi"
+  ROFI_BACKGROUND_ALT=$(grep -i rofi_background_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%background_alt%%/$ROFI_BACKGROUND_ALT/g" "$_ROFI_PATH/colors/nightly.rasi"
 
-  sed -i -e "s/%%selected%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%selected_alt%%/$GET_COL_16/g" "$_ROFI_PATH/colors/nightly.rasi"
+  ROFI_FOREGROUND=$(grep -i rofi_foreground: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%foreground%%/$ROFI_FOREGROUND/g" "$_ROFI_PATH/colors/nightly.rasi"
 
-  sed -i -e "s/%%border_alt%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
+  ROFI_KEYWORD=$(grep -i rofi_keyword: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%keyword%%/$ROFI_KEYWORD/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+  # Selected
+  ROFI_SELECTED=$(grep -i rofi_selected: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%selected%%/$ROFI_SELECTED/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+  ROFI_SELECTED_ALT=$(grep -i rofi_selected_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%selected_alt%%/$ROFI_SELECTED_ALT/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+  # Normal colors
+  ROFI_RED=$(grep -i rofi_red: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%red%%/$ROFI_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+  ROFI_GREEN=$(grep -i rofi_green: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%green%%/$ROFI_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%urgent%%/$GET_MAGENTA/g" "$_ROFI_PATH/colors/nightly.rasi"
-
-  sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%border_alt%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
-
-  sed -i -e "s/%%keyword%%/$GET_COL_17/g" "$_ROFI_PATH/colors/nightly.rasi"
-
 }
 set_dunst() {
   _DUNST_PATH="$DOTFILES_PATH/dunst/.config/dunst"
@@ -204,22 +224,38 @@ set_dunst() {
 
   cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
 
-  DUNST_BG=$GET_COL_16
-  DUNST_FG=$GET_COL_17
-  DUNST_FRAME=$GET_COL_17
+  # Normal
+  DUNST_NORMAL_BG=$(grep -i dunst_normal_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%normal_bg%%/$DUNST_NORMAL_BG/g" "$_DUNST_PATH/dunstrc"
 
-  sed -i -e "s/%%normal_bg%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_fg%%/$DUNST_FG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_frame_fg%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
+  DUNST_NORMAL_FG=$(grep -i dunst_normal_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%normal_fg%%/$DUNST_NORMAL_FG/g" "$_DUNST_PATH/dunstrc"
 
-  sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%critical_bg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%critical_frame_fg%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
+  DUNST_NORMAL_FRAME_FG=$(grep -i dunst_normal_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%normal_frame_fg%%/$DUNST_NORMAL_FRAME_FG/g" "$_DUNST_PATH/dunstrc"
 
+  # Critical
+  DUNST_CRITICAL_FG=$(grep -i dunst_critical_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%critical_fg%%/$DUNST_CRITICAL_FG/g" "$_DUNST_PATH/dunstrc"
+
+  DUNST_CRITICAL_BG=$(grep -i dunst_critical_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%critical_bg%%/$DUNST_CRITICAL_BG/g" "$_DUNST_PATH/dunstrc"
+
+  DUNST_CRITICAL_FRAME_BG=$(grep -i dunst_critical_frame_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%critical_frame_fg%%/$DUNST_CRITICAL_FRAME_BG/g" "$_DUNST_PATH/dunstrc"
+
+  # General
+  DUNST_BG=$(grep -i dunst_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%background%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%color_border%%/$DUNST_BG/g" "$_DUNST_PATH/dunstrc"
+
+  DUNST_FG=$(grep -i dunst_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%foreground%%/$DUNST_FG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%frame_border%%/$DUNST_FRAME/g" "$_DUNST_PATH/dunstrc"
+
+  DUNST_BORDER=$(grep -i dunst_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_border%%/$DUNST_BORDER/g" "$_DUNST_PATH/dunstrc"
+
+  # What is this?
+  sed -i -e "s/%%frame_border%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
@@ -233,44 +269,40 @@ set_tmux() {
   if [ -f "$_PATH_TMUX_THEMES" ]; then
     sleep 1
 
-    ACTIVE_FG=$(darken_color "$GET_COL_16" 140)
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
-      ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
-    fi
-    if [ "$1" == "base46-doomchad" ] || [ "$1" == "tokyonight-storm" ]; then
-      ACTIVE_FG=$(darken_color "$GET_COL_16" 30)
-    fi
-    if [ "$1" == "ashen" ]; then
-      ACTIVE_FG=$(darken_color "$GET_COL_16" 140)
-    fi
-    if [ "$1" == "base46-seoul256_dark" ]; then
-      ACTIVE_FG=$(lighten_color "$GET_COL_16" 2)
-    fi
-    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$GET_COL_44\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_FG=$(grep -i tmux_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_BG=.*$/TMUX_BG=\"$TMUX_FG\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^BORDER_FG_ACTIVE=.*$/BORDER_FG_ACTIVE=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_BG=$(grep -i tmux_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$TMUX_BG\"/g" "$_PATH_TMUX_THEMES"
 
-    SESSION_BG=$GET_WHITE
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
-      SESSION_BG=$(darken_color "$GET_COL_21" 70)
-    fi
-    sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$SESSION_BG\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^SESSION_FG=.*$/SESSION_FG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_TAB_ACTIVE_FG=$(grep -i tmux_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$TMUX_TAB_ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
 
-    TMUX_STATUSLINE_FG=$(darken_color "$GET_COL_21" 10)
+    TMUX_TAB_ACTIVE_BG=$(grep -i tmux_tab_active_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$TMUX_TAB_ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_BORDER_ACTIVE=$(grep -i tmux_border_active: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^BORDER_FG_ACTIVE=.*$/BORDER_FG_ACTIVE=\"$TMUX_BORDER_ACTIVE\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_BORDER_INACTIVE=$(grep -i tmux_border_inactive: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$TMUX_BORDER_INACTIVE\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_SESSION_BG=$(grep -i tmux_session_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$TMUX_SESSION_BG\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_SESSION_FG=$(grep -i tmux_session_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^SESSION_FG=.*$/SESSION_FG=\"$TMUX_SESSION_FG\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_STATUSLINE_FG=$(grep -i tmux_statusline_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$TMUX_STATUSLINE_FG\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^TMUX_BG=.*$/TMUX_BG=\"$GET_COL_20\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$GET_COL_21\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_MESSAGE_BG=$(grep -i tmux_message_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$TMUX_MESSAGE_BG\"/g" "$_PATH_TMUX_THEMES"
 
     sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^WHITE=.*$/WHITE=\"$GET_WHITE\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^GREEN=.*$/GREEN=\"$GET_GREEN\"/g" "$_PATH_TMUX_THEMES"
-
-    sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$GET_YELLOW\"/g" "$_PATH_TMUX_THEMES"
   else
     send_notify "set_tmux: path $_PATH_TMUX_THEMES not ex"
   fi
@@ -282,21 +314,28 @@ set_kitty() {
   if [ -f "$_PATH_KITTY_THEMES" ]; then
     sleep 1
 
-    ACTIVE_FG="$GET_COL_16"
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
-      ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
-    fi
+    # Tab
+    KITTY_TAB_ACTIVE_FG=$(grep -i kitty_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^active_tab_foreground.*$/active_tab_foreground $KITTY_TAB_ACTIVE_FG/g" "$_PATH_KITTY_THEMES"
 
-    sed -i -e "s/^active_border_color\s.*$/active_border_color $GET_COL_17/g" "$_PATH_KITTY_THEMES"
-    sed -i -e "s/^inactive_border_color\s.*$/inactive_border_color $GET_COL_18/g" "$_PATH_KITTY_THEMES"
+    KITTY_TAB_ACTIVE_BG=$(grep -i kitty_tab_active_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^active_tab_background.*$/active_tab_background $KITTY_TAB_ACTIVE_BG/g" "$_PATH_KITTY_THEMES"
 
-    sed -i -e "s/^active_tab_foreground.*$/active_tab_foreground $GET_COL_17/g" "$_PATH_KITTY_THEMES"
-    sed -i -e "s/^active_tab_background.*$/active_tab_background $GET_COL_44/g" "$_PATH_KITTY_THEMES"
+    KITTY_TAB_INACTIVE_FG=$(grep -i kitty_tab_inactive_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^inactive_tab_foreground.*$/inactive_tab_background $KITTY_TAB_INACTIVE_FG/g" "$_PATH_KITTY_THEMES"
 
-    sed -i -e "s/^inactive_tab_foreground.*$/inactive_tab_background $GET_COL_21/g" "$_PATH_KITTY_THEMES"
-    sed -i -e "s/^inactive_tab_background.*$/inactive_tab_background $GET_COL_20/g" "$_PATH_KITTY_THEMES"
+    KITTY_TAB_INACTIVE_BG=$(grep -i kitty_tab_inactive_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^inactive_tab_background.*$/inactive_tab_background $KITTY_TAB_INACTIVE_BG/g" "$_PATH_KITTY_THEMES"
 
-    sed -i -e "s/^tab_bar_background.*$/tab_bar_background $GET_COL_20/g" "$_PATH_KITTY_THEMES"
+    KITTY_TAB_BAR_BG=$(grep -i kitty_tab_bar_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^tab_bar_background.*$/tab_bar_background $KITTY_TAB_BAR_BG/g" "$_PATH_KITTY_THEMES"
+
+    # Border
+    KITTY_BORDER_ACTIVE=$(grep -i kitty_border_active: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^active_border_color\s.*$/active_border_color $KITTY_BORDER_ACTIVE/g" "$_PATH_KITTY_THEMES"
+
+    KITTY_BORDER_INACTIVE=$(grep -i kitty_border_inactive: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^inactive_border_color\s.*$/inactive_border_color $KITTY_BORDER_INACTIVE/g" "$_PATH_KITTY_THEMES"
 
   else
     send_notify "set_kitty: path $_PATH_KITTY_THEMES not ex"
@@ -310,30 +349,37 @@ set_delta() {
     send_notify "set_delta: $_DELTA_PATH does not exists!" && exit 1
   fi
 
-  # FILE_STYLE_FG=$(darken_color "$GET_COL_47" 90)
-  # FILE_STYLE_BG=$(darken_color "$GET_COL_47" 150)
-  sed -i -e "s/^file-style.*/file-style = \"$GET_COL_47\" bold \"$GET_BG\"/g" "$_DELTA_PATH"
+  DELTA_FILE_BG=$(grep -i delta_file_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  DELTA_FILE_FG=$(grep -i delta_file_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^file-style.*/file-style = \"$DELTA_FILE_FG\" bold \"$DELTA_FILE_BG\"/g" "$_DELTA_PATH"
 
-  HUNK_HEADER_STYLE_BG=$(darken_color "$GET_COL_47" 110)
-  sed -i -e "s/^hunk-header-style.*/hunk-header-style = syntax bold \"$HUNK_HEADER_STYLE_BG\"/g" "$_DELTA_PATH"
+  DELTA_HUNK_HEADER_BG=$(grep -i delta_hunk_header_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^hunk-header-style.*/hunk-header-style = syntax bold \"$DELTA_HUNK_HEADER_BG\"/g" "$_DELTA_PATH"
 
   # For line number
-  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$GET_COL_36\" italic/g" "$_DELTA_PATH"
-  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$GET_COL_34\" italic/g" "$_DELTA_PATH"
+  DELTA_LINE_NUMBER_MINUS=$(grep -i delta_line_number_minus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$DELTA_LINE_NUMBER_MINUS\" italic/g" "$_DELTA_PATH"
+
+  DELTA_LINE_NUMBER_PLUS=$(grep -i delta_line_number_plus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$DELTA_LINE_NUMBER_PLUS\" italic/g" "$_DELTA_PATH"
 
   # For hunk plus
-  PLUS_STYLE_FG=$(darken_color "$GET_COL_34" 10)
-  sed -i -e "s/^plus-style.*/plus-style = \"$PLUS_STYLE_FG\" bold \"$GET_COL_33\"/g" "$_DELTA_PATH" # color for hunk added
-  PLUS_EMPH_STYLE_FG=$(lighten_color "$GET_COL_34" 35)
-  PLUS_EMPH_STYLE_BG=$(darken_color "$GET_COL_34" 30)
-  sed -i -e "s/^plus-emph-style.*/plus-emph-style = \"$PLUS_EMPH_STYLE_FG\" bold \"$PLUS_EMPH_STYLE_BG\"/g" "$_DELTA_PATH"
+  DELTA_HUNK_PLUS_FG=$(grep -i delta_hunk_plus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  DELTA_HUNK_PLUS_BG=$(grep -i delta_hunk_plus_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^plus-style.*/plus-style = \"$DELTA_HUNK_PLUS_FG\" bold \"$DELTA_HUNK_PLUS_BG\"/g" "$_DELTA_PATH" # color for hunk added
+
+  DELTA_HUNK_EMP_PLUS_FG=$(grep -i delta_hunk_emp_plus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  DELTA_HUNK_EMP_PLUS_BG=$(grep -i delta_hunk_emp_plus_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^plus-emph-style.*/plus-emph-style = \"$DELTA_HUNK_EMP_PLUS_FG\" bold \"$DELTA_HUNK_EMP_PLUS_BG\"/g" "$_DELTA_PATH"
 
   # For hunk minus
-  MINUS_STYLE_FG=$(darken_color "$GET_COL_36" 15)
-  sed -i -e "s/^minus-style.*/minus-style = \"$MINUS_STYLE_FG\" bold \"$GET_COL_35\"/g" "$_DELTA_PATH" # color for hunk deleted
-  MINUS_EMPH_STYLE_FG=$(lighten_color "$GET_COL_36" 35)
-  MINUS_EMPH_STYLE_BG=$(darken_color "$GET_COL_36" 30)
-  sed -i -e "s/^minus-emph-style.*/minus-emph-style = \"$MINUS_EMPH_STYLE_FG\" bold \"$MINUS_EMPH_STYLE_BG\"/g" "$_DELTA_PATH"
+  DELTA_HUNK_MINUS_FG=$(grep -i delta_hunk_minus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  DELTA_HUNK_MINUS_BG=$(grep -i delta_hunk_minus_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^minus-style.*/minus-style = \"$DELTA_HUNK_MINUS_FG\" bold \"$DELTA_HUNK_MINUS_BG\"/g" "$_DELTA_PATH" # color for hunk deleted
+
+  DELTA_HUNK_EMP_MINUS_FG=$(grep -i delta_hunk_emp_minus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  DELTA_HUNK_EMP_MINUS_BG=$(grep -i delta_hunk_emp_minus_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^minus-emph-style.*/minus-emph-style = \"$DELTA_HUNK_EMP_MINUS_FG\" bold \"$DELTA_HUNK_EMP_MINUS_BG\"/g" "$_DELTA_PATH"
 
 }
 set_zathura() {
@@ -356,16 +402,6 @@ set_zathura() {
   # sed -i -e "s/^set inputbar-fg.*/set inputbar-fg \"$GETFOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
 
   sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
-}
-set_vim() {
-  _PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
-  if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
-    PATH_NVIM="base2tone_space_dark"
-  else
-    PATH_NVIM=$_PATH_NVIM
-  fi
-
-  sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
 }
 set_terminal() {
   # size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
@@ -410,39 +446,45 @@ set_btop() {
   _BTOP_THEME_PATH="$_BTOP_PATH/themes/guard.theme"
 
   if [ -d "$_BTOP_PATH" ]; then
-    RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
-    RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
-
-    GREEN_LIGHT_1=$(lighten_color "$GET_GREEN_ALT" 40)
-    GREEN_LIGHT_2=$(lighten_color "$GET_GREEN_ALT" 80)
 
     cat "$_BTOP_CONFIG_THEME_PATH" >"$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%background%%/$GET_COL_22/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%red_alt%%/$GET_YELLOW_ALT/g" "$_BTOP_THEME_PATH"
+    BTOP_FG=$(grep -i btop_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%foreground%%/$BTOP_FG/g" "$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%cursorline_fg%%/$GET_BG/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%cursorline_bg%%/$GET_COL_17/g" "$_BTOP_THEME_PATH"
+    BTOP_BG=$(grep -i btop_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%background%%/$BTOP_BG/g" "$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%title_fg%%/$GET_CYAN/g" "$_BTOP_THEME_PATH"
+    BTOP_HIGHLIGHT_KEY=$(grep -i btop_highlight_key: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%highlight_key%%/$BTOP_HIGHLIGHT_KEY/g" "$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%border_fg%%/$GET_COL_18/g" "$_BTOP_THEME_PATH"
+    BTOP_CURSORLINE_FG=$(grep -i btop_cursorline_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%cursorline_fg%%/$BTOP_CURSORLINE_FG/g" "$_BTOP_THEME_PATH"
 
+    BTOP_CURSORLINE_BG=$(grep -i btop_cursorline_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%cursorline_bg%%/$BTOP_CURSORLINE_BG/g" "$_BTOP_THEME_PATH"
+
+    BTOP_TITLE=$(grep -i btop_title: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%title_fg%%/$BTOP_TITLE/g" "$_BTOP_THEME_PATH"
+
+    BTOP_BORDER_FG=$(grep -i btop_border_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%border_fg%%/$BTOP_BORDER_FG/g" "$_BTOP_THEME_PATH"
+
+    BTOP_BORDER_FG=$(grep -i btop_border_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/%%keyword%%/$GET_COL_17/g" "$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_THEME_PATH"
+    # sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_THEME_PATH"
+    # sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_THEME_PATH"
+    # sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_THEME_PATH"
+    #
+    # sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_THEME_PATH"
+    # sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_THEME_PATH"
 
-    sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_THEME_PATH"
+    BTOP_INACTIVE_TEXT=$(grep -i btop_inactive_text: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%inactive_text%%/$BTOP_INACTIVE_TEXT/g" "$_BTOP_THEME_PATH"
 
-    FOREGROUND_DARKEN_1=$(lighten_color "$GET_BG" 10) # Misalnya, mengurangi 50 untuk menggelapkan
-    BACKGROUND_DARKEN_1=$(lighten_color "$GET_FG" 5)
-    sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
-    sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
+    BTOP_DARKEN_BG=$(grep -i btop_darken_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%background_darken_2%%/$BTOP_DARKEN_BG/g" "$_BTOP_THEME_PATH"
   else
     send_notify "set_btop: path $_BTOP_PATH does not exists!"
   fi
@@ -459,35 +501,60 @@ set_yazi() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  HOVERED_BG=$(lighten_color "$GET_COL_39" 20)
-  if [ "$1" == "rose-pine-dawn" ]; then
-    HOVERED_BG=$(darken_color "$GET_COL_39" 10)
-  fi
-  if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ] || [ "$1" == "vscode_modern" ]; then
-    HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
-  fi
+  # HOVERED_BG=$(lighten_color "$GET_COL_39" 20)
+  # if [ "$1" == "rose-pine-dawn" ]; then
+  #   HOVERED_BG=$(darken_color "$GET_COL_39" 10)
+  # fi
+  # if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ] || [ "$1" == "vscode_modern" ]; then
+  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
+  # fi
 
-  sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
+  YAZI_HOVERED=$(grep -i yazi_hovered: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_hovered%%/$YAZI_HOVERED/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_selected%%/$GET_YELLOW/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_copied%%/$GET_MAGENTA/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_cut%%/$GET_RED/g" "$TARGET_YAZI_THEME"
+  YAZI_CWD=$(grep -i yazi_cwd: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_cwd%%/$YAZI_CWD/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_tab_active_fg%%/$GET_COL_40/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_tab_active_bg%%/$GET_COL_41/g" "$TARGET_YAZI_THEME"
+  # Cut, Copied, Selected
+  YAZI_SELECTED=$(grep -i yazi_selected: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_selected%%/$YAZI_SELECTED/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_tab_inactive_fg%%/$GET_COL_42/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_tab_inactive_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
+  YAZI_COPIED=$(grep -i yazi_copied: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_copied%%/$YAZI_COPIED/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_statusline_active_blur_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_statusline_active_fg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
+  YAZI_CUT=$(grep -i yazi_cut: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_cut%%/$YAZI_CUT/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_directory%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_which_bg%%/$GET_COL_48/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_filename_fg%%/$GET_COL_49/g" "$TARGET_YAZI_THEME"
+  # Tab
+  YAZI_TAB_ACTIVE_FG=$(grep -i yazi_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_tab_active_fg%%/$YAZI_TAB_ACTIVE_FG/g" "$TARGET_YAZI_THEME"
 
+  YAZI_TAB_ACTIVE_BG=$(grep -i yazi_tab_active_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_tab_active_bg%%/$YAZI_TAB_ACTIVE_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_TAB_INACTIVE_FG=$(grep -i yazi_tab_inactive_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_tab_inactive_fg%%/$YAZI_TAB_INACTIVE_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_TAB_INACTIVE_BG=$(grep -i yazi_tab_inactive_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_tab_inactive_bg%%/$YAZI_TAB_INACTIVE_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_TAB_ACTIVE_BLUR_BG=$(grep -i yazi_tab_active_blur_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_active_blur_bg%%/$YAZI_TAB_ACTIVE_BLUR_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_FG=$(grep -i yazi_statusline_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_active_fg%%/$YAZI_STATUSLINE_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_BG=$(grep -i yazi_statusline_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_active_bg%%/$YAZI_STATUSLINE_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_DIRECTORY=$(grep -i yazi_directory: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_directory%%/$YAZI_DIRECTORY/g" "$TARGET_YAZI_THEME"
+
+  YAZI_MENU_FG=$(grep -i yazi_menu_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_filename_fg%%/$YAZI_MENU_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_MENU_BG=$(grep -i yazi_menu_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_which_bg%%/$YAZI_MENU_BG/g" "$TARGET_YAZI_THEME"
 }
 set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
@@ -498,20 +565,35 @@ set_fzf() {
 
   cat "$FZF_PATH_CONFIG/_fzf.config" >"$FZF_PATH_CONFIG/fzf.config"
 
-  sed -i -e "s/%%color_bg%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_fg%%/$GET_COL_23/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_hl%%/$GET_COL_24/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_BG=$(grep -i fzf_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_bg%%/$FZF_BG/g" "$FZF_PATH_CONFIG/fzf.config"
 
-  sed -i -e "s/%%color_selection_bg%%/$GET_COL_25/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_selection_fg%%/$GET_COL_26/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_selection_hl%%/$GET_COL_27/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_FG=$(grep -i fzf_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_fg%%/$FZF_FG/g" "$FZF_PATH_CONFIG/fzf.config"
 
-  sed -i -e "s/%%color_border%%/$GET_COL_28/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_gutter%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_pointer%%/$GET_COL_17/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_HL=$(grep -i fzf_match_fuzzy: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_hl%%/$FZF_HL/g" "$FZF_PATH_CONFIG/fzf.config"
 
-  sed -i -e "s/%%color_header%%/$GET_COL_37/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_SELECTION_BG=$(grep -i fzf_selection_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_selection_bg%%/$FZF_SELECTION_BG/g" "$FZF_PATH_CONFIG/fzf.config"
 
+  FZF_SELECTION_FG=$(grep -i fzf_selection_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_selection_fg%%/$FZF_SELECTION_FG/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  FZF_SELECTION_HL=$(grep -i fzf_match: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_selection_hl%%/$FZF_SELECTION_HL/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  FZF_BORDER=$(grep -i fzf_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_border%%/$FZF_BORDER/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  FZF_GUTTER=$(grep -i fzf_gutter: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_gutter%%/$FZF_GUTTER/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  FZF_POINTER=$(grep -i fzf_pointer: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_pointer%%/$FZF_POINTER/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  FZF_HEADER=$(grep -i fzf_header: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_header%%/$FZF_HEADER/g" "$FZF_PATH_CONFIG/fzf.config"
 }
 set_zsh_p10k() {
   ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
@@ -534,8 +616,11 @@ set_zshrc() {
     send_notify "set_zshrc: path $ZSHRC_PATH does not exists!" && exit 1
   fi
 
-  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$GET_COL_50\"/g" "$ZSHRC_PATH"
-  sed -i -e "s/^colorline=.*/colorline=\"$GET_COL_51\"/g" "$ZSHRC_PATH"
+  ZSHRC_LINES=$(grep -i zshrc_lines: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$ZSHRC_LINES\"/g" "$ZSHRC_PATH"
+
+  ZSHRC_SUGEST=$(grep -i zshrc_sugest: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^colorline=.*/colorline=\"$ZSHRC_SUGEST\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
@@ -547,13 +632,20 @@ set_lazygit() {
     rm "$THEME_LAZYGIT_FLA"
     cp "$THEME_LAZYGIT" "$THEME_LAZYGIT_FLA"
 
-    sed -i -e "s/%%active_border_color%%/$GET_COL_29/g" "$THEME_LAZYGIT_FLA"
-    sed -i -e "s/%%inactive_border_color%%/$GET_COL_30/g" "$THEME_LAZYGIT_FLA"
-    sed -i -e "s/%%options_text_color%%/$GET_COL_31/g" "$THEME_LAZYGIT_FLA"
+    LAZYGIT_ACTIVE_BORDER=$(grep -i lazygit_active_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%active_border_color%%/$LAZYGIT_ACTIVE_BORDER/g" "$THEME_LAZYGIT_FLA"
 
-    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_32/g" "$THEME_LAZYGIT_FLA"
+    LAZYGIT_INACTIVE_BORDER=$(grep -i lazygit_inactive_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%inactive_border_color%%/$LAZYGIT_INACTIVE_BORDER/g" "$THEME_LAZYGIT_FLA"
 
-    sed -i -e "s/%%default_fg_color%%/$GET_COL_16/g" "$THEME_LAZYGIT_FLA"
+    LAZYGIT_OPTION_TXT=$(grep -i lazygit_option_txt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%options_text_color%%/$LAZYGIT_OPTION_TXT/g" "$THEME_LAZYGIT_FLA"
+
+    LAZYGIT_SELECTED_BG=$(grep -i lazygit_selected_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%selected_line_bg_color%%/$LAZYGIT_SELECTED_BG/g" "$THEME_LAZYGIT_FLA"
+
+    LAZYGIT_DEFAULT_FG=$(grep -i lazygit_default_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%default_fg_color%%/$LAZYGIT_DEFAULT_FG/g" "$THEME_LAZYGIT_FLA"
   fi
 
 }
@@ -564,17 +656,32 @@ set_eww() {
     send_notify "set_eww: path $EWW_PATH does not exists!" && exit 1
   fi
 
-  BG_DARKEN_1=$(darken_color "$GET_BG" 5) # Misalnya, mengurangi 50 untuk menggelapkan
+  EWW_BG=$(grep -i eww_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$bg: .*/\$bg: $EWW_BG;/g" "$EWW_PATH/eww.scss"
 
-  sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$altbg: .*/\$altbg: $GET_BLACK_ALT;/g" "$EWW_PATH/eww.scss"
+  EWW_BG_DARKEN=$(grep -i eww_bg_darken: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$black: .*/\$black: $EWW_BG_DARKEN;/g" "$EWW_PATH/eww.scss"
 
-  sed -i -e "s/^\$fg: .*/\$fg: $GET_FG;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$fg2: .*/\$fg2: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
+  EWW_BG_ALT=$(grep -i eww_bg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$altbg: .*/\$altbg: $EWW_BG_ALT;/g" "$EWW_PATH/eww.scss"
 
-  sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"
+  EWW_FG=$(grep -i eww_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$fg: .*/\$fg: $EWW_FG;/g" "$EWW_PATH/eww.scss"
+
+  EWW_FG2=$(grep -i eww_fg2: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$fg2: .*/\$fg2: $EWW_FG2;/g" "$EWW_PATH/eww.scss"
+
+  # sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
+
+  EWW_RED=$(grep -i eww_red: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$red: .*/\$red: $EWW_RED;/g" "$EWW_PATH/eww.scss"
+
+  EWW_KEYWORD=$(grep -i eww_keyword: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$keyword: .*/\$keyword: $EWW_KEYWORD;/g" "$EWW_PATH/eww.scss"
+
+  EWW_ICON_FG=$(grep -i eww_icon_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^\$magenta: .*/\$magenta: $EWW_ICON_FG;/g" "$EWW_PATH/eww.scss"
+
   sed -i -e "s/^\$altred: .*/\$altred: $GET_RED_ALT;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$green: .*/\$green: $GET_GREEN;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$altgreen: .*/\$altgreen: $GET_GREEN_ALT;/g" "$EWW_PATH/eww.scss"
@@ -582,10 +689,7 @@ set_eww() {
   sed -i -e "s/^\$altyellow: .*/\$altyellow: $GET_YELLOW_ALT;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$blue: .*/\$blue: $GET_BLUE;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$altblue: .*/\$altblue: $GET_BLUE_ALT;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$magenta: .*/\$magenta: $GET_COL_19;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
-
-  sed -i -e "s/^\$keyword: .*/\$keyword: $GET_COL_17;/g" "$EWW_PATH/eww.scss"
 }
 set_firefox() {
   IGET_CUS="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"
@@ -734,33 +838,24 @@ setup() {
   sleep 1
 
   set_rofi
-  _NOTIF_ROFI="Rofi        ✅"
   set_dunst
-  _NOTIF_DUNST="Dunst       ✅"
   set_tmux "$1"
-  _NOTIF_TMUX="Tmux        ✅"
   set_btop
-  _NOTIF_BTOP="Btop        ✅"
   set_eww
-  _NOTIF_EWW="Eww        ✅"
-  set_zathura
-  _NOTIF_ZATHURA="Zathura     ✅"
   set_vim "$1"
-  _NOTIF_VIM="Vim         ✅"
+  # set_zathura
   set_terminal "$1"
-  _NOTIF_TERMINAL="Terminal    ✅"
-  set_firefox "$1"
-  _NOTIF_FIREFOX="Firefox     ✅"
+  # set_firefox "$1"
 
   sleep 1
 
   set_fzf
   set_yazi "$1"
   set_lazygit
-  set_zsh_p10k "$1"
+  # set_zsh_p10k "$1"
   set_delta
   set_zshrc "$1"
-  set_polybar "$1"
+  # set_polybar "$1"
   set_shaders_color "$1"
   set_kitty "$1"
 
@@ -770,8 +865,31 @@ setup() {
   # esac
 
   bspc wm -r && sleep 2 && send_notify "Reload bspwm config.."
+
   "$HOME/.config/miscxrdb/exbin/fehbg" "$1"
-  send_notify "Load theme: $1\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
+
+  NOTIFS=(
+    "Btop"
+    "Delta"
+    "Dunst"
+    "Eww"
+    "FZF"
+    "Kitty"
+    "Rofi"
+    "Terminal"
+    "Tmux"
+    "Vim"
+    "Yazi"
+    "Zshrc"
+  )
+
+  MESSAGE="Theme: $1"
+
+  for i in "${!NOTIFS[@]}"; do
+    MESSAGE+=$(printf "\n%-12s ✅" "${NOTIFS[$i]}")
+  done
+
+  send_notify "$MESSAGE"
 }
 
 main() {

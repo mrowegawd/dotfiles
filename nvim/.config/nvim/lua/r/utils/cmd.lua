@@ -925,217 +925,203 @@ end
 function M.change_colors()
   local H = require "r.settings.highlights"
 
-  local KeywordNC_bg = H.tint(H.get("Keyword", "fg"), -0.5)
-  local KeywordNC_fg = H.get("Keyword", "fg") -- 17
+  local tab_active_fg = H.tint(H.get("Keyword", "fg"), -0.2)
+  local tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.65)
 
-  local tmux_bg = H.get("Normal", "bg")
-  local tmux_fg = H.get("StatusLine", "fg")
-  -- local tmux_fg = H.tint(H.get("StatusLine", "fg"), 0.2)
-  -- local tmux_fg = H.tint(H.get("StatusLine", "bg"), 1.4)
+  local tab_inactive_fg = H.get("WinbarFilepath", "fg")
 
-  local statusline_fg = H.tint(H.get("WinSeparator", "fg"), 0.7)
+  local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
+  local border_inactive = H.get("WinSeparator", "fg")
 
-  local winseparator = H.get("WinSeparator", "fg")
+  local col_tbls = {
+    fzf = {
+      fg = H.tint(H.get("FzfLuaFilePart", "fg"), -0.15),
+      bg = H.get("FzfLuaNormal", "bg"),
+      match = H.get("FzfLuaFzfMatch", "fg"),
 
-  local lazygit_selected_line_bg = H.get("LazygitselectedLineBgColor", "bg")
-  local lazygit_inactive_border = H.get("LazygitInactiveBorderColor", "fg")
-  local lazygit_active_border = KeywordNC_bg
-  local lazygit_border_fg = H.tint(H.get("WinSeparator", "fg"), 0.2) --> colorline zshrc
+      selection_fg = H.get("FzfLuaFilePart", "fg"),
+      selection_bg = H.get("FzfLuaSel", "bg"),
+      match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
-  local gitadd = H.get("diffAdd", "bg")
-  local gitlinenumber_add = H.darken(H.get("GitSignsAdd", "fg"), 0.4, H.get("Normal", "bg"))
+      gutter = H.get("FzfLuaNormal", "bg"),
 
-  local gitdelete = H.get("diffDelete", "bg")
-  local gitlinenumber_delete = H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg"))
+      pointer = H.get("diffDelete", "fg"),
+      border = H.get("FzfLuaBorder", "fg"),
+      header = fzf_headertext,
+    },
+    tmux = {
+      fg = H.get("Normal", "fg"),
+      bg = H.get("Normal", "bg"),
 
-  local fzf_headertext = H.get("FzfLuaHeaderText", "fg")
+      tab_active_fg = tab_active_fg,
+      tab_active_bg = tab_active_bg,
 
-  local yazi_cwd = H.get("Comment", "fg")
-  local yazi_hovered = H.get("CursorLine", "bg")
-  local yazi_tab_active_fg = KeywordNC_fg
-  local yazi_tab_active_bg = KeywordNC_bg
-  local yazi_tab_inactive_fg = H.get("TabLine", "fg")
-  local yazi_tab_inactive_bg = H.get("TabLine", "bg")
-  local yazi_statusline_bg = H.get("StatusLine", "bg")
-  local yazi_statusline_active_fg = H.get("StatusLine", "fg")
-  local yazi_statusline_active_bg = H.tint(H.get("StatusLine", "bg"), 0.2)
-  local yazi_directory = H.get("Directory", "fg")
-  local yazi_filename_fg = H.tint(H.get("StatusLine", "fg"), 1.4)
-  local yazi_which_bg = H.get("Pmenu", "bg")
+      -- statusline_fg = H.tint(H.get("StatusLine", "fg"), -0.05),
+      statusline_fg = tab_inactive_fg,
 
-  local zsh_lines = H.tint(H.get("WinSeparator", "fg"), 0.5)
-  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), 0.8)
+      session_fg = H.get("Normal", "bg"),
+      session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
 
-  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-    tmux_fg = H.tint(H.get("StatusLine", "fg"), -0.2)
-  end
+      message_bg = H.tint(H.get("diffChange", "fg"), 0.1),
 
-  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    statusline_fg = H.tint(H.get("Comment", "fg"), 0)
+      border_active = border_active,
+      border_inactive = border_inactive,
+    },
+    lazygit = {
+      active_border = H.get("Keyword", "fg"),
+      inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.3),
 
-    lazygit_active_border = H.tint(H.get("WinSeparator", "fg"), -0.5) -- 29
-    lazygit_border_fg = H.tint(H.get("WinSeparator", "fg"), 0)
-    lazygit_inactive_border = H.tint(H.get("Keyword", "fg"), 0) -- 30
-    lazygit_selected_line_bg = H.darken(H.get("Keyword", "fg"), 0.8, H.get("Normal", "bg"))
+      selected_bg = H.tint(H.get("CursorLine", "bg"), 0.55),
 
-    yazi_hovered = H.get("CursorLine", "bg")
-    yazi_statusline_active_bg = H.tint(H.get("StatusLine", "bg"), 0)
-    yazi_tab_inactive_fg = H.tint(H.get("TabLine", "fg"), -0.3)
+      option_txt = H.tint(H.get("WinSeparator", "fg"), 0.8),
 
-    fzf_headertext = H.tint(H.get("FzfLuaHeaderText", "fg"), 0.2)
+      default_fg = H.tint(H.get("Normal", "fg"), -0.1),
+    },
+    kitty = {
+      tab_active_fg = tab_active_fg,
+      tab_active_bg = tab_active_bg,
 
-    zsh_lines = H.tint(H.get("Normal", "bg"), 0.6)
-    zsh_sugest = H.tint(H.get("Normal", "bg"), 0.55)
-  end
+      tab_inactive_fg = tab_inactive_fg,
+      tab_inactive_bg = H.get("Normal", "bg"),
 
-  if vim.g.colorscheme == "rose-pine-dawn" then
-    yazi_filename_fg = H.tint(H.get("LineNr", "fg"), -0.5)
-  end
+      tab_bar_bg = H.get("Normal", "bg"),
 
-  local master_colors = string.format(
-    [[
-%s
-! -----------------------------
+      border_active = border_active,
+      border_inactive = border_inactive,
+    },
+    dunst = {
+      normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
+      normal_fg = H.tint(H.get("Keyword", "fg"), 0.1),
+      normal_frame = H.tint(H.get("Keyword", "fg"), -0.45),
 
-%s
-*color16: %s
-*color17: %s
+      critical_bg = H.tint(H.get("diffDelete", "fg"), -0.45),
+      critical_fg = H.tint(H.get("diffDelete", "fg"), 0.1),
+      critical_frame = H.tint(H.get("diffDelete", "fg"), -0.2),
 
-%s
-*color18: %s
-*color19: %s
+      bg = H.tint(H.get("Normal", "bg"), 0.25),
+      fg = H.tint(H.get("Normal", "bg"), 0.25),
+      border = H.tint(H.get("Normal", "bg"), 0.25),
+    },
+    zshrc = {
+      sugest = H.tint(H.get("WinSeparator", "fg"), 0.4),
+      lines = H.tint(H.get("WinSeparator", "fg"), 0.8),
+    },
+    btop = {
+      fg = H.tint(H.get("Normal", "fg"), -0.2),
+      bg = H.get("Normal", "bg"),
 
-%s
-*color20: %s
-*color21: %s
+      yellow_alt = H.tint(H.get("diffChange", "fg"), -0.45),
+      highlight_key = H.tint(H.get("diffDelete", "fg"), 0.1),
 
-%s
-*color22: %s
-*color23: %s
-*color24: %s
+      cursorline_fg = H.tint(H.get("Keyword", "fg"), 1),
+      cursorline_bg = H.tint(H.get("Keyword", "fg"), -0.5),
 
-%s
-*color25: %s
-*color26: %s
-*color27: %s
+      border_fg = H.tint(H.get("WinSeparator", "fg"), 0.25),
 
-%s
-*color28: %s
+      title = H.tint(H.get("Keyword", "fg"), -0.2),
 
-%s
-*color29: %s
-*color30: %s
-*color31: %s
-*color32: %s
+      inactive_text = H.tint(H.get("Normal", "fg"), -0.6),
 
-%s
-*color33: %s
-*color34: %s
+      darken_bg = H.tint(H.get("Normal", "bg"), -0.5),
+    },
+    delta = {
+      file_fg = H.get("diffFile", "fg"),
+      file_bg = H.get("diffFile", "bg"),
 
-%s
-*color35: %s
-*color36: %s
+      hunk_header_bg = H.tint(H.get("FzfLuaNormal", "bg"), 0.2),
 
-%s
-*color37: %s
+      line_number_plus = H.get("diffAdd", "fg"),
+      line_number_minus = H.get("diffDelete", "fg"),
 
-%s
-*color38: %s
-*color39: %s
-*color40: %s
-*color41: %s
-*color42: %s
-*color43: %s
+      hunk_plus_fg = H.get("diffAdd", "fg"),
+      hunk_plus_bg = H.get("diffAdd", "bg"),
+      hunk_emp_plus_fg = H.tint(H.get("diffAdd", "fg"), 0.45),
+      hunk_emp_plus_bg = H.tint(H.get("diffAdd", "bg"), 0.45),
 
-%s
-*color44: %s
-*color45: %s
-*color46: %s
-*color47: %s
-*color48: %s
-*color49: %s
+      hunk_minus_fg = H.get("diffDelete", "fg"),
+      hunk_minus_bg = H.get("diffDelete", "bg"),
+      hunk_emp_minus_fg = H.tint(H.get("diffDelete", "fg"), 0.45),
+      hunk_emp_minus_bg = H.tint(H.get("diffDelete", "bg"), 0.45),
+    },
+    eww = {
+      bg = H.get("Normal", "bg"),
 
-%s
-*color50: %s
+      fg = H.tint(H.get("Normal", "fg"), -0.5),
+      fg2 = H.tint(H.get("diffChange", "fg"), -0.3),
 
-*color51: %s
-]],
-    string.format "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
+      bg_darken = H.tint(H.get("Normal", "fg"), -0.3),
+      bg_alt = H.tint(H.get("Normal", "fg"), 0.3),
 
-    string.format "! State color: bg, fg",
-    KeywordNC_bg, -- 16
-    KeywordNC_fg, -- 17
+      red = H.tint(H.get("diffDelete", "fg"), 0.5),
 
-    string.format "! TMUX: border_fg_nc, border_fg",
-    winseparator, -- 19
-    statusline_fg, -- 18
+      icon_fg = H.tint(H.get("WinSeparator", "fg"), 0.4),
 
-    string.format "! TMUX: tmux_bg, tmux_fg",
-    tmux_bg, -- 20
-    tmux_fg, -- 21
+      keyword = H.get("Keyword", "fg"),
 
-    string.format "! FZF-NORMAL: bg, fg, match",
-    H.get("FzfLuaNormal", "bg"), -- 22
-    H.get("FzfLuaFilePart", "fg"), -- 23
-    H.get("FzfLuaFzfMatchFuzzy", "fg"), --24
+      -- add_fg = diff_add_fg,
+      -- add_line_number = diff_add_line_number,
+      -- change_bg = diff_change_bg,
+      -- change_fg = diff_change_fg,
+      -- change_line_number = diff_change_line_number,
+    },
+    yazi = {
+      cwd = H.get("Comment", "fg"),
+      hovered = H.tint(H.get("CursorLine", "bg"), 0.5),
+      selected = H.tint(H.get("diffDelete", "fg"), 0.3),
 
-    string.format "! FZF-SELECTION: bg, fg, match",
-    H.get("FzfLuaSel", "bg"), -- 25
-    H.get("FzfLuaFilePart", "fg"), -- 26
-    H.get("FzfLuaFzfMatch", "fg"), --27
+      copied = H.tint(H.get("diffChange", "fg"), 0.3),
+      cut = H.tint(H.get("diffDelete", "fg"), -0.3),
 
-    string.format "! FZF: border",
-    H.get("FzfLuaBorder", "fg"), -- 28
+      tab_active_fg = H.tint(H.get("Keyword", "fg"), 0.3),
+      tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.3),
+      tab_active_blur_bg = H.tint(H.get("Keyword", "fg"), -0.3),
 
-    string.format "! LAZYGIT: active_border_color, inactive_border_color, options_text_color, selected_line_bg_color",
-    lazygit_active_border, -- 29
-    lazygit_inactive_border, -- 30
-    lazygit_border_fg, -- 31
-    lazygit_selected_line_bg, -- 32
+      tab_inactive_fg = H.get("TabLine", "fg"),
+      tab_inactive_bg = H.get("Keyword", "fg"),
 
-    string.format "! DELTA: plus-style, plus-emph-style",
-    gitadd, -- 33
-    gitlinenumber_add, -- 34
+      statusline_fg = H.get("StatusLine", "bg"),
+      statusline_bg = H.get("StatusLine", "fg"),
 
-    string.format "! DELTA: minus-style, minus-emph-style",
-    gitdelete, -- 36
-    gitlinenumber_delete, -- 35
+      directory = H.get("Directory", "fg"),
 
-    string.format "! fzf-headertext: fg",
-    fzf_headertext, -- 37
+      menu_bg = H.get("Pmenu", "bg"),
+      menu_fg = H.get("Pmenu", "fg"),
+    },
+    rofi = {
+      foreground = H.get("Normal", "bg"),
 
-    string.format "! yazi: cwd, hovered, tab_active_fg, tab_active_bg, tab_inactive_bg, tab_inactive_fg",
-    yazi_cwd, -- 38
-    yazi_hovered, -- 39
-    yazi_tab_active_fg, -- 40
-    yazi_tab_active_bg, -- 41
-    yazi_tab_inactive_fg, -- 42
-    yazi_tab_inactive_bg, -- 43
+      background = H.tint(H.get("Normal", "bg"), 0.25),
+      background_alt = H.tint(H.get("Keyword", "fg"), -0.4),
 
-    string.format "! yazi: col_statusline_fg, col_statusline_main_bg, col_statusline_main_alt_bg, directory, which_bg, filename_fg",
-    yazi_statusline_bg, -- 44
-    yazi_statusline_active_fg, -- 45
-    yazi_statusline_active_bg, -- 46
-    yazi_directory, -- 47
-    yazi_which_bg, -- 48
-    yazi_filename_fg, -- 49
+      selected = H.get("Normal", "bg"),
+      selected_alt = H.tint(H.get("Keyword", "fg"), -0.4),
 
-    string.format "! zsh: zsh_line",
-    zsh_sugest, -- 50
-    zsh_lines -- 51
-  )
+      keyword = H.get("Keyword", "fg"),
+
+      red = H.tint(H.get("diffDelete", "fg"), -0.3),
+      green = H.tint(H.get("diffAdd", "fg"), -0.3),
+    },
+  }
 
   local master_color_path = "/tmp/master-colors-themes"
-
   if RUtils.file.is_file(master_color_path) then
     vim.system { "rm", master_color_path }
     vim.system { "touch", master_color_path }
   end
 
-  local fp = io.open(master_color_path, "a")
-  if fp then
-    fp:write(master_colors)
-    fp:close()
+  local file = io.open(master_color_path, "w")
+  if file then
+    file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
+
+    for i, x in pairs(col_tbls) do
+      for idx, j in pairs(x) do
+        file:write(i .. "_" .. idx .. ": " .. j .. "\n")
+      end
+    end
+    file:close()
+
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.info("Data berhasil disimpan di " .. master_color_path)
   end
 end
 
