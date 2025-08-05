@@ -30,12 +30,17 @@ return {
           progress = { enabled = true },
         },
         cmdline = { view = "cmdline" },
+        redirect = { view = "popup", filter = { event = "msg_show" } },
         views = {
           cmdline_popup = { position = { row = -2, col = "1%" } },
           cmdline_popupmenu = {
             position = { row = -2.1, col = "1%" },
             size = { width = "auto", height = "auto" },
             win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
+          },
+          mini = {
+            position = { row = "98%", col = "100%" },
+            size = { height = "5%" },
           },
           popupmenu = {
             border = {},
@@ -65,6 +70,15 @@ return {
               },
             },
             view = "mini",
+          },
+          {
+            view = "mini",
+            filter = {
+              any = {
+                { event = "msg_show", find = "^E486:" },
+                -- { event = "notify", max_height = 1 }, -- comment this!
+              },
+            }, -- minimise pattern not found messages
           },
           {
             opts = { skip = true },

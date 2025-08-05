@@ -340,6 +340,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
+          line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",

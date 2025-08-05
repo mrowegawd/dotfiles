@@ -158,7 +158,7 @@ local __colors = function()
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-    block_fg_qfstatus = 0.3,
+    block_fg_qfstatus = 0.6,
     fg_branch = -1,
     fg_keyword = 0.85,
     winbar_keyword = -0.15,
@@ -179,7 +179,9 @@ local __colors = function()
     block_bg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg_darken),
 
     block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), col_opts.block_fg_qfstatus),
-    block_bg_qfstatus = H.tint(H.get("Tabline", "bg"), 0.1),
+    block_bg_qfstatus = H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), 0.2),
+
+    block_title_qfstatus = H.tint(H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), 0.2), 1.1),
 
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
@@ -687,7 +689,7 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_fg_qfstatus, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.block_title_qfstatus, bg = colors.block_bg_qfstatus },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
@@ -707,7 +709,7 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.mode_term_bg, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.block_title_qfstatus, bg = colors.block_bg_qfstatus },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
