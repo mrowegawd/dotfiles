@@ -934,7 +934,45 @@ function M.change_colors()
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
   local border_inactive = H.get("WinSeparator", "fg")
 
-  local col_tbls = {
+  local zsh_lines_fg = 0.7
+  local zsh_sugest_fg = 0.4
+
+  local bright_themes = { "base46-everforest", "base46-jabuti", "base46-melange", "base46-onenord" }
+  if vim.tbl_contains(bright_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.25
+  end
+  local dark_themes = {
+    "base46-chocolate",
+    "base46-doomchad",
+    "base46-gruvchad",
+    "base46-horizon",
+    "base46-kanagawa",
+    "base46-material-darker",
+    "base46-oxocarbon",
+    "base46-rosepine",
+    "base46-solarized_dark",
+    "base46-vscode_dark",
+    "base46-wombat",
+  }
+  if vim.tbl_contains(dark_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.35
+    zsh_sugest_fg = 0.65
+  end
+  local darker_themes = { "base46-catppuccin" }
+  if vim.tbl_contains(darker_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.9
+    zsh_sugest_fg = 0.6
+  end
+  local special_cfg_themes = { "base46-seoul256_dark", "base46-zenburn" }
+  if vim.tbl_contains(special_cfg_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.14
+    zsh_sugest_fg = 0.45
+  end
+
+  local zsh_lines = H.tint(H.get("WinSeparator", "fg"), zsh_lines_fg)
+  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), zsh_sugest_fg)
+
+  local defined_cols = {
     fzf = {
       fg = H.tint(H.get("FzfLuaFilePart", "fg"), -0.15),
       bg = H.get("FzfLuaNormal", "bg"),
@@ -958,7 +996,7 @@ function M.change_colors()
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), 0.1),
+      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), 0.05),
 
       session_fg = H.get("Normal", "bg"),
       session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
@@ -1005,8 +1043,8 @@ function M.change_colors()
       border = H.tint(H.get("Normal", "bg"), 0.25),
     },
     zshrc = {
-      sugest = H.tint(H.get("WinSeparator", "fg"), 0.4),
-      lines = H.tint(H.get("WinSeparator", "fg"), 0.8),
+      lines = zsh_lines,
+      sugest = zsh_sugest,
     },
     btop = {
       fg = H.tint(H.get("Normal", "fg"), -0.2),
@@ -1115,7 +1153,7 @@ function M.change_colors()
   if file then
     file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
 
-    for i, x in pairs(col_tbls) do
+    for i, x in pairs(defined_cols) do
       for idx, j in pairs(x) do
         file:write(i .. "_" .. idx .. ": " .. j .. "\n")
       end

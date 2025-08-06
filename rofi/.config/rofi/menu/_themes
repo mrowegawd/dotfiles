@@ -622,11 +622,11 @@ set_zshrc() {
     send_notify "set_zshrc: path $ZSHRC_PATH does not exists!" && exit 1
   fi
 
-  ZSHRC_LINES=$(grep -i zshrc_lines: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$ZSHRC_LINES\"/g" "$ZSHRC_PATH"
-
   ZSHRC_SUGEST=$(grep -i zshrc_sugest: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^colorline=.*/colorline=\"$ZSHRC_SUGEST\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$ZSHRC_SUGEST\"/g" "$ZSHRC_PATH"
+
+  ZSHRC_LINES=$(grep -i zshrc_lines: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^colorline=.*/colorline=\"$ZSHRC_LINES\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"

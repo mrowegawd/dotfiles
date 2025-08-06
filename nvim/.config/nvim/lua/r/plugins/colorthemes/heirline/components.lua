@@ -139,16 +139,16 @@ local __colors = function()
 
   local set_col_light = {
     block_bg = -0.12,
-    block_bg_darken = -0.05,
+    block_darken_bg = -0.05,
+    block_darken_fg = -0.25,
     block_fg = -0.5,
-    block_fg_darken = -0.25,
-    block_fg_qfstatus = -0.1,
-    block_fg_qfstatus_title = -0.4,
+    block_qfstatus_bg = 0.2,
+    block_qfstatus_fg = -0.4,
+    branch_fg = -0.6,
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
-    fg_branch = -0.6,
-    fg_keyword = -0.05,
+    keyword_fg = -0.05,
     mode_git_bg = 0.1,
     mode_git_fg = 1,
     mode_git_fg_active = 5,
@@ -160,16 +160,16 @@ local __colors = function()
 
   local set_col_normal = {
     block_bg = 0.5,
-    block_bg_darken = 0.25,
+    block_darken_bg = 0.25,
+    block_darken_fg = 0.7,
     block_fg = 2,
-    block_fg_darken = 0.7,
-    block_fg_qfstatus = 0.6,
-    block_fg_qfstatus_title = 1.1,
+    block_qfstatus_bg = 0.2,
+    block_qfstatus_fg = 1,
+    branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-    fg_branch = 1.5,
-    fg_keyword = 0.85,
+    keyword_fg = 0.85,
     mode_git_bg = -0.2,
     mode_git_fg = -0.1,
     mode_git_fg_active = 0.4,
@@ -184,23 +184,21 @@ local __colors = function()
     statusline_fg = H.get("StatusLine", "fg"),
     statusline_bg = H.get("StatusLine", "bg"),
 
-    keyword = H.tint(H.get("Keyword", "fg"), col_opts.fg_keyword),
+    keyword = H.tint(H.get("Keyword", "fg"), col_opts.keyword_fg),
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
     block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg),
     block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg),
-    block_fg_darken = H.tint(H.get("StatusLine", "fg"), col_opts.block_fg_darken),
-    block_bg_darken = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg_darken),
+    block_darken_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_darken_fg),
+    block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
 
-    block_fg_qfstatus = H.tint(H.get("Tabline", "fg"), col_opts.block_fg_qfstatus),
     ---@diagnostic disable-next-line: param-type-mismatch
-    block_bg_qfstatus = H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), 0.2),
-
-    block_title_qfstatus = H.tint(
+    block_qfstatus_bg = H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), col_opts.block_qfstatus_bg),
+    block_qfstatus_fg = H.tint(
       ---@diagnostic disable-next-line: param-type-mismatch
       H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), 0.2),
-      col_opts.block_fg_qfstatus_title
+      col_opts.block_qfstatus_fg
     ),
 
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
@@ -233,11 +231,11 @@ local __colors = function()
     mode_term_bg = H.get("Boolean", "fg"),
     mode_visual_bg = H.get("Visual", "bg"),
 
-    -- branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.fg_branch, H.get("WinSeparator", "fg")),
+    -- branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.branch_fg, H.get("WinSeparator", "fg")),
     -- branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
 
-    -- branch_fg = H.tint(H.get("Keyword", "fg"), col_opts.fg_branch),
-    branch_fg = H.tint(H.get("FzfLuaTitle", "fg"), col_opts.fg_branch),
+    -- branch_fg = H.tint(H.get("Keyword", "fg"), col_opts.branch_fg),
+    branch_fg = H.tint(H.get("FzfLuaTitle", "fg"), col_opts.branch_fg),
     branch_bg = H.get("StatusLine", "bg"),
     -- branch_bg = H.get("Keyword", "fg"),
     -- branch_bg = H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")),
@@ -678,7 +676,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.normal_bg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = function(self)
@@ -709,15 +707,15 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_title_qfstatus, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.block_qfstatus_fg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_bg_qfstatus, bg = colors.normal_bg },
+    hl = { fg = colors.block_qfstatus_bg, bg = colors.normal_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.normal_bg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = function(self)
@@ -729,11 +727,11 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_title_qfstatus, bg = colors.block_bg_qfstatus },
+    hl = { fg = colors.block_qfstatus_fg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_bg_qfstatus, bg = colors.normal_bg },
+    hl = { fg = colors.block_qfstatus_bg, bg = colors.normal_bg },
   },
 }
 M.FileFlags = {
@@ -882,7 +880,7 @@ M.LSPActive = {
       end
       return lsp_clients_str
     end,
-    hl = { fg = colors.block_fg_darken, bold = true },
+    hl = { fg = colors.block_darken_fg, bold = true },
   },
   {
     provider = function(self)
@@ -1219,7 +1217,7 @@ M.Filetype = {
       if #self.watch > 0 then
         fg = colors.block_notice
       end
-      return { fg = fg, bg = colors.block_bg_darken }
+      return { fg = fg, bg = colors.block_darken_bg }
     end,
   },
   {
@@ -1228,14 +1226,14 @@ M.Filetype = {
         return self.icon and (self.icon .. " " .. self.filetype .. " ")
       end
     end,
-    hl = { fg = colors.block_fg_darken, bg = colors.block_bg_darken },
+    hl = { fg = colors.block_darken_fg, bg = colors.block_darken_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_down .. " ",
     hl = function(self)
       local fg = colors.statusline_bg
       if self.filetype and #self.filetype > 0 then
-        fg = colors.block_bg_darken
+        fg = colors.block_darken_bg
       end
       return { fg = fg, bg = colors.block_bg }
     end,

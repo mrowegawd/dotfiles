@@ -55,7 +55,6 @@ return {
         "base46-melange",
         "base46-onenord",
         "base46-oxocarbon",
-        "base46-rosepine",
         "base46-seoul256_dark",
         "base46-solarized_dark",
         "base46-vscode_dark",
