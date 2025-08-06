@@ -929,6 +929,7 @@ function M.change_colors()
   local tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.65)
 
   local tab_inactive_fg = H.get("WinbarFilepath", "fg")
+  local tab_inactive_bg = H.get("Normal", "bg")
 
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
   local border_inactive = H.get("WinSeparator", "fg")
@@ -947,17 +948,17 @@ function M.change_colors()
 
       pointer = H.get("diffDelete", "fg"),
       border = H.get("FzfLuaBorder", "fg"),
-      header = fzf_headertext,
+      header = H.get("FzfLuaHeaderText", "fg"),
     },
     tmux = {
       fg = H.get("Normal", "fg"),
       bg = H.get("Normal", "bg"),
+      keyword = H.get("Keyword", "fg"),
 
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      -- statusline_fg = H.tint(H.get("StatusLine", "fg"), -0.05),
-      statusline_fg = tab_inactive_fg,
+      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), 0.1),
 
       session_fg = H.get("Normal", "bg"),
       session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
@@ -966,28 +967,29 @@ function M.change_colors()
 
       border_active = border_active,
       border_inactive = border_inactive,
-    },
-    lazygit = {
-      active_border = H.get("Keyword", "fg"),
-      inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.3),
-
-      selected_bg = H.tint(H.get("CursorLine", "bg"), 0.55),
-
-      option_txt = H.tint(H.get("WinSeparator", "fg"), 0.8),
-
-      default_fg = H.tint(H.get("Normal", "fg"), -0.1),
+      border_inactive_status_fg = H.tint(border_inactive, 0.8),
     },
     kitty = {
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
       tab_inactive_fg = tab_inactive_fg,
-      tab_inactive_bg = H.get("Normal", "bg"),
+      tab_inactive_bg = tab_inactive_bg,
 
       tab_bar_bg = H.get("Normal", "bg"),
 
       border_active = border_active,
       border_inactive = border_inactive,
+    },
+    lazygit = {
+      active_border = tab_active_fg,
+      inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.3),
+
+      selected_bg = H.tint(H.get("CursorLine", "bg"), 0.55),
+
+      option_txt = H.tint(H.get("WinSeparator", "fg"), 0.8),
+
+      default_fg = H.tint(H.get("Normal", "fg"), 5),
     },
     dunst = {
       normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
@@ -1121,7 +1123,7 @@ function M.change_colors()
     file:close()
 
     ---@diagnostic disable-next-line: undefined-field
-    RUtils.info("Data berhasil disimpan di " .. master_color_path)
+    RUtils.warn "Theme changes detected. Don't forget to reload."
   end
 end
 

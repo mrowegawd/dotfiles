@@ -275,17 +275,23 @@ set_tmux() {
     TMUX_BG=$(grep -i tmux_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$TMUX_BG\"/g" "$_PATH_TMUX_THEMES"
 
+    TMUX_KEYWORD=$(grep -i tmux_keyword: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_KEYWORD=.*$/TMUX_KEYWORD=\"$TMUX_KEYWORD\"/g" "$_PATH_TMUX_THEMES"
+
     TMUX_TAB_ACTIVE_FG=$(grep -i tmux_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$TMUX_TAB_ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^TAB_ACTIVE_FG=.*$/TAB_ACTIVE_FG=\"$TMUX_TAB_ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_TAB_ACTIVE_BG=$(grep -i tmux_tab_active_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$TMUX_TAB_ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^TAB_ACTIVE_BG=.*$/TAB_ACTIVE_BG=\"$TMUX_TAB_ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_BORDER_ACTIVE=$(grep -i tmux_border_active: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^BORDER_FG_ACTIVE=.*$/BORDER_FG_ACTIVE=\"$TMUX_BORDER_ACTIVE\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_ACTIVE=.*$/BORDER_ACTIVE=\"$TMUX_BORDER_ACTIVE\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_BORDER_INACTIVE=$(grep -i tmux_border_inactive: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$TMUX_BORDER_INACTIVE\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_INACTIVE=.*$/BORDER_INACTIVE=\"$TMUX_BORDER_INACTIVE\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_BORDER_INACTIVE_STATUS_FG=$(grep -i tmux_border_inactive_status_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^BORDER_INACTIVE_STATUS_FG=.*$/BORDER_INACTIVE_STATUS_FG=\"$TMUX_BORDER_INACTIVE_STATUS_FG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_SESSION_BG=$(grep -i tmux_session_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$TMUX_SESSION_BG\"/g" "$_PATH_TMUX_THEMES"

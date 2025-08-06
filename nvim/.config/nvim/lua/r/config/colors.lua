@@ -225,7 +225,7 @@ reset_base_alter({ "base46-aylin" }, {
   statusline_bg_alter = 0.25,
   statusline_fg_alter = 1.3,
   tabline_bg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.35,
+  winbar_file_path_fg_alter = 0.7,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-catppuccin" }, {

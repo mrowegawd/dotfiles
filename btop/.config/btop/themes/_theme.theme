@@ -10,14 +10,14 @@ theme[main_fg]="%%foreground%%"
 theme[title]="%%title_fg%%"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="%%red%%"
+theme[hi_fg]="%%highlight_key%%"
 
 # Color cursorline
 theme[selected_fg]="%%cursorline_fg%%"
 theme[selected_bg]="%%cursorline_bg%%"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="%%foreground_darken_1%%"
+theme[inactive_fg]="%%inactive_text%%"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="#F2D5CF"

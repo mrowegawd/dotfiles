@@ -31,18 +31,20 @@ _check_pane_is_zsh() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
 }
 _open_file_manager_window() {
-  # tmux split-window -hb -p 30 -l 30 -c "#{pane_current_path}" "$file_manager"
-  tmux split-window -h -l $SIZE_PANE -c "#{pane_current_path}" "$FILE_MANAGER"
+  if [[ $1 == "wiki" ]]; then
+    WIKI_DIR="$HOME/Dropbox/neorg/"
+    if [[ -d "$WIKI_DIR" ]]; then
+      tmux split-window -h -l $SIZE_PANE -c "$WIKI_DIR" "$FILE_MANAGER"
+    else
+      dunstify "wiki $WIKI_DIR not found?"
+    fi
+  else
+    tmux split-window -h -l $SIZE_PANE -c "#{pane_current_path}" "$FILE_MANAGER"
+  fi
 }
 
 _open_wiki_file_manager_window() {
-  WIKI_DIR="$HOME/Dropbox/neorg/"
-
-  if [[ -d "$WIKI_DIR" ]]; then
-    tmux split-window -h -l 45 -c "$HOME/Dropbox/neorg" "$file_manager"
-  else
-    dunstify "path not found"
-  fi
+  _open_file_manager_window "wiki"
 
 }
 
@@ -90,7 +92,7 @@ clean_tree() {
 
 open_tree_cwd() {
   if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
-    _open_file_manager_window
+    _open_file_manager_window "fm"
   else
     is_pane_is_right=$(tmux display -p '#{pane_at_right}')
     if [ "$is_pane_is_right" == 0 ]; then
@@ -105,7 +107,7 @@ open_tree_cwd() {
     else
       clean_tree
       _go_right
-      _open_file_manager_window
+      _open_file_manager_window "fm"
     fi
   fi
 }

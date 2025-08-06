@@ -351,11 +351,18 @@ return {
         map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
         map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
         map("n", "<Leader>ghR", gs.reset_buffer, "Hunk: reset buffer [gitsigns]")
-        map("n", "<Leader>ghi", gs.preview_hunk_inline, "Hunk: preview hunk inline [gitsigns]")
 
         -- Hunk preview
-        map("n", "<Leader>ghp", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
+        map("n", "<Leader>ghp", gs.preview_hunk_inline, "Hunk: preview hunk [gitsigns]")
         map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
+        map("v", "<Leader>ghP", function()
+          local from, to = vim.fn.line ".", vim.fn.line "v"
+          if from > to then
+            from, to = to, from
+          end
+          print(from, to)
+          gs.preview_hunk()
+        end, "Hunk: preview (visual) [gitsigns]")
 
         -- Toggle
         map("n", "<Leader>gub", function()

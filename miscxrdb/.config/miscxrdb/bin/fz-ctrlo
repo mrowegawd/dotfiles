@@ -11,8 +11,8 @@ GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 RED="red"
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  GET_FG=$(grep -i ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  GET_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  RED=$(grep -i TAB_ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 COLOR_MASTER="/tmp/master-colors-themes"
