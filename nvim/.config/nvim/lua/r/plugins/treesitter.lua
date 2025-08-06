@@ -256,7 +256,7 @@ return {
         },
       })
       return {
-        multiline_threshold = 4,
+        multiline_threshold = 5,
         separator = "▁", -- alternatives: ▁ ─ ▄
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local

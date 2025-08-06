@@ -162,7 +162,7 @@ super + e
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
 # misc: open snipets
-super + shift + a
+super + shift + s
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps remember_me_snippet
 
         # zsh -c "$HOME/.config/rofi/menu/_snippet"
