@@ -7,12 +7,15 @@ set -uo pipefail
 # ╰──────────────────────────────────────────────────────────╯
 
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
-GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
-RED="red"
+COL_TAB_ACTIVE_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+# COL_TAB_ACTIVE_BG="red"
+COL_STATUSLINE_BG_MESSAGE="yellow"
+
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  GET_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  RED=$(grep -i TAB_ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  # COL_TAB_ACTIVE_BG=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COL_STATUSLINE_BG_MESSAGE=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 COLOR_MASTER="/tmp/master-colors-themes"
@@ -135,14 +138,14 @@ open_url() {
       done <<<"$chosen"
     fi
   else
-    tmux display-message "#[fill=$RED bg=$RED  fg=red bold align=centre]Searching URL Not Found"
+    tmux display-message "#[fill=$COL_STATUSLINE_BG_MESSAGE bg=$COL_STATUSLINE_BG_MESSAGE fg=black bold align=centre]Searching URL Not Found"
   fi
 }
 
 open_calc() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   tmux display-popup \
-    -S bg="$GET_BG",fg="$GET_FG" \
+    -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
     -b rounded \
     -E python -ic "from __future__ import division; from math import *; from random import *"
 }
@@ -169,7 +172,7 @@ open_newsboat() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
       -E -d "#{pane_current_path}" \
-      -S bg="$GET_BG",fg="$GET_FG" \
+      -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
   else
@@ -178,7 +181,7 @@ open_newsboat() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
         -E -d "#{pane_current_path}" \
-        -S bg="$GET_BG",fg="$GET_FG" \
+        -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E "tmux attach -t $session"
     fi
@@ -187,7 +190,7 @@ open_newsboat() {
 open_rkill() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
-  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$GET_FG" | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$COL_TAB_ACTIVE_FG" | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
     echo "$pid" | xargs kill -9
@@ -202,7 +205,7 @@ open_calcure() {
     set -gF status off
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
-      -S bg="$GET_BG",fg="$GET_FG" \
+      -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
       -E -d "#{pane_current_path}" \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session calcure;'"
@@ -211,7 +214,7 @@ open_calcure() {
       tmux detach-client
     else
       tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
-        -S bg="$GET_BG",fg="$GET_FG" \
+        -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
@@ -227,7 +230,7 @@ open_ps_btop() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
-      -S bg="$GET_BG",fg="$GET_FG" \
+      -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session btop;'"
   else
@@ -235,7 +238,7 @@ open_ps_btop() {
       tmux detach-client
     else
       tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
-        -S bg="$GET_BG",fg="$GET_FG" \
+        -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
@@ -286,7 +289,7 @@ open_ps_lsof() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
-      -S bg="$GET_BG",fg="$GET_FG" \
+      -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
   else
@@ -295,7 +298,7 @@ open_ps_lsof() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
         -E -d "#{pane_current_path}" \
-        -S bg="$GET_BG",fg="$GET_FG" \
+        -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E "tmux attach -t $session"
       # -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
@@ -307,7 +310,7 @@ open_systemctl_ui() {
   session="tmp_szy"
 
   tmux display-popup -d '#{pane_current_path}' -w '80%' -h '90%' -y '80%' \
-    -S bg="$GET_BG",fg="$GET_FG" \
+    -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
     -b rounded \
     -E -d "#{pane_current_path}" \
     -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
@@ -322,7 +325,7 @@ open_lazydocker() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
       -E -d "#{pane_current_path}" \
-      -S bg="$GET_BG",fg="$GET_FG" \
+      -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q $program_tool;'"
   else
@@ -331,7 +334,7 @@ open_lazydocker() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
         -E -d "#{pane_current_path}" \
-        -S bg="$GET_BG",fg="$GET_FG" \
+        -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E "tmux attach -t $session"
     fi
@@ -339,7 +342,7 @@ open_lazydocker() {
 }
 open_lazygit() {
   tmux display-popup -d '#{pane_current_path}' \
-    -S bg="$GET_BG",fg="$GET_FG" \
+    -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
     -E -w 90% -h 90% \
     "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml" # Open Lazygit inside popup
 }

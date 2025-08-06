@@ -3,10 +3,10 @@
 # : Manager {{{
 
 [mgr]
-cwd = { fg = "#575e71" }
+cwd = { fg = "#484848" }
 
 # Hovered
-hovered = { bg = "#404858" }
+hovered = { bg = "#3a3a3a" }
 preview_hovered = { underline = true }
 
 # Find
@@ -18,13 +18,13 @@ marker_selected = { fg = "#df5d51", bg = "#df5d51" }
 marker_copied = { fg = "#e7ce05", bg = "#e7ce05" }
 marker_cut = { fg = "#78322c", bg = "#78322c" }
 
-count_selected = { fg = "#df5d51", bg = "#9fd4ff" }
-count_copied = { fg = "#e7ce05", bg = "#9fd4ff" }
-count_cut = { fg = "#78322c", bg = "#9fd4ff" }
+count_selected = { fg = "#df5d51", bg = "#e5e5e5" }
+count_copied = { fg = "#e7ce05", bg = "#e5e5e5" }
+count_cut = { fg = "#78322c", bg = "#e5e5e5" }
 
 # Tab
-tab_active = { fg = "#ceffff", bg = "#6f94b2" }
-tab_inactive = { fg = "#515466", bg = "#9fd4ff" }
+tab_active = { fg = "#ffffff", bg = "#a0a0a0" }
+tab_inactive = { fg = "#5b5b5b", bg = "#e5e5e5" }
 
 # Border
 border_symbol = "│"
@@ -36,8 +36,8 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#2d2f39", bg = "#6f94b2", bold = true }
-normal_alt = { fg = "#2d2f39", bg = "#525769" }
+normal_main = { fg = "#272727", bg = "#a0a0a0", bold = true }
+normal_alt = { fg = "#272727", bg = "#464646" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -101,7 +101,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#373a47" }
+mask = { bg = "#363636" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -117,7 +117,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#575e71", bold = true }
+hovered = { bg = "#484848", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -145,8 +145,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#d3d7e5" },
-  { name = "*/", fg = "#9fd4ff" },
+  { name = "*", fg = "#a2a2a2" },
+  { name = "*/", fg = "#b4b4b4" },
 ]
 
 # : }}}

@@ -1,11 +1,3 @@
-local UIPallette = require("r.utils").uisec
-
-local H = require "r.settings.highlights"
-
-local dark_green = H.tint(UIPallette.palette.green, 0.3)
-local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
-local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
-
 local base_cl = {
   Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" },
   CurSearch = {
@@ -189,11 +181,12 @@ local function reset_base_alter(themes, alter_base)
 end
 
 reset_base_alter({ "ashen" }, {
-  blink_cmp_label_kind_fg_alter = 0.45,
+  blink_cmp_label_kind_fg_alter = 0.5,
   code_block_fg_alter = 0.4,
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.1,
   fold_fg = 0.6,
+  fzflua_file_part_fg = -0.15,
   fzflua_headertext_fg_alter = -0.55,
   linenr_fg_alter = 0.15,
   lsp_reference_read_bg_alter = { from = "Normal", attr = "bg", alter = 0.4 },
@@ -201,7 +194,7 @@ reset_base_alter({ "ashen" }, {
   lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.1 },
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = 0.01,
-  noice_cmdline_fg_alter = 0.2,
+  noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 3.2,
   pmenu_bg_alter = 2,
   quickfixline_alter = 2,
@@ -210,10 +203,11 @@ reset_base_alter({ "ashen" }, {
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
   statusline_bg_alter = 1.2,
-  statusline_fg_alter = 2.9,
-  tabline_bg_alter = 0.3,
+  statusline_fg_alter = 3.1,
+  tabline_bg_alter = 0.32,
   tabline_fg_alter = 0.7,
   trouble_indent_fg_alter = 2,
+  winbar_file_path_fg_alter = 0.55,
   winseparator_alter = 1.2,
 })
 reset_base_alter({ "base46-aylin" }, {
@@ -235,14 +229,12 @@ reset_base_alter({ "base46-catppuccin" }, {
   dapstopped_bg_alter = 0.2,
   fold_bg = 0.03,
   fold_fg = 0.72,
-  my_code_usage_bg_alter = -0.7,
-  my_code_usage_fg_alter = -0.35,
   noice_cmdline_fg_alter = 0.4,
   render_markdown_code_bg_alter = 0.3,
   statusline_bg_alter = 0.2,
-  tabline_bg_alter = 0.43,
+  tabline_bg_alter = 0.45,
   statusline_fg_alter = 1.8,
-  winbar_file_path_fg_alter = 0.7,
+  winbar_file_path_fg_alter = 0.5,
   visual_bg_alter = -0.3,
   winseparator_alter = 0.5,
 })
@@ -348,19 +340,19 @@ reset_base_alter({ "base46-jabuti" }, {
   noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 1.25,
   pmenu_bg_alter = 0.32,
-  quickfixline_alter = 0.7,
+  quickfixline_alter = 0.6,
   render_markdown_code_bg_alter = 0.18,
   statusline_bg_alter = 0.17,
   statusline_fg_alter = 1.1,
-  tabline_bg_alter = 0.28,
+  tabline_bg_alter = 0.29,
   tabline_fg_alter = 0.52,
   trouble_indent_fg_alter = 0.6,
-  winbar_file_path_fg_alter = 0.35,
+  winbar_file_path_fg_alter = 0.33,
   winseparator_alter = 0.28,
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
-  cursorline_alter = 0.85,
+  cursorline_alter = 0.8,
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.1,
@@ -374,10 +366,11 @@ reset_base_alter({ "base46-jellybeans" }, {
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
   statusline_bg_alter = 0.82,
-  statusline_fg_alter = 2.5,
+  statusline_fg_alter = 2.2,
   tabline_bg_alter = 0.37,
+  tabline_fg_alter = 0.5,
   trouble_indent_fg_alter = 1.5,
-  winbar_file_path_fg_alter = 0.4,
+  winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.95,
 
   -- {
@@ -407,6 +400,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   winseparator_alter = 0.51,
 })
 reset_base_alter({ "base46-material-darker" }, {
+  blink_cmp_label_kind_fg_alter = 0.4,
   comment_fg_alter = 0.6,
   cursor_fg = "#16afca",
   cursorline_alter = 0.08,
@@ -417,7 +411,7 @@ reset_base_alter({ "base46-material-darker" }, {
   render_markdown_code_inline_bg_alter = 0.15,
   statusline_bg_alter = 0.3,
   statusline_fg_alter = 1.4,
-  -- tabline_bg_alter = 0.,
+  tabline_fg_alter = 0.35,
   visual_bg_alter = -0.2,
   winseparator_alter = 0.35,
 })
@@ -463,8 +457,8 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.15,
   fzflua_headertext_fg_alter = -0.4,
-  my_code_usage_bg_alter = -0.68,
-  my_code_usage_fg_alter = -0.38,
+  -- my_code_usage_bg_alter = -0.68,
+  -- my_code_usage_fg_alter = -0.38,
   noice_cmdline_fg_alter = 0.4,
   pmenu_bg_alter = 0.3,
   quickfixline_alter = 0.5,
@@ -622,7 +616,7 @@ reset_base_alter({ "base46-vscode_dark" }, {
   blink_cmp_label_kind_fg_alter = 0.4,
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#dfdfe0",
-  cursorline_alter = 0.12,
+  cursorline_alter = 0.08,
   dapstopped_bg_alter = 0.2,
   fold_fg = 0.6,
   linenr_fg_alter = 0.13,
@@ -632,8 +626,9 @@ reset_base_alter({ "base46-vscode_dark" }, {
   render_markdown_code_bg_alter = 0.38,
   statusline_bg_alter = 0.32,
   statusline_fg_alter = 1.5,
-  winbar_file_path_fg_alter = 0.5,
   tabline_bg_alter = 0.45,
+  tabline_fg_alter = 0.55,
+  winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-wombat" }, {
@@ -798,19 +793,21 @@ reset_base_alter({ "rose-pine-dawn" }, {
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.1,
-  fold_bg = -0.1,
-  fold_fg = 0.68,
+  fold_bg = -0.05,
+  fold_fg = 0.65,
   linenr_fg_alter = 0.05,
-  fzflua_headertext_fg_alter = -0.5,
+  -- fzflua_headertext_fg_alter = -0.5,
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 2.2,
   comment_fg_alter = 0.8,
   pmenu_bg_alter = 0.65,
   render_markdown_code_bg_alter = 0.52,
+  quickfixline_alter = 0.85,
   statusline_bg_alter = 0.4,
-  statusline_fg_alter = 1.85,
-  tabline_bg_alter = 0.35,
-  tabline_fg_alter = 0.82,
+  statusline_fg_alter = 1.8,
+  -- tabline_bg_alter = 0.35,
+  -- tabline_fg_alter = 0.82,
+  winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.7,
 
   -- {
@@ -826,15 +823,17 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.2,
+  fold_bg = -0.01,
+  fold_fg = 0.65,
   fzflua_headertext_fg_alter = -0.5,
-  noice_cmdline_fg_alter = 0.6,
+  noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 1.2,
   pmenu_bg_alter = 0.25,
   render_markdown_code_bg_alter = 0.13,
   statusline_bg_alter = 0.1,
-  tabline_bg_alter = 0.2,
-  tabline_fg_alter = 0.6,
+  tabline_bg_alter = 0.25,
   trouble_indent_fg_alter = 0.5,
+  winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.22,
 })
 reset_base_alter({ "vscode_modern" }, {
@@ -852,16 +851,25 @@ reset_base_alter({ "vscode_modern" }, {
   lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 1.8,
+  quickfixline_alter = 0.85,
+  -- quickfixline_linenr_fg_alter = 1,
   render_markdown_code_bg_alter = 0.4,
   snacks_indent_scope_fg_alter = 0.15,
-  statusline_bg_alter = 0.4,
-  statusline_fg_alter = 1.4,
-  tabline_bg_alter = 0.2,
-  tabline_fg_alter = 0.6,
+  statusline_bg_alter = 0.3,
+  statusline_fg_alter = 1.5,
+  tabline_bg_alter = 0.35,
+  -- winbar_file_path_fg_alter = 0.45,
   winseparator_alter = 0.4,
 })
 
 local general_overrides = function()
+  local H = require "r.settings.highlights"
+  local UIPallette = require("r.utils").uisec
+
+  local dark_green = H.tint(UIPallette.palette.green, 0.3)
+  local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
+  local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+
   H.all {
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                          BASE                           ║
@@ -2308,6 +2316,7 @@ local general_overrides = function()
 end
 
 local function set_sidebar_highlight()
+  local H = require "r.settings.highlights"
   H.all {
     { PanelDarkBackground = { bg = { from = "Normal", alter = -0.1 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
@@ -2342,6 +2351,13 @@ local function on_sidebar_enter()
 end
 
 local function colorscheme_overrides()
+  local H = require "r.settings.highlights"
+
+  local UIPallette = require("r.utils").uisec
+  local dark_green = H.tint(UIPallette.palette.green, 0.3)
+  local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
+  local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+
   local overrides = {
     ["ashen"] = {
       -- GRUG-FAR

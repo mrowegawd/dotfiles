@@ -170,12 +170,12 @@ local __colors = function()
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
     keyword_fg = 0.85,
-    mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.2,
-    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
-    mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.4,
-    mode_readonly_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.2,
-    mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
-    mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.4,
+    mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
+    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
+    mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
+    mode_readonly_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
+    mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
+    mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
     winbar_keyword = vim.g.colorscheme == "lackluster" and 0.8 or -0.15,
   }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
