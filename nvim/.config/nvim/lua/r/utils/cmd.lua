@@ -925,8 +925,16 @@ end
 function M.change_colors()
   local H = require "r.settings.highlights"
 
-  local tab_active_fg = H.tint(H.get("Keyword", "fg"), -0.2)
-  local tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.65)
+  local __tab_active_fg = -0.2
+  local __tab_active_bg = -0.65
+
+  if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
+    __tab_active_fg = 0.1
+    __tab_active_bg = -0.4
+  end
+
+  local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
+  local tab_active_bg = H.tint(H.get("Keyword", "fg"), __tab_active_bg)
 
   local tab_inactive_fg = H.get("WinbarFilepath", "fg")
   local tab_inactive_bg = H.get("Normal", "bg")
@@ -953,6 +961,7 @@ function M.change_colors()
     "base46-solarized_dark",
     "base46-vscode_dark",
     "base46-wombat",
+    "lackluster",
   }
   if vim.tbl_contains(dark_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.35
@@ -965,7 +974,7 @@ function M.change_colors()
   end
   local special_cfg_themes = { "base46-seoul256_dark", "base46-zenburn" }
   if vim.tbl_contains(special_cfg_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.14
+    zsh_lines_fg = 0.15
     zsh_sugest_fg = 0.45
   end
 
@@ -1001,7 +1010,7 @@ function M.change_colors()
       session_fg = H.get("Normal", "bg"),
       session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
 
-      message_bg = H.tint(H.get("diffChange", "fg"), 0.1),
+      message_bg = H.tint(H.get("diffChange", "fg"), 0.6),
 
       border_active = border_active,
       border_inactive = border_inactive,

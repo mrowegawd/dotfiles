@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Default zoom level file location
+STATE_FILE="${HOME}/.config/kitty/zoom_level.state"
+
+# Read current zoom level
+if [[ -f "$STATE_FILE" ]]; then
+  CURRENT_LEVEL=$(cat "$STATE_FILE")
+else
+  CURRENT_LEVEL=0
+fi
+
+# Toggle between 0 and 5
+if [[ "$CURRENT_LEVEL" -eq 0 ]]; then
+  NEW_LEVEL=20
+else
+  NEW_LEVEL=0
+fi
+
+# Save new zoom level
+echo "$NEW_LEVEL" >"$STATE_FILE"
+
+# Send command to kitty to set font size
+kitty @ set-font-size "$NEW_LEVEL"

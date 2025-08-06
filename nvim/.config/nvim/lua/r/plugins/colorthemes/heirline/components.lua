@@ -163,20 +163,20 @@ local __colors = function()
     block_darken_bg = 0.25,
     block_darken_fg = 0.7,
     block_fg = 2,
-    block_qfstatus_bg = 0.2,
-    block_qfstatus_fg = 1,
+    block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.2,
+    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 1,
     branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
     keyword_fg = 0.85,
-    mode_git_bg = -0.2,
-    mode_git_fg = -0.1,
-    mode_git_fg_active = 0.4,
-    mode_readonly_bg = -0.2,
-    mode_readonly_fg = -0.1,
-    mode_readonly_fg_active = 0.4,
-    winbar_keyword = -0.15,
+    mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.2,
+    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
+    mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.4,
+    mode_readonly_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.2,
+    mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
+    mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.4,
+    winbar_keyword = vim.g.colorscheme == "lackluster" and 0.8 or -0.15,
   }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
@@ -1506,12 +1506,10 @@ M.WinbarFilePath = {
       local is_bold = true
       if self.is_fugitive() then
         fg = tostring(colors.mode_git_fg)
-        is_bold = false
       end
 
       if self.is_readonly() then
         fg = tostring(colors.mode_readonly_fg)
-        is_bold = false
       end
       return { fg = fg, bold = is_bold }
     end,
@@ -1542,7 +1540,6 @@ M.WinbarFilePath = {
       if self.is_fugitive() then
         fg = tostring(colors.mode_git_fg)
         bg = tostring(colors.mode_git_bg)
-        is_bold = false
         if Conditions.is_active() then
           fg = tostring(colors.mode_git_fg_active)
           is_italic = true
@@ -1552,7 +1549,6 @@ M.WinbarFilePath = {
       if self.is_readonly() then
         fg = tostring(colors.mode_readonly_fg)
         bg = tostring(colors.mode_readonly_bg)
-        is_bold = false
         if Conditions.is_active() then
           fg = tostring(colors.mode_readonly_fg_active)
           is_italic = true
