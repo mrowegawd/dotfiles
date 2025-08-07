@@ -164,12 +164,12 @@ local __colors = function()
     block_darken_fg = 0.7,
     block_fg = 2,
     block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.13,
-    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.5,
+    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.8,
     branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-    keyword_fg = 0.85,
+    keyword_fg = 0.7,
     mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
     mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
     mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
@@ -184,7 +184,8 @@ local __colors = function()
     statusline_fg = H.get("StatusLine", "fg"),
     statusline_bg = H.get("StatusLine", "bg"),
 
-    keyword = H.tint(H.get("Keyword", "fg"), col_opts.keyword_fg),
+    -- keyword = H.tint(H.get("Keyword", "fg"), col_opts.keyword_fg),
+    keyword = H.darken(H.get("Keyword", "fg"), col_opts.keyword_fg, H.get("Normal", "bg")),
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
@@ -194,12 +195,8 @@ local __colors = function()
     block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
 
     ---@diagnostic disable-next-line: param-type-mismatch
-    block_qfstatus_bg = H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), col_opts.block_qfstatus_bg),
-    block_qfstatus_fg = H.tint(
-      ---@diagnostic disable-next-line: param-type-mismatch
-      H.blend(H.get("Keyword", "fg"), H.get("Normal", "bg"), 0.2),
-      col_opts.block_qfstatus_fg
-    ),
+    block_qfstatus_bg = H.get("QuickFixHeader", "bg"),
+    block_qfstatus_fg = H.get("QuickFixHeader", "fg"),
 
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
@@ -432,7 +429,7 @@ M.FilePath = {
     hl = function()
       local fg = colors.block_bg
       if Conditions.is_git_repo() or (#get_branch_name() > 0) then
-        fg = colors.branch_bg
+        fg = tostring(colors.branch_bg)
       end
       -- return { fg = fg, bg = colors.block_bg }
       return { fg = fg }
@@ -516,11 +513,11 @@ M.FilePath = {
     end,
     hl = function(self)
       local fg = tostring(colors.keyword)
-      -- local bg = colors.block_bg
+      local is_bold = true
       if self.exclude_ft or #self.filename == 0 then
         fg = colors.block_fg
       end
-      return { fg = fg }
+      return { fg = fg, bold = is_bold }
     end,
   },
   {
@@ -1503,7 +1500,11 @@ M.WinbarFilePath = {
     end,
     hl = function(self)
       local fg = colors.winbar_fg
-      local is_bold = true
+      local is_bold = false
+      if Conditions.is_active() then
+        is_bold = true
+      end
+
       if self.is_fugitive() then
         fg = tostring(colors.mode_git_fg)
       end
@@ -1521,11 +1522,12 @@ M.WinbarFilePath = {
     hl = function(self)
       local fg = colors.winbar_fg
       local bg = colors.normal_bg
+      local is_bold = false
       local is_italic = false
-      local is_bold = true
 
       if Conditions.is_active() then
         fg = colors.winbar_keyword
+        is_bold = true
         is_italic = true
       end
 

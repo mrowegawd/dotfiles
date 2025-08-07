@@ -418,6 +418,33 @@ return {
             end)
           end
         end, "Git: last hunk [gitsigns]")
+
+        map("n", "<c-n>", function()
+          if vim.wo.diff then
+            vim.cmd.normal { "]c", bang = true }
+          else
+            vim.schedule(function()
+              gs.nav_hunk(
+                "next",
+                { navigation_message = false, foldopen = true }
+                -- function() vim.fn.feedkeys("zz", "n") end
+              )
+            end)
+          end
+        end, "Git: next hunk (alternatif) [gitsigns]")
+        map("n", "<c-p>", function()
+          if vim.wo.diff then
+            vim.cmd.normal { "[c", bang = true }
+          else
+            vim.schedule(function()
+              gs.nav_hunk(
+                "prev",
+                { navigation_message = false, foldopen = true }
+                -- function() vim.fn.feedkeys("zz", "n") end
+              )
+            end)
+          end
+        end, "Git: last hunk (alternatif) [gitsigns]")
       end,
     },
   },

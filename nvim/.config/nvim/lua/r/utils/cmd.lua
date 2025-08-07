@@ -926,32 +926,59 @@ function M.change_colors()
   local H = require "r.settings.highlights"
 
   -- TAB -------------------------------------------------------------
+  --
+  -- Active Tab ======================================================
   local __tab_active_fg = -0.2
   local __tab_active_bg = -0.65
+
+  if vim.tbl_contains({ "base46-solarized_dark" }, vim.g.colorscheme) then
+    __tab_active_bg = -0.55
+  end
 
   if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
     __tab_active_fg = 0.1
     __tab_active_bg = -0.4
   end
-
   if vim.tbl_contains({ "ashen" }, vim.g.colorscheme) then
-    __tab_active_fg = -0.3
+    __tab_active_fg = -0.35
     __tab_active_bg = -0.7
+  end
+
+  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+    __tab_active_fg = -0.15
+    __tab_active_bg = -0.55
   end
 
   local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
   local tab_active_bg = H.tint(H.get("Keyword", "fg"), __tab_active_bg)
 
-  local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.22)
+  -- Inactive Tab ====================================================
+  local __tab_inactive_fg = -0.25
+  local __tab_statusline_fg = -0.25
+
+  -- if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+  --   __tab_inactive_fg = -0.3
+  --   __tab_statusline_fg = -0.3
+  -- end
+
+  if vim.tbl_contains({ "ashen" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.28
+    __tab_statusline_fg = -0.28
+  end
+
+  local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_inactive_fg)
   local tab_inactive_bg = H.get("Normal", "bg")
 
+  local tab_statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_statusline_fg)
+
+  -- Border Pane =====================================================
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
   local border_inactive = H.get("WinSeparator", "fg")
   ---
   --------------------------------------------------------------------
 
   -- ZSH -------------------------------------------------------------
-  local zsh_lines_fg = 0.32
+  local zsh_lines_fg = 0.35
   local zsh_sugest_fg = 0.65
 
   local zsh_bright_themes = { "base46-everforest", "base46-jabuti", "base46-onenord" }
@@ -960,7 +987,7 @@ function M.change_colors()
   end
   local zsh_contras_themes = { "base46-seoul256_dark", "base46-zenburn" }
   if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.15
+    zsh_lines_fg = 0.19
     zsh_sugest_fg = 0.45
   end
 
@@ -981,6 +1008,24 @@ function M.change_colors()
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
   ---
   --------------------------------------------------------------------
+  ---
+
+  -- EWW -------------------------------------------------------------
+  ---
+  local __eww_icon_fg = 0.3
+
+  if vim.tbl_contains({ "base46-jellybeans", "ashen", "base46-oxocarbon" }, vim.g.colorscheme) then
+    __eww_icon_fg = 0.5
+  end
+
+  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+    __eww_icon_fg = 0.35
+  end
+
+  local eww_icon_fg = H.tint(H.get("WinSeparator", "fg"), __eww_icon_fg)
+  ---
+  --------------------------------------------------------------------
+  ---
 
   local defined_cols = {
     fzf = {
@@ -1006,7 +1051,7 @@ function M.change_colors()
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.22),
+      statusline_fg = tab_statusline_fg,
 
       session_fg = H.get("Normal", "bg"),
       session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
@@ -1104,7 +1149,7 @@ function M.change_colors()
 
       red = H.tint(H.get("diffDelete", "fg"), 0.5),
 
-      icon_fg = H.tint(H.get("WinSeparator", "fg"), 0.4),
+      icon_fg = eww_icon_fg,
 
       keyword = H.get("Keyword", "fg"),
 

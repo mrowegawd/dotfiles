@@ -51,7 +51,7 @@ return {
               "packer",
               "snacks_dashboard",
               "toggleterm",
-              "org",
+              -- "org",
               "orgagenda",
             }, vim.bo[buf].filetype)
 
