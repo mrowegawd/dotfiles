@@ -163,8 +163,8 @@ local __colors = function()
     block_darken_bg = 0.25,
     block_darken_fg = 0.7,
     block_fg = 2,
-    block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.2,
-    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 1,
+    block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.13,
+    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.5,
     branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
@@ -855,7 +855,7 @@ M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
 
   condition = function()
-    return Conditions.lsp_attached and set_conditions.hide_in_col_width(120)
+    return Conditions.lsp_attached and set_conditions.hide_in_col_width(120) and vim.bo.filetype ~= "qf"
   end,
 
   init = function(self)
@@ -1142,7 +1142,7 @@ M.BufferCwd = {
         end
         -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
         -- return " " .. cwd .. "%*"
-        return cwd .. "  "
+        return cwd .. " "
       end
     end,
     hl = { fg = colors.statusline_fg },

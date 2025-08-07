@@ -15,7 +15,7 @@ TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   # COL_TAB_ACTIVE_BG=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  COL_STATUSLINE_BG_MESSAGE=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COL_STATUSLINE_BG_MESSAGE=$(grep -i STATUSLINE_BG_MESSAGE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 COLOR_MASTER="/tmp/master-colors-themes"
@@ -138,7 +138,7 @@ open_url() {
       done <<<"$chosen"
     fi
   else
-    tmux display-message "#[fill=$COL_STATUSLINE_BG_MESSAGE bg=$COL_STATUSLINE_BG_MESSAGE fg=black bold align=centre]Searching URL Not Found"
+    tmux display-message "#[fill=$COL_STATUSLINE_BG_MESSAGE bg=$COL_STATUSLINE_BG_MESSAGE fg=black bold align=left] Searching URL Not Found!!"
   fi
 }
 

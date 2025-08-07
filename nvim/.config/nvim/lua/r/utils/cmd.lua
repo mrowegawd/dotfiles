@@ -942,7 +942,7 @@ function M.change_colors()
   local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
   local tab_active_bg = H.tint(H.get("Keyword", "fg"), __tab_active_bg)
 
-  local tab_inactive_fg = H.get("WinbarFilepath", "fg")
+  local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.22)
   local tab_inactive_bg = H.get("Normal", "bg")
 
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
@@ -951,7 +951,7 @@ function M.change_colors()
   --------------------------------------------------------------------
 
   -- ZSH -------------------------------------------------------------
-  local zsh_lines_fg = 0.45
+  local zsh_lines_fg = 0.32
   local zsh_sugest_fg = 0.65
 
   local zsh_bright_themes = { "base46-everforest", "base46-jabuti", "base46-onenord" }
@@ -975,7 +975,7 @@ function M.change_colors()
 
   local lazygit_invalid_border_themes = { "ashen" }
   if vim.tbl_contains(lazygit_invalid_border_themes, vim.g.colorscheme) then
-    inactive_border_fg = 0.5
+    lazygit_inactive_border_fg = 0.5
   end
 
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
@@ -1006,7 +1006,7 @@ function M.change_colors()
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), 0.05),
+      statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), -0.22),
 
       session_fg = H.get("Normal", "bg"),
       session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
