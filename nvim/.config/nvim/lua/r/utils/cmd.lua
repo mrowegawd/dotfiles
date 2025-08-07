@@ -928,27 +928,16 @@ function M.change_colors()
   -- TAB -------------------------------------------------------------
   --
   -- Active Tab ======================================================
-  local __tab_active_fg = -0.2
-  local __tab_active_bg = -0.65
-
-  if vim.tbl_contains({ "base46-solarized_dark" }, vim.g.colorscheme) then
-    __tab_active_fg = 0.2
-    __tab_active_bg = -0.55
-  end
+  local __tab_active_fg = -0.3
+  local __tab_active_bg = -0.7
 
   if vim.tbl_contains({ "vscode_modern" }, vim.g.colorscheme) then
     __tab_active_bg = -0.6
   end
-
   if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
     __tab_active_fg = 0.1
-    __tab_active_bg = -0.4
+    __tab_active_bg = -0.45
   end
-  if vim.tbl_contains({ "ashen" }, vim.g.colorscheme) then
-    __tab_active_fg = -0.35
-    __tab_active_bg = -0.7
-  end
-
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
     __tab_active_fg = -0.15
     __tab_active_bg = -0.55
@@ -1083,7 +1072,7 @@ function M.change_colors()
       active_border = tab_active_fg,
       inactive_border = lazygit_inactive_border,
 
-      selected_bg = H.tint(H.get("CursorLine", "bg"), 0.55),
+      selected_bg = H.get("LazygitselectedLineBgColor", "bg"),
 
       option_txt = H.tint(H.get("WinSeparator", "fg"), 0.8),
 

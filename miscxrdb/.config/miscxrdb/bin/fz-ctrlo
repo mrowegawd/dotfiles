@@ -138,7 +138,7 @@ open_url() {
       done <<<"$chosen"
     fi
   else
-    tmux display-message "#[fill=$COL_STATUSLINE_BG_MESSAGE bg=$COL_STATUSLINE_BG_MESSAGE fg=black bold align=left] Searching URL Not Found!!"
+    tmux display-message "#[fill=$COL_STATUSLINE_BG_MESSAGE bg=$COL_STATUSLINE_BG_MESSAGE fg=$GET_BG bold align=left] Searching URL Not Found!!"
   fi
 }
 

@@ -27,7 +27,7 @@ local base_cl = {
   fzflua_dir_part_fg = 0.9,
   fzflua_file_part_fg = -0.1,
   fzflua_headertext_fg_alter = -0.33,
-  fzflua_normal_bg_alter = 0,
+  fzflua_normal_bg_alter = 0.5,
   fzflua_sel_bg_alter = -0.02,
   linenr_fg_alter = 0.08,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
@@ -44,20 +44,20 @@ local base_cl = {
   pmenu_sel_bg_alter = 0.2,
   pmenu_thumb_bg_alter = 0.4,
 
-  quickfixline_alter = -0.3,
-  quickfixline_header_bg_alter = 0.09,
-  quickfixline_header_fg_alter = 0.48,
+  quickfixline_alter = -0.1,
+  quickfixline_header_bg_alter = 0.1,
+  quickfixline_header_fg_alter = 1.1,
   quickfixline_header_tint_bg_alter = 0,
   quickfixline_header_tint_fg_alter = 0,
 
   quickfixline_linenr_fg_alter = 0.4,
-  quickfixline_separator_fg_alter = -0.4,
+  quickfixline_separator_fg_alter = -0.28,
 
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = -0.1,
   statusline_fg_alter = 0.75,
-  tabline_bg_alter = 0.35,
-  tabline_fg_alter = 0.4,
+  tabline_bg_alter = 0.3,
+  tabline_fg_alter = 0.5,
   trouble_indent_fg_alter = 0.9,
   visual_bg_alter = -0.1,
   winbar_file_path_fg_alter = 0.9,
@@ -205,7 +205,6 @@ reset_base_alter({ "ashen" }, {
   my_code_usage_fg_alter = 0.01,
   nontext_fg_alter = 3.2,
   pmenu_bg_alter = 2,
-  quickfixline_header_bg_alter = 0.22,
   render_markdown_code_bg_alter = 1.2,
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
@@ -361,14 +360,11 @@ reset_base_alter({ "base46-jellybeans" }, {
   noice_cmdline_fg_alter = 0.65,
   nontext_fg_alter = 2.5,
   pmenu_bg_alter = 1.2,
-  quickfixline_linenr_fg_alter = 1.2,
-
   render_markdown_code_bg_alter = 0.9,
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
   trouble_indent_fg_alter = 1.5,
-
-  winseparator_alter = 1.15,
+  winseparator_alter = 1.1,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -384,7 +380,6 @@ reset_base_alter({ "base46-kanagawa" }, {
   snacks_indent_scope_fg_alter = 0.22,
   trouble_indent_fg_alter = 1,
   winseparator_alter = 0.52,
-  winbar_file_path_fg_alter = 1.2,
 })
 reset_base_alter({ "base46-material-darker" }, {
   comment_fg_alter = 0.6,
@@ -392,9 +387,11 @@ reset_base_alter({ "base46-material-darker" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_cursorline_bg_alter = -0.1,
+  linenr_fg_alter = 0.05,
   noice_cmdline_fg_alter = 0.6,
   render_markdown_code_bg_alter = 0.3,
   render_markdown_code_inline_bg_alter = 0.15,
+  snacks_indent_scope_fg_alter = 0.18,
   visual_bg_alter = -0.2,
   winseparator_alter = 0.5,
 })
@@ -444,6 +441,7 @@ reset_base_alter({ "base46-melange" }, {
   noice_cmdline_fg_alter = 0.6,
   pmenu_bg_alter = 0.3,
   render_markdown_code_bg_alter = 0.23,
+  tabline_bg_alter = 0.25,
   trouble_indent_fg_alter = 0.6,
   winseparator_alter = 0.33,
 })
@@ -536,13 +534,13 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   nontext_fg_alter = 0.8,
   pmenu_bg_alter = 0.15,
   pmenu_sel_bg_alter = 0.15,
-  quickfixline_header_fg_alter = 0.65,
+  quickfixline_alter = -0.06,
   render_markdown_code_bg_alter = 0.02,
   render_markdown_code_inline_bg_alter = 0.04,
   statusline_bg_alter = -0.01,
   tabline_bg_alter = 0.1,
   trouble_indent_fg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.75,
+  winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.08,
 
   snacks_notifier_info_fg_info = 1,
@@ -621,16 +619,14 @@ reset_base_alter({ "base46-zenburn" }, {
   my_code_usage_fg_alter = 0.1,
   nontext_fg_alter = 0.8,
   pmenu_bg_alter = 0.2,
-  quickfixline_header_fg_alter = 0.75,
+  quickfixline_alter = -0.15,
   render_markdown_code_bg_alter = 0.07,
   render_markdown_code_inline_bg_alter = 0.04,
   snacks_indent_scope_fg_alter = 0.11,
-  statusline_bg_alter = -0.02,
-  quickfixline_alter = -0.3,
-  tabline_bg_alter = 0.15,
-  tabline_fg_alter = 0.28,
+  statusline_bg_alter = -0.03,
   trouble_indent_fg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.78,
+  tabline_fg_alter = 0.3,
+  winbar_file_path_fg_alter = 0.65,
 
   -- winbar_file_path_fg_alter = 0.45,
   winseparator_alter = 0.12,
@@ -655,7 +651,7 @@ reset_base_alter({ "lackluster" }, {
   fold_fg = 0.55,
   fzflua_dir_part_fg = 0.72,
   fzflua_file_part_fg = 0.25,
-  fzflua_headertext_fg_alter = -0.35,
+  fzflua_headertext_fg_alter = -0.4,
   linenr_fg_alter = -0.02,
   lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
   lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
@@ -665,9 +661,8 @@ reset_base_alter({ "lackluster" }, {
   noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 3.5,
   pmenu_bg_alter = 2,
-  quickfixline_alter = 0.25,
-  quickfixline_header_bg_alter = 0.45,
-  quickfixline_header_fg_alter = 0.75,
+  quickfixline_alter = -0.05,
+  quickfixline_header_fg_alter = 0.95,
   trouble_indent_fg_alter = 2.5,
   visual_bg_alter = 0.05,
   winseparator_alter = 1.7,
@@ -795,21 +790,19 @@ reset_base_alter({ "vscode_modern" }, {
   fold_bg = -0.1,
   fzflua_dir_part_fg = 0.8,
   fzflua_headertext_fg_alter = -0.25,
-  linenr_fg_alter = 0.05,
+  linenr_fg_alter = 0.02,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
   lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 1.8,
-  quickfixline_alter = -0.05,
   pmenu_bg_alter = 0.65,
-  quickfixline_header_bg_alter = 0.4,
-  quickfixline_header_fg_alter = 0.8,
   render_markdown_code_bg_alter = 0.4,
   snacks_indent_scope_fg_alter = 0.15,
   statusline_bg_alter = -0.05,
-  tabline_fg_alter = 0.25,
-  winbar_file_path_fg_alter = 0.7,
+  tabline_bg_alter = 0.18,
+  tabline_fg_alter = 0.4,
+  winbar_file_path_fg_alter = 0.8,
   winseparator_alter = 0.55,
 })
 
@@ -970,7 +963,7 @@ local general_overrides = function()
     {
       QuickFixLine = {
         fg = "NONE",
-        bg = H.tint(H.darken(H.get("Directory", "fg"), 0.4, H.get("TabLine", "bg")), quickfixline_alter),
+        bg = { from = "TabLine", attr = "bg", alter = quickfixline_alter },
         underline = false,
         bold = true,
         reverse = false,
@@ -978,14 +971,8 @@ local general_overrides = function()
     },
     {
       QuickFixHeader = {
-        fg = H.tint(
-          H.darken(H.get("Keyword", "fg"), quickfixline_header_fg_alter, H.get("QuickFixLine", "bg")),
-          quickfixline_header_tint_bg_alter
-        ),
-        bg = H.tint(
-          H.darken(H.get("Keyword", "fg"), quickfixline_header_bg_alter, H.get("QuickFixLine", "bg")),
-          quickfixline_header_tint_bg_alter
-        ),
+        fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_bg_alter },
       },
     },
     { QuickFixLineNr = { fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
@@ -1729,7 +1716,7 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ PRPOMPT │
     -- ╰─────────╯
-    { FzfLuaNormal = { bg = { from = "Pmenu", attr = "bg", alter = fzflua_normal_bg_alter } } },
+    { FzfLuaNormal = { bg = { from = "Pmenu", attr = "bg" } } },
     { FzfLuaBorder = { fg = { from = "FzfLuaNormal", attr = "bg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
     {
       FzfLuaBufLineNr = {
@@ -1979,8 +1966,7 @@ local general_overrides = function()
     { DiffviewFilePanelFileName = { fg = { from = "DiffviewHash", attr = "fg", alter = 0.5 } } },
 
     --  ──────────────────────────────[ LAZYGIT ]──────────────────────────────
-    -- { LazygitselectedLineBgColor = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 } } },
-    -- { LazygitInactiveBorderColor = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, bg = "NONE" } },
+    { LazygitselectedLineBgColor = { bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
 
     --  ────────────────────────────[ BUFFERLINE ]─────────────────────────
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
