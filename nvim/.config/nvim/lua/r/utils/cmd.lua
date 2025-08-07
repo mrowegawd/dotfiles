@@ -932,7 +932,12 @@ function M.change_colors()
   local __tab_active_bg = -0.65
 
   if vim.tbl_contains({ "base46-solarized_dark" }, vim.g.colorscheme) then
+    __tab_active_fg = 0.2
     __tab_active_bg = -0.55
+  end
+
+  if vim.tbl_contains({ "vscode_modern" }, vim.g.colorscheme) then
+    __tab_active_bg = -0.6
   end
 
   if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
