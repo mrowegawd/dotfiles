@@ -1,4 +1,5 @@
 return {
+  -- NVIM-BQF
   {
     "kevinhwang91/nvim-bqf",
     event = "FileType qf",
@@ -53,8 +54,8 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
       { "T" },
-      { "<a-A>" },
-      { "<a-F>" },
+      { "tb" },
+      { "ty" },
       { "<Leader>qf" },
       { "<Leader>fn" },
       { "<Leader>fN" },
@@ -174,8 +175,8 @@ return {
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",
 
-          add_item_to_qf = "<a-A>",
-          add_item_to_loc = "<a-F>",
+          add_item_to_qf = "tb",
+          add_item_to_loc = "ty",
         },
         todo = {
           add_local = "<Leader>fp",

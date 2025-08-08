@@ -1768,7 +1768,7 @@ local general_overrides = function()
     { TelescopeMatching = { link = "FzfLuaFzfMatch" } },
     { TelescopeTitle = { inherit = "FzfLuaTitle" } },
 
-    { TelescopeSelection = { bg = { from = "FzfLuaSel", attr = "bg" }, bold = true } },
+    { TelescopeSelection = { bg = { from = "FzfLuaSel", attr = "bg" }, fg = "NONE", bold = true } },
     { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
 
     -- ╭────────╮
@@ -1783,7 +1783,7 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ Preview │
     -- ╰─────────╯
-    { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+    { TelescopePreviewNormal = { inherit = "FzfLuaPreviewNormal" } },
     { TelescopePreviewTitle = { inherit = "FzfLuaPreviewTitle" } },
     { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
 
@@ -1810,13 +1810,19 @@ local general_overrides = function()
     { SnacksPickerManSection = { link = "FzfLuaFzfMatchFuzzy" } },
     { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
-    { SnacksPickerBorder = { link = "FzfLuaBorder" } },
 
     { SnacksPickerList = { inherit = "NormalFloat" } },
-    { SnacksPickerPrompt = { bg = { from = "NormalFloat", attr = "bg" } } },
     { SnacksPickerListBorder = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+    { SnacksPickerPrompt = { bg = { from = "NormalFloat", attr = "bg" } } },
     { SnacksPickerInput = { bg = { from = "NormalFloat", attr = "bg" } } },
     { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
+
+    { SnacksPickerBorder = { link = "FzfLuaBorder" } },
+    { SnacksPickerBoxBorder = { link = "FzfLuaBorder" } },
+    { SnacksPickerInputBorder = { link = "FzfLuaBorder" } },
+
+    { SnacksPickerPreview = { link = "FzfLuaPreviewNormal" } },
 
     -- ╭──────────────────╮
     -- │ SNACKS DASHBOARD │

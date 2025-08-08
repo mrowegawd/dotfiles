@@ -1006,7 +1006,7 @@ function M.change_colors()
 
   -- EWW -------------------------------------------------------------
   ---
-  local __eww_icon_fg = 0.3
+  local __eww_icon_fg = 0.6
 
   if vim.tbl_contains({ "base46-jellybeans", "ashen", "base46-oxocarbon" }, vim.g.colorscheme) then
     __eww_icon_fg = 0.5
@@ -1079,12 +1079,16 @@ function M.change_colors()
       default_fg = H.tint(H.get("Normal", "fg"), 5),
     },
     dunst = {
-      normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
+      low_fg = H.tint(H.get("WinSeparator", "fg"), 2),
+      low_bg = H.tint(H.get("WinSeparator", "fg"), 0.5),
+      low_frame = H.tint(H.get("WinSeparator", "fg"), -0.1),
+
       normal_fg = H.tint(H.get("Keyword", "fg"), 0.1),
+      normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
       normal_frame = H.tint(H.get("Keyword", "fg"), -0.45),
 
-      critical_bg = H.tint(H.get("diffDelete", "fg"), -0.45),
-      critical_fg = H.tint(H.get("diffDelete", "fg"), 0.1),
+      critical_fg = H.tint(H.get("diffDelete", "fg"), 0.4),
+      critical_bg = H.tint(H.get("diffDelete", "fg"), -0.25),
       critical_frame = H.tint(H.get("diffDelete", "fg"), -0.2),
 
       bg = H.tint(H.get("Normal", "bg"), 0.25),

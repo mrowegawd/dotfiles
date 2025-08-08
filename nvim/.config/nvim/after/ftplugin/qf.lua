@@ -149,8 +149,10 @@ keymap.set("n", "o", function()
   vim.schedule(function()
     local folded_line = vim.fn.foldclosed(vim.fn.line ".")
     if folded_line ~= -1 then
-      vim.cmd "normal! zv" -- buka fold
+      vim.cmd "normal! zvzz" -- buka fold
+      return
     end
+    vim.cmd "normal! zz"
   end)
 end, {
   buffer = api.nvim_get_current_buf(),
