@@ -950,10 +950,10 @@ function M.change_colors()
   local __tab_inactive_fg = -0.25
   local __tab_statusline_fg = -0.25
 
-  -- if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-  --   __tab_inactive_fg = -0.3
-  --   __tab_statusline_fg = -0.3
-  -- end
+  if vim.tbl_contains({ "base46-seoul256_dark" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.18
+    __tab_statusline_fg = -0.18
+  end
 
   if vim.tbl_contains({ "ashen" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.28
@@ -962,7 +962,6 @@ function M.change_colors()
 
   local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_inactive_fg)
   local tab_inactive_bg = H.get("Normal", "bg")
-
   local tab_statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_statusline_fg)
 
   -- Border Pane =====================================================
@@ -975,14 +974,18 @@ function M.change_colors()
   local zsh_lines_fg = 0.35
   local zsh_sugest_fg = 0.65
 
-  local zsh_bright_themes = { "base46-everforest", "base46-jabuti", "base46-onenord" }
+  local zsh_bright_themes = { "base46-everforest", "base46-jabuti", "base46-onenord", "base46-melange" }
   if vim.tbl_contains(zsh_bright_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.25
   end
   local zsh_contras_themes = { "base46-seoul256_dark", "base46-zenburn" }
   if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.19
+    zsh_lines_fg = 0.2
     zsh_sugest_fg = 0.45
+  end
+  local zsh_contras_themes = { "lackluster", "vscode_modern" }
+  if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.4
   end
 
   local zsh_lines = H.tint(H.get("WinSeparator", "fg"), zsh_lines_fg)

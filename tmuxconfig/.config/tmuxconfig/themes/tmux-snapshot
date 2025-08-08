@@ -84,11 +84,6 @@ set -g status-position top
 set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
 
-set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
-set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
-
-set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
-# set-window-option -g cursor-colour "$STATUSLINE_BG_MESSAGE"
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ STATUS RIGHT ╎

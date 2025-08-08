@@ -232,7 +232,7 @@ local __colors = function()
     -- branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
 
     -- branch_fg = H.tint(H.get("Keyword", "fg"), col_opts.branch_fg),
-    branch_fg = H.tint(H.get("FzfLuaTitle", "fg"), col_opts.branch_fg),
+    branch_fg = H.tint(H.get("TabLine", "bg"), col_opts.branch_fg),
     branch_bg = H.get("StatusLine", "bg"),
     -- branch_bg = H.get("Keyword", "fg"),
     -- branch_bg = H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")),

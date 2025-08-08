@@ -451,7 +451,7 @@ tmux_create_sess() {
 #  +----------------------------------------------------------+
 
 callme() {
-  MENULIST=" calc\n calcure\n ps-lsof\n systemctlUI\n btop"
+  MENULIST=" calculator\n calendar\n ps-lsof\n systemctlUI\n󰷛 btop"
   MENULIST="$MENULIST\n toggle-status\n toggle-synchronize-panes\n clock-mode\n select-session"
   MENULIST="$MENULIST\n rkill\n multilog\n newsboat\n apt-search"
 
@@ -461,8 +461,8 @@ callme() {
   select=$(echo "$selected" | cut -d " " -f 2)
 
   case $select in
-  "calc") open_calc ;;
-  "calcure") open_calcure ;;
+  "calculator") open_calc ;;
+  "calendar") open_calcure ;;
   "ps-lsof") open_ps_lsof ;;
   "btop") open_ps_btop ;;
   "systemctlUI") open_systemctl_ui ;;

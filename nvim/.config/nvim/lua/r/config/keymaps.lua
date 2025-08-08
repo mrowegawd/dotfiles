@@ -38,7 +38,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("zh", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zk", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 RUtils.map.nnoremap("zo", function()
   vim.cmd "normal! zozz"
 end, { desc = "Fold: zo" })
@@ -53,7 +53,7 @@ end, { desc = "Fold: zO" })
 --   end
 -- end, { desc = "Fold: toggle fold on current line" })
 
-RUtils.map.nnoremap("zr", function()
+RUtils.map.nnoremap("zh", function()
   return RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle level fold" })
 

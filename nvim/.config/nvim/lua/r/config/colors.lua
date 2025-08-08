@@ -37,9 +37,9 @@ local base_cl = {
   my_code_usage_fg_alter = -0.25,
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 1.5,
-  normal_float_bg_alter = 0,
+  normal_float_bg_alter = -0.08,
   normal_float_fg_alter = -0.01,
-  pmenu_bg_alter = 0.55,
+  pmenu_bg_alter = 0.7,
   pmenu_fg_alter = -0.1,
   pmenu_sel_bg_alter = 0.2,
   pmenu_thumb_bg_alter = 0.4,
@@ -359,7 +359,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   linenr_fg_alter = 0.02,
   noice_cmdline_fg_alter = 0.65,
   nontext_fg_alter = 2.5,
-  pmenu_bg_alter = 1.2,
+  pmenu_bg_alter = 1.3,
   render_markdown_code_bg_alter = 0.9,
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
@@ -374,7 +374,6 @@ reset_base_alter({ "base46-kanagawa" }, {
   dapstopped_bg_alter = 0.2,
   noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 1.8,
-  pmenu_bg_alter = 0.65,
   render_markdown_code_bg_alter = 0.38,
   render_markdown_code_inline_bg_alter = 0.2,
   snacks_indent_scope_fg_alter = 0.22,
@@ -437,9 +436,10 @@ reset_base_alter({ "base46-melange" }, {
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.15,
   fzflua_headertext_fg_alter = -0.4,
+  fzflua_cursorline_bg_alter = -0.17,
   linenr_fg_alter = 0.06,
   noice_cmdline_fg_alter = 0.6,
-  pmenu_bg_alter = 0.3,
+  pmenu_bg_alter = 0.5,
   render_markdown_code_bg_alter = 0.23,
   tabline_bg_alter = 0.25,
   trouble_indent_fg_alter = 0.6,
@@ -482,7 +482,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   linenr_fg_alter = 0.03,
   noice_cmdline_fg_alter = 1,
   nontext_fg_alter = 2.7,
-  pmenu_bg_alter = 1.4,
+  pmenu_bg_alter = 1.5,
   render_markdown_code_bg_alter = 0.85,
   render_markdown_code_inline_bg_alter = 0.16,
   trouble_indent_fg_alter = 1.65,
@@ -532,13 +532,15 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   my_code_usage_fg_alter = -0.02,
   noice_cmdline_fg_alter = 0.05,
   nontext_fg_alter = 0.8,
-  pmenu_bg_alter = 0.15,
+  pmenu_bg_alter = 0.18,
   pmenu_sel_bg_alter = 0.15,
-  quickfixline_alter = -0.06,
+  quickfixline_alter = 0.03,
+  quickfixline_header_fg_alter = 1.1,
   render_markdown_code_bg_alter = 0.02,
   render_markdown_code_inline_bg_alter = 0.04,
   statusline_bg_alter = -0.01,
   tabline_bg_alter = 0.1,
+  tabline_fg_alter = 0.24,
   trouble_indent_fg_alter = 0.2,
   winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.08,
@@ -625,6 +627,7 @@ reset_base_alter({ "base46-zenburn" }, {
   snacks_indent_scope_fg_alter = 0.11,
   statusline_bg_alter = -0.03,
   trouble_indent_fg_alter = 0.2,
+  tabline_bg_alter = 0.25,
   tabline_fg_alter = 0.3,
   winbar_file_path_fg_alter = 0.65,
 
@@ -660,7 +663,7 @@ reset_base_alter({ "lackluster" }, {
   my_code_usage_fg_alter = -0.1,
   noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 3.5,
-  pmenu_bg_alter = 2,
+  pmenu_bg_alter = 2.5,
   quickfixline_alter = -0.05,
   quickfixline_header_fg_alter = 0.95,
   trouble_indent_fg_alter = 2.5,
@@ -796,7 +799,7 @@ reset_base_alter({ "vscode_modern" }, {
   lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 1.8,
-  pmenu_bg_alter = 0.65,
+  pmenu_bg_alter = 0.7,
   render_markdown_code_bg_alter = 0.4,
   snacks_indent_scope_fg_alter = 0.15,
   statusline_bg_alter = -0.05,
@@ -890,6 +893,7 @@ local general_overrides = function()
         reverse = false,
       },
     },
+    { PmenuFloatBorder = { bg = { from = "Pmenu", attr = "bg" }, fg = { from = "Pmenu", attr = "bg" } } },
     { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = pmenu_thumb_bg_alter } } },
 
     {
@@ -901,13 +905,13 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "Pmenu", attr = "bg", alter = float_border_fg_alter },
+        fg = { from = "NormalFloat", attr = "bg", alter = float_border_fg_alter },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
     {
       FloatTitle = {
-        fg = { from = "NormalFloat", attr = "bg", alter = float_title_fg_alter },
+        fg = { from = "Normal", attr = "bg" },
         bg = { from = "Keyword", attr = "fg", alter = float_title_bg_alter },
         bold = true,
       },
@@ -1357,12 +1361,7 @@ local general_overrides = function()
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
-    {
-      CmpDocFloatBorder = {
-        fg = { from = "FloatBorder", attr = "fg" },
-        bg = { from = "Pmenu", attr = "bg" },
-      },
-    },
+    { CmpDocFloatBorder = { inherit = "PmenuFloatBorder" } },
 
     -- ╭─────────╮
     -- │ CMPKIND │
@@ -1716,23 +1715,23 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ PRPOMPT │
     -- ╰─────────╯
-    { FzfLuaNormal = { bg = { from = "Pmenu", attr = "bg" } } },
-    { FzfLuaBorder = { fg = { from = "FzfLuaNormal", attr = "bg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { FzfLuaBorder = { fg = { from = "FloatBorder", attr = "bg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
     {
       FzfLuaBufLineNr = {
         fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_buf_linenr_bg_alter },
         bg = "NONE",
       },
     },
-    { FzfLuaTitle = { inherit = "FloatTitle" } },
+    {
+      FzfLuaTitle = {
+        fg = { from = "Normal", attr = "bg" },
+        bg = { from = "Keyword", attr = "fg", alter = float_title_bg_alter },
+        bold = true,
+      },
+    },
 
-    -- fg = { from = "FzfLuaNormal", attr = "bg", alter = 1.4 },
-    -- bg = { from = "FzfLuaNormal", attr = "bg", alter = 0.2 },
-
-    -- { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = fzflua_file_part_fg }, reverse = false } },
     { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg", alter = fzflua_file_part_fg }, reverse = false } },
-    -- { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = fzflua_dir_part_fg } } },
-    -- { FzfLuaDirPart = { fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_dir_part_fg } } },
     { FzfLuaDirPart = { fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_dir_part_fg } } },
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = fzflua_headertext_fg_alter } } },
@@ -1744,7 +1743,7 @@ local general_overrides = function()
     { FzfLuaCursorLine = { bg = { from = "FzfLuaSel", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
     {
       FzfLuaCursorLineNr = {
-        fg = { from = "Keyword", attr = "fg" },
+        fg = { from = "Keyword", attr = "fg", alter = -0.25 },
         bg = { from = "FzfLuaCursorLine", attr = "bg" },
       },
     },
@@ -1811,11 +1810,11 @@ local general_overrides = function()
     { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
 
-    { SnacksPickerList = { inherit = "NormalFloat" } },
-    { SnacksPickerListBorder = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerList = { inherit = "FzfLuaNormal" } },
+    { SnacksPickerListBorder = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
 
-    { SnacksPickerPrompt = { bg = { from = "NormalFloat", attr = "bg" } } },
-    { SnacksPickerInput = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerPrompt = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { SnacksPickerInput = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
 
     { SnacksPickerBorder = { link = "FzfLuaBorder" } },
@@ -2098,8 +2097,8 @@ local general_overrides = function()
     },
     {
       GrugFarResultsLineNr = {
-        fg = { from = "Normal", attr = "bg", alter = 1 },
-        bg = { from = "Normal", attr = "bg", alter = 0.3 },
+        fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+        bg = { from = "LineNr", attr = "fg", alter = 0.1 },
       },
     },
     {
@@ -2109,7 +2108,12 @@ local general_overrides = function()
         bold = true,
       },
     },
-    { GrugFarResultsNumberLabel = { fg = { from = "DiagnosticError", attr = "fg", alter = -0.6 }, bold = false } },
+    {
+      GrugFarResultsNumberLabel = {
+        fg = H.darken(H.get("DiagnosticError", "fg"), 0.3, H.get("Normal", "bg")),
+        bold = false,
+      },
+    },
 
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
@@ -2166,11 +2170,11 @@ local general_overrides = function()
     { OverseerTaskBorder = { fg = { from = "WinSeparator", attr = "fg" }, bg = "NONE" } },
 
     --  ─────────────────────────────[ WHICH KEY ]─────────────────────────────
-    { WhichKeyTitle = { inherit = "FloatTitle" } },
-    -- { WhichKeyNormal = { inherit = "NormalFloat", fg = { from = "Function", attr = "fg", alter = 0.1 } } }, -- <----
-    { WhichKeyGroup = { inherit = "NormalFloat", fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
-    { WhichKeyDesc = { inherit = "NormalFloat", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
-    { WhichKeyBorder = { inherit = "FloatBorder" } },
+    { WhichKeyTitle = { inherit = "FzfLuaTitle" } },
+    { WhichKeyNormal = { inherit = "FzfLuaNormal", fg = { from = "Function", attr = "fg", alter = 0.1 } } }, -- <----
+    { WhichKeyGroup = { inherit = "FzfLuaNormal", fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
+    { WhichKeyDesc = { inherit = "FzfLuaNormal", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
+    { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
 
     --  ──────────────────────────────[ TROUBLE ]──────────────────────────────
     { TroubleNormal = { inherit = "Normal" } },
@@ -2316,65 +2320,6 @@ local function colorscheme_overrides()
   local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
   local overrides = {
-    ["ashen"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.5 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.35 },
-        },
-      },
-    },
-    ["base46-doomchad"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.05 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.1 },
-        },
-      },
-    },
-    ["base46-everforest"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.07 },
-        },
-      },
-    },
-    ["base46-gruvchad"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
-        },
-      },
-    },
-    ["base46-jellybeans"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.6 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.4 },
-        },
-      },
-    },
-    ["base46-kanagawa"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.1 },
-        },
-      },
-    },
     ["base46-material-lighter"] = {
       -- DIAGNOSTICS
       {
@@ -2598,87 +2543,7 @@ local function colorscheme_overrides()
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
       { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = -0.2 } } },
     },
-    ["base46-onenord"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.05 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.05 },
-        },
-      },
-    },
-    ["base46-oxocarbon"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.5 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.4 },
-        },
-      },
-    },
-    ["base46-rosepine"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.4 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.3 },
-        },
-      },
-    },
-    ["base46-seoul256_dark"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.15 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.15 },
-        },
-      },
-    },
     ["base46-solarized_dark"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
-        },
-      },
-    },
-    ["base46-vscode_dark"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
-        },
-      },
-    },
-    ["base46-zenburn"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = -0.1 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = -0.1 },
-        },
-      },
-    },
-    ["lackluster"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.8 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.8 },
-        },
-      },
-    },
-    ["techbase"] = {
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {
@@ -2781,16 +2646,6 @@ local function colorscheme_overrides()
       -- -- SNACKS
       -- { SnacksIndentScope = { fg = H.tint(H.darken(dark_yellow, 0.3, H.get("Normal", "bg")), -0.1) } },
 
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
-        },
-      },
-    },
-    ["tokyonight-night"] = {
       -- GRUG-FAR
       {
         GrugFarResultsLineNr = {

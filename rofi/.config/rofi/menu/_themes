@@ -880,7 +880,8 @@ setup() {
   # "awesome") wm_awesome ;;
   # esac
 
-  bspc wm -r && sleep 2 && send_notify "Reload bspwm config.."
+  # bspc wm -r && sleep 2 && send_notify "Reload bspwm config.."
+  sleep 1 && send_notify "Reload bspwm config.."
 
   "$HOME/.config/miscxrdb/exbin/fehbg" "$1"
 

@@ -256,7 +256,10 @@ function M.cycle_fold_level()
   end
   local new_level = fold_levels[current_index]
   vim.o.foldlevel = new_level
-  RUtils.info("Fold level set to: " .. new_level, { title = "Folds" })
+  if new_level == 0 then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.info("Fold level set to: " .. new_level, { title = "Folds" })
+  end
 end
 
 return M

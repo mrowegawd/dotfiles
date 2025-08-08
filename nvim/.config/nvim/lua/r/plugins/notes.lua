@@ -231,12 +231,12 @@ return {
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>or",
-            org_capture_kill = "<Leader><TAB>",
+            org_capture_kill = { "<Leader><TAB>", "q" },
             org_capture_show_help = "?",
           },
           note = {
             org_note_finalize = { "<C-c>", "<C-s>" },
-            org_note_kill = { "q", "<ESC>" },
+            org_note_kill = { "<Leader><TAB>", "q" },
           },
           org = {
             org_timestamp_up_day = "<UP>",
@@ -305,7 +305,7 @@ return {
             org_move_subtree_down = "<c-n>",
 
             org_refile = "<prefix>r",
-            org_add_note = "<prefix>k",
+            org_add_note = "<prefix>n",
 
             org_show_help = "?",
             org_babel_tangle = "<prefix>bt",
