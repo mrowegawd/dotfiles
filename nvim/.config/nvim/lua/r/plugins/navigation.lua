@@ -65,41 +65,41 @@ return {
       local Preview = require "neo-tree.sources.common.preview"
       -- local events = require "neo-tree.events"
       local log = require "neo-tree.log"
-      local Highlight = require "r.settings.highlights"
-      Highlight.plugin("NeoTreeHi", {
+
+      local H = require "r.settings.highlights"
+      H.plugin("NeoTreeHi", {
         theme = {
           ["*"] = {
             { Directory = { link = "Directory" } },
-            -- { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
-            { NeoTreeNormal = { link = "PanelBackground" } },
-            { NeoTreeNormalNC = { link = "PanelBackground" } },
-            { NeoTreeCursorLine = { link = "CursorLine" } },
-            { NeoTreeRootName = { fg = { from = "Comment", attr = "fg" } } },
-            { NeoTreeStatusLine = { link = "PanelStusLine" } },
-            { NeoTreeWinSeparator = { link = "WinSeparator" } },
+            { NeoTreeNormal = { link = "PanelSideBackground" } },
+            { NeoTreeNormalNC = { link = "PanelSideBackground" } },
+            { NeoTreeCursorLine = { link = "HoveredCursorline" } },
+            { NeoTreeRootName = { link = "PanelSideRootName" } },
+            { NeoTreeStatusLine = { link = "PanelSideStusLine" } },
+            { NeoTreeWinSeparator = { link = "PanelSideWinSeparator" } },
             {
               NeoTreeTabActive = {
-                bg = { from = "PanelBackground" },
                 fg = { from = "Keyword", attr = "fg" },
+                bg = { from = "PanelSideBackground", attr = "bg" },
                 bold = true,
               },
             },
             {
-              NeoTreeTabInactive = {
-                bg = { from = "PanelDarkBackground", alter = -0.3, attr = "bg" },
+              NeoTreeTabInActive = {
                 fg = { from = "Comment" },
+                bg = { from = "PanelSideBackground", attr = "bg", alter = -0.12 },
               },
             },
 
             { NeoTreeIndentMarker = { fg = { from = "TroubleIndent", attr = "fg" }, bold = false } },
-            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+            { NeoTreeTabSeparatorActive = { inherit = "PanelSideNormal", fg = { from = "Comment" } } },
 
             { NeoTreeGitAdded = { link = "GitSignsAdd" } },
             { NeoTreeGitModified = { link = "GitSignsChange" } },
             {
               NeoTreeTabSeparatorInactive = {
                 inherit = "NeoTreeTabInactive",
-                fg = { from = "PanelDarkBackground", attr = "bg" },
+                fg = { from = "PanelSideDarkBackground", attr = "bg" },
               },
             },
           },
@@ -128,19 +128,19 @@ return {
           {
             event = "neo_tree_buffer_enter",
             handler = function()
-              Highlight.set("Cursor", { blend = 100 })
+              H.set("Cursor", { blend = 100 })
             end,
           },
           {
             event = "neo_tree_buffer_leave",
             handler = function()
-              Highlight.set("Cursor", { blend = 0 })
+              H.set("Cursor", { blend = 0 })
             end,
           },
           {
             event = "neo_tree_window_after_close",
             handler = function()
-              Highlight.set("Cursor", { blend = 0 })
+              H.set("Cursor", { blend = 0 })
             end,
           },
         },
@@ -167,6 +167,8 @@ return {
               ["H"] = "toggle_hidden",
               ["gp"] = "prev_git_modified",
               ["gn"] = "next_git_modified",
+              ["<a-p>"] = "prev_git_modified",
+              ["<a-n>"] = "next_git_modified",
               -- ["<leader>ff"] = "fuzzy_finder",
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
@@ -409,7 +411,7 @@ return {
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
             ["h"] = "parent_or_close",
-            ["<a-p>"] = {
+            ["P"] = {
               "toggle_open_preview",
               config = { use_float = true, use_image_nvim = true },
             },
@@ -418,7 +420,6 @@ return {
             -- ["s"] = "filter_on_submit",
             -- ["S"] = "fuzzy_finder_directory",
             ["t"] = "", -- disabled open tab
-            ["P"] = "",
             ["z"] = "",
             ["<Tab>"] = "toggle_node",
             ["<S-Tab>"] = "close_all_nodes",
@@ -720,7 +721,7 @@ return {
           rename_symbol = {},
           code_actions = {},
           fold = "h",
-          fold_toggle = { "<tab>", "za", "zh" },
+          fold_toggle = { "<tab>", "za", "zk" },
           fold_toggle_all = "<S-tab>",
           unfold = "l",
           fold_all = { "zm", "zM" },
@@ -875,7 +876,7 @@ return {
       }
     end,
     opts = function()
-      -- Highlight.plugin("NeoEdgyHi", {
+      -- H.plugin("NeoEdgyHi", {
       --   theme = {
       --     ["*"] = {
       --       { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.4 }, fg = "NONE" } },

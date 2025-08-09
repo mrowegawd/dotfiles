@@ -4,10 +4,10 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 local builtin = require "fzf-lua.previewer.builtin"
 local QFPreviewer = builtin.buffer_or_file:extend()
 
-opt.buflisted = false
-opt.winfixheight = true
-opt.scrolloff = 2
-opt.cursorline = true
+-- opt.buflisted = false
+-- opt.winfixheight = true
+-- opt.scrolloff = 2
+-- opt.cursorline = true
 opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "

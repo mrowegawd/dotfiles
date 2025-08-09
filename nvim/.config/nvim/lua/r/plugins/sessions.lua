@@ -6,6 +6,12 @@ return {
   {
     "stevearc/resession.nvim",
     event = "VeryLazy",
+    keys = {
+      "<Leader>st",
+      "<Leader>sl",
+      "<Leader>sL",
+      "<Leader>sd",
+    },
     opts = {
       autosave = {
         enabled = true,
@@ -58,10 +64,10 @@ return {
       --stylua: ignore
       vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Session: save session tab [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sl", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sL", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
       --stylua: ignore
-      -- vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Misc: load last session [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Session: session delete [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Session: load last [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Session: delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()
         resession.detach()

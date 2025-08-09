@@ -12,7 +12,7 @@ GET_FG=$(xrdb -query | grep -i foreground | cut -d':' -f2 | xargs)
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 
 # GET_BLACK=$(xrdb -query | grep -i .color0 | cut -d':' -f2 | head -1 | xargs)
-GET_BLACK_ALT=$(xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs)
+# GET_BLACK_ALT=$(xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs)
 
 GET_RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
 GET_RED_ALT=$(xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs)
@@ -35,64 +35,64 @@ GET_CYAN=$(xrdb -query | grep -i .color6 | cut -d':' -f2 | head -1 | xargs)
 GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 # GET_WHITE_ALT=$(xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs)
 
-GET_COL_16="#6c8cac"
+# GET_COL_16="#6c8cac"
 GET_COL_17="#333333"
-GET_COL_18="#5b5b5b"
-GET_COL_19="#131313"
-GET_COL_20="#262626"
-GET_COL_21="#262626"
-GET_COL_22="#181818"
-GET_COL_23="#5f5f5f"
-GET_COL_24="#ffb49d"
-GET_COL_25="#2f2f2f"
-GET_COL_26="#5f5f5f"
-GET_COL_27="#ffb49d"
-GET_COL_28="#ffb49d"
+# GET_COL_18="#5b5b5b"
+# GET_COL_19="#131313"
+# GET_COL_20="#262626"
+# GET_COL_21="#262626"
+# GET_COL_22="#181818"
+# GET_COL_23="#5f5f5f"
+# GET_COL_24="#ffb49d"
+# GET_COL_25="#2f2f2f"
+# GET_COL_26="#5f5f5f"
+# GET_COL_27="#ffb49d"
+# GET_COL_28="#ffb49d"
 
 MASTER_THEME_FILE=/tmp/master-colors-themes
 
 if [[ -f "$MASTER_THEME_FILE" ]]; then
-  GET_COL_16=$(grep -i color16 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_16=$(grep -i color16 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_17=$(grep -i color17 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_18=$(grep -i color18 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_19=$(grep -i color19 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  GET_COL_20=$(grep -i color20 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_21=$(grep -i color21 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_22=$(grep -i color22 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_23=$(grep -i color23 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_24=$(grep -i color24 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_25=$(grep -i color25 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_26=$(grep -i color26 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_27=$(grep -i color27 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_18=$(grep -i color18 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_19=$(grep -i color19 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  #
+  # GET_COL_20=$(grep -i color20 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_21=$(grep -i color21 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_22=$(grep -i color22 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_23=$(grep -i color23 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_24=$(grep -i color24 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_25=$(grep -i color25 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_26=$(grep -i color26 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_27=$(grep -i color27 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
-  GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   #  Delta: plus-emph-style, plus-style
-  GET_COL_33=$(grep -i color33 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_34=$(grep -i color34 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_33=$(grep -i color33 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_34=$(grep -i color34 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # Delta: plus-emph-style, minus-emph-style
-  GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # ZSH-AUTOSUGGESTIONS
-  GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # YAZI
-  GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_40=$(grep -i color40 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_41=$(grep -i color41 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_42=$(grep -i color42 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_43=$(grep -i color43 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  GET_COL_44=$(grep -i color44 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_40=$(grep -i color40 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_41=$(grep -i color41 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_42=$(grep -i color42 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_43=$(grep -i color43 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  #
+  # GET_COL_44=$(grep -i color44 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   # GET_COL_45=$(grep -i color45 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   # GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   # GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -279,15 +279,20 @@ set_tmux() {
   if [ -f "$_PATH_TMUX_THEMES" ]; then
     sleep 1
 
-    TMUX_FG=$(grep -i tmux_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^TMUX_BG=.*$/TMUX_BG=\"$TMUX_FG\"/g" "$_PATH_TMUX_THEMES"
+    # Mist
+    TMUX_FG=$(grep -i tmux_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$TMUX_FG\"/g" "$_PATH_TMUX_THEMES"
 
-    TMUX_BG=$(grep -i tmux_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-    sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$TMUX_BG\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_BG=$(grep -i tmux_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_BG=.*$/TMUX_BG=\"$TMUX_BG\"/g" "$_PATH_TMUX_THEMES"
+
+    TMUX_FM_BG=$(grep -i tmux_fm_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^FM_BG=.*$/FM_BG=\"$TMUX_FM_BG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_KEYWORD=$(grep -i tmux_keyword: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^TMUX_KEYWORD=.*$/TMUX_KEYWORD=\"$TMUX_KEYWORD\"/g" "$_PATH_TMUX_THEMES"
 
+    # Tab
     TMUX_TAB_ACTIVE_FG=$(grep -i tmux_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^TAB_ACTIVE_FG=.*$/TAB_ACTIVE_FG=\"$TMUX_TAB_ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
 
@@ -303,12 +308,14 @@ set_tmux() {
     TMUX_BORDER_INACTIVE_STATUS_FG=$(grep -i tmux_border_inactive_status_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^BORDER_INACTIVE_STATUS_FG=.*$/BORDER_INACTIVE_STATUS_FG=\"$TMUX_BORDER_INACTIVE_STATUS_FG\"/g" "$_PATH_TMUX_THEMES"
 
+    # Session
     TMUX_SESSION_BG=$(grep -i tmux_session_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$TMUX_SESSION_BG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_SESSION_FG=$(grep -i tmux_session_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^SESSION_FG=.*$/SESSION_FG=\"$TMUX_SESSION_FG\"/g" "$_PATH_TMUX_THEMES"
 
+    # Statusline
     TMUX_STATUSLINE_FG=$(grep -i tmux_statusline_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$TMUX_STATUSLINE_FG\"/g" "$_PATH_TMUX_THEMES"
 
@@ -517,14 +524,6 @@ set_yazi() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  # HOVERED_BG=$(lighten_color "$GET_COL_39" 20)
-  # if [ "$1" == "rose-pine-dawn" ]; then
-  #   HOVERED_BG=$(darken_color "$GET_COL_39" 10)
-  # fi
-  # if [ "$1" == "lackluster" ] || [ "$1" == "base46-jellybeans" ] || [ "$1" == "vscode_modern" ]; then
-  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
-  # fi
-
   YAZI_HOVERED=$(grep -i yazi_hovered: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_hovered%%/$YAZI_HOVERED/g" "$TARGET_YAZI_THEME"
 
@@ -541,6 +540,12 @@ set_yazi() {
   YAZI_CUT=$(grep -i yazi_cut: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_cut%%/$YAZI_CUT/g" "$TARGET_YAZI_THEME"
 
+  YAZI_MARKED_FG=$(grep -i yazi_marked_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_marked_fg%%/$YAZI_MARKED_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_MARKED_BG=$(grep -i yazi_marked_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_marked_bg%%/$YAZI_MARKED_BG/g" "$TARGET_YAZI_THEME"
+
   # Tab
   YAZI_TAB_ACTIVE_FG=$(grep -i yazi_tab_active_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_tab_active_fg%%/$YAZI_TAB_ACTIVE_FG/g" "$TARGET_YAZI_THEME"
@@ -554,15 +559,47 @@ set_yazi() {
   YAZI_TAB_INACTIVE_BG=$(grep -i yazi_tab_inactive_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_tab_inactive_bg%%/$YAZI_TAB_INACTIVE_BG/g" "$TARGET_YAZI_THEME"
 
-  YAZI_TAB_ACTIVE_BLUR_BG=$(grep -i yazi_tab_active_blur_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%col_statusline_active_blur_bg%%/$YAZI_TAB_ACTIVE_BLUR_BG/g" "$TARGET_YAZI_THEME"
+  # Statusline
+  # Normal
+  YAZI_STATUSLINE_NORMAL_FG=$(grep -i yazi_statusline_normal_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_normal_fg%%/$YAZI_STATUSLINE_NORMAL_FG/g" "$TARGET_YAZI_THEME"
 
-  YAZI_STATUSLINE_FG=$(grep -i yazi_statusline_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%col_statusline_active_fg%%/$YAZI_STATUSLINE_FG/g" "$TARGET_YAZI_THEME"
+  YAZI_STATUSLINE_NORMAL_BG=$(grep -i yazi_statusline_normal_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_normal_bg%%/$YAZI_STATUSLINE_NORMAL_BG/g" "$TARGET_YAZI_THEME"
 
-  YAZI_STATUSLINE_BG=$(grep -i yazi_statusline_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%col_statusline_active_bg%%/$YAZI_STATUSLINE_BG/g" "$TARGET_YAZI_THEME"
+  YAZI_STATUSLINE_NORMAL_FG_ALT=$(grep -i yazi_statusline_normal_fg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_normal_fg_alt%%/$YAZI_STATUSLINE_NORMAL_FG_ALT/g" "$TARGET_YAZI_THEME"
 
+  YAZI_STATUSLINE_NORMAL_BG_ALT=$(grep -i yazi_statusline_normal_bg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_normal_bg_alt%%/$YAZI_STATUSLINE_NORMAL_BG_ALT/g" "$TARGET_YAZI_THEME"
+
+  # Select
+  YAZI_STATUSLINE_SELECT_FG=$(grep -i yazi_statusline_select_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_select_fg%%/$YAZI_STATUSLINE_SELECT_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_SELECT_BG=$(grep -i yazi_statusline_select_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_select_bg%%/$YAZI_STATUSLINE_SELECT_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_SELECT_FG_ALT=$(grep -i yazi_statusline_select_fg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_select_fg_alt%%/$YAZI_STATUSLINE_SELECT_FG_ALT/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_SELECT_BG_ALT=$(grep -i yazi_statusline_select_bg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_select_bg_alt%%/$YAZI_STATUSLINE_SELECT_BG_ALT/g" "$TARGET_YAZI_THEME"
+
+  # Unset
+  YAZI_STATUSLINE_UNSET_FG=$(grep -i yazi_statusline_unset_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_unset_fg%%/$YAZI_STATUSLINE_UNSET_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_UNSET_BG=$(grep -i yazi_statusline_unset_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_unset_bg%%/$YAZI_STATUSLINE_UNSET_BG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_UNSET_FG_ALT=$(grep -i yazi_statusline_unset_fg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_unset_fg_alt%%/$YAZI_STATUSLINE_UNSET_FG_ALT/g" "$TARGET_YAZI_THEME"
+
+  YAZI_STATUSLINE_UNSET_BG_ALT=$(grep -i yazi_statusline_unset_bg_alt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_statusline_unset_bg_alt%%/$YAZI_STATUSLINE_UNSET_BG_ALT/g" "$TARGET_YAZI_THEME"
+
+  # Mist
   YAZI_DIRECTORY=$(grep -i yazi_directory: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_directory%%/$YAZI_DIRECTORY/g" "$TARGET_YAZI_THEME"
 
@@ -610,21 +647,6 @@ set_fzf() {
 
   FZF_HEADER=$(grep -i fzf_header: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%color_header%%/$FZF_HEADER/g" "$FZF_PATH_CONFIG/fzf.config"
-}
-set_zsh_p10k() {
-  ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
-  if [ -f "$ZSH_P10K_PATH_CONFIG" ]; then
-    # Color yang harus dirubah bisa check di link github:
-    # https://github.com/romkatv/powerlevel10k/issues/805#issuecomment-640145313
-
-    POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_50" 1)
-    POWERLEVEL9K_DIR_ANCHOR_FG=$(darken_color "$GET_COL_23" 5)
-    sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND=.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
-    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-  fi
-
 }
 set_zshrc() {
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
@@ -742,23 +764,25 @@ set_polybar() {
   _POLYBAR_PATH="$DOTFILES_PATH/polybar/.config/polybar"
   _POLYBAR_CONFIG_MODULE_PATH="$_POLYBAR_PATH/bar/newback/modules.ini"
 
-  if [ -f "$_POLYBAR_CONFIG_MODULE_PATH" ]; then
+  dunstify "not impelemented yet"
 
-    statusline_fg=$GET_COL_45
-    statusline=$GET_COL_46
-    keyword_alt=$GET_COL_16
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
-      statusline_fg=$GET_COL_46
-      statusline=$GET_COL_16
-      keyword_alt=$GET_COL_45
-    fi
-
-    sed -i -e "s/^keyword\s=.*$/keyword = $GET_COL_17/g" "$_POLYBAR_CONFIG_MODULE_PATH"
-    sed -i -e "s/^keyword_alt\s=.*$/keyword_alt = $keyword_alt/g" "$_POLYBAR_CONFIG_MODULE_PATH"
-
-    sed -i -e "s/^statusline_fg\s=.*$/statusline_fg = $statusline_fg/g" "$_POLYBAR_CONFIG_MODULE_PATH"
-    sed -i -e "s/^statusline\s=.*$/statusline = $statusline/g" "$_POLYBAR_CONFIG_MODULE_PATH"
-  fi
+  # if [ -f "$_POLYBAR_CONFIG_MODULE_PATH" ]; then
+  #
+  #   statusline_fg=$GET_COL_45
+  #   statusline=$GET_COL_46
+  #   keyword_alt=$GET_COL_16
+  #   if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
+  #     statusline_fg=$GET_COL_46
+  #     statusline=$GET_COL_16
+  #     keyword_alt=$GET_COL_45
+  #   fi
+  #
+  #   sed -i -e "s/^keyword\s=.*$/keyword = $GET_COL_17/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+  #   sed -i -e "s/^keyword_alt\s=.*$/keyword_alt = $keyword_alt/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+  #
+  #   sed -i -e "s/^statusline_fg\s=.*$/statusline_fg = $statusline_fg/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+  #   sed -i -e "s/^statusline\s=.*$/statusline = $statusline/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+  # fi
 }
 set_shaders_color() {
   _GHOSTTY_PATH="$DOTFILES_PATH/ghosty/.config/ghostty"
@@ -851,8 +875,6 @@ setup() {
 
   #shellcheck source=/dev/null
 
-  sleep 1
-
   set_rofi
   set_dunst
   set_tmux "$1"
@@ -863,12 +885,9 @@ setup() {
   set_terminal "$1"
   # set_firefox "$1"
 
-  sleep 1
-
   set_fzf
   set_yazi "$1"
   set_lazygit
-  # set_zsh_p10k "$1"
   set_delta
   set_zshrc "$1"
   # set_polybar "$1"

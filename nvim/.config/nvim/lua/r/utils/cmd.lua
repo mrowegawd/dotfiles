@@ -931,16 +931,21 @@ function M.change_colors()
   local __tab_active_fg = -0.3
   local __tab_active_bg = -0.7
 
-  if vim.tbl_contains({ "vscode_modern" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "vscode_modern", "base46-kanagawa" }, vim.g.colorscheme) then
     __tab_active_bg = -0.6
   end
   if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
     __tab_active_fg = 0.1
     __tab_active_bg = -0.45
   end
-  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-seoul256_dark" }, vim.g.colorscheme) then
     __tab_active_fg = -0.15
     __tab_active_bg = -0.55
+  end
+
+  if vim.tbl_contains({ "base46-zenburn" }, vim.g.colorscheme) then
+    __tab_active_fg = -0.2
+    __tab_active_bg = -0.6
   end
 
   local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
@@ -950,14 +955,19 @@ function M.change_colors()
   local __tab_inactive_fg = -0.25
   local __tab_statusline_fg = -0.25
 
-  if vim.tbl_contains({ "base46-seoul256_dark" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.18
-    __tab_statusline_fg = -0.18
+  if vim.tbl_contains({ "base46-seoul256_dark", "base46-kanagawa" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.17
+    __tab_statusline_fg = -0.17
   end
 
-  if vim.tbl_contains({ "ashen" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.28
     __tab_statusline_fg = -0.28
+  end
+
+  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.26
+    __tab_statusline_fg = -0.26
   end
 
   local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_inactive_fg)
@@ -983,8 +993,8 @@ function M.change_colors()
     zsh_lines_fg = 0.2
     zsh_sugest_fg = 0.45
   end
-  local zsh_contras_themes = { "lackluster", "vscode_modern" }
-  if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
+  local zsh_special_themes = { "lackluster", "vscode_modern" }
+  if vim.tbl_contains(zsh_special_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.4
   end
 
@@ -997,11 +1007,6 @@ function M.change_colors()
   --
   local lazygit_inactive_border_fg = 0.3
 
-  local lazygit_invalid_border_themes = { "ashen" }
-  if vim.tbl_contains(lazygit_invalid_border_themes, vim.g.colorscheme) then
-    lazygit_inactive_border_fg = 0.5
-  end
-
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
   ---
   --------------------------------------------------------------------
@@ -1011,7 +1016,7 @@ function M.change_colors()
   ---
   local __eww_icon_fg = 0.6
 
-  if vim.tbl_contains({ "base46-jellybeans", "ashen", "base46-oxocarbon" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-jellybeans", "base46-oxocarbon" }, vim.g.colorscheme) then
     __eww_icon_fg = 0.5
   end
 
@@ -1043,6 +1048,9 @@ function M.change_colors()
     tmux = {
       fg = H.get("Normal", "fg"),
       bg = H.get("Normal", "bg"),
+
+      fm_bg = H.get("PanelSideBackground", "bg"),
+
       keyword = H.get("Keyword", "fg"),
 
       tab_active_fg = tab_active_fg,
@@ -1131,13 +1139,13 @@ function M.change_colors()
 
       hunk_plus_fg = H.get("diffAdd", "fg"),
       hunk_plus_bg = H.get("diffAdd", "bg"),
-      hunk_emp_plus_fg = H.tint(H.get("diffAdd", "fg"), 0.45),
-      hunk_emp_plus_bg = H.tint(H.get("diffAdd", "bg"), 0.45),
+      hunk_emp_plus_fg = H.tint(H.get("diffAdd", "fg"), 0.4),
+      hunk_emp_plus_bg = H.tint(H.get("diffAdd", "bg"), 0.4),
 
       hunk_minus_fg = H.get("diffDelete", "fg"),
       hunk_minus_bg = H.get("diffDelete", "bg"),
-      hunk_emp_minus_fg = H.tint(H.get("diffDelete", "fg"), 0.45),
-      hunk_emp_minus_bg = H.tint(H.get("diffDelete", "bg"), 0.45),
+      hunk_emp_minus_fg = H.tint(H.get("diffDelete", "fg"), 0.4),
+      hunk_emp_minus_bg = H.tint(H.get("diffDelete", "bg"), 0.4),
     },
     eww = {
       bg = H.get("Normal", "bg"),
@@ -1161,22 +1169,34 @@ function M.change_colors()
       -- change_line_number = diff_change_line_number,
     },
     yazi = {
-      cwd = H.get("Comment", "fg"),
-      hovered = H.tint(H.get("CursorLine", "bg"), 0.5),
-      selected = H.tint(H.get("diffDelete", "fg"), 0.3),
+      cwd = H.get("PanelSideRootName", "fg"),
+      hovered = H.get("HoveredCursorline", "bg"),
 
+      selected = H.tint(H.get("diffDelete", "fg"), 0.3),
       copied = H.tint(H.get("diffChange", "fg"), 0.3),
       cut = H.tint(H.get("diffDelete", "fg"), -0.3),
+      marked_fg = H.tint(H.get("String", "fg"), 0.1),
+      marked_bg = H.tint(H.get("String", "fg"), -0.5),
 
       tab_active_fg = H.tint(H.get("Keyword", "fg"), 0.3),
       tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.3),
-      tab_active_blur_bg = H.tint(H.get("Keyword", "fg"), -0.3),
-
       tab_inactive_fg = H.get("TabLine", "fg"),
       tab_inactive_bg = H.get("Keyword", "fg"),
 
-      statusline_fg = H.get("StatusLine", "bg"),
-      statusline_bg = H.get("StatusLine", "fg"),
+      statusline_normal_fg = H.tint(H.get("TabLine", "fg"), 0.4),
+      statusline_normal_bg = H.tint(H.get("TabLine", "bg"), 0.2),
+      statusline_normal_fg_alt = H.get("TabLine", "fg"),
+      statusline_normal_bg_alt = H.get("TabLine", "bg"),
+
+      statusline_select_fg = H.tint(H.get("Visual", "bg"), 2),
+      statusline_select_bg = H.tint(H.get("Visual", "bg"), 0.4),
+      statusline_select_fg_alt = H.tint(H.get("Visual", "bg"), 1),
+      statusline_select_bg_alt = H.get("Visual", "bg"),
+
+      statusline_unset_fg = H.tint(H.get("Function", "fg"), -0.5),
+      statusline_unset_bg = H.tint(H.get("Function", "fg"), 0.4),
+      statusline_unset_fg_alt = H.tint(H.get("Function", "fg"), -0.8),
+      statusline_unset_bg_alt = H.get("Function", "fg"),
 
       directory = H.get("Directory", "fg"),
 

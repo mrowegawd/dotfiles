@@ -455,7 +455,7 @@ callme() {
   MENULIST="$MENULIST\n toggle-status\n toggle-synchronize-panes\n clock-mode\n select-session"
   MENULIST="$MENULIST\n rkill\n multilog\n newsboat\n apt-search"
 
-  selected=$(echo -e "$MENULIST" | fzf-tmux -xC -w '60%' -h '50%' --prompt="⚡ " --border-label ' ALT-Y ')
+  selected=$(echo -e "$MENULIST" | fzf-tmux -xC -w '30%' -h '40%' --prompt="⚡ " --border-label ' ALT-Y ')
   [[ -z $selected ]] && exit
 
   select=$(echo "$selected" | cut -d " " -f 2)

@@ -38,17 +38,17 @@ return {
 
             local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
             local is_buftype = vim.tbl_contains({ "help", "prompt", "nofile" }, vim.bo[buf].buftype)
-            local is_buftype_with_nofile = vim.tbl_contains({ "help", "prompt" }, vim.bo[buf].buftype)
+            local is_buftype_with_no_file = vim.tbl_contains({ "help", "prompt" }, vim.bo[buf].buftype)
             local is_filetype = vim.tbl_contains({
               "DiffviewFileHistory",
               "DiffviewFiles",
               "Outline",
-              "Trouble",
               "dashboard",
               "fugitive",
               "fzf",
               "gitcommit",
               "packer",
+              "neo-tree",
               "snacks_dashboard",
               "toggleterm",
               -- "org",
@@ -57,17 +57,17 @@ return {
 
             if vim.bo[buf].buftype == "nofile" then
               local path = vim.fn.expand "%:p"
-              -- if #path > 0 and not is_filetype and not is_buftype and not is_float then
-              if #path > 0 and not is_float and not is_buftype_with_nofile and not is_filetype then
+              if #path > 0 and not is_float and not is_buftype_with_no_file and not is_filetype then
                 return false
               end
+
               return not vim.tbl_contains(
                 { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" },
                 vim.bo[buf].filetype
               )
             end
 
-            return is_filetype or is_float or is_buftype
+            return is_float or is_buftype or is_filetype
           end,
         },
       }

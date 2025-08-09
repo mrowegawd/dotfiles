@@ -195,7 +195,7 @@ RUtils.cmd.augroup("WindowDim", {
     RUtils.windowdim.focus_gained()
   end,
 }, {
-  event = { "VimLeave", "FocusLost" },
+  event = { "FocusLost" },
   pattern = "*",
   command = function()
     if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then

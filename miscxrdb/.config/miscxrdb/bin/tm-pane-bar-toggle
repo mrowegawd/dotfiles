@@ -1,18 +1,32 @@
 #!/bin/bash
 
-TMUX_BG="#1f1f1f"
 BORDER_ACTIVE="#569cd6"
 BORDER_INACTIVE="#3a3a3a"
+FM_BG="#3a3a3a"
+TMUX_BG="#1f1f1f"
 
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   BORDER_ACTIVE=$(grep -i BORDER_ACTIVE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   BORDER_INACTIVE=$(grep -i BORDER_INACTIVE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  FM_BG=$(grep -i FM_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
-auto_toggle() {
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+
+_force_color_filemanager() {
+  if _check_pane_is_yazi; then
+    tmux set-option -g window-active-style bg="$FM_BG"
+  else
+    tmux set-option -g window-active-style bg="$TMUX_BG"
+  fi
+}
+
+toggle_border_visibility_and_file_manager() {
   pane_count=$(tmux list-panes | wc -l)
 
   if [ "$pane_count" -eq 1 ] || [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
@@ -26,6 +40,7 @@ auto_toggle() {
     fi
     tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_ACTIVE"
   fi
+  _force_color_filemanager
 }
 
 hide_bar_pane() {

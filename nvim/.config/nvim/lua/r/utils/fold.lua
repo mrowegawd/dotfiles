@@ -232,16 +232,11 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
       end)
 
       if err and (string.match(err, "E380") or string.match(err, "E381")) then
-        local msg = "stack qf list sudah mentok"
+        local msg = string.format("stack qf %s, sudah mentok", cmd_msg)
         ---@diagnostic disable-next-line: undefined-field
         RUtils.warn(msg, { title = "Quickfix" })
         return
       end
-
-      -- if vim.tbl_contains({ "bnext", "lnext", "cnewer", "colder" }, cmd_msg) then
-      --   ---@diagnostic disable-next-line: undefined-field
-      --   RUtils.info(cmd_msg, { title = "QF" })
-      -- end
     end)
   end
 end

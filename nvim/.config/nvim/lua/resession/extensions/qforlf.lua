@@ -48,11 +48,11 @@ M.on_save = function()
 end
 
 M.on_pre_load = function(data)
-  if data.quickfix then
+  if data.quickfix and #data.quickfix > 0 then
     vim.fn.setqflist({}, " ", { items = data.quickfix })
   end
 
-  if data.location then
+  if data.location and #data.location > 0 then
     local winid = vim.api.nvim_get_current_win()
     vim.fn.setloclist(winid, {}, " ", { items = data.location })
   end

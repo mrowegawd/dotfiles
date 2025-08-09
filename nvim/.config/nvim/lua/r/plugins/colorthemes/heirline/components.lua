@@ -144,39 +144,45 @@ local __colors = function()
     block_fg = -0.5,
     block_qfstatus_bg = 0.2,
     block_qfstatus_fg = -0.4,
+
+    keyword_fg = -0.05,
+
     branch_fg = -0.6,
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
-    keyword_fg = -0.05,
+
     mode_git_bg = 0.1,
     mode_git_fg = 1,
     mode_git_fg_active = 5,
+
     mode_readonly_bg = 0.1,
     mode_readonly_fg = 1,
     mode_readonly_fg_active = 5,
-    winbar_keyword = -0.1,
   }
 
   local set_col_normal = {
     block_bg = 0.5,
     block_darken_bg = 0.25,
-    block_darken_fg = 0.7,
+    block_darken_fg = 0.2,
     block_fg = 2,
     block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.13,
     block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.8,
+
+    keyword_fg = 0.7,
+
     branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-    keyword_fg = 0.7,
+
     mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
-    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
+    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.04,
     mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
+
     mode_readonly_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
     mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
     mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
-    winbar_keyword = vim.g.colorscheme == "lackluster" and 0.8 or -0.15,
   }
   local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
 
@@ -184,8 +190,9 @@ local __colors = function()
     statusline_fg = H.get("StatusLine", "fg"),
     statusline_bg = H.get("StatusLine", "bg"),
 
-    -- keyword = H.tint(H.get("Keyword", "fg"), col_opts.keyword_fg),
     keyword = H.darken(H.get("Keyword", "fg"), col_opts.keyword_fg, H.get("Normal", "bg")),
+
+    statusline_fg_notice = H.tint(H.get("StatusLine", "fg"), 0.6),
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
@@ -206,11 +213,11 @@ local __colors = function()
     block_bg_loclist = H.tint(H.get("Keyword", "fg"), 0.35),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
-    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 2),
+    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
     winbar_fg = H.get("WinbarFilepath", "fg"),
-    winbar_bg = H.tint(H.get("Tabline", "bg"), 0),
-    winbar_keyword = H.tint(H.get("Keyword", "fg"), col_opts.winbar_keyword),
+    winbar_bg = H.get("PanelBottomNormal", "bg"),
+    winbar_keyword = H.get("WinbarKeyword", "fg"),
     winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
     winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
@@ -668,12 +675,12 @@ M.QuickfixStatus = {
       if RUtils.qf.is_loclist() then
         fg = colors.block_bg_loclist
       end
-      return { fg = fg, bg = colors.normal_bg }
+      return { fg = fg, bg = colors.winbar_bg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = function(self)
@@ -708,11 +715,11 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_qfstatus_bg, bg = colors.normal_bg },
+    hl = { fg = colors.block_qfstatus_bg, bg = colors.winbar_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.normal_bg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.block_qfstatus_bg },
   },
   {
     provider = function(self)
@@ -728,7 +735,23 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_qfstatus_bg, bg = colors.normal_bg },
+    hl = { fg = colors.block_qfstatus_bg, bg = colors.winbar_bg },
+  },
+}
+M.TroubleStatus = {
+  condition = function()
+    return vim.bo.filetype == "trouble"
+  end,
+  {
+    provider = function()
+      RUtils.info "mantap"
+      return "Trouble"
+    end,
+    hl = function()
+      local fg = colors.block_fg_qf
+      local bg = colors.block_bg_qf
+      return { fg = fg, bg = bg, bold = true }
+    end,
   },
 }
 M.FileFlags = {
@@ -877,7 +900,7 @@ M.LSPActive = {
       end
       return lsp_clients_str
     end,
-    hl = { fg = colors.block_darken_fg, bold = true },
+    hl = { fg = colors.statusline_fg_notice, bold = true },
   },
   {
     provider = function(self)
@@ -1166,7 +1189,7 @@ M.RmuxTargetPane = {
         return self.run_with
       end
     end,
-    hl = { fg = colors.normal_bg, bg = colors.block_notice },
+    hl = { fg = colors.normal_bg, bg = colors.block_notice, bold = true },
   },
 
   {
@@ -1175,7 +1198,7 @@ M.RmuxTargetPane = {
         return " W "
       end
     end,
-    hl = { fg = colors.normal_bg, bg = colors.block_notice },
+    hl = { fg = colors.normal_bg, bg = colors.block_notice, bold = true },
   },
   {
     provider = function(self)
@@ -1273,7 +1296,7 @@ M.Ruler = {
       rhs = rhs .. self.line
       return rhs
     end,
-    hl = { fg = colors.keyword, bg = colors.block_bg },
+    hl = { fg = colors.winbar_keyword, bg = colors.block_bg, bold = true },
   },
   {
     provider = function(self)
@@ -1283,7 +1306,7 @@ M.Ruler = {
       rhs = rhs .. self.height
       return rhs
     end,
-    hl = { fg = colors.block_fg, bg = colors.block_bg },
+    hl = { fg = colors.block_fg, bg = colors.block_bg, bold = false },
   },
   -- {
   --   provider = function(self)
@@ -1527,8 +1550,8 @@ M.WinbarFilePath = {
 
       if Conditions.is_active() then
         fg = colors.winbar_keyword
-        is_bold = true
-        is_italic = true
+        -- is_bold = true
+        -- is_italic = true
       end
 
       if set_conditions.is_dap_ft() then
@@ -1566,12 +1589,17 @@ M.status_winbar_active_left = {
   M.FileIcon,
   M.WinbarFilePath,
   M.QuickfixStatus,
+  M.TroubleStatus,
 
   M.Gap,
 
   hl = function()
     local fg = colors.statusline_fg
     local bg = colors.normal_bg
+
+    if vim.bo.filetype == "qf" then
+      bg = colors.winbar_bg
+    end
 
     if set_conditions.is_dap_ft() then
       fg = colors.winbar_fg

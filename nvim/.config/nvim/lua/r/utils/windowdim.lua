@@ -6,21 +6,7 @@ local autocmds = {}
 
 local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ",")
 
--- local winhighlight_blurred = table.concat({
---   -- -- "IncSearch:ColorColumn",
---   "CursorLineNr:LineNr",
---   "SignColumn:ColorColumn",
---   "EndOfBuffer:ColorColumn",
---   -- "LineNr:ColorColumn",
---   "CursorLineNr:CursorLineNr",
---   "IncSearch:ColorColumn",
---   "Normal:ColorColumn",
---   "NormalNC:ColorColumn",
---   "Search:ColorColumn",
---   "SignColumn:ColorColumn",
--- }, ",")
-
--- local winhighlight_blurred = table.concat({
+-- local winhighlight_bottom_panel = table.concat({
 --   -- -- "IncSearch:ColorColumn",
 --   "CursorLineNr:LineNr",
 --   "SignColumn:ColorColumn",
@@ -34,22 +20,34 @@ local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ","
 --   "SignColumn:ColorColumn",
 -- }, ",")
 
--- local winhighlight_blurred = table.concat({
---   "CursorLineNr:LineNr",
---   "EndOfBuffer:ColorColumn",
---   -- "IncSearch:ColorColumn",
---   "Normal:ColorColumn",
---   "NormalNC:ColorColumn",
---   "SignColumn:ColorColumn",
---   "WinBar:ColorColumn",
---   "NormalFloat:ColorColumn",
--- }, ",")
+local winhighlight_bottom_panel = table.concat({
+  -- -- "IncSearch:ColorColumn",
+  "CursorLineNr:LineNr",
+  "SignColumn:PanelBottomNormal",
+  "LineNr:PanelBottomNormal",
+  -- "IncSearch:NormalBoxComment",
+  "Normal:PanelBottomNormal",
+  "NormalNC:PanelBottomNormal",
+  "WinSeparator:PanelBottomWinSeparator",
+  -- "Search:NormalBoxComment",
+  "EndOfBuffer:PanelBottomNormal",
+}, ",")
 
-local winhighlight_buffer = table.concat({
+local winhighlight_sidebar_panel = table.concat({
+  "CursorLineNr:LineNr",
+  -- "SignColumn:ColorColumn",
+  -- "LineNr:ColorColumn",
+  "Normal:PanelSideNormal",
+  "NormalNC:PanelSideNormal",
+  "EndOfBuffer:PanelSideNormal",
+  "IncSearch:NormalBoxComment",
+  -- "Search:NormalBoxComment",
+}, ",")
+
+local winhighlight_custom_folded = table.concat({
   "Folded:FoldedMarkdown",
 }, ",")
 
--- Jangan bikin ft ini effect windowdim
 autocmds.winhighlight_filetype_blacklist = {
   ["CommandTMatchListing"] = true,
   ["CommandTPrompt"] = true,
@@ -62,6 +60,9 @@ autocmds.winhighlight_filetype_blacklist = {
   ["dashboard"] = true,
   ["diff"] = true,
   ["Glance"] = true,
+  ["qf"] = true,
+  ["Outline"] = true,
+  ["trouble"] = true,
   -- ["git"] = true,
   -- ["floggraph"] = true,
   ["octo"] = true,
@@ -128,7 +129,16 @@ autocmds.ignore_cursorline = {
   ["Outline"] = true,
 }
 
-autocmds.winhi_filetype = {
+autocmds.bottom_panel = {
+  ["qf"] = true,
+}
+
+autocmds.side_panel = {
+  ["Outline"] = true,
+  ["aerial"] = true,
+}
+
+autocmds.blacklist_hl_folded = {
   ["markdown"] = true,
   ["md"] = true,
   ["orgagenda"] = true,
@@ -186,15 +196,12 @@ local colorcolumn_width
 local focus_window = function()
   local filetype, buftype = RUtils.buf.get_bo_buft()
 
-  if autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
+  if filetype ~= "" and autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
     wo.winhighlight = ""
   end
 
-  if
-    autocmds.colorcolumn_filetype_blacklist[filetype] == true
-    -- Dont dim pada floating window, seperti TelescopePrompt
-    or api.nvim_win_get_config(0).relative ~= ""
-  then
+  -- Dont dim pada floating window, seperti TelescopePrompt
+  if autocmds.colorcolumn_filetype_blacklist[filetype] == true or api.nvim_win_get_config(0).relative ~= "" then
     wo.colorcolumn = "255"
 
     if buftype == "" then
@@ -211,23 +218,25 @@ local focus_window = function()
   end
 end
 
-local winhl_window = function()
+local blurred_window = function()
   local filetype, _ = RUtils.buf.get_bo_buft()
-  if autocmds.winhi_filetype[filetype] and api.nvim_win_get_config(0).relative ~= "win" then
-    wo.winhighlight = winhighlight_buffer
+
+  if filetype == "" and api.nvim_win_get_config(0).relative == "win" then
+    return
+  end
+
+  if autocmds.blacklist_hl_folded[filetype] then
+    wo.winhighlight = winhighlight_custom_folded
+  end
+
+  if autocmds.bottom_panel[filetype] then
+    wo.winhighlight = winhighlight_bottom_panel
+  end
+
+  if autocmds.side_panel[filetype] then
+    wo.winhighlight = winhighlight_sidebar_panel
   end
 end
-
--- local blur_window = function()
---   local filetype, _ = RUtils.buf.get_bo_buft()
---
---   if
---     filetype == ""
---     or autocmds.winhighlight_filetype_blacklist[filetype] ~= true and api.nvim_win_get_config(0).relative ~= "win"
---   then
---     wo.winhighlight = winhighlight_blurred
---   end
--- end
 
 -- http://vim.wikia.com/wiki/Make_views_automatic
 -- local mkview = function()
@@ -272,26 +281,25 @@ end
 autocmds.buf_enter = function()
   set_cursorline(true)
   focus_window()
-  winhl_window()
+  blurred_window()
 end
 
 autocmds.focus_gained = function()
   set_cursorline(true)
-  winhl_window()
 end
 
 autocmds.focus_lost = function()
   set_cursorline(true)
+  blurred_window()
 end
 
 autocmds.win_enter = function()
   set_cursorline(true)
-  winhl_window()
 end
 
 autocmds.win_leave = function()
   set_cursorline(true)
-  -- blur_window()
+  blurred_window()
 end
 
 return autocmds

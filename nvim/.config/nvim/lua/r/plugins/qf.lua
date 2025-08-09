@@ -189,8 +189,8 @@ return {
         marks = {
           toggle_mark = "T",
           fzf_marks = "<Leader>qf",
-          next_mark = "<Leader>wn",
-          prev_mark = "<Leader>wp",
+          next_mark = "<Leader>qn",
+          prev_mark = "<Leader>qp",
         },
       },
     },

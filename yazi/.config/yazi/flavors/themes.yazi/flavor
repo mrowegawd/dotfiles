@@ -14,21 +14,22 @@ find_keyword = { fg = "#1b1b1b", bg = "#3ddbd9", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "%%col_selected%%", bg = "%%col_selected%%" }
 marker_copied = { fg = "%%col_copied%%", bg = "%%col_copied%%" }
 marker_cut = { fg = "%%col_cut%%", bg = "%%col_cut%%" }
+marker_marked   = { fg = "%%col_marked_fg%%", bg = "%%col_marked_bg%%" }
+marker_selected = { fg = "%%col_selected%%", bg = "%%col_selected%%" }
 
 count_selected = { fg = "%%col_selected%%", bg = "%%col_tab_inactive_bg%%" }
 count_copied = { fg = "%%col_copied%%", bg = "%%col_tab_inactive_bg%%" }
 count_cut = { fg = "%%col_cut%%", bg = "%%col_tab_inactive_bg%%" }
 
-# Tab
-tab_active = { fg = "%%col_tab_active_fg%%", bg = "%%col_tab_active_bg%%" }
-tab_inactive = { fg = "%%col_tab_inactive_fg%%", bg = "%%col_tab_inactive_bg%%" }
-
 # Border
 border_symbol = "│"
 border_style = { fg = "#1c1c1c" }
+
+[tabs]
+active = { fg = "%%col_tab_active_fg%%", bg = "%%col_tab_active_bg%%" }
+inactive = { fg = "%%col_tab_inactive_fg%%", bg = "%%col_tab_inactive_bg%%" }
 
 # Highlighting
 # syntect_theme = "~/.config/yazi/Gruvbox-Dark.tmTheme"
@@ -36,14 +37,14 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "%%col_statusline_active_fg%%", bg = "%%col_statusline_active_blur_bg%%", bold = true }
-normal_alt = { fg = "%%col_statusline_active_fg%%", bg = "%%col_statusline_active_bg%%" }
+normal_main = { fg = "%%col_statusline_normal_fg%%", bg = "%%col_statusline_normal_bg%%", bold = true }
+normal_alt = { fg = "%%col_statusline_normal_fg_alt%%", bg = "%%col_statusline_normal_bg_alt%%" }
 
-select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
-select_alt = { fg = "#223249", bg = "#ffffff" }
+select_main = { fg = "%%col_statusline_select_fg%%", bg = "%%col_statusline_select_bg%%", bold = true }
+select_alt = { fg = "%%col_statusline_select_fg_alt%%", bg = "%%col_statusline_select_bg_alt%%" }
 
-unset_main = { fg = "#ffffff", bg = "#d3869b", bold = true }
-unset_alt = { fg = "#d3869b", bg = "#ffffff" }
+unset_main = { fg = "%%col_statusline_unset_fg%%", bg = "%%col_statusline_unset_bg%%", bold = true }
+unset_alt = { fg = "%%col_statusline_unset_fg_alt%%", bg = "%%col_statusline_unset_bg_alt%%" }
 
 # : Status {{{
 
@@ -58,11 +59,11 @@ progress_normal = { fg = "#504945", bg = "#3c3836" }
 progress_error = { fg = "#fb4934", bg = "#3c3836" }
 
 # Permissions
-perm_type = { fg = "#8caaee" }
-perm_read = { fg = "#e5c890" }
-perm_write = { fg = "#e78284" }
 perm_exec = { fg = "#a6d189" }
+perm_read = { fg = "#e5c890" }
 perm_sep = { fg = "#838ba7" }
+perm_type = { fg = "#8caaee" }
+perm_write = { fg = "#e78284" }
 
 # : }}}
 

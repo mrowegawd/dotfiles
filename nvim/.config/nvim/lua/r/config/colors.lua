@@ -24,8 +24,8 @@ local base_cl = {
   float_title_fg_alter = -0.1,
   fzflua_buf_linenr_bg_alter = 0.5,
   fzflua_cursorline_bg_alter = -0.05,
-  fzflua_dir_part_fg = 0.9,
-  fzflua_file_part_fg = -0.1,
+  fzflua_dir_part_fg = 0.95,
+  fzflua_file_part_fg = -0.13,
   fzflua_headertext_fg_alter = -0.33,
   fzflua_normal_bg_alter = 0.5,
   fzflua_sel_bg_alter = -0.02,
@@ -39,57 +39,68 @@ local base_cl = {
   nontext_fg_alter = 1.5,
   normal_float_bg_alter = -0.08,
   normal_float_fg_alter = -0.01,
+  outline_indent_fg_alter = 0.3,
+  panel_sidebar_bg_alter = 0.25,
+  panel_sidebar_fg_alter = 0.3,
   pmenu_bg_alter = 0.7,
   pmenu_fg_alter = -0.1,
   pmenu_sel_bg_alter = 0.2,
   pmenu_thumb_bg_alter = 0.4,
-
-  quickfixline_alter = -0.1,
-  quickfixline_header_bg_alter = 0.1,
-  quickfixline_header_fg_alter = 1.1,
+  quickfixline_alter = 0.45,
+  quickfixline_header_bg_alter = -0.1,
+  quickfixline_header_fg_alter = 0.8,
   quickfixline_header_tint_bg_alter = 0,
   quickfixline_header_tint_fg_alter = 0,
-
-  quickfixline_linenr_fg_alter = 0.4,
-  quickfixline_separator_fg_alter = -0.28,
-
+  quickfixline_linenr_fg_alter = 0.35,
+  quickfixline_separator_fg_alter = -0.35,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = -0.1,
   statusline_fg_alter = 0.75,
   tabline_bg_alter = 0.3,
   tabline_fg_alter = 0.5,
-  trouble_indent_fg_alter = 0.9,
+  trouble_indent_fg_alter = 0.55,
   visual_bg_alter = -0.1,
   winbar_file_path_fg_alter = 0.9,
+  winbar_keyword = 0.2,
   winseparator_alter = 0.25,
+
+  normal_keyword_alter = 0.14,
+
+  panel_bottom_normal_fg_alter = -0.05,
+  panel_bottom_normal_bg_alter = -0.2,
 
   fold_fg = 0.5,
   fold_bg = -0.05,
 
-  render_markdown_code_bg_alter = 0.25,
-  code_block_fg_alter = 0.12, -- for Org file (better to leave it as is)
-  render_markdown_code_inline_fg_alter = 0.1,
+  render_markdown_code_bg_alter = 0.3,
   render_markdown_code_inline_bg_alter = 0.12,
+  render_markdown_code_inline_fg_alter = 0.1,
 
-  snacks_notifier_info_fg_info = 2,
-  snacks_notifier_border_info_fg_info = 1.1,
-  snacks_notifier_title_info_fg_info = 0.3,
+  code_block_fg_alter = 0.12, -- for Org file (better to leave it as is)
 
-  snacks_notifier_warn_fg_info = 1,
-  snacks_notifier_border_warn_fg_info = 0.3,
+  snacks_notifier_info_fg = 1.2,
+  snacks_notifier_info_bg = 0.5,
+  snacks_notifier_border_info_fg = -0.5,
 
-  snacks_notifier_error_fg_info = 0.5,
-  snacks_notifier_border_error_fg_info = 0.3,
+  snacks_notifier_warn_fg = 1,
+  snacks_notifier_warn_bg = 0.3,
+  snacks_notifier_border_warn_fg = -0.6,
+
+  snacks_notifier_error_fg = 0.1,
+  snacks_notifier_error_bg = 0.3,
+  snacks_notifier_border_error_fg = -0.3,
 
   -- diff
-  diffadd_fg_alter = -0.3,
-  diffadd_bg_alter = -0.68,
+  diffadd_bg_alter = -0.75,
+  diffadd_fg_alter = -0.4,
+  diffchange_bg_alter = -0.75,
   diffchange_fg_alter = -0.3,
-  diffchange_bg_alter = -0.68,
-  diffdelete_fg_alter = -0.3,
-  diffdelete_bg_alter = -0.68,
-  difftext_fg_alter = 0.5,
-  difftext_bg_alter = -0.5,
+  diffdelete_bg_alter = -0.74,
+  diffdelete_fg_alter = -0.2,
+  difffile_bg_alter = -0.68,
+  difffile_fg_alter = -0.15,
+  difftext_bg_alter = -0.59,
+  difftext_fg_alter = 0.35,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -124,6 +135,8 @@ local function reset_base_alter(themes, alter_base)
     diffchange_fg_alter = "diffchange_fg_alter",
     diffdelete_bg_alter = "diffdelete_bg_alter",
     diffdelete_fg_alter = "diffdelete_fg_alter",
+    difffile_bg_alter = "difffile_bg_alter",
+    difffile_fg_alter = "difffile_fg_alter",
     difftext_bg_alter = "difftext_bg_alter",
     difftext_fg_alter = "difftext_fg_alter",
     float_border_fg_alter = "float_border_fg_alter",
@@ -148,6 +161,10 @@ local function reset_base_alter(themes, alter_base)
     nontext_fg_alter = "nontext_fg_alter",
     normal_float_bg_alter = "normal_float_bg_alter",
     normal_float_fg_alter = "normal_float_fg_alter",
+    normal_keyword_alter = "normal_keyword_alter",
+    outline_indent_fg_alter = "outline_indent_fg_alter",
+    panel_bottom_normal_bg_alter = "panel_bottom_normal_bg_alter",
+    panel_bottom_normal_fg_alter = "panel_bottom_normal_fg_alter",
     pmenu_bg_alter = "pmenu_bg_alter",
     pmenu_fg_alter = "pmenu_fg_alter",
     pmenu_sel_bg_alter = "pmenu_sel_bg_alter",
@@ -167,22 +184,28 @@ local function reset_base_alter(themes, alter_base)
     trouble_indent_fg_alter = "trouble_indent_fg_alter",
     visual_bg_alter = "visual_bg_alter",
     winbar_file_path_fg_alter = "winbar_file_path_fg_alter",
+    winbar_keyword = "winbar_keyword",
     winseparator_alter = "winseparator_alter",
 
-    render_markdown_code_bg_alter = "render_markdown_code_bg_alter",
+    panel_sidebar_bg_alter = "panel_sidebar_bg_alter",
+    panel_sidebar_fg_alter = "panel_sidebar_fg_alter",
+
     code_block_fg_alter = "code_block_fg_alter",
-    render_markdown_code_inline_fg_alter = "render_markdown_code_inline_fg_alter",
+    render_markdown_code_bg_alter = "render_markdown_code_bg_alter",
     render_markdown_code_inline_bg_alter = "render_markdown_code_inline_bg_alter",
+    render_markdown_code_inline_fg_alter = "render_markdown_code_inline_fg_alter",
 
-    snacks_notifier_info_fg_info = "snacks_notifier_info_fg_info",
-    snacks_notifier_border_info_fg_info = "snacks_notifier_border_info_fg_info",
-    snacks_notifier_title_info_fg_info = "snacks_notifier_title_info_fg_info",
+    snacks_notifier_info_fg = "snacks_notifier_info_fg",
+    snacks_notifier_info_bg = "snacks_notifier_info_bg",
+    snacks_notifier_border_info_fg = "snacks_notifier_border_info_fg",
 
-    snacks_notifier_warn_fg_info = "snacks_notifier_warn_fg_info",
-    snacks_notifier_border_warn_fg_info = "snacks_notifier_border_warn_fg_info",
+    snacks_notifier_warn_fg = "snacks_notifier_warn_fg",
+    snacks_notifier_warn_bg = "snacks_notifier_warn_bg",
+    snacks_notifier_border_warn_fg = "snacks_notifier_border_warn_fg",
 
-    snacks_notifier_error_fg_info = "snacks_notifier_error_fg_info",
-    snacks_notifier_border_error_fg_info = "snacks_notifier_border_error_fg_info",
+    snacks_notifier_error_fg = "snacks_notifier_error_fg",
+    snacks_notifier_error_bg = "snacks_notifier_error_bg",
+    snacks_notifier_border_error_fg = "snacks_notifier_border_error_fg",
   }
 
   for key, var_name in pairs(variable_map) do
@@ -190,164 +213,6 @@ local function reset_base_alter(themes, alter_base)
   end
 end
 
-reset_base_alter({ "ashen" }, {
-  code_block_fg_alter = 0.4,
-  cursor_fg = "#b4b4b4",
-  cursorline_alter = 0.1,
-  fold_fg = 0.6,
-  fzflua_file_part_fg = -0.15,
-  fzflua_headertext_fg_alter = -0.5,
-  linenr_fg_alter = 0.02,
-  lsp_reference_read_bg_alter = { from = "Normal", attr = "bg", alter = 0.4 },
-  lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = 0.1 },
-  lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.1 },
-  my_code_usage_bg_alter = -0.4,
-  my_code_usage_fg_alter = 0.01,
-  nontext_fg_alter = 3.2,
-  pmenu_bg_alter = 2,
-  render_markdown_code_bg_alter = 1.2,
-  render_markdown_code_inline_bg_alter = 0.15,
-  render_markdown_code_inline_fg_alter = 0.05,
-  trouble_indent_fg_alter = 2,
-  winbar_file_path_fg_alter = 1.2,
-  winseparator_alter = 1.45,
-})
-reset_base_alter({ "base46-aylin" }, {
-  cmpdocnormal_fg_alter = 0.1,
-  Directory = { fg = "#9fd4ff", bg = "NONE" },
-  cursor_fg = "#b3276f",
-  cursorline_alter = 0.06,
-  fold_fg = 0.55,
-  linenr_fg_alter = 0.17,
-  noice_cmdline_fg_alter = 0.4,
-  statusline_bg_alter = 0.25,
-  statusline_fg_alter = 1.3,
-  winseparator_alter = 0.3,
-})
-reset_base_alter({ "base46-catppuccin" }, {
-  cursor_fg = "#c7063c",
-  cursorline_alter = 0.06,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = 0.03,
-  fold_fg = 0.72,
-  noice_cmdline_fg_alter = 0.4,
-  render_markdown_code_bg_alter = 0.3,
-  statusline_bg_alter = 0.2,
-  tabline_bg_alter = 0.45,
-  statusline_fg_alter = 1.8,
-  winbar_file_path_fg_alter = 0.5,
-  visual_bg_alter = -0.3,
-  winseparator_alter = 0.5,
-})
-reset_base_alter({ "base46-chocolate" }, {
-  cursor_fg = "#c8bAA4",
-  cursorline_alter = 0.11,
-  fold_fg = 0.55,
-  fzflua_headertext_fg_alter = -0.2,
-  my_code_usage_bg_alter = -0.63,
-  my_code_usage_fg_alter = -0.28,
-  noice_cmdline_fg_alter = 0.2,
-  render_markdown_code_bg_alter = 0.28,
-  statusline_bg_alter = 0.25,
-  statusline_fg_alter = 1.3,
-  quickfixline_alter = 0.65,
-  tabline_bg_alter = 0.3,
-  tabline_fg_alter = 0.3,
-  winbar_file_path_fg_alter = 0.55,
-  trouble_indent_fg_alter = 0.7,
-  winseparator_alter = 0.38,
-})
-reset_base_alter({ "base46-doomchad" }, {
-  cursor_fg = "#81A1C1",
-  cursorline_alter = 0.35,
-  comment_fg_alter = 0.5,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.2,
-  fold_fg = 0.4,
-  fzflua_dir_part_fg = 0.7,
-  fzflua_headertext_fg_alter = -0.25,
-  linenr_fg_alter = 0.15,
-  noice_cmdline_fg_alter = 0.1,
-  nontext_fg_alter = 1,
-  pmenu_bg_alter = 0.4,
-  quickfixline_alter = 0.4,
-  render_markdown_code_bg_alter = 0.2,
-  tabline_bg_alter = 0.3,
-  tabline_fg_alter = 0.5,
-  trouble_indent_fg_alter = 0.5,
-  winseparator_alter = 0.2,
-})
-reset_base_alter({ "base46-everforest" }, {
-  comment_fg_alter = 0.58,
-  cursor_fg = "#e69875",
-  cursorline_alter = 0.35,
-  cursorline_fg_alter = "WinSeparator",
-  fzflua_dir_part_fg = 0.7,
-  fzflua_headertext_fg_alter = -0.27,
-  linenr_fg_alter = 0.1,
-  my_code_usage_fg_alter = -0.35,
-  noice_cmdline_fg_alter = 0.1,
-  nontext_fg_alter = 1,
-  pmenu_bg_alter = 0.25,
-  quickfixline_alter = 0.4,
-  render_markdown_code_bg_alter = 0.13,
-  snacks_indent_scope_fg_alter = 0.15,
-  statusline_bg_alter = 0.1,
-  statusline_fg_alter = 1,
-  tabline_bg_alter = 0.28,
-  trouble_indent_fg_alter = 0.4,
-  winbar_file_path_fg_alter = 0.43,
-  winseparator_alter = 0.15,
-})
-reset_base_alter({ "base46-gruvchad" }, {
-  cmpdocnormal_fg_alter = 0.1,
-  cursor_fg = "#dfdfe0",
-  cursorline_alter = 0.1,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = -0.06,
-  fold_fg = 0.5,
-  nontext_fg_alter = 1.25,
-  quickfixline_alter = 0.8,
-  noice_cmdline_fg_alter = 0.2,
-  render_markdown_code_bg_alter = 0.35,
-  statusline_bg_alter = 0.35,
-  statusline_fg_alter = 1.7,
-  tabline_bg_alter = 0.28,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.4,
-})
-reset_base_alter({ "base46-horizon" }, {
-  cursor_fg = "#b3276f",
-  cursorline_alter = 0.4,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.2,
-  fold_bg = 0.02,
-  fold_fg = 0.8,
-  nontext_fg_alter = 1.9,
-  pmenu_bg_alter = 0.6,
-  quickfixline_alter = 1,
-  render_markdown_code_bg_alter = 0.35,
-  statusline_fg_alter = 1.95,
-  tabline_bg_alter = 0.55,
-  trouble_indent_fg_alter = 1.2,
-  winbar_file_path_fg_alter = 0.55,
-  winseparator_alter = 0.5,
-})
-reset_base_alter({ "base46-jabuti" }, {
-  comment_fg_alter = 0.45,
-  cursor_fg = "#c0cbe3",
-  cursorline_alter = 0.05,
-  fold_bg = -0.03,
-  fzflua_headertext_fg_alter = -0.4,
-  linenr_fg_alter = 0.06,
-  noice_cmdline_fg_alter = 0.5,
-  nontext_fg_alter = 1.25,
-  pmenu_bg_alter = 0.32,
-  quickfixline_header_bg_alter = 0.05,
-  render_markdown_code_bg_alter = 0.18,
-  trouble_indent_fg_alter = 0.6,
-  winseparator_alter = 0.32,
-})
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
   cursorline_alter = 0.6,
@@ -355,15 +220,18 @@ reset_base_alter({ "base46-jellybeans" }, {
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.1,
   fold_fg = 0.6,
-  fzflua_headertext_fg_alter = -0.4,
   linenr_fg_alter = 0.02,
   noice_cmdline_fg_alter = 0.65,
   nontext_fg_alter = 2.5,
+  normal_keyword_alter = 0.14,
+  panel_sidebar_bg_alter = 4,
   pmenu_bg_alter = 1.3,
+  quickfixline_alter = 0.6,
   render_markdown_code_bg_alter = 0.9,
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
-  trouble_indent_fg_alter = 1.5,
+  tabline_bg_alter = 0.25,
+  trouble_indent_fg_alter = 0.7,
   winseparator_alter = 1.1,
 })
 reset_base_alter({ "base46-kanagawa" }, {
@@ -377,7 +245,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   render_markdown_code_bg_alter = 0.38,
   render_markdown_code_inline_bg_alter = 0.2,
   snacks_indent_scope_fg_alter = 0.22,
-  trouble_indent_fg_alter = 1,
+  winbar_file_path_fg_alter = 0.7,
   winseparator_alter = 0.52,
 })
 reset_base_alter({ "base46-material-darker" }, {
@@ -386,11 +254,12 @@ reset_base_alter({ "base46-material-darker" }, {
   cursorline_alter = 0.07,
   dapstopped_bg_alter = 0.2,
   fzflua_cursorline_bg_alter = -0.1,
+  fzflua_headertext_fg_alter = -0.3,
   linenr_fg_alter = 0.05,
   noice_cmdline_fg_alter = 0.6,
-  render_markdown_code_bg_alter = 0.3,
   render_markdown_code_inline_bg_alter = 0.15,
   snacks_indent_scope_fg_alter = 0.18,
+  tabline_fg_alter = 0.4,
   visual_bg_alter = -0.2,
   winseparator_alter = 0.5,
 })
@@ -435,41 +304,18 @@ reset_base_alter({ "base46-melange" }, {
   cursor_fg = "#ece1d7",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.15,
-  fzflua_headertext_fg_alter = -0.4,
   fzflua_cursorline_bg_alter = -0.17,
+  fzflua_headertext_fg_alter = -0.4,
   linenr_fg_alter = 0.06,
   noice_cmdline_fg_alter = 0.6,
+  normal_keyword_alter = 0.1,
   pmenu_bg_alter = 0.5,
   render_markdown_code_bg_alter = 0.23,
+  statusline_fg_alter = 0.7,
   tabline_bg_alter = 0.25,
   trouble_indent_fg_alter = 0.6,
+  winbar_file_path_fg_alter = 0.7,
   winseparator_alter = 0.33,
-})
-reset_base_alter({ "base46-onenord" }, {
-  cmpdocnormal_fg_alter = 0.3,
-  comment_fg_alter = 0.5,
-  cursor_fg = "#3879C5",
-  cursorline_alter = 0.07,
-  dapstopped_bg_alter = 0.2,
-  fzflua_dir_part_fg = 0.75,
-  fzflua_file_part_fg = 0.02,
-  fzflua_headertext_fg_alter = -0.35,
-  noice_cmdline_fg_alter = 0.2,
-  nontext_fg_alter = 1.2,
-  pmenu_bg_alter = 0.25,
-
-  fold_fg = 0.35,
-  fold_bg = -0.02,
-
-  quickfixline_alter = 0.45,
-  render_markdown_code_bg_alter = 0.14,
-  statusline_bg_alter = 0.1,
-  statusline_fg_alter = 1,
-  tabline_bg_alter = 0.25,
-  tabline_fg_alter = 0.25,
-  trouble_indent_fg_alter = 0.5,
-  winbar_file_path_fg_alter = 0.35,
-  winseparator_alter = 0.17,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   comment_fg_alter = 0.78,
@@ -479,7 +325,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   dapstopped_bg_alter = 0.2,
   fold_fg = 0.6,
   fzflua_cursorline_bg_alter = -0.1,
-  linenr_fg_alter = 0.03,
+  linenr_fg_alter = 0.04,
   noice_cmdline_fg_alter = 1,
   nontext_fg_alter = 2.7,
   pmenu_bg_alter = 1.5,
@@ -488,34 +334,6 @@ reset_base_alter({ "base46-oxocarbon" }, {
   trouble_indent_fg_alter = 1.65,
   winseparator_alter = 1,
 })
-reset_base_alter({ "base46-rosepine" }, {
-  comment_fg_alter = 0.55,
-  cursor_fg = "#e0def4",
-  cursorline_alter = 0.8,
-  cursorline_fg_alter = "WinSeparator",
-  fold_fg = 0.6,
-  dapstopped_bg_alter = 0.2,
-  noice_cmdline_fg_alter = 0.6,
-  nontext_fg_alter = 2.2,
-  pmenu_bg_alter = 0.7,
-  quickfixline_alter = 1.2,
-  render_markdown_code_bg_alter = 0.55,
-  statusline_bg_alter = 0.5,
-  statusline_fg_alter = 2.5,
-  tabline_bg_alter = 0.43,
-  -- tabline_fg_alter = 0.7,
-  trouble_indent_fg_alter = 1.4,
-  visual_bg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.7,
-  -- {
-  --   ["@markup.quote.markdown"] = {
-  --     inherit = "@markup.quote.markdown",
-  --     fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.05 },
-  --     bg = { from = "@markup.quote.markdown", attr = "bg", alter = 0.1 },
-  --   },
-  -- },
-})
 reset_base_alter({ "base46-seoul256_dark" }, {
   comment_fg_alter = 0.32,
   cursor_fg = "#d75f87",
@@ -523,21 +341,26 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.025,
   fold_fg = 0.28,
-  fzflua_cursorline_bg_alter = -0.06,
-  fzflua_dir_part_fg = 0.6,
-  fzflua_file_part_fg = 0.1,
+  fzflua_cursorline_bg_alter = -0.13,
+  fzflua_dir_part_fg = 0.8,
+  fzflua_file_part_fg = 0.2,
   fzflua_headertext_fg_alter = -0.3,
   linenr_fg_alter = 0.07,
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = -0.02,
-  noice_cmdline_fg_alter = 0.05,
+  noice_cmdline_fg_alter = 0.3,
   nontext_fg_alter = 0.8,
+  normal_keyword_alter = 0.12,
+  outline_indent_fg_alter = 0.15,
   pmenu_bg_alter = 0.18,
-  pmenu_sel_bg_alter = 0.15,
-  quickfixline_alter = 0.03,
-  quickfixline_header_fg_alter = 1.1,
+  pmenu_sel_bg_alter = 0.13,
+  quickfixline_alter = 0.2,
+  quickfixline_header_bg_alter = -0.05,
+  quickfixline_header_fg_alter = 0.7,
   render_markdown_code_bg_alter = 0.02,
   render_markdown_code_inline_bg_alter = 0.04,
+  snacks_notifier_border_error_fg = -0.1,
+  snacks_notifier_border_warn_fg = -0.4,
   statusline_bg_alter = -0.01,
   tabline_bg_alter = 0.1,
   tabline_fg_alter = 0.24,
@@ -545,67 +368,16 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.08,
 
-  snacks_notifier_info_fg_info = 1,
-  snacks_notifier_border_info_fg_info = 0.5,
-  snacks_notifier_title_info_fg_info = 0.3,
-
-  snacks_notifier_warn_fg_info = 1,
-  snacks_notifier_border_warn_fg_info = -0.05,
-
-  snacks_notifier_error_fg_info = 0.5,
-  snacks_notifier_border_error_fg_info = -0.05,
-})
-reset_base_alter({ "base46-solarized_dark" }, {
-  cursor_fg = "#708284",
-  cursorline_alter = 0.07,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = -0.02,
-  fold_fg = 0.5,
-  fzflua_cursorline_bg_alter = -0.08,
-  fzflua_dir_part_fg = 0.75,
-  fzflua_headertext_fg_alter = -0.2,
-  linenr_fg_alter = 0.05,
-  noice_cmdline_fg_alter = 0.4,
-  pmenu_bg_alter = 0.4,
-  quickfixline_header_fg_alter = 0.6,
-  render_markdown_code_bg_alter = 0.12,
-  snacks_indent_scope_fg_alter = 0.12,
-  trouble_indent_fg_alter = 0.6,
-  winbar_file_path_fg_alter = 0.8,
-  winseparator_alter = 0.28,
-})
-reset_base_alter({ "base46-vscode_dark" }, {
-  cmpdocnormal_fg_alter = 0.1,
-  cursor_fg = "#dfdfe0",
-  cursorline_alter = 0.08,
-  dapstopped_bg_alter = 0.2,
-  fold_fg = 0.6,
-  linenr_fg_alter = 0.13,
-  noice_cmdline_fg_alter = 0.35,
-  nontext_fg_alter = 1.8,
-  pmenu_bg_alter = 0.65,
-  render_markdown_code_bg_alter = 0.38,
-  statusline_bg_alter = 0.32,
-  statusline_fg_alter = 1.5,
-  tabline_bg_alter = 0.45,
-  tabline_fg_alter = 0.55,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.45,
-})
-reset_base_alter({ "base46-wombat" }, {
-  cursor_fg = "#bbbbbb",
-  cursorline_alter = 0.52,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.15,
-  noice_cmdline_fg_alter = 0.6,
-  render_markdown_code_bg_alter = 0.4,
-  statusline_bg_alter = 0.3,
-  statusline_fg_alter = 1.5,
-  tabline_bg_alter = 0.4,
-  tabline_fg_alter = 0.4,
-  visual_bg_alter = -0.15,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.45,
+  diffadd_bg_alter = -0.58,
+  diffadd_fg_alter = -0.25,
+  diffchange_bg_alter = -0.58,
+  diffchange_fg_alter = -0.25,
+  diffdelete_bg_alter = -0.55,
+  diffdelete_fg_alter = -0.15,
+  difffile_bg_alter = -0.5,
+  difffile_fg_alter = 0.05,
+  difftext_bg_alter = -0.49,
+  difftext_fg_alter = 0.1,
 })
 reset_base_alter({ "base46-zenburn" }, {
   comment_fg_alter = 0.38,
@@ -615,34 +387,38 @@ reset_base_alter({ "base46-zenburn" }, {
   fold_bg = -0.014,
   fold_fg = 0.32,
   fzflua_cursorline_bg_alter = -0.12,
-  fzflua_dir_part_fg = 0.6,
+  fzflua_dir_part_fg = 0.7,
   fzflua_headertext_fg_alter = -0.3,
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = 0.1,
   nontext_fg_alter = 0.8,
+  normal_keyword_alter = 0.1,
   pmenu_bg_alter = 0.2,
-  quickfixline_alter = -0.15,
+  quickfixline_alter = 0.25,
+  quickfixline_header_bg_alter = -0.05,
+  quickfixline_header_fg_alter = 0.7,
   render_markdown_code_bg_alter = 0.07,
   render_markdown_code_inline_bg_alter = 0.04,
   snacks_indent_scope_fg_alter = 0.11,
+  snacks_notifier_border_error_fg = -0.1,
+  snacks_notifier_border_warn_fg = -0.4,
   statusline_bg_alter = -0.03,
-  trouble_indent_fg_alter = 0.2,
-  tabline_bg_alter = 0.25,
+  tabline_bg_alter = 0.2,
   tabline_fg_alter = 0.3,
-  winbar_file_path_fg_alter = 0.65,
-
-  -- winbar_file_path_fg_alter = 0.45,
+  trouble_indent_fg_alter = 0.2,
+  winbar_file_path_fg_alter = 0.6,
   winseparator_alter = 0.12,
 
-  snacks_notifier_info_fg_info = 1,
-  snacks_notifier_border_info_fg_info = 0.5,
-  snacks_notifier_title_info_fg_info = 0.3,
-
-  snacks_notifier_warn_fg_info = 1,
-  snacks_notifier_border_warn_fg_info = -0.05,
-
-  snacks_notifier_error_fg_info = 0.5,
-  snacks_notifier_border_error_fg_info = -0.05,
+  diffadd_bg_alter = -0.75,
+  diffadd_fg_alter = -0.32,
+  diffchange_bg_alter = -0.7,
+  diffchange_fg_alter = -0.32,
+  diffdelete_bg_alter = -0.7,
+  diffdelete_fg_alter = -0.2,
+  difffile_bg_alter = -0.55,
+  difffile_fg_alter = -0.1,
+  difftext_bg_alter = -0.5,
+  difftext_fg_alter = 0.2,
 })
 reset_base_alter({ "lackluster" }, {
   Directory = { fg = "#7788aa", bg = "NONE" },
@@ -655,29 +431,32 @@ reset_base_alter({ "lackluster" }, {
   fzflua_dir_part_fg = 0.72,
   fzflua_file_part_fg = 0.25,
   fzflua_headertext_fg_alter = -0.4,
-  linenr_fg_alter = -0.02,
+  linenr_fg_alter = -0.015,
   lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
   lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
   lsp_reference_write_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
   my_code_usage_bg_alter = -0.35,
   my_code_usage_fg_alter = -0.1,
-  noice_cmdline_fg_alter = 0.4,
+  noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 3.5,
+  normal_keyword_alter = 0.45,
   pmenu_bg_alter = 2.5,
-  quickfixline_alter = -0.05,
-  quickfixline_header_fg_alter = 0.95,
-  trouble_indent_fg_alter = 2.5,
-  visual_bg_alter = 0.05,
-  winseparator_alter = 1.7,
-
+  quickfixline_alter = 0.3,
+  quickfixline_header_fg_alter = 0.7,
+  outline_indent_fg_alter = 0.15,
   render_markdown_code_bg_alter = 1.35,
   render_markdown_code_inline_bg_alter = 0.35,
+  snacks_notifier_info_fg = 1.6,
+  trouble_indent_fg_alter = 0.5,
+  visual_bg_alter = 0.05,
+  winbar_keyword = 0.9,
+  winseparator_alter = 1.8,
 
   diffadd_fg_alter = -0.4,
   diffadd_bg_alter = -0.75,
   diffchange_fg_alter = -0.4,
   diffchange_bg_alter = -0.75,
-  diffdelete_fg_alter = -0.4,
+  diffdelete_fg_alter = -0.35,
   diffdelete_bg_alter = -0.75,
   difftext_fg_alter = 0.2,
   difftext_bg_alter = -0.55,
@@ -722,9 +501,8 @@ reset_base_alter({ "rose-pine-dawn" }, {
   quickfixline_linenr_fg_alter = -0.25,
   quickfixline_separator_fg_alter = 0.2,
   snacks_indent_scope_fg_alter = -1,
-  snacks_notifier_border_info_fg_info = -0.3,
-  snacks_notifier_info_fg_info = -0.5,
-  snacks_notifier_title_info_fg_info = -0.05,
+  snacks_notifier_border_info_fg = -0.3,
+  snacks_notifier_info_fg = -0.5,
   statusline_bg_alter = -0.085,
   statusline_fg_alter = -0.4,
   tabline_bg_alter = -0.02,
@@ -738,60 +516,20 @@ reset_base_alter({ "rose-pine-dawn" }, {
   render_markdown_code_inline_fg_alter = -0.05,
   render_markdown_code_inline_bg_alter = 0.4,
 
-  snacks_notifier_warn_fg_info = -0.5,
-  snacks_notifier_border_warn_fg_info = -0.1,
+  snacks_notifier_warn_fg = -0.5,
+  snacks_notifier_border_warn_fg = -0.1,
 
-  snacks_notifier_error_fg_info = -0.5,
-  snacks_notifier_border_error_fg_info = -0.1,
-})
-reset_base_alter({ "tokyonight-night" }, {
-  cursor_fg = "#9e0e06",
-  cursorline_alter = 0.1,
-  fold_bg = -0.05,
-  fold_fg = 0.65,
-  noice_cmdline_fg_alter = 0.6,
-  nontext_fg_alter = 2.2,
-  comment_fg_alter = 0.8,
-  pmenu_bg_alter = 0.65,
-  render_markdown_code_bg_alter = 0.52,
-  quickfixline_alter = 0.85,
-  statusline_bg_alter = 0.4,
-  statusline_fg_alter = 1.8,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.8,
-})
-reset_base_alter({ "tokyonight-storm" }, {
-  cmpdocnormal_fg_alter = 0.15,
-  comment_fg_alter = 0.5,
-  cursor_fg = "#b3276f",
-  cursorline_alter = 0.05,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = -0.01,
-  fold_fg = 0.65,
-  fzflua_headertext_fg_alter = -0.3,
-  linenr_fg_alter = 0.08,
-  noice_cmdline_fg_alter = 0.4,
-  nontext_fg_alter = 1.2,
-  pmenu_bg_alter = 0.27,
-  quickfixline_alter = -0.05,
-  quickfixline_header_bg_alter = 0.1,
-  quickfixline_header_fg_alter = 0.6,
-  quickfixline_header_tint_bg_alter = -0.18,
-  render_markdown_code_bg_alter = 0.13,
-  tabline_bg_alter = 0.25,
-  trouble_indent_fg_alter = 0.5,
-  winbar_file_path_fg_alter = 0.8,
-  winseparator_alter = 0.27,
+  snacks_notifier_error_fg = -0.5,
+  snacks_notifier_border_error_fg = -0.1,
 })
 reset_base_alter({ "vscode_modern" }, {
   Directory = { fg = "#569cd6", bg = "NONE" },
   cmpdocnormal_fg_alter = 0.1,
-  comment_fg_alter = 0.5,
+  comment_fg_alter = 0.6,
   cursor_fg = "#fa1919",
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.1,
-  fzflua_dir_part_fg = 0.8,
   fzflua_headertext_fg_alter = -0.25,
   linenr_fg_alter = 0.02,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
@@ -832,6 +570,7 @@ local general_overrides = function()
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "bg", alter = nontext_fg_alter } } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = winseparator_alter }, bg = "NONE" } },
+
     { LineNr = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = linenr_fg_alter }, bold = true } },
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
@@ -839,8 +578,8 @@ local general_overrides = function()
     { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
-    { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
-    { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
+    -- { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
+    -- { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
 
     { CursorLine = { bg = H.darken(H.get(cursorline_fg_alter, "fg"), cursorline_alter, H.get("Normal", "bg")) } },
     {
@@ -917,6 +656,14 @@ local general_overrides = function()
       },
     },
 
+    { NormalKeyword = { fg = H.darken(H.get("Keyword", "fg"), normal_keyword_alter, H.get("Normal", "bg")) } },
+    {
+      NormalKeyword = {
+        bg = { from = "NormalKeyword", attr = "fg" },
+        fg = { from = "NormalKeyword", attr = "fg", alter = 3 },
+      },
+    },
+
     {
       NormalBoxComment = {
         fg = { from = "Keyword", attr = "fg", alter = 3 },
@@ -958,6 +705,8 @@ local general_overrides = function()
         bg = { from = "Normal", attr = "bg", alter = 0.7 },
       },
     },
+    -- Disable the Folded background using the `FoldedMarkdown` group.
+    -- Check `windowdim.lua` for details.
     { FoldedMarkdown = { fg = { from = "Normal", attr = "bg" }, bg = "NONE" } },
     { FoldedSign = { inherit = "Folded", bg = "NONE" } },
 
@@ -967,7 +716,7 @@ local general_overrides = function()
     {
       QuickFixLine = {
         fg = "NONE",
-        bg = { from = "TabLine", attr = "bg", alter = quickfixline_alter },
+        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_alter },
         underline = false,
         bold = true,
         reverse = false,
@@ -991,6 +740,163 @@ local general_overrides = function()
     -- ╚═════════════════════════════════════════════════════════╝
     { SpellBad = { undercurl = true, bg = "NONE", fg = "NONE", sp = "green" } },
     { SpellRare = { undercurl = true } },
+
+    -- ╔═════════════════════════════════════════════════════════╗
+    -- ║                       DIFF COLOR                        ║
+    -- ╚═════════════════════════════════════════════════════════╝
+    -- These highlights are syntax groups that are set in diff.vim
+    -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
+    -- { diffBDiffer = { link = 'WarningMsg' } },
+    -- { diffCommon = { link = 'WarningMsg' } },
+    -- { diffDiffer = { link = 'WarningMsg' } },
+    {
+      diffFile = {
+        fg = { from = "Directory", attr = "fg", alter = difffile_fg_alter },
+        bg = { from = "Directory", attr = "fg", alter = difffile_bg_alter },
+      },
+    },
+    -- { diffIdentical = { link = 'WarningMsg' } },
+    -- { diffIndexLine = { link = 'Number' } },
+    -- { diffIsA = { link = 'WarningMsg' } },
+    -- { diffNoEOL = { link = 'WarningMsg' } },
+    -- { diffOnly = { link = 'WarningMsg' } },
+
+    -- Setting darken: gunakan paramater (setting_color, ukuran, base_color)
+    {
+      -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
+      diffAdd = {
+        fg = H.tint(dark_green, diffadd_fg_alter),
+        bg = H.tint(dark_green, diffadd_bg_alter),
+        reverse = false,
+      },
+    },
+    {
+      diffChange = {
+        fg = H.tint(dark_yellow, diffchange_fg_alter),
+        bg = H.tint(dark_yellow, diffchange_bg_alter),
+        reverse = false,
+      },
+    },
+    {
+      diffDelete = {
+        fg = H.tint(dark_red, diffdelete_fg_alter),
+        bg = H.tint(dark_red, diffdelete_bg_alter),
+        reverse = false,
+      },
+    },
+    {
+      diffText = {
+        fg = H.tint(dark_yellow, difftext_fg_alter),
+        bg = H.tint(dark_yellow, difftext_bg_alter),
+        reverse = false,
+      },
+    },
+
+    { DiffAdded = { inherit = "diffAdd" } },
+    { DiffChange = { inherit = "diffChange" } },
+    { DiffDelete = { inherit = "diffDelete" } },
+
+    { diffChanged = { inherit = "diffChange" } },
+    { diffRemoved = { inherit = "diffDelete" } },
+
+    { GitSignsAdd = { bg = "NONE", fg = dark_green } },
+    { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
+    { GitSignsDelete = { bg = "NONE", fg = dark_red } },
+
+    {
+      GitSignsAddInline = {
+        fg = { from = "diffAdded", attr = "bg", alter = 3 },
+        bg = { from = "diffAdded", attr = "bg", alter = 1 },
+      },
+    },
+    {
+      GitSignsChangeDelete = {
+        fg = { from = "diffChanged", attr = "bg", alter = 3 },
+        bg = "NONE",
+      },
+    },
+    {
+      GitSignsDeleteInline = {
+        fg = { from = "diffDelete", attr = "bg", alter = 3 },
+        bg = { from = "diffDelete", attr = "bg", alter = 1 },
+      },
+    },
+
+    { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
+    { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
+    { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
+
+    { NeogitDiffAdd = { link = "diffAdd" } },
+    { NeogitDiffAddHighlight = { link = "diffAdd" } },
+    { NeogitDiffDelete = { link = "diffDelete" } },
+    { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
+
+    { DiffText = { link = "diffText" } },
+
+    -- ╔═════════════════════════════════════════════════════════╗
+    -- ║                       ERROR COLOR                       ║
+    -- ╚═════════════════════════════════════════════════════════╝
+
+    { ErrorMsg = { bg = "NONE", fg = { from = "diffDelete", attr = "fg", alter = 0.5 } } },
+    { Error = { bg = "NONE", fg = { from = "diffDelete", attr = "fg", alter = 0.3 } } },
+
+    -- ╔═════════════════════════════════════════════════════════╗
+    -- ║                       DIAGNOSTIC                        ║
+    -- ╚═════════════════════════════════════════════════════════╝
+    { DiagnosticSignError = { bg = "NONE" } },
+    { DiagnosticSignWarn = { bg = "NONE" } },
+    { DiagnosticSignInfo = { bg = "NONE" } },
+    { DiagnosticSignHint = { bg = "NONE" } },
+
+    { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsErrorNumHl = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsWarnNumHl = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsHintNumHl = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsInfoNumHl = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE" } },
+
+    { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingError = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
+    { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
+
+    { DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" } },
+    { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
+    { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
+    { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
+
+    {
+      DiagnosticUnderlineWarn = {
+        sp = { from = "DiagnosticWarn", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
+    },
+    {
+      DiagnosticUnderlineHint = {
+        sp = { from = "DiagnosticHint", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
+    },
+    {
+      DiagnosticUnderlineError = {
+        sp = { from = "DiagnosticError", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
+    },
+    {
+      DiagnosticUnderlineInfo = {
+        sp = { from = "DiagnosticInfo", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
+    },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                     SEMANTIC TOKENS                     ║
@@ -1106,167 +1012,16 @@ local general_overrides = function()
     -- { ["@lsp.type.function.rust"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
 
     -- ╔═════════════════════════════════════════════════════════╗
-    -- ║                       DIFF COLOR                        ║
-    -- ╚═════════════════════════════════════════════════════════╝
-    -- These highlights are syntax groups that are set in diff.vim
-    -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
-    -- { diffBDiffer = { link = 'WarningMsg' } },
-    -- { diffCommon = { link = 'WarningMsg' } },
-    -- { diffDiffer = { link = 'WarningMsg' } },
-    {
-      diffFile = {
-        fg = { from = "Directory", attr = "fg", alter = -0.15 },
-        bg = { from = "Directory", attr = "fg", alter = -0.68 },
-      },
-    },
-    -- { diffIdentical = { link = 'WarningMsg' } },
-    -- { diffIndexLine = { link = 'Number' } },
-    -- { diffIsA = { link = 'WarningMsg' } },
-    -- { diffNoEOL = { link = 'WarningMsg' } },
-    -- { diffOnly = { link = 'WarningMsg' } },
-
-    -- Setting darken: gunakan paramater (setting_color, ukuran, base_color)
-    {
-      -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
-      diffAdd = {
-        fg = H.tint(dark_green, diffadd_fg_alter),
-        bg = H.tint(dark_green, diffadd_bg_alter),
-        reverse = false,
-      },
-    },
-    {
-      diffChange = {
-        fg = H.tint(dark_yellow, diffchange_fg_alter),
-        bg = H.tint(dark_yellow, diffchange_bg_alter),
-        reverse = false,
-      },
-    },
-    {
-      diffDelete = {
-        fg = H.tint(dark_red, diffdelete_fg_alter),
-        bg = H.tint(dark_red, diffdelete_bg_alter),
-        reverse = false,
-      },
-    },
-    {
-      diffText = {
-        fg = H.tint(dark_yellow, difftext_fg_alter),
-        bg = H.tint(dark_yellow, difftext_bg_alter),
-        reverse = false,
-      },
-    },
-
-    { diffAdded = { inherit = "DiffAdd" } },
-    { diffChanged = { inherit = "DiffChange" } },
-    { diffRemoved = { inherit = "DiffDelete" } },
-
-    { GitSignsAdd = { bg = "NONE", fg = dark_green } },
-    { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
-    { GitSignsDelete = { bg = "NONE", fg = dark_red } },
-
-    {
-      GitSignsAddInline = {
-        fg = { from = "diffAdded", attr = "bg", alter = 3 },
-        bg = { from = "diffAdded", attr = "bg", alter = 1 },
-      },
-    },
-    {
-      GitSignsChangeDelete = {
-        fg = { from = "diffChanged", attr = "bg", alter = 3 },
-        bg = "NONE",
-      },
-    },
-    {
-      GitSignsDeleteInline = {
-        fg = { from = "diffDelete", attr = "bg", alter = 3 },
-        bg = { from = "diffDelete", attr = "bg", alter = 1 },
-      },
-    },
-
-    { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
-    { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
-    { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
-
-    { NeogitDiffAdd = { link = "diffAdd" } },
-    { NeogitDiffAddHighlight = { link = "diffAdd" } },
-    { NeogitDiffDelete = { link = "diffDelete" } },
-    { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
-
-    { DiffText = { link = "diffText" } },
-
-    -- ╔═════════════════════════════════════════════════════════╗
-    -- ║                       DEBUG COLOR                       ║
-    -- ╚═════════════════════════════════════════════════════════╝
-    { debugPC = { bg = { from = "Boolean", attr = "fg", alter = -0.6 }, fg = "NONE", bold = true } },
-
-    -- ╔═════════════════════════════════════════════════════════╗
-    -- ║                       DIAGNOSTIC                        ║
-    -- ╚═════════════════════════════════════════════════════════╝
-    { DiagnosticSignError = { bg = "NONE" } },
-    { DiagnosticSignWarn = { bg = "NONE" } },
-    { DiagnosticSignInfo = { bg = "NONE" } },
-    { DiagnosticSignHint = { bg = "NONE" } },
-
-    { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsErrorNumHl = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE" } },
-    { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsWarnNumHl = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE" } },
-    { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsHintNumHl = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE" } },
-    { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsInfoNumHl = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE" } },
-
-    { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingError = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
-    { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
-
-    { DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" } },
-    { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
-    { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
-    { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
-
-    {
-      DiagnosticUnderlineWarn = {
-        sp = { from = "DiagnosticWarn", attr = "fg" },
-        underline = true,
-        undercurl = false,
-      },
-    },
-    {
-      DiagnosticUnderlineHint = {
-        sp = { from = "DiagnosticHint", attr = "fg" },
-        underline = true,
-        undercurl = false,
-      },
-    },
-    {
-      DiagnosticUnderlineError = {
-        sp = { from = "DiagnosticError", attr = "fg" },
-        underline = true,
-        undercurl = false,
-      },
-    },
-    {
-      DiagnosticUnderlineInfo = {
-        sp = { from = "DiagnosticInfo", attr = "fg" },
-        underline = true,
-        undercurl = false,
-      },
-    },
-
-    -- ╔═════════════════════════════════════════════════════════╗
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
+    { HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = 0.2 } } },
+    --
     { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
     {
       MyCodeUsage = {
         fg = H.tint(H.get("String", "fg"), my_code_usage_fg_alter),
         bg = H.tint(H.darken(H.get("String", "fg"), 0.7, H.get("Normal", "bg")), my_code_usage_bg_alter),
-        -- bg = { from = "Normal", attr = "bg", alter = my_code_usage_bg_alter },
         italic = true,
       },
     },
@@ -1288,9 +1043,8 @@ local general_overrides = function()
 
     -- WINBAR
     { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
-    -- { WinbarFilepath = { fg = { from = "Tabline", attr = "bg", alter = winbar_file_path_fg_alter } } },
-    -- { WinbarFilepath = { fg = { from = "StatusLine", attr = "bg", alter = 1.3 } } },
     { WinbarFilepath = { fg = { from = "TabLine", attr = "bg", alter = winbar_file_path_fg_alter } } },
+    { WinbarKeyword = { fg = { from = "Keyword", attr = "fg", alter = winbar_keyword } } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                      PLUGIN COLORS                      ║
@@ -1316,7 +1070,7 @@ local general_overrides = function()
         italic = true,
       },
     },
-    { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+    { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "bg", alter = 0.38 }, bg = "NONE" } },
     {
       BlinkCmpDocSeparator = {
         fg = { from = "FloatBorder", attr = "fg" },
@@ -1717,12 +1471,14 @@ local general_overrides = function()
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     { FzfLuaBorder = { fg = { from = "FloatBorder", attr = "bg" }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
+
     {
       FzfLuaBufLineNr = {
         fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_buf_linenr_bg_alter },
         bg = "NONE",
       },
     },
+
     {
       FzfLuaTitle = {
         fg = { from = "Normal", attr = "bg" },
@@ -1731,7 +1487,7 @@ local general_overrides = function()
       },
     },
 
-    { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg", alter = fzflua_file_part_fg }, reverse = false } },
+    { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = fzflua_file_part_fg }, reverse = false } },
     { FzfLuaDirPart = { fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_dir_part_fg } } },
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = fzflua_headertext_fg_alter } } },
@@ -1843,60 +1599,60 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = snacks_notifier_info_fg_info },
+        fg = { from = "Comment", attr = "fg", alter = snacks_notifier_info_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = snacks_notifier_border_info_fg_info },
+        fg = { from = "SnacksNotifierInfo", attr = "fg", alter = snacks_notifier_border_info_fg },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "bg" },
-        bg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = snacks_notifier_title_info_fg_info },
+        fg = { from = "Normal", attr = "bg" },
+        bg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.5 },
         bold = true,
       },
     },
     -- WARN
     {
       SnacksNotifierWarn = {
-        fg = { from = "diffChange", attr = "fg", alter = snacks_notifier_warn_fg_info },
+        fg = { from = "diffChange", attr = "fg", alter = snacks_notifier_warn_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "diffChange", attr = "fg", alter = snacks_notifier_border_warn_fg_info },
+        fg = { from = "SnacksNotifierWarn", attr = "fg", alter = snacks_notifier_border_warn_fg },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "bg" },
-        bg = { from = "SnacksNotifierBorderWarn", attr = "fg" },
+        fg = { from = "Normal", attr = "bg" },
+        bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.5 },
         bold = true,
       },
     },
     -- ERROR
     {
       SnacksNotifierError = {
-        fg = { from = "diffDelete", attr = "fg", alter = snacks_notifier_error_fg_info },
+        fg = { from = "diffDelete", attr = "fg", alter = snacks_notifier_error_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "diffDelete", attr = "fg", alter = snacks_notifier_border_error_fg_info },
+        fg = { from = "SnacksNotifierError", attr = "fg", alter = snacks_notifier_border_error_fg },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleError = {
-        fg = { from = "SnacksNotifierError", attr = "bg" },
-        bg = { from = "SnacksNotifierBorderError", attr = "fg" },
+        fg = { from = "Normal", attr = "bg" },
+        bg = { from = "SnacksNotifierError", attr = "fg", alter = 0.5 },
         bold = true,
       },
     },
@@ -1920,7 +1676,6 @@ local general_overrides = function()
     {
       ["@org.agenda.today"] = {
         fg = { from = "@org.headline.level2.org", attr = "fg" },
-        -- bg = { from = "LineNr", attr = "fg", alter = 0.1 },
         bold = true,
         italic = true,
       },
@@ -1986,20 +1741,6 @@ local general_overrides = function()
         bg = { from = "BqfPreviewBorder", attr = "fg" },
       },
     },
-
-    -- {
-    --   BqfPreviewBufLabel = {
-    --     -- fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-    --     bg = "NONE",
-    --   },
-    -- },
-
-    -- {
-    --   BqfPreviewRange = {
-    --     fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-    --     bg = { from = "BqfPreviewBorder", attr = "fg" },
-    --   },
-    -- },
 
     --  ───────────────────────────[ TODO-COMMENT ]────────────────────────
     { TodoSignWarn = { bg = "NONE", fg = "#FBBF24" } },
@@ -2176,9 +1917,106 @@ local general_overrides = function()
     { WhichKeyDesc = { inherit = "FzfLuaNormal", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
     { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
 
+    --  ──────────────────────────────[ AVANTE ]───────────────────────────
+    {
+      AvanteNormal = {
+        fg = { from = "Normal", attr = "bg", alter = 4 },
+        bg = { from = "Normal", attr = "bg", alter = -0.5 },
+      },
+    },
+    {
+      AvanteInlineHint = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.6 },
+        bg = "NONE",
+      },
+    },
+  }
+end
+
+local function set_panel_highlight()
+  local H = require "r.settings.highlights"
+  H.all {
+    -- +---------+
+    -- | SIDEBAR |
+    -- +---------+
+    {
+      PanelSideNormal = {
+        fg = { from = "Normal", attr = "fg", alter = -0.05 },
+        bg = { from = "NormalKeyword", attr = "bg", alter = -0.1 },
+      },
+    },
+    { PanelSideBackground = { link = "PanelSideNormal", fg = "NONE" } },
+    { PanelSideDarkBackground = { bg = { from = "PanelSideNormal", attr = "bg", alter = -1 } } },
+
+    { PanelSideDarkHeading = { inherit = "PanelSideDarkBackground", bold = true } },
+    { PanelSideHeading = { inherit = "PanelSideBackground", bold = true } },
+
+    { PanelSideRootName = { fg = { from = "PanelSideNormal", attr = "bg", alter = 1.35 } } },
+
+    { PanelSideStNC = { link = "PanelSideWinSeparator" } },
+    { PanelSideSt = { bg = { from = "Visual", alter = -0.2 } } },
+    { PanelSideStusLine = { bg = { from = "StatusLine" }, fg = { from = "Normal", attr = "fg" } } },
+
+    {
+      PanelSideWinSeparator = {
+        fg = { from = "WinSeparator", attr = "fg" },
+        bg = { from = "PanelSideBackground", attr = "bg" },
+      },
+    },
+
+    -- +--------+
+    -- | BOTTOM |
+    -- +--------+
+    {
+      PanelBottomNormal = {
+        fg = { from = "NormalKeyword", attr = "fg", alter = panel_bottom_normal_fg_alter },
+        bg = { from = "NormalKeyword", attr = "bg", alter = panel_bottom_normal_bg_alter },
+      },
+    },
+    { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },
+    { PanelBottomBackground = { bg = { from = "PanelBottomNormal", attr = "bg" } } },
+
+    { PanelBottomDarkBackground = { bg = { from = "PanelBottomBackground", attr = "bg", alter = -0.1 } } },
+    { PanelBottomDarkHeading = { inherit = "PanelBottomDarkBackground", bold = true } },
+
+    { PanelBottomSt = { bg = { from = "Visual", alter = -0.2 } } },
+    { PanelBottomStNC = { link = "PanelBottomWinSeparator" } },
+    { PanelBottomStusLine = { bg = { from = "PanelBottomBackground" }, fg = { from = "Normal", attr = "fg" } } },
+    {
+      PanelBottomWinSeparator = {
+        fg = { from = "WinSeparator", attr = "fg" },
+        bg = { from = "Normal", attr = "bg" },
+      },
+    },
+
+    -- +----------------------+
+    -- | Quickfix - QuickList |
+    -- +----------------------+
+    {
+      QuickFixLine = {
+        fg = "NONE",
+        bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
+        underline = false,
+        bold = true,
+        reverse = false,
+      },
+    },
+    {
+      QuickFixHeader = {
+        fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_bg_alter },
+      },
+    },
+    { QuickFixLineNr = { fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
+    { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = quickfixline_separator_fg_alter } } },
+    { qfSeparator2 = { link = "qfSeparator1" } },
+    { Delimiter = { link = "qfSeparator1" } },
+    { QuickFixFileName = { bg = "NONE" } },
+    { qfFileName = { bg = "NONE" } },
+
     --  ──────────────────────────────[ TROUBLE ]──────────────────────────────
-    { TroubleNormal = { inherit = "Normal" } },
-    { TroubleNormalNC = { inherit = "Normal" } },
+    { TroubleNormal = { inherit = "PanelBottomNormal" } },
+    { TroubleNormalNC = { inherit = "PanelBottomNormal" } },
 
     { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn", alter = -0.1 } } },
     { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError", alter = -0.1 } } },
@@ -2189,14 +2027,14 @@ local general_overrides = function()
 
     {
       TroubleIndent = {
-        fg = { from = "Normal", attr = "bg", alter = trouble_indent_fg_alter },
+        fg = { from = "TroubleNormal", attr = "bg", alter = trouble_indent_fg_alter },
         bg = "NONE",
       },
     },
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.4 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.5 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
@@ -2237,17 +2075,12 @@ local general_overrides = function()
     { TroubleQfPos = { link = "TroubleFsPos" } },
     { TroubleQfCount = { link = "TroubleFsCount" } },
 
-    -- DUNNO
-    {
-      TroubleCode = {
-        bg = "NONE",
-        fg = { from = "ErrorMsg", attr = "fg" },
-        underline = false,
-      },
-    },
+    { TroubleCode = { bg = "NONE", fg = { from = "ErrorMsg", attr = "fg" }, underline = false } },
 
     --  ──────────────────────────────[ OUTLINE ]──────────────────────────────
-    { OutlineGuides = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+    {
+      OutlineGuides = { fg = { from = "PanelSideNormal", attr = "bg", alter = outline_indent_fg_alter }, bg = "NONE" },
+    },
     {
       OutlineCurrent = {
         fg = { from = "diffDelete", attr = "fg", alter = 0.3 },
@@ -2255,38 +2088,10 @@ local general_overrides = function()
         reverse = false,
       },
     },
-    { OutlineDetails = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 }, bg = "NONE", italic = true } },
+    { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.3 }, bg = "NONE", italic = true } },
     { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
     { OutlineLineno = { bg = "NONE" } },
-    { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
-
-    --  ──────────────────────────────[ AVANTE ]───────────────────────────
-    {
-      AvanteNormal = {
-        fg = { from = "Normal", attr = "bg", alter = 4 },
-        bg = { from = "Normal", attr = "bg", alter = -0.5 },
-      },
-    },
-    {
-      AvanteInlineHint = {
-        fg = { from = "Keyword", attr = "fg", alter = -0.6 },
-        bg = "NONE",
-      },
-    },
-  }
-end
-
-local function set_sidebar_highlight()
-  local H = require "r.settings.highlights"
-  H.all {
-    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.1 } } },
-    { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
-    { PanelBackground = { bg = { from = "Normal" } } },
-    { PanelHeading = { inherit = "PanelBackground", bold = true } },
-    { PanelWinSeparator = { inherit = "PanelBackground", fg = { from = "WinSeparator" } } },
-    { PanelStNC = { link = "PanelWinSeparator" } },
-    { PanelSt = { bg = { from = "Visual", alter = -0.2 } } },
-    { PanelStusLine = { bg = { from = "StatusLine" }, fg = { from = "Normal", attr = "fg" } } },
+    { OutlineFoldMarker = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.48 }, bg = "NONE" } },
   }
 end
 
@@ -2294,7 +2099,7 @@ local sidebar_fts = {
   "packer",
   "flutterToolsOutline",
   "undotree",
-  "Outline",
+  -- "Outline",
   "dbui",
   "neotest-summary",
   "pr",
@@ -2302,12 +2107,12 @@ local sidebar_fts = {
 
 local function on_sidebar_enter()
   vim.opt_local.winhighlight:append {
-    Normal = "PanelBackground",
-    EndOfBuffer = "PanelBackground",
-    StatusLine = "PanelSt",
-    SignColumn = "PanelBackground",
-    VertSplit = "PanelVertSplit",
-    WinSeparator = "PanelWinSeparator",
+    Normal = "PanelSideNormal",
+    EndOfBuffer = "PanelSideNormal",
+    StatusLine = "PanelSideSt",
+    SignColumn = "PanelSideNormal",
+    VertSplit = "PanelSideNormal", -- TODO: check ini, seharusnya bukan `PanelSideNormal, seharusnya VertSplit juga tpai khusus untuk sidebar
+    WinSeparator = "PanelSideWinSeparator",
   }
 end
 
@@ -2321,159 +2126,6 @@ local function colorscheme_overrides()
 
   local overrides = {
     ["base46-material-lighter"] = {
-      -- DIAGNOSTICS
-      {
-        diffAdd = {
-          fg = H.tint(H.darken(dark_green, 0.9, H.get("Normal", "bg")), -0.1),
-          bg = H.tint(H.darken(dark_green, 0.1, H.get("Normal", "bg")), -0.1),
-          reverse = false,
-        },
-      },
-      {
-        diffChange = {
-          fg = H.darken(dark_yellow, 0.55, H.get("Normal", "bg")),
-          bg = H.darken(dark_yellow, 0.1, H.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        diffDelete = {
-          fg = H.darken(dark_red, 0.7, H.get("Normal", "bg")),
-          bg = H.darken(dark_red, 0.1, H.get("Normal", "bg")),
-          reverse = false,
-        },
-      },
-      {
-        diffText = {
-          fg = H.darken(dark_yellow, 0.8, H.get("Normal", "bg")),
-          bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-
-      { diffAdded = { inherit = "DiffAdd" } },
-      { diffChanged = { inherit = "DiffChange" } },
-      { diffRemoved = { inherit = "DiffDelete" } },
-
-      {
-        GitSignsAdd = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_green, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-
-      {
-        GitSignsChange = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_yellow, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-      {
-        GitSignsDelete = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_red, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-
-      {
-        GitSignsAddInline = {
-          fg = { from = "diffAdded", attr = "bg", alter = 3 },
-          bg = { from = "diffAdded", attr = "bg", alter = 1 },
-        },
-      },
-      {
-        GitSignsChangeDelete = {
-          fg = { from = "diffChanged", attr = "bg", alter = 3 },
-          bg = "NONE",
-        },
-      },
-      {
-        GitSignsDeleteInline = {
-          fg = { from = "diffDelete", attr = "bg", alter = 3 },
-          bg = { from = "diffDelete", attr = "bg", alter = 1 },
-        },
-      },
-
-      { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
-      { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
-      { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
-
-      { NeogitDiffAdd = { link = "diffAdd" } },
-      { NeogitDiffAddHighlight = { link = "diffAdd" } },
-      { NeogitDiffDelete = { link = "diffDelete" } },
-      { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
-
-      { DiffText = { link = "diffText" } },
-
-      -- ╭─────────────────╮
-      -- │ SNACKS NOTIFIER │
-      -- ╰─────────────────╯
-      -- INFO
-      {
-        SnacksNotifierInfo = {
-          fg = H.tint(H.darken(H.get("Function", "fg"), 0.1, H.get("Normal", "bg")), -0.5),
-          bg = { from = "Normal", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierBorderInfo = {
-          fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
-          bg = { from = "SnacksNotifierInfo", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleInfo = {
-          fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = -0.1 },
-          bg = { from = "SnacksNotifierInfo", attr = "bg" },
-          bold = true,
-        },
-      },
-      -- WARN
-      {
-        SnacksNotifierWarn = {
-          fg = { from = "diffChange", attr = "fg", alter = -0.5 },
-          bg = { from = "Normal", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierBorderWarn = {
-          fg = { from = "diffChange", attr = "fg" },
-          bg = { from = "SnacksNotifierWarn", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleWarn = {
-          fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = -0.1 },
-          bg = { from = "SnacksNotifierWarn", attr = "bg" },
-          bold = true,
-        },
-      },
-      -- ERROR
-      {
-        SnacksNotifierError = {
-          fg = { from = "diffDelete", attr = "fg", alter = -0.5 },
-          bg = { from = "Normal", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierBorderError = {
-          fg = { from = "diffDelete", attr = "fg" },
-          bg = { from = "SnacksNotifierError", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleError = {
-          fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.1 },
-          bg = { from = "SnacksNotifierError", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      -- SNACKS
-      { SnacksIndentScope = { fg = H.tint(H.darken(dark_yellow, 0.3, H.get("Normal", "bg")), -0.1) } },
-
       -- QF/QUICKER
       { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
       { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
@@ -2497,51 +2149,6 @@ local function colorscheme_overrides()
           bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
         },
       },
-
-      -- STATUSLINE
-      {
-        StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = -0.35 },
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          reverse = false,
-        },
-      },
-      {
-        NoiceCmdline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
-          bg = { from = "StatusLine", attr = "bg" },
-        },
-      },
-      { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "bg", alter = -0.22 }, bg = "NONE" } },
-
-      {
-        TabLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.26 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.01 },
-        },
-      },
-
-      {
-        Folded = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.01 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.48 }, bg = "NONE" } },
-
-      -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.52 } } },
-      { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.1 } } },
-      {
-        ["@markup.quote.markdown"] = {
-          inherit = "@markup.quote.markdown",
-          fg = { from = "@markup.quote.markdown", attr = "fg", alter = -0.15 },
-        },
-      },
-
-      -- CREATED HIGHLIGHTS
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
-      { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = -0.2 } } },
     },
     ["base46-solarized_dark"] = {
       -- GRUG-FAR
@@ -2665,7 +2272,7 @@ end
 
 local function user_highlights()
   general_overrides()
-  set_sidebar_highlight()
+  set_panel_highlight()
   colorscheme_overrides()
 end
 
