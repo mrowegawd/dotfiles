@@ -1,5 +1,5 @@
 local rg_opts =
-  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:178' -e "
+  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:red' -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
 return {
@@ -276,8 +276,15 @@ return {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-          ["fg+"] = { "fg", "FzfLuaFilePart" },
-          ["bg+"] = { "bg", "FzfLuaSel" },
+
+          ["fg+"] = { "fg", "Directory", "underline" },
+          ["bg+"] = { "bg", "FzfLuaNormal" },
+          -- ["bg+"] = { "bg", { "FzfLuaFzfMatch", "Normal" } },
+
+          -- ["fg+"] = { "fg", "Normal", "underline" },
+          -- ["bg+"] = { "bg", { "CursorLine", "Normal" } },
+          -- ["hl+"] = { "fg", "Statement" },
+
           ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
@@ -343,7 +350,7 @@ return {
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
-          formatter = "path.filename_first",
+          -- formatter = "path.filename_first",
           actions = {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,

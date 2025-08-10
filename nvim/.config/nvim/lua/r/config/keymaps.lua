@@ -30,7 +30,7 @@ RUtils.map.inoremap("hh", function()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 
--- NOTE: conflict with mapping tmux split vertial/horizontal
+-- conflict with mapping tmux split vertial/horizontal
 -- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 -- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
@@ -45,15 +45,28 @@ end, { desc = "Fold: zo" })
 RUtils.map.nnoremap("zO", function()
   vim.cmd "normal! zOzz"
 end, { desc = "Fold: zO" })
--- RUtils.map.nnoremap("za", function()
---   if vim.fn.foldclosed(vim.fn.line ".") == -1 then
---     vim.cmd "normal! za"
---   else
---     vim.cmd "normal! zo"
---   end
--- end, { desc = "Fold: toggle fold on current line" })
+RUtils.map.nnoremap("<Tab>", function()
+  -- if vim.fn.foldclosed(vim.fn.line ".") == -1 then
+  --   vim.cmd "normal! za"
+  -- else
+  --   vim.cmd "normal! zo"
+  -- end
+  -- vim.cmd "normal! za"
 
-RUtils.map.nnoremap("zh", function()
+  vim.schedule(function()
+    local _, err = pcall(function()
+      vim.fn.execute "normal! za"
+    end)
+
+    if err and (string.match(err, "E510") or string.match(err, "E490")) then
+      local msg = string.format "No fold found"
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.warn(msg, { title = "Folds" })
+    end
+  end)
+end, { desc = "Fold: toggle fold on current line" })
+
+RUtils.map.nnoremap("zr", function()
   return RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle level fold" })
 

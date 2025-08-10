@@ -1035,7 +1035,11 @@ function M.change_colors()
       bg = H.get("FzfLuaNormal", "bg"),
       match = H.get("FzfLuaFzfMatch", "fg"),
 
-      selection_fg = H.get("FzfLuaFilePart", "fg"),
+      -- selection_fg = H.get("FzfLuaFilePart", "fg"),
+      -- selection_bg = H.get("FzfLuaSel", "bg"),
+      -- match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
+
+      selection_fg = H.get("FzfLuaSel", "fg"),
       selection_bg = H.get("FzfLuaSel", "bg"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
@@ -1173,15 +1177,21 @@ function M.change_colors()
       hovered = H.get("HoveredCursorline", "bg"),
 
       selected = H.tint(H.get("diffDelete", "fg"), 0.3),
-      copied = H.tint(H.get("diffChange", "fg"), 0.3),
-      cut = H.tint(H.get("diffDelete", "fg"), -0.3),
-      marked_fg = H.tint(H.get("String", "fg"), 0.1),
-      marked_bg = H.tint(H.get("String", "fg"), -0.5),
+      count_selected_bg = H.tint(H.get("diffDelete", "fg"), -0.5),
 
-      tab_active_fg = H.tint(H.get("Keyword", "fg"), 0.3),
-      tab_active_bg = H.tint(H.get("Keyword", "fg"), -0.3),
-      tab_inactive_fg = H.get("TabLine", "fg"),
-      tab_inactive_bg = H.get("Keyword", "fg"),
+      copied = H.tint(H.get("diffChange", "fg"), 0.3),
+      count_copied_bg = H.tint(H.get("diffChange", "fg"), -0.5),
+
+      cut = H.tint(H.get("String", "fg"), 0.3),
+      count_cut_bg = H.tint(H.get("String", "fg"), -0.5),
+
+      marked_fg = H.tint(H.get("Function", "fg"), 0.1),
+      marked_bg = H.tint(H.get("Function", "fg"), -0.5),
+
+      tab_active_fg = H.get("Keyword", "fg"),
+      tab_active_bg = H.get("NormalKeyword", "bg"),
+      tab_inactive_fg = H.get("NormalKeyword", "bg"),
+      tab_inactive_bg = H.tint(H.get("TabLine", "bg"), 0.66),
 
       statusline_normal_fg = H.tint(H.get("TabLine", "fg"), 0.4),
       statusline_normal_bg = H.tint(H.get("TabLine", "bg"), 0.2),

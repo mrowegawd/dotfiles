@@ -131,7 +131,8 @@ opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
-opt.formatoptions = "jcroqlnt" -- tcqj
+vim.opt.formatoptions = vim.opt.formatoptions + "j" -- remove comment leader when joining comment lines
+vim.opt.formatoptions = vim.opt.formatoptions + "n" -- smart auto-indenting inside numbered lists
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
 opt.splitright = true -- ':vnew' ':vsplit' right of current
@@ -154,6 +155,7 @@ opt.fillchars = {
 opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in nvim 0.9
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
+-- opt.foldminlines = 0 -- allow closing even 1-line folds.
 opt.magic = true --  use 'magic' chars in search patterns
 opt.hlsearch = true -- highlight all text matching current search pattern
 opt.incsearch = true -- show search matches as you type
@@ -331,13 +333,12 @@ vim.g.undotree_DiffCommand = "diff -u"
 
 -- }}}
 -- {{{ Foldexpr, foldtext, smoothscroll
-if vim.fn.has "nvim-0.10" == 1 then
-  opt.smoothscroll = true
-  opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
-  opt.foldmethod = "expr"
-  opt.foldtext = ""
-else
-  opt.foldmethod = "indent"
-  opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
-end
+opt.smoothscroll = true
+opt.foldmethod = "expr"
+-- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+-- opt.foldexpr = "v:lua.require'r.utils'.foldexpr()"
+opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+-- opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
+opt.foldtext = ""
+-- end
 -- }}}

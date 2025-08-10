@@ -91,7 +91,11 @@ super + shift + l
 # 	    bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
-alt + {shift+Tab,Tab}
+# alt + {shift+Tab,Tab}
+# 	      bspc desktop -f {prev,next}.local
+
+# workspace: focus next/prev workspace
+super + {shift+p,shift+n}
 	      bspc desktop -f {prev,next}.local
 
 
@@ -197,7 +201,7 @@ super + Home
 
 # misc: open translate with nvim
 super + o
-        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && st -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && $TERMINAL -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
 
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
         #

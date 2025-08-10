@@ -86,8 +86,9 @@ return {
             },
             {
               NeoTreeTabInActive = {
-                fg = { from = "Comment" },
-                bg = { from = "PanelSideBackground", attr = "bg", alter = -0.12 },
+                fg = { from = "PanelSideBackground", attr = "bg" },
+                bg = { from = "TabLine", attr = "bg", alter = 0.66 },
+                bold = true,
               },
             },
 
@@ -721,8 +722,8 @@ return {
           rename_symbol = {},
           code_actions = {},
           fold = "h",
-          fold_toggle = { "<tab>", "za", "zk" },
-          fold_toggle_all = "<S-tab>",
+          fold_toggle = { "<Tab>", "za", "zk" },
+          fold_toggle_all = "<S-Tab>",
           unfold = "l",
           fold_all = { "zm", "zM" },
           unfold_all = { "zO", "zR" },

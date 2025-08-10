@@ -6,6 +6,7 @@
 [mgr]
 prepend_keymap = [
   { on = [ "l", ], run = "plugin smart-enter", desc = "Enter child or file" },
+  { on = [ "<Tab>", ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [ "o", ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [ "L", ], run = "plugin smart-enter -- open", desc = "Open the selected files" },
   { on = [ "<c-v>", ], run = "plugin smart-enter -- vsplit", desc = "Open vsplit the selected item" },
@@ -38,7 +39,7 @@ nohup mpv --ontop --no-border --force-window \
 '
 """, desc = "Play video playist on mpv" },
   { on = [ "<a-b>", ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
-  { on = [ "B", ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
+  { on = [ "<a-B>", ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
 ]
 
 keymap = [

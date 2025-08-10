@@ -10,8 +10,8 @@ local base_cl = {
     bg = { from = "CurSearch", attr = "bg", alter = -0.35 },
     bold = false,
   },
-  blink_cmp_label_kind_fg_alter = 0.5,
-  blink_cmp_label_match_fg_alter = 0.8,
+  blink_cmp_label_kind_fg_alter = 0.9,
+  blink_cmp_label_match_fg_alter = 0.2,
   bqf_keyword = "Keyword",
   cmpdocnormal_fg_alter = 0.3,
   comment_fg_alter = 0.65,
@@ -23,12 +23,12 @@ local base_cl = {
   float_title_bg_alter = 0.1,
   float_title_fg_alter = -0.1,
   fzflua_buf_linenr_bg_alter = 0.5,
-  fzflua_cursorline_bg_alter = -0.05,
+  fzflua_cursorline_bg_alter = 0.2,
   fzflua_dir_part_fg = 0.95,
   fzflua_file_part_fg = -0.13,
   fzflua_headertext_fg_alter = -0.33,
   fzflua_normal_bg_alter = 0.5,
-  fzflua_sel_bg_alter = -0.02,
+  fzflua_sel_bg_alter = 2,
   linenr_fg_alter = 0.08,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
@@ -47,11 +47,11 @@ local base_cl = {
   pmenu_sel_bg_alter = 0.2,
   pmenu_thumb_bg_alter = 0.4,
   quickfixline_alter = 0.45,
-  quickfixline_header_bg_alter = -0.1,
-  quickfixline_header_fg_alter = 0.8,
+  quickfixline_header_bg_alter = 0.2,
+  quickfixline_header_fg_alter = 1.5,
   quickfixline_header_tint_bg_alter = 0,
   quickfixline_header_tint_fg_alter = 0,
-  quickfixline_linenr_fg_alter = 0.35,
+  quickfixline_linenr_fg_alter = 0.8,
   quickfixline_separator_fg_alter = -0.35,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = -0.1,
@@ -624,14 +624,7 @@ local general_overrides = function()
         reverse = false,
       },
     },
-    {
-      PmenuSel = {
-        fg = "NONE",
-        bg = { from = "Pmenu", attr = "bg", alter = pmenu_sel_bg_alter },
-        bold = true,
-        reverse = false,
-      },
-    },
+    { PmenuSel = { fg = "NONE", bg = "NONE", bold = true, underline = true, reverse = false } },
     { PmenuFloatBorder = { bg = { from = "Pmenu", attr = "bg" }, fg = { from = "Pmenu", attr = "bg" } } },
     { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = pmenu_thumb_bg_alter } } },
 
@@ -1077,8 +1070,8 @@ local general_overrides = function()
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
-    { BlinkCmpLabelMatch = { fg = { from = "CurSearch", attr = "bg", alter = blink_cmp_label_match_fg_alter } } },
-    { BlinkCmpLabelKind = { fg = { from = "PmenuSel", attr = "bg", alter = blink_cmp_label_kind_fg_alter } } },
+    { BlinkCmpLabelMatch = { fg = { from = "diffDelete", attr = "fg", alter = blink_cmp_label_match_fg_alter } } },
+    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = blink_cmp_label_kind_fg_alter } } },
 
     --  ────────────────────────────────[ CMP ]────────────────────────────────
     { CmpGhostText = { link = "BlinkCmpGhostText" } },
@@ -1492,15 +1485,15 @@ local general_overrides = function()
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = fzflua_headertext_fg_alter } } },
 
-    { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
-    { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.25 }, bg = "NONE" } },
+    { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+    { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
-    { FzfLuaSel = { bg = { from = "PmenuSel", attr = "bg", alter = fzflua_sel_bg_alter }, fg = "NONE", bold = true } },
-    { FzfLuaCursorLine = { bg = { from = "FzfLuaSel", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
     {
-      FzfLuaCursorLineNr = {
-        fg = { from = "Keyword", attr = "fg", alter = -0.25 },
-        bg = { from = "FzfLuaCursorLine", attr = "bg" },
+      FzfLuaSel = {
+        fg = { from = "Directory", attr = "fg", alter = 0.1 },
+        -- bg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_sel_bg_alter },
+        bg = { from = "FzfLuaNormal", attr = "bg" },
+        bold = true,
       },
     },
 
@@ -1516,6 +1509,15 @@ local general_overrides = function()
     { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder" } },
     { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle" } },
     { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
+
+    -- { FzfLuaCursorLine = { bg = { from = "FzfLuaCursorLine", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
+    { FzfLuaCursorLine = { bg = { from = "FzfLuaPreviewNormal", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
+    {
+      FzfLuaCursorLineNr = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.25 },
+        bg = { from = "FzfLuaCursorLine", attr = "bg" },
+      },
+    },
 
     --  ─────────────────────────────[ TELESCOPE ]─────────────────────────────
     { TelescopeNormal = { inherit = "FzfLuaNormal" } },
@@ -1561,7 +1563,7 @@ local general_overrides = function()
     -- ╰───────────────╯
     { SnacksPickerFile = { link = "FzfLuaFilePart" } },
     { SnacksPickerDir = { link = "FzfLuaDirPart" } },
-    { SnacksPickerMatch = { link = "FzfLuaFzfMatch" } },
+    { SnacksPickerMatch = { fg = { from = "FzfLuaFzfMatch", attr = "fg" } } },
     { SnacksPickerManSection = { link = "FzfLuaFzfMatchFuzzy" } },
     { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
@@ -1995,19 +1997,21 @@ local function set_panel_highlight()
     {
       QuickFixLine = {
         fg = "NONE",
-        bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
-        underline = false,
+        bg = "NONE",
+        -- bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
+        -- bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
+        underline = true,
         bold = true,
         reverse = false,
       },
     },
     {
       QuickFixHeader = {
-        fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_fg_alter },
-        bg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_bg_alter },
+        fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_bg_alter },
       },
     },
-    { QuickFixLineNr = { fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
+    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
     { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = quickfixline_separator_fg_alter } } },
     { qfSeparator2 = { link = "qfSeparator1" } },
     { Delimiter = { link = "qfSeparator1" } },
