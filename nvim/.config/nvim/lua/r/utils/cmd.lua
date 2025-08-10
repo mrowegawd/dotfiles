@@ -1031,7 +1031,7 @@ function M.change_colors()
 
   local defined_cols = {
     fzf = {
-      fg = H.tint(H.get("FzfLuaFilePart", "fg"), -0.15),
+      fg = H.get("FzfLuaFilePart", "fg"),
       bg = H.get("FzfLuaNormal", "bg"),
       match = H.get("FzfLuaFzfMatch", "fg"),
 
@@ -1039,8 +1039,8 @@ function M.change_colors()
       -- selection_bg = H.get("FzfLuaSel", "bg"),
       -- match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
-      selection_fg = H.get("FzfLuaSel", "fg"),
-      selection_bg = H.get("FzfLuaSel", "bg"),
+      selection_fg = H.get("Directory", "fg"),
+      selection_bg = H.get("Normal", "bg"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
       gutter = H.get("FzfLuaNormal", "bg"),

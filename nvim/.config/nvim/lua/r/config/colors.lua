@@ -341,10 +341,10 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.025,
   fold_fg = 0.28,
-  fzflua_cursorline_bg_alter = -0.13,
+  fzflua_cursorline_bg_alter = 0.05,
   fzflua_dir_part_fg = 0.8,
   fzflua_file_part_fg = 0.2,
-  fzflua_headertext_fg_alter = -0.3,
+  fzflua_headertext_fg_alter = -0.35,
   linenr_fg_alter = 0.07,
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = -0.02,
@@ -386,9 +386,9 @@ reset_base_alter({ "base46-zenburn" }, {
   dapstopped_bg_alter = 0.15,
   fold_bg = -0.014,
   fold_fg = 0.32,
-  fzflua_cursorline_bg_alter = -0.12,
+  fzflua_cursorline_bg_alter = 0.08,
   fzflua_dir_part_fg = 0.7,
-  fzflua_headertext_fg_alter = -0.3,
+  fzflua_headertext_fg_alter = -0.28,
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = 0.1,
   nontext_fg_alter = 0.8,
@@ -429,8 +429,8 @@ reset_base_alter({ "lackluster" }, {
   fold_bg = -0.08,
   fold_fg = 0.55,
   fzflua_dir_part_fg = 0.72,
-  fzflua_file_part_fg = 0.25,
-  fzflua_headertext_fg_alter = -0.4,
+  fzflua_headertext_fg_alter = -0.15,
+  fzflua_cursorline_bg_alter = 0.12,
   linenr_fg_alter = -0.015,
   lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
   lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
@@ -530,7 +530,8 @@ reset_base_alter({ "vscode_modern" }, {
   cursorline_alter = 0.1,
   dapstopped_bg_alter = 0.2,
   fold_bg = -0.1,
-  fzflua_headertext_fg_alter = -0.25,
+  fzflua_file_part_fg = -0.13,
+  fzflua_headertext_fg_alter = -0.2,
   linenr_fg_alter = 0.02,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
@@ -1488,14 +1489,7 @@ local general_overrides = function()
     { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.2 }, bg = "NONE" } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
-    {
-      FzfLuaSel = {
-        fg = { from = "Directory", attr = "fg", alter = 0.1 },
-        -- bg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_sel_bg_alter },
-        bg = { from = "FzfLuaNormal", attr = "bg" },
-        bold = true,
-      },
-    },
+    { FzfLuaSel = { fg = "NONE", bg = "NONE", underline = true, bold = true } },
 
     -- ╭─────────╮
     -- │ PREVIEW │
@@ -1510,7 +1504,6 @@ local general_overrides = function()
     { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle" } },
     { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
 
-    -- { FzfLuaCursorLine = { bg = { from = "FzfLuaCursorLine", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
     { FzfLuaCursorLine = { bg = { from = "FzfLuaPreviewNormal", attr = "bg", alter = fzflua_cursorline_bg_alter } } },
     {
       FzfLuaCursorLineNr = {
@@ -1525,7 +1518,7 @@ local general_overrides = function()
     { TelescopeMatching = { link = "FzfLuaFzfMatch" } },
     { TelescopeTitle = { inherit = "FzfLuaTitle" } },
 
-    { TelescopeSelection = { bg = { from = "FzfLuaSel", attr = "bg" }, fg = "NONE", bold = true } },
+    { TelescopeSelection = { inherit = "FzfLuaSel" } },
     { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
 
     -- ╭────────╮
@@ -1573,7 +1566,7 @@ local general_overrides = function()
 
     { SnacksPickerPrompt = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { SnacksPickerInput = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
-    { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
+    { SnacksPickerListCursorLine = { link = "FzfLuaSel", bold = true } },
 
     { SnacksPickerBorder = { link = "FzfLuaBorder" } },
     { SnacksPickerBoxBorder = { link = "FzfLuaBorder" } },

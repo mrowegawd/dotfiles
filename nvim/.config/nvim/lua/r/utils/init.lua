@@ -15,6 +15,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field json r.utils.json
 ---@field extras r.utils.extras
 ---@field buf r.utils.buf
+---@field foldexpr r.utils.foldexpr
 ---@field plugin r.utils.plugin
 ---@field terminal r.utils.terminal
 ---@field mini r.utils.mini

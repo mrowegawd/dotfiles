@@ -156,7 +156,7 @@ return {
       -- { "<Leader>gs", function() Snacks.picker.git_status() end, desc = "Git: git status [snackspicker]", },
       -- Grep
       -- { "<Leader>fg", function() Snacks.picker.grep { hidden = true, layout = "ivy" } end, desc = "Snackspicker: grep open buffers", },
-      { "<leader>fg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
+      { "<Localleader>sg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
       -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
       { "<Localleader>sw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
       { "<Localleader>sW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd) [snackspicker]", mode = { "n", "x" }, },

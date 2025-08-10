@@ -1,5 +1,7 @@
 local rg_opts =
-  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:red' -e "
+  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:yellow'  -e "
+-- local rg_opts =
+--   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
 return {
@@ -276,15 +278,8 @@ return {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-
-          ["fg+"] = { "fg", "Directory", "underline" },
-          ["bg+"] = { "bg", "FzfLuaNormal" },
-          -- ["bg+"] = { "bg", { "FzfLuaFzfMatch", "Normal" } },
-
-          -- ["fg+"] = { "fg", "Normal", "underline" },
-          -- ["bg+"] = { "bg", { "CursorLine", "Normal" } },
-          -- ["hl+"] = { "fg", "Statement" },
-
+          ["fg+"] = { "fg", "FzfLuaSel", "underline" },
+          ["bg+"] = { "bg", "FzfLuaSel" },
           ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
