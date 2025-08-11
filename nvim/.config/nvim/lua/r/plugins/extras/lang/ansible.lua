@@ -1,38 +1,42 @@
-return {}
+-- return {}
 
 -- TODO: lastedit, ansiblels ini slow, next time di update :)
 
--- return {
---   recommended = function()
---     return RUtils.extras.wants {
---       ft = "yaml.ansible",
---       root = { "ansible.cfg", ".ansible-lint" },
---     }
---   end,
---   {
---     "mason-org/mason.nvim",
---     opts = { ensure_installed = { "ansible-lint" } },
---   },
---   {
---     "neovim/nvim-lspconfig",
---     opts = {
---       servers = {
---         ansiblels = {},
---       },
---     },
---   },
---   {
---     "mfussenegger/nvim-ansible",
---     ft = {},
---     -- keys = {
---     --   {
---     --     "<leader>ta",
---     --     function()
---     --       require("ansible").run()
---     --     end,
---     --     desc = "Ansible Run Playbook/Role",
---     --     silent = true,
---     --   },
---     -- },
---   },
--- }
+return {
+  recommended = function()
+    return RUtils.extras.wants {
+      ft = "yaml.ansible",
+      root = { "ansible.cfg", ".ansible-lint" },
+    }
+  end,
+  {
+    "mason-org/mason.nvim",
+    opts = { ensure_installed = { "ansible-lint", "ansible-language-server" } },
+  },
+  -- {
+  --   "mason-org/mason-lspconfig.nvim",
+  --   opts = { ensure_installed = { "ansible-language-server" } },
+  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        ansiblels = {},
+      },
+    },
+  },
+  {
+    "mfussenegger/nvim-ansible",
+    ft = {},
+    -- keys = {
+    --   {
+    --     "<leader>ta",
+    --     function()
+    --       require("ansible").run()
+    --     end,
+    --     desc = "Ansible Run Playbook/Role",
+    --     silent = true,
+    --   },
+    -- },
+  },
+}

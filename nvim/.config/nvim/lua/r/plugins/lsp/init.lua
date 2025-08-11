@@ -9,6 +9,7 @@ return {
       {
         "mason-org/mason-lspconfig.nvim",
         version = vim.fn.has "nvim-0.11" == 0 and "1.32.0" or false,
+        opts = { ensure_installed = { "lua_ls" } },
         config = function() end,
       },
     },
@@ -331,10 +332,8 @@ return {
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },
     opts = {
-      ensure_installed = {
-        "stylua",
-        "shfmt",
-      },
+      ensure_installed = { "shfmt", "stylua" },
+      automatic_installation = true,
       ui = { border = RUtils.config.icons.border.line, height = 0.8 },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
@@ -343,7 +342,7 @@ return {
       local mr = require "mason-registry"
       mr:on("package:install:success", function()
         vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
+          -- Trigger FileType event to possibly load this newly installed LSP server
           require("lazy.core.handler.event").trigger {
             event = "FileType",
             buf = vim.api.nvim_get_current_buf(),

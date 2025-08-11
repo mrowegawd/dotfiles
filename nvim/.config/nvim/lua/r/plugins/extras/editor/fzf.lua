@@ -4,6 +4,14 @@ local rg_opts =
 --   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
+local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+local win_height = math.ceil(lines * 0.5)
+local win_width = math.ceil(columns * 1)
+local col = math.ceil((columns - win_width) * 1)
+local row = math.ceil((lines - win_height) * 1 - 3)
+
 return {
   -- FZF-LUA
   {
@@ -249,14 +257,6 @@ return {
         end
       end
 
-      local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-      local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-
-      local win_height = math.ceil(lines * 0.5)
-      local win_width = math.ceil(columns * 1)
-      local col = math.ceil((columns - win_width) * 1)
-      local row = math.ceil((lines - win_height) * 1 - 3)
-
       return {
         winopts = {
           title_pos = "center",
@@ -339,7 +339,13 @@ return {
         }, -- remove separator line
         files = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("Files", "") },
+          winopts = {
+            title = RUtils.fzflua.format_title("Files", ""),
+            width = win_width,
+            height = win_height,
+            row = row,
+            col = col,
+          },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
           line_query = true, -- now we can use "example_file:32"

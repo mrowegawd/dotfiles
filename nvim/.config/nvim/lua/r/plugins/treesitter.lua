@@ -54,6 +54,7 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = {
           "c",
+          "copilot-chat",
           "cpp",
           "diff",
           "dockerfile",
@@ -78,7 +79,7 @@ return {
           "typescriptreact",
           "vim",
           "yaml",
-          "copilot-chat",
+          "yaml.ansible",
         },
         group = vim.api.nvim_create_augroup("nvim-treesitter-fts", { clear = true }),
         callback = function(args)
