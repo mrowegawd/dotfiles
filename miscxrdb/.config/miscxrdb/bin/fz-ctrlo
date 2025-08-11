@@ -13,7 +13,6 @@ GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   COL_STATUSLINE_BG_MESSAGE=$(grep -i STATUSLINE_BG_MESSAGE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  COL_TAB_ACTIVE_FG=$(grep -i BORDER_ACTIVE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   GET_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
