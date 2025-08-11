@@ -29,6 +29,7 @@ local base_cl = {
   fzflua_headertext_fg_alter = -0.33,
   fzflua_normal_bg_alter = 0.5,
   fzflua_sel_bg_alter = 2,
+  hovered_cursorline_fg_alter = 0.2,
   linenr_fg_alter = 0.08,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
@@ -186,6 +187,7 @@ local function reset_base_alter(themes, alter_base)
     winbar_file_path_fg_alter = "winbar_file_path_fg_alter",
     winbar_keyword = "winbar_keyword",
     winseparator_alter = "winseparator_alter",
+    hovered_cursorline_fg_alter = "hovered_cursorline_fg_alter",
 
     panel_sidebar_bg_alter = "panel_sidebar_bg_alter",
     panel_sidebar_fg_alter = "panel_sidebar_fg_alter",
@@ -532,6 +534,7 @@ reset_base_alter({ "vscode_modern" }, {
   fold_bg = -0.1,
   fzflua_file_part_fg = -0.13,
   fzflua_headertext_fg_alter = -0.2,
+  hovered_cursorline_fg_alter = 0.35,
   linenr_fg_alter = 0.02,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
@@ -1008,7 +1011,7 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
-    { HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = 0.2 } } },
+    { HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = hovered_cursorline_fg_alter } } },
     --
     { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },

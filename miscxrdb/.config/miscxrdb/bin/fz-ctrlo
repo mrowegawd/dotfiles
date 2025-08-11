@@ -6,21 +6,16 @@ set -uo pipefail
 # │                          utils                           │
 # ╰──────────────────────────────────────────────────────────╯
 
-GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
-COL_TAB_ACTIVE_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
-# COL_TAB_ACTIVE_BG="red"
 COL_STATUSLINE_BG_MESSAGE="yellow"
+COL_TAB_ACTIVE_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  # COL_TAB_ACTIVE_BG=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COL_STATUSLINE_BG_MESSAGE=$(grep -i STATUSLINE_BG_MESSAGE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-fi
-
-COLOR_MASTER="/tmp/master-colors-themes"
-if [ -f "$COLOR_MASTER" ]; then
-  GET_BG=$(grep -i color22 <"$COLOR_MASTER" | cut -d':' -f2 | head -1 | xargs)
+  COL_TAB_ACTIVE_FG=$(grep -i BORDER_ACTIVE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  GET_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 not_in_tmux() {
@@ -229,7 +224,7 @@ open_ps_btop() {
 
   if ! session_exists "$session"; then
     set -gF '@last_session_name' '#S'
-    tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+    tmux display-popup -d '#{pane_current_path}' -w '90%' -h '60%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
       -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
@@ -238,7 +233,7 @@ open_ps_btop() {
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
     else
-      tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+      tmux display-popup -d '#{pane_current_path}' -w '90%' -h '60%' -x '80%' -y '80%' \
         -S bg="$GET_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
         -E -d "#{pane_current_path}" \
