@@ -38,6 +38,8 @@ return {
 
           { "<Leader>j", group = "jumpTo" },
 
+          { "<Leader>p", group = "peek" },
+
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
           { "<Leader>go", group = "open" },

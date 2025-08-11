@@ -1,7 +1,57 @@
 return {
-  -- GOTO-PREVIEW
+  -- OVERLOOK.NVIM
+  {
+    "WilliamHsieh/overlook.nvim",
+    opts = {},
+    keys = {
+      {
+        "<Leader>pd",
+        function()
+          require("overlook.api").peek_definition()
+        end,
+        desc = "LSP: peek definition [overlook]",
+      },
+      {
+        "<Leader>pc",
+        function()
+          require("overlook.api").close_all()
+        end,
+        desc = "LSP: close all popup [overlook]",
+      },
+      {
+        "<Leader>pu",
+        function()
+          require("overlook.api").restore_popup()
+        end,
+        desc = "LSP: restore popup [overlook]",
+      },
+      {
+        "<Leader>pU",
+        function()
+          require("overlook.api").restore_all_popups()
+        end,
+        desc = "LSP: restore all popup [overlook]",
+      },
+      {
+        "<Leader>pv",
+        function()
+          require("overlook.api").open_in_vsplit()
+        end,
+        desc = "LSP: open vsplit [overlook]",
+      },
+      {
+        "<Leader>ps",
+        function()
+          require("overlook.api").open_in_split()
+        end,
+        desc = "LSP: open split [overlook]",
+      },
+    },
+  },
+  -- GOTO-PREVIEW (disabled)
   {
     "rmagatti/goto-preview",
+    enabled = false,
     dependencies = { "rmagatti/logger.nvim" },
     event = "LspAttach",
     config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88

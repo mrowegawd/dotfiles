@@ -315,36 +315,36 @@ function M.get()
     }
   end
 
-  if RUtils.has "goto-preview" then
-    M._keys[#M._keys + 1] = { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek [goto-preview]" }
-  else
-    M._keys[#M._keys + 1] = {
-      "gP",
-      function()
-        fzf_lua.lsp_definitions {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("LSP: Peek [fzflua]", RUtils.config.icons.misc.lsp),
-            relative = "editor",
-            backdrop = 60,
-            height = 0.80,
-            width = 0.60,
-            row = 0.50,
-            col = 0.50,
-            border = RUtils.config.icons.border.rectangle,
-            fullscreen = false,
-            preview = {
-              border = RUtils.config.icons.border.rectangle,
-              vertical = "up:80%", -- up|down:size
-              layout = "vertical", -- horizontal|vertical|flex
-            },
-          },
-        }
-      end,
-      has = "signatureHelp",
-      desc = "LSP: peek [fzflua]",
-    }
-  end
+  -- if RUtils.has "goto-preview" then
+  --   M._keys[#M._keys + 1] = { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek [goto-preview]" }
+  -- else
+  --   M._keys[#M._keys + 1] = {
+  --     "gP",
+  --     function()
+  --       fzf_lua.lsp_definitions {
+  --         prompt = RUtils.fzflua.default_title_prompt(),
+  --         winopts = {
+  --           title = RUtils.fzflua.format_title("LSP: Peek [fzflua]", RUtils.config.icons.misc.lsp),
+  --           relative = "editor",
+  --           backdrop = 60,
+  --           height = 0.80,
+  --           width = 0.60,
+  --           row = 0.50,
+  --           col = 0.50,
+  --           border = RUtils.config.icons.border.rectangle,
+  --           fullscreen = false,
+  --           preview = {
+  --             border = RUtils.config.icons.border.rectangle,
+  --             vertical = "up:80%", -- up|down:size
+  --             layout = "vertical", -- horizontal|vertical|flex
+  --           },
+  --         },
+  --       }
+  --     end,
+  --     has = "signatureHelp",
+  --     desc = "LSP: peek [fzflua]",
+  --   }
+  -- end
 
   return M._keys
 end
