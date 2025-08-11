@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Fungsi untuk mengubah permission simbolik ke angka
+perm_to_num() {
+  local perm=$1
+  local mode=""
+  for ((i = 0; i < ${#perm}; i += 3)); do
+    triad=${perm:$i:3}
+    val=0
+    [[ ${triad:0:1} == "r" ]] && ((val += 4))
+    [[ ${triad:1:1} == "w" ]] && ((val += 2))
+    [[ ${triad:2:1} == "x" || ${triad:2:1} == "s" || ${triad:2:1} == "t" ]] && ((val += 1))
+    mode+=$val
+  done
+  echo $mode
+}
+
+# Jika tidak ada argumen, periksa semua file di direktori saat ini
+if [ $# -eq 0 ]; then
+  files=(*)
+else
+  files=("$@")
+fi
+
+for file in "${files[@]}"; do
+  if [ -e "$file" ]; then
+    # Ambil permission simbolik dari ls -ld
+    perm_symbolic=$(stat -c "%A" "$file" | cut -c2-)
+    perm_numeric=$(perm_to_num "$perm_symbolic")
+    echo "$perm_numeric $file"
+  else
+    echo "File $file tidak ditemukan."
+  fi
+done
+
+# Example use
+# ./check_permission.sh file1.txt /path/to/anotherfile
