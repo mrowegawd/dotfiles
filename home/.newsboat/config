@@ -15,7 +15,7 @@ external-url-viewer         "urlview"
 
 # history-limit               0
 # max-items                   50
-cache-file                   ~/.cache/newsboat/cache.db
+# cache-file                   ~/.cache/newsboat/cache.db
 
 notify-format               "%d new articles"
 notify-program              "/usr/local/bin/dunstify"

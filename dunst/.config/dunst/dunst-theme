@@ -1,9 +1,9 @@
 # test
 
 [urgency_low]
-background = "%%normal_bg%%"
-foreground = "%%normal_fg%%"
-frame_color = "%%normal_frame_fg%%"
+background = "%%low_bg%%"
+foreground = "%%low_fg%%"
+frame_color = "%%low_frame_fg%%"
 timeout = 10
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 

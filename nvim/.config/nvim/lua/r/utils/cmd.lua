@@ -807,6 +807,7 @@ function M.follow_link(is_selection)
       local rg_opts =
         [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
 
+      local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
       fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     else
       if require("obsidian.api").cursor_link() then

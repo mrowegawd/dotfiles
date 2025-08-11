@@ -46,6 +46,12 @@ return {
   },
   {
     "mason-org/mason.nvim",
+    opts = function(_, opts)
+      table.insert(opts.ensure_installed, "bash-language-server")
+    end,
+  },
+  {
+    "mason-org/mason.nvim",
     opts = { ensure_installed = { "shellcheck" } },
   },
   -- add some stuff to treesitter

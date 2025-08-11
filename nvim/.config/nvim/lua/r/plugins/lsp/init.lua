@@ -9,7 +9,7 @@ return {
       {
         "mason-org/mason-lspconfig.nvim",
         version = vim.fn.has "nvim-0.11" == 0 and "1.32.0" or false,
-        opts = { ensure_installed = { "lua_ls" } },
+        opts = { ensure_installed = {} },
         config = function() end,
       },
     },
@@ -359,6 +359,11 @@ return {
         end
       end)
     end,
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = { ensure_installed = { "lua-language-server" } },
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   MISC                                                   │

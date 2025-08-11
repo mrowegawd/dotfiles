@@ -1,7 +1,7 @@
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-font-family    = "SF Mono"
+font-family    = "Maple Mono NL NF"
 # font-family = "Cousins hug"
 # font-family = "Cousins hug" # "JetBrainsMono NF"
 # font-family = "JetBrainsMono NF"
@@ -23,7 +23,7 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = ashen
+theme = base46-jellybeans
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |

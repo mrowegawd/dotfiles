@@ -1,5 +1,4 @@
 local keymap, api, opt = vim.keymap, vim.api, vim.opt_local
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local builtin = require "fzf-lua.previewer.builtin"
 local QFPreviewer = builtin.buffer_or_file:extend()
@@ -15,6 +14,10 @@ opt.listchars:append "trail: "
 -- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+
+local fzf_lua = function()
+  return RUtils.cmd.reqcall "fzf-lua"
+end
 
 -- Func untuk mengatasi error `no room enaough` saat open split/vsplit pada qf item,
 -- jadi dibutuhkan expand window height jika itu terjadi.
@@ -176,9 +179,9 @@ keymap.set("n", "<Leader>ff", function()
   }
 
   if RUtils.qf.is_loclist() then
-    fzf_lua.loclist(opts)
+    fzf_lua().loclist(opts)
   else
-    fzf_lua.quickfix(opts)
+    fzf_lua().quickfix(opts)
   end
 end, {
   buffer = api.nvim_get_current_buf(),
@@ -204,7 +207,7 @@ keymap.set("n", "<Leader>fg", function()
     .. table.concat(qf_ntbl, " ")
     .. " -e "
 
-  return fzf_lua.live_grep_glob {
+  return fzf_lua().live_grep_glob {
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
     cmd = pcmd,
@@ -292,6 +295,7 @@ keymap.set("n", "<Leader>fw", function()
   local _tbl = {}
   for _, x in pairs(items) do
     if #x.text == 0 then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.warn("No text, abort", { title = "QF" })
       return
     end
@@ -335,7 +339,7 @@ keymap.set("n", "<Leader>fw", function()
     return data
   end
 
-  fzf_lua.fzf_exec(_tbl, {
+  fzf_lua().fzf_exec(_tbl, {
     previewer = QFPreviewer,
     -- prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {

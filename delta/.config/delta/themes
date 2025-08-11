@@ -8,23 +8,23 @@ file-modified-label = [M]
 file-removed-label = [-]
 file-renamed-label = [R]
 # file-decoration-style = "#606018" overline
-file-style = "#999999" bold "#393939"
+file-style = "#798cae" bold "#2d3441"
 hunk-header-decoration-style = none
-hunk-header-style = syntax bold "#404040"
+hunk-header-style = syntax bold "#343434"
 line-numbers = true
 line-numbers-left-format = "{nm:>1}┊"
 line-numbers-left-style = red
-line-numbers-minus-style = "#ac483f" italic
-line-numbers-plus-style = "#89b16d" italic
+line-numbers-minus-style = "#c55348" italic
+line-numbers-plus-style = "#76975e" italic
 line-numbers-right-format = "{np:>1}┊"
 line-numbers-right-style = green
 line-numbers-zero-style = "#545474" italic
 
-minus-emph-style = "#f9685b" bold "#722f2a"
-minus-style = "#ac483f" bold "#4f211d"
+minus-emph-style = "#ff7464" bold "#592520"
+minus-style = "#c55348" bold "#401b17"
 
-plus-emph-style = "#c6ff9e" bold "#5b7448"
-plus-style = "#89b16d" bold "#3f5032"
+plus-emph-style = "#a5d383" bold "#445836"
+plus-style = "#76975e" bold "#313f27"
 
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse

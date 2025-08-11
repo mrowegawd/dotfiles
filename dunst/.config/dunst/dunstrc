@@ -28,13 +28,13 @@ follow = none
 width = (0, 650)
 
 # The maximum height of a single notification, excluding the frame.
-height = 300
+height = (0, 300)
 
 # Position the notification in the top right corner
 origin = top-right
 
 # Offset from the origin
-offset = 10x50
+offset = (10, 50)
 
 # Scale factor. It is auto-detected if value is 0.
 scale = 0
@@ -91,7 +91,7 @@ frame_width = 2
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#4A8B8B"
+frame_color = "#97bedc"
 
 # Define a color for the separator.
 # possible values are:
@@ -293,22 +293,22 @@ per_monitor_dpi = false
 # test
 
 [urgency_low]
-background = "#7d7d7d"
-foreground = "#fbfbfb"
-frame_color = "#7d7d7d"
+background = "#424242"
+foreground = "#848484"
+frame_color = "#272727"
 timeout = 10
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_normal]
-background = "#7d7d7d"
-foreground = "#fbfbfb"
-frame_color = "#7d7d7d"
+background = "#7b4c7b"
+foreground = "#f798f7"
+frame_color = "#7b4c7b"
 timeout = 12
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_critical]
-background = "#5e2722"
-foreground = "#bd4f45"
-frame_color = ""
+background = "#933e36"
+foreground = "#ff7464"
+frame_color = "#9d4239"
 timeout = 20
 icon = ~/.config/miscxrdb/icons/warning.png

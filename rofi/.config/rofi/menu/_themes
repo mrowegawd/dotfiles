@@ -231,8 +231,8 @@ set_dunst() {
   DUNST_LOW_FG=$(grep -i dunst_low_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%low_fg%%/$DUNST_LOW_FG/g" "$_DUNST_PATH/dunstrc"
 
-  DUNST_LOW_FRAME_FG=$(grep -i dunst_low_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%low_frame_fg%%/$DUNST_LOW_FRAME_FG/g" "$_DUNST_PATH/dunstrc"
+  DUNST_LOW_FRAME=$(grep -i dunst_low_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%low_frame_fg%%/$DUNST_LOW_FRAME/g" "$_DUNST_PATH/dunstrc"
 
   # Normal
   DUNST_NORMAL_BG=$(grep -i dunst_normal_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -241,8 +241,8 @@ set_dunst() {
   DUNST_NORMAL_FG=$(grep -i dunst_normal_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%normal_fg%%/$DUNST_NORMAL_FG/g" "$_DUNST_PATH/dunstrc"
 
-  DUNST_NORMAL_FRAME_FG=$(grep -i dunst_normal_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%normal_frame_fg%%/$DUNST_NORMAL_FRAME_FG/g" "$_DUNST_PATH/dunstrc"
+  DUNST_NORMAL_FRAME=$(grep -i dunst_normal_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%normal_frame_fg%%/$DUNST_NORMAL_FRAME/g" "$_DUNST_PATH/dunstrc"
 
   # Critical
   DUNST_CRITICAL_FG=$(grep -i dunst_critical_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -251,8 +251,8 @@ set_dunst() {
   DUNST_CRITICAL_BG=$(grep -i dunst_critical_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%critical_bg%%/$DUNST_CRITICAL_BG/g" "$_DUNST_PATH/dunstrc"
 
-  DUNST_CRITICAL_FRAME_BG=$(grep -i dunst_critical_frame_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%critical_frame_fg%%/$DUNST_CRITICAL_FRAME_BG/g" "$_DUNST_PATH/dunstrc"
+  DUNST_CRITICAL_FRAME=$(grep -i dunst_critical_frame: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%critical_frame_fg%%/$DUNST_CRITICAL_FRAME/g" "$_DUNST_PATH/dunstrc"
 
   # General
   DUNST_BG=$(grep -i dunst_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -724,7 +724,6 @@ set_lazydocker() {
     LAZYGIT_SELECTED_BG=$(grep -i lazygit_selected_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/%%selected_line_bg_color%%/$LAZYGIT_SELECTED_BG/g" "$LAZYDOCKER_CONFIG"
   fi
-
 }
 set_eww() {
   EWW_PATH="$HOME/.config/eww"

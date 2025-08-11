@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/ashen"
+#include ".config/miscxrdb/xresource-theme/base46-jellybeans"
 
 ! --------------
 ! XFT SETTINGS
