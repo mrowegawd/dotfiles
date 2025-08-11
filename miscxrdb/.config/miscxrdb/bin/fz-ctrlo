@@ -190,7 +190,8 @@ open_newsboat() {
 open_rkill() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
-  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$COL_TAB_ACTIVE_FG" | awk '{print $2}')
+  # pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$COL_TAB_ACTIVE_FG" | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
     echo "$pid" | xargs kill -9

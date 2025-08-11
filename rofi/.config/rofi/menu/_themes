@@ -700,6 +700,32 @@ set_lazygit() {
   fi
 
 }
+set_lazydocker() {
+  LAZYDOCKER_PATH="$HOME/.config/lazydocker"
+
+  LAZYDOCKER_CONFIG="$LAZYDOCKER_PATH/config.yml"
+
+  LAZYDOCKER_CONFIG_FLA="$LAZYDOCKER_PATH/_config.yml"
+  LAZYDOCKER_FLA="$LAZYDOCKER_PATH/theme/fla.yml"
+
+  if [ -f "$LAZYDOCKER_CONFIG" ]; then
+
+    cat "$LAZYDOCKER_CONFIG_FLA" "$LAZYDOCKER_FLA" >"$LAZYDOCKER_CONFIG"
+
+    LAZYGIT_ACTIVE_BORDER=$(grep -i lazygit_active_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%active_border_color%%/$LAZYGIT_ACTIVE_BORDER/g" "$LAZYDOCKER_CONFIG"
+
+    LAZYGIT_INACTIVE_BORDER=$(grep -i lazygit_inactive_border: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%inactive_border_color%%/$LAZYGIT_INACTIVE_BORDER/g" "$LAZYDOCKER_CONFIG"
+
+    LAZYGIT_OPTION_TXT=$(grep -i lazygit_option_txt: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%options_text_color%%/$LAZYGIT_OPTION_TXT/g" "$LAZYDOCKER_CONFIG"
+
+    LAZYGIT_SELECTED_BG=$(grep -i lazygit_selected_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/%%selected_line_bg_color%%/$LAZYGIT_SELECTED_BG/g" "$LAZYDOCKER_CONFIG"
+  fi
+
+}
 set_eww() {
   EWW_PATH="$HOME/.config/eww"
 
@@ -901,6 +927,7 @@ setup() {
   set_fzf
   set_yazi "$1"
   set_lazygit
+  set_lazydocker
   set_delta
   set_zshrc "$1"
   # set_polybar "$1"

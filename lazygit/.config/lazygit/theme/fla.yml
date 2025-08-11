@@ -1,14 +1,14 @@
 gui:
   theme:
     activeBorderColor:
-      - "#a0a0a0"
+      - "#3c6d95"
       - bold
     inactiveBorderColor:
-      - "#323232"
+      - "#3e3e3e"
     optionsTextColor:
-      - "#464646"
+      - "#565656"
     selectedLineBgColor:
-      - "#3c3c3c"
+      - "#223e55"
     defaultFgColor:
       - "#ffffff"
     searchingActiveBorderColor:
