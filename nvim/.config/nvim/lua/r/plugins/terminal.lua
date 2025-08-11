@@ -30,10 +30,10 @@ return {
         base:toggle()
       end, { desc = "toggle base terminal" })
       RUtils.map.nnoremap("<Localleader>t", function()
-        base:toggle()
+        vim.cmd "TermNew layout=float"
       end, { desc = "toggle base terminal" })
       RUtils.map.tnoremap("<Localleader>t", function()
-        base:toggle()
+        vim.cmd "TermNew layout=float"
       end, { desc = "toggle base terminal" })
 
       RUtils.map.vnoremap("<a-f>", function()
