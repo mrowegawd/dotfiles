@@ -12,6 +12,13 @@ COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 |
 TITLE_DUNST="Show Linux Help"
 TITLE_BORDER_LABEL="Bulk Snippet"
 
+is_mac() {
+  uname | grep -q "Darwin"
+}
+not_in_tmux() {
+  [ -z "$TMUX" ]
+}
+
 FZF_COMMAND="fzf --no-border "
 if ! not_in_tmux; then
   FZF_COMMAND="fzf-tmux -xC -w 80% -h 80% -y 43% "
@@ -23,15 +30,6 @@ is_path_exits() {
     exit
   fi
 }
-
-is_mac() {
-  uname | grep -q "Darwin"
-}
-
-not_in_tmux() {
-  [ -z "$TMUX" ]
-}
-
 copy_selected() {
   [[ -z $1 ]] && exit
 

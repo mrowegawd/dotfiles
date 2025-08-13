@@ -1,21 +1,50 @@
 #!/bin/bash
 
-checkgit() {
+PATH_DOTFILESXRC="$HOME/Downloads/dotfilesxc"
+[[ ! -d "$PATH_DOTFILESXRC" ]] && dunstify "Directory: $PATH_DOTFILESXRC not found. abort it" && exit
 
-	for VAR in "$(pwd)"/*; do
-		if [[ -d $VAR ]]; then
-			printf "====> \033[0;32m$(basename $VAR)\033[0m \n"
-			cd "$VAR" || exit
-			git fetch && git merge --no-ff --no-edit
-			git pull --rebase --prune
-			printf "\n"
-		fi
-		cd ..
-	done
+download_repo_dotfiles() {
+  PATH_DOTFILESXRC_REPO="$HOME/Dropbox/data.programming.forprivate/gitdotfilexrc"
+  [[ ! -f "$PATH_DOTFILESXRC_REPO" ]] && dunstify "Path: $PATH_DOTFILESXRC_REPO not found. abort it" && exit
 
+  # Convert cat command into array
+  mapfile -t DOTFILES <"$PATH_DOTFILESXRC_REPO"
+
+  cd "$PATH_DOTFILESXRC" || exit
+
+  for repo in "${DOTFILES[@]}"; do
+    NAME_REP=$(echo "$repo" | awk -F'/' '{print $4}')
+
+    if [[ ! -d "$PATH_DOTFILESXRC/$NAME_REP" ]]; then
+      git clone "$repo" "$NAME_REP"
+    else
+      printf "====> Repo \033[0;32m%s\033[0m are done\n" "$NAME_REP"
+    fi
+  done
 }
 
-BASECWD=$(basename "$(pwd)")
-[[ $BASECWD != "dotfilesxc" ]] && echo "not dotfilesxc" && exit 1
+update_repos() {
+  cd "$PATH_DOTFILESXRC" || exit
 
-checkgit
+  for VAR in "$(pwd)"/*; do
+    if [[ -d $VAR ]]; then
+      printf "====> \033[0;32m%s\033[0m \n" "$(basename "$VAR")"
+      cd "$VAR" || exit
+      git fetch && git merge --no-ff --no-edit
+      git pull --rebase --prune
+      printf "\n"
+    fi
+    cd ..
+  done
+}
+
+if [[ $1 == "download" ]]; then
+  download_repo_dotfiles
+else
+  echo -e "\nanother args: \"gitpulldot download\"\n"
+
+  # BASECWD=$(basename "$(pwd)")
+  # [[ $BASECWD != "dotfilesxc" ]] && echo "not dotfilesxc" && exit 1
+
+  update_repos
+fi
