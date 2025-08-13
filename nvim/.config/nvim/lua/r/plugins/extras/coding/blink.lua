@@ -176,16 +176,32 @@ return {
           preset = "none",
           ["<C-y>"] = { "select_and_accept" },
 
+          ["<C-j>"] = {
+            function()
+              local type = vim.fn.getcmdtype()
+              if type == "/" or type == "?" then
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+              end
+              if type == ":" or type == "@" then
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+              end
+            end,
+          },
+          ["<C-k>"] = {
+            function()
+              local type = vim.fn.getcmdtype()
+              if type == "/" or type == "?" then
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+              end
+              if type == ":" or type == "@" then
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+              end
+            end,
+          },
           ["<C-n>"] = {
             function(cmp)
               if not cmp.is_visible() then
-                local type = vim.fn.getcmdtype()
-                if type == "/" or type == "?" then
-                  return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
-                end
-                if type == ":" or type == "@" then
-                  return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
-                end
+                cmp.show {}
               else
                 cmp.select_next()
               end
@@ -280,8 +296,6 @@ return {
         -- How to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
 
-        -- I have to disable these mappings because they cause conflict errors
-        -- ["<CR>"] = {},
         ["<C-f>"] = {},
         ["<C-e>"] = {},
         ["<C-b>"] = {},
@@ -304,28 +318,28 @@ return {
             local current_provider = providers[idx]
 
             if current_provider == "codeium" and vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
-              -- Jika filetype adalah 'org' atau 'rgflow', lewati 'codeium'
               idx = idx + 1
               current_provider = providers[idx]
             end
 
             cmp.show { providers = { current_provider } }
 
-            -- Update idx untuk siklus nya
             idx = (idx % #providers) + 1
           end,
         },
+        ["<C-c>"] = {
+          "hide",
+          "cancel",
+          function()
+            if vim.fn.getcmdtype() ~= "" then
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+            end
+          end,
+        },
+
         ["<C-n>"] = {
           function(cmp)
             if not cmp.is_visible() then
-              local type = vim.fn.getcmdtype()
-              if type == "/" or type == "?" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
-              end
-              if type == ":" or type == "@" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
-              end
-
               cmp.show {}
             else
               cmp.select_next()
@@ -336,23 +350,6 @@ return {
           function(cmp)
             if cmp.is_visible() then
               cmp.select_prev()
-            else
-              local type = vim.fn.getcmdtype()
-              if type == "/" or type == "?" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
-              end
-              if type == ":" or type == "@" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
-              end
-            end
-          end,
-        },
-        ["<C-c>"] = {
-          "hide",
-          "cancel",
-          function()
-            if vim.fn.getcmdtype() ~= "" then
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
             end
           end,
         },
