@@ -254,7 +254,7 @@ return {
           alt = { "WARNING", "WARN" },
         },
         TODO = { icon = RUtils.config.icons.misc.check_big, color = "info" },
-        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
       },
       -- merge_keywords = false,
       highlight = {

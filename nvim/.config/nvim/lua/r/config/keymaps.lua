@@ -113,9 +113,42 @@ RUtils.map.tnoremap("<a-CR>", function()
 end, { desc = "Terminal: new term" })
 -- }}}
 -- {{{ Windows, view and nav
--- Edit window state
-RUtils.map.nnoremap("<Leader>wL", "<C-W>t <C-W>H", { desc = "Window: force buffers to vertical split" })
-RUtils.map.nnoremap("<Leader>wJ", "<C-W>t <C-W>K", { desc = "Window: force buffers to horizontal split" })
+RUtils.map.nnoremap("<c-h>", function()
+  vim.cmd "wincmd H"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd H" })
+RUtils.map.vnoremap("<c-h>", function()
+  vim.cmd "wincmd H"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd H" })
+
+RUtils.map.nnoremap("<c-K>", function()
+  vim.cmd "wincmd K"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd K" })
+RUtils.map.vnoremap("<c-K>", function()
+  vim.cmd "wincmd K"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd K" })
+
+vim.keymap.del("n", "<c-L>")
+RUtils.map.nnoremap("<c-L>", function()
+  vim.cmd "wincmd L"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd L" })
+RUtils.map.vnoremap("<c-L>", function()
+  vim.cmd "wincmd L"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd L" })
+
+RUtils.map.nnoremap("<c-J>", function()
+  vim.cmd "wincmd J"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd J" })
+RUtils.map.vnoremap("<c-J>", function()
+  vim.cmd "wincmd J"
+  vim.cmd "wincmd ="
+end, { desc = "Window: wincmd J" })
 
 -- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
 --   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
@@ -309,11 +342,6 @@ RUtils.map.inoremap("<Esc>", function()
   RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
-RUtils.map.nnoremap(
-  "<Leader>ur",
-  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-  { desc = "Toggle: redraw / clear hlsearch / diff update" }
-)
 RUtils.map.nnoremap("dd", function()
   if vim.fn.getline "." == "" then
     return '"_dd'
@@ -335,7 +363,11 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap("<Leader>n", vim.cmd.nohl, { desc = "Misc: clear searches" })
+RUtils.map.nnoremap(
+  "<Leader>n",
+  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  { desc = "Misc: redraw / clear hlsearch / diff update" }
+)
 RUtils.map.vnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
 RUtils.map.vnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
