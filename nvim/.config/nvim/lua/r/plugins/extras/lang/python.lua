@@ -20,6 +20,7 @@ return {
   end,
   {
     "nvim-treesitter/nvim-treesitter",
+    optional = true,
     opts = { ensure_installed = { "ninja", "rst" } },
   },
   {
@@ -62,6 +63,13 @@ return {
       end
     end,
   },
+
+  {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "pyright", "ruff" } },
+  },
+
   {
     "nvim-neotest/neotest",
     optional = true,

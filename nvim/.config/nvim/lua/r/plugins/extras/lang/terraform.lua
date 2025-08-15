@@ -18,6 +18,13 @@ return {
       },
     },
   },
+
+  {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "terraform-ls" } },
+  },
+
   -- ensure terraform tools are installed
   {
     "mason-org/mason.nvim",

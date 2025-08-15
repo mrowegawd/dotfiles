@@ -12,9 +12,15 @@ return {
     version = false, -- last release is way too old
   },
 
+  -- {
+  --   "mason-org/mason-lspconfig.nvim",
+  --   opts = { ensure_installed = { "jsonls" } },
+  -- },
+
   {
-    "mason-org/mason-lspconfig.nvim",
-    opts = { ensure_installed = { "jsonls" } },
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "json-lsp" } },
   },
 
   -- correctly setup lspconfig

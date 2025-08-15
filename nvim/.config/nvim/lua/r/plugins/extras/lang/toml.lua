@@ -11,4 +11,10 @@ return {
       taplo = {},
     },
   },
+
+  {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "taplo" } },
+  },
 }

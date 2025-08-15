@@ -15,7 +15,8 @@ return {
   -- Add packages(linting, debug adapter)
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "ktlint" } },
+    optional = true,
+    opts = { ensure_installed = { "ktlint", "kotlin-language-server" } },
   },
 
   -- kotlin

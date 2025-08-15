@@ -36,6 +36,12 @@ return {
 
   {
     "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "phpactor" } },
+  },
+
+  {
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "phpcs",

@@ -30,6 +30,13 @@ return {
       },
     },
   },
+
+  {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "neocmakelsp", "clangd" } },
+  },
+
   {
     "Civitasv/cmake-tools.nvim",
     lazy = true,

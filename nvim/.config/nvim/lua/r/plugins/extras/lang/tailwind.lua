@@ -67,6 +67,13 @@ return {
       },
     },
   },
+
+  {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "tailwindcss-language-server" } },
+  },
+
   {
     "iguanacucumber/magazine.nvim",
     optional = true,
