@@ -121,17 +121,7 @@ local overseer_tasks_for_status = function(status, colors)
   }
 end
 local rmux_pane = function()
-  local watch = ""
-  local run_with = ""
-  local rmux = require("rmux").status_panes_targeted()
-  if type(rmux) == "table" and (rmux.watch and #rmux.watch > 0) then
-    watch = table.concat(rmux.watch, " ")
-  end
-  if type(rmux) == "table" and (rmux.run_with and #rmux.run_with > 0) then
-    run_with = rmux.run_with
-  end
-
-  return run_with, watch
+  return require("rmux.statusline").get()
 end
 local __colors = function()
   local H = require "r.settings.highlights"
@@ -214,6 +204,9 @@ local __colors = function()
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
+
+    block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")), -0.4),
+    block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.3),
 
     winbar_fg = H.get("WinbarFilepath", "fg"),
     winbar_bg = H.get("PanelBottomNormal", "bg"),
@@ -1170,51 +1163,60 @@ M.BufferCwd = {
 }
 M.RmuxTargetPane = {
   init = function(self)
-    self.run_with, self.watch = rmux_pane()
+    local status = rmux_pane()
+
+    self.run_with = status.run_with
+    self.task = status.task
+    self.watch = status.watch
   end,
   condition = function()
     return set_conditions.hide_in_col_width(120)
   end,
   {
     provider = function(self)
-      if #self.watch > 0 then
-        return RUtils.config.icons.misc.separator_down .. " "
+      if self.task > 0 or #self.watch > 0 then
+        return RUtils.config.icons.misc.separator_down
       end
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.block_notice },
+    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg },
   },
+  -- {
+  --   provider = function(self)
+  --     if self.run_with and self.task > 0 then
+  --       return self.run_with
+  --     end
+  --   end,
+  --   hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
+  -- },
+
   {
     provider = function(self)
-      if #self.watch > 0 then
-        return self.run_with
+      if self.task > 0 then
+        return "  " .. self.task
       end
     end,
-    hl = { fg = colors.normal_bg, bg = colors.block_notice, bold = true },
+    hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
   },
 
   {
     provider = function(self)
       if #self.watch > 0 then
-        return " W "
+        return "  " .. self.watch[1]
       end
     end,
-    hl = { fg = colors.normal_bg, bg = colors.block_notice, bold = true },
+    hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
   },
   {
     provider = function(self)
-      if #self.watch > 0 then
-        return self.watch
+      if self.task > 0 then
+        return RUtils.config.icons.misc.separator_down
       end
-    end,
-    hl = { fg = colors.block_notice_keyword, bg = colors.block_notice, bold = true },
-  },
-  {
-    provider = function(self)
+
       if #self.watch > 0 then
         return RUtils.config.icons.misc.separator_down
       end
     end,
-    hl = { fg = colors.block_notice, bg = colors.block_notice },
+    hl = { fg = colors.block_mux_bg, bg = colors.block_mux_bg },
   },
 }
 M.Filetype = {
@@ -1223,7 +1225,10 @@ M.Filetype = {
     local filename = get_vars.filename(bufname)
     local extension = get_vars.extension(filename)
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-    self.run_with, self.watch = rmux_pane()
+
+    local status = rmux_pane()
+    self.task = status.task
+
     self.filetype = get_vars.filetype()
   end,
   {
@@ -1234,8 +1239,8 @@ M.Filetype = {
     end,
     hl = function(self)
       local fg = colors.statusline_bg
-      if #self.watch > 0 then
-        fg = colors.block_notice
+      if self.task > 0 then
+        fg = colors.block_mux_bg
       end
       return { fg = fg, bg = colors.block_darken_bg }
     end,

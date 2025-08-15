@@ -252,7 +252,7 @@ function M.browse_this_error(is_selection)
     winopts = {
       title = RUtils.fzflua.format_title("What do you want?", "󱥽"),
       border = "rounded",
-      height = 0.15,
+      height = 0.20,
       width = 0.30,
       row = 1.05,
       relative = "cursor",
