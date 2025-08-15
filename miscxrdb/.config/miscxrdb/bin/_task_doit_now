@@ -11,6 +11,12 @@ ICON_LEARNING_PATH="$HOME/.config/miscxrdb/icons/knowledge.png"
 GREEN="$(xrdb -query | grep 'color3:' | awk '{print $NF}' | head -1)"
 RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
 
+TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+  GREEN=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+fi
+
 TASK="$(/usr/bin/rg -i "\*\sPROGRES" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
 LEARNING="$(/usr/bin/rg -i "\*\sLEARNING" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
 

@@ -146,6 +146,10 @@ rules = [
   # Fallback
   { name = "*", fg = "%%col_filename_fg%%" },
   { name = "*/", fg = "%%col_directory%%" },
+
+  # Fallback
+  { url = "*", fg = "%%col_filename_fg%%" },
+  { url = "*/", fg = "%%col_directory%%" },
 ]
 
 # : }}}

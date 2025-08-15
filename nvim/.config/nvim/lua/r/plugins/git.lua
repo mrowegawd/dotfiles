@@ -2,6 +2,24 @@
 -- to avoid conflicts, it is temporarily disabled.
 vim.g.fugitive_no_maps = 1
 
+local git_sign = {
+  add = "+", --  "▎" "▌" "┆"
+  change = "m",
+  delete = "_",
+  topdelete = "‾",
+  changedelete = "~",
+}
+
+if vim.tbl_contains({ "neogotham", "vscode_modern" }, vim.g.colorscheme) then
+  git_sign = {
+    add = "▌",
+    change = "▌",
+    delete = "_",
+    topdelete = "‾",
+    changedelete = "~",
+  }
+end
+
 return {
   -- GH.NVIM
   {
@@ -292,18 +310,18 @@ return {
       -- debug_mode = true,
       attach_to_untracked = true,
       signs_staged = {
-        add = { text = "+" }, --  "▎" "▌" "┆"
-        change = { text = "m" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "~" },
+        add = { text = git_sign.add }, --  "▎" "▌" "┆"
+        change = { text = git_sign.change },
+        delete = { text = git_sign.delete },
+        topdelete = { text = git_sign.topdelete },
+        changedelete = { text = git_sign.changedelete },
       },
       signs = {
-        add = { text = "+" },
-        change = { text = "m" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "~" },
+        add = { text = git_sign.add },
+        change = { text = git_sign.change },
+        delete = { text = git_sign.delete },
+        topdelete = { text = git_sign.topdelete },
+        changedelete = { text = git_sign.changedelete },
         untracked = { text = "┆" },
       },
       preview_config = {

@@ -12,6 +12,7 @@ local base_cl = {
   },
   blink_cmp_label_kind_fg_alter = 0.9,
   blink_cmp_label_match_fg_alter = 0.2,
+  blink_ghost_text_fg_alter = -0.35,
   bqf_keyword = "Keyword",
   cmpdocnormal_fg_alter = 0.3,
   comment_fg_alter = 0.65,
@@ -29,6 +30,7 @@ local base_cl = {
   fzflua_headertext_fg_alter = -0.33,
   fzflua_normal_bg_alter = 0.5,
   fzflua_sel_bg_alter = 2,
+  fzflua_sel_sp_alter = 0.14,
   hovered_cursorline_fg_alter = 0.2,
   linenr_fg_alter = 0.08,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
@@ -46,6 +48,7 @@ local base_cl = {
   pmenu_bg_alter = 0.7,
   pmenu_fg_alter = -0.1,
   pmenu_sel_bg_alter = 0.2,
+  pmenu_sp_alter = 2.5,
   pmenu_thumb_bg_alter = 0.4,
   quickfixline_alter = 0.45,
   quickfixline_header_bg_alter = 0.2,
@@ -54,6 +57,7 @@ local base_cl = {
   quickfixline_header_tint_fg_alter = 0,
   quickfixline_linenr_fg_alter = 0.8,
   quickfixline_separator_fg_alter = -0.35,
+  quickfixline_sp_alter = 1,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = -0.1,
   statusline_fg_alter = 0.7,
@@ -123,6 +127,7 @@ local function reset_base_alter(themes, alter_base)
     Search = "Search",
     blink_cmp_label_kind_fg_alter = "blink_cmp_label_kind_fg_alter",
     blink_cmp_label_match_fg_alter = "blink_cmp_label_match_fg_alter",
+    blink_ghost_text_fg_alter = "blink_ghost_text_fg_alter",
     bqf_keyword = "bqf_keyword",
     cmpdocnormal_fg_alter = "cmpdocnormal_fg_alter",
     comment_fg_alter = "comment_fg_alter",
@@ -152,6 +157,8 @@ local function reset_base_alter(themes, alter_base)
     fzflua_headertext_fg_alter = "fzflua_headertext_fg_alter",
     fzflua_normal_bg_alter = "fzflua_normal_bg_alter",
     fzflua_sel_bg_alter = "fzflua_sel_bg_alter",
+    fzflua_sel_sp_alter = "fzflua_sel_sp_alter",
+    hovered_cursorline_fg_alter = "hovered_cursorline_fg_alter",
     linenr_fg_alter = "linenr_fg_alter",
     lsp_reference_read_bg_alter = "lsp_reference_read_bg_alter",
     lsp_reference_text_bg_alter = "lsp_reference_text_bg_alter",
@@ -169,6 +176,7 @@ local function reset_base_alter(themes, alter_base)
     pmenu_bg_alter = "pmenu_bg_alter",
     pmenu_fg_alter = "pmenu_fg_alter",
     pmenu_sel_bg_alter = "pmenu_sel_bg_alter",
+    pmenu_sp_alter = "pmenu_sp_alter",
     pmenu_thumb_bg_alter = "pmenu_thumb_bg_alter",
     quickfixline_alter = "quickfixline_alter",
     quickfixline_header_bg_alter = "quickfixline_header_bg_alter",
@@ -177,6 +185,7 @@ local function reset_base_alter(themes, alter_base)
     quickfixline_header_tint_fg_alter = "quickfixline_header_tint_fg_alter",
     quickfixline_linenr_fg_alter = "quickfixline_linenr_fg_alter",
     quickfixline_separator_fg_alter = "quickfixline_separator_fg_alter",
+    quickfixline_sp_alter = "quickfixline_sp_alter",
     snacks_indent_scope_fg_alter = "snacks_indent_scope_fg_alter",
     statusline_bg_alter = "statusline_bg_alter",
     statusline_fg_alter = "statusline_fg_alter",
@@ -187,7 +196,6 @@ local function reset_base_alter(themes, alter_base)
     winbar_file_path_fg_alter = "winbar_file_path_fg_alter",
     winbar_keyword = "winbar_keyword",
     winseparator_alter = "winseparator_alter",
-    hovered_cursorline_fg_alter = "hovered_cursorline_fg_alter",
 
     panel_sidebar_bg_alter = "panel_sidebar_bg_alter",
     panel_sidebar_fg_alter = "panel_sidebar_fg_alter",
@@ -320,6 +328,7 @@ reset_base_alter({ "base46-melange" }, {
   winseparator_alter = 0.33,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
+  blink_cmp_label_kind_fg_alter = 0.5,
   comment_fg_alter = 0.78,
   cursor_fg = "#ffffff",
   cursorline_alter = 0.5,
@@ -327,14 +336,14 @@ reset_base_alter({ "base46-oxocarbon" }, {
   dapstopped_bg_alter = 0.2,
   fold_fg = 0.6,
   fzflua_cursorline_bg_alter = -0.1,
-  linenr_fg_alter = 0.04,
+  linenr_fg_alter = 0.3,
   noice_cmdline_fg_alter = 1,
   nontext_fg_alter = 2.7,
   pmenu_bg_alter = 1.5,
   render_markdown_code_bg_alter = 0.85,
   render_markdown_code_inline_bg_alter = 0.16,
   trouble_indent_fg_alter = 1.65,
-  winseparator_alter = 1,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   comment_fg_alter = 0.32,
@@ -476,6 +485,7 @@ reset_base_alter({ "neogotham" }, {
   nontext_fg_alter = 4,
   normal_keyword_alter = 0.25,
   pmenu_bg_alter = 2.2,
+  pmenu_sp_alter = 6,
   render_markdown_code_bg_alter = 1.5,
   statusline_fg_alter = 1,
   tabline_bg_alter = 0.5,
@@ -655,6 +665,7 @@ local general_overrides = function()
       Pmenu = {
         fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
         bg = { from = "Normal", attr = "bg", alter = pmenu_bg_alter },
+        sp = { from = "Normal", attr = "bg", alter = pmenu_sp_alter },
         reverse = false,
       },
     },
@@ -743,7 +754,8 @@ local general_overrides = function()
     {
       QuickFixLine = {
         fg = "NONE",
-        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_alter },
+        bg = "NONE",
+        sp = { from = "NormalKeyword", attr = "bg", alter = quickfixline_sp_alter },
         underline = false,
         bold = true,
         reverse = false,
@@ -751,11 +763,11 @@ local general_overrides = function()
     },
     {
       QuickFixHeader = {
-        fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_fg_alter },
-        bg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_header_bg_alter },
+        fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_bg_alter },
       },
     },
-    { QuickFixLineNr = { fg = { from = "QuickFixLine", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
+    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
     { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = quickfixline_separator_fg_alter } } },
     { qfSeparator2 = { link = "qfSeparator1" } },
     { Delimiter = { link = "qfSeparator1" } },
@@ -1097,7 +1109,12 @@ local general_overrides = function()
         italic = true,
       },
     },
-    { BlinkCmpGhostText = { fg = { from = "StatusLine", attr = "bg", alter = 0.38 }, bg = "NONE" } },
+    {
+      BlinkCmpGhostText = {
+        fg = { from = "NoiceCmdline", attr = "fg", alter = blink_ghost_text_fg_alter },
+        bg = "NONE",
+      },
+    },
     {
       BlinkCmpDocSeparator = {
         fg = { from = "FloatBorder", attr = "fg" },
@@ -1522,7 +1539,15 @@ local general_overrides = function()
     { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.2 }, bg = "NONE" } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
-    { FzfLuaSel = { fg = "NONE", bg = "NONE", underline = true, bold = true } },
+    {
+      FzfLuaSel = {
+        fg = "NONE",
+        bg = "NONE",
+        sp = { from = "FzfLuaFilePart", attr = "fg", alter = fzflua_sel_sp_alter },
+        underline = true,
+        bold = true,
+      },
+    },
 
     -- ╭─────────╮
     -- │ PREVIEW │
@@ -2024,8 +2049,7 @@ local function set_panel_highlight()
       QuickFixLine = {
         fg = "NONE",
         bg = "NONE",
-        -- bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
-        -- bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_alter },
+        sp = { from = "NormalKeyword", attr = "bg", alter = quickfixline_sp_alter },
         underline = true,
         bold = true,
         reverse = false,

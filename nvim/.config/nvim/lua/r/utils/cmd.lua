@@ -966,6 +966,11 @@ function M.change_colors()
     __tab_statusline_fg = -0.28
   end
 
+  if vim.tbl_contains({ "neogotham" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.22
+    __tab_statusline_fg = -0.22
+  end
+
   if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.26
     __tab_statusline_fg = -0.26
@@ -999,10 +1004,24 @@ function M.change_colors()
     zsh_lines_fg = 0.4
   end
 
+  local zsh_special_more_themes = { "neogotham" }
+  if vim.tbl_contains(zsh_special_more_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.5
+  end
+
   local zsh_lines = H.tint(H.get("WinSeparator", "fg"), zsh_lines_fg)
   local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), zsh_sugest_fg)
   ---
   --------------------------------------------------------------------
+  ---
+
+  -- YAZI ------------------------------------------------------------
+  --
+  local yazi_hovered_fg = 0
+  local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
+  ---
+  --------------------------------------------------------------------
+  ---
 
   -- LAZYGIT ---------------------------------------------------------
   --
@@ -1042,6 +1061,7 @@ function M.change_colors()
 
       selection_fg = H.get("Directory", "fg"),
       selection_bg = H.get("Normal", "bg"),
+      selection_sp = H.get("FzfLuaSel", "sp"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
       gutter = H.get("FzfLuaNormal", "bg"),
@@ -1175,7 +1195,7 @@ function M.change_colors()
     },
     yazi = {
       cwd = H.get("PanelSideRootName", "fg"),
-      hovered = H.get("HoveredCursorline", "bg"),
+      hovered = yazi_hovered,
 
       selected = H.tint(H.get("diffDelete", "fg"), 0.3),
       count_selected_bg = H.tint(H.get("diffDelete", "fg"), -0.5),
