@@ -217,6 +217,8 @@ return {
     -- stylua: ignore
     keys = {
       -- { "<Localleader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
+      { "<Leader>jd", function() Snacks.scope.jump({bottom= true}) end, desc = "JumpTo: scope above [snacks]" },
+      { "<Leader>ju", function() Snacks.scope.jump({bottom= false}) end, desc = "JumpTo: scope bottom [snacks]" },
       -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
       -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },

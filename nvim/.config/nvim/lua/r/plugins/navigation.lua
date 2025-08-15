@@ -556,7 +556,7 @@ return {
       {
         "<Leader>wo",
         function()
-          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree" }
+          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history" }
           for _, win in pairs(right_win) do
             if vim.bo.filetype ~= win then
               local win_checked = RUtils.cmd.windows_is_opened { win }

@@ -369,6 +369,8 @@ return {
       { "<Leader>eg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
       { "<Leader>ep", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
+      { "<a-G>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: grep buf" },
+
       { "<Leader>ee", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
       { "<Leader>eE", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
       { "<Leader>e?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
