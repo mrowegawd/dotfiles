@@ -463,6 +463,36 @@ reset_base_alter({ "lackluster" }, {
   difftext_fg_alter = 0.2,
   difftext_bg_alter = -0.55,
 })
+reset_base_alter({ "neogotham" }, {
+  comment_fg_alter = 0.8,
+  cursor_fg = "#98d1ce",
+  cursorline_alter = 0.05,
+  dapstopped_bg_alter = 0.15,
+  fold_fg = 0.6,
+  fzflua_cursorline_bg_alter = 0.17,
+  fzflua_headertext_fg_alter = -0.2,
+  linenr_fg_alter = 0.15,
+  noice_cmdline_fg_alter = 0.6,
+  nontext_fg_alter = 4,
+  normal_keyword_alter = 0.25,
+  pmenu_bg_alter = 2.2,
+  render_markdown_code_bg_alter = 1.5,
+  statusline_fg_alter = 1,
+  tabline_bg_alter = 0.5,
+  trouble_indent_fg_alter = 0.6,
+  winbar_file_path_fg_alter = 0.7,
+  winseparator_alter = 1.4,
+
+  -- quickfixline_alter = 0.6,
+  quickfixline_header_bg_alter = 0.05,
+  quickfixline_header_fg_alter = 1,
+  quickfixline_separator_fg_alter = 0.15,
+  -- quickfixline_header_fg_alter = 2,
+  -- quickfixline_header_tint_bg_alter = 0,
+  -- quickfixline_header_tint_fg_alter = 0,
+  -- quickfixline_linenr_fg_alter = 3,
+  -- quickfixline_separator_fg_alter = -0.35,
+})
 reset_base_alter({ "rose-pine-dawn" }, {
   CurSearch = {
     fg = { from = "Dark_red", attr = "fg", alter = 1 },

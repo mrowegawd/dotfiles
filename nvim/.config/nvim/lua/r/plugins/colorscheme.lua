@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- NEOGOTHAM
+  {
+    "shmerl/neogotham",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local neogotham_theme = { "neogotham" }
+      if vim.tbl_contains(neogotham_theme, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- TECHBASE
   {
     "mcauley-penney/techbase.nvim",
