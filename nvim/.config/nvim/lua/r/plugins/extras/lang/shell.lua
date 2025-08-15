@@ -24,7 +24,7 @@ RUtils.on_very_lazy(function()
     },
     pattern = {
       [".*/waybar/config"] = "jsonc",
-      ["%.vscode/tasks.json"] = "task",
+      ["%.vscode/tasks.json"] = "jsonc",
       [".*/mako/config"] = "dosini",
       [".*/kitty/.+%.conf"] = "kitty",
       [".*/hypr/.+%.conf"] = "hyprlang",

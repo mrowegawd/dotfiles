@@ -11,11 +11,7 @@
     {
       "label": "Orchestrations: run all tail task",
       "type": "shell",
-      "dependsOn": [
-        "Tail lsp.log",
-        "Tail nvim log",
-        "Tail journalctl"
-      ]
+      "dependsOn": ["Tail lsp.log", "Tail nvim log", "Tail journalctl"]
     },
     {
       "label": "Tail lsp.log",
