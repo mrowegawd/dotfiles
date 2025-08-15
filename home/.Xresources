@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/base46-jellybeans"
+#include ".config/miscxrdb/xresource-theme/vscode_modern"
 
 ! --------------
 ! XFT SETTINGS

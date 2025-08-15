@@ -23,23 +23,23 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = base46-jellybeans
+theme = vscode_modern
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
 # +-----------------------------------------------------------+
 window-decoration               = none
 window-padding-x                = 5
-window-padding-y                = 5
+window-padding-y                = 0
 # window-colorspace               = display-p3
-window-padding-balance          = false
+window-padding-balance          = true
 window-step-resize              = false
 window-theme                    = ghostty
 
 # +-----------------------------------------------------------+
 # | MISC                                                      |
 # +-----------------------------------------------------------+
-custom-shader = "./shaders/cursor_smear_fade.glsl"
+custom-shader = "./shaders/cursor_blaze.glsl"
 
 resize-overlay                  = never
 cursor-style                    = block
@@ -93,16 +93,19 @@ keybind = ctrl+zero=reset_font_size
 # ┏╍╍╍╍╍╍┓
 # ╏ PANE ╏
 # ┗╍╍╍╍╍╍┛
-# keybind = ctrl+h=goto_split:left
-# keybind = ctrl+j=goto_split:bottom
-# keybind = ctrl+k=goto_split:top
-# keybind = ctrl+l=goto_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
 
 # keybind = unconsumed:alt+enter=new_split:right
 # keybind = alt+l=new_split:right
-# keybind = ctrl+space,j=new_split:down
+# keybind = ctrl+space,j=new_split:new_split:right
 
-# keybind = alt+shift+k=resize_split:up,15
-# keybind = alt+shift+h=resize_split:left,15
-# keybind = alt+shift+j=resize_split:down,15
-# keybind = alt+shift+l=resize_split:right,15
+keybind = ctrl+shift+o=new_split:right
+keybind = ctrl+shift+p=new_split:down
+
+keybind = ctrl+alt+shift+k=resize_split:up,20
+keybind = ctrl+alt+shift+h=resize_split:left,20
+keybind = ctrl+alt+shift+j=resize_split:down,20
+keybind = ctrl+alt+shift+l=resize_split:right,20

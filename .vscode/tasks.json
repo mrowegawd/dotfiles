@@ -9,7 +9,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Orchestrations: Run All Tail Task",
+      "label": "Orchestrations: run all tail task",
       "type": "shell",
       "dependsOn": [
         "Tail lsp.log",

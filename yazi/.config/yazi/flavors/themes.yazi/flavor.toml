@@ -1,10 +1,10 @@
 # : Manager {{{
 
 [mgr]
-cwd = { fg = "#694f69" }
+cwd = { fg = "#526777" }
 
 # Hovered
-hovered = { bg = "#3c2d3c" }
+hovered = { bg = "#34424c" }
 preview_hovered = { underline = true }
 
 # Find
@@ -13,21 +13,21 @@ find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
 marker_copied = { fg = "#e7ce05", bg = "#e7ce05" }
-marker_cut = { fg = "#c6e089", bg = "#c6e089" }
-marker_marked   = { fg = "#9db5e1", bg = "#475266" }
+marker_cut = { fg = "#ffbc9c", bg = "#ffbc9c" }
+marker_marked   = { fg = "#f2f2bb", bg = "#6e6e55" }
 marker_selected = { fg = "#ff6b5d", bg = "#ff6b5d" }
 
 count_selected = { fg = "#622924", bg = "#ff6b5d" }
 count_copied = { fg = "#594f02", bg = "#e7ce05" }
-count_cut = { fg = "#4c5635", bg = "#c6e089" }
+count_cut = { fg = "#67483c", bg = "#ffbc9c" }
 
 # Border
 border_symbol = "│"
 border_style = { fg = "#1c1c1c" }
 
 [tabs]
-active = { fg = "#e18be1", bg = "#322632", bold = true }
-inactive = { fg = "#322632", bg = "#4f4f4f", bold = true }
+active = { fg = "#569cd6", bg = "#273139", bold = true }
+inactive = { fg = "#273139", bg = "#575757", bold = true }
 # sep_inner = { open = "", close = "" }
 # sep_outer = { open = "", close = "" }
 sep_inner = { open = "", close = "" }
@@ -36,14 +36,14 @@ sep_outer = { open = "", close = "" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#646464", bg = "#393939", bold = true }
-normal_alt = { fg = "#484848", bg = "#303030" }
+normal_main = { fg = "#676767", bg = "#3f3f3f", bold = true }
+normal_alt = { fg = "#4a4a4a", bg = "#353535" }
 
-select_main = { fg = "#a2b47e", bg = "#4b543a", bold = true }
-select_alt = { fg = "#6c7854", bg = "#363c2a" }
+select_main = { fg = "#e1ae9c", bg = "#695148", bold = true }
+select_alt = { fg = "#967468", bg = "#4b3a34" }
 
-unset_main = { fg = "#475266", bg = "#c8e6ff", bold = true }
-unset_alt = { fg = "#1c2028", bg = "#8fa5cd" }
+unset_main = { fg = "#6e6e55", bg = "#ffffed", bold = true }
+unset_alt = { fg = "#2b2b21", bg = "#dcdcaa" }
 
 # : Status {{{
 
@@ -100,7 +100,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#303030" }
+mask = { bg = "#343434" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -116,7 +116,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#694f69", bold = true }
+hovered = { bg = "#526777", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -144,8 +144,12 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#c3c3b0" },
-  { name = "*/", fg = "#8fa5cd" },
+  { name = "*", fg = "#b7b7b7" },
+  { name = "*/", fg = "#569cd6" },
+
+  # Fallback
+  { url = "*", fg = "#b7b7b7" },
+  { url = "*/", fg = "#569cd6" },
 ]
 
 # : }}}
