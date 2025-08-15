@@ -1912,18 +1912,24 @@ local general_overrides = function()
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
       RgFlowHeadLine = {
-        bg = { from = "Keyword", attr = "fg", alter = -0.65 },
-        fg = { from = "NormalFloat", attr = "bg" },
+        -- fg = { from = "NormalFloat", attr = "bg" },
+        bg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
+        fg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
       },
     },
     {
       RgFlowHead = {
-        bg = { from = "RgFlowHeadLine" },
         fg = { from = "Keyword", attr = "fg", alter = 0.5 },
+        bg = { from = "RgFlowHeadLine" },
         bold = true,
       },
     },
-    { RgFlowInputBg = { bg = { from = "RgFlowHeadLine" } } },
+    {
+      RgFlowInputBg = {
+        fg = { from = "RgFlowHeadLine", attr = "bg", alter = 2 },
+        bg = { from = "RgFlowHeadLine", attr = "bg", alter = -0.1 },
+      },
+    },
     { RgFlowInputFlags = { bg = "NONE" } },
 
     --  ────────────────────────────[ VIM.MATCHUP ]────────────────────────────

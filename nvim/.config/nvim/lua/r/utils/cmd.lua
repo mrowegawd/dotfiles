@@ -44,34 +44,42 @@ end
 
 ---@param wins table
 function M.windows_is_opened(wins)
-  wins = wins or {}
+  local ft_wins = { "incline" }
 
-  vim.validate {
-    wins = { wins, "table" },
-  }
-
-  local ft_wins = {
-    "incline",
-  }
-
-  if #wins > 0 then
-    for _, x in pairs(wins) do
-      ft_wins[#ft_wins + 1] = x
+  if type(wins) == "table" then
+    if #wins > 0 then
+      for _, x in pairs(wins) do
+        ft_wins[#ft_wins + 1] = x
+      end
     end
   end
 
-  local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0 }
-  for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+  if type(wins) == "string" then
+    ft_wins[#ft_wins + 1] = wins
+  end
+
+  local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0, ft = "" }
+  for _, winnr in ipairs(vim.api.nvim_list_wins()) do
     local winbufnr = vim.fn.winbufnr(winnr)
-    if
-      winbufnr > 0
-      and (
-        vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("filetype", { buf = winbufnr }))
-        or vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("buftype", { buf = winbufnr }))
-      )
-    then
-      local winid = vim.fn.win_findbuf(winbufnr)[1] -- example winid: 1004, 1005
-      outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
+
+    if tonumber(winbufnr) == 0 then
+      return outline_tbl
+    end
+
+    local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
+    local buf_buftype = vim.api.nvim_get_option_value("buftype", { buf = winbufnr })
+
+    local winid = vim.fn.win_findbuf(winbufnr)[1] -- example winid: 1004, 1005
+    -- local win_config = vim.api.nvim_win_get_config(winid)
+    -- local is_float = win_config.relative ~= ""
+
+    -- RUtils.info(buf_ft)
+    -- RUtils.info(buf_buftype)
+    -- RUtils.info(is_float and "FLOATING" or "NORMAL")
+    -- RUtils.info "-----------------------------------"
+
+    if vim.tbl_contains(ft_wins, buf_ft) or vim.tbl_contains(ft_wins, buf_buftype) then
+      outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid, ft = buf_ft }
     end
   end
 

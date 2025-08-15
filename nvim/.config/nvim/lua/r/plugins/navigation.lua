@@ -554,9 +554,9 @@ return {
         desc = "Open: outline window [outline]",
       },
       {
-        "ro",
+        "<Leader>wo",
         function()
-          local right_win = { "trouble", "aerial", "Outline" }
+          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree" }
           for _, win in pairs(right_win) do
             if vim.bo.filetype ~= win then
               local win_checked = RUtils.cmd.windows_is_opened { win }
