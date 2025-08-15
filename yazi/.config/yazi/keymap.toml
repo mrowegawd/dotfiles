@@ -13,7 +13,7 @@ prepend_keymap = [
   { on = [ "<c-s>", ], run = "plugin smart-enter -- split", desc = "Open split the selected item" },
   { on = [ "<c-t>", ], run = "plugin smart-enter -- tab", desc = "Open tab the selected item" },
   { on = [ "<c-o>", ], run = "plugin fzmark", desc = "Open fzmark" },
-  { on = [ "<a-o>" ], run = "plugin opcurdir", desc = "Open current directory" },
+  { on = [ "O" ], run = "plugin opcurdir", desc = "Open current directory" },
   { on = [ "<a-t>", ], run = "plugin opener -- terminal", desc = "Open terminal on target dir yazi" },
   { on = [ "P", ], run = "plugin preview-tree", desc = "Open preview file or directory tree" },
   { on = [ "<a-w>" ], run = """ shell --block --confirm ' clear

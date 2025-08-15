@@ -354,22 +354,25 @@ return {
   },
   -- RUNMUX
   {
-    "mrowegawd/rmux",
-    -- dir = "~/.local/src/nvim_plugins/rmux",
+    -- "mrowegawd/rmux",
+    dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
-      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
+      { "<Leader>ef", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
 
-      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
-      { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Task: send selection", mode = { "v" } },
+      { "<Leader>el", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
+      { "<Leader>el", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual)", mode = { "v" } },
+      { "<Leader>ei", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt" },
+      { "<Leader>eI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt all" },
 
-      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
-      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
-      { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
+      { "<Leader>eC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
+      { "<Leader>eg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
+      { "<Leader>ep", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
-      { "<Leader>ri", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
-      { "<Leader>rI", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
-      { "<Leader>rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
+      { "<Leader>ee", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
+      { "<Leader>eE", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
+      { "<Leader>e?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
+      l,
     },
     opts = {
       base = {
@@ -378,6 +381,10 @@ return {
         auto_run_tasks = true,
         tbl_opened_panes = {},
         run_with = "auto", -- `mux, tt, wez, toggleterm`
+        quickfix = {
+          copen = RUtils.cmd.quickfix.copen,
+          lopen = RUtils.cmd.quickfix.lopen,
+        },
       },
     },
     config = function(_, opts)
@@ -411,7 +418,7 @@ return {
       --   desc = "Reactoring: debug print variable [refactoring]",
       -- },
       {
-        "<Leader>rc",
+        "<Leader>ec",
         function()
           require("refactoring").debug.cleanup {}
         end,

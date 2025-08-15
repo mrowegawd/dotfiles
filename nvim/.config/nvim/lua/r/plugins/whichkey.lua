@@ -45,7 +45,7 @@ return {
           { "<Leader>go", group = "open" },
 
           { "<Leader>o", group = "open/linking" },
-          { "<Leader>r", group = "run/tasks" },
+          { "<Leader>e", group = "run/tasks" },
 
           { "<Leader>t", group = "testing" },
           { "<Leader>tc", group = "coverage" },

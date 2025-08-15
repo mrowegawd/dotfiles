@@ -122,33 +122,35 @@ RUtils.map.vnoremap("<c-h>", function()
   vim.cmd "wincmd ="
 end, { desc = "Window: wincmd H" })
 
-RUtils.map.nnoremap("<c-K>", function()
-  vim.cmd "wincmd K"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd K" })
-RUtils.map.vnoremap("<c-K>", function()
-  vim.cmd "wincmd K"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd K" })
+local exclude_ft_arrange = { "rgflow" }
+
+local arange_wins = function(direction)
+  return function()
+    if vim.wo.diff then
+      return
+    end
+
+    if vim.tbl_contains(exclude_ft_arrange, vim.bo.filetype) then
+      return
+    end
+
+    vim.cmd("wincmd " .. direction)
+    vim.cmd "wincmd ="
+  end
+end
+
+RUtils.map.nnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H" })
+RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
+
+RUtils.map.nnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J" })
+RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })
+
+RUtils.map.nnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K" })
+RUtils.map.vnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
 
 vim.keymap.del("n", "<c-L>")
-RUtils.map.nnoremap("<c-L>", function()
-  vim.cmd "wincmd L"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd L" })
-RUtils.map.vnoremap("<c-L>", function()
-  vim.cmd "wincmd L"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd L" })
-
-RUtils.map.nnoremap("<c-J>", function()
-  vim.cmd "wincmd J"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd J" })
-RUtils.map.vnoremap("<c-J>", function()
-  vim.cmd "wincmd J"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd J" })
+RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
+RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
 -- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
 --   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
@@ -420,10 +422,10 @@ end, { desc = "Open: browse/link under cursor" })
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.cmd.follow_link(true)
 end, { desc = "Open: browse/link under cursor (visual)" })
-RUtils.map.vnoremap("<Leader>re", function()
+RUtils.map.vnoremap("<Leader>eb", function()
   return RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser (visual)" })
-RUtils.map.nnoremap("<Leader>re", function()
+RUtils.map.nnoremap("<Leader>eb", function()
   return RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser" })
 

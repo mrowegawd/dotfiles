@@ -131,8 +131,9 @@ opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
-vim.opt.formatoptions = vim.opt.formatoptions + "j" -- remove comment leader when joining comment lines
-vim.opt.formatoptions = vim.opt.formatoptions + "n" -- smart auto-indenting inside numbered lists
+-- opt.formatoptions = vim.opt.formatoptions + "j" -- remove comment leader when joining comment lines
+-- opt.formatoptions = vim.opt.formatoptions + "n" -- smart auto-indenting inside numbered lists
+opt.formatoptions = "tcqjn12" -- "cront",
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
 opt.splitright = true -- ':vnew' ':vsplit' right of current

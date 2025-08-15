@@ -105,7 +105,7 @@ return {
       { "<Leader>da", function() require("dap").continue { before = get_args } end, desc = "Debug: run with args" },
 
       { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
-      { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
+      { "<Leader>ed", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
       { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
 
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },

@@ -64,7 +64,7 @@ return {
       { "<Leader>wn" },
       { "<Leader>wp" },
       {
-        "<c-k>",
+        "<Leader>wk",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
@@ -83,7 +83,7 @@ return {
         desc = "Qf: force open above left [qfsilet]",
       },
       {
-        "<c-j>",
+        "<Leader>wj",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
