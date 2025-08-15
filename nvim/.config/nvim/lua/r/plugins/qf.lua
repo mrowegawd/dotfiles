@@ -64,7 +64,7 @@ return {
       { "<Leader>wn" },
       { "<Leader>wp" },
       {
-        "<c-K>",
+        "<c-k>",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
@@ -83,7 +83,7 @@ return {
         desc = "Qf: force open above left [qfsilet]",
       },
       {
-        "<c-J>",
+        "<c-j>",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
@@ -101,22 +101,6 @@ return {
         ft = "qf",
         desc = "Qf: force open below right [qfsilet]",
       },
-      -- {
-      --   "<Leader>qJ",
-      --   function()
-      --     vim.cmd(RUtils.cmd.quickfix.copen)
-      --     vim.cmd "wincmd p"
-      --   end,
-      --   desc = "Qf: force copen [qfsilet]",
-      -- },
-      -- {
-      --   "<Leader>qL",
-      --   function()
-      --     vim.cmd(RUtils.cmd.quickfix.lopen)
-      --     vim.cmd "wincmd p"
-      --   end,
-      --   desc = "Qf: force lopen [qfsilet]",
-      -- },
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",

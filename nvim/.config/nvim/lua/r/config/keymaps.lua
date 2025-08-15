@@ -45,7 +45,7 @@ end, { desc = "Fold: zo" })
 RUtils.map.nnoremap("zO", function()
   vim.cmd "normal! zOzz"
 end, { desc = "Fold: zO" })
-RUtils.map.nnoremap("<Tab>", function()
+RUtils.map.nnoremap("<Leader><Leader>", function()
   -- if vim.fn.foldclosed(vim.fn.line ".") == -1 then
   --   vim.cmd "normal! za"
   -- else

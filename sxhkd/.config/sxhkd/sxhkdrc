@@ -44,7 +44,7 @@ super + {Tab,shift+Tab}
         bspc node -f {next,prev}.local
 
 # window: swap window
-super + shift + {Left,Down,Up,Right}
+super + {Left,Down,Up,Right}
         bspc node -s {west,south,north,east}
 
 # window: move window to the left,right,up,down (float)
