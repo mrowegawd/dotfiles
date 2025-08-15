@@ -154,7 +154,16 @@ local function collect_all_tags_async(data, cb, is_for_tags)
   end)()
 end
 
-local function check_tbl_element(tbl, element)
+local function check_duplicate_element(tbl, element)
+  for _, x in pairs(tbl) do
+    if x == element then
+      return true
+    end
+  end
+  return false
+end
+
+local function check_duplicate_element_data_tags(tbl, element)
   for _, x in pairs(tbl) do
     if x["text"] == element then
       return true
@@ -235,14 +244,15 @@ local function picker(contents, actions, opts)
       end,
 
       ["ctrl-f"] = function(selected, _)
-        local path_items = {}
+        local path_item
+        local path_items_tbl = {}
         if #selected > 1 then
           for _, sel in pairs(selected) do
-            local seltitle = vim.split(sel, "|")
+            local sel_strip = vim.split(sel, "|")
             for _, x in pairs(data_tags_table) do
-              if x.title == seltitle[2] then
-                if not check_tbl_element(path_items, x.path) then
-                  path_items[#path_items + 1] = x.path
+              if x.title == sel_strip[2] then
+                if x.path and not check_duplicate_element(path_items_tbl, x.path) then
+                  path_items_tbl[#path_items_tbl + 1] = x.path
                 end
               end
             end
@@ -252,14 +262,15 @@ local function picker(contents, actions, opts)
           sel = vim.split(sel, "|")
           for _, x in pairs(data_tags_table) do
             if x.title == sel[2] then
-              if not check_tbl_element(path_items, x.path) then
-                path_items[#path_items + 1] = x.path
-              end
+              path_item = x.path
             end
           end
         end
 
-        M.find_local_titles(path_items)
+        if #path_items_tbl > 0 then
+          path_item = path_items_tbl
+        end
+        M.find_local_titles(path_item)
       end,
 
       ["ctrl-x"] = function(selected, _)
@@ -292,36 +303,48 @@ local function picker(contents, actions, opts)
 
       -- https://github.com/ibhagwan/fzf-lua/discussions/1211
       ["ctrl-g"] = {
-        prefix = "select-all",
         fn = function(selected, _)
-          local newtbl = {}
-          for _, sel in pairs(selected) do
-            local seltitle = vim.split(sel, "|")
+          local item_data_tbl = {}
+          if #selected > 1 then
+            for _, sel in pairs(selected) do
+              local sel_strip = vim.split(sel, "|")
+              for _, x in pairs(data_tags_table) do
+                if x.title == sel_strip[2] then
+                  if not check_duplicate_element(item_data_tbl, x.path) then
+                    item_data_tbl[#item_data_tbl + 1] = x.path
+                  end
+                end
+              end
+            end
+          else
+            local sel_strip = vim.split(selected[1], "|")
             for _, x in pairs(data_tags_table) do
-              if x.title == seltitle[2] then
-                if not check_tbl_element(newtbl, x.title) then
-                  newtbl[#newtbl + 1] = x
+              if x.title == sel_strip[2] then
+                if not check_duplicate_element(item_data_tbl, x.path) then
+                  item_data_tbl[#item_data_tbl + 1] = x.path
                 end
               end
             end
           end
 
-          local cmdscs = {}
-          for _, y in pairs(newtbl) do
-            cmdscs[#cmdscs + 1] = y.path
-          end
-
-          local rg_optssc = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
-            .. table.concat(cmdscs, " ")
+          local rg_opts_format = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+            .. table.concat(item_data_tbl, " ")
             .. " -e "
 
-          fzf_lua.live_grep {
+          local opts_c = {
             -- debug = true,
-            rg_glob = false,
+            rg_opts = rg_opts_format,
             no_esc = true,
-            rg_opts = rg_optssc,
-            winopts = { title = RUtils.fzflua.format_title("Grep filter note", " ") },
+            rg_glob = false,
+            winopts = {
+              title = RUtils.fzflua.format_title("Grep filter note", " "),
+              preview = {
+                horizontal = "up:60%",
+              },
+            },
           }
+
+          fzf_lua.live_grep(opts_c)
         end,
       },
 
@@ -333,7 +356,7 @@ local function picker(contents, actions, opts)
 
             for _, tbl_tags in pairs(data_tags_table) do
               if tbl_tags.title == sel_str then
-                if not check_tbl_element(items, tbl_tags.title) then
+                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                   items[#items + 1] = {
                     filename = tbl_tags.path,
                     lnum = tbl_tags.line_number,
@@ -348,7 +371,7 @@ local function picker(contents, actions, opts)
           local sel_str = vim.split(selected[1], "|")[2]
           for _, tbl_tags in pairs(data_tags_table) do
             if tbl_tags.title == sel_str then
-              if not check_tbl_element(items, tbl_tags.title) then
+              if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                 items[#items + 1] = {
                   filename = tbl_tags.path,
                   lnum = tbl_tags.line_number,
@@ -380,7 +403,7 @@ local function picker(contents, actions, opts)
 
             for _, tbl_tags in pairs(data_tags_table) do
               if tbl_tags.title == sel_str then
-                if not check_tbl_element(items, tbl_tags.title) then
+                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                   items[#items + 1] = {
                     filename = tbl_tags.path,
                     lnum = tbl_tags.line_number,
@@ -411,7 +434,7 @@ local function picker(contents, actions, opts)
 
             for _, tbl_tags in pairs(data_tags_table) do
               if tbl_tags.title == sel_str then
-                if not check_tbl_element(items, tbl_tags.title) then
+                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                   items[#items + 1] = {
                     filename = tbl_tags.path,
                     lnum = tbl_tags.line_number,
@@ -426,7 +449,7 @@ local function picker(contents, actions, opts)
           local sel_str = vim.split(selected[1], "|")[2]
           for _, tbl_tags in pairs(data_tags_table) do
             if tbl_tags.title == sel_str then
-              if not check_tbl_element(items, tbl_tags.title) then
+              if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                 items[#items + 1] = {
                   filename = tbl_tags.path,
                   lnum = tbl_tags.line_number,
@@ -456,7 +479,7 @@ local function picker(contents, actions, opts)
 
             for _, tbl_tags in pairs(data_tags_table) do
               if tbl_tags.title == sel_str then
-                if not check_tbl_element(items, tbl_tags.title) then
+                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
                   items[#items + 1] = {
                     filename = tbl_tags.path,
                     lnum = tbl_tags.line_number,
@@ -673,10 +696,11 @@ local function get_sel_text()
 end
 
 local function is_markdown_file(path)
-  if type(path) == "string" then
-    return path:match "%.md$" or path:match "%.markdown$"
+  vim.validate { path = { path, "string" } }
+  if path:match "%.md$" or path:match "%.markdown$" then
+    return true
   end
-  return true
+  return false
 end
 
 function M.find_note_by_tag(data, is_set, is_for_tags)
@@ -738,20 +762,23 @@ function M.find_global_titles()
 end
 
 function M.find_local_titles(item_paths)
-  item_paths = item_paths or {}
-
   local _is_single = true
+  local is_markdown_file_regex
   local filename = ""
 
-  if #item_paths == 0 then
+  if item_paths == nil then
     local starting_bufname = vim.api.nvim_buf_get_name(0)
     filename = vim.fn.fnamemodify(starting_bufname, ":p")
+    is_markdown_file_regex = filename
   else
-    if #item_paths == 1 then
-      filename = item_paths[1]
-    else
-      _is_single = false
+    if type(item_paths) == "string" then
+      filename = item_paths
+      is_markdown_file_regex = filename
+    end
+
+    if type(item_paths) == "table" then
       filename = table.concat(item_paths, " ")
+      is_markdown_file_regex = item_paths[1]
     end
   end
 
@@ -767,22 +794,33 @@ function M.find_local_titles(item_paths)
       return {}
     end
 
-    if not _is_single then
+    if item_paths and type(item_paths) == "table" then
       local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
-      if entry_str_strip then
-        local entry_str_strip_split = vim.split(entry_str_strip, ":")[1]
-        local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+      -- Debug output:
+      -- tmuxconfig/.config/tmuxconfig/scripts/fzf_panes.tmux:10:1:# invoked by pane-focus-in event
+      if not entry_str_strip then
+        return {}
+      end
 
-        if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
-          local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
-          local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+      -- Split entry_str_strip to extract the filename
+      local entry_filename = vim.split(entry_str_strip, ":")[1]
+      if not entry_filename then
+        return {}
+      end
 
-          for _, x in pairs(item_paths) do
-            if x == str_fmt_fullname then
-              filename = x
-            end
-          end
+      local is_found = false
+      local entry_full_filename = vim.fn.fnamemodify(entry_filename, ":p")
+
+      for _, item_path in pairs(item_paths) do
+        if item_path == entry_full_filename then
+          is_found = true
+          filename = item_path
         end
+      end
+
+      if not is_found then
+        RUtils.warn "An error occurred in the find_local_titles previewer"
+        return {}
       end
     end
 
@@ -798,7 +836,7 @@ function M.find_local_titles(item_paths)
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    search = is_markdown_file(filename) and regex_title or regex_title_org,
+    search = is_markdown_file(is_markdown_file_regex) and regex_title or regex_title_org,
     rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. filename
       .. " -e ",
@@ -821,13 +859,15 @@ function M.find_local_titles(item_paths)
     actions = {
       ["enter"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
-        if sel then
-          vim.cmd("e " .. filename)
-          sel = vim.split(sel, ":")
-          local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
-          vim.api.nvim_win_set_cursor(0, { row, 1 })
-          vim.cmd "normal! zv"
+        if not sel then
+          return
         end
+
+        vim.cmd("e " .. filename)
+        sel = vim.split(sel, ":")
+        local row = _is_single and tonumber(sel[1]) or tonumber(sel[2])
+        vim.api.nvim_win_set_cursor(0, { row, 1 })
+        vim.cmd "normal! zv"
       end,
       ["alt-l"] = function(selected, _)
         local items = {}
@@ -835,29 +875,21 @@ function M.find_local_titles(item_paths)
         if #selected > 1 then
           for _, sel in pairs(selected) do
             local sel_strip = RUtils.fzflua.__strip_str(sel)
-            if sel_strip then
-              local split_sel = vim.split(sel_strip, ":")
-              if _is_single then
-                _text = split_sel[3]
-                lnum = split_sel[1]
-              else
-                _text = split_sel[4]
-                lnum = split_sel[2]
+            if not sel_strip then
+              return
+            end
 
-                local entry_str_strip_split = vim.split(sel_strip, ":")[1]
-                local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+            local split_sel = vim.split(sel_strip, ":")
 
-                if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
-                  local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
-                  local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+            if type(item_paths) == "string" then
+              _text = split_sel[3]
+              lnum = split_sel[1]
+            end
 
-                  for _, x in pairs(item_paths) do
-                    if x == str_fmt_fullname then
-                      filename = x
-                    end
-                  end
-                end
-              end
+            if type(item_paths) == "table" then
+              _text = split_sel[4]
+              lnum = split_sel[2]
+              filename = vim.fn.fnamemodify(split_sel[1], ":p")
             end
 
             items[#items + 1] = {
@@ -869,30 +901,21 @@ function M.find_local_titles(item_paths)
           end
         else
           local sel_strip = RUtils.fzflua.__strip_str(selected[1])
-          if sel_strip then
-            local split_sel = vim.split(sel_strip, ":")
+          if not sel_strip then
+            return
+          end
 
-            if _is_single then
-              _text = split_sel[3]
-              lnum = split_sel[1]
-            else
-              _text = split_sel[4]
-              lnum = split_sel[2]
+          local split_sel = vim.split(sel_strip, ":")
 
-              local entry_str_strip_split = split_sel[1]
-              local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+          if type(item_paths) == "string" then
+            _text = split_sel[3]
+            lnum = split_sel[1]
+          end
 
-              if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
-                local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
-                local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
-
-                for _, x in pairs(item_paths) do
-                  if x == str_fmt_fullname then
-                    filename = x
-                  end
-                end
-              end
-            end
+          if type(item_paths) == "table" then
+            _text = split_sel[4]
+            lnum = split_sel[2]
+            filename = vim.fn.fnamemodify(split_sel[1], ":p")
           end
 
           items[#items + 1] = {
@@ -922,29 +945,21 @@ function M.find_local_titles(item_paths)
         if #selected > 1 then
           for _, sel in pairs(selected) do
             local sel_strip = RUtils.fzflua.__strip_str(sel)
-            if sel_strip then
-              local split_sel = vim.split(sel_strip, ":")
-              if _is_single then
-                _text = split_sel[3]
-                lnum = split_sel[1]
-              else
-                _text = split_sel[4]
-                lnum = split_sel[2]
+            if not sel_strip then
+              return
+            end
 
-                local entry_str_strip_split = vim.split(sel_strip, ":")[1]
-                local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+            local split_sel = vim.split(sel_strip, ":")
 
-                if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
-                  local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
-                  local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
+            if type(item_paths) == "string" then
+              _text = split_sel[3]
+              lnum = split_sel[1]
+            end
 
-                  for _, x in pairs(item_paths) do
-                    if x == str_fmt_fullname then
-                      filename = x
-                    end
-                  end
-                end
-              end
+            if type(item_paths) == "table" then
+              _text = split_sel[4]
+              lnum = split_sel[2]
+              filename = vim.fn.fnamemodify(split_sel[1], ":p")
             end
 
             items[#items + 1] = {
@@ -956,30 +971,21 @@ function M.find_local_titles(item_paths)
           end
         else
           local sel_strip = RUtils.fzflua.__strip_str(selected[1])
-          if sel_strip then
-            local split_sel = vim.split(sel_strip, ":")
+          if not sel_strip then
+            return
+          end
 
-            if _is_single then
-              _text = split_sel[3]
-              lnum = split_sel[1]
-            else
-              _text = split_sel[4]
-              lnum = split_sel[2]
+          local split_sel = vim.split(sel_strip, ":")
 
-              local entry_str_strip_split = split_sel[1]
-              local entry_str_strip_split_slice = vim.split(entry_str_strip_split, "\t")
+          if type(item_paths) == "string" then
+            _text = split_sel[3]
+            lnum = split_sel[1]
+          end
 
-              if entry_str_strip_split_slice[2] and entry_str_strip_split_slice[1] then
-                local str_fmt = entry_str_strip_split_slice[2] .. "/" .. entry_str_strip_split_slice[1]
-                local str_fmt_fullname = vim.fn.fnamemodify(str_fmt, ":p")
-
-                for _, x in pairs(item_paths) do
-                  if x == str_fmt_fullname then
-                    filename = x
-                  end
-                end
-              end
-            end
+          if type(item_paths) == "table" then
+            _text = split_sel[4]
+            lnum = split_sel[2]
+            filename = vim.fn.fnamemodify(split_sel[1], ":p")
           end
 
           items[#items + 1] = {

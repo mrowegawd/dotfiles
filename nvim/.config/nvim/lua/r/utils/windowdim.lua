@@ -63,6 +63,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["qf"] = true,
   ["Outline"] = true,
   ["trouble"] = true,
+  ["rgflow"] = true,
   -- ["git"] = true,
   -- ["floggraph"] = true,
   ["octo"] = true,
@@ -125,10 +126,6 @@ autocmds.number_blacklist = {
   ["BufTerm"] = false,
 }
 
-autocmds.ignore_cursorline = {
-  ["Outline"] = true,
-}
-
 autocmds.bottom_panel = {
   ["qf"] = true,
 }
@@ -162,6 +159,7 @@ autocmds.cursorline_blacklist = {
   ["dapui_scopes"] = true,
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
+  ["rgflow"] = true,
   ["help"] = true,
   ["markdown"] = true,
   ["mason"] = true,
@@ -268,14 +266,15 @@ end
 
 local set_cursorline = function(active)
   local filetype, _ = RUtils.buf.get_bo_buft()
-  if autocmds.cursorline_blacklist[filetype] ~= true then
+  if filetype ~= "" and not autocmds.cursorline_blacklist[filetype] then
     -- nvim_win_get_config.relative utk detect float window, output boolean
-    if not api.nvim_win_get_config(0).relative then
+    if api.nvim_win_get_config(0).relative ~= "win" then
       wo.cursorline = active
+      return
     end
-  else
-    wo.cursorline = false
   end
+
+  wo.cursorline = false
 end
 
 autocmds.buf_enter = function()
@@ -289,12 +288,12 @@ autocmds.focus_gained = function()
 end
 
 autocmds.focus_lost = function()
-  set_cursorline(true)
+  -- set_cursorline(true)
   blurred_window()
 end
 
 autocmds.win_enter = function()
-  set_cursorline(true)
+  -- set_cursorline(true)
 end
 
 autocmds.win_leave = function()
