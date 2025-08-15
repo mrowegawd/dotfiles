@@ -113,14 +113,6 @@ RUtils.map.tnoremap("<a-CR>", function()
 end, { desc = "Terminal: new term" })
 -- }}}
 -- {{{ Windows, view and nav
-RUtils.map.nnoremap("<c-h>", function()
-  vim.cmd "wincmd H"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd H" })
-RUtils.map.vnoremap("<c-h>", function()
-  vim.cmd "wincmd H"
-  vim.cmd "wincmd ="
-end, { desc = "Window: wincmd H" })
 
 local exclude_ft_arrange = { "rgflow" }
 

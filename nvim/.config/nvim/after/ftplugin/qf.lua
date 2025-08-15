@@ -203,18 +203,23 @@ keymap.set("n", "<Leader>fg", function()
     table.insert(qf_ntbl, path.normalize(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
   end
 
-  local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case ]]
+  local rg_opts_format = [[--column --line-number -i --hidden --no-heading --color=always --smart-case ]]
     .. table.concat(qf_ntbl, " ")
     .. " -e "
 
-  return fzf_lua().live_grep_glob {
+  return fzf_lua().live_grep {
+    -- debug = true,
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
-    cmd = pcmd,
+    rg_opts = rg_opts_format,
     actions = {
-      ["ctrl-s"] = actions.git_buf_split,
-      ["ctrl-v"] = actions.git_buf_vsplit,
-      ["ctrl-t"] = actions.git_buf_tabedit,
+      -- ["ctrl-s"] = actions.git_buf_split,
+      -- ["ctrl-v"] = actions.git_buf_vsplit,
+      -- ["ctrl-t"] = actions.git_buf_tabedit,
+
+      ["ctrl-s"] = actions.buf_split,
+      ["ctrl-v"] = actions.buf_vsplit,
+      ["ctrl-t"] = actions.buf_tabedit,
     },
   }
 end, {

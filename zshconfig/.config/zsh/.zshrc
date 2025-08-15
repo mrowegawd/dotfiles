@@ -201,15 +201,21 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
     zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%" --border
   fi
 
+  # Force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix,
+  # kalau tidak di setting sebagai `menu no`, ketika quit dengan <c-c> saat select, cursor nya akan hilang,
+  # check berkala isu ini: https://github.com/Aloxaf/fzf-tab/issues/56
+  zstyle ':completion:*' menu no
+
   # Guide for adding size popup window (only works inside tmux):
   # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#ftb-tmux-popup
-  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-  zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
-  zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
-  zstyle ':fzf-tab:*' popup-fit-preview yes
-  zstyle ':fzf-tab:*' use-fzf-default-opts yes
-
-  zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
+  if [[ $TMUX ]]; then
+  	zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+    zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
+    zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
+    zstyle ':fzf-tab:*' popup-fit-preview yes
+    zstyle ':fzf-tab:*' use-fzf-default-opts yes
+    zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
+  fi
 
   # ─< KEYBINDING >───────────────────────────────────────────────────────
   # Guide for adding continuous-trigger
