@@ -5,15 +5,6 @@ local function fzf_lua()
   return RUtils.cmd.reqcall "fzf-lua"
 end
 
--- function M.rectangle_win_pojokan()
---   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
---   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
---
---   local col = math.ceil((win_width / 2) * 1 + 20)
---   local row = math.ceil((RUtils.cmd.get_option "lines" - win_height) * 1 + 5)
---   return col, row
--- end
-
 local dropdown = function(opts)
   opts = opts or {}
   local title = vim.tbl_get(opts, "winopts", "title") ---@type string?
@@ -129,21 +120,18 @@ function M.open_cursor_dropdown(opts)
 end
 
 function M.open_dock_bottom(opts)
-  local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-  local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-
-  local win_height = math.ceil(lines * 0.5)
-  local win_width = math.ceil(columns * 1)
-  local col = math.ceil((columns - win_width) * 1)
-  local row = math.ceil((lines - win_height) * 1 - 3)
+  -- local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+  -- local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+  -- local win_height = math.ceil(lines * 0.5)
+  -- local win_width = math.ceil(columns * 1)
 
   return dropdown(vim.tbl_deep_extend("force", {
     winopts = {
       fullscreen = false,
-      width = win_width,
-      height = win_height,
-      row = row,
-      col = col,
+      width = 1,
+      height = 0.55,
+      row = 1,
+      col = 0.50,
       preview = {
         hidden = false,
         layout = vertical,
