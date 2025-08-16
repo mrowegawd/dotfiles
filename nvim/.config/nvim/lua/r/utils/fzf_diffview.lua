@@ -543,22 +543,14 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
   -- local _ = package.loaded["vim-fugitive"]
   -- vim.cmd "packadd vim-fugitive"
 
-  return {
-    prompt = RUtils.fzflua.padding_prompt(),
+  return RUtils.fzflua.open_dock_bottom {
     exec_empty_query = true,
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
       ["--header"] = [[^o:browser  ^y:copyhash  ^x:diffview  ^s/v/t:fugitive]],
     },
-    winopts = {
-      title = RUtils.fzflua.format_title(title, "󰈙"),
-      preview = {
-        layout = "horizontal",
-        vertical = "left:55%", -- up|down:size
-        horizontal = "right:45%", -- right|left:size
-      },
-    },
+    winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {
       ["alt-l"] = function(selected, _)
         local items = {}

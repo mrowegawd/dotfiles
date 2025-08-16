@@ -705,6 +705,12 @@ return {
             preview = { hidden = true },
           },
         },
+        search_history = RUtils.fzflua.open_dock_bottom {
+          winopts = {
+            title = RUtils.fzflua.format_title("Search history", RUtils.config.icons.misc.indent),
+            preview = { hidden = true },
+          },
+        },
         oldfiles = RUtils.fzflua.open_dock_bottom {
           prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
