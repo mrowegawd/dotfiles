@@ -1,7 +1,6 @@
 local rg_opts =
   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:yellow'  -e "
--- local rg_opts =
---   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
+
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
 return {
@@ -51,6 +50,23 @@ return {
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
       { "tf", function() require("fzf-lua").tabs() end, desc = "Tab: select tabs [fzflua]" },
+
+      {
+      	"<c-g>",
+      	function()
+      		require("fzf-lua").complete_path()
+      	end,
+      	desc = "Insert: complete path [fzflua]",
+      	mode = "i",
+      },
+      { -- WARN: ini ga work
+      	"<c-v>",
+      	function()
+      		require("fzf-lua").complete_file()
+      	end,
+      	desc = "Insert: complete line buffers [fzflua]",
+      	mode = "i",
+      },
 
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "v" } },
       { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
@@ -961,18 +977,20 @@ return {
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
           },
         },
-        complete_path = {
-          prompt = RUtils.fzflua.padding_prompt(),
-          cmd = nil, -- default: auto detect fd|rg|find
+        complete_path = RUtils.fzflua.open_lsp_code_action {
+          cmd = "fd " .. fd_opts, -- default: auto detect fd|rg|find
           actions = { ["default"] = actions.complete_insert },
         },
-        complete_file = {
-          cmd = nil, -- default: auto detect rg|fd|find
+        complete_file = RUtils.fzflua.open_lsp_code_action {
+          cmd = "rg " .. rg_opts,
           file_icons = true,
           color_icons = true,
           git_icons = false,
           actions = { ["default"] = actions.complete_insert },
-          winopts = { preview = { hidden = "hidden" } },
+          winopts = { preview = { hidden = false } },
+        },
+        complete_line = RUtils.fzflua.open_lsp_code_action {
+          cmd = "rg " .. rg_opts,
         },
       }
     end,

@@ -1,6 +1,6 @@
 vim.g.lazyvim_blink_main = true
 
-local providers = { "lsp", "snippets", "buffer", "fzf_path" } -- remove codeium
+local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local idx = 1
 
 return {
@@ -322,13 +322,7 @@ return {
               current_provider = providers[idx]
             end
 
-            -- TODO: masih error, complete_path masih belum bisa work
-            if current_provider == "fzf_path" then
-              RUtils.info "FZF complete_path is not configured yet"
-              -- require("fzf-lua").complete_path { cmd = "fd --no-ignore", debug = true }
-            else
-              cmp.show { providers = { current_provider } }
-            end
+            cmp.show { providers = { current_provider } }
 
             idx = (idx % #providers) + 1
           end,
