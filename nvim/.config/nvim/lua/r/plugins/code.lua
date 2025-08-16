@@ -372,7 +372,7 @@ return {
       { "<a-G>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: grep buf" },
 
       { "<Leader>ee", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
-      { "<Leader>eE", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
+      { "<Leader>eE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc" },
       { "<Leader>e?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
       l,
     },
@@ -382,6 +382,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
+        rmuxpath = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
         run_with = "auto", -- `mux, tt, wez, toggleterm`
         quickfix = {
           copen = RUtils.cmd.quickfix.copen,
