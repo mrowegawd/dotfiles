@@ -141,12 +141,7 @@ local function picker(contents, tbl_cts, fzf_opts)
           end
         end
 
-        vim.fn.setloclist(0, {}, " ", {
-          nr = "$",
-          items = items,
-          title = "TODO Comments Note",
-        })
-        vim.cmd(RUtils.cmd.quickfix.lopen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note", true)
       end,
       ["alt-L"] = {
         prefix = "select-all+accept",
@@ -165,12 +160,7 @@ local function picker(contents, tbl_cts, fzf_opts)
             end
           end
 
-          vim.fn.setloclist(0, {}, " ", {
-            nr = "$",
-            items = items,
-            title = "TODO Comments Note",
-          })
-          vim.cmd(RUtils.cmd.quickfix.lopen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note All", true)
         end,
       },
 
@@ -204,14 +194,7 @@ local function picker(contents, tbl_cts, fzf_opts)
           end
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "TODO Comments Note",
-        }
-
-        vim.fn.setqflist({}, "r", what)
-        vim.cmd(RUtils.cmd.quickfix.copen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note")
       end,
       ["alt-Q"] = {
         prefix = "select-all+accept",
@@ -230,14 +213,7 @@ local function picker(contents, tbl_cts, fzf_opts)
             end
           end
 
-          local what = {
-            idx = "$",
-            items = items,
-            title = "TODO Comments Note",
-          }
-
-          vim.fn.setqflist({}, "r", what)
-          vim.cmd(RUtils.cmd.quickfix.copen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note All")
         end,
       },
     },

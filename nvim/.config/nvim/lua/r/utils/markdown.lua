@@ -384,14 +384,7 @@ local function picker(contents, actions, opts)
           end
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Tags Note",
-        }
-
-        vim.fn.setqflist({}, "r", what)
-        vim.cmd(RUtils.cmd.quickfix.copen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note")
       end,
 
       ["alt-Q"] = {
@@ -415,14 +408,7 @@ local function picker(contents, actions, opts)
             end
           end
 
-          local what = {
-            idx = "$",
-            items = items,
-            title = "Tags Note",
-          }
-
-          vim.fn.setqflist({}, "r", what)
-          vim.cmd(RUtils.cmd.quickfix.copen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All")
         end,
       },
 
@@ -462,12 +448,7 @@ local function picker(contents, actions, opts)
           end
         end
 
-        vim.fn.setloclist(0, {}, " ", {
-          nr = "$",
-          items = items,
-          title = "Tags Note",
-        })
-        vim.cmd(RUtils.cmd.quickfix.lopen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note", true)
       end,
 
       ["alt-L"] = {
@@ -491,12 +472,7 @@ local function picker(contents, actions, opts)
             end
           end
 
-          vim.fn.setloclist(0, {}, " ", {
-            nr = "$",
-            items = items,
-            title = "Tags Note",
-          })
-          vim.cmd(RUtils.cmd.quickfix.lopen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All", true)
         end,
       },
     }
@@ -926,18 +902,7 @@ function M.find_local_titles(item_paths)
           }
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Tags Note Random",
-        }
-
-        vim.fn.setloclist(0, {}, " ", {
-          nr = "$",
-          items = what.items,
-          title = "Tags Note",
-        })
-        vim.cmd(RUtils.cmd.quickfix.lopen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Title local", true)
       end,
       ["alt-q"] = function(selected, _)
         local items = {}
@@ -996,14 +961,7 @@ function M.find_local_titles(item_paths)
           }
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Tags Note Random",
-        }
-
-        vim.fn.setqflist({}, "r", what)
-        vim.cmd(RUtils.cmd.quickfix.copen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Title local")
       end,
 
       ["ctrl-v"] = function(selected, _)

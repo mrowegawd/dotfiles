@@ -138,7 +138,6 @@ function M.open_dock_bottom(opts)
   local row = math.ceil((lines - win_height) * 1 - 3)
 
   return dropdown(vim.tbl_deep_extend("force", {
-    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       fullscreen = false,
       width = win_width,
@@ -156,7 +155,6 @@ end
 
 function M.open_center_big(opts)
   return dropdown(vim.tbl_deep_extend("force", {
-    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       title_pos = "center",
       width = 0.90,
@@ -199,7 +197,6 @@ end
 
 function M.open_center_medium(opts)
   return dropdown(vim.tbl_deep_extend("force", {
-    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       fullscreen = false,
       width = 0.6,
@@ -213,7 +210,6 @@ end
 
 function M.open_center_small_wide(opts)
   return M.open_center_medium(vim.tbl_deep_extend("force", {
-    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       height = 0.4,
       width = 0.8,
@@ -224,16 +220,14 @@ end
 
 function M.open_fullscreen_vertical(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
-    -- fullscreen = t,
-    width = 0.3,
-    height = 0.9,
-    row = 0.50,
-    col = 0.50,
-    preview = {
-      hidden = false,
-      layout = "vertical",
-      vertical = "up:60%",
-      horizontal = "up:25%",
+    winopts = {
+      fullscreen = true,
+      preview = {
+        hidden = false,
+        layout = "vertical",
+        vertical = "up:60%",
+        horizontal = "up:25%",
+      },
     },
   }, opts))
 end
@@ -282,7 +276,6 @@ function M.open_cmd_bulk(opts, opts_cmds)
   fzf_lua().fzf_exec(
     cmds,
     layout_pojokan(vim.tbl_deep_extend("force", {
-      prompt = RUtils.fzflua.padding_prompt(),
       winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
@@ -308,7 +301,6 @@ function M.open_cmd_filter_kind_lsp(opts)
   fzf_lua().fzf_exec(
     selected_lsp,
     layout_center(vim.tbl_deep_extend("force", {
-      prompt = RUtils.fzflua.padding_prompt(),
       no_esc = true,
       fzf_opts = { ["--layout"] = "reverse" },
       winopts = { title = M.format_title(string.format("%s Filter", opts.title), "󰈙") },

@@ -78,46 +78,13 @@ local __get_vars = {
   end,
 }
 local get_items_list = function()
-  local items = {}
   if RUtils.qf.is_loclist() then
-    items = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        bufnr = item.bufnr,
-        module = item.module,
-        lnum = item.lnum,
-        end_lnum = item.end_lnum,
-        col = item.col,
-        end_col = item.end_col,
-        vcol = item.vcol,
-        nr = item.nr,
-        pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        valid = item.valid,
-      }
-    end, vim.fn.getloclist(0))
-  else
-    items = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        bufnr = item.bufnr,
-        module = item.module,
-        lnum = item.lnum,
-        -- end_lnum = item.end_lnum,
-        col = item.col,
-        -- end_col = item.end_col,
-        -- vcol = item.vcol,
-        -- nr = item.nr,
-        -- pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        -- valid = item.valid,
-      }
-    end, vim.fn.getqflist())
+    local results = RUtils.qf.get_data_qf(true)
+    return results.location.items
   end
 
-  return items
+  local results = RUtils.qf.get_data_qf()
+  return results.quickfix.items
 end
 
 vim.keymap.set("v", "<c-v>", function()
@@ -191,11 +158,8 @@ keymap.set("n", "<Leader>fg", function()
   local path = require "fzf-lua.path"
   local actions = require "fzf-lua.actions"
 
-  local qf_items = vim.fn.getqflist()
+  local qf_items = get_items_list()
   local title_ = "Grep" .. __get_vars.title_list()
-  if RUtils.qf.is_loclist() then
-    qf_items = vim.fn.getloclist(0)
-  end
 
   local qf_ntbl = {}
   for _, qf_item in pairs(qf_items) do
@@ -226,74 +190,48 @@ end, {
 })
 
 keymap.set("n", "L", function()
-  local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-  if qf_win.found then
-    if RUtils.qf.is_loclist() then
-      if qf_win.found then
-        vim.cmd [[lclose]]
+  local _qf = RUtils.cmd.windows_is_opened { "qf" }
+  if _qf.found then
+    if not RUtils.qf.is_loclist() then
+      vim.cmd "cclose"
+      local title = RUtils.qf.get_title_qf()
+      local results = RUtils.qf.get_data_qf()
+      if #results.quickfix.items > 0 then
+        RUtils.qf.save_to_qf_and_auto_open_qf(results.quickfix.items, title, true)
       end
-      vim.cmd "Trouble loclist toggle focus=true"
-    else
-      vim.fn.setloclist(1, get_items_list())
-
-      -- vim.fn.setloclist(0, {}, " ", {
-      --   nr = "$",
-      --   items = items,
-      --   title = vim.fn.getqflist({ title = 0 }).title,
-      -- })
-
-      local _qf = RUtils.cmd.windows_is_opened { "qf" }
-      if _qf.found then
-        if RUtils.qf.is_loclist() then
-          vim.cmd "lclose"
-        else
-          vim.cmd "cclose"
-        end
-      end
-
-      vim.cmd(RUtils.cmd.quickfix.lopen)
+      return
     end
+    vim.cmd "lclose"
   end
+  vim.cmd "Trouble loclist toggle focus=true"
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert loclist into trouble/qf",
+  desc = "QF: convert loclist into trouble or quickfix",
 })
 
 keymap.set("n", "Q", function()
-  if RUtils.qf.is_loclist() then
-    local _qf = RUtils.cmd.windows_is_opened { "qf" }
-    if _qf.found then
-      if RUtils.qf.is_loclist() then
-        vim.cmd "lclose"
-      else
-        vim.cmd "cclose"
+  local _qf = RUtils.cmd.windows_is_opened { "qf" }
+  if _qf.found then
+    if RUtils.qf.is_loclist() then
+      vim.cmd "lclose"
+      local title = RUtils.qf.get_title_qf(true)
+      local results = RUtils.qf.get_data_qf(true)
+      if #results.location.items > 0 then
+        RUtils.qf.save_to_qf_and_auto_open_qf(results.location.items, title)
       end
+      return
     end
-
-    local what = {
-      idx = "$",
-      items = get_items_list(),
-      title = vim.fn.getloclist(0, { title = 0 }).title,
-    }
-
-    vim.fn.setqflist({}, "r", what)
-    vim.cmd(RUtils.cmd.quickfix.copen)
-  else
-    local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-    if qf_win.found then
-      vim.cmd [[cclose]]
-    end
-    vim.cmd "Trouble quickfix toggle focus=true"
+    vim.cmd "cclose"
   end
+  vim.cmd "Trouble quickfix toggle focus=true"
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert qf into trouble/lf",
+  desc = "QF: convert qf into trouble or loclist",
 })
 
 keymap.set("n", "<Leader>fw", function()
   local items = get_items_list()
-  local title = RUtils.qf.is_loclist() and vim.fn.getloclist(0, { title = 0 }).title
-    or vim.fn.getqflist({ title = 0 }).title
+  local title = RUtils.qf.is_loclist() and RUtils.qf.get_title_qf(true) or RUtils.qf.get_title_qf()
 
   local _tbl = {}
   for _, x in pairs(items) do
@@ -395,21 +333,12 @@ keymap.set("n", "<Leader>fw", function()
           end
         end,
         ["alt-l"] = function(selected, _)
-          vim.fn.setloclist(0, {}, " ", {
-            nr = "$",
-            items = send_data(selected),
-            title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
-          })
-          vim.cmd(RUtils.cmd.quickfix.lopen)
+          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
+          RUtils.qf.save_to_qf_and_auto_open_qf(send_data(selected), title, true)
         end,
         ["alt-q"] = function(selected, _)
-          local what = {
-            idx = "$",
-            items = send_data(selected),
-            title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
-          }
-          vim.fn.setqflist({}, " ", what)
-          vim.cmd(RUtils.cmd.quickfix.copen)
+          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
+          RUtils.qf.save_to_qf_and_auto_open_qf(send_data(selected), title)
         end,
       },
     }
