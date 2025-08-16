@@ -31,33 +31,23 @@ end
 keymap.set("n", "Q", function()
   local tbl_items, prefix_title = __tbl_trouble()
   if #tbl_items > 0 then
-    vim.fn.setqflist({}, "r", { title = "Trouble-" .. prefix_title, items = tbl_items })
-
     local qf_win = RUtils.cmd.windows_is_opened { "trouble" }
     if qf_win.found then
       require("trouble").close()
     end
 
-    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-    if not is_qf_opened.found then
-      vim.cmd(RUtils.cmd.quickfix.copen)
-    end
+    RUtils.qf.save_to_qf_and_auto_open_qf(tbl_items, "Trouble-" .. prefix_title)
   end
 end, { buffer = api.nvim_get_current_buf(), desc = "Trouble: convert into quickfix (qf)" })
 
 keymap.set("n", "L", function()
-  local tbl_items, _ = __tbl_trouble()
+  local tbl_items, prefix_title = __tbl_trouble()
   if #tbl_items > 0 then
-    vim.fn.setloclist(1, tbl_items)
-
     local qf_win = RUtils.cmd.windows_is_opened { "trouble" }
     if qf_win.found then
       require("trouble").close()
     end
 
-    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-    if not is_qf_opened.found then
-      vim.cmd(RUtils.cmd.quickfix.lopen)
-    end
+    RUtils.qf.save_to_qf_and_auto_open_qf(tbl_items, "Trouble-" .. prefix_title, true)
   end
 end, { buffer = api.nvim_get_current_buf(), desc = "Trouble: convert into loclist" })

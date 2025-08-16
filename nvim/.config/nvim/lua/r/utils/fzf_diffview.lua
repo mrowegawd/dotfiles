@@ -599,18 +599,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
           }
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Fzf_diffview",
-        }
-
-        vim.fn.setloclist(0, {}, " ", {
-          nr = "$",
-          items = what.items,
-          title = what.title,
-        })
-        vim.cmd(RUtils.cmd.quickfix.lopen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview", true)
       end,
       ["alt-L"] = {
         prefix = "select-all+accept",
@@ -653,18 +642,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
             }
           end
 
-          local what = {
-            idx = "$",
-            items = items,
-            title = "Fzf_diffview",
-          }
-
-          vim.fn.setloclist(0, {}, " ", {
-            nr = "$",
-            items = what.items,
-            title = what.title,
-          })
-          vim.cmd(RUtils.cmd.quickfix.lopen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview All", true)
         end,
       },
       ["alt-q"] = function(selected, _)
@@ -706,14 +684,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
           }
         end
 
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Fzf_diffview",
-        }
-
-        vim.fn.setqflist({}, "r", what)
-        vim.cmd(RUtils.cmd.quickfix.copen)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview")
       end,
       ["alt-Q"] = {
         prefix = "select-all+accept",
@@ -756,14 +727,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
             }
           end
 
-          local what = {
-            idx = "$",
-            items = items,
-            title = "Fzf_diffview",
-          }
-
-          vim.fn.setqflist({}, "r", what)
-          vim.cmd(RUtils.cmd.quickfix.copen)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview All")
         end,
       },
       ["ctrl-s"] = function(selected, _)

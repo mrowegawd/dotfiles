@@ -101,4 +101,29 @@ function M.get_data_qf(is_loc)
   return results
 end
 
+function M.save_to_qf(items, title, is_loc, winid)
+  is_loc = is_loc or false
+
+  if not is_loc then
+    vim.fn.setqflist({}, " ", { items = items, title = title })
+    return
+  end
+
+  winid = winid or vim.api.nvim_get_current_win()
+  vim.fn.setloclist(winid, {}, " ", { items = items, title = title })
+end
+
+function M.save_to_qf_and_auto_open_qf(items, title, is_loc, winid)
+  is_loc = is_loc or false
+
+  M.save_to_qf(items, title, is_loc, winid)
+
+  if not is_loc then
+    vim.cmd(RUtils.cmd.quickfix.copen)
+    return
+  end
+
+  vim.cmd(RUtils.cmd.quickfix.lopen)
+end
+
 return M
