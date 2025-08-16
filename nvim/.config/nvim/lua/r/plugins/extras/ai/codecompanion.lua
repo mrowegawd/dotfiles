@@ -156,7 +156,7 @@ return {
         function()
           local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
           return require("fzf-lua").files {
-            prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.padding_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
             cwd = codecompanion_cwd,
             fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  ^y:yank  ^q:ignore  ^o:hidden]] },
@@ -203,35 +203,35 @@ return {
           local git_ft_stuff = { "fugitive" }
           local prompt_cmds = {
             -- Ask a question
-            ask_question_with_ai = { cmd = "CodeCompanion /ai_chat", ft = {} },
+            ["Ask ai a question"] = { cmd = "CodeCompanion /ai_chat", ft = {} },
 
             -- Explain stuff
-            explain_to_me = { cmd = "CodeCompanion /explain_to_me", ft = {} },
+            ["Code - Explain to me?"] = { cmd = "CodeCompanion /explain_to_me", ft = {} },
 
             -- Translate
-            translate_id = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
-            translate_en = { cmd = "CodeCompanion /translate_in_en", ft = {} },
+            ["Translate - into idn"] = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
+            ["Translate - into english"] = { cmd = "CodeCompanion /translate_in_en", ft = {} },
 
             -- Fix, correct, improve the EN or IDN sentence.
-            fix_or_correct_en_sentence = { cmd = "CodeCompanion /correct_sentence_en", ft = {} },
-            fix_or_correct_todo_sentence = { cmd = "CodeCompanion /correct_todo_sentence", ft = {} },
-            fix_or_correct_wiki_sentence = { cmd = "CodeCompanion /correct_wiki_sentence", ft = {} },
+            ["Fix words - ENG sentence"] = { cmd = "CodeCompanion /correct_sentence_en", ft = {} },
+            ["Fix words - TODO sentence"] = { cmd = "CodeCompanion /correct_todo_sentence", ft = {} },
+            ["Fix words - WIKI sentence"] = { cmd = "CodeCompanion /correct_wiki_sentence", ft = {} },
 
             -- Git stuff
-            git_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            ["Git - commit"] = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
             -- git_commit_our = { cmd = "CodeCompanion /write_commit", ft = {} },
-            git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = {} },
+            ["Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
 
             -- Write doc
-            write_inline_doc = { cmd = "CodeCompanion /inline_doc", ft = {} },
-            write_doc = { cmd = "CodeCompanion /doc", ft = {} },
+            ["Doc - write for inline doc codes"] = { cmd = "CodeCompanion /inline_doc", ft = {} },
+            ["Doc - write for func docs"] = { cmd = "CodeCompanion /doc", ft = {} },
 
             -- Programming stuff
-            review_code = { cmd = "CodeCompanion /review", ft = {} },
-            refactor_inline_code = { cmd = "CodeCompanion /refactor", ft = {} },
-            refactor_side_effect_code = { cmd = "CodeCompanion /refactor_side_effect", ft = {} },
-            naming_variable_inline_code = { cmd = "CodeCompanion /naming", ft = {} },
-            naming_variable_code = { cmd = "CodeCompanion /better_naming", ft = {} },
+            ["Code - Review code"] = { cmd = "CodeCompanion /review", ft = {} },
+            ["Refactor - Inline code"] = { cmd = "CodeCompanion /refactor", ft = {} },
+            ["Refactor - Avoid side effect from code"] = { cmd = "CodeCompanion /refactor_side_effect", ft = {} },
+            ["Refactor - Rewrite naming variable"] = { cmd = "CodeCompanion /naming", ft = {} },
+            ["Refactor - Seggest better naming variable"] = { cmd = "CodeCompanion /better_naming", ft = {} },
 
             -- exract_func = { cmd = "CodeCompanion /commit", ft = {} },
             -- exract_variable = { cmd = "CodeCompanion /commit", ft = {} },
@@ -268,7 +268,7 @@ return {
             return true
           end
 
-          local sel_prompts = function()
+          local results_formats = function()
             local results = {}
             for i, x in pairs(prompt_cmds) do
               if vim.tbl_contains(git_ft_stuff, vim.bo.filetype) then
@@ -280,6 +280,8 @@ return {
               end
             end
 
+            table.sort(results)
+
             return results
           end
 
@@ -290,19 +292,13 @@ return {
             end
           end
 
-          local opts = {
+          local opts = RUtils.fzflua.open_lsp_code_action {
             winopts = {
               title = RUtils.fzflua.format_title(
                 "Select Custom Prompt Ai [CodeCompanion]",
                 RUtils.config.icons.misc.ai
               ),
-              relative = "cursor",
-              width = 0.25,
-              height = 0.30,
-              row = 1,
-              col = 2,
             },
-
             actions = {
               ["default"] = function(selected)
                 local sel = selected[1]
@@ -313,7 +309,9 @@ return {
               end,
             },
           }
-          require("fzf-lua").fzf_exec(sel_prompts(), opts)
+
+          local results = results_formats()
+          require("fzf-lua").fzf_exec(results, opts)
         end,
         mode = { "n", "v" },
         desc = "Codecompanion: select custome prompt",

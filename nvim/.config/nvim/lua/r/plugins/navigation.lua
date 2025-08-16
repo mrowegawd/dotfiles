@@ -219,7 +219,7 @@ return {
             -- end
 
             return require("fzf-lua").fzf_exec(reverse, {
-              prompt = RUtils.fzflua.default_title_prompt(),
+              prompt = RUtils.fzflua.padding_prompt(),
               winopts = {
                 title = RUtils.fzflua.format_title("FzMark", "󰈙"),
               },
@@ -554,25 +554,6 @@ return {
         desc = "Open: outline window [outline]",
       },
       {
-        "<Leader>wo",
-        function()
-          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history" }
-          for _, win in pairs(right_win) do
-            if vim.bo.filetype ~= win then
-              local win_checked = RUtils.cmd.windows_is_opened { win }
-              if win_checked.found then
-                vim.api.nvim_set_current_win(win_checked.winid)
-                break
-              end
-            elseif vim.tbl_contains(right_win, vim.bo.filetype) then
-              vim.cmd [[wincmd p]]
-            end
-          end
-        end,
-        desc = "Misc: move cursor to outline window [edgy]",
-      },
-
-      {
         "<Leader>oA",
         function()
           if vim.tbl_contains({ "norg", "org", "orgagenda" }, vim.bo[0].filetype) then
@@ -646,7 +627,7 @@ return {
               end,
             },
           }
-          RUtils.fzflua.cmd_filter_kind_lsp(opts)
+          RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
         end,
         desc = "Open: filter kind for outline [outline]",
       },
@@ -852,7 +833,7 @@ return {
                 end,
               },
             }
-            RUtils.fzflua.cmd_filter_kind_lsp(opts)
+            RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
           end,
           desc = "Open: filter kind for outline [outline]",
         },

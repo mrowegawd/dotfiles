@@ -144,6 +144,23 @@ vim.keymap.del("n", "<c-L>")
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
 RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
+RUtils.map.nnoremap("<Leader>wo", function()
+  local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history" }
+
+  if vim.tbl_contains(right_win, vim.bo.filetype) then
+    vim.cmd [[wincmd p]]
+    return
+  end
+
+  for _, win in pairs(right_win) do
+    local win_checked = RUtils.cmd.windows_is_opened { win }
+    if win_checked.found then
+      vim.api.nvim_set_current_win(win_checked.winid)
+      break
+    end
+  end
+end, { desc = "Window: jump to or from spesific window" })
+
 -- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
 --   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
 --   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
@@ -491,134 +508,139 @@ end, { force = true, bang = true, nargs = "*" })
 -- }}}
 -- {{{ Bulk commands
 -- These commands run outside tmux
-local func_cmds = function()
+local ctrl_o_nvim = function()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
 
   local col = math.ceil((win_width / 2) - 40)
   local row = math.ceil((RUtils.cmd.get_option "lines" - win_height) - 10)
 
-  RUtils.fzflua.send_cmds({
-    clock_mode = function()
+  RUtils.fzflua.open_cmd_bulk({
+    ["Clock mode"] = function()
       RUtils.terminal.clock_mode()
     end,
-    newsboat = function()
+    ["Newsboat"] = function()
       RUtils.terminal.float_newsboat()
     end,
-    calcure = function()
+    ["Calendar"] = function()
       RUtils.terminal.float_calcure()
     end,
-    btop = function()
+    ["Btop"] = function()
       RUtils.terminal.float_btop()
     end,
-    rust_upserv = function()
+    ["Rust upserv"] = function()
       print "sf"
     end,
-    rust_upserv2 = function()
+    ["Rust upserv2"] = function()
       print "sf"
     end,
-    rust_bench = function()
+    ["Rust benc"] = function()
       print "sf"
     end,
-    gravterm = function()
+    ["Grav term"] = function()
       print "sf"
     end,
-    log_meta = function()
+    ["Log meta"] = function()
       print "sf"
     end,
-    r_kill = function()
+    ["R-kill"] = function()
       RUtils.terminal.float_rkill()
     end,
-  }, { winopts = { title = "fz-ctrlo", row = row, col = col } })
+  }, { winopts = { title = "Bulk: ctrl-o cmds", row = row, col = col } })
 end
-RUtils.map.nnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
-RUtils.map.tnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
-RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 
-RUtils.map.nnoremap("<Leader>of", function()
-  local col, row = RUtils.fzflua.rectangle_win_pojokan()
-  RUtils.fzflua.send_cmds({
+RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.vnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
+
+local bulk_cmd_misc = function()
+  RUtils.fzflua.open_cmd_bulk({
     ["Qf - Load qf/lf list"] = function()
       cmd "LoadQf"
     end,
     ["Qf - Save qf/lf list"] = function()
       cmd "SaveQf"
     end,
-    ["Browser - open tailwindcss"] = function()
+    ["Browser - Open tailwindcss.com"] = function()
       cmd "!open https://tailwindcss.com"
     end,
-    kulala = function()
+    ["Kulala - Run"] = function()
       require("kulala").run()
     end,
-    ["Browser - search devdocs!"] = function()
+    ["Browser - Open devdocs (with input)"] = function()
       local query = vim.fn.input "Search DevDocs: "
       if #query > 0 then
         local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
         os.execute(encodedURL)
       end
     end,
-  }, { winopts = { title = "Misc commands", row = row, col = col } })
-end, { desc = "Open: list commands of misc" })
-RUtils.map.nnoremap("<Leader>gof", function()
-  local col, row = RUtils.fzflua.rectangle_win_pojokan()
-  RUtils.fzflua.send_cmds(
-    vim.tbl_deep_extend("force", {
-      ["Diffview - DiffviewOpen"] = function()
-        vim.cmd [[DiffviewOpen]]
-      end,
-      ["Diffview - DiffviewFileHistory Repo"] = function()
-        vim.cmd [[DiffviewFileHistory]]
-      end,
-      ["Diffview - DiffviewFileHistory Curbuf"] = function()
-        vim.cmd [[DiffviewFileHistory --follow %]]
-      end,
-      ["Diffview - DiffviewFileHistory Line"] = function()
-        vim.cmd [[.DiffviewFileHistory --follow]]
-      end,
-      ["Diff - windo this"] = function()
-        vim.cmd [[windo diffthis]]
-      end,
-      ["GH - Open PR"] = function()
-        vim.cmd [[GHOpenPR]]
-      end,
-      ["GH - Open Issue"] = function()
-        vim.cmd [[GHOpenIssue]]
-      end,
-      git_worktree_create = function()
-        vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
-      end,
-      git_worktree_manage = function()
-        vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
-      end,
-      ["GitConflict - Refresh"] = function()
-        vim.cmd [[GitConflictRefresh]]
-      end,
-      ["GitConflict - Send list to qf"] = function()
-        vim.cmd [[GitConflictListQf]]
-      end,
-      ["GitConflict - choosing ours (current)"] = function()
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info("Choosing ours (current)", { title = "GitConflict" })
-        vim.cmd [[GitConflictChooseOurs]]
-      end,
-      ["GitConflict - choosing theirs (incoming)"] = function()
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
-        vim.cmd [[GitConflictChooseTheirs]]
-      end,
-      ["GitConflict - choosing none of them (deleted)"] = function()
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
-        vim.cmd [[GitConflictChooseNone]]
-      end,
-      ["Gitsigns - show blame"] = function()
-        local gs = package.loaded.gitsigns
-        gs.blame()
-      end,
-    }, {}),
-    { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
-  )
-end, { desc = "Open: list commands of git" })
+  }, { winopts = { title = "Bulk Misc" } })
+end
+
+RUtils.map.nnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
+RUtils.map.tnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
+RUtils.map.vnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds (visual)" })
+
+local bulk_cmd_git = function()
+  RUtils.fzflua.open_cmd_bulk({
+    ["Diffview - DiffviewOpen"] = function()
+      vim.cmd [[DiffviewOpen]]
+    end,
+    ["Diffview - DiffviewFileHistory Repo"] = function()
+      vim.cmd [[DiffviewFileHistory]]
+    end,
+    ["Diffview - DiffviewFileHistory Curbuf"] = function()
+      vim.cmd [[DiffviewFileHistory --follow %]]
+    end,
+    ["Diffview - DiffviewFileHistory Line"] = function()
+      vim.cmd [[.DiffviewFileHistory --follow]]
+    end,
+    ["Diff - Windo this"] = function()
+      vim.cmd [[windo diffthis]]
+    end,
+    ["GH - Open PR"] = function()
+      vim.cmd [[GHOpenPR]]
+    end,
+    ["GH - Open Issue"] = function()
+      vim.cmd [[GHOpenIssue]]
+    end,
+    ["GitWorktree - Create"] = function()
+      vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
+    end,
+    ["GitWorktree - Manage"] = function()
+      vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
+    end,
+    ["GitConflict - Refresh"] = function()
+      vim.cmd [[GitConflictRefresh]]
+    end,
+    ["GitConflict - Send list to qf"] = function()
+      vim.cmd [[GitConflictListQf]]
+    end,
+    ["GitConflict - Choosing ours (current)"] = function()
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.info("Choosing ours (current)", { title = "GitConflict" })
+      vim.cmd [[GitConflictChooseOurs]]
+    end,
+    ["GitConflict - Choosing theirs (incoming)"] = function()
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
+      vim.cmd [[GitConflictChooseTheirs]]
+    end,
+    ["GitConflict - Choosing none of them (deleted)"] = function()
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
+      vim.cmd [[GitConflictChooseNone]]
+    end,
+    ["GitSigns - Show blame"] = function()
+      local gs = package.loaded.gitsigns
+      gs.blame()
+    end,
+  }, { winopts = { title = RUtils.config.icons.git.branch .. "Git " } })
+end
+
+RUtils.map.nnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
+RUtils.map.tnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
+RUtils.map.vnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
 
 -- }}}
 -- {{{ Tmux integration

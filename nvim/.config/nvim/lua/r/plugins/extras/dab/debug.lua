@@ -203,43 +203,41 @@ return {
       {
         "<Leader>df",
         function()
-          local col, row = RUtils.fzflua.rectangle_win_pojokan()
-
-          RUtils.fzflua.send_cmds({
-            breakpoint_set = function()
+          RUtils.fzflua.open_cmd_bulk({
+            ["Breakpoint"] = function()
               return require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
             end,
-            breakpoint_clear_all = function()
+            ["Breakpoint clear all"] = function()
               return require("dap").clear_breakpoints()
             end,
-            breakpoint_lists = function()
+            ["Breakpoint list qf"] = function()
               return require("dap").list_breakpoints(true)
             end,
-            dap_run_to_cursor = function()
+            ["Run at cursor"] = function()
               return require("dap").run_to_cursor()
             end,
-            dap_run_last = function()
+            ["Run last"] = function()
               return require("dap").run_last()
             end,
-            dap_continue_or_run = function()
+            ["Run or continue"] = function()
               return require("dap").continue()
             end,
-            dap_printout_session = function()
-              return print(vim.inspect(require("dap").session()))
+            ["Print out the session"] = function()
+              return RUtils.info(vim.inspect(require("dap").session()))
             end,
-            dap_close_or_quit = function()
+            ["Quit or close"] = function()
               require("dap").terminate()
               require("dapui").close()
             end,
-            dap_GUI_toggle = function()
+            ["GUI toggle"] = function()
               return require("dapui").toggle()
             end,
-            dap_GUI_reset = function()
+            ["GUI reset"] = function()
               return require("dapui").open { reset = true }
             end,
-          }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
+          }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug" } })
         end,
-        desc = "Debug: list command of debug",
+        desc = "Bulk: debug cmds",
       },
     },
     config = function()

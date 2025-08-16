@@ -534,7 +534,7 @@ local function picker(contents, actions, opts)
     contents,
     vim.tbl_deep_extend("force", {}, {
       previewer = Tagpreviewer,
-      prompt = RUtils.fzflua.default_title_prompt(),
+      prompt = RUtils.fzflua.padding_prompt(),
       winopts = {
         title = format_prompt_strings "Search By Tag",
         width = win_width,
@@ -742,7 +742,7 @@ end
 
 function M.find_global_titles()
   fzf_lua.grep {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
     search = is_markdown_file() and regex_title or regex_title_org,
     rg_glob = false,
@@ -832,7 +832,7 @@ function M.find_local_titles(item_paths)
   end
 
   return fzf_lua.grep {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
@@ -1043,7 +1043,7 @@ end
 
 function M.find_local_sitelink()
   fzf_lua.lgrep_curbuf {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
     },
@@ -1123,7 +1123,7 @@ end
 
 function M.insert_local_titles()
   fzf_lua.lgrep_curbuf {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       title = format_prompt_strings "Insert By Local Title",
       width = 0.90,
@@ -1161,7 +1161,7 @@ end
 
 function M.insert_global_titles()
   fzf_lua.grep {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     winopts = { title = format_prompt_strings "Insert By Global Title" },
     rg_glob = false,
     no_esc = true,

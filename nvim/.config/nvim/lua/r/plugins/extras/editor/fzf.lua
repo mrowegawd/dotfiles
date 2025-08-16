@@ -4,14 +4,6 @@ local rg_opts =
 --   "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
 
-local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-
-local win_height = math.ceil(lines * 0.5)
-local win_width = math.ceil(columns * 1)
-local col = math.ceil((columns - win_width) * 1)
-local row = math.ceil((lines - win_height) * 1 - 3)
-
 return {
   -- FZF-LUA
   {
@@ -73,9 +65,8 @@ return {
       {
         "<Leader>fz",
         function()
-          require("fzf-lua").files {
-            prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙") },
+          require("fzf-lua").files( RUtils.fzflua.open_dock_bottom ({
+            winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙"), preview = { hidden = true } },
             no_header = false, -- disable default header
             cwd = "~/.config/miscxrdb/xresource-theme",
             actions = {
@@ -87,7 +78,7 @@ return {
                 vim.cmd([[!bash ]] .. script_path)
               end,
             },
-          }
+          }))
         end,
         desc = "Picker: select themes [fzflua]",
       },
@@ -115,7 +106,6 @@ return {
         "<Leader>fo",
         function()
           return require("fzf-lua").files {
-            prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
@@ -125,11 +115,9 @@ return {
       {
         "<Leader>fF",
         function()
-          local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
           return require("fzf-lua").files {
-            prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Plugin Files", "󰈙") },
-            cwd = plugins_directory,
+            cwd = vim.fn.stdpath "data" .. "/lazy",
           }
         end,
         desc = "Picker: plugin files [fzflua]",
@@ -137,32 +125,7 @@ return {
 
       -- Buffers
       { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep on buffers [fzflua]", mode = { "n", "v" } },
-      {
-        "<Leader>bf",
-        function()
-          local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-          local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-
-          local win_height = math.ceil(lines / 2)
-          local win_width = math.ceil(columns / 2)
-          local col = math.ceil((win_width / 2))
-          local row = math.ceil((win_height / 2))
-          require("fzf-lua").buffers {
-            winopts = {
-              title = RUtils.fzflua.format_title("Buffers", "󰈙"),
-              title_pos = "center",
-              width = win_width,
-              height = win_height,
-              row = row,
-              col = col,
-              backdrop = 60,
-              ---@diagnostic disable-next-line: missing-fields
-              preview = { hidden = true },
-            },
-          }
-        end,
-        desc = "Buffer: select buffers [fzflua]",
-      },
+      { "<Leader>bf", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
       { "<Leader>bg", function() require("fzf-lua").blines() end, desc = "Buffer: live grep on curbuf [fzflua]" },
       {
         "<Leader>bg",
@@ -258,21 +221,6 @@ return {
       end
 
       return {
-        winopts = {
-          title_pos = "center",
-          width = win_width,
-          height = win_height,
-          row = row,
-          col = col,
-          backdrop = 100,
-          border = RUtils.config.icons.border.line,
-          preview = {
-            layout = "horizontal",
-            border = RUtils.config.icons.border.line,
-            vertical = "up:55%", -- up|down:size
-            horizontal = "right:50%", -- right|left:size
-          },
-        },
         hls = { cursor = "CurSearch" },
         fzf_colors = {
           ["fg"] = { "fg", "FzfLuaFilePart" },
@@ -337,15 +285,9 @@ return {
           ["--no-separator"] = "",
           ["--history"] = vim.fn.stdpath "data" .. "/fzf-lua-history",
         }, -- remove separator line
-        files = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("Files", ""),
-            width = win_width,
-            height = win_height,
-            row = row,
-            col = col,
-          },
+        files = RUtils.fzflua.open_dock_bottom {
+          prompt = RUtils.fzflua.padding_prompt(),
+          winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
           line_query = true, -- now we can use "example_file:32"
@@ -389,9 +331,7 @@ return {
                     cwd = args.cwd,
                     cmd = args.cmd,
                     rg_opts = args.rg_opts,
-                    winopts = {
-                      title = RUtils.fzflua.format_title("Files: RgFlow", ""),
-                    },
+                    winopts = { title = RUtils.fzflua.format_title("Files: RgFlow", "") },
                   }
                 end,
               })
@@ -410,7 +350,7 @@ return {
         },
         git = {
           files = {
-            prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.padding_prompt(),
             winopts = {
               title = RUtils.fzflua.format_title("Git Files", ""),
               title_pos = "left",
@@ -421,18 +361,9 @@ return {
             file_icons = true, -- show file icons?
             color_icons = true, -- colorize file|git icons
           },
-          status = {
+          status = RUtils.fzflua.open_dock_bottom {
             no_header_i = false,
-            prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = {
-              title = RUtils.fzflua.format_title("Git Status", ""),
-              title_pos = "left",
-              preview = {
-                layout = "horizontal",
-                vertical = "left:55%", -- up|down:size
-                horizontal = "right:45%", -- right|left:size
-              },
-            },
+            winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               ["left"] = false,
@@ -445,22 +376,13 @@ return {
               ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
           },
-          commits = {
-            prompt = RUtils.fzflua.default_title_prompt(),
+          commits = RUtils.fzflua.open_dock_bottom {
             no_header = true, -- disable default header
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = {
-              title = RUtils.fzflua.format_title("Commits", ""),
-              title_pos = "left",
-              preview = {
-                layout = "horizontal",
-                vertical = "left:55%", -- up|down:size
-                horizontal = "right:45%", -- right|left:size
-              },
-            },
+            winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -523,23 +445,14 @@ return {
               end,
             },
           },
-          bcommits = {
+          bcommits = RUtils.fzflua.open_dock_bottom {
             -- debug = true,
-            prompt = RUtils.fzflua.default_title_prompt(),
             no_header = true, -- disable default header
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = {
-              title = RUtils.fzflua.format_title("BCommits", ""),
-              title_pos = "left",
-              preview = {
-                layout = "horizontal",
-                vertical = "left:55%", -- up|down:size
-                horizontal = "right:45%", -- right|left:size
-              },
-            },
+            winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:historycommit  ^y:copyhash  ^o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -603,16 +516,10 @@ return {
               end,
             },
           },
-          branches = {
-            prompt = RUtils.fzflua.default_title_prompt(),
+          branches = RUtils.fzflua.open_center_small_wide {
             cmd = "git branch --all --color",
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
-            winopts = {
-              title = RUtils.fzflua.format_title("Branches", ""),
-              title_pos = "left",
-              height = 0.3,
-              row = 0.4,
-            },
+            winopts = { title = RUtils.fzflua.format_title("Branches", "") },
             actions = {
               ["default"] = actions.git_switch,
               ["alt-l"] = actions.file_sel_to_ll,
@@ -621,13 +528,9 @@ return {
               ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
             },
           },
-          stash = {
+          stash = RUtils.fzflua.open_dock_bottom {
             no_header_i = false,
-            prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = {
-              title = RUtils.fzflua.format_title("Stash", ""),
-              title_pos = "left",
-            },
+            winopts = { title = RUtils.fzflua.format_title("Stash", "") },
           },
           icons = {
             ["M"] = { icon = "M", color = "yellow" },
@@ -643,9 +546,8 @@ return {
             -- ["A"]        = { icon = "+", color = "green" },
           },
         },
-        grep = {
+        grep = RUtils.fzflua.open_center_big {
           -- debug = true,
-          prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd  ^q:ignore  ^o:hidden]] },
@@ -659,17 +561,6 @@ return {
               "Grep",
               RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
             ),
-            title_pos = "center",
-            width = 0.90,
-            height = 0.90,
-            row = 0.50,
-            col = 0.50,
-            fullscreen = false,
-            preview = {
-              layout = "horizontal",
-              vertical = "down:50%", -- up|down:size
-              horizontal = "up:45%", -- right|left:size
-            },
           },
           actions = {
             ["ctrl-q"] = actions.toggle_ignore,
@@ -771,7 +662,7 @@ return {
           },
         },
         args = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+          prompt = RUtils.fzflua.padding_prompt(),
           files_only = true,
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
@@ -781,30 +672,25 @@ return {
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
           },
         },
-        jumps = { prompt = RUtils.fzflua.default_title_prompt() },
-        marks = { prompt = RUtils.fzflua.default_title_prompt() },
-        builtin = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        jumps = RUtils.fzflua.open_center_big_vertical {},
+        marks = RUtils.fzflua.open_center_big_vertical {},
+        builtin = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Builtin", RUtils.config.icons.misc.tools) },
         },
-        commands = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        commands = RUtils.fzflua.open_dock_bottom {
           winopts = {
             title = RUtils.fzflua.format_title("Commands", RUtils.config.icons.misc.tools),
-            fullscreen = false,
             preview = { hidden = true },
           },
         },
-        command_history = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        command_history = RUtils.fzflua.open_dock_bottom {
           winopts = {
             title = RUtils.fzflua.format_title("History Commands", RUtils.config.icons.misc.tools),
-            fullscreen = false,
             preview = { hidden = true },
           },
         },
-        oldfiles = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        oldfiles = RUtils.fzflua.open_dock_bottom {
+          prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
           fzf_opts = { ["--header"] = [[^o:oldfiles-all  ^r:oldfiles-current]] },
           cwd_only = true,
@@ -819,13 +705,8 @@ return {
             end,
           },
         },
-        buffers = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("Buffers", "󰈙"),
-            fullscreen = false,
-            preview = { hidden = false },
-          },
+        buffers = RUtils.fzflua.open_center_medium {
+          winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = { ["--with-nth"] = "-1.." },
           actions = {
@@ -836,15 +717,14 @@ return {
           },
         },
         highlights = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+          prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Highlights", RUtils.config.icons.misc.circle) },
         },
-        helptags = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        helptags = RUtils.fzflua.open_center_big_vertical {
           winopts = { title = RUtils.fzflua.format_title("Help", "󰋖") },
         },
         tabs = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+          prompt = RUtils.fzflua.padding_prompt(),
           tab_title = "Tab",
           tab_marker = "<<",
           file_icons = true, -- show file icons?
@@ -864,8 +744,7 @@ return {
             ["--with-nth"] = "2..",
           },
         },
-        lines = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        lines = RUtils.fzflua.open_fullscreen_vertical {
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
@@ -874,13 +753,7 @@ return {
             ["--tiebreak"] = "index",
             ["--tabstop"] = "1",
           },
-          winopts = {
-            title = RUtils.fzflua.format_title("Lines", ""),
-            height = 0.90,
-            width = 0.90,
-            col = 0.50,
-            row = 0.50,
-          },
+          winopts = { title = RUtils.fzflua.format_title("Lines", "") },
           -- actions inherit from 'actions.buffers' and merge
           actions = {
             ["default"] = actions.buf_edit_or_qf,
@@ -895,38 +768,9 @@ return {
             ["ctrl-t"] = actions.buf_tabedit,
           },
         },
-        keymaps = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("Keymaps", " "),
-            height = 0.90,
-            width = 0.90,
-            col = 0.50,
-            row = 0.50,
-            preview = { vertical = "up:40%", horizontal = "down:40%" },
-          },
-        },
-        autocmds = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("Autocmds", " "),
-            height = 0.90,
-            width = 0.90,
-            col = 0.50,
-            row = 0.50,
-            preview = { vertical = "up:30%", horizontal = "up:50%" },
-          },
-        },
-        blines = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        blines = RUtils.fzflua.open_fullscreen_vertical {
           no_header = true, -- hide grep|cwd header?
-          winopts = {
-            title = RUtils.fzflua.format_title("Blines", ""),
-            height = 0.90,
-            width = 0.90,
-            col = 0.50,
-            row = 0.50,
-          },
+          winopts = { title = RUtils.fzflua.format_title("Blines", "") },
           fzf_opts = {
             -- Cara menghilangkan filepath
             -- https://github.com/ibhagwan/fzf-lua/issues/228#issuecomment-983262485
@@ -950,6 +794,12 @@ return {
             ["ctrl-v"] = actions.buf_vsplit,
             ["ctrl-t"] = actions.buf_tabedit,
           },
+        },
+        keymaps = RUtils.fzflua.open_center_big {
+          winopts = { title = RUtils.fzflua.format_title("Keymaps", " ") },
+        },
+        autocmds = RUtils.fzflua.open_center_big {
+          winopts = { title = RUtils.fzflua.format_title("Autocmds", " ") },
         },
         tags = {
           ctags_file = nil, -- auto-detect from tags-option
@@ -983,44 +833,27 @@ return {
             ["--tiebreak"] = "index",
           },
         },
-        colorschemes = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        colorschemes = RUtils.fzflua.open_dock_bottom {
           live_preview = true, -- apply the colorscheme on preview?
           actions = { ["default"] = actions.colorscheme },
           winopts = { title = RUtils.fzflua.format_title("Colorscheme", RUtils.config.icons.misc.plus) },
         },
-        quickfix = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("[QF]", "󰈙"),
-          },
+        quickfix = RUtils.fzflua.open_dock_bottom {
+          winopts = { title = RUtils.fzflua.format_title("[QF]", "󰈙") },
           file_icons = true,
           git_icons = true,
         },
-        quickfix_stack = {
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("[QF]", "󰈙"),
-          },
+        loclist = RUtils.fzflua.open_dock_bottom {
+          winopts = { title = RUtils.fzflua.format_title("[LF]", "󰈙") },
+          file_icons = true,
+          git_icons = true,
+        },
+        quickfix_stack = RUtils.fzflua.open_dock_bottom {
+          winopts = { title = RUtils.fzflua.format_title("[QF]", "󰈙") },
           marker = ">", -- current list marker
         },
-        lsp = {
+        lsp = RUtils.fzflua.open_lsp_references {
           cwd_only = true,
-          winopts = {
-            height = 0.70,
-            width = 0.95,
-            row = 0.50,
-            col = 0.50,
-            fullscreen = false,
-            title_pos = "center",
-            border = { "", "━", "", "", "", "━", "", "" },
-            preview = {
-              border = { "", "━", "", "", "", "━", "", "" },
-              layout = "horizontal",
-              vertical = "down:45%", -- up|down:size
-              horizontal = "left:55%", -- right|left:size
-            },
-          },
           actions = {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
@@ -1030,8 +863,7 @@ return {
             ["ctrl-s"] = actions.file_split,
             ["ctrl-t"] = actions.file_tabedit,
           },
-          symbols = {
-            prompt = RUtils.fzflua.default_title_prompt(),
+          symbols = RUtils.fzflua.open_center_big_vertical {
             symbol_hl = function(s)
               return "TroubleIcon" .. s
             end,
@@ -1043,14 +875,7 @@ return {
             symbol_icons = RUtils.config.icons.kinds,
             async_or_timeout = true,
             exec_empty_query = true,
-            winopts = {
-              title = extend_title.title,
-              fullscreen = false,
-              height = 0.90,
-              width = 0.90,
-              row = 0.50,
-              col = 0.50,
-            },
+            winopts = { title = extend_title.title },
             fzf_opts = {
               ["--header"] = [[^x:filter  ^r:workspace-symbols]],
               ["--reverse"] = false,
@@ -1085,7 +910,7 @@ return {
                     end,
                   },
                 }
-                RUtils.fzflua.cmd_filter_kind_lsp(opts)
+                RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
               end,
               ["ctrl-r"] = function()
                 local cwd = vim.loop.cwd()
@@ -1098,14 +923,10 @@ return {
               end,
             },
           },
-          code_actions = RUtils.fzflua.cursor_dropdown {
-            prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = {
-              title = RUtils.fzflua.format_title("Code Actions", "󰌵", "@type"),
-            },
+          code_actions = RUtils.fzflua.open_lsp_code_action {
+            winopts = { title = RUtils.fzflua.format_title("Code Actions", "󰌵", "@type") },
           },
-          finder = {
-            prompt = RUtils.fzflua.default_title_prompt(),
+          finder = RUtils.fzflua.open_lsp_references {
             async = true,
             silent = true,
             -- providers = {
@@ -1117,18 +938,7 @@ return {
             --   { "incoming_calls", prefix = require("fzf-lua").utils.ansi_codes.cyan "in  " },
             --   { "outgoing_calls", prefix = require("fzf-lua").utils.ansi_codes.yellow "out " },
             -- },
-            winopts = {
-              title = RUtils.fzflua.format_title("Finder", ""),
-              height = 0.70,
-              width = 0.90,
-              row = 0.50,
-              col = 0.50,
-              title_pos = "center",
-              preview = {
-                vertical = "down:45%", -- up|down:size
-                horizontal = "left:55%", -- right|left:size
-              },
-            },
+            winopts = { title = RUtils.fzflua.format_title("Finder", "") },
             actions = {
               ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
@@ -1137,8 +947,7 @@ return {
             },
           },
         },
-        diagnostics = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+        diagnostics = RUtils.fzflua.open_center_big_diagnostics {
           winopts = { title = RUtils.fzflua.format_title("Diagnostics", "") },
           cwd_only = false,
           file_icons = true,
@@ -1153,7 +962,7 @@ return {
           },
         },
         complete_path = {
-          prompt = RUtils.fzflua.default_title_prompt(),
+          prompt = RUtils.fzflua.padding_prompt(),
           cmd = nil, -- default: auto detect fd|rg|find
           actions = { ["default"] = actions.complete_insert },
         },

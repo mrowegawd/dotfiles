@@ -350,7 +350,7 @@ return {
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.live_grep_glob {
-            prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.padding_prompt(),
             cwd = RUtils.config.path.wiki_path,
             rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
             winopts = {
@@ -370,7 +370,7 @@ return {
           local viz = RUtils.cmd.get_visual_selection { strict = true }
           if viz then
             return fzf_lua.grep {
-              prompt = RUtils.fzflua.default_title_prompt(),
+              prompt = RUtils.fzflua.padding_prompt(),
               query = string.format("%s", viz.selection),
               -- no_esc = true,
               rg_glob = true,
@@ -393,7 +393,7 @@ return {
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.files {
-            prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.padding_prompt(),
             cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
             rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],

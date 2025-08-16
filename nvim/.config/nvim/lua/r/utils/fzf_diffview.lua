@@ -544,7 +544,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
   -- vim.cmd "packadd vim-fugitive"
 
   return {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     exec_empty_query = true,
     func_async_callback = false,
     fzf_opts = {

@@ -126,57 +126,56 @@ return {
       {
         "<Leader>tf",
         function()
-          local col, row = RUtils.fzflua.rectangle_win_pojokan()
           local neotest = require "neotest"
-          RUtils.fzflua.send_cmds({
-            test_file = function()
+          RUtils.fzflua.open_cmd_bulk({
+            ["Test - File"] = function()
               vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
             end,
-            test_all_files = function()
+            ["Test - All files"] = function()
               vim.cmd [[lua require("neotest").run.run(vim.uv.cwd())]]
             end,
-            test_unit = function()
+            ["Test - Unit"] = function()
               vim.cmd [[lua require("neotest").run.run()]]
             end,
-            test_stop = function()
+            ["Test - Stop"] = function()
               vim.cmd [[lua require("neotest").run.stop { interactive = true }]]
             end,
-            test_suit = function()
+            ["Test - Suit"] = function()
               vim.cmd [[lua for _, adapter_id in ipairs(require("neotest").state.adapter_ids()) do require("neotest").run.run { suite = true, adapter = adapter_id, } end]]
             end,
-            test_open_summary = function()
-              neotest.summary.toggle()
-            end,
-            test_debug_nearest = function()
+            ["Test - nearest"] = function()
               vim.cmd [[lua require("neotest").run.run { strategy = "dap" }]]
             end,
-            coverage = function()
+            ["Coverage - Run"] = function()
               vim.cmd [[CoverageLoad]]
               vim.cmd [[Coverage]]
             end,
-            coverage_summary = function()
+            ["Coverage - Summary"] = function()
               vim.cmd [[CoverageSummary]]
             end,
-            coverage_load = function()
+            ["Coverage - Load"] = function()
               vim.cmd [[CoverageLoad]]
             end,
-            coverage_show = function()
+            ["Coverage - Show"] = function()
               vim.cmd [[CoverageShow]]
             end,
-            coverage_hide = function()
+            ["Coverage - Hide"] = function()
               vim.cmd [[CoverageHide]]
             end,
-            coverage_toggle = function()
-              vim.cmd [[CoverageToggle]]
-            end,
-            coverage_clear = function()
+            ["Coverage - Clear"] = function()
               vim.cmd [[CoverageClear]]
             end,
+            ["Toggle - Summery test"] = function()
+              neotest.summary.toggle()
+            end,
+            ["Toggle - coverage"] = function()
+              vim.cmd [[CoverageToggle]]
+            end,
           }, {
-            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing", row = row, col = col },
+            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing",  },
           })
         end,
-        desc = "Testing: list command of testing",
+        desc = "Bulk: testing cmds",
       },
     },
   },

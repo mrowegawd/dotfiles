@@ -710,7 +710,7 @@ local general_overrides = function()
     },
     {
       FloatBoxComment = {
-        fg = { from = "NormalBoxComment", attr = "bg", alter = 0.45 },
+        fg = { from = "NormalBoxComment", attr = "bg", alter = 0.3 },
         bg = { from = "NormalBoxComment", attr = "bg" },
       },
     },

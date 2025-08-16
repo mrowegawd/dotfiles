@@ -74,6 +74,8 @@ return {
           "sh",
           "sql",
           "terraform",
+          -- https://github.com/olimorris/codecompanion.nvim/discussions/1691#discussioncomment-13540919
+          "codecompanion",
           "toml",
           "typescript",
           "typescriptreact",

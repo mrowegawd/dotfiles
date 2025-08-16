@@ -165,7 +165,6 @@ end, {
 keymap.set("n", "<Leader>ff", function()
   local actions = require "fzf-lua.actions"
   local opts = {
-    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title(string.format("Select%s", __get_vars.title_list()), __get_vars.title_icon()),
     },
@@ -209,7 +208,6 @@ keymap.set("n", "<Leader>fg", function()
 
   return fzf_lua().live_grep {
     -- debug = true,
-    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
     rg_opts = rg_opts_format,
     actions = {
@@ -344,75 +342,78 @@ keymap.set("n", "<Leader>fw", function()
     return data
   end
 
-  fzf_lua().fzf_exec(_tbl, {
-    previewer = QFPreviewer,
-    -- prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = {
-      title = RUtils.fzflua.format_title(
-        string.format("Grep%s Word >> %s", __get_vars.title_list(), title),
-        __get_vars.title_icon()
-      ),
-    },
-    -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
-    actions = {
-      ["default"] = function(selected, _)
-        local sel
-        if #selected == 1 then
-          sel = selected[1]
-          for _, x in pairs(items) do
-            if x.text == sel then
-              vim.cmd("e " .. x.filename)
-              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
-              vim.cmd "normal! zz"
+  fzf_lua().fzf_exec(
+    _tbl,
+    RUtils.fzflua.open_dock_bottom {
+      previewer = QFPreviewer,
+      -- prompt = RUtils.fzflua.padding_prompt(),
+      winopts = {
+        title = RUtils.fzflua.format_title(
+          string.format("Grep%s Word >> %s", __get_vars.title_list(), title),
+          __get_vars.title_icon()
+        ),
+      },
+      -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
+      actions = {
+        ["default"] = function(selected, _)
+          local sel
+          if #selected == 1 then
+            sel = selected[1]
+            for _, x in pairs(items) do
+              if x.text == sel then
+                vim.cmd("e " .. x.filename)
+                vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+                vim.cmd "normal! zz"
+              end
             end
           end
-        end
-      end,
-      ["ctrl-v"] = function(selected, _)
-        local sel
-        if #selected == 1 then
-          sel = selected[1]
-          for _, x in pairs(items) do
-            if x.text == sel then
-              vim.cmd("vsplit " .. x.filename)
-              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
-              vim.cmd "normal! zz"
+        end,
+        ["ctrl-v"] = function(selected, _)
+          local sel
+          if #selected == 1 then
+            sel = selected[1]
+            for _, x in pairs(items) do
+              if x.text == sel then
+                vim.cmd("vsplit " .. x.filename)
+                vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+                vim.cmd "normal! zz"
+              end
             end
           end
-        end
-      end,
-      ["ctrl-s"] = function(selected, _)
-        local sel
-        if #selected == 1 then
-          sel = selected[1]
-          for _, x in pairs(items) do
-            if x.text == sel then
-              vim.cmd("split " .. x.filename)
-              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
-              vim.cmd "normal! zz"
+        end,
+        ["ctrl-s"] = function(selected, _)
+          local sel
+          if #selected == 1 then
+            sel = selected[1]
+            for _, x in pairs(items) do
+              if x.text == sel then
+                vim.cmd("split " .. x.filename)
+                vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+                vim.cmd "normal! zz"
+              end
             end
           end
-        end
-      end,
-      ["alt-l"] = function(selected, _)
-        vim.fn.setloclist(0, {}, " ", {
-          nr = "$",
-          items = send_data(selected),
-          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
-        })
-        vim.cmd(RUtils.cmd.quickfix.lopen)
-      end,
-      ["alt-q"] = function(selected, _)
-        local what = {
-          idx = "$",
-          items = send_data(selected),
-          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
-        }
-        vim.fn.setqflist({}, " ", what)
-        vim.cmd(RUtils.cmd.quickfix.copen)
-      end,
-    },
-  })
+        end,
+        ["alt-l"] = function(selected, _)
+          vim.fn.setloclist(0, {}, " ", {
+            nr = "$",
+            items = send_data(selected),
+            title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
+          })
+          vim.cmd(RUtils.cmd.quickfix.lopen)
+        end,
+        ["alt-q"] = function(selected, _)
+          local what = {
+            idx = "$",
+            items = send_data(selected),
+            title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query,
+          }
+          vim.fn.setqflist({}, " ", what)
+          vim.cmd(RUtils.cmd.quickfix.copen)
+        end,
+      },
+    }
+  )
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: grep text of items [fzflua]",

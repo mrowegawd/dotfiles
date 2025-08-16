@@ -136,6 +136,85 @@ open_url() {
   fi
 }
 
+open_find_path() {
+
+  current_session=$(tmux display-message -p '#S')
+  PATH_PANE_COLLECT_JSON="/tmp/tmux-toggle-pane-$current_session.json"
+
+  pane_id=$(jq -r ".[] | .pane_id" "$PATH_PANE_COLLECT_JSON")
+  is_pane_id_exists=$(tmux display -t "$pane_id" -p '#{pane_id}')
+
+  file_path=$(cat)
+
+  if [ -z "$is_pane_id_exists" ]; then
+    tm_jump_to_main_pane="tm-jump-to-main-pane.log"
+    dunstify -u critical "TM-JUMP-TO-MAIN-PANE" "Warning: main pane_id=$pane_id does not exist, check path $PATH_PANE_COLLECT_JSON and log /tmp/$tm_jump_to_main_pane"
+    echo "Failed to open filename: $file_path" >"/tmp/$tm_jump_to_main_pane"
+    exit 1
+  fi
+
+  open_nvim() {
+    if [ -n "$1" ]; then
+      message="Open "
+      line=""
+
+      tmux send-keys -t "$pane_id" ":e $1" Enter
+      tmux select-pane -t "$pane_id"
+
+      if [ -n "$2" ]; then
+        tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $2, 1 })" Enter
+        line=",line: $2"
+      fi
+
+      __send_message "$message$1$line"
+    fi
+
+  }
+
+  get_fzf_options() {
+    local fzf_options
+    local fzf_default_options='-w 70% -h 50% --multi -0 --no-preview --bind alt-a:toggle-all --prompt="Open path:num> "'
+    fzf_options="$(tmux show -gqv '@fzf-pathnum-fzf-options')"
+    [ -n "$fzf_options" ] && echo "$fzf_options" || echo "$fzf_default_options"
+  }
+
+  fzf_filter() {
+    eval "fzf-tmux $(get_fzf_options)"
+  }
+
+  limit='screen'
+  [[ $# -ge 2 ]] && limit=$2
+
+  if [[ $limit == 'screen' ]]; then
+    content="$(tmux capture-pane -J -p -e -S -32768 | sed -r 's/\x1B\[[0-9;]*[mK]//g')"
+  else
+    content="$(tmux capture-pane -J -p -e -S -"$limit" | sed -r 's/\x1B\[[0-9;]*[mK]//g')"
+  fi
+
+  # Cari pola path:num
+  paths=$(echo "$content" | grep -oE '([~/.A-Za-z0-9_-]*:[0-9]+)')
+
+  items=$(
+    printf '%s\n' "${paths[@]}" |
+      grep -v '^$' |
+      sort -u |
+      nl -w3 -s '  '
+  )
+
+  if [[ -n $items ]]; then
+    chosen=$(fzf_filter <<<"$items" | awk '{print $2}')
+    if [[ -n $chosen ]]; then
+      while read -r pathnum; do
+        file=$(echo "$pathnum" | cut -d: -f1)
+        line=$(echo "$pathnum" | cut -d: -f2)
+        nvim "$file" +"$line"
+      done <<<"$chosen"
+    fi
+  else
+    tmux display-message "Searching path:num Not Found!!"
+  fi
+}
+
 open_calc() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   tmux display-popup \

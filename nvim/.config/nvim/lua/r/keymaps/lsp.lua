@@ -158,7 +158,7 @@ function M.get()
     --  LSP commands
     --  +----------------------------------------------------------+
     {
-      "gff",
+      "<Leader>gf",
       function()
         local function check_current_ft(fts)
           local ft = vim.bo[0].filetype
@@ -168,60 +168,57 @@ function M.get()
           return false
         end
 
-        local ft_ts = { "typescriptreact", "typescript" }
+        local lang_lsp_cmds = {}
 
-        local newCmds = {}
-        if check_current_ft(ft_ts) then
-          table.insert(newCmds, {
-            run_TSC = function()
+        if check_current_ft { "typescriptreact", "typescript" } then
+          table.insert(lang_lsp_cmds, {
+            ["Run TSC"] = function()
               vim.cmd [[TSC]]
             end,
-            run_organize_imports = function()
+            ["LSP - Organizer Imports"] = function()
               vim.cmd [[TSToolsOrganizeImports]]
             end,
-            run_sort_imports = function()
+            ["LSP - Short Imports"] = function()
               vim.cmd [[TSToolsSortImports]]
             end,
-            run_remove_unused_imports = function()
+            ["LSP - Remove Unused imports"] = function()
               vim.cmd [[TSToolsRemoveUnusedImports]]
             end,
-            run_tstool_fixall = function()
+            ["Eslint - Fix all"] = function()
               vim.cmd [[TSToolsFixAll]]
             end,
-            run_missing_imports = function()
+            ["LSP - Check missing imports"] = function()
               vim.cmd [[TSToolsAddMissingImports]]
             end,
           })
-        elseif check_current_ft { "go" } then
-          table.insert(newCmds, {
-            run_gogenerate = function()
+        end
+
+        if check_current_ft { "go" } then
+          table.insert(lang_lsp_cmds, {
+            ["Run Gomod"] = function()
               vim.cmd [[GoGenerate %]]
             end,
-            run_gomod_tidy = function()
+            ["Run go tidy"] = function()
               vim.cmd [[GoMod tidy]]
             end,
           })
         end
 
-        local defaultCmds = vim.tbl_deep_extend("force", {
-          ["Lazy - show format info"] = function()
+        local lsp_cmds = vim.tbl_deep_extend("force", {
+          ["Lazy - Show format info"] = function()
             vim.cmd [[LazyFormatInfo]]
           end,
-          ["LSP - show info log"] = function()
+          ["LSP - Show info log"] = function()
             vim.cmd [[LspInfo]]
           end,
-          ["Toggle -LSP lines"] = function()
+          ["LSP - Toggle lsp_lines"] = function()
             require("lsp_lines").toggle()
           end,
-        }, unpack(newCmds) or {})
+        }, unpack(lang_lsp_cmds) or {})
 
-        local col, row = RUtils.fzflua.rectangle_win_pojokan()
-        RUtils.fzflua.send_cmds(
-          defaultCmds,
-          { winopts = { title = RUtils.config.icons.misc.smiley .. "LSP", row = row, col = col } }
-        )
+        RUtils.fzflua.open_cmd_bulk(lsp_cmds, { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } })
       end,
-      desc = "LSP: list command of lsp",
+      desc = "Bulk: LSP cmds",
     },
   }
 
@@ -322,7 +319,7 @@ function M.get()
   --     "gP",
   --     function()
   --       fzf_lua.lsp_definitions {
-  --         prompt = RUtils.fzflua.default_title_prompt(),
+  --         prompt = RUtils.fzflua.padding_prompt(),
   --         winopts = {
   --           title = RUtils.fzflua.format_title("LSP: Peek [fzflua]", RUtils.config.icons.misc.lsp),
   --           relative = "editor",

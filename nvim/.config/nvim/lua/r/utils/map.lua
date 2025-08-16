@@ -47,7 +47,7 @@ M.show_help_buf_keymap = function()
   end
 
   local opts = {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
       title = " Show Keymap Help for Current Buffer [" .. ft .. "] ",
     },

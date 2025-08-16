@@ -58,7 +58,7 @@ local function opts_fzf(title, maps)
     tilte = { title, "string" },
   }
   return {
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     winopts = function()
       local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
       local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })

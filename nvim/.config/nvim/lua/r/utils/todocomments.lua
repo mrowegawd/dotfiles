@@ -64,7 +64,7 @@ local function picker(contents, tbl_cts, fzf_opts)
         RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.check_big)
       ),
     },
-    prompt = RUtils.fzflua.default_title_prompt(),
+    prompt = RUtils.fzflua.padding_prompt(),
     actions = {
       ["default"] = function(selected, _)
         local sel = selected[1]
