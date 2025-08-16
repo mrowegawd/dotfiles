@@ -15,6 +15,7 @@ return {
     opts = {
       autosave = {
         enabled = true,
+        -- interval = 15, -- How often to save (in seconds)
         notify = false,
       },
       buf_filter = function(bufnr)
@@ -59,6 +60,7 @@ return {
           end
         end)
       end, { desc = "Session: save with session name [resession.nvim]" })
+
       --stylua: ignore
       vim.keymap.set("n", "<Leader>ss", function() resession.save() end, { desc = "Session: save session with current name [resession.nvim]" })
       --stylua: ignore
@@ -67,6 +69,7 @@ return {
       vim.keymap.set("n", "<Leader>sL", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
       --stylua: ignore
       vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Session: load last [resession.nvim]" })
+      --stylua: ignore
       vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Session: delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()
@@ -96,7 +99,6 @@ return {
       RUtils.cmd.augroup("ResessionLeave", {
         event = { "VimLeavePre" },
         command = function()
-          vim.cmd [[set cmdheight=0]]
           resession.save "last"
         end,
       })

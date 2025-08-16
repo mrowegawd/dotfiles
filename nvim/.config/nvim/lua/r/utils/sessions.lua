@@ -1,23 +1,6 @@
 ---@class r.utils.session
 local M = {}
 
-function M.save_ses()
-  local MS = require "mini.sessions"
-  local branch_name = "temp"
-  local path_cwd = vim.uv.cwd()
-
-  local cwd = ""
-  if type(path_cwd) == "string" then
-    cwd = vim.fn.fnameescape(path_cwd)
-  end
-  local session_name = string.format("%s_%s", branch_name, cwd)
-  -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
-  session_name = string.gsub(session_name, "[/\\ .]", "_")
-  MS.write(session_name, {
-    force = true,
-  })
-end
-
 function M.load_ses()
   local MS = require "mini.sessions"
   local branch_name = "temp"
@@ -43,79 +26,43 @@ end
 
 function M.load_ses_dashboard(last)
   last = last or false
+  local has_persistent = RUtils.has "persistence.nvim"
+  local has_auto_session = RUtils.has "auto-session"
+  local has_resession = RUtils.has "resession.nvim"
 
-  if RUtils.has "persistence.nvim" then
+  if has_persistent then
     vim.schedule(function()
-      require("persistence").load()
       -- require("qfsilet.note").get_todo()
+      require("persistence").load()
       vim.cmd "silent! :e"
     end)
-  elseif RUtils.has "auto-session" then
+  end
+
+  if has_auto_session then
     if last then
       vim.cmd "SessionRestore last"
     else
       vim.cmd "SessionSearch"
     end
+  end
 
-    local uv = vim.loop
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-      group = vim.api.nvim_create_augroup("ResessionLoadTest", { clear = true }),
-      pattern = "*",
-      once = true,
-      callback = function()
-        local ft = vim.bo[0].filetype
-        if ft and ft ~= "fzf" then
-          local async
-          async = uv.new_async(vim.schedule_wrap(function()
-            if async ~= nil then
-              -- if #vim.fn.getqflist() > 0 then
-              --   vim.cmd [[copen]]
-              --   vim.cmd [[wincmd p]]
-              -- end
-
-              if vim.bo[0].filetype ~= "dashboard" then
-                if vim.bo[0].filetype == "" then
-                  return
-                end
-              end
-
-              require("qfsilet.note").get_todo()
-
-              vim.cmd "silent! :e"
-              -- vim.cmd [[set cmdheight=0]]
-              async:close()
-            end
-          end))
-
-          if async ~= nil then
-            async:send()
-          end
-
-          if vim.bo[0].filetype ~= "dashboard" then
-            if vim.bo[0].filetype == "" then
-              return
-            end
-          end
-        end
-      end,
-    })
-  elseif RUtils.has "resession.nvim" then
+  if has_resession then
     if last then
       require("resession").load "last"
     else
       require("resession").load()
     end
+  end
 
-    if #vim.fn.getqflist() > 0 then
-      vim.cmd(RUtils.cmd.quickfix.copen)
-      vim.cmd [[wincmd p]]
-    end
-  else
+  if #RUtils.qf.get_list_qf() > 0 then
+    vim.cmd(RUtils.cmd.quickfix.copen)
+    vim.cmd [[wincmd p]]
+    vim.cmd [[set cmdheight=0]]
+  end
+
+  if not has_auto_session and not has_persistent and not has_resession then
     ---@diagnostic disable-next-line: undefined-field
-    RUtils.warn(
-      "Cannot load session. Maybe the plugins are not installed or something went wrong..",
-      { title = "Sessions" }
-    )
+    RUtils.warn("Unable to load the session. The required plugins may not be installed..", { title = "Sessions" })
   end
 end
 

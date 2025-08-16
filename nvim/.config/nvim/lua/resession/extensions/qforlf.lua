@@ -1,60 +1,34 @@
 local M = {}
 
-local result = {}
+local result = {
+  quickfix = {},
+  location = {},
+}
 
 M.on_save = function()
-  local qf_list = vim.fn.getqflist()
-  if #qf_list > 0 then
-    result.quickfix = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        module = item.module,
-        lnum = item.lnum,
-        end_lnum = item.end_lnum,
-        col = item.col,
-        end_col = item.end_col,
-        vcol = item.vcol,
-        nr = item.nr,
-        pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        valid = item.valid,
-      }
-    end, qf_list)
+  local data_qf = RUtils.qf.get_data_qf()
+  local data_loc = RUtils.qf.get_data_qf(true)
+
+  if data_qf.quickfix.items and #data_qf.quickfix.items > 0 then
+    result.quickfix.items = data_qf.quickfix.items
+    result.quickfix.title = RUtils.qf.get_title_qf()
   end
 
-  local winid = vim.api.nvim_get_current_win()
-  local loc_list = vim.fn.getloclist(winid)
-  if #loc_list > 0 then
-    result.location = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        module = item.module,
-        lnum = item.lnum,
-        end_lnum = item.end_lnum,
-        col = item.col,
-        end_col = item.end_col,
-        vcol = item.vcol,
-        nr = item.nr,
-        pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        valid = item.valid,
-      }
-    end, loc_list)
+  if data_loc.location.items and #data_loc.location.items > 0 then
+    result.location.items = data_loc.location.items
+    result.location.title = RUtils.qf.get_title_qf(true)
   end
 
   return result
 end
 
 M.on_pre_load = function(data)
-  if data.quickfix and #data.quickfix > 0 then
-    vim.fn.setqflist({}, " ", { items = data.quickfix })
+  if data.quickfix.items and #data.quickfix.items > 0 then
+    RUtils.qf.save_to_qf(data.quickfix.items, data.quickfix.title)
   end
 
-  if data.location and #data.location > 0 then
-    local winid = vim.api.nvim_get_current_win()
-    vim.fn.setloclist(winid, {}, " ", { items = data.location })
+  if data.location.items and #data.location.items > 0 then
+    RUtils.qf.save_to_qf(data.quickfix.items, data.location.title, true)
   end
 end
 
@@ -67,10 +41,7 @@ M.save_win = function(winid)
 end
 
 M.load_win = function(winid, config)
-  vim.api.nvim_set_current_win(winid)
-  -- if #result.quickfix > 0 then
-  --   vim.cmd "belowright copen"
-  -- end
+  -- vim.api.nvim_set_current_win(winid)
   -- if #result.location > 0 then
   --   vim.cmd "belowright lopen"
   -- end
