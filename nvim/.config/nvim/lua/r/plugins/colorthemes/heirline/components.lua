@@ -211,6 +211,8 @@ local __colors = function()
     winbar_fg = H.get("WinbarFilepath", "fg"),
     winbar_bg = H.get("PanelBottomNormal", "bg"),
     winbar_keyword = H.get("WinbarKeyword", "fg"),
+
+    winbar_dap_keyword = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 1.5),
     winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
     winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
 
@@ -1540,6 +1542,13 @@ M.WinbarFilePath = {
       if self.is_readonly() then
         fg = tostring(colors.mode_readonly_fg)
       end
+
+      if set_conditions.is_dap_ft() then
+        fg = colors.winbar_dap_fg
+        if Conditions.is_active() then
+          fg = colors.winbar_keyword
+        end
+      end
       return { fg = fg, bold = is_bold }
     end,
   },
@@ -1555,16 +1564,6 @@ M.WinbarFilePath = {
 
       if Conditions.is_active() then
         fg = colors.winbar_keyword
-        -- is_bold = true
-        -- is_italic = true
-      end
-
-      if set_conditions.is_dap_ft() then
-        fg = colors.winbar_dap_fg
-        bg = colors.winbar_dap_bg
-        if Conditions.is_active() then
-          fg = colors.winbar_keyword
-        end
       end
 
       if self.is_fugitive() then
@@ -1582,6 +1581,14 @@ M.WinbarFilePath = {
         if Conditions.is_active() then
           fg = tostring(colors.mode_readonly_fg_active)
           is_italic = true
+        end
+      end
+
+      if set_conditions.is_dap_ft() then
+        fg = colors.winbar_dap_fg
+        bg = colors.winbar_dap_bg
+        if Conditions.is_active() then
+          fg = colors.winbar_dap_keyword
         end
       end
       return { fg = fg, bg = bg, bold = is_bold, italic = is_italic }
@@ -1606,17 +1613,17 @@ M.status_winbar_active_left = {
       bg = colors.winbar_bg
     end
 
-    if set_conditions.is_dap_ft() then
-      fg = colors.winbar_fg
-      bg = colors.winbar_dap_bg
-    end
-
     if set_conditions.is_path_git_relative() then
       bg = colors.mode_git_bg
     end
 
     if set_conditions.is_readonly() then
       bg = colors.mode_readonly_bg
+    end
+
+    if set_conditions.is_dap_ft() then
+      fg = colors.winbar_dap_fg
+      bg = colors.winbar_dap_bg
     end
 
     return { fg = fg, bg = bg }

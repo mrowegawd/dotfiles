@@ -184,6 +184,7 @@ return {
                         ---@diagnostic disable-next-line: undefined-field
                         RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
                       else
+                        ---@diagnostic disable-next-line: undefined-field
                         RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
                       end
                     end

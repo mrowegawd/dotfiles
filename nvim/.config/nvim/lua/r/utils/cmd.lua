@@ -984,6 +984,11 @@ function M.change_colors()
     __tab_statusline_fg = -0.26
   end
 
+  if vim.tbl_contains({ "base46-oxocarbon" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.18
+    __tab_statusline_fg = -0.18
+  end
+
   local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_inactive_fg)
   local tab_inactive_bg = H.get("Normal", "bg")
   local tab_statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_statusline_fg)
@@ -1017,6 +1022,12 @@ function M.change_colors()
     zsh_lines_fg = 0.5
   end
 
+  local zsh_special_more_more_themes = { "base46-oxocarbon" }
+  if vim.tbl_contains(zsh_special_more_more_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.55
+    zsh_sugest_fg = 1.2
+  end
+
   local zsh_lines = H.tint(H.get("WinSeparator", "fg"), zsh_lines_fg)
   local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), zsh_sugest_fg)
   ---
@@ -1044,7 +1055,7 @@ function M.change_colors()
   ---
   local __eww_icon_fg = 0.6
 
-  if vim.tbl_contains({ "base46-jellybeans", "base46-oxocarbon" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
     __eww_icon_fg = 0.5
   end
 
