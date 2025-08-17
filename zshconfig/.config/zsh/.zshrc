@@ -100,8 +100,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#434343"
-colorsuggest="fg=#4f4f4f"
+colorline="#424242"
+colorsuggest="fg=#505050"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -205,17 +205,17 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   # kalau tidak di setting sebagai `menu no`, ketika quit dengan <c-c> saat select, cursor nya akan hilang,
   # check berkala isu ini: https://github.com/Aloxaf/fzf-tab/issues/56
   zstyle ':completion:*' menu no
+  zstyle ':fzf-tab:*' use-fzf-default-opts yes
+  # zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
 
   # Guide for adding size popup window (only works inside tmux):
   # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#ftb-tmux-popup
-  if [[ $TMUX ]]; then
-  	zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-    zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
-    zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
-    zstyle ':fzf-tab:*' popup-fit-preview yes
-    zstyle ':fzf-tab:*' use-fzf-default-opts yes
-    zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
-  fi
+  # if [[ $TMUX ]]; then
+  # 	zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+  #   zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
+  #   zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
+  #   zstyle ':fzf-tab:*' popup-fit-preview yes
+  # fi
 
   # ─< KEYBINDING >───────────────────────────────────────────────────────
   # Guide for adding continuous-trigger

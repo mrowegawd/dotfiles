@@ -37,14 +37,14 @@ gui:
   border: "rounded" # one of 'rounded' | 'single' | 'double' | 'hidden'
   theme:
     activeBorderColor:
-      - "#3c6d95"
+      - "#8b66a3"
       - bold
     inactiveBorderColor:
-      - "#3e3e3e"
+      - "#3f3f3f"
     selectedLineBgColor:
-      - "#223e55"
+      - "#4f3a5d"
     optionsTextColor:
-      - "#565656"
+      - "#585858"
   returnImmediately: false
   wrapMainPanel: true
   # Side panel width as a ratio of the screen's width

@@ -1017,6 +1017,12 @@ function M.change_colors()
     zsh_lines_fg = 0.4
   end
 
+  local zsh_special_kanagawa_themes = { "base46-kanagawa" }
+  if vim.tbl_contains(zsh_special_kanagawa_themes, vim.g.colorscheme) then
+    zsh_lines_fg = 0.45
+    zsh_sugest_fg = 0.8
+  end
+
   local zsh_special_more_themes = { "neogotham" }
   if vim.tbl_contains(zsh_special_more_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.5

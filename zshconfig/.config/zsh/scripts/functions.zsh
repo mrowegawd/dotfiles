@@ -398,7 +398,7 @@ bindkey '^[x' exitme
 find-in-file() {
   local _file="$(rg --color=always --line-number --hidden --no-heading --smart-case "${@:-^[^\n]}" \
     | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
-    --preview-window='50%' --prompt='Grep> ' --height='50%' --with-nth 1,3.. --exact)"
+    --preview-window='50%' --prompt='Grep In File> ' --height='50%' --with-nth 1,3.. --exact)"
 
   _file="${_file%%:*}"
   if [[ -n $_file ]]; then
@@ -444,6 +444,7 @@ show_alias() {
   local doc_con="doc_con_"
   local doc_im="doc_im_"
 
+  # env TMUX_POPUP=1
 
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
@@ -453,7 +454,7 @@ show_alias() {
 
   elif [[ $myargs[-2] == "alias" ]]; then
     local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' \
-      | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
+      | fzf -p 80% | cut -d" " -f1 | xargs)
     if [[ -n $alias_sel ]]; then
       LBUFFER="git $alias_sel "
       zle reset-prompt
@@ -537,7 +538,7 @@ show_alias() {
   elif [[ $myargs[-1] == "" ]]; then
     local alias_selected=$(
     awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
+      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf --exit-0 --ansi
     )
 
     if [[ -n $alias_selected ]]; then
@@ -560,4 +561,4 @@ show_alias() {
   fi
 }
 zle -N show_alias
-bindkey '\t' show_alias
+bindkey '\t' show_alias  # <Tab>
