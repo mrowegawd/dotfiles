@@ -57,32 +57,9 @@ local function opts_fzf(title, maps)
     maps = { maps, "table" },
     tilte = { title, "string" },
   }
-  return {
+  return RUtils.fzflua.layout_pojokan {
     prompt = RUtils.fzflua.padding_prompt(),
-    winopts = function()
-      local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
-      local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
-
-      local win_height = math.ceil(lines * 0.5)
-      local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
-      local width = math.ceil((win_width / 3) * 1 + 2)
-
-      local col = math.ceil((columns - lines) - 20)
-      local row = math.ceil(lines - win_height)
-      return {
-        title = RUtils.fzflua.format_title(title, "󰈙"),
-        width = width,
-        height = win_height - 10,
-        row = row,
-        col = col,
-        fullscreen = false,
-        border = RUtils.config.icons.border.rectangle,
-        preview = {
-          vertical = "down:55%", -- `up|down:size`
-          horizontal = "right:45%", -- `right|left:size`
-        },
-      }
-    end,
+    winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = maps.actions,
     fzf_opts = maps.fzf_opts,
   }
@@ -196,7 +173,7 @@ function M.open_agenda_file_lists()
         for _, file_path in pairs(dirs) do
           local is_file_org = contains_match(tostring(file_path), ".org$")
           if is_file_org then
-            if vim.fn.getfsize(file_path) <= 1 then
+            if vim.fn.getfsize(file_path) <= 3 then
               local p = Path:new(file_path)
               if p:exists() then
                 p:rm()

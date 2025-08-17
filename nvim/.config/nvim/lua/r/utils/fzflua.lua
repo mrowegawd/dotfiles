@@ -37,22 +37,6 @@ local dropdown = function(opts)
   }, opts)
 end
 
-local layout_pojokan = function(opts)
-  local height = vim.o.lines - vim.o.cmdheight
-  if vim.o.laststatus ~= 0 then
-    height = math.floor(math.min(99, height / 3))
-  end
-
-  return dropdown(vim.tbl_deep_extend("force", {
-    winopts = {
-      width = math.floor(math.min(60, vim.o.columns / 2)),
-      height = height,
-      col = 0.95,
-      row = 0.70,
-    },
-  }, opts))
-end
-
 local layout_center = function(opts)
   return dropdown(vim.tbl_deep_extend("force", {
     winopts = {
@@ -87,6 +71,20 @@ end
 local __stripBeforeLastOccurrenceOf = function(str, sep)
   local idx = __lastIndexOf(str, sep) or 0
   return str:sub(idx + 1), idx
+end
+
+function M.layout_pojokan(opts)
+  local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
+  local win_height = math.ceil(lines * 0.5)
+  return dropdown(vim.tbl_deep_extend("force", {
+    winopts = {
+
+      width = math.floor(math.min(60, vim.o.columns / 2)),
+      height = win_height - 10,
+      col = 0.85,
+      row = 0.70,
+    },
+  }, opts))
 end
 
 function M.padding_prompt(is_expand)
@@ -269,7 +267,7 @@ function M.open_cmd_bulk(opts, opts_cmds)
 
   fzf_lua().fzf_exec(
     cmds,
-    layout_pojokan(vim.tbl_deep_extend("force", {
+    M.layout_pojokan(vim.tbl_deep_extend("force", {
       winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
