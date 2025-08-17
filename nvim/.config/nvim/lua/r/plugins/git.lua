@@ -10,7 +10,7 @@ local git_sign = {
   changedelete = "~",
 }
 
-if vim.tbl_contains({ "neogotham", "vscode_modern" }, vim.g.colorscheme) then
+if vim.tbl_contains({ "neogotham", "vscode_modern", "base46-kanagawa" }, vim.g.colorscheme) then
   git_sign = {
     add = "▌",
     change = "▌",

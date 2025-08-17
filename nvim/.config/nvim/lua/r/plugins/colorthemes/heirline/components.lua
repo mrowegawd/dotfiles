@@ -128,16 +128,16 @@ local __colors = function()
   local UIPallette = require("r.utils").uisec
 
   local set_col_light = {
-    block_bg = -0.12,
-    block_darken_bg = -0.05,
-    block_darken_fg = -0.25,
-    block_fg = -0.5,
+    block_bg = 0.2,
+    block_darken_bg = 0.1,
+    block_darken_fg = 0.15,
+    block_fg = 0.25,
     block_qfstatus_bg = 0.2,
     block_qfstatus_fg = -0.4,
 
     keyword_fg = -0.05,
 
-    branch_fg = -0.6,
+    branch_fg = 0.8,
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
@@ -149,13 +149,17 @@ local __colors = function()
     mode_readonly_bg = 0.1,
     mode_readonly_fg = 1,
     mode_readonly_fg_active = 5,
+
+    winbar_dap_keyword = 1.5,
+    winbar_dap_fg = 0.6,
+    winbar_dap_bg = -0.03,
   }
 
   local set_col_normal = {
-    block_bg = 0.5,
-    block_darken_bg = 0.25,
-    block_darken_fg = 0.2,
-    block_fg = 2,
+    block_bg = 0.6,
+    block_darken_bg = 0.4,
+    block_darken_fg = 0.3,
+    block_fg = 0.5,
     block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.13,
     block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.8,
 
@@ -166,6 +170,10 @@ local __colors = function()
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
 
+    winbar_dap_keyword = 1.5,
+    winbar_dap_fg = 0.6,
+    winbar_dap_bg = -0.2,
+
     mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
     mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.04,
     mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
@@ -174,7 +182,12 @@ local __colors = function()
     mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
     mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
   }
-  local col_opts = vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) and set_col_light or set_col_normal
+
+  local light_themes = vim.g.lightthemes
+  light_themes[#light_themes + 1] = "base46-seoul256_dark"
+  light_themes[#light_themes + 1] = "base46-zenburn"
+
+  local col_opts = vim.tbl_contains(light_themes, vim.g.colorscheme) and set_col_light or set_col_normal
 
   return {
     statusline_fg = H.get("StatusLine", "fg"),
@@ -186,7 +199,7 @@ local __colors = function()
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
-    block_fg = H.tint(H.get("StatusLine", "bg"), col_opts.block_fg),
+    block_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_fg),
     block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg),
     block_darken_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_darken_fg),
     block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
@@ -212,9 +225,12 @@ local __colors = function()
     winbar_bg = H.get("PanelBottomNormal", "bg"),
     winbar_keyword = H.get("WinbarKeyword", "fg"),
 
-    winbar_dap_keyword = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 1.5),
-    winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), 0.6),
-    winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), -0.2),
+    winbar_dap_keyword = H.tint(
+      H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")),
+      col_opts.winbar_dap_keyword
+    ),
+    winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), col_opts.winbar_dap_fg),
+    winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), col_opts.winbar_dap_bg),
 
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",

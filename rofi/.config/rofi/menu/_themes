@@ -642,11 +642,11 @@ set_fzf() {
   sed -i -e "s/%%color_hl%%/$FZF_HL/g" "$FZF_PATH_CONFIG/fzf.config"
 
   # Selection
-  # FZF_SELECTION_BG=$(grep -i fzf_selection_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%color_selection_bg%%/$FZF_BG/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_SELECTION_FG=$(grep -i fzf_selection_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_selection_fg%%/$FZF_SELECTION_FG:underline/g" "$FZF_PATH_CONFIG/fzf.config"
 
-  FZF_SELECTION_SP=$(grep -i fzf_selection_sp: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%color_selection_fg%%/$FZF_SELECTION_SP:underline/g" "$FZF_PATH_CONFIG/fzf.config"
+  FZF_SELECTION_BG=$(grep -i fzf_selection_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%color_selection_bg%%/$FZF_SELECTION_BG/g" "$FZF_PATH_CONFIG/fzf.config"
 
   FZF_SELECTION_HL=$(grep -i fzf_match: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%color_selection_hl%%/$FZF_SELECTION_HL:underline/g" "$FZF_PATH_CONFIG/fzf.config"

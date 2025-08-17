@@ -970,18 +970,13 @@ function M.change_colors()
   end
 
   if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.28
-    __tab_statusline_fg = -0.28
+    __tab_inactive_fg = -0.3
+    __tab_statusline_fg = -0.3
   end
 
   if vim.tbl_contains({ "neogotham" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.22
     __tab_statusline_fg = -0.22
-  end
-
-  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.26
-    __tab_statusline_fg = -0.26
   end
 
   if vim.tbl_contains({ "base46-oxocarbon" }, vim.g.colorscheme) then
@@ -1003,16 +998,13 @@ function M.change_colors()
   local zsh_lines_fg = 0.35
   local zsh_sugest_fg = 0.65
 
-  local zsh_bright_themes = { "base46-everforest", "base46-jabuti", "base46-onenord", "base46-melange" }
-  if vim.tbl_contains(zsh_bright_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.25
-  end
   local zsh_contras_themes = { "base46-seoul256_dark", "base46-zenburn" }
   if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.2
     zsh_sugest_fg = 0.45
   end
-  local zsh_special_themes = { "lackluster", "vscode_modern" }
+
+  local zsh_special_themes = { "lackluster" }
   if vim.tbl_contains(zsh_special_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.4
   end
@@ -1023,9 +1015,17 @@ function M.change_colors()
     zsh_sugest_fg = 0.8
   end
 
-  local zsh_special_more_themes = { "neogotham" }
-  if vim.tbl_contains(zsh_special_more_themes, vim.g.colorscheme) then
+  local zsh_special_melange = { "base46-melange", "base46-jellybeans" }
+  if vim.tbl_contains(zsh_special_melange, vim.g.colorscheme) then
+    zsh_lines_fg = 0.4
+  end
+
+  if vim.g.colorscheme == "neogotham" then
     zsh_lines_fg = 0.5
+  end
+
+  if vim.g.colorscheme == "vscode_modern" then
+    zsh_sugest_fg = 0.75
   end
 
   local zsh_special_more_more_themes = { "base46-oxocarbon" }
@@ -1066,7 +1066,7 @@ function M.change_colors()
   end
 
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-    __eww_icon_fg = 0.35
+    __eww_icon_fg = 0.5
   end
 
   local eww_icon_fg = H.tint(H.get("WinSeparator", "fg"), __eww_icon_fg)
@@ -1078,15 +1078,16 @@ function M.change_colors()
     fzf = {
       fg = H.get("FzfLuaFilePart", "fg"),
       bg = H.get("FzfLuaNormal", "bg"),
-      match = H.get("FzfLuaFzfMatch", "fg"),
 
       -- selection_fg = H.get("FzfLuaFilePart", "fg"),
       -- selection_bg = H.get("FzfLuaSel", "bg"),
       -- match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
-      selection_fg = H.get("Directory", "fg"),
+      selection_fg = H.get("FzfLuaSel", "fg"),
       selection_bg = H.get("Normal", "bg"),
       selection_sp = H.get("FzfLuaSel", "sp"),
+
+      match = H.get("FzfLuaFzfMatch", "fg"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
       gutter = H.get("FzfLuaNormal", "bg"),
