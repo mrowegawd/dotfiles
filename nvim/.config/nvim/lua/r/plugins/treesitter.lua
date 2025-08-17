@@ -73,6 +73,7 @@ return {
           "ruby",
           "sh",
           "sql",
+          "octo",
           "terraform",
           -- https://github.com/olimorris/codecompanion.nvim/discussions/1691#discussioncomment-13540919
           "codecompanion",

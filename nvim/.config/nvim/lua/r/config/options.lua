@@ -36,43 +36,52 @@ vim.g.loaded_matchparen = 1
 -- vim.g.health = { style = "float" } -- make :checkhealth float window
 
 -- {{{ Generals
-opt.winborder = "none"
-opt.mousescroll = "ver:3,hor:6"
-opt.termguicolors = true -- tmux need this!
-opt.secure = true
-opt.modelines = 1 -- read a modeline at EOF
-opt.confirm = false -- Confirm to save changes before exiting modified buffer
-opt.completeopt = "menuone,noinsert"
-opt.spelloptions:append "noplainbuffer"
-opt.errorbells = false -- disable error bells (no beep/flash)
-opt.visualbell = false
-opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
-opt.cursorline = true
-opt.inccommand = "split"
-opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
-opt.fileformats = { "unix", "mac", "dos" }
-opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
-opt.encoding = "utf-8"
-opt.conceallevel = 2
-opt.infercase = true -- Infer cases in keyword completion
-opt.concealcursor = "nc"
-opt.guifont = "SF Mono:h11"
-opt.pumheight = 20
-opt.helpheight = 12
-opt.previewheight = 12
-opt.showmode = false -- show current mode (insert, etc) under the cmdline
-opt.showcmd = false -- show current command under the cmd line
-opt.cmdheight = 0 -- cmdline height: 0 1 2
-opt.laststatus = 3 -- 2 = always show status line (filename, etc)
-opt.textwidth = 80 -- max inserted text width for paste operations
-opt.linespace = 0 -- font spacing
-opt.ruler = false -- disable default ruler, 'ruler' is -> show line,col at the cursor pos
-opt.signcolumn = "yes:1" -- Always show the sign column
-opt.number = true -- show absolute line no. at the cursor pos
-opt.relativenumber = false -- otherwise, show relative numbers in the ruler
+-- opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
 opt.breakindent = true -- start wrapped lines indented
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+opt.cmdheight = 0 -- cmdline height: 0 1 2
+opt.completeopt = "menuone,noinsert"
+opt.concealcursor = "nc"
+opt.conceallevel = 2
+opt.confirm = false -- Confirm to save changes before exiting modified buffer
+opt.cursorline = true
+opt.encoding = "utf-8"
+opt.errorbells = false -- disable error bells (no beep/flash)
+opt.fileformats = { "unix", "mac", "dos" }
+opt.guifont = "SF Mono:h11"
+opt.helpheight = 12
+opt.hidden = true -- do not unload buffer when abandoned
+opt.hlsearch = true -- highlight all text matching current search pattern
+opt.ignorecase = true -- ignore case on search
+opt.inccommand = "split"
+opt.incsearch = true -- show search matches as you type
+opt.infercase = true -- Infer cases in keyword completion
+opt.laststatus = 3 -- 2 = always show status line (filename, etc)
 opt.linebreak = true -- do not break words on line wrap
+opt.linespace = 0 -- font spacing
+opt.magic = true --  use 'magic' chars in search patterns
+opt.modelines = 1 -- read a modeline at EOF
+opt.mousescroll = "ver:3,hor:6"
+opt.number = true -- show absolute line no. at the cursor pos
+opt.previewheight = 12
+opt.pumheight = 20
+opt.relativenumber = false -- otherwise, show relative numbers in the ruler
+opt.ruler = false -- disable default ruler, 'ruler' is -> show line,col at the cursor pos
+opt.secure = true
 opt.showbreak = "↪ "
+opt.showcmd = false -- show current command under the cmd line
+opt.showmatch = true -- highlight matching [{()}]
+opt.showmode = false -- show current mode (insert, etc) under the cmdline
+opt.signcolumn = "yes:1" -- Always show the sign column
+opt.smartcase = true -- case sensitive when search includes uppercase
+opt.smoothscroll = true
+opt.spelloptions:append "noplainbuffer"
+opt.termguicolors = true -- tmux need this!
+opt.textwidth = 80 -- max inserted text width for paste operations
+opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
+opt.visualbell = false
+opt.winborder = "none"
+opt.wrapscan = true -- begin search from top of the file when nothing is found
 -- }}}
 -- {{{ List chars
 opt.list = true -- Show some invisible characters (tabs...
@@ -116,7 +125,7 @@ opt.wildignore = {
   "tags.lock",
 }
 opt.wildoptions = { "pum", "fuzzy" } --Show completion items using the pop-up-menu (pum)
-opt.pumblend = 0 -- Make popup window translucent
+-- opt.pumblend = 0 -- Make popup window translucent
 
 opt.joinspaces = true -- insert spaces after '.?!' when joining lines
 opt.autoindent = true -- copy indent from current line on newline
@@ -157,14 +166,20 @@ opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
 -- opt.foldminlines = 0 -- allow closing even 1-line folds.
-opt.magic = true --  use 'magic' chars in search patterns
-opt.hlsearch = true -- highlight all text matching current search pattern
-opt.incsearch = true -- show search matches as you type
-opt.ignorecase = true -- ignore case on search
-opt.smartcase = true -- case sensitive when search includes uppercase
-opt.showmatch = true -- highlight matching [{()}]
-opt.wrapscan = true -- begin search from top of the file when nothing is found
-opt.hidden = true -- do not unload buffer when abandoned
+
+-- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+-- opt.foldexpr = "v:lua.require'r.utils'.foldexpr()"
+-- opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
+opt.foldmethod = "expr"
+if vim.treesitter.foldexpr then
+  opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  -- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+  opt.foldtext = ""
+else
+  opt.foldexpr = "nvim_treesitter#foldexpr()"
+  opt.foldtext = ""
+end
+-- end
 -- }}}
 -- {{{ Timings
 opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
@@ -332,14 +347,4 @@ vim.g.undotree_DiffCommand = "diff -u"
 --   }
 -- end
 
--- }}}
--- {{{ Foldexpr, foldtext, smoothscroll
-opt.smoothscroll = true
-opt.foldmethod = "expr"
--- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
--- opt.foldexpr = "v:lua.require'r.utils'.foldexpr()"
-opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
--- opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
-opt.foldtext = ""
--- end
 -- }}}

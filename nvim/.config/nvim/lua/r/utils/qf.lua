@@ -6,6 +6,51 @@ local results = {
   location = {},
 }
 
+function M.get_total_stack_qf(is_loc)
+  is_loc = is_loc or false
+
+  local qflists = {}
+
+  if not is_loc then
+    for i = 1, 10 do -- (n)vim keeps at most 10 quickfix lists in full
+      local qflist = vim.fn.getqflist { nr = i, id = 0, title = true, items = true }
+      if not vim.tbl_isempty(qflist.items) then
+        qflists[#qflists + 1] = qflist
+      end
+    end
+    return qflists
+  end
+
+  -- maksimal stack pada loclist itu 10
+  for i = 1, 10 do
+    local loclist = vim.fn.getloclist(0, { all = "", nr = tonumber(i) })
+    if not vim.tbl_isempty(loclist.items) then
+      qflists[#qflists + 1] = loclist
+    end
+  end
+  return qflists
+end
+
+function M.get_current_history_qf(is_loc)
+  is_loc = is_loc or false
+
+  if not is_loc then
+    return vim.fn.getqflist({ nr = 0 }).nr
+  end
+
+  return vim.fn.getloclist(0, { nr = 0 }).nr
+end
+
+function M.get_current_idx_qf(is_loc)
+  is_loc = is_loc or false
+
+  if not is_loc then
+    return vim.fn.getqflist({ idx = 0 }).idx
+  end
+
+  return vim.fn.getloclist(0, { idx = 0 }).idx
+end
+
 -- example use; M.is_loclist() and "Location List" or "Quickfix List"
 function M.is_loclist(buf)
   buf = buf or 0

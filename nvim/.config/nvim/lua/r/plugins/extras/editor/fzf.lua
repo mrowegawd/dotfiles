@@ -216,7 +216,7 @@ return {
       { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
       { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
       { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
-
+      { "<Leader>gD", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
@@ -302,7 +302,6 @@ return {
           ["--history"] = vim.fn.stdpath "data" .. "/fzf-lua-history",
         }, -- remove separator line
         files = RUtils.fzflua.open_dock_bottom {
-          prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
           fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
@@ -366,7 +365,6 @@ return {
         },
         git = {
           files = {
-            prompt = RUtils.fzflua.padding_prompt(),
             winopts = {
               title = RUtils.fzflua.format_title("Git Files", ""),
               title_pos = "left",
@@ -712,7 +710,6 @@ return {
           },
         },
         oldfiles = RUtils.fzflua.open_dock_bottom {
-          prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
           fzf_opts = { ["--header"] = [[^o:oldfiles-all  ^r:oldfiles-current]] },
           cwd_only = true,
@@ -739,14 +736,12 @@ return {
           },
         },
         highlights = {
-          prompt = RUtils.fzflua.padding_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Highlights", RUtils.config.icons.misc.circle) },
         },
         helptags = RUtils.fzflua.open_center_big_vertical {
           winopts = { title = RUtils.fzflua.format_title("Help", "󰋖") },
         },
         tabs = {
-          prompt = RUtils.fzflua.padding_prompt(),
           tab_title = "Tab",
           tab_marker = "<<",
           file_icons = true, -- show file icons?
@@ -819,6 +814,7 @@ return {
         },
         keymaps = RUtils.fzflua.open_center_big {
           winopts = { title = RUtils.fzflua.format_title("Keymaps", " ") },
+          show_details = false,
         },
         autocmds = RUtils.fzflua.open_center_big {
           winopts = { title = RUtils.fzflua.format_title("Autocmds", " ") },

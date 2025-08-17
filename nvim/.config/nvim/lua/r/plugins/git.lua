@@ -473,6 +473,8 @@ return {
       "G",
       "GBrowse",
       "GcLog",
+      "Gllog",
+      "GlLog",
       "Gclog",
       "Gdiffsplit",
       "Gedit",

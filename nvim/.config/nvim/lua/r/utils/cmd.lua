@@ -721,17 +721,25 @@ function M.open_with_mvp_or_sxiv()
   local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
 
   -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-  if uri ~= "" then
-    url = uri
-  else
-    vim.cmd "normal yy"
-    title = vim.fn.getreg '"0'
-    title = title:gsub("^(%[)(.+)(%])$", "%2")
-    title = RUtils.cmd.remove_alias(title)
+  if vim.bo.filetype ~= "git" then
+    --
+    --   url = url
+    -- else
+    if uri ~= "" then
+      -- check if sha
+      url = uri:match "([a-f0-9]+)$"
+    else
+      vim.cmd "normal yy"
+      title = vim.fn.getreg '"0'
 
-    local parts = vim.split(title, "#")
-    if #parts > 0 then
-      url = parts[1]
+      title = title:gsub("^(%[)(.+)(%])$", "%2")
+      title = RUtils.cmd.remove_alias(title)
+
+      local parts = vim.split(title, "#")
+
+      if #parts > 0 then
+        url = parts[1]
+      end
     end
   end
 
@@ -740,10 +748,15 @@ function M.open_with_mvp_or_sxiv()
       --   { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
       cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
     },
-    sxiv = {
-      cmd = { "tsp", "svix", "--ontop" },
-    },
+    sxiv = { cmd = { "tsp", "svix", "--ontop" } },
   }
+
+  if vim.bo.filetype == "git" then
+    -- local sha = line:match "^parent%s+([a-f0-9]+)$"
+    sel_open_with = {
+      DiffviewOpen = { cmd = { "DiffviewOpen" } },
+    }
+  end
 
   local sel_fzf = function()
     local newtbl = {}
@@ -752,15 +765,12 @@ function M.open_with_mvp_or_sxiv()
     end
     return newtbl
   end
+  local contents = sel_fzf()
 
-  local opts = {
+  local opts = RUtils.fzflua.open_lsp_code_action {
     winopts = {
       title = RUtils.fzflua.format_title("Select To Open With", RUtils.config.icons.documents.openfolder),
-      relative = "cursor",
-      width = 0.30,
-      height = 0.25,
-      row = 1,
-      col = 2,
+      height = #contents + 3,
     },
     actions = {
       ["default"] = function(selected)
@@ -775,14 +785,20 @@ function M.open_with_mvp_or_sxiv()
           end
         end
 
-        vim.fn.jobstart(cmds, { detach = true })
+        if vim.bo.filetype ~= "git" then
+          vim.fn.jobstart(cmds, { detach = true })
+          return
+        end
+
+        vim.cmd(table.concat(cmds, " "))
+
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info(notif_msg, { title = "Open With" })
       end,
     },
   }
 
-  require("fzf-lua").fzf_exec(sel_fzf(), opts)
+  require("fzf-lua").fzf_exec(contents, opts)
 end
 
 function M.follow_link(is_selection)

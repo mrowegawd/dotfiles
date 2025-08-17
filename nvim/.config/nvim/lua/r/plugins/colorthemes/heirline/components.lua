@@ -633,30 +633,11 @@ M.QuickfixStatus = {
   init = function(self)
     self.height = vim.api.nvim_buf_line_count(0)
 
-    self.title_qflist = vim.fn.getqflist({ title = 0 }).title
-    self.stack_qflists = function()
-      -- Taken from fzflua internal
-      local qflists = {}
-      for i = 1, 10 do -- (n)vim keeps at most 10 quickfix lists in full
-        local qflist = vim.fn.getqflist { nr = i, id = 0, title = true, items = true }
-        if not vim.tbl_isempty(qflist.items) then
-          qflists[#qflists + 1] = qflist
-        end
-      end
-      return qflists
-    end
+    self.title_qflist = RUtils.qf.get_title_qf()
+    self.stack_qflists = #RUtils.qf.get_total_stack_qf()
 
-    self.title_loclist = vim.fn.getloclist(0, { title = 0 }).title
-    self.stack_loclists = function()
-      local loclists = {}
-      for i = 1, 10 do
-        local loclist = vim.fn.getloclist(0, { all = "", nr = tonumber(i) })
-        if not vim.tbl_isempty(loclist.items) then
-          loclists[#loclists + 1] = loclist
-        end
-      end
-      return loclists
-    end
+    self.title_loclist = RUtils.qf.get_title_qf(true)
+    self.stack_loclists = #RUtils.qf.get_total_stack_qf(true)
   end,
   condition = function()
     return vim.bo[0].filetype == "qf"
@@ -697,11 +678,8 @@ M.QuickfixStatus = {
     provider = function(self)
       local parts = {}
       if RUtils.qf.is_loclist() then
-        -- set index_loclist harus di bagian block provider, jangan di block init
-        -- begitu juga deang index_qf
-        --
-        local index_loclist = vim.fn.getloclist(0, { idx = 0 }).idx
-        local current_stack_loclist = vim.fn.getloclist(0, { nr = 0 }).nr
+        local index_loclist = RUtils.qf.get_current_idx_qf(true)
+        local current_stack_loclist = RUtils.qf.get_current_history_qf(true)
         table.insert(
           parts,
           string.format(
@@ -709,15 +687,15 @@ M.QuickfixStatus = {
             index_loclist,
             self.height,
             current_stack_loclist,
-            #self.stack_loclists()
+            self.stack_loclists
           )
         )
       else
-        local index_qf = vim.fn.getqflist({ idx = 0 }).idx
-        local current_stack_qf = vim.fn.getqflist({ id = 0 }).id
+        local index_qf = RUtils.qf.get_current_idx_qf()
+        local current_stack_qf = RUtils.qf.get_current_history_qf()
         table.insert(
           parts,
-          string.format("  %d/%d 󱗿 %d/%d ", index_qf, self.height, current_stack_qf, #self.stack_qflists())
+          string.format("  %d/%d 󱗿 %d/%d ", index_qf, self.height, current_stack_qf, self.stack_qflists)
         )
       end
       return table.concat(parts, " ")

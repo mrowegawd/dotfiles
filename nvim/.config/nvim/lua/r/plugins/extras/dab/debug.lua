@@ -161,6 +161,7 @@ return {
           if #status_dap(require "dap") > 0 then
             require("dap").step_over()
           else
+            -- vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("J", true, true, true), "n", true)
           end
         end,

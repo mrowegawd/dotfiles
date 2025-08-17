@@ -38,7 +38,10 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("zk", "zMzv", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zr", function()
+  return RUtils.fold.cycle_fold_level()
+end, { desc = "Fold: cycle level fold" })
 RUtils.map.nnoremap("zo", function()
   vim.cmd "normal! zozz"
 end, { desc = "Fold: zo" })
@@ -46,13 +49,6 @@ RUtils.map.nnoremap("zO", function()
   vim.cmd "normal! zOzz"
 end, { desc = "Fold: zO" })
 RUtils.map.nnoremap("<Leader><Leader>", function()
-  -- if vim.fn.foldclosed(vim.fn.line ".") == -1 then
-  --   vim.cmd "normal! za"
-  -- else
-  --   vim.cmd "normal! zo"
-  -- end
-  -- vim.cmd "normal! za"
-
   vim.schedule(function()
     local _, err = pcall(function()
       vim.fn.execute "normal! za"
@@ -65,17 +61,6 @@ RUtils.map.nnoremap("<Leader><Leader>", function()
     end
   end)
 end, { desc = "Fold: toggle fold on current line" })
-
-RUtils.map.nnoremap("zr", function()
-  return RUtils.fold.cycle_fold_level()
-end, { desc = "Fold: cycle level fold" })
-
-RUtils.map.nnoremap("zn", function()
-  return RUtils.fold.go_next_prev_fold(false, true)
-end, { desc = "Fold: close current fold when open. Always open next fold." })
-RUtils.map.nnoremap("zp", function()
-  return RUtils.fold.go_next_prev_fold(true, true)
-end, { desc = "Fold: close current fold when open. Always open previous fold." })
 
 RUtils.map.nnoremap("<a-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
@@ -139,6 +124,8 @@ RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (v
 
 RUtils.map.nnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K" })
 RUtils.map.vnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
+
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
 
 vim.keymap.del("n", "<c-L>")
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
@@ -343,11 +330,19 @@ if vim.fn.executable "lazygit" == 1 then
 end
 -- }}}
 -- {{{ Misc
+RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
+RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
 RUtils.map.nnoremap("<Esc>", function()
   vim.cmd "noh"
   RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+RUtils.map.nnoremap("*", function()
+  -- Don't jump to first match with *
+  local word = vim.fn.expand "<cword>"
+  vim.fn.setreg("/", "\\v" .. word)
+  vim.o.hlsearch = true
+end, { remap = true, desc = "Misc: search word under cursor (no jump)" })
 RUtils.map.inoremap("<Esc>", function()
   vim.cmd "noh"
   RUtils.cmp.actions.snippet_stop()
@@ -448,10 +443,12 @@ RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: p
 
 -- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
-RUtils.map.nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-RUtils.map.nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-RUtils.map.vnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+RUtils.map.nnoremap("k", function()
+  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "k"
+end, { expr = true })
+RUtils.map.nnoremap("j", function()
+  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
+end, { expr = true })
 
 -- Visual
 -- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })

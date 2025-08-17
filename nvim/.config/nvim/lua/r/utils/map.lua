@@ -46,14 +46,13 @@ M.show_help_buf_keymap = function()
     col[#col + 1] = map_desc
   end
 
-  local opts = {
-    prompt = RUtils.fzflua.padding_prompt(),
+  local opts = RUtils.fzflua.open_center_height_small_but_wide {
     winopts = {
-      title = " Show Keymap Help for Current Buffer [" .. ft .. "] ",
+      title = "Keymaps For Curbuf (" .. ft .. ")",
     },
     actions = {
       ["default"] = function(_, _)
-        print "not implemented yet"
+        RUtils.info "Not implemented yet"
       end,
     },
   }

@@ -164,6 +164,23 @@ function M.open_center_big(opts)
   }, opts))
 end
 
+function M.open_center_height_small_but_wide(opts)
+  return dropdown(vim.tbl_deep_extend("force", {
+    winopts = {
+      width = 0.80,
+      height = 0.60,
+      row = 0.50,
+      col = 0.50,
+      preview = {
+        hidden = true,
+        layout = "horizontal",
+        vertical = "down:50%",
+        horizontal = "up:45%",
+      },
+    },
+  }, opts))
+end
+
 function M.open_center_big_diagnostics(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
     winopts = {
