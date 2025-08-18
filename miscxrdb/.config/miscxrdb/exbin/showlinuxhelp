@@ -21,7 +21,7 @@ not_in_tmux() {
 
 FZF_COMMAND="fzf --no-border "
 if ! not_in_tmux; then
-  FZF_COMMAND="fzf-tmux -xC -w 80% -h 80% -y 43% "
+  FZF_COMMAND="fzf-tmux -xC -w 80% -h 60% "
 fi
 
 is_path_exits() {
@@ -142,7 +142,7 @@ tmux() {
   }
   {last=""} /^#/{last=$0}' "$TMUX_PATH" | sort |
       awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
-      column -t -s ")" | fzf-tmux -xC -w 80% -h 80% -y 43% \
+      column -t -s ")" | fzf-tmux -xC -w 80% -h 60% \
       --header="^x:edit  ^r:reload" \
       --bind="ctrl-x:execute($EDIT_CMD)" \
       --bind="ctrl-r:execute($RELOAD_CMD)" \
@@ -321,7 +321,7 @@ bulk_note_snippets() {
     rg --pretty bash | awk '/^[a-zA-Z]/ && last { printf "%s\n%s\n", last, $0; }
   {last=""} /^#;/{last=$0}' "$TARGET_PATH" |
       perl -0 -pe 's/#; /\0/gm' | grcat bulksnip.grc | sed 's/## //' |
-      fzf-tmux -xC -w 80% -h 80% -y 43% \
+      fzf-tmux -xC -w 80% -h 60% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
         --header="^x:edit  ^r:reload" \
@@ -379,7 +379,7 @@ bulk_show_snippets() {
 
   SELECT=$(
     rg --pretty bash | grep -v '^>>' "$TARGET_PATH" | perl -0 -pe 's/\n\n/\0/gm' | grcat bulksnip.grc | sed 's/##; //' |
-      fzf-tmux -xC -w 80% -h 80% -y 43% \
+      fzf-tmux -xC -w 80% -h 60% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
         --header="^x:edit  ^r:reload" \
@@ -426,7 +426,7 @@ bulk_code_snippets() {
         in_block { print; next }                  # Jika dalam blok, cetak baris
         /^```/ { in_block=1 }                     # Jika ketemu awal blok comment, mulai cetak
   ' "$TARGET_PATH" |
-    fzf-tmux -xC -w 80% -h 80% -y 43% \
+    fzf-tmux -xC -w 80% -h 60% \
       --pointer='▌' \
       --header="^x:edit  ^r:reload" \
       --bind="ctrl-x:execute($EDIT_CMD)" \
@@ -486,7 +486,7 @@ bulk_snippets() {
 
   SELECT=$(
     rg --pretty bash | perl -0 -pe 's/\n\n/\0/gm' "$TARGET_PATH" | grcat bulksnip.grc | sed 's/##; //' |
-      fzf-tmux -xC -w 80% -h 80% -y 43% \
+      fzf-tmux -xC -w 80% -h 60% \
         --read0 --multi --highlight-line --gap \
         --pointer='▌' \
         --header="^x:edit  ^r:reload" \

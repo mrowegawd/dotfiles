@@ -120,7 +120,7 @@ EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 &&
 RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
 
 SELECTED=$(
-  echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 80% -y 43% \
+  echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 60% --min-height 10 \
     --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \
