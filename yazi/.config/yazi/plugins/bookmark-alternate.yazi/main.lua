@@ -30,10 +30,13 @@ local function jump(cwd)
 	if not output then
 		return fail("No output! error: %s", errc)
 	else
-		local target = output.stdout:gsub("\n$", "")
-		if target ~= "" then
-			ya.manager_emit("cd", { target })
+		local target_bookmark_path = output.stdout:gsub("\n$", "")
+
+		if #target_bookmark_path == 0 or (type(target_bookmark_path) == "string" and target_bookmark_path == "") then
+			os.execute([[dunstify "No bookmark found, You can create a new one"]])
 		end
+
+		ya.manager_emit("cd", { target_bookmark_path })
 	end
 end
 

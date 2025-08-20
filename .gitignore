@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+.ruby-lsp
+
 todo.md
 
 .repro

@@ -38,34 +38,32 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
+RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" })
+
+RUtils.map.nnoremap("<c-s>", "zO", { desc = "Fold: open all" })
+
 RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("<c-a>", "zMzv", { desc = "Fold: close all folds except the current one" })
+
+RUtils.map.nnoremap("<c-x>", function()
+  return RUtils.fold.cycle_fold_level()
+end, { desc = "Fold: cycle level fold" })
+
 RUtils.map.nnoremap("zr", function()
   return RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle level fold" })
+
 RUtils.map.nnoremap("zo", function()
   vim.cmd "normal! zozz"
 end, { desc = "Fold: zo" })
 RUtils.map.nnoremap("zO", function()
   vim.cmd "normal! zOzz"
 end, { desc = "Fold: zO" })
-RUtils.map.nnoremap("<Leader><Leader>", function()
-  vim.schedule(function()
-    local _, err = pcall(function()
-      vim.fn.execute "normal! za"
-    end)
 
-    if err and (string.match(err, "E510") or string.match(err, "E490")) then
-      local msg = string.format "No fold found"
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.warn(msg, { title = "Folds" })
-    end
-  end)
-end, { desc = "Fold: toggle fold on current line" })
-
-RUtils.map.nnoremap("<a-n>", function()
+RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
 end, { desc = "Fold: magic jump next fold/qf" })
-RUtils.map.nnoremap("<a-p>", function()
+RUtils.map.nnoremap("<c-p>", function()
   return RUtils.fold.magic_jump_qf_or_fold(true)
 end, { desc = "Fold: magic jump prev fold/qf" })
 -- }}}
@@ -99,7 +97,7 @@ end, { desc = "Terminal: new term" })
 -- }}}
 -- {{{ Windows, view and nav
 
-local exclude_ft_arrange = { "rgflow" }
+local exclude_ft_arrange = { "rgflow", "DiffviewFileHistory", "DiffviewFiles" }
 
 local arange_wins = function(direction)
   return function()
@@ -116,8 +114,8 @@ local arange_wins = function(direction)
   end
 end
 
-RUtils.map.nnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H" })
-RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
+RUtils.map.nnoremap("<Leader>ws", "<CMD>split<CR>", { desc = "Window: split" })
+RUtils.map.nnoremap("<Leader>wv", "<CMD>vsplit<CR>", { desc = "Window: vsplit" })
 
 RUtils.map.nnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J" })
 RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })
@@ -125,9 +123,9 @@ RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (v
 RUtils.map.nnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K" })
 RUtils.map.vnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
 
-vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
+RUtils.map.nnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H" })
+RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
 
-vim.keymap.del("n", "<c-L>")
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
 RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
@@ -215,6 +213,7 @@ RUtils.map.nnoremap("gl", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf()
 end, { desc = "Buffer: magic gl (qf)" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
+RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.nnoremap("<Leader>R", function()
   vim.cmd [[wall!]]
   vim.cmd [[restart]]
@@ -311,22 +310,22 @@ RUtils.map.vnoremap(
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
 if vim.fn.executable "lazygit" == 1 then
-  RUtils.map.nnoremap("<Leader>gll", function()
+  RUtils.map.nnoremap("<Leader>gg", function()
     ---@diagnostic disable-next-line: missing-fields
     Snacks.lazygit { cwd = RUtils.root.git() }
   end, { desc = "Git: lazygit (root dir) [snacks]" })
-  RUtils.map.nnoremap("<Leader>glL", function()
+  RUtils.map.nnoremap("<Leader>gG", function()
     Snacks.lazygit()
   end, { desc = "Git: lazygit (cwd) [snacks]" })
-  RUtils.map.nnoremap("<Leader>glc", function()
-    Snacks.lazygit.log_file()
-  end, { desc = "Git: lazygit current file history" })
-  RUtils.map.nnoremap("<Leader>glC", function()
-    Snacks.lazygit.log { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit log" })
-  RUtils.map.nnoremap("<Leader>glg", function()
-    Snacks.lazygit.log()
-  end, { desc = "Git: lazygit log (cwd)" })
+  -- RUtils.map.nnoremap("<Leader>glc", function()
+  --   Snacks.lazygit.log_file()
+  -- end, { desc = "Git: lazygit current file history" })
+  -- RUtils.map.nnoremap("<Leader>glC", function()
+  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
+  -- end, { desc = "Git: lazygit log" })
+  -- RUtils.map.nnoremap("<Leader>glg", function()
+  --   Snacks.lazygit.log()
+  -- end, { desc = "Git: lazygit log (cwd)" })
 end
 -- }}}
 -- {{{ Misc
@@ -450,6 +449,38 @@ RUtils.map.nnoremap("j", function()
   return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
 end, { expr = true })
 
+RUtils.map.nnoremap("<F1>", function()
+  local get_current_pane_tmux_id = function()
+    local get_pane_id = vim.system({ "tmux", "display-message", "-p", "#{pane_id}" }, { text = true }):wait()
+    if get_pane_id.code ~= 0 then
+      RUtils.error("Failed to get tmux pane_id", { title = "Config Keymaps" })
+      return
+    end
+    return get_pane_id.stdout
+  end
+
+  local get_current_pane_tmux_idx = function(id)
+    -- local cmds = { "tmux", "display-message", "-p", "-t", id, "'#{pane_index}'" }
+    local cmds = ("tmux display-message -p -t " .. id .. " '#{pane_index}'"):gsub("\n", "")
+
+    RUtils.info("cmds : " .. table.concat { "sh", "-c", cmds })
+
+    local get_pane_idx = vim.system({ "sh", "-c", cmds }, { text = true }):wait()
+    if get_pane_idx.code ~= 0 then
+      RUtils.error("Failed to get tmux idx", { title = "Config Keymaps" })
+      return
+    end
+    return get_pane_idx.stdout
+  end
+
+  local pane_id = get_current_pane_tmux_id()
+
+  if pane_id then
+    RUtils.info("the pane id is: " .. pane_id)
+    RUtils.info("The idx is: " .. get_current_pane_tmux_idx(pane_id))
+  end
+end)
+
 -- Visual
 -- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
 -- RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
@@ -546,9 +577,9 @@ local ctrl_o_nvim = function()
   }, { winopts = { title = "Bulk: ctrl-o cmds", row = row, col = col } })
 end
 
-RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.vnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
+RUtils.map.nnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.tnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.vnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   RUtils.fzflua.open_cmd_bulk({
@@ -632,6 +663,14 @@ local bulk_cmd_git = function()
       local gs = package.loaded.gitsigns
       gs.blame()
     end,
+    ["GitSigns - Toggle diff changes"] = function()
+      local gs = package.loaded.gitsigns
+      gs.toggle_deleted()
+    end,
+    ["GitSigns - Toggle word diff"] = function()
+      local gs = package.loaded.gitsigns
+      gs.toggle_word_diff()
+    end,
   }, { winopts = { title = RUtils.config.icons.git.branch .. "Git " } })
 end
 
@@ -642,6 +681,17 @@ RUtils.map.vnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visua
 -- }}}
 -- {{{ Tmux integration
 local fm_manager = vim.env.TERM_FILEMANAGER
+
+RUtils.map.nnoremap("<a-B>", function()
+  RUtils.terminal.float_btop()
+end, { desc = "CTRL_o: btop" })
+
+-- RUtils.map.xnoremap("<a-B>", function()
+--   RUtils.terminal.float_btop()
+-- end, { desc = "CTRL_o: btop" })
+RUtils.map.vnoremap("<a-B>", function()
+  RUtils.terminal.float_btop()
+end, { desc = "CTRL_o: btop" })
 
 local go_left_tmux = function()
   vim.system { "tmux", "select-pane", "-L" }
@@ -724,11 +774,13 @@ RUtils.map.nnoremap("<a-E>", function()
     end
   else
     local main_pane_id = get_current_pane_tmux_id()
+    RUtils.info(main_pane_id)
 
     go_left_tmux()
 
     -- Kill all file manager panes
     if get_current_pane_tmux_cmd "nnn" or get_current_pane_tmux_cmd "yazi" or get_current_pane_tmux_cmd "lf" then
+      RUtils.info "wadaw"
       vim.system { "tmux", "kill-pane" }
     end
 

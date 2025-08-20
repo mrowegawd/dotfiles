@@ -58,8 +58,8 @@ $if mode=vi
     "\C-a": beginning-of-line
     "\C-e": end-of-line
     # "\C-j": "fzm\n"
-    # "\eq": edit-and-execute-command
-    "\C-q": edit-and-execute-command
+    "\eq": edit-and-execute-command
+    # "\C-q": edit-and-execute-command
 $endif
 
 $if Bash

@@ -158,7 +158,7 @@ function M.get()
     --  LSP commands
     --  +----------------------------------------------------------+
     {
-      "<Leader>gf",
+      "gF",
       function()
         local function check_current_ft(fts)
           local ft = vim.bo[0].filetype

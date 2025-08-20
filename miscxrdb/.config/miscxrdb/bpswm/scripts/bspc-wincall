@@ -12,6 +12,18 @@ make_call() {
 
 }
 
+swap_desktop() {
+  direction="$1" # "next" atau "prev"
+
+  current=$(bspc query -D -d --names)
+  target=$(bspc query -D -d "${direction}.local" --names)
+
+  # If target exists, swap them
+  if [ -n "$target" ]; then
+    bspc desktop "$current" --swap "$target"
+  fi
+}
+
 toggle_call_win() {
   MARK_FILE="/tmp/.keep_$1"
   POSITION_WIN=$2

@@ -281,8 +281,9 @@ return {
 
           ["<C-h>"] = false, -- disabled because conflict with move_cursor window
           ["<C-l>"] = false,
-          ["<C-p>"] = false,
-          ["<C-n>"] = false,
+
+          ["<C-p>"] = "PrevTask",
+          ["<C-n>"] = "NextTask",
 
           ["q"] = function()
             vim.cmd "OverseerClose"
@@ -358,22 +359,22 @@ return {
     dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
-      { "<Leader>ef", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
+      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
 
-      { "<Leader>el", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
-      { "<Leader>el", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual)", mode = { "v" } },
-      { "<Leader>ei", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt" },
-      { "<Leader>eI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt all" },
+      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
+      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual)", mode = { "v" } },
+      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt" },
+      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt all" },
 
-      { "<Leader>eC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
-      { "<Leader>eg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
-      { "<Leader>ep", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
+      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
+      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
+      { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
       { "<a-G>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: grep buf" },
 
-      { "<Leader>ee", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
-      { "<Leader>eE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc" },
-      { "<Leader>e?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
+      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
+      { "<Leader>rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc" },
+      { "<Leader>r?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
       l,
     },
     opts = {
@@ -399,7 +400,7 @@ return {
     "ThePrimeagen/refactoring.nvim",
     keys = {
       {
-        "<Leader>rs",
+        "<Localleader>rs",
         function()
           require("telescope").extensions.refactoring.refactors()
         end,
@@ -413,28 +414,28 @@ return {
       --   end,
       --   desc = "Reactoring: debug print [refactoring]",
       -- },
-      -- {
-      --   "<Localleader>rp",
-      --   function()
-      --     require("refactoring").debug.print_var { normal = true }
-      --   end,
-      --   desc = "Reactoring: debug print variable [refactoring]",
-      -- },
       {
-        "<Leader>ec",
+        "<Localleader>rp",
+        function()
+          require("refactoring").debug.print_var { normal = true }
+        end,
+        desc = "Reactoring: debug print variable [refactoring]",
+      },
+      {
+        "<Localleader>ec",
         function()
           require("refactoring").debug.cleanup {}
         end,
         desc = "Task: debug cleanup [refactoring]",
       },
-      {
-        "<Leader>rp",
-        function()
-          require("refactoring").debug.print_var {}
-        end,
-        mode = "v",
-        desc = "Task: debug print variable [refactoring]",
-      },
+      -- {
+      --   "<Localleader>rp",
+      --   function()
+      --     require("refactoring").debug.print_var {}
+      --   end,
+      --   mode = "v",
+      --   desc = "Task: debug print variable [refactoring]",
+      -- },
     },
     opts = {
       prompt_func_return_type = {

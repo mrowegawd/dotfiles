@@ -1,5 +1,6 @@
 -- Taken from and credit: https://github.com/wincent/wincent
 local api, wo = vim.api, vim.wo
+local H = require "r.settings.highlights"
 
 ---@class r.utils.windowdim
 local autocmds = {}
@@ -161,6 +162,7 @@ autocmds.cursorline_blacklist = {
   ["help"] = true,
   ["markdown"] = true,
   ["mason"] = true,
+  ["noice"] = true,
   ["org"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
@@ -265,14 +267,62 @@ end
 --     end
 -- end
 
+local saved_cursorline_hl = nil
+local color_cursorline_bright = ""
+
+local hi_cursorline = "highlight CursorLine"
+
+local function save_cursorline_hl()
+  if not saved_cursorline_hl then
+    local hl = H.h "CursorLine"
+    color_cursorline_bright = H.tint(hl.bg, 0.5)
+    if hl then
+      saved_cursorline_hl = hl
+    end
+  end
+end
+
+local function set_bright_cursorline()
+  vim.cmd(hi_cursorline .. " guibg=" .. color_cursorline_bright)
+end
+
+local function restore_cursorline()
+  if saved_cursorline_hl then
+    local hl_cmd
+    if saved_cursorline_hl.fg then
+      hl_cmd = hi_cursorline .. " guifg=" .. saved_cursorline_hl.fg
+    end
+    if saved_cursorline_hl.bg then
+      hl_cmd = hi_cursorline .. " guibg=" .. saved_cursorline_hl.bg
+    end
+    if saved_cursorline_hl.sp then
+      hl_cmd = hi_cursorline .. " guisp=" .. saved_cursorline_hl.sp
+    end
+    if saved_cursorline_hl.gui then
+      hl_cmd = hi_cursorline .. " gui=" .. saved_cursorline_hl.gui
+    end
+    vim.cmd(hl_cmd)
+  end
+end
+
 local set_cursorline = function(active)
   local filetype, _ = RUtils.buf.get_bo_buft()
   if filetype ~= "" and not autocmds.cursorline_blacklist[filetype] then
     -- nvim_win_get_config.relative utk detect float window, output boolean
     if api.nvim_win_get_config(0).relative ~= "win" then
       wo.cursorline = active
+
+      if saved_cursorline_hl then
+        restore_cursorline()
+      end
+
       return
     end
+  end
+
+  if filetype ~= "" and filetype == "qf" then
+    save_cursorline_hl()
+    set_bright_cursorline()
   end
 
   wo.cursorline = false

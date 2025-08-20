@@ -211,6 +211,8 @@ return {
           zh = "fold_toggle",
           ["<a-n>"] = "next",
           ["<a-p>"] = "prev",
+          ["<c-n>"] = "next",
+          ["<c-p>"] = "prev",
           ["<TAB>"] = "fold_toggle",
         },
       }

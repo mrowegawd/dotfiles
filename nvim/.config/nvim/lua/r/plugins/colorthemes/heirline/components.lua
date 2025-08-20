@@ -99,16 +99,24 @@ local stl_lsp_clients = function()
     return { name = client.name, priority = 4 }
   end, clients)
 end
+
+local symbols_overseer = {
+  ["CANCELED"] = " ",
+  ["FAILURE"] = "󰅚 ",
+  ["SUCCESS"] = "󰄴 ",
+  ["RUNNING"] = "󰑮 ",
+}
 local overseer_tasks_for_status = function(status, colors)
   return {
     condition = function(self)
       return self.tasks[status]
     end,
     provider = function(self)
-      return string.format("%s%d", self.symbols[status], #self.tasks[status])
+      return string.format("%s%d", symbols_overseer[status], #self.tasks[status])
     end,
     hl = function()
       local fg
+      local bg = colors.block_mux_bg
       if status == "RUNNING" then
         fg = colors.diff_delete
       elseif status == "SUCCESS" then
@@ -116,7 +124,7 @@ local overseer_tasks_for_status = function(status, colors)
       else
         fg = colors.diagnostic_err
       end
-      return { fg = fg, bold = true }
+      return { fg = fg, bg = bg, bold = true }
     end,
   }
 end
@@ -766,49 +774,6 @@ M.FileFlags = {
   },
 }
 M.Gap = { { provider = "%=" } }
-M.Tasks = {
-  condition = function()
-    return package.loaded.overseer and set_conditions.hide_in_col_width(120)
-  end,
-  init = function(self)
-    local tasks = require("overseer.task_list").list_tasks { unique = true }
-    local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
-    self.tasks = tasks_by_status
-  end,
-  static = {
-    symbols = {
-      ["CANCELED"] = " ",
-      ["FAILURE"] = "󰅚 ",
-      ["SUCCESS"] = "󰄴 ",
-      ["RUNNING"] = "󰑮 ",
-    },
-  },
-  {
-    provider = function(self)
-      for i, _ in pairs(self.symbols) do
-        if self.tasks[i] then
-          return "Overseer: "
-        end
-      end
-    end,
-    hl = function()
-      return { fg = colors.statusline_fg }
-    end,
-  },
-  rpad(overseer_tasks_for_status("CANCELED", colors)),
-  rpad(overseer_tasks_for_status("RUNNING", colors)),
-  rpad(overseer_tasks_for_status("SUCCESS", colors)),
-  rpad(overseer_tasks_for_status("FAILURE", colors)),
-  {
-    provider = function(self)
-      for i, _ in pairs(self.symbols) do
-        if self.tasks[i] then
-          return "  "
-        end
-      end
-    end,
-  },
-}
 M.Dap = {
   condition = function()
     if package.loaded.dap == nil then
@@ -1157,6 +1122,50 @@ M.BufferCwd = {
     hl = { fg = colors.statusline_fg },
   },
 }
+M.Tasks = {
+  condition = function()
+    return package.loaded.overseer and set_conditions.hide_in_col_width(120)
+  end,
+  init = function(self)
+    local tasks = require("overseer.task_list").list_tasks { unique = true }
+    local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
+    self.tasks = tasks_by_status
+  end,
+  {
+    provider = function(self)
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks[i] then
+          return RUtils.config.icons.misc.separator_down
+        end
+      end
+    end,
+    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg },
+  },
+  {
+    provider = function(self)
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks[i] then
+          return " Overseer: "
+        end
+      end
+    end,
+    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg, bold = true },
+  },
+  rpad(overseer_tasks_for_status("CANCELED", colors)),
+  rpad(overseer_tasks_for_status("RUNNING", colors)),
+  rpad(overseer_tasks_for_status("SUCCESS", colors)),
+  rpad(overseer_tasks_for_status("FAILURE", colors)),
+  {
+    provider = function(self)
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks[i] then
+          return RUtils.config.icons.misc.separator_down
+        end
+      end
+    end,
+    hl = { fg = colors.block_mux_bg, bg = colors.block_mux_bg },
+  },
+}
 M.RmuxTargetPane = {
   init = function(self)
     local status = rmux_pane()
@@ -1166,7 +1175,7 @@ M.RmuxTargetPane = {
     self.watch = status.watch
   end,
   condition = function()
-    return set_conditions.hide_in_col_width(120)
+    return package.loaded.rmux and set_conditions.hide_in_col_width(120)
   end,
   {
     provider = function(self)
@@ -1197,7 +1206,7 @@ M.RmuxTargetPane = {
   {
     provider = function(self)
       if #self.watch > 0 then
-        return "  " .. self.watch[1]
+        return "  " .. self.watch
       end
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
@@ -1225,6 +1234,10 @@ M.Filetype = {
     local status = rmux_pane()
     self.task = status.task
 
+    local tasks_overseer = require("overseer.task_list").list_tasks { unique = true }
+    local tasks_by_status = require("overseer.util").tbl_group_by(tasks_overseer, "status")
+    self.tasks_overseer = tasks_by_status
+
     self.filetype = get_vars.filetype()
   end,
   {
@@ -1237,6 +1250,12 @@ M.Filetype = {
       local fg = colors.statusline_bg
       if self.task > 0 then
         fg = colors.block_mux_bg
+      end
+
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks_overseer[i] then
+          fg = colors.block_mux_bg
+        end
       end
       return { fg = fg, bg = colors.block_darken_bg }
     end,
@@ -1419,7 +1438,6 @@ M.status_active_left = {
   M.Gap,
 
   M.LazyStatus,
-  M.Tasks,
   M.Dap,
   M.Diagnostics,
   M.LSPActive,
@@ -1430,6 +1448,7 @@ M.status_active_left = {
   M.Marks,
   M.Sessions,
   M.BufferCwd,
+  M.Tasks,
   M.RmuxTargetPane,
   M.Filetype,
   M.Ruler,

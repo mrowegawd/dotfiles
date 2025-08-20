@@ -53,18 +53,18 @@ return {
     event = "LazyFile", -- use `LazyFile` agar sign mark bisa di load dgn benar
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
-      { "T" },
-      { "tb" },
+      { "tt" },
       { "ty" },
-      { "<Leader>qf" },
-      { "<Leader>fn" },
+
       { "<Leader>fN" },
+      { "<Leader>fn" },
       { "<Leader>fp" },
-      { "<Leader>qc" },
-      { "<Leader>wn" },
-      { "<Leader>wp" },
+
+      { "<Leader>qb" }, -- mark
+      { "<Leader>qf" }, -- select mark fzf
+      { "<Leader>qc" }, -- copy
       {
-        "<Leader>wk",
+        "<a-k>",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
@@ -83,7 +83,7 @@ return {
         desc = "Qf: force open above left [qfsilet]",
       },
       {
-        "<Leader>wj",
+        "<a-j>",
         function()
           local _qf = RUtils.cmd.windows_is_opened { "qf" }
           if _qf.found then
@@ -159,7 +159,7 @@ return {
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",
 
-          add_item_to_qf = "tb",
+          add_item_to_qf = "tt",
           add_item_to_loc = "ty",
         },
         todo = {
@@ -171,7 +171,7 @@ return {
           goto_link_capture = "g<cr>",
         },
         marks = {
-          toggle_mark = "T",
+          toggle_mark = "<Leader>qb",
           fzf_marks = "<Leader>qf",
           next_mark = "<Leader>qn",
           prev_mark = "<Leader>qp",

@@ -33,13 +33,10 @@ return {
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
-          { "<Leader>g", group = "git" },
-          { "<Leader>gl", group = "lazygit" },
-
           { "<Leader>j", group = "jumpTo" },
-
           { "<Leader>p", group = "peek" },
 
+          { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
           { "<Leader>go", group = "open" },

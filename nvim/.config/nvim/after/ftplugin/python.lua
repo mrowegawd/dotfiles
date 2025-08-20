@@ -105,9 +105,9 @@ local function run_ipython(mode)
   end
 end
 
-vim.keymap.set("n", "<Leader>rl", function()
-  run_ipython "line"
-end, { buffer = true })
+-- vim.keymap.set("n", "<Leader>rl", function()
+--   run_ipython "line"
+-- end, { buffer = true })
 
-vim.api.nvim_create_user_command("Tmux2Qf", tmux2qf, { nargs = 1 })
-vim.keymap.set("n", "<Leader>lt", ":Tmux2Qf ", { silent = false })
+-- vim.api.nvim_create_user_command("Tmux2Qf", tmux2qf, { nargs = 1 })
+-- vim.keymap.set("n", "<Leader>lt", ":Tmux2Qf ", { silent = false })

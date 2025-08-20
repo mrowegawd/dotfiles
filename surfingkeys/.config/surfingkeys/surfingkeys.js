@@ -215,7 +215,7 @@ mapkey("gxJ", "#3Close all tabs on down", function () {
 });
 
 mapkey(
-  "<Alt-l>",
+  "<Ctrl-l>",
   "Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -223,7 +223,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Alt-j>",
+  "<Ctrl-j>",
   "Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -231,7 +231,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Alt-h>",
+  "<Ctrl-h>",
   "Go one tab left",
   function () {
     RUNTIME("previousTab");
@@ -239,7 +239,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Alt-k>",
+  "<Ctrl-k>",
   "Go one tab left",
   function () {
     RUNTIME("previousTab");
@@ -247,7 +247,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Alt-n>",
+  "<Ctrl-n>",
   "Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -255,7 +255,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Alt-p>",
+  "<Ctrl-p>",
   "Go one tab left",
   function () {
     RUNTIME("previousTab");

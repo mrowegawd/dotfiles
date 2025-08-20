@@ -231,12 +231,12 @@ return {
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>or",
-            org_capture_kill = { "<Leader><TAB>", "q" },
+            org_capture_kill = { "<Leader><TAB>", "q", "<c-q>" },
             org_capture_show_help = "?",
           },
           note = {
             org_note_finalize = { "<C-c>", "<C-s>" },
-            org_note_kill = { "<Leader><TAB>", "q" },
+            org_note_kill = { "<Leader><TAB>", "q", "<c-q>" },
           },
           org = {
             org_timestamp_up_day = "<UP>",

@@ -103,6 +103,22 @@ super + {shift+p,shift+n}
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 
+# Super + o → lompat ke jendela sebelumnya (fokus ke kiri)
+# super + {i,o}
+# 	      bspc desktop -f {prev,next}.local
+
+# Super + Shift + o → swap desktop dengan sebelumnya
+super + o
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall swap_desktop prev
+
+# Super + Shift + i → swap desktop dengan berikutnya
+super + i
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall swap_desktop next
+
+# Super + i → lompat ke jendela berikutnya (fokus ke kanan)
+# super + i
+#         bspc node -f east
+
 
 ########################################
 # BRIGHTNESS
@@ -176,8 +192,8 @@ super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float ncmpcpp
 
 # misc: open note inbox (capture notes)
-super + i
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
+# super + i
+#         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
 
 # misc: open bookmark and pass
 super + p
@@ -200,8 +216,8 @@ super + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
 # misc: open translate with nvim
-super + o
-        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && $TERMINAL -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+# super + o
+#         bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && $TERMINAL -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
 
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
         #
@@ -212,8 +228,8 @@ super + d
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win firefox 2
 
 # misc: call window zathura (side by side)
-super + a
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
+# super + a
+#         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
 
 # misc: open link with mpv (or with proxychains)
 super + shift + y

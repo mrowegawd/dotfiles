@@ -54,7 +54,7 @@ return {
     },
     keys = {
       {
-        "<Leader>gr",
+        "<Leader>gor",
         function()
           vim.cmd [[GitConflictRefresh]]
           RUtils.info("Start or refresh git conflict..", { title = "Git-conflict" })
@@ -383,11 +383,11 @@ return {
         end, "Hunk: preview (visual) [gitsigns]")
 
         -- Toggle
-        map("n", "<Leader>gub", function()
-          gs.blame()
-        end, "Toggle: git blame [gitsigns]")
-        map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: to check diff changes [gitsigns]")
-        map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
+        -- map("n", "<Leader>gub", function()
+        --   gs.blame()
+        -- end, "Toggle: git blame [gitsigns]")
+        -- map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: to check diff changes [gitsigns]")
+        -- map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -437,7 +437,7 @@ return {
           end
         end, "Git: last hunk [gitsigns]")
 
-        map("n", "<c-n>", function()
+        map("n", "<a-n>", function()
           if vim.wo.diff then
             vim.cmd.normal { "]c", bang = true }
           else
@@ -450,7 +450,7 @@ return {
             end)
           end
         end, "Git: next hunk (alternatif) [gitsigns]")
-        map("n", "<c-p>", function()
+        map("n", "<a-p>", function()
           if vim.wo.diff then
             vim.cmd.normal { "[c", bang = true }
           else
@@ -592,12 +592,12 @@ return {
           vim.keymap.set("n", "<tab>", "=zt", { buffer = e.buf, remap = true })
 
           -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
-          vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
-          vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
-          vim.keymap.set("n", "<Leader>gP", "<Cmd>Git pull<CR>", { buffer = true })
-          vim.keymap.set("n", "<Leader>gl", function()
-            vim.cmd "Git log --oneline"
-          end, { buffer = e.buf })
+          -- vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
+          -- vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
+          -- vim.keymap.set("n", "<Leader>gP", "<Cmd>Git pull<CR>", { buffer = true })
+          -- vim.keymap.set("n", "<Leader>gl", function()
+          --   vim.cmd "Git log --oneline"
+          -- end, { buffer = e.buf })
         end,
       }, {
         event = "BufWinEnter",
@@ -669,7 +669,7 @@ return {
         desc = "Open: DiffviewFileHistory repo [diffview]",
       },
       {
-        "<Leader>gi",
+        "<Leader>gl",
         function()
           local current_line = vim.fn.line "."
           local file = vim.fn.expand "%"
@@ -680,7 +680,7 @@ return {
         desc = "Git: DiffviewFileHistory line [diffview]",
       },
       {
-        "<Leader>gi",
+        "<Leader>gl",
         function()
           local function exit_visual_mode()
             -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
@@ -740,8 +740,10 @@ return {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
           view = {
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
+            -- { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
+            -- { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-view]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-view]" } },
@@ -807,12 +809,14 @@ return {
             { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-panel]" } },
             { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-panel]" } },
 
-            { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
-            { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
+            { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
+            { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-panel]" }, },
+            -- { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
+            -- { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-panel]" }, },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-panel]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-panel]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-panel]" }, },
@@ -872,16 +876,18 @@ return {
             { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-history]" } },
 
 
-            { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
-            { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
+            { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
+            { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
 
             { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold [diffview-history]" } },
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-history]" }, },
 
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-history]" } },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-history]" }, },
+            -- { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-history]" } },
+            -- { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-history]" }, },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-history]" } },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview-history]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-history]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-history]" } },

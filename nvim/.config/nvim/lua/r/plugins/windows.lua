@@ -135,28 +135,28 @@ return {
     keys = function()
       return {
         {
-          "<a-h>",
+          "<c-h>",
           function()
             require("smart-splits").move_cursor_left()
           end,
           desc = "Window: move cursor left [smart-splits]",
         },
         {
-          "<a-j>",
+          "<c-j>",
           function()
             require("smart-splits").move_cursor_down()
           end,
           desc = "Window: move cursor down [smart-splits]",
         },
         {
-          "<a-k>",
+          "<c-k>",
           function()
             require("smart-splits").move_cursor_up()
           end,
           desc = "Window: move cursor up [smart-splits]",
         },
         {
-          "<a-l>",
+          "<c-l>",
           function()
             require("smart-splits").move_cursor_right()
           end,
