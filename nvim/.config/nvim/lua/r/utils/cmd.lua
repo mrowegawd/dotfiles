@@ -1022,7 +1022,8 @@ function M.change_colors()
 
   local zsh_special_themes = { "lackluster" }
   if vim.tbl_contains(zsh_special_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.4
+    zsh_lines_fg = 0.5
+    zsh_sugest_fg = 0.7
   end
 
   local zsh_special_kanagawa_themes = { "base46-kanagawa" }
@@ -1037,7 +1038,7 @@ function M.change_colors()
   end
 
   if vim.g.colorscheme == "neogotham" then
-    zsh_lines_fg = 0.5
+    zsh_lines_fg = 0.65
   end
 
   if vim.g.colorscheme == "vscode_modern" then

@@ -15,7 +15,7 @@ function M.trace_file_event()
 
     -- for commit, from, to in output:gmatch("commit ([%x]+).-rename from ([^\n]+).-rename to ([^\n]+)") do
     -- for commit, from, to in output:gmatch("commit ([%x]+).-rename ([^\n]+)") do
-    --for line in output:gmatch("[^\r\n]+") do
+    -- for line in output:gmatch("[^\r\n]+") do
 
     -- for commit, path in output:gmatch "commit ([%x]+).-delete mode %d+ ([^\n]+)" do
     local current_commit = ""

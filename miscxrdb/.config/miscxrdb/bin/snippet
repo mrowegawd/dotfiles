@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#shellcheck source=/dev/null
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
 # SNIPPETS_MENU="aliases\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura\nfzf"
 #
 # dir="$HOME/.config/rofi/menu"
@@ -119,8 +122,13 @@ SNIPPET_SCRIPT_PATH="$HOME/.config/miscxrdb/bin/snippet"
 EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $SNIPPET_SCRIPT_PATH'"
 RELOAD_CMD="dunstify 'Snippet Bulk' 'All current snippets updated'"
 
+COMMAND_FZF="fzf-tmux -xC -w 80% -h 60%"
+if not_in_tmux; then
+  COMMAND_FZF="fzf"
+fi
+
 SELECTED=$(
-  echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | fzf-tmux -xC -w 80% -h 60% --min-height 10 \
+  echo "${ALL_SNIPPETS[@]}" | tr ' ' '\n' | sort | $COMMAND_FZF --min-height 10 \
     --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \
     --bind="ctrl-r:execute($RELOAD_CMD)" \

@@ -346,7 +346,8 @@ reset_base_alter({ "base46-oxocarbon" }, {
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
-  blink_cmp_label_kind_fg_alter = 0.65,
+  blink_cmp_label_kind_fg_alter = 0.6,
+  blink_ghost_text_fg_alter = -0.45,
   comment_fg_alter = 0.32,
   cursor_fg = "#d75f87",
   cursorline_alter = 0.03,
@@ -358,11 +359,11 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   linenr_fg_alter = 0.07,
   my_code_usage_bg_alter = -0.4,
   my_code_usage_fg_alter = -0.02,
-  noice_cmdline_fg_alter = 0.3,
+  noice_cmdline_fg_alter = 0.4,
   nontext_fg_alter = 0.8,
   normal_keyword_alter = 0.12,
   outline_indent_fg_alter = 0.15,
-  pmenu_bg_alter = 0.18,
+  pmenu_bg_alter = 0.2,
   pmenu_sel_bg_alter = 0.13,
   pmenu_sp_alter = 1,
   quickfixline_alter = 0.2,
@@ -392,6 +393,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
 })
 reset_base_alter({ "base46-zenburn" }, {
   blink_cmp_label_kind_fg_alter = 0.7,
+  blink_ghost_text_fg_alter = -0.55,
   comment_fg_alter = 0.38,
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.04,
@@ -412,8 +414,7 @@ reset_base_alter({ "base46-zenburn" }, {
   snacks_indent_scope_fg_alter = 0.11,
   snacks_notifier_border_error_fg = -0.1,
   snacks_notifier_border_warn_fg = -0.4,
-  tabline_bg_alter = 0.2,
-  tabline_fg_alter = 0.3,
+  tabline_fg_alter = 0.25,
   trouble_indent_fg_alter = 0.2,
   winbar_file_path_fg_alter = 0.6,
   winseparator_alter = 0.12,

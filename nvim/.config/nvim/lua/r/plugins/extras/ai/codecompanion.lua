@@ -682,12 +682,19 @@ return {
               {
                 role = constants.USER_ROLE,
                 content = function()
+                  local result = vim.system({ "xclip", "-o", "-se", "clip" }, { text = true }):wait()
+                  if result.code ~= 0 then
+                    ---@diagnostic disable-next-line: undefined-field
+                    RUtils.error("Failed to xclip", { title = "Config Keymaps" })
+                    return
+                  end
+
                   local header =
                     "Tolong translate kalimat ini ke bahasa indonesia, perbaiki maksud jika kalimat nya kurang baku, tanda baca dan juga jelaskan secara singkat tapi mudah dimengerti:"
                   local body = code_block_delimiter
                     .. "text"
                     .. "\n"
-                    .. vim.system { "xclip", "-o", "-se", "clip" }
+                    .. result.stdout
                     .. newline
                     .. code_block_delimiter
 

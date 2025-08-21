@@ -453,6 +453,7 @@ RUtils.map.nnoremap("<F1>", function()
   local get_current_pane_tmux_id = function()
     local get_pane_id = vim.system({ "tmux", "display-message", "-p", "#{pane_id}" }, { text = true }):wait()
     if get_pane_id.code ~= 0 then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.error("Failed to get tmux pane_id", { title = "Config Keymaps" })
       return
     end
@@ -463,10 +464,12 @@ RUtils.map.nnoremap("<F1>", function()
     -- local cmds = { "tmux", "display-message", "-p", "-t", id, "'#{pane_index}'" }
     local cmds = ("tmux display-message -p -t " .. id .. " '#{pane_index}'"):gsub("\n", "")
 
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info("cmds : " .. table.concat { "sh", "-c", cmds })
 
     local get_pane_idx = vim.system({ "sh", "-c", cmds }, { text = true }):wait()
     if get_pane_idx.code ~= 0 then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.error("Failed to get tmux idx", { title = "Config Keymaps" })
       return
     end
@@ -476,7 +479,10 @@ RUtils.map.nnoremap("<F1>", function()
   local pane_id = get_current_pane_tmux_id()
 
   if pane_id then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info("the pane id is: " .. pane_id)
+
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info("The idx is: " .. get_current_pane_tmux_idx(pane_id))
   end
 end)
@@ -699,6 +705,7 @@ end
 local get_current_pane_tmux_id = function()
   local get_pane_id = vim.system({ "tmux", "display-message", "-p", "#{pane_id}" }, { text = true }):wait()
   if get_pane_id.code ~= 0 then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.error("Failed to get tmux pane_id", { title = "Config Keymaps" })
     return
   end
