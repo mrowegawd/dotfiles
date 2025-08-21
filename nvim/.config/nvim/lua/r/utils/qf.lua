@@ -96,6 +96,15 @@ function M.get_list_qf(is_loc)
   return vim.fn.getloclist(winid)
 end
 
+function M.get_list_qf_or_loc()
+  if not M.is_loclist() then
+    return vim.fn.getqflist()
+  end
+
+  local winid = vim.api.nvim_get_current_win()
+  return vim.fn.getloclist(winid)
+end
+
 function M.get_data_qf(is_loc)
   is_loc = is_loc or false
 
