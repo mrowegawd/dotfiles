@@ -1,4 +1,3 @@
-local validate = vim.validate
 local fzf_lua = require "fzf-lua"
 
 ---@class r.utils.fzf_diffview
@@ -15,7 +14,6 @@ local get_last_query = function()
 end
 
 local search_ancestors = function(startpath, func)
-  validate { func = { func, "f" } }
   if func(startpath) then
     return startpath
   end
@@ -80,7 +78,7 @@ local escape_term = function(x)
   )
 end
 
-M.git_relative_path = function(bufnr)
+function M.git_relative_path(bufnr)
   local abs_filename = RUtils.file.absolute_path(bufnr)
   local git_dir = find_first_ancestor_dir_or_file(abs_filename, ".git")
 
@@ -94,7 +92,7 @@ M.git_relative_path = function(bufnr)
   end
 end
 
-M.split_string = function(inputstr, sep)
+function M.split_string(inputstr, sep)
   if sep == nil then
     sep = "%s"
   end
@@ -105,11 +103,18 @@ M.split_string = function(inputstr, sep)
   return t
 end
 
----@param prompt string|nil
----@param author string|nil
----@param bufnr number|nil
----@return table
-M.git_log_content = function(prompt, author, bufnr)
+function M.split_string_2(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t = {}
+  for str in string.gmatch(inputstr, sep) do
+    table.insert(t, str)
+  end
+  return t
+end
+
+function M.git_log_content(prompt, author, bufnr)
   local command = {
     "git",
     "log",
@@ -167,7 +172,7 @@ local split_query_from_author = function(query)
   return prompt, author
 end
 
-M.git_log_content_finder = function(query, bufnr)
+function M.git_log_content_finder(query, bufnr)
   set_last_query(query)
 
   local prompt, author = split_query_from_author(query)
@@ -188,7 +193,7 @@ local previous_commit_hash = function(commit_hash)
   return string.gsub(output, "\n", "")
 end
 
-M.git_dir = function()
+function M.git_dir()
   return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
 end
 
@@ -220,10 +225,6 @@ local all_commit_hashes_touching_file = function(git_relative_file_path)
   return M.split_string(output, "\n")
 end
 
---- Returns the file name of a file on a specific commit
---- @param commit_hash string
---- @param git_relative_file_path string
---- @return string|nil file name on commit
 local file_name_on_commit = function(commit_hash, git_relative_file_path)
   if file_exists_on_commit(commit_hash, git_relative_file_path) then
     return git_relative_file_path
@@ -294,10 +295,6 @@ end
 
 local empty_tree_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
----@param bufnr number|nil
----@param first_commit string
----@param second_commit string
----@return string|nil prev_name, string|nil curr_name
 local filename_commit = function(bufnr, first_commit, second_commit)
   if bufnr == nil then
     return nil, nil
@@ -324,7 +321,7 @@ end
 
 local config = {}
 
-M.git_flags = function()
+function M.git_flags()
   local git_flags = config["git_flags"] or {}
 
   if type(git_flags) ~= "table" then
@@ -335,7 +332,7 @@ M.git_flags = function()
   return git_flags
 end
 
-M.git_diff_flags = function()
+function M.git_diff_flags()
   local git_diff_flags = config["git_diff_flags"] or {}
 
   if type(git_diff_flags) ~= "table" then
@@ -346,11 +343,7 @@ M.git_diff_flags = function()
   return git_diff_flags
 end
 
---- @param command table
---- @param git_flags_ix number|nil
---- @param git_diff_flags_ix number|nil
---- @return table Command with configured git diff flags
-M.format_git_diff_command = function(command, git_flags_ix, git_diff_flags_ix)
+function M.format_git_diff_command(command, git_flags_ix, git_diff_flags_ix)
   git_flags_ix = git_flags_ix or 2
   git_diff_flags_ix = git_diff_flags_ix or 3
 
@@ -376,9 +369,6 @@ M.format_git_diff_command = function(command, git_flags_ix, git_diff_flags_ix)
   return command
 end
 
---- Returns true if hash is a commit
---- @param commit_hash string
---- @return boolean is_commit true if hash is commit
 local is_commit = function(commit_hash)
   local git_dir = function()
     return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
@@ -391,12 +381,7 @@ local is_commit = function(commit_hash)
   return output == "commit"
 end
 
---- Shows a diff of 2 commit hashes and greps on prompt string
---- @param first_commit string
---- @param second_commit string
---- @param prompt string
---- @param opts table|nil
-M.git_diff_content = function(first_commit, second_commit, prompt, opts)
+function M.git_diff_content(first_commit, second_commit, prompt, opts)
   opts = opts or {}
 
   local prev_name, curr_name = filename_commit(opts.bufnr, first_commit, second_commit)
@@ -434,7 +419,7 @@ M.git_diff_content = function(first_commit, second_commit, prompt, opts)
   return command
 end
 
-M.git_diff_content_previewer = function(opts)
+function M.git_diff_content_previewer(opts)
   opts = opts or { bufnr = nil }
 
   return fzf_lua.shell.stringify_cmd(function(items)
@@ -461,13 +446,98 @@ M.git_diff_content_previewer = function(opts)
   end, {}, "{} {q}")
 end
 
--- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
--- ┃ MAPPING ACTIONS                                         ┃
--- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+-- ╭─────────────────────────────────────────────────────────╮
+-- │                      MAPPING UTILS                      │
+-- ╰─────────────────────────────────────────────────────────╯
 
-local diff_plugin = "diffview"
+local function convert_path_hash_commit(short_hash)
+  local handle = io.popen("git rev-parse " .. short_hash)
+  if not handle then
+    return ""
+  end
 
-M.open_diff_view = function(commit, file_name)
+  local full_hash = handle:read("*a"):gsub("%s+", "")
+  handle:close()
+
+  if full_hash == "" then
+    return ""
+  end
+
+  -- Fugitive
+  local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
+
+  -- Neogit
+  -- local path_commmit = ??
+
+  return path_commmit
+end
+
+local function extract_git_hash_single(selected)
+  if not selected and #selected == 0 then
+    return
+  end
+
+  local selection = selected[1]
+  local commit_hash = M.split_string(selection, " ")[1]
+  if commit_hash then
+    return commit_hash
+  end
+  RUtils.warn "open single: someting went wrong"
+end
+
+local function extract_git_hash(sel)
+  local commit_hash, commit_msg = sel:match "^(%S+)%s+(.+)$"
+  return commit_hash, commit_msg
+end
+
+local function parse_selected_git_commits(selected)
+  if not selected or #selected == 0 then
+    return
+  end
+
+  local items = {}
+  local sel
+
+  if selected and #selected == 1 then
+    sel = selected[1]
+    local commit_hash, commit_msg = extract_git_hash(sel)
+    local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
+
+    RUtils.info("commit message: " .. commit_msg)
+
+    items[#items + 1] = {
+      lnum = 1,
+      col = 1,
+      text = commit_msg,
+      module = commit_hash,
+      filename = fugitive_commit_filename,
+    }
+    return items
+  end
+
+  for _, item in pairs(selected) do
+    local commit_hash, commit_msg = extract_git_hash(item)
+    local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
+
+    items[#items + 1] = {
+      lnum = 1,
+      col = 1,
+      text = commit_msg,
+      module = commit_hash,
+      filename = fugitive_commit_filename,
+    }
+  end
+  return items
+end
+
+local open_single_with_cmd = function(selected, direction)
+  local commit_hash = extract_git_hash_single(selected)
+  if commit_hash then
+    vim.cmd(direction .. [[ | Gedit ]] .. commit_hash)
+  end
+end
+
+function M.open_diff_view(commit, file_name, diff_plugin)
   local cmds
 
   if file_name ~= nil and file_name ~= "" then
@@ -488,10 +558,11 @@ M.open_diff_view = function(commit, file_name)
   vim.cmd(cmds)
 end
 
-M.open_commit = function(commit_hash)
+function M.open_commit(commit_hash, diff_plugin)
   local cmds
   if diff_plugin == "diffview" then
     cmds = "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
+    -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
   elseif diff_plugin == "fugitive" then
     cmds = "Gedit " .. commit_hash
   end
@@ -500,9 +571,7 @@ M.open_commit = function(commit_hash)
   vim.cmd(cmds)
 end
 
----General action: Copy commit hash to system clipboard
----@param commit_hash string
-M.copy_to_clipboard = function(commit_hash)
+function M.copy_to_clipboard(commit_hash)
   RUtils.info("Copied commit hash " .. commit_hash .. " to clipboard", { title = "FZFGit" })
 
   vim.fn.setreg("+", commit_hash)
@@ -520,7 +589,7 @@ local get_browse_command = function(commit_hash)
   return string.gsub(cmd, commit_pattern, commit_hash)
 end
 
-M.opts_diffview_log = function(is_repo, title, bufnr)
+function M.opts_diffview_log(is_repo, title, bufnr)
   vim.validate { is_repo = { is_repo, "string" } }
 
   title = title or "Search > "
@@ -542,6 +611,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
   -- check config fugitive di plugins/git.lua
   -- local _ = package.loaded["vim-fugitive"]
   -- vim.cmd "packadd vim-fugitive"
+  --
 
   return RUtils.fzflua.open_dock_bottom {
     exec_empty_query = true,
@@ -552,220 +622,114 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {
-      ["alt-l"] = function(selected, _)
-        local items = {}
-        for _, item in pairs(selected) do
-          local commit_hash = M.split_string(item, " ")[1]
-          local commit_msg = vim.split(item, "_ ")[2]
-
-          local function convert_path_hash_commit(short_hash)
-            local handle = io.popen("git rev-parse " .. short_hash)
-            if not handle then
-              return ""
-            end
-
-            local full_hash = handle:read("*a"):gsub("%s+", "")
-            handle:close()
-
-            if full_hash == "" then
-              return ""
-            end
-
-            -- Fugitive
-            local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
-
-            -- Neogit
-            -- local path_commmit = ??
-
-            return path_commmit
-          end
-
-          local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
-
-          items[#items + 1] = {
-            lnum = 1,
-            col = 1,
-            text = commit_msg,
-            module = commit_hash,
-            filename = fugitive_commit_filename,
-          }
-        end
-
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview", true)
-      end,
-      ["alt-L"] = {
-        prefix = "select-all+accept",
-        fn = function(selected, _)
-          local items = {}
-          for _, item in pairs(selected) do
-            local commit_hash = M.split_string(item, " ")[1]
-            local commit_msg = vim.split(item, "_ ")[2]
-
-            local function convert_path_hash_commit(short_hash)
-              local handle = io.popen("git rev-parse " .. short_hash)
-              if not handle then
-                return ""
-              end
-
-              local full_hash = handle:read("*a"):gsub("%s+", "")
-              handle:close()
-
-              if full_hash == "" then
-                return ""
-              end
-
-              -- Fugitive
-              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
-
-              -- Neogit
-              -- local path_commmit = ??
-
-              return path_commmit
-            end
-
-            local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
-
-            items[#items + 1] = {
-              lnum = 1,
-              col = 1,
-              text = commit_msg,
-              module = commit_hash,
-              filename = fugitive_commit_filename,
-            }
-          end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview All", true)
-        end,
-      },
-      ["alt-q"] = function(selected, _)
-        local items = {}
-        for _, item in pairs(selected) do
-          local commit_hash = M.split_string(item, " ")[1]
-          local commit_msg = vim.split(item, "_ ")[2]
-
-          local function convert_path_hash_commit(short_hash)
-            local handle = io.popen("git rev-parse " .. short_hash)
-            if not handle then
-              return ""
-            end
-
-            local full_hash = handle:read("*a"):gsub("%s+", "")
-            handle:close()
-
-            if full_hash == "" then
-              return ""
-            end
-
-            -- Fugitive
-            local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
-
-            -- Neogit
-            -- local path_commmit = ??
-
-            return path_commmit
-          end
-
-          local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
-
-          items[#items + 1] = {
-            lnum = 1,
-            col = 1,
-            text = commit_msg,
-            module = commit_hash,
-            filename = fugitive_commit_filename,
-          }
-        end
-
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview")
-      end,
-      ["alt-Q"] = {
-        prefix = "select-all+accept",
-        fn = function(selected, _)
-          local items = {}
-          for _, item in pairs(selected) do
-            local commit_hash = M.split_string(item, " ")[1]
-            local commit_msg = vim.split(item, "_ ")[2]
-
-            local function convert_path_hash_commit(short_hash)
-              local handle = io.popen("git rev-parse " .. short_hash)
-              if not handle then
-                return ""
-              end
-
-              local full_hash = handle:read("*a"):gsub("%s+", "")
-              handle:close()
-
-              if full_hash == "" then
-                return ""
-              end
-
-              -- Fugitive
-              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
-
-              -- Neogit
-              -- local path_commmit = ??
-
-              return path_commmit
-            end
-
-            local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
-
-            items[#items + 1] = {
-              lnum = 1,
-              col = 1,
-              text = commit_msg,
-              module = commit_hash,
-              filename = fugitive_commit_filename,
-            }
-          end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview All")
-        end,
-      },
-      ["ctrl-s"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        vim.cmd([[split | Gedit ]] .. commit_hash)
-      end,
-      ["ctrl-v"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        vim.cmd([[vsplit | Gedit ]] .. commit_hash)
-      end,
-      ["ctrl-t"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        vim.cmd([[tabe | Gedit ]] .. commit_hash)
-      end,
-      ["default"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        M.open_diff_view(commit_hash, M.git_relative_path(bufnr))
-      end,
-      ["ctrl-o"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        vim.api.nvim_command(":" .. get_browse_command(commit_hash))
-      end,
-      ["ctrl-x"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        M.open_commit(commit_hash)
-      end,
-      ["ctrl-y"] = function(selected, _)
-        local selection = selected[1]
-        local commit_hash = M.split_string(selection, " ")[1]
-
-        M.copy_to_clipboard(commit_hash)
-      end,
+      ["alt-l"] = M.git_open_to_loc "Fzf_diffview",
+      ["alt-L"] = M.git_open_to_loc "Fzf_diffview All",
+      ["alt-q"] = M.git_open_to_qf "Fzf_diffview",
+      ["alt-Q"] = M.git_open_to_qf "Fzf_diffview All",
+      ["ctrl-s"] = M.git_open "split",
+      ["ctrl-v"] = M.git_open "vsplit",
+      ["ctrl-t"] = M.git_open "tabe",
+      ["default"] = M.git_open_default(bufnr),
+      ["ctrl-o"] = M.git_open_with_browser(),
+      ["ctrl-x"] = M.git_open_with_diffview(),
+      ["ctrl-y"] = M.git_copy_to_clipboard_or_yank(),
     },
   }
+end
+
+-- ╭─────────────────────────────────────────────────────────╮
+-- │                        MAPPINGS                         │
+-- ╰─────────────────────────────────────────────────────────╯
+
+function M.git_open_to_loc(title)
+  vim.validate { title = { title, "string" } }
+
+  return function(selected, _)
+    local items = parse_selected_git_commits(selected)
+    RUtils.qf.save_to_qf_and_auto_open_qf(items, title, true)
+  end
+end
+
+function M.git_open_to_qf(title)
+  vim.validate { title = { title, "string" } }
+
+  return function(selected, _)
+    local items = parse_selected_git_commits(selected)
+    RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview")
+  end
+end
+
+function M.git_open(direction)
+  return function(selected, _)
+    open_single_with_cmd(selected, direction)
+  end
+end
+
+function M.git_open_default(bufnr)
+  bufnr = bufnr or vim.fn.bufnr()
+
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    M.open_diff_view(commit_hash, M.git_relative_path(bufnr), "diffview")
+  end
+end
+
+function M.git_open_with_browser()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      vim.api.nvim_command(":" .. get_browse_command(commit_hash))
+    end
+  end
+end
+
+function M.git_open_with_diffview()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      M.open_commit(commit_hash, "diffview")
+    end
+  end
+end
+
+function M.git_open_with_compare_hash()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      local gitsigns = require "gitsigns"
+      gitsigns.diffthis(commit_hash)
+
+      -- With vim-fugitive
+      -- local cmdmsg = "Gvdiffsplit " .. commit_hash
+      -- vim.cmd(cmdmsg)
+
+      -- With diffview
+      -- local cmdmsg = "DiffviewOpen -uno " .. commit_hash
+      -- local cmdmsg = "Gvdiffsplit " .. commit_hash
+      -- vim.cmd(cmdmsg)
+
+      ---@diagnostic disable-next-line: undefined-field
+      RUtils.info("Compare diff: current commit --> " .. commit_hash, { title = "FZFGit" })
+    end
+  end
+end
+
+function M.git_copy_to_clipboard_or_yank()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      M.copy_to_clipboard(commit_hash)
+      require("fzf-lua").actions.resume()
+    end
+  end
+end
+
+function M.git_grep_log()
+  return function()
+    require("fzf-lua").fzf_live(function(query)
+      return M.git_log_content_finder(query, nil)
+    end, RUtils.fzf_diffview.opts_diffview_log("repo", "Grep log history"))
+  end
 end
 
 return M
