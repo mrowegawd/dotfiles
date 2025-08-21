@@ -160,7 +160,7 @@ autocmds.cursorline_blacklist = {
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
   ["help"] = true,
-  ["markdown"] = true,
+  -- ["markdown"] = true,
   ["mason"] = true,
   ["noice"] = true,
   ["org"] = true,
@@ -275,7 +275,22 @@ local hi_cursorline = "highlight CursorLine"
 local function save_cursorline_hl()
   if not saved_cursorline_hl then
     local hl = H.h "CursorLine"
-    color_cursorline_bright = H.tint(hl.bg, 0.5)
+
+    local more_bright = 0.5
+    if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
+      more_bright = 0.1
+    end
+
+    if vim.g.colorscheme == "lackluster" then
+      more_bright = 0.32
+    end
+
+    if vim.g.colorscheme == "neogotham" then
+      more_bright = 1.4
+    end
+
+    color_cursorline_bright = H.tint(hl.bg, more_bright)
+
     if hl then
       saved_cursorline_hl = hl
     end
@@ -307,6 +322,18 @@ end
 
 local set_cursorline = function(active)
   local filetype, _ = RUtils.buf.get_bo_buft()
+
+  -- autocmds.cursorline_blacklist = vim.deepcopy(cursorline_blacklist)
+
+  -- __AUTO_GENERATED_PRINT_VAR_START__
+  -- print([==[set_cursorline filetype:]==], vim.inspect(filetype == "markdown")) -- __AUTO_GENERATED_PRINT_VAR_END__
+
+  -- if filetype ~= "" and filetype == "qf" then
+  --   autocmds.cursorline_blacklist["markdown"] = nil
+  -- else
+  --   autocmds.cursorline_blacklist["markdown"] = true
+  -- end
+
   if filetype ~= "" and not autocmds.cursorline_blacklist[filetype] then
     -- nvim_win_get_config.relative utk detect float window, output boolean
     if api.nvim_win_get_config(0).relative ~= "win" then
@@ -315,14 +342,15 @@ local set_cursorline = function(active)
       if saved_cursorline_hl then
         restore_cursorline()
       end
-
-      return
     end
+    return
   end
 
   if filetype ~= "" and filetype == "qf" then
-    save_cursorline_hl()
-    set_bright_cursorline()
+    if api.nvim_win_get_config(0).relative ~= "win" then
+      save_cursorline_hl()
+      set_bright_cursorline()
+    end
   end
 
   wo.cursorline = false
