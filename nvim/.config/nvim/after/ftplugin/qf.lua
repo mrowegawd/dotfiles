@@ -101,7 +101,7 @@ vim.keymap.set("v", "<c-v>", function()
     if item then
       vim.cmd [[wincmd p]]
 
-      local filename = vim.api.nvim_buf_get_name(item.bufnr)
+      local filename = item.filename
 
       -- buka lewat dgn tabnew
       -- vim.cmd("tabnew " .. filename)
@@ -163,8 +163,22 @@ keymap.set("n", "<Leader>fg", function()
 
   local qf_ntbl = {}
   for _, qf_item in pairs(qf_items) do
-    table.insert(qf_ntbl, path.normalize(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
+    local fname = qf_item.filename
+    if
+      not fname:match "%.png$"
+      and not fname:match "%.jpeg$"
+      and not fname:match "%.gif$"
+      and not fname:match "%.jpg$"
+      and not fname:match "%.spl$"
+      and not fname:match "%.csv$"
+      and not fname:match "%.add$"
+      and not fname:match "%.sug$"
+    then
+      table.insert(qf_ntbl, path.normalize(fname, vim.uv.cwd()))
+    end
   end
+
+  qf_ntbl = RUtils.cmd.rm_duplicates_tbl(qf_ntbl)
 
   local rg_opts_format = [[--column --line-number -i --hidden --no-heading --color=always --smart-case ]]
     .. table.concat(qf_ntbl, " ")

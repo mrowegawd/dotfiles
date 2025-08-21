@@ -114,7 +114,6 @@ function M.get_data_qf(is_loc)
       results.quickfix.items = vim.tbl_map(function(item)
         return {
           filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-          bufnr = item.bufnr,
           module = item.module,
           lnum = item.lnum,
           end_lnum = item.end_lnum,
@@ -138,7 +137,6 @@ function M.get_data_qf(is_loc)
     results.location.items = vim.tbl_map(function(item)
       return {
         filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        bufnr = item.bufnr,
         module = item.module,
         lnum = item.lnum,
         end_lnum = item.end_lnum,
