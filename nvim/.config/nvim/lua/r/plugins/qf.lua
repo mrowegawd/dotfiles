@@ -6,7 +6,7 @@ return {
     opts = {
       preview = {
         auto_preview = false,
-        win_height = 30,
+        win_height = 20,
       },
       func_map = {
         open = "",
@@ -20,7 +20,7 @@ return {
         tabdrop = "",
         ptogglemode = "zp",
         ptoggleitem = "p",
-        ptoggleauto = "P",
+        ptoggleauto = "<a-p>",
         pscrollup = "<C-u>",
         pscrolldown = "<C-d>",
         pscrollorig = "zo",

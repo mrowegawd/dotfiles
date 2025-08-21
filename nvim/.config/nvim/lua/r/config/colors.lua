@@ -20,7 +20,6 @@ local base_cl = {
   cursorline_alter = 0.04,
   cursorline_fg_alter = "Keyword",
   dapstopped_bg_alter = 0.25,
-  float_border_fg_alter = 0,
   float_title_bg_alter = -0.1,
   float_title_fg_alter = -0.1,
   fzflua_border_fg_alter = 0.55,
@@ -38,7 +37,7 @@ local base_cl = {
   my_code_usage_fg_alter = -0.25,
   noice_cmdline_fg_alter = 0.6,
   nontext_fg_alter = 1.5,
-  normal_float_bg_alter = -0.08,
+  normal_float_bg_alter = -0.1,
   normal_float_fg_alter = -0.01,
   outline_indent_fg_alter = 0.3,
   panel_sidebar_bg_alter = 0.25,
@@ -141,7 +140,6 @@ local function reset_base_alter(themes, alter_base)
     difffile_fg_alter = "difffile_fg_alter",
     difftext_bg_alter = "difftext_bg_alter",
     difftext_fg_alter = "difftext_fg_alter",
-    float_border_fg_alter = "float_border_fg_alter",
     float_title_bg_alter = "float_title_bg_alter",
     float_title_fg_alter = "float_title_fg_alter",
     fold_bg = "fold_bg",
@@ -256,6 +254,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   render_markdown_code_bg_alter = 0.38,
   render_markdown_code_inline_bg_alter = 0.2,
   snacks_indent_scope_fg_alter = 0.22,
+  tabline_fg_alter = 0.55,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "base46-material-darker" }, {
@@ -265,7 +264,7 @@ reset_base_alter({ "base46-material-darker" }, {
   dapstopped_bg_alter = 0.2,
   fzflua_border_fg_alter = 0.7,
   fzflua_file_part_fg = 0.65,
-  linenr_fg_alter = 0.05,
+  linenr_fg_alter = 0.08,
   noice_cmdline_fg_alter = 0.6,
   pmenu_sp_alter = 2.2,
   quickfixline_linenr_fg_alter = 0.3,
@@ -273,7 +272,7 @@ reset_base_alter({ "base46-material-darker" }, {
   render_markdown_code_inline_bg_alter = 0.15,
   snacks_indent_scope_fg_alter = 0.18,
   visual_bg_alter = -0.2,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-material-lighter" }, {
   CurSearch = {
@@ -292,7 +291,6 @@ reset_base_alter({ "base46-material-lighter" }, {
   cursor_fg = "#dfdfe0",
   cursorline_alter = -0.12,
   dapstopped_bg_alter = 0.2,
-  float_border_fg_alter = -0.15,
   fzflua_file_part_fg = -0.4,
   fzflua_sel_bg_alter = 0.01,
   linenr_fg_alter = -0.04,
@@ -319,6 +317,7 @@ reset_base_alter({ "base46-melange" }, {
   noice_cmdline_fg_alter = 0.6,
   normal_keyword_alter = 0.1,
   pmenu_bg_alter = 0.5,
+  pmenu_sp_alter = 1.5,
   render_markdown_code_bg_alter = 0.23,
   snacks_indent_scope_fg_alter = 0.13,
   trouble_indent_fg_alter = 0.6,
@@ -333,7 +332,6 @@ reset_base_alter({ "base46-oxocarbon" }, {
   cursorline_fg_alter = "WinSeparator",
   dapstopped_bg_alter = 0.2,
   fold_fg = 0.18,
-  fzflua_border_fg_alter = 1.3,
   linenr_fg_alter = 0.3,
   noice_cmdline_fg_alter = 1,
   nontext_fg_alter = 2.7,
@@ -342,6 +340,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   pmenu_sp_alter = 3.5,
   render_markdown_code_bg_alter = 0.85,
   render_markdown_code_inline_bg_alter = 0.16,
+  tabline_fg_alter = 0.6,
   trouble_indent_fg_alter = 1.65,
   winbar_file_path_fg_alter = 1,
   winseparator_alter = 0.5,
@@ -657,7 +656,7 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = float_border_fg_alter },
+        fg = { from = "NormalFloat", attr = "bg" },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -1502,10 +1501,10 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ PRPOMPT │
     -- ╰─────────╯
-    { FzfLuaNormal = { bg = { from = "Normal", attr = "bg" } } },
+    { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     {
       FzfLuaBorder = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_border_fg_alter },
+        fg = { from = "FzfLuaNormal", attr = "bg" },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
@@ -1546,11 +1545,16 @@ local general_overrides = function()
         bg = { from = "FzfLuaNormal", attr = "bg", alter = -0.03 },
       },
     },
-    { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder", bg = { from = "FzfLuaPreviewNormal", attr = "bg" } } },
+    {
+      FzfLuaPreviewBorder = {
+        fg = { from = "FzfLuaPreviewNormal", attr = "bg" },
+        bg = { from = "FzfLuaPreviewNormal", attr = "bg" },
+      },
+    },
     { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle" } },
     { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
 
-    { FzfLuaCursorLine = { bg = { from = "FzfLuaBorder", attr = "fg", alter = -0.15 } } },
+    { FzfLuaCursorLine = { bg = { from = "FzfLuaBorder", attr = "fg", alter = 0.12 } } },
 
     {
       FzfLuaCursorLineNr = {
@@ -1903,7 +1907,6 @@ local general_overrides = function()
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
       RgFlowHeadLine = {
-        -- fg = { from = "NormalFloat", attr = "bg" },
         bg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
         fg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
       },

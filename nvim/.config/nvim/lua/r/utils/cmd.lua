@@ -1100,8 +1100,8 @@ function M.change_colors()
       -- match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
       selection_fg = H.get("FzfLuaSel", "fg"),
-      selection_bg = H.get("Normal", "bg"),
       selection_sp = H.get("FzfLuaSel", "sp"),
+      selection_bg = H.get("FzfLuaNormal", "bg"),
 
       match = H.get("FzfLuaFzfMatch", "fg"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),

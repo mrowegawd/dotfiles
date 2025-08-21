@@ -159,6 +159,7 @@ RUtils.cmd.augroup("WindowBehaviour", {
 })
 
 local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
+
 RUtils.cmd.augroup("AutoFoldOnBufferEvents", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",

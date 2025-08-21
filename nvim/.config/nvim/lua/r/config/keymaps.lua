@@ -758,7 +758,7 @@ RUtils.map.nnoremap("<a-E>", function()
     vim.system { "wezterm", "cli", "activate-pane-direction", "left" }
 
     pane_right_id = get_right_pane_id_wez()
-    -- RUtils.info(pane_right_id)
+
     if pane_right_id then
       local cmd_open_filemanager_wez = {
         "wezterm",
@@ -774,13 +774,11 @@ RUtils.map.nnoremap("<a-E>", function()
     end
   else
     local main_pane_id = get_current_pane_tmux_id()
-    RUtils.info(main_pane_id)
 
     go_left_tmux()
 
     -- Kill all file manager panes
     if get_current_pane_tmux_cmd "nnn" or get_current_pane_tmux_cmd "yazi" or get_current_pane_tmux_cmd "lf" then
-      RUtils.info "wadaw"
       vim.system { "tmux", "kill-pane" }
     end
 
