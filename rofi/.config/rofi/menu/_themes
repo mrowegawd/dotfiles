@@ -224,6 +224,10 @@ set_dunst() {
 
   cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
 
+  # Title
+  DUNST_HEADER_TITLE=$(grep -i dunst_normal_title_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%header_title_fg%%/$DUNST_HEADER_TITLE/g" "$_DUNST_PATH/dunstrc"
+
   # Normal
   DUNST_LOW_BG=$(grep -i dunst_low_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%low_bg%%/$DUNST_LOW_BG/g" "$_DUNST_PATH/dunstrc"

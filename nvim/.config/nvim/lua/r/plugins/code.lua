@@ -370,7 +370,7 @@ return {
       { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
       { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
-      { "<a-G>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: grep buf" },
+      { "<a-G>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: open single find err" },
 
       { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
       { "<Leader>rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc" },

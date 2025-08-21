@@ -1161,6 +1161,8 @@ function M.change_colors()
       low_bg = H.tint(H.get("WinSeparator", "fg"), 0.5),
       low_frame = H.tint(H.get("WinSeparator", "fg"), -0.1),
 
+      normal_title_fg = H.tint(H.get("Keyword", "fg"), 0.5),
+
       normal_fg = H.tint(H.get("Keyword", "fg"), 0.1),
       normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
       normal_frame = H.tint(H.get("Keyword", "fg"), -0.45),
