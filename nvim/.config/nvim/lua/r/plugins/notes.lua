@@ -10,7 +10,7 @@ return {
       "akinsho/org-bullets.nvim",
       {
         "lukas-reineke/headlines.nvim",
-        -- ft = { "org" },
+        ft = { "org" },
         opts = {
           markdown = {
             headline_highlights = false,

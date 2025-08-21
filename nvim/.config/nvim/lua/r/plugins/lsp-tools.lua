@@ -2,8 +2,86 @@ return {
   -- OVERLOOK.NVIM
   {
     "WilliamHsieh/overlook.nvim",
-    opts = {},
+    opts = {
+      ui = {
+        size_ratio = 0.60,
+        min_width = 40,
+        min_height = 20,
+      },
+      adapters = {
+        peek_fzflua_file = {
+          get = function(selection)
+            local path = RUtils.fzflua.__strip_str(selection[1])
+            if not path then
+              return
+            end
+
+            local bufnr = vim.fn.bufadd(path)
+            if not vim.api.nvim_buf_is_loaded(bufnr) then
+              vim.fn.bufload(bufnr)
+            end
+
+            local opts = {
+              target_bufnr = bufnr,
+              lnum = 1,
+              col = 1,
+              title = path,
+            }
+
+            return opts
+          end,
+        },
+        peek_qf = {
+          get = function()
+            local lnum = vim.api.nvim_win_get_cursor(0)[1]
+            local qflist = RUtils.qf.get_list_qf_or_loc()
+            local item = qflist[lnum]
+
+            local opts = {}
+
+            if item.bufnr then
+              opts.target_bufnr = item.bufnr
+
+              if item.text then
+                if #item.text == 0 then
+                  local path = vim.api.nvim_buf_get_name(item.bufnr)
+                  opts.title = vim.fn.fnameescape(path)
+                else
+                  opts.title = item.text
+                end
+              end
+            end
+
+            if item.col then
+              opts.col = item.col
+            end
+
+            if item.lnum then
+              opts.lnum = item.lnum
+            end
+
+            return opts
+          end,
+        },
+      },
+    },
     keys = {
+      {
+        "P",
+        function()
+          local P = require "overlook.peek"
+          P.peek_qf()
+        end,
+        ft = "qf",
+        desc = "LSP: peek item qf [overlook]",
+      },
+      {
+        "P",
+        function()
+          require("overlook.api").peek_definition()
+        end,
+        desc = "LSP: peek definition [overlook]",
+      },
       {
         "<Leader>pd",
         function()
@@ -45,6 +123,13 @@ return {
           require("overlook.api").open_in_split()
         end,
         desc = "LSP: open split [overlook]",
+      },
+      {
+        "<Leader>pw",
+        function()
+          require("overlook.api").switch_focus()
+        end,
+        desc = "LSP: switch focus [overlook]",
       },
     },
   },

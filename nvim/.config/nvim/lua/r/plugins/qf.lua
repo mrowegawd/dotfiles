@@ -1,7 +1,8 @@
 return {
-  -- NVIM-BQF
+  -- NVIM-BQF (disabled)
   {
     "kevinhwang91/nvim-bqf",
+    enabled = false,
     event = "FileType qf",
     opts = {
       preview = {

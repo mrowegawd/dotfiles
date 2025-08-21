@@ -256,7 +256,8 @@ return {
         },
         previewers = {
           builtin = {
-            treesitter = { context = false }, -- disable treesitter-context
+            snacks_image = { enabled = false },
+            treesitter = { enabled = false }, -- disable treesitter-context
             extensions = {
               ["png"] = img_previewer,
               ["jpg"] = img_previewer,
@@ -314,6 +315,10 @@ return {
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-p"] = function(...)
+              local P = require "overlook.peek"
+              P.peek_fzflua_file(...)
+            end,
             ["ctrl-o"] = actions.toggle_hidden,
             ["ctrl-q"] = actions.toggle_ignore,
             ["default"] = function(selected, opts)
