@@ -263,7 +263,7 @@ return {
             org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
 
-            org_insert_heading_respect_content = "<CR>", -- Add new headling after current heading block with same level
+            org_insert_heading_respect_content = "<prefix>i<CR>", -- Add new headling after current heading block with same level
             org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
             org_insert_todo_heading_respect_content = "<c-t>", -- Add new todo headling after current heading block on same level
 

@@ -163,7 +163,7 @@ autocmds.cursorline_blacklist = {
   -- ["markdown"] = true,
   ["mason"] = true,
   ["noice"] = true,
-  ["org"] = true,
+  -- ["org"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
   ["qf"] = true,
@@ -321,36 +321,26 @@ local function restore_cursorline()
 end
 
 local set_cursorline = function(active)
-  local filetype, _ = RUtils.buf.get_bo_buft()
+  local filetype, buftype = RUtils.buf.get_bo_buft()
+  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
-  -- autocmds.cursorline_blacklist = vim.deepcopy(cursorline_blacklist)
+  if is_float or filetype == "" then
+    wo.cursorline = false
+    return
+  end
 
-  -- __AUTO_GENERATED_PRINT_VAR_START__
-  -- print([==[set_cursorline filetype:]==], vim.inspect(filetype == "markdown")) -- __AUTO_GENERATED_PRINT_VAR_END__
+  if not autocmds.cursorline_blacklist[filetype] then
+    wo.cursorline = active
 
-  -- if filetype ~= "" and filetype == "qf" then
-  --   autocmds.cursorline_blacklist["markdown"] = nil
-  -- else
-  --   autocmds.cursorline_blacklist["markdown"] = true
-  -- end
-
-  if filetype ~= "" and not autocmds.cursorline_blacklist[filetype] then
-    -- nvim_win_get_config.relative utk detect float window, output boolean
-    if api.nvim_win_get_config(0).relative ~= "win" then
-      wo.cursorline = active
-
-      if saved_cursorline_hl then
-        restore_cursorline()
-      end
+    if saved_cursorline_hl then
+      restore_cursorline()
     end
     return
   end
 
-  if filetype ~= "" and filetype == "qf" then
-    if api.nvim_win_get_config(0).relative ~= "win" then
-      save_cursorline_hl()
-      set_bright_cursorline()
-    end
+  if buftype == "quickfix" and filetype == "qf" then
+    save_cursorline_hl()
+    set_bright_cursorline()
   end
 
   wo.cursorline = false
