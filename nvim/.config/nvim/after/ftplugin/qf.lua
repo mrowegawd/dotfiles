@@ -59,7 +59,15 @@ keymap.set("n", "<C-s>", function()
   open_split_or_vsplit "split"
 end, { buffer = api.nvim_get_current_buf() })
 
+keymap.set("n", "<Leader>ws", function()
+  open_split_or_vsplit "split"
+end, { buffer = api.nvim_get_current_buf() })
+
 keymap.set("n", "<C-v>", function()
+  open_split_or_vsplit "vsplit"
+end, { buffer = api.nvim_get_current_buf() })
+
+keymap.set("n", "<Leader>wv", function()
   open_split_or_vsplit "vsplit"
 end, { buffer = api.nvim_get_current_buf() })
 
