@@ -251,7 +251,7 @@ RUtils.cmd.augroup("TextYankHighlight", {
     (vim.hl or vim.highlight).on_yank {
       timeout = 200,
       on_visual = true,
-      higroup = "YankInk",
+      higroup = "IncSearch",
     }
   end,
 })
