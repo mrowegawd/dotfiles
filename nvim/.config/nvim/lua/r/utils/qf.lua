@@ -1,5 +1,8 @@
 ---@class r.utils.qf
-local M = {}
+local M = {
+  copen = "belowright copen",
+  lopen = "belowright lopen", -- :botright :topleft :aboveleft :belowright :leftabove :rightbelow
+}
 
 local results = {
   quickfix = {},
@@ -173,11 +176,11 @@ function M.save_to_qf_and_auto_open_qf(items, title, is_loc, winid)
   M.save_to_qf(items, title, is_loc, winid)
 
   if not is_loc then
-    vim.cmd(RUtils.cmd.quickfix.copen)
+    vim.cmd(M.copen)
     return
   end
 
-  vim.cmd(RUtils.cmd.quickfix.lopen)
+  vim.cmd(M.lopen)
 end
 
 return M

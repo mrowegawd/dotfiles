@@ -295,8 +295,8 @@ return {
         defaults = {
           cwd_prompt = false,
           no_header_i = true, -- hide interactive header?
-          copen = RUtils.cmd.quickfix.copen,
-          lopen = RUtils.cmd.quickfix.lopen,
+          copen = RUtils.qf.copen,
+          lopen = RUtils.qf.lopen,
         },
         fzf_opts = {
           ["--no-separator"] = "",

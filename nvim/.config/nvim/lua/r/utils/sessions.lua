@@ -55,7 +55,7 @@ function M.load_ses_dashboard(last)
   end
 
   if #RUtils.qf.get_list_qf() > 0 then
-    vim.cmd(RUtils.cmd.quickfix.copen)
+    vim.cmd(RUtils.qf.copen)
     vim.cmd [[wincmd p]]
     vim.cmd [[set cmdheight=0]]
   end

@@ -386,8 +386,8 @@ return {
         rmuxpath = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
         run_with = "auto", -- `mux, tt, wez, toggleterm`
         quickfix = {
-          copen = RUtils.cmd.quickfix.copen,
-          lopen = RUtils.cmd.quickfix.lopen,
+          copen = RUtils.qf.copen,
+          lopen = RUtils.qf.lopen,
         },
       },
     },

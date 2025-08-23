@@ -117,8 +117,8 @@ return {
       },
       theme_list = {
         quickfix = {
-          copen = RUtils.cmd.quickfix.copen,
-          lopen = RUtils.cmd.quickfix.lopen,
+          copen = RUtils.qf.copen,
+          lopen = RUtils.qf.lopen,
         },
       },
       marks = {
