@@ -710,16 +710,13 @@ r_create_passSHA_512() {
 
 # run: generate ssh key
 r_create_sshkeygen() {
-  if [ -n "$TMUX" ]; then
-    read -r -p "some comments for new sshgen? " commentme
-    read -r -p "prefix ~/.ssh/_your_prefix? " prefixfile
-  else
-    read -r "commentme?some comments for new sshgen? "
-    read -r "prefixfile?prefix ~/.ssh/_your_prefix? "
-  fi
+  echo -n "Some comments for new SSH gen (note tambahan di ssh)? "
+  read -r commentme
+  echo -n "Prefix for ~/.ssh/_your_prefix? "
+  read -r prefixfile
 
   ssh-keygen -t rsa -b 4096 -C "$commentme" \
-    -f "$HOME/.ssh/$prefixfile$(date +%F)"
+    -f "$HOME/.ssh/$prefixfile-$(date +%F)"
 }
 
 # run: remove comment of the file <$YOUR_FILE>
