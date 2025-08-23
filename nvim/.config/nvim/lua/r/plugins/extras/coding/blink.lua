@@ -201,7 +201,13 @@ return {
           ["<C-n>"] = {
             function(cmp)
               if not cmp.is_visible() then
-                cmp.show {}
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                end
+                if type == ":" or type == "@" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                end
               else
                 cmp.select_next()
               end
