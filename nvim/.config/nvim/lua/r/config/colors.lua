@@ -308,6 +308,7 @@ reset_base_alter({ "base46-material-lighter" }, {
   winseparator_alter = -0.16,
 })
 reset_base_alter({ "base46-melange" }, {
+  blink_ghost_text_fg_alter = -0.4,
   cursor_fg = "#ece1d7",
   cursorline_alter = 0.05,
   dapstopped_bg_alter = 0.15,

@@ -40,13 +40,13 @@ send_notify() {
     FPS="30"
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
+      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
 
       ffmpeg \
         -f x11grab \
         -s "$GEOMETRY" \
         -r "$FPS" \
-        -i $DISPLAY \
+        -i "$DISPLAY" \
         -f alsa \
         -ac 2 \
         -i default \
@@ -87,13 +87,13 @@ send_notify() {
     read -r blur_x blur_y blur_width blur_height <<<"$SLOP_BLUR"
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
+      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
 
       ffmpeg \
         -f x11grab \
         -s "$GEOMETRY" \
         -r 30 \
-        -i $DISPLAY"$OFFSET" \
+        -i "$DISPLAY$OFFSET" \
         -f alsa \
         -ac 2 \
         -i default \
@@ -133,13 +133,13 @@ send_notify() {
 
     if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
       FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && send_notify "Record start.."
+      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
 
       ffmpeg \
         -f x11grab \
         -s "$GEOMETRY" \
         -r 30 \
-        -i $DISPLAY"$OFFSET" \
+        -i "$DISPLAY$OFFSET" \
         -f alsa \
         -ac 2 \
         -i default \
@@ -174,7 +174,7 @@ send_notify() {
 
   run_simplegif_with_rectangle() {
     OUTPUT_MKV="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').mkv"
-    ICON="$HOME/.config/miscxrdb/icons/rec-button.png"
+    # ICON="$HOME/.config/miscxrdb/icons/rec-button.png"
 
     GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
     SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
@@ -196,23 +196,26 @@ send_notify() {
         -r 30 \
         "$OUTPUT_MKV"
 
-      ffmpeg \
-        -i "$OUTPUT_MKV" \
-        -c:v libx264 \
-        -crf 23 \
-        -profile:v baseline \
-        -level 3.0 \
-        -movflags faststart \
-        -pix_fmt yuv420p \
-        -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
-        -an \
-        "$OUTPUT_MKV.mp4"
+      # ffmpeg \
+      #   -i "$OUTPUT_MKV" \
+      #   -c:v libx264 \
+      #   -crf 23 \
+      #   -profile:v baseline \
+      #   -level 3.0 \
+      #   -movflags faststart \
+      #   -pix_fmt yuv420p \
+      #   -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+      #   -an \
+      #   "$OUTPUT_MKV.mp4"
 
       OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
-      mv "$OUTPUT_MKV.mp4" "$OUTPUT_GIF"
+      ffmpeg -i "$OUTPUT_MKV" -pix_fmt rgb24 "$OUTPUT_GIF"
 
+      # OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
+      # mv "$OUTPUT_MKV.mp4" "$OUTPUT_GIF"
+      #
       if [ -f "$OUTPUT_MKV" ]; then
-        rm -rf "$OUTPUT_MKV" "$OUTPUT_MKV.mp4"
+        rm -rf "$OUTPUT_MKV"
         send_notify "Saved: $OUTPUT_GIF"
       fi
     fi
@@ -237,7 +240,7 @@ send_notify() {
         -f x11grab \
         -s "$GEOMETRY" \
         -r 30 \
-        -i $DISPLAY"$OFFSET" \
+        -i "$DISPLAY$OFFSET" \
         -f alsa \
         -ac 2 \
         -i default \

@@ -154,14 +154,21 @@ return {
         function()
           require("overlook.api").open_in_vsplit()
         end,
-        desc = "LSP: open vsplit [overlook]",
+        desc = "LSP: open in  vsplit [overlook]",
       },
       {
         "<Leader>ps",
         function()
           require("overlook.api").open_in_split()
         end,
-        desc = "LSP: open split [overlook]",
+        desc = "LSP: open in split [overlook]",
+      },
+      {
+        "<Leader>pt",
+        function()
+          require("overlook.api").open_in_tab()
+        end,
+        desc = "LSP: open in tab [overlook]",
       },
       {
         "<Leader>pw",
