@@ -1,7 +1,8 @@
 return {
   -- OVERLOOK.NVIM
   {
-    "WilliamHsieh/overlook.nvim",
+    "MadKuntilanak/overlook.nvim",
+    branch = "feat/allow-customize-ui-adapter",
     opts = {
       ui = {
         size_ratio = 0.60,
@@ -9,11 +10,37 @@ return {
         min_height = 20,
       },
       adapters = {
-        peek_fzflua_file = {
+        peek_fzflua = {
           get = function(selection)
             local path = RUtils.fzflua.__strip_str(selection[1])
             if not path then
               return
+            end
+
+            local lnum = 1
+            local col = 1
+
+            if path:match ":" then
+              path = vim.split(path, ":")
+
+              local str_path = path[1]
+              local _lnum = tonumber(path[2])
+              local _col = tonumber(path[3])
+
+              path = str_path
+
+              if _lnum then
+                lnum = _lnum
+              end
+
+              if _col then
+                col = _col
+              end
+            end
+
+            if path:match "~" then
+              path = path:gsub("~", "")
+              path = RUtils.config.path.home .. path
             end
 
             local bufnr = vim.fn.bufadd(path)
@@ -23,9 +50,15 @@ return {
 
             local opts = {
               target_bufnr = bufnr,
-              lnum = 1,
-              col = 1,
+              lnum = lnum,
+              col = col,
               title = path,
+
+              win_col = 50,
+              win_row = 5,
+
+              win_width = 70,
+              win_height = 25,
             }
 
             return opts
@@ -59,6 +92,12 @@ return {
             if item.lnum then
               opts.lnum = item.lnum
             end
+
+            opts.win_height = 20
+            opts.win_width = 80
+
+            opts.win_col = 1
+            opts.win_row = -24
 
             return opts
           end,

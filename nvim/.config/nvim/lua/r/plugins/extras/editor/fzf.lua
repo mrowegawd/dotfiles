@@ -317,7 +317,7 @@ return {
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["alt-p"] = function(...)
               local P = require "overlook.peek"
-              P.peek_fzflua_file(...)
+              P.peek_fzflua(...)
             end,
             ["ctrl-o"] = actions.toggle_hidden,
             ["ctrl-q"] = actions.toggle_ignore,
@@ -567,6 +567,10 @@ return {
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-p"] = function(...)
+              local P = require "overlook.peek"
+              P.peek_fzflua(...)
+            end,
             ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
@@ -649,6 +653,10 @@ return {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-p"] = function(...)
+              local P = require "overlook.peek"
+              P.peek_fzflua(...)
+            end,
           },
         },
         highlights = {

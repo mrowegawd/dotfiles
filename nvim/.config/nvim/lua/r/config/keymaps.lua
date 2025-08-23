@@ -109,13 +109,29 @@ local arange_wins = function(direction)
       return
     end
 
+    if vim.w.is_overlook_popup then
+      if direction == "split" then
+        require("overlook.api").open_in_split()
+      end
+
+      if direction == "vsplit" then
+        require("overlook.api").open_in_vsplit()
+      end
+      return
+    end
+
+    if vim.tbl_contains({ "split", "vsplit" }, direction) then
+      vim.cmd(direction)
+      return
+    end
+
     vim.cmd("wincmd " .. direction)
     vim.cmd "wincmd ="
   end
 end
 
-RUtils.map.nnoremap("<Leader>ws", "<CMD>split<CR>", { desc = "Window: split" })
-RUtils.map.nnoremap("<Leader>wv", "<CMD>vsplit<CR>", { desc = "Window: vsplit" })
+RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
+RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 
 RUtils.map.nnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J" })
 RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })

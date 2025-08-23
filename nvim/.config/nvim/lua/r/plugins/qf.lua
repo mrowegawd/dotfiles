@@ -64,44 +64,9 @@ return {
       { "<Leader>qb" }, -- mark
       { "<Leader>qf" }, -- select mark fzf
       { "<Leader>qc" }, -- copy
-      {
-        "<a-k>",
-        function()
-          local _qf = RUtils.cmd.windows_is_opened { "qf" }
-          if _qf.found then
-            if RUtils.qf.is_loclist() then
-              vim.cmd "lclose"
-              vim.cmd "wincmd p"
-              vim.cmd "aboveleft lopen"
-            else
-              vim.cmd "cclose"
-              vim.cmd "wincmd p"
-              vim.cmd "aboveleft copen"
-            end
-          end
-        end,
-        ft = "qf",
-        desc = "Qf: force open above left [qfsilet]",
-      },
-      {
-        "<a-j>",
-        function()
-          local _qf = RUtils.cmd.windows_is_opened { "qf" }
-          if _qf.found then
-            if RUtils.qf.is_loclist() then
-              vim.cmd "lclose"
-              vim.cmd "wincmd p"
-              vim.cmd "belowright lopen"
-            else
-              vim.cmd "cclose"
-              vim.cmd "wincmd p"
-              vim.cmd "belowright copen"
-            end
-          end
-        end,
-        ft = "qf",
-        desc = "Qf: force open below right [qfsilet]",
-      },
+
+      { "<a-k>" }, -- move win to above
+      { "<a-j>" }, -- move win to bottom
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",
