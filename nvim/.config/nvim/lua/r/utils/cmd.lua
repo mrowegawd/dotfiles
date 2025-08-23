@@ -709,48 +709,46 @@ local function check_for_link_or_tag()
   return is_tag_or_link_at(line, col, {}) -- TODO: ini adalah yang salah
 end
 
-function M.open_with_mvp_or_sxiv()
+function M.open_with_mvp_or_sxiv(is_visual)
+  is_visual = is_visual or false
+
   local url = vim.fn.expand "<cWORD>"
 
-  -- check jika terdapat `https` pada `url`
-  local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+  if is_visual then
+    local search_string = RUtils.map.getVisualSelection()
+    if search_string then
+      url = search_string
+    end
+  end
 
-  -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-  if vim.bo.filetype ~= "git" then
-    --
-    --   url = url
-    -- else
-    if uri ~= "" then
-      -- check if sha
-      url = uri:match "([a-f0-9]+)$"
-    else
-      vim.cmd "normal yy"
-      title = vim.fn.getreg '"0'
+  if vim.bo.filetype == "git" then
+    -- local sha = line:match "^parent%s+([a-f0-9]+)$"
+    url = url:match "([a-f0-9]+)$"
+  end
 
-      title = title:gsub("^(%[)(.+)(%])$", "%2")
-      title = RUtils.cmd.remove_alias(title)
-
-      local parts = vim.split(title, "#")
-
-      if #parts > 0 then
-        url = parts[1]
+  if not is_visual then
+    if vim.bo.filetype ~= "git" then
+      -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
+      local match_pattern = [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]]
+      local uri = vim.fn.matchstr(url, match_pattern)
+      if uri and #uri == 0 then
+        ---@diagnostic disable-next-line: undefined-field
+        RUtils.warn("Failed to match '" .. url .. "' with regex pattern '" .. match_pattern .. "'")
+        return
       end
+      url = uri
     end
   end
 
   local sel_open_with = {
     mpv = {
-      --   { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
       cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
     },
     sxiv = { cmd = { "tsp", "svix", "--ontop" } },
   }
 
   if vim.bo.filetype == "git" then
-    -- local sha = line:match "^parent%s+([a-f0-9]+)$"
-    sel_open_with = {
-      DiffviewOpen = { cmd = { "DiffviewOpen" } },
-    }
+    sel_open_with = { DiffviewOpen = { cmd = { "DiffviewOpen" } } }
   end
 
   local sel_fzf = function()
@@ -772,20 +770,25 @@ function M.open_with_mvp_or_sxiv()
         local sel = selected[1]
 
         local cmds, notif_msg
-        for i, x in pairs(sel_open_with) do
-          if i == sel then
-            x.cmd[#x.cmd + 1] = url
-            cmds = x.cmd
-            notif_msg = i .. ": " .. url
+        for cmd_name, cmd_args in pairs(sel_open_with) do
+          if cmd_name == sel then
+            cmd_args.cmd[#cmd_args.cmd + 1] = url
+            cmds = cmd_args.cmd
+            notif_msg = cmd_name .. ": " .. url
           end
         end
 
-        if vim.bo.filetype ~= "git" then
-          vim.fn.jobstart(cmds, { detach = true })
+        if vim.bo.filetype == "git" then
+          vim.cmd(table.concat(cmds, " "))
           return
         end
 
-        vim.cmd(table.concat(cmds, " "))
+        local outputs = vim.system(cmds, { text = true }):wait()
+        if outputs.code ~= 0 then
+          ---@diagnostic disable-next-line: undefined-field
+          RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'")
+          return
+        end
 
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info(notif_msg, { title = "Open With" })
