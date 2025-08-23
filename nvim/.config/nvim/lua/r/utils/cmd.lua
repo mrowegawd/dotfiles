@@ -954,16 +954,18 @@ function M.change_colors()
   if vim.tbl_contains({ "vscode_modern", "base46-kanagawa" }, vim.g.colorscheme) then
     __tab_active_bg = -0.6
   end
-  if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
+
+  if vim.g.colorscheme == "lackluster" then
     __tab_active_fg = 0.1
     __tab_active_bg = -0.45
   end
-  if vim.tbl_contains({ "base46-seoul256_dark" }, vim.g.colorscheme) then
+
+  if vim.g.colorscheme == "base46-seoul256_dark" then
     __tab_active_fg = -0.15
     __tab_active_bg = -0.55
   end
 
-  if vim.tbl_contains({ "base46-zenburn" }, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-zenburn" then
     __tab_active_fg = -0.2
     __tab_active_bg = -0.6
   end
@@ -980,17 +982,17 @@ function M.change_colors()
     __tab_statusline_fg = -0.17
   end
 
-  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-jellybeans" then
     __tab_inactive_fg = -0.3
     __tab_statusline_fg = -0.3
   end
 
-  if vim.tbl_contains({ "neogotham" }, vim.g.colorscheme) then
+  if vim.g.colorscheme == "neogotham" then
     __tab_inactive_fg = -0.22
     __tab_statusline_fg = -0.22
   end
 
-  if vim.tbl_contains({ "base46-oxocarbon" }, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-oxocarbon" then
     __tab_inactive_fg = -0.18
     __tab_statusline_fg = -0.18
   end
@@ -1015,21 +1017,20 @@ function M.change_colors()
     zsh_sugest_fg = 0.45
   end
 
-  local zsh_special_themes = { "lackluster" }
-  if vim.tbl_contains(zsh_special_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.5
+  local zsh_special_melange = { "base46-melange", "base46-jellybeans" }
+  if vim.tbl_contains(zsh_special_melange, vim.g.colorscheme) then
+    zsh_lines_fg = 0.4
     zsh_sugest_fg = 0.7
   end
 
-  local zsh_special_kanagawa_themes = { "base46-kanagawa" }
-  if vim.tbl_contains(zsh_special_kanagawa_themes, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-kanagawa" then
     zsh_lines_fg = 0.45
     zsh_sugest_fg = 0.8
   end
 
-  local zsh_special_melange = { "base46-melange", "base46-jellybeans" }
-  if vim.tbl_contains(zsh_special_melange, vim.g.colorscheme) then
-    zsh_lines_fg = 0.4
+  if vim.g.colorscheme == "lackluster" then
+    zsh_lines_fg = 0.5
+    zsh_sugest_fg = 0.7
   end
 
   if vim.g.colorscheme == "neogotham" then
@@ -1040,8 +1041,7 @@ function M.change_colors()
     zsh_sugest_fg = 0.75
   end
 
-  local zsh_special_more_more_themes = { "base46-oxocarbon" }
-  if vim.tbl_contains(zsh_special_more_more_themes, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-oxocarbon" then
     zsh_lines_fg = 0.55
     zsh_sugest_fg = 1.2
   end
@@ -1073,7 +1073,7 @@ function M.change_colors()
   ---
   local __eww_icon_fg = 0.6
 
-  if vim.tbl_contains({ "base46-jellybeans" }, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-jellybeans" then
     __eww_icon_fg = 0.5
   end
 
