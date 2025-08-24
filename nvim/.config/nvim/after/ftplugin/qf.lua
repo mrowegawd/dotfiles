@@ -321,7 +321,6 @@ keymap.set("n", "<Leader>fw", function()
           __get_vars.title_icon()
         ),
       },
-      -- fzf_opts = { ["--header"] = [[^x:addtag  ^g:grep  ^r:reload  ^f:greptitle  ^e:filtertag]] },
       actions = {
         ["default"] = function(selected, _)
           local sel

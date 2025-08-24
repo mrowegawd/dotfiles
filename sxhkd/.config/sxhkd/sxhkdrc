@@ -5,10 +5,10 @@
 ########################################
 # alt, super (tombol tengah), ctrl
 
-# state: fullscreen
+# state: toggle fullscreen
 super + f
         bspc node -t {fullscreen,tiled}
-# state: toggle float or tiled
+# state: toggle float, tiled
 super + t
         bspc node -t {floating,tiled}
 
@@ -16,11 +16,11 @@ super + t
 super + B
         bspc node -f @brother
 
-# state: sticky
+# state: toggle sticky, unsticky
 super + F9
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state sticky
 
-# state: locked
+# state: toggle locked, unlocked
 super + F10
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
 

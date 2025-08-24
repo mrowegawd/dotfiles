@@ -305,7 +305,7 @@ return {
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^q:ignore  ^o:hidden]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath]] },
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
@@ -315,12 +315,11 @@ return {
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
-            ["alt-p"] = function(...)
+            ["alt-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
-            ["ctrl-o"] = actions.toggle_hidden,
-            ["ctrl-q"] = actions.toggle_ignore,
+            -- ["ctrl-q"] = actions.toggle_ignore,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -402,22 +401,24 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
-            fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:gitopen  ^y:copyhash  ^o:browser]] },
+            fzf_opts = { ["--header"] = [[^g:grep  ^y:copyhash  m-i:gitopen  m-h:compare  m-o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["alt-l"] = RUtils.fzf_diffview.git_open_to_loc "Commits Hash",
               ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_loc "Commits Hash" },
               ["alt-q"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
               ["alt-Q"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash All" },
+
+              ["alt-o"] = RUtils.fzf_diffview.git_open_with_browser(),
+              ["alt-h"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-i"] = RUtils.fzf_diffview.git_open_with_diffview(),
+
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
 
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-              ["ctrl-o"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
-              ["ctrl-x"] = RUtils.fzf_diffview.git_open_with_diffview(),
-              ["ctrl-r"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
             },
           },
           bcommits = RUtils.fzflua.open_dock_bottom {
@@ -428,7 +429,7 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
-            fzf_opts = { ["--header"] = [[^r:compare  ^g:grep  ^x:gitopen  ^y:copyhash  ^o:browser]] },
+            fzf_opts = { ["--header"] = [[^g:grep  ^y:copyhash  m-i:gitopen  m-h:compare  m-o:browser]] },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["alt-l"] = RUtils.fzf_diffview.git_open_to_loc "BCommits Hash",
@@ -439,11 +440,12 @@ return {
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-v"] = actions.git_buf_vsplit,
 
+              ["alt-h"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-o"] = RUtils.fzf_diffview.git_open_with_browser(),
+              ["alt-i"] = RUtils.fzf_diffview.git_open_with_diffview(),
+
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-              ["ctrl-o"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
-              ["ctrl-x"] = RUtils.fzf_diffview.git_open_with_diffview(),
-              ["ctrl-r"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
             },
           },
           branches = RUtils.fzflua.open_center_small_wide {
@@ -480,7 +482,7 @@ return {
           -- debug = true,
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd  ^q:ignore  ^o:hidden]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -493,12 +495,7 @@ return {
             ),
           },
           actions = {
-            ["ctrl-q"] = actions.toggle_ignore,
-            ["ctrl-o"] = actions.toggle_hidden,
-            -- ["ctrl-o"] = function(_, opts)
-            --   actions.toggle_opt(opts, "hidden")
-            --   actions.toggle_opt(opts, "no_ignore")
-            -- end,
+            -- ["ctrl-q"] = actions.toggle_ignore,
             ["ctrl-x"] = function()
               require("fzf-lua").files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],
@@ -564,10 +561,10 @@ return {
               }
             end,
             ["alt-l"] = actions.file_sel_to_ll,
+            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
-            ["alt-p"] = function(...)
+            ["alt-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
@@ -631,15 +628,15 @@ return {
         },
         oldfiles = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
-          fzf_opts = { ["--header"] = [[^o:oldfiles-all  ^r:oldfiles-current]] },
+          fzf_opts = { ["--header"] = [[m-h:oldfiles-current  m-o:oldfiles-all]] },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
           actions = {
-            ["ctrl-o"] = function()
+            ["alt-o"] = function()
               require("fzf-lua").oldfiles { cwd_only = false }
             end,
-            ["ctrl-r"] = function()
+            ["alt-h"] = function()
               require("fzf-lua").oldfiles { cwd_only = true }
             end,
           },
@@ -819,7 +816,7 @@ return {
             exec_empty_query = true,
             winopts = { title = extend_title.title },
             fzf_opts = {
-              ["--header"] = [[^x:filter  ^r:workspace-symbols]],
+              ["--header"] = [[m-h:filter  m-o:workspace-symbols]],
               ["--reverse"] = false,
             },
             actions = {
@@ -828,7 +825,7 @@ return {
               ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
               ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
               ["ctrl-g"] = actions.grep_lgrep,
-              ["ctrl-x"] = function()
+              ["alt-h"] = function()
                 local opts = {
                   title = "[LSP Symbols]",
                   actions = {
@@ -854,7 +851,7 @@ return {
                 }
                 RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
               end,
-              ["ctrl-r"] = function()
+              ["alt-o"] = function()
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 

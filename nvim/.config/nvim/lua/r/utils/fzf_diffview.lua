@@ -618,7 +618,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[^o:browser  ^y:copyhash  ^x:diffview  ^s/v/t:fugitive]],
+      ["--header"] = [[^y:copyhash  m-i:diffview  m-o:browser]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {
@@ -630,8 +630,8 @@ function M.opts_diffview_log(is_repo, title, bufnr)
       ["ctrl-v"] = M.git_open "vsplit",
       ["ctrl-t"] = M.git_open "tabe",
       ["default"] = M.git_open_default(bufnr),
-      ["ctrl-o"] = M.git_open_with_browser(),
-      ["ctrl-x"] = M.git_open_with_diffview(),
+      ["alt-o"] = M.git_open_with_browser(),
+      ["alt-i"] = M.git_open_with_diffview(),
       ["ctrl-y"] = M.git_copy_to_clipboard_or_yank(),
     },
   }
