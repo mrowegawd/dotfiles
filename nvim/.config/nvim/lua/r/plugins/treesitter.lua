@@ -256,6 +256,29 @@ return {
               },
             },
           },
+          ["base46-melange"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TabLine", attr = "bg", alter = 0.45 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "Keyword", attr = "fg" },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["lackluster"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {

@@ -289,6 +289,10 @@ local function save_cursorline_hl()
       more_bright = 1.4
     end
 
+    if vim.g.colorscheme == "base46-melange" then
+      more_bright = 0.3
+    end
+
     color_cursorline_bright = H.tint(hl.bg, more_bright)
 
     if hl then

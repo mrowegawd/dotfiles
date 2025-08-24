@@ -1020,9 +1020,13 @@ function M.change_colors()
     zsh_sugest_fg = 0.45
   end
 
-  local zsh_special_melange = { "base46-melange", "base46-jellybeans" }
-  if vim.tbl_contains(zsh_special_melange, vim.g.colorscheme) then
+  if vim.g.colorscheme == "base46-jellybeans" then
     zsh_lines_fg = 0.4
+    zsh_sugest_fg = 0.7
+  end
+
+  if vim.g.colorscheme == "base46-melange" then
+    zsh_lines_fg = 0.15
     zsh_sugest_fg = 0.7
   end
 

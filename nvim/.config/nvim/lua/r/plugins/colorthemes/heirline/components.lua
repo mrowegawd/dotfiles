@@ -213,8 +213,8 @@ local __colors = function()
     block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
 
     ---@diagnostic disable-next-line: param-type-mismatch
-    block_qfstatus_bg = H.get("QuickFixHeader", "bg"),
     block_qfstatus_fg = H.get("QuickFixHeader", "fg"),
+    block_qfstatus_bg = H.tint(H.get("PanelBottomNormal", "bg"), 0.4),
 
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
     --
