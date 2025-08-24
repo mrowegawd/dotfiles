@@ -80,4 +80,60 @@ set_win_state() {
 
 }
 
+win_big_zoom_toggle() {
+  TMP_DIR="/tmp/bspwm_window_states"
+  mkdir -p "$TMP_DIR"
+
+  # Get ID of focused window
+  wid=$(bspc query -N -n focused)
+  wid_hex=$(printf "0x%x" "$wid")
+
+  STATE_FILE="${TMP_DIR}/${wid_hex}.state"
+
+  # Get ukuran, posisi current window
+  get_window_size() {
+    info=$(xwininfo -id "$wid_hex")
+    x=$(echo "$info" | grep "Absolute upper-left X" | awk '{print $NF}')
+    y=$(echo "$info" | grep "Absolute upper-left Y" | awk '{print $NF}')
+    width=$(echo "$info" | grep "Width:" | awk '{print $2}')
+    height=$(echo "$info" | grep "Height:" | awk '{print $2}')
+    echo "$x $y $width $height"
+  }
+
+  # Toggle logic
+  if [[ -f "$STATE_FILE" ]]; then
+    # Restore original size
+    read -r x y width height <"$STATE_FILE"
+    bspc node -t floating
+    xdotool windowmove "$wid" "$x" "$y"
+    xdotool windowsize "$wid" "$width" "$height"
+    rm "$STATE_FILE"
+
+    dunstify "BSPC-WINCALL" "⤺ Restore to ${width}x${height}"
+  else
+    # Save current size, and then expand
+    read -r x y width height < <(get_window_size)
+    echo "$x $y $width $height" >"$STATE_FILE"
+
+    # Get ukuran layar (monitor aktif)
+    screen_width=$(xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f1)
+    screen_height=$(xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f2)
+
+    target_width=1000
+    target_height=800
+
+    # Hitung posisi tengah
+    center_x=$(((screen_width - target_width) / 2))
+    center_y=$(((screen_height - target_height) / 2))
+
+    bspc node -t floating
+
+    # Resize dan pindahkan ke tengah
+    xdotool windowsize "$wid" "$target_width" "$target_height"
+    xdotool windowmove "$wid" "$center_x" "$center_y"
+
+    dunstify "BSPC-WINCALL" "⤒ Expand to 1000x800"
+  fi
+}
+
 "$@"

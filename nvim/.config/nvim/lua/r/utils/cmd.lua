@@ -625,6 +625,20 @@ end
 --  ╏                           test                           ╏
 --  ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
+local function open_image_with_sxiv(url)
+  local filename = url:match "^.+/(.+)$" or "image.jpg"
+  local download_path = vim.fn.expand("/tmp/" .. filename)
+
+  -- Download file ke ~/Downloads/
+  vim.system({ "wget", "-q", url, "-O", download_path }, {}, function(dl)
+    if dl.code == 0 then
+      vim.system({ "sxiv", download_path }, { detach = true })
+    else
+      vim.notify("Download failed: " .. dl.stderr, vim.log.levels.ERROR)
+    end
+  end)
+end
+
 local title, kind
 
 local function is_tag_or_link_at(line, col, opts)
@@ -744,7 +758,15 @@ function M.open_with_mvp_or_sxiv(is_visual)
     mpv = {
       cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
     },
-    sxiv = { cmd = { "tsp", "svix", "--ontop" } },
+
+    -- Kendala dengan sxiv ini, tidak bisa open image URL
+    local_img = { cmd = { "tsp", "sxiv", "--ontop" } },
+
+    -- Kalau dengan feh ini, bisa membuka image URL, tapi ga bisa di zoom
+    URL_img_feh = { cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
+
+    -- Kalau cara ini kita download, check function open_image_with_sxiv
+    URL_img_DL = { cmd = {} },
   }
 
   if vim.bo.filetype == "git" then
@@ -768,26 +790,32 @@ function M.open_with_mvp_or_sxiv(is_visual)
     actions = {
       ["default"] = function(selected)
         local sel = selected[1]
+        local notif_msg
 
-        local cmds, notif_msg
-        for cmd_name, cmd_args in pairs(sel_open_with) do
-          if cmd_name == sel then
-            cmd_args.cmd[#cmd_args.cmd + 1] = url
-            cmds = cmd_args.cmd
-            notif_msg = cmd_name .. ": " .. url
+        if sel == "URL_img_DL" then
+          open_image_with_sxiv(url)
+          notif_msg = "DL and Sxiv: " .. url
+        else
+          local cmds
+          for cmd_name, cmd_args in pairs(sel_open_with) do
+            if cmd_name == sel then
+              cmd_args.cmd[#cmd_args.cmd + 1] = url
+              cmds = cmd_args.cmd
+              notif_msg = cmd_name .. ": " .. url
+            end
           end
-        end
 
-        if vim.bo.filetype == "git" then
-          vim.cmd(table.concat(cmds, " "))
-          return
-        end
+          if vim.bo.filetype == "git" then
+            vim.cmd(table.concat(cmds, " "))
+            return
+          end
 
-        local outputs = vim.system(cmds, { text = true }):wait()
-        if outputs.code ~= 0 then
-          ---@diagnostic disable-next-line: undefined-field
-          RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'")
-          return
+          local outputs = vim.system(cmds, { text = true }):wait()
+          if outputs.code ~= 0 then
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'")
+            return
+          end
         end
 
         ---@diagnostic disable-next-line: undefined-field

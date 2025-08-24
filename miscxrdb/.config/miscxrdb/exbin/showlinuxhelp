@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #shellcheck source=/dev/null
-. $HOME/.config/miscxrdb/fzf/fzf.config
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
 
 dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
@@ -111,6 +111,32 @@ newsboat() {
   is_path_exits "$NEWSBOAT_PATH"
   SELECT=$(awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NEWSBOAT_PATH" | sed 's/#//' |
     column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
+
+  copy_selected "$SELECT"
+}
+mpv() {
+  MPV_PATH="$HOME/.config/mpv/input.conf"
+  is_path_exits "$MPV_PATH"
+
+  EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $MPV_PATH'"
+  RELOAD_CMD="dunstify '$TITLE_DUNST' 'MPV snippet updated'"
+
+  SELECT=$(
+    awk '/^[a-zA-Z]/ && last {
+  if ($2 == "-n")
+    print $1,$3,"\t",last;
+  else
+    print $1,"\t\t",last;
+  }
+  {last=""} /^#/{last=$0}' "$MPV_PATH" | sort |
+      sed 's/#//g' |
+      fzf-tmux -xC -w 80% -h 60% \
+        --header="^x:edit  ^r:reload" \
+        --bind="ctrl-x:execute($EDIT_CMD)" \
+        --bind="ctrl-r:execute($RELOAD_CMD)" \
+        --border-label=" $TITLE_BORDER_LABEL [$1] " |
+      awk NF | tail -1
+  )
 
   copy_selected "$SELECT"
 }
@@ -530,6 +556,7 @@ main() {
   "journalctl") bulk_note_snippets "journalctl" ;;
   "lazygit") bulk_show_snippets "lazygit" ;;
   "molecule") bulk_note_snippets "molecule" ;;
+  "mpv") mpv "mpv" ;;
   "ncmpcpp") ncmpcpp "ncmpcpp" ;;
   "newsboat") newsboat "newsboat" ;;
   "npm") bulk_note_snippets "npm" ;;

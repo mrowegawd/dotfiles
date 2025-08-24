@@ -24,6 +24,10 @@ super + F9
 super + F10
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
 
+# state: toggle expand, shirnk
+super + F8
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall win_big_zoom_toggle
+
 ########################################
 # WINDOW
 ########################################
@@ -53,23 +57,23 @@ super + ctrl + {h,j,k,l}
 
 # window: rotate the windows
 super + R
-	      bspc node @parent -R 90
+        bspc node @parent -R 90
 
-# window: expand vertically
+# window: resize or expand window up
 super + shift + k
-	      bspc node -z top 0 -20; bspc node -z bottom 0 20
+        bspc node -z top 0 -20; bspc node -z bottom 0 20
 
-# window: shrink vertically
+# window: resize or expand window down
 super + shift + j
-	      bspc node -z top 0 20; bspc node -z bottom 0 -20
+        bspc node -z top 0 20; bspc node -z bottom 0 -20
 
-# window: expand horizontally
+# window: resize or expand window left
 super + shift + h
-	      bspc node -z left 20 0; bspc node -z right -20 0
+        bspc node -z left 20 0; bspc node -z right -20 0
 
-# window: shrink horizontally
+# window: resize or expand window right
 super + shift + l
-	      bspc node -z left -20 0; bspc node -z right 20 0
+        bspc node -z left -20 0; bspc node -z right 20 0
 
 ########################################
 # WORKSPACE

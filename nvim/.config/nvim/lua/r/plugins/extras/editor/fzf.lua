@@ -650,7 +650,7 @@ return {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
-            ["alt-p"] = function(...)
+            ["alt-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,

@@ -12,7 +12,7 @@ fi
 
 # Toggle between 0 and 5
 if [[ "$CURRENT_LEVEL" -eq 0 ]]; then
-  NEW_LEVEL=20
+  NEW_LEVEL=18
 else
   NEW_LEVEL=0
 fi
