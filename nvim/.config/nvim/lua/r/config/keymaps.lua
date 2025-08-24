@@ -462,10 +462,26 @@ RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: p
 -- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
 RUtils.map.nnoremap("k", function()
-  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "k"
+  local count = vim.v.count
+  local mode = vim.api.nvim_get_mode().mode
+  local use_gk = count == 0 and not mode:match "no"
+
+  local move = use_gk and "gk" or "k"
+  -- Jadi setiap kamu jump memakai `10j` atau `6j`, akan di automatis mark
+  local mark = tonumber(count) > 5 and "m'" .. count or ""
+
+  return mark .. move
 end, { expr = true })
+
 RUtils.map.nnoremap("j", function()
-  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
+  local count = vim.v.count
+  local mode = vim.api.nvim_get_mode().mode
+  local use_gj = count == 0 and not mode:match "no"
+
+  local move = use_gj and "gj" or "j"
+  local mark = tonumber(count) > 5 and "m'" .. count or ""
+
+  return mark .. move
 end, { expr = true })
 
 RUtils.map.nnoremap("<F1>", function()

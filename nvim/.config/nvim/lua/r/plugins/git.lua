@@ -210,7 +210,7 @@ return {
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee [pull request]" },
           create_label = { lhs = "<space>lc", desc = "create label [pull request]" },
           add_label = { lhs = "<space>la", desc = "add label [pull request]" },
-          copy_sha = { lhs = "<C-e>", desc = "copy commit SHA to system clipboard [pull request]" },
+          copy_sha = { lhs = "<space>gY", desc = "copy commit SHA to system clipboard [pull request]" },
           remove_label = { lhs = "<space>ld", desc = "remove label [pull request]" },
           goto_issue = { lhs = "<space>gi", desc = "navigate to a local repo issue [pull request]" },
           add_comment = { lhs = "<space>ca", desc = "add comment [pull request]" },
@@ -274,7 +274,7 @@ return {
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [review diff]" },
           toggle_viewed = { lhs = "<space><space>", desc = "toggle viewer viewed state [review diff]" },
           goto_file = { lhs = "gf", desc = "go to file [review diff]" },
-          copy_sha = { lhs = "<C-e>", desc = "copy commit SHA to system clipboard [review diff" },
+          copy_sha = { lhs = "<space>gY", desc = "copy commit SHA to system clipboard [review diff" },
           review_commits = { lhs = "<space>C", desc = "review PR commits [review diff]" },
         },
         file_panel = {
