@@ -618,9 +618,9 @@ local ctrl_o_nvim = function()
   }, { winopts = { title = "Bulk: ctrl-o cmds", row = row, col = col } })
 end
 
-RUtils.map.nnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.tnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.vnoremap("<a-O>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
+RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
+RUtils.map.vnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   RUtils.fzflua.open_cmd_bulk({

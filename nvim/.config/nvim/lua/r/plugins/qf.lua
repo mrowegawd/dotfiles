@@ -61,6 +61,9 @@ return {
       { "<Leader>fn" },
       { "<Leader>fp" },
 
+      { "<Leader>qq" }, -- save
+      { "<Leader>qy" }, -- load
+
       { "<Leader>qb" }, -- mark
       { "<Leader>qf" }, -- select mark fzf
       { "<Leader>qc" }, -- copy
@@ -119,8 +122,8 @@ return {
       },
       keymap = {
         quickfix = {
-          save_local = "<Leader>qs",
-          load_local = "<Leader>qS",
+          save_local = "<Leader>qq",
+          load_local = "<Leader>qy",
 
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",
