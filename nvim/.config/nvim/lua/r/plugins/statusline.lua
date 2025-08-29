@@ -55,6 +55,7 @@ return {
               "snacks_dashboard",
               "toggleterm",
               "orgagenda",
+              "octo_panel",
 
               "snacks_notif",
             }, ft)
