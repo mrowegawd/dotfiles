@@ -383,12 +383,8 @@ set_delta() {
   DELTA_HUNK_HEADER_BG=$(grep -i delta_hunk_header_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/^hunk-header-style.*/hunk-header-style = syntax bold \"$DELTA_HUNK_HEADER_BG\"/g" "$_DELTA_PATH"
 
-  # For line number
-  DELTA_LINE_NUMBER_MINUS=$(grep -i delta_line_number_minus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$DELTA_LINE_NUMBER_MINUS\" italic/g" "$_DELTA_PATH"
-
-  DELTA_LINE_NUMBER_PLUS=$(grep -i delta_line_number_plus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$DELTA_LINE_NUMBER_PLUS\" italic/g" "$_DELTA_PATH"
+  DELTA_LINE_NUMBER_FG=$(grep -i delta_line_number_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^line-numbers-zero-style.*/line-numbers-zero-style = \"$DELTA_LINE_NUMBER_FG\"/g" "$_DELTA_PATH"
 
   # For hunk plus
   DELTA_HUNK_PLUS_FG=$(grep -i delta_hunk_plus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -407,6 +403,13 @@ set_delta() {
   DELTA_HUNK_EMP_MINUS_FG=$(grep -i delta_hunk_emp_minus_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   DELTA_HUNK_EMP_MINUS_BG=$(grep -i delta_hunk_emp_minus_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/^minus-emph-style.*/minus-emph-style = \"$DELTA_HUNK_EMP_MINUS_FG\" bold \"$DELTA_HUNK_EMP_MINUS_BG\"/g" "$_DELTA_PATH"
+
+  # For line number
+  DELTA_LINE_NUMBER_MINUS=$(grep -i delta_line_number_minus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$DELTA_LINE_NUMBER_MINUS\" italic/g" "$_DELTA_PATH"
+
+  DELTA_LINE_NUMBER_PLUS=$(grep -i delta_line_number_plus: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$DELTA_LINE_NUMBER_PLUS\" italic/g" "$_DELTA_PATH"
 
 }
 set_zathura() {

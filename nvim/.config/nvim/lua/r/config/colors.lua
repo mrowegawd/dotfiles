@@ -48,11 +48,11 @@ local base_cl = {
   pmenu_sp_alter = 2.5,
   pmenu_thumb_bg_alter = 0.4,
   quickfixline_alter = 0.45,
-  quickfixline_header_bg_alter = 0.2,
-  quickfixline_header_fg_alter = 0.85,
+  quickfixline_header_bg_alter = 0.4,
+  quickfixline_header_fg_alter = 1.7,
   quickfixline_header_tint_bg_alter = 0,
   quickfixline_header_tint_fg_alter = 0,
-  quickfixline_linenr_fg_alter = 0.5,
+  quickfixline_linenr_fg_alter = 0.65,
   quickfixline_separator_fg_alter = -0.35,
   quickfixline_sp_alter = 1,
   snacks_indent_scope_fg_alter = 0.2,
@@ -92,16 +92,26 @@ local base_cl = {
   snacks_notifier_border_error_fg = -0.3,
 
   -- diff
-  diffadd_bg_alter = -0.75,
-  diffadd_fg_alter = -0.4,
-  diffchange_bg_alter = -0.75,
-  diffchange_fg_alter = -0.3,
-  diffdelete_bg_alter = -0.74,
-  diffdelete_fg_alter = -0.2,
-  difffile_bg_alter = -0.68,
+  diffadd_fg_alter = -0.2,
+  diffadd_bg_alter = 0.2,
+
+  diffchange_fg_alter = -0.2,
+  diffchange_bg_alter = 0.2,
+
+  diffdelete_fg_alter = -0.1,
+  diffdelete_bg_alter = 0.18,
+
   difffile_fg_alter = -0.15,
-  difftext_bg_alter = -0.59,
-  difftext_fg_alter = 0.35,
+  difffile_bg_alter = -0.68,
+
+  difftext_fg_alter = 0.4,
+  difftext_bg_alter = 0.5,
+
+  delta_plus_fg_alter = 0.9,
+  delta_plus_bg_alter = -0.4,
+
+  delta_minus_fg_alter = 1,
+  delta_minus_bg_alter = -0.4,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -131,6 +141,10 @@ local function reset_base_alter(themes, alter_base)
     cursorline_alter = "cursorline_alter",
     cursorline_fg_alter = "cursorline_fg_alter",
     dapstopped_bg_alter = "dapstopped_bg_alter",
+    delta_minus_bg_alter = "delta_minus_bg_alter",
+    delta_minus_fg_alter = "delta_minus_fg_alter",
+    delta_plus_bg_alter = "delta_plus_bg_alter",
+    delta_plus_fg_alter = "delta_plus_fg_alter",
     diffadd_bg_alter = "diffadd_bg_alter",
     diffadd_fg_alter = "diffadd_fg_alter",
     diffchange_bg_alter = "diffchange_bg_alter",
@@ -227,9 +241,10 @@ reset_base_alter({ "base46-jellybeans" }, {
   nontext_fg_alter = 2.5,
   normal_keyword_alter = 0.14,
   panel_sidebar_bg_alter = 4,
-  pmenu_bg_alter = 1.3,
+  pmenu_bg_alter = 1.5,
   pmenu_sp_alter = 3,
   quickfixline_alter = 0.6,
+  quickfixline_header_fg_alter = 1.75,
   render_markdown_code_bg_alter = 0.9,
   render_markdown_code_inline_bg_alter = 0.15,
   render_markdown_code_inline_fg_alter = 0.05,
@@ -250,7 +265,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   noice_cmdline_fsg_alter = 0.4,
   nontext_fg_alter = 1.8,
   normal_keyword_alter = 0.16,
-  pmenu_bg_alter = 0.65,
+  pmenu_bg_alter = 0.8,
   quickfixline_linenr_fg_alter = 0.35,
   quickfixline_sp_alter = 0.7,
   render_markdown_code_bg_alter = 0.38,
@@ -258,6 +273,9 @@ reset_base_alter({ "base46-kanagawa" }, {
   snacks_indent_scope_fg_alter = 0.22,
   tabline_fg_alter = 0.55,
   winseparator_alter = 0.3,
+})
+reset_base_alter({ "base46-jabuti" }, {
+  pmenu_bg_alter = 0.5,
 })
 reset_base_alter({ "base46-material-darker" }, {
   comment_fg_alter = 0.6,
@@ -371,10 +389,12 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   pmenu_sel_bg_alter = 0.13,
   pmenu_sp_alter = 1,
   quickfixline_alter = 0.2,
-  quickfixline_header_bg_alter = -0.05,
-  quickfixline_header_fg_alter = 0.7,
-  quickfixline_linenr_fg_alter = 0.1,
+
+  quickfixline_header_bg_alter = 0.2,
+  quickfixline_header_fg_alter = 1,
+  quickfixline_linenr_fg_alter = 0.2,
   quickfixline_sp_alter = 0.4,
+
   render_markdown_code_bg_alter = 0.02,
   render_markdown_code_inline_bg_alter = 0.04,
   snacks_notifier_border_error_fg = -0.1,
@@ -384,16 +404,14 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   winbar_file_path_fg_alter = 0.5,
   winseparator_alter = 0.08,
 
-  diffadd_bg_alter = -0.58,
-  diffadd_fg_alter = -0.25,
-  diffchange_bg_alter = -0.58,
-  diffchange_fg_alter = -0.25,
-  diffdelete_bg_alter = -0.55,
-  diffdelete_fg_alter = -0.15,
-  difffile_bg_alter = -0.5,
   difffile_fg_alter = 0.05,
-  difftext_bg_alter = -0.49,
-  difftext_fg_alter = 0.1,
+  difffile_bg_alter = -0.5,
+
+  difftext_fg_alter = 0.2,
+  difftext_bg_alter = 0.3,
+
+  delta_plus_fg_alter = 1.2,
+  delta_minus_fg_alter = 1.5,
 })
 reset_base_alter({ "base46-zenburn" }, {
   blink_cmp_label_kind_fg_alter = 0.7,
@@ -410,9 +428,13 @@ reset_base_alter({ "base46-zenburn" }, {
   normal_keyword_alter = 0.1,
   pmenu_bg_alter = 0.2,
   pmenu_sp_alter = 1,
+
   quickfixline_alter = 0.25,
-  quickfixline_header_bg_alter = -0.05,
-  quickfixline_header_fg_alter = 0.7,
+  quickfixline_header_bg_alter = 0.2,
+  quickfixline_header_fg_alter = 1.3,
+  quickfixline_linenr_fg_alter = 0.2,
+  quickfixline_sp_alter = 0.4,
+
   render_markdown_code_bg_alter = 0.07,
   render_markdown_code_inline_bg_alter = 0.04,
   snacks_indent_scope_fg_alter = 0.11,
@@ -423,16 +445,14 @@ reset_base_alter({ "base46-zenburn" }, {
   winbar_file_path_fg_alter = 0.6,
   winseparator_alter = 0.12,
 
-  diffadd_bg_alter = -0.75,
-  diffadd_fg_alter = -0.32,
-  diffchange_bg_alter = -0.7,
-  diffchange_fg_alter = -0.32,
-  diffdelete_bg_alter = -0.7,
-  diffdelete_fg_alter = -0.2,
   difffile_bg_alter = -0.55,
   difffile_fg_alter = -0.1,
-  difftext_bg_alter = -0.5,
-  difftext_fg_alter = 0.2,
+
+  difftext_fg_alter = 0.6,
+  difftext_bg_alter = 0.4,
+
+  delta_plus_fg_alter = 1.2,
+  delta_minus_fg_alter = 1.5,
 })
 reset_base_alter({ "lackluster" }, {
   Directory = { fg = "#7788aa", bg = "NONE" },
@@ -456,11 +476,10 @@ reset_base_alter({ "lackluster" }, {
   outline_indent_fg_alter = 0.15,
   pmenu_bg_alter = 2.2,
   pmenu_sp_alter = 5,
+
   quickfixline_alter = 0.3,
-  quickfixline_header_bg_alter = 0.05,
-  quickfixline_header_fg_alter = 0.85,
-  quickfixline_linenr_fg_alter = 0.5,
-  quickfixline_sp_alter = 0.44,
+  quickfixline_sp_alter = 0.45,
+
   render_markdown_code_bg_alter = 1.35,
   render_markdown_code_inline_bg_alter = 0.35,
   snacks_notifier_info_fg = 1.6,
@@ -469,14 +488,14 @@ reset_base_alter({ "lackluster" }, {
   winbar_keyword = 0.9,
   winseparator_alter = 1.2,
 
-  diffadd_fg_alter = -0.4,
-  diffadd_bg_alter = -0.75,
-  diffchange_fg_alter = -0.4,
-  diffchange_bg_alter = -0.75,
-  diffdelete_fg_alter = -0.35,
-  diffdelete_bg_alter = -0.75,
-  difftext_fg_alter = 0.2,
-  difftext_bg_alter = -0.55,
+  diffadd_fg_alter = -0.2,
+  diffadd_bg_alter = 0.18,
+
+  diffchange_fg_alter = -0.3,
+  diffchange_bg_alter = 0.18,
+
+  diffdelete_fg_alter = -0.3,
+  diffdelete_bg_alter = 0.2,
 })
 reset_base_alter({ "neogotham" }, {
   comment_fg_alter = 0.8,
@@ -495,16 +514,6 @@ reset_base_alter({ "neogotham" }, {
   trouble_indent_fg_alter = 0.6,
   winbar_file_path_fg_alter = 0.7,
   winseparator_alter = 1.4,
-
-  -- quickfixline_alter = 0.6,
-  quickfixline_header_bg_alter = 0.05,
-  quickfixline_header_fg_alter = 1,
-  quickfixline_separator_fg_alter = 0.15,
-  quickfixline_linenr_fg_alter = 0.35,
-  -- quickfixline_header_tint_bg_alter = 0,
-  -- quickfixline_header_tint_fg_alter = 0,
-  -- quickfixline_linenr_fg_alter = 3,
-  -- quickfixline_separator_fg_alter = -0.35,
 })
 reset_base_alter({ "rose-pine-dawn" }, {
   CurSearch = {
@@ -742,32 +751,6 @@ local general_overrides = function()
     { FoldedSign = { inherit = "Folded", bg = "NONE" } },
 
     -- ╔═════════════════════════════════════════════════════════╗
-    -- ║                           QF                            ║
-    -- ╚═════════════════════════════════════════════════════════╝
-    {
-      QuickFixLine = {
-        fg = "NONE",
-        bg = "NONE",
-        sp = { from = "NormalKeyword", attr = "bg", alter = quickfixline_sp_alter },
-        underline = false,
-        bold = true,
-        reverse = false,
-      },
-    },
-    {
-      QuickFixHeader = {
-        fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_fg_alter },
-        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_bg_alter },
-      },
-    },
-    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
-    { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = quickfixline_separator_fg_alter } } },
-    { qfSeparator2 = { link = "qfSeparator1" } },
-    { Delimiter = { link = "qfSeparator1" } },
-    { QuickFixFileName = { bg = "NONE" } },
-    { qfFileName = { bg = "NONE" } },
-
-    -- ╔═════════════════════════════════════════════════════════╗
     -- ║                          SPELL                          ║
     -- ╚═════════════════════════════════════════════════════════╝
     { SpellBad = { undercurl = true, bg = "NONE", fg = "NONE", sp = "green" } },
@@ -783,8 +766,9 @@ local general_overrides = function()
     -- { diffDiffer = { link = 'WarningMsg' } },
     {
       diffFile = {
-        fg = { from = "Directory", attr = "fg", alter = difffile_fg_alter },
-        bg = { from = "Directory", attr = "fg", alter = difffile_bg_alter },
+        fg = { from = "Directory", attr = "fg", alter = difffile_bg_alter },
+        bg = { from = "Directory", attr = "fg", alter = difffile_fg_alter },
+        bold = true,
       },
     },
     -- { diffIdentical = { link = 'WarningMsg' } },
@@ -798,29 +782,42 @@ local general_overrides = function()
       -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
       diffAdd = {
         fg = H.tint(dark_green, diffadd_fg_alter),
-        bg = H.tint(dark_green, diffadd_bg_alter),
+        bg = H.tint(H.darken(dark_green, diffadd_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffChange = {
         fg = H.tint(dark_yellow, diffchange_fg_alter),
-        bg = H.tint(dark_yellow, diffchange_bg_alter),
+        bg = H.tint(H.darken(dark_yellow, diffchange_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffDelete = {
         fg = H.tint(dark_red, diffdelete_fg_alter),
-        bg = H.tint(dark_red, diffdelete_bg_alter),
+        bg = H.tint(H.darken(dark_red, diffdelete_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffText = {
-        fg = H.tint(dark_yellow, difftext_fg_alter),
-        bg = H.tint(dark_yellow, difftext_bg_alter),
+        fg = { from = "diffChange", attr = "fg", alter = difftext_fg_alter },
+        bg = { from = "diffChange", attr = "bg", alter = difftext_bg_alter },
         reverse = false,
+      },
+    },
+
+    {
+      deltaPlus = {
+        fg = H.tint(H.darken(dark_green, delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_green, delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
+      },
+    },
+    {
+      deltaMinus = {
+        fg = H.tint(H.darken(dark_red, delta_minus_fg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_red, delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
       },
     },
 
@@ -834,6 +831,10 @@ local general_overrides = function()
     { GitSignsAdd = { bg = "NONE", fg = dark_green } },
     { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
+
+    -- { GitSignsAdd = { bg = { from = "diffAdd", attr = "bg" }, fg = dark_green } },
+    -- { GitSignsChange = { bg = { from = "diffChange", attr = "bg" }, fg = dark_yellow } },
+    -- { GitSignsDelete = { bg = { from = "diffDelete", attr = "bg" }, fg = dark_red } },
 
     {
       GitSignsAddInline = {
@@ -2062,12 +2063,8 @@ local function set_panel_highlight()
     },
     {
       QuickFixHeader = {
-        bg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_header_bg_alter },
-      },
-    },
-    {
-      QuickFixHeader = {
-        fg = { from = "QuickFixHeader", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_header_bg_alter },
+        fg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_header_fg_alter },
       },
     },
     { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_linenr_fg_alter } } },

@@ -140,8 +140,6 @@ local __colors = function()
     block_darken_bg = 0.1,
     block_darken_fg = 0.15,
     block_fg = 0.25,
-    block_qfstatus_bg = 0.2,
-    block_qfstatus_fg = -0.4,
 
     keyword_fg = -0.05,
 
@@ -168,8 +166,6 @@ local __colors = function()
     block_darken_bg = 0.4,
     block_darken_fg = 0.3,
     block_fg = 0.5,
-    block_qfstatus_bg = vim.g.colorscheme == "lackluster" and 0.4 or 0.13,
-    block_qfstatus_fg = vim.g.colorscheme == "lackluster" and 2 or 0.8,
 
     keyword_fg = 0.7,
 
@@ -212,16 +208,10 @@ local __colors = function()
     block_darken_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_darken_fg),
     block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
 
-    ---@diagnostic disable-next-line: param-type-mismatch
-    block_qfstatus_fg = H.get("QuickFixHeader", "fg"),
-    block_qfstatus_bg = H.tint(H.get("PanelBottomNormal", "bg"), 0.4),
-
     block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
-    --
+
     block_fg_qf = H.tint(H.get("Keyword", "fg"), 0.5),
     block_bg_qf = H.tint(H.get("Keyword", "fg"), -0.5),
-    block_fg_loclist = H.tint(H.get("Keyword", "fg"), -0.8),
-    block_bg_loclist = H.tint(H.get("Keyword", "fg"), 0.35),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
@@ -229,9 +219,14 @@ local __colors = function()
     block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")), -0.5),
     block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.1),
 
-    winbar_fg = H.get("WinbarFilepath", "fg"),
+    winbar_fg = H.get("Function", "fg"),
     winbar_bg = H.get("PanelBottomNormal", "bg"),
     winbar_keyword = H.get("WinbarKeyword", "fg"),
+
+    winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
+    winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),
+    winbar_quickfix_fg_loc = H.tint(H.get("Keyword", "fg"), -0.8),
+    winbar_quickfix_bg_loc = H.tint(H.get("Keyword", "fg"), 0.35),
 
     winbar_dap_keyword = H.tint(
       H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")),
@@ -662,8 +657,8 @@ M.QuickfixStatus = {
       local fg = colors.block_fg_qf
       local bg = colors.block_bg_qf
       if RUtils.qf.is_loclist() then
-        fg = colors.block_fg_loclist
-        bg = colors.block_bg_loclist
+        fg = colors.winbar_quickfix_fg_loc
+        bg = colors.winbar_quickfix_bg_loc
       end
       return { fg = fg, bg = bg, bold = true }
     end,
@@ -673,14 +668,14 @@ M.QuickfixStatus = {
     hl = function()
       local fg = colors.block_bg_qf
       if RUtils.qf.is_loclist() then
-        fg = colors.block_bg_loclist
+        fg = colors.winbar_quickfix_bg_loc
       end
       return { fg = fg, bg = colors.winbar_bg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.winbar_quickfix_bg },
   },
   {
     provider = function(self)
@@ -708,15 +703,15 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_qfstatus_fg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_quickfix_fg, bg = colors.winbar_quickfix_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_qfstatus_bg, bg = colors.winbar_bg },
+    hl = { fg = colors.winbar_quickfix_bg, bg = colors.winbar_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.winbar_quickfix_bg },
   },
   {
     provider = function(self)
@@ -728,11 +723,11 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.block_qfstatus_fg, bg = colors.block_qfstatus_bg },
+    hl = { fg = colors.winbar_quickfix_fg, bg = colors.winbar_quickfix_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.block_qfstatus_bg, bg = colors.winbar_bg },
+    hl = { fg = colors.winbar_quickfix_bg, bg = colors.winbar_bg },
   },
 }
 M.TroubleStatus = {
