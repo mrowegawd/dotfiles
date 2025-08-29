@@ -205,35 +205,35 @@ return {
         "<Leader>df",
         function()
           RUtils.fzflua.open_cmd_bulk({
-            ["Breakpoint"] = function()
+            ["Breakpoint - with conditions"] = function()
               return require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
             end,
-            ["Breakpoint clear all"] = function()
+            ["Breakpoint - clear all"] = function()
               return require("dap").clear_breakpoints()
             end,
-            ["Breakpoint list qf"] = function()
+            ["Breakpoint - sending to qf"] = function()
               return require("dap").list_breakpoints(true)
             end,
-            ["Run at cursor"] = function()
+            ["Run - at cursor"] = function()
               return require("dap").run_to_cursor()
             end,
-            ["Run last"] = function()
+            ["Run - last"] = function()
               return require("dap").run_last()
             end,
-            ["Run or continue"] = function()
+            ["Run - or continue"] = function()
               return require("dap").continue()
             end,
-            ["Print out the session"] = function()
+            ["Print - out the session"] = function()
               return RUtils.info(vim.inspect(require("dap").session()))
             end,
-            ["Quit or close"] = function()
+            ["Run - quit or close"] = function()
               require("dap").terminate()
               require("dapui").close()
             end,
-            ["GUI toggle"] = function()
+            ["GUI - Toggle"] = function()
               return require("dapui").toggle()
             end,
-            ["GUI reset"] = function()
+            ["GUI - reset"] = function()
               return require("dapui").open { reset = true }
             end,
           }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug" } })

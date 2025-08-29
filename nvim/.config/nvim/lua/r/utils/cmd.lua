@@ -55,16 +55,16 @@ function M.windows_is_opened(wins)
 
   local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0, ft = "" }
   for _, winnr in ipairs(vim.api.nvim_list_wins()) do
-    local winbufnr = vim.fn.winbufnr(winnr)
+    local win_bufnr = vim.api.nvim_win_get_buf(winnr)
 
-    if tonumber(winbufnr) == 0 then
+    if tonumber(win_bufnr) == 0 then
       return outline_tbl
     end
 
-    local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
-    local buf_buftype = vim.api.nvim_get_option_value("buftype", { buf = winbufnr })
+    local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = win_bufnr })
+    local buf_buftype = vim.api.nvim_get_option_value("buftype", { buf = win_bufnr })
 
-    local winid = vim.fn.win_findbuf(winbufnr)[1] -- example winid: 1004, 1005
+    local winid = vim.fn.win_findbuf(win_bufnr)[1] -- example winid: 1004, 1005
     -- local win_config = vim.api.nvim_win_get_config(winid)
     -- local is_float = win_config.relative ~= ""
 
@@ -74,7 +74,7 @@ function M.windows_is_opened(wins)
     -- RUtils.info "-----------------------------------"
 
     if vim.tbl_contains(ft_wins, buf_ft) or vim.tbl_contains(ft_wins, buf_buftype) then
-      outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid, ft = buf_ft }
+      outline_tbl = { found = true, winbufnr = win_bufnr, winnr = winnr, winid = winid, ft = buf_ft }
     end
   end
 
@@ -1234,18 +1234,20 @@ function M.change_colors()
 
       hunk_header_bg = H.tint(H.get("FzfLuaNormal", "bg"), 0.2),
 
-      line_number_plus = H.get("diffAdd", "fg"),
-      line_number_minus = H.get("diffDelete", "fg"),
+      line_number_fg = H.tint(H.get("Comment", "fg"), -0.05),
+
+      line_number_plus = H.get("deltaPlus", "fg"),
+      line_number_minus = H.get("deltaMinus", "fg"),
 
       hunk_plus_fg = H.get("diffAdd", "fg"),
       hunk_plus_bg = H.get("diffAdd", "bg"),
-      hunk_emp_plus_fg = H.tint(H.get("diffAdd", "fg"), 0.4),
-      hunk_emp_plus_bg = H.tint(H.get("diffAdd", "bg"), 0.4),
+      hunk_emp_plus_fg = H.get("deltaPlus", "fg"),
+      hunk_emp_plus_bg = H.get("deltaPlus", "bg"),
 
       hunk_minus_fg = H.get("diffDelete", "fg"),
       hunk_minus_bg = H.get("diffDelete", "bg"),
-      hunk_emp_minus_fg = H.tint(H.get("diffDelete", "fg"), 0.4),
-      hunk_emp_minus_bg = H.tint(H.get("diffDelete", "bg"), 0.4),
+      hunk_emp_minus_fg = H.get("deltaMinus", "fg"),
+      hunk_emp_minus_bg = H.get("deltaMinus", "bg"),
     },
     eww = {
       bg = H.get("Normal", "bg"),

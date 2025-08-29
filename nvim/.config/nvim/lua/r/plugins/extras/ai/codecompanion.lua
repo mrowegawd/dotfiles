@@ -201,10 +201,11 @@ return {
       {
         "<Leader>af",
         function()
+          local fzf_lua = require "fzf-lua"
           local git_ft_stuff = { "fugitive" }
           local prompt_cmds = {
             -- Ask a question
-            ["Ask ai a question"] = { cmd = "CodeCompanion /ai_chat", ft = {} },
+            ["Ask - ai"] = { cmd = "CodeCompanion /ai_chat", ft = {} },
 
             -- Explain stuff
             ["Code - Explain to me?"] = { cmd = "CodeCompanion /explain_to_me", ft = {} },
@@ -270,14 +271,26 @@ return {
           end
 
           local results_formats = function()
+            local width_cmd = 1
+            for idx, _ in pairs(prompt_cmds) do
+              local str_x = vim.split(idx, " ")
+              if width_cmd < #str_x[1] then
+                width_cmd = #str_x[1]
+              end
+            end
+
             local results = {}
-            for i, x in pairs(prompt_cmds) do
+            for idx, x in pairs(prompt_cmds) do
               if vim.tbl_contains(git_ft_stuff, vim.bo.filetype) then
                 if is_tables_are_equal(git_ft_stuff, x.ft) then
-                  results[#results + 1] = i
+                  local str_x = vim.split(idx, "-")
+                  local str_x_hl = fzf_lua.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+                  results[#results + 1] = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
                 end
               else
-                results[#results + 1] = i
+                local str_x = vim.split(idx, "-")
+                local str_x_hl = fzf_lua.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+                results[#results + 1] = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
               end
             end
 
@@ -301,12 +314,28 @@ return {
               ),
             },
             actions = {
-              ["default"] = function(selected)
-                local sel = selected[1]
-                local prompt = prompt_cmds[sel]
+              ["default"] = function(selected, _)
+                if not selected then
+                  return
+                end
 
-                is_get_lines()
-                vim.cmd(prompt.cmd)
+                local sel = selected[1]
+
+                local display_str = fzf_lua.utils.strip_ansi_coloring(sel)
+                local display_str_split = vim.split(display_str, "-")
+
+                local build_idx_cmd = RUtils.cmd.strip_whitespace(display_str_split[1])
+                  .. " - "
+                  .. RUtils.cmd.strip_whitespace(display_str_split[2])
+
+                local prompt = prompt_cmds[build_idx_cmd]
+                if prompt then
+                  is_get_lines()
+                  vim.cmd(prompt.cmd)
+                  return
+                end
+
+                RUtils.info "Selection doesn't match!"
               end,
             },
           }
