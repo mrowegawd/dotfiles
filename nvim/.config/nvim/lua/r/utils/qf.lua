@@ -60,6 +60,15 @@ function M.is_loclist(buf)
   return vim.fn.getloclist(buf, { filewinid = 1 }).filewinid ~= 0
 end
 
+function M.is_quickfix_win(winnr)
+  return vim.fn.getwinvar(winnr, "&buftype") == "quickfix"
+end
+
+function M.is_loclist_win(winnr)
+  local wininfo = vim.fn.getwininfo(vim.fn.win_getid(winnr))[1]
+  return M.is_quickfix_win(winnr) and wininfo.loclist == 1
+end
+
 function M.get_qf_cursor_idx()
   local cur_list = {}
   local count = vim.v.count

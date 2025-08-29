@@ -123,19 +123,39 @@ vim.keymap.set("v", "<c-v>", function()
 end, { buffer = vim.api.nvim_get_current_buf() })
 
 keymap.set("n", "o", function()
-  RUtils.map.feedkey("<CR>", "n")
-  vim.schedule(function()
-    local folded_line = vim.fn.foldclosed(vim.fn.line ".")
-    if folded_line ~= -1 then
-      vim.cmd "normal! zvzz" -- buka fold
-      return
-    end
-    vim.cmd "normal! zz"
-  end)
+  if RUtils.qf.is_loclist() then
+    RUtils.map.feedkey("<CR>", "n")
+    vim.schedule(function()
+      local folded_line = vim.fn.foldclosed(vim.fn.line ".")
+      if folded_line ~= -1 then
+        vim.cmd "normal! zvzz" -- buka fold
+        return
+      end
+      vim.cmd "normal! zz"
+    end)
+    return
+  end
+
+  RUtils.fold.handle_qf_open(true, "only", true)
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: open item",
 })
+
+-- keymap.set("n", "<CR>", function()
+--   RUtils.map.feedkey("<CR>", "n")
+--   vim.schedule(function()
+--     local folded_line = vim.fn.foldclosed(vim.fn.line ".")
+--     if folded_line ~= -1 then
+--       vim.cmd "normal! zvzz" -- buka fold
+--       return
+--     end
+--     vim.cmd "normal! zz"
+--   end)
+-- end, {
+--   buffer = api.nvim_get_current_buf(),
+--   desc = "QF: open item",
+-- })
 
 keymap.set("n", "<Leader>ff", function()
   local actions = require "fzf-lua.actions"
