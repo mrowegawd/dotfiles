@@ -432,23 +432,33 @@ end
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: Search and replace under cursor" })
 RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: Search and replace under cursor (visual)" })
 RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: open lazy log [lazy]" })
-RUtils.map.nnoremap("<Leader>oO", function()
-  return RUtils.cmd.open_with_mvp_or_sxiv()
-end, { desc = "Open: mpv or svix" })
-RUtils.map.vnoremap("<Leader>oO", function()
-  return RUtils.cmd.open_with_mvp_or_sxiv(true)
-end, { desc = "Open: mpv or svix (visual" })
-RUtils.map.nnoremap("<Leader>oo", function()
-  return RUtils.cmd.follow_link(false)
+
+RUtils.map.nnoremap("<Leader>ob", function()
+  RUtils.cmd.open_with "browser"
 end, { desc = "Open: browse/link under cursor" })
-RUtils.map.vnoremap("<Leader>oo", function()
-  return RUtils.cmd.follow_link(true)
+RUtils.map.vnoremap("<Leader>ob", function()
+  RUtils.cmd.open_with("browser", true)
 end, { desc = "Open: browse/link under cursor (visual)" })
+
+RUtils.map.nnoremap("<Leader>oB", function()
+  return RUtils.cmd.open_with "mpv or svix"
+end, { desc = "Open: mpv or svix" })
+RUtils.map.vnoremap("<Leader>oB", function()
+  return RUtils.cmd.open_with("mpv or svix", true)
+end, { desc = "Open: mpv or svix (visual" })
+
+RUtils.map.nnoremap("<Leader>oo", function()
+  RUtils.cmd.open_with "go to file"
+end, { desc = "Open: open file under cursor" })
+RUtils.map.vnoremap("<Leader>oo", function()
+  RUtils.cmd.open_with("go to file", true)
+end, { desc = "Open: open file under cursor (visual)" })
+
 RUtils.map.vnoremap("<Leader>eb", function()
-  return RUtils.cmd.browse_this_error(true)
+  RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser (visual)" })
 RUtils.map.nnoremap("<Leader>eb", function()
-  return RUtils.cmd.browse_this_error(true)
+  RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -562,7 +572,7 @@ RUtils.map.nnoremap("<Leader>oI", function()
   vim.treesitter.inspect_tree()
   vim.api.nvim_input "I"
 end, { desc = "Open: inspect tree" })
-RUtils.cmd.create_command("Snippets", RUtils.cmd.EditSnippet, { desc = "Misc: edit snippet file" })
+RUtils.cmd.create_command("Snippets", RUtils.cmd.edit_snippet, { desc = "Misc: edit snippet file" })
 RUtils.cmd.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.cmd.create_command("InfoOption", RUtils.cmd.infoFoldPreview, { desc = "Misc: echo options" })
 RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
@@ -726,13 +736,23 @@ local fm_manager = vim.env.TERM_FILEMANAGER
 RUtils.map.nnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
 end, { desc = "CTRL_o: btop" })
-
--- RUtils.map.xnoremap("<a-B>", function()
---   RUtils.terminal.float_btop()
--- end, { desc = "CTRL_o: btop" })
 RUtils.map.vnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
 end, { desc = "CTRL_o: btop" })
+
+RUtils.map.nnoremap("<a-M>", function()
+  RUtils.terminal.float_newsboat()
+end, { desc = "CTRL_o: newsboat" })
+RUtils.map.vnoremap("<a-M>", function()
+  RUtils.terminal.float_newsboat()
+end, { desc = "CTRL_o: newsboat" })
+
+RUtils.map.nnoremap("<a-C>", function()
+  RUtils.terminal.float_rkill()
+end, { desc = "CTRL_o: rkill" })
+RUtils.map.vnoremap("<a-C>", function()
+  RUtils.terminal.float_rkill()
+end, { desc = "CTRL_o: rkill" })
 
 local go_left_tmux = function()
   vim.system { "tmux", "select-pane", "-L" }

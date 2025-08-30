@@ -273,7 +273,7 @@ local function picker(contents, actions, opts)
         M.find_local_titles(path_item)
       end,
 
-      ["alt-h"] = function(selected, _)
+      ["alt-i"] = function(selected, _)
         local sel = selected[1]
         sel = vim.split(sel, " ")
 
@@ -285,7 +285,7 @@ local function picker(contents, actions, opts)
         require("fzf-lua").actions.resume()
       end,
 
-      ["alt-o"] = function()
+      ["alt-h"] = function()
         if #insert_tags == 0 then
           ---@diagnostic disable-next-line: undefined-field
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
@@ -527,7 +527,7 @@ local function picker(contents, actions, opts)
           horizontal = "right:50%", -- right|left:size
         },
       },
-      fzf_opts = { ["--header"] = [[^g:grep  ^r:reload  ^f:greptitle  m-h:addtag  m-o:filtertag]] },
+      fzf_opts = { ["--header"] = [[^r:reload  ^g:grep  ^f:greptitle  m-i:filtertag  m-i:addtag]] },
       actions = actions,
     }, opts)
   )

@@ -122,7 +122,7 @@ return {
       -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
       { "<Localleader>ss", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
-      { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
+      -- { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
       {
         "<Localleader>sN",
         function()
@@ -147,8 +147,8 @@ return {
       { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Buffer: grep open buffers [snackspicker]", },
       { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Buffer: buffers [snackspicker]", },
       { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
-      { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
-      { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
+      -- { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
+      -- { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
       -- { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Picker: projects [snackspicker]", },
       -- Git
       -- { "<Leader>gc", function() Snacks.picker.git_log() end, desc = "Git: git log [snackspicker]", },
@@ -163,41 +163,40 @@ return {
       -- Search
       -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
       -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
-      { "<Leader>fc", function() Snacks.picker.command_history() end, desc = "Snackspicker: command history", },
+      -- { "<Leader>fc", function() Snacks.picker.command_history() end, desc = "Snackspicker: command history", },
       -- { "<Leader><space>", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
-      -- { "<Leader>n", function() Snacks.picker.notifications() end, desc = "Snackspicker: notification history" },
       -- { "<Leader>sp", function() Snacks.picker.lazy() end, desc = "Snackspicker: search for plugin spec", },
       -- { "<Leader>sC", function() Snacks.picker.commands() end, desc = "Snackspicker: commands", },
       -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
-      { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
-      -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
-      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
+      -- { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
+      -- -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
+      -- { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
       -- { "<Leader>sj", function() Snacks.picker.jumps() end, desc = "Snackspicker: jumps", },
-      {
-        "<Leader>fk",
-        function()
-          Snacks.picker.keymaps {
-            layout = {
-              layout = {
-                width = 0.80,
-                height = 0.80,
-                -- position = "bottom",
-                box = "vertical",
-                {
-                  win = "input",
-                  height = 1,
-                  border = "rounded",
-                  title = "{title} {live} {flags}",
-                  title_pos = "center",
-                },
-                { win = "list", border = "none" },
-                { win = "preview", title = "{preview}", height = 0.50, border = "top" },
-              },
-            },
-          }
-        end,
-        desc = "Snackspicker: keymaps",
-      },
+      -- {
+      --   "<Leader>fk",
+      --   function()
+      --     Snacks.picker.keymaps {
+      --       layout = {
+      --         layout = {
+      --           width = 0.80,
+      --           height = 0.80,
+      --           -- position = "bottom",
+      --           box = "vertical",
+      --           {
+      --             win = "input",
+      --             height = 1,
+      --             border = "rounded",
+      --             title = "{title} {live} {flags}",
+      --             title_pos = "center",
+      --           },
+      --           { win = "list", border = "none" },
+      --           { win = "preview", title = "{preview}", height = 0.50, border = "top" },
+      --         },
+      --       },
+      --     }
+      --   end,
+      --   desc = "Snackspicker: keymaps",
+      -- },
       -- { "<Leader>sl", function() Snacks.picker.loclist() end, desc = "Snackspicker: location list", },
       -- { "<Leader>sM", function() Snacks.picker.man() end, desc = "Snackspicker: man pages", },
       -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },

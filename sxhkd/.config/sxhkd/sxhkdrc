@@ -13,7 +13,7 @@ super + t
         bspc node -t {floating,tiled}
 
 # state: brother
-super + B
+super + shift + b
         bspc node -f @brother
 
 # state: toggle sticky, unsticky
@@ -99,7 +99,7 @@ super + shift + l
 # 	      bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
-super + {shift+p,shift+n}
+super + shift + {p, n}
 	      bspc desktop -f {prev,next}.local
 
 # workspace: select workspace by number 1-9
@@ -159,13 +159,21 @@ super + shift + ctrl + p
 ########################################
 # APPS
 ########################################
+# misc: reload/restart sxhkd config
+super + F5
+        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD" "Reload config.."
+
+# misc: quit/stop record video
+super + F6
+        pkill ffmpeg; dunstify "Quit ffmpeg.."
+
+# misc: reload/restart bspwm config
+super + F7
+        bspc wm -r && SLEEP=2 && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
+
 # misc: open terminal
 super + Return
         $TERMINAL
-
-# misc: open neovide
-super + shift + Return
-        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
 
 # misc: open rofi menu
 super + r
@@ -179,54 +187,40 @@ super + w
 super + e
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
+# misc: change wallpaper
+super + Home
+        $HOME/.config/miscxrdb/exbin/fehbg
+
+# misc: open neovide
+super + shift + Return
+        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
+
 # misc: open snipets
 super + shift + s
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps remember_me_snippet
 
-        # zsh -c "$HOME/.config/rofi/menu/_snippet"
-
-# misc: open rmpc (music)
+# misc: open music
 super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float ncmpcpp
 
-# misc: open note inbox (capture notes)
-super + n
+# misc: open note inbox
+super + shift + i
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
 
 # misc: open bookmark and pass
-super + p
+super + shift + f
         $HOME/.config/miscxrdb/bpswm/scripts/bookmark-pass
-
-# misc: reload/restart sxhkd config
-super + F5
-        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD" "Reload config.."
-
-# misc: quit/stop record video
-super + F6
-        pkill ffmpeg; dunstify "Quit ffmpeg.."
-
-# misc: reload/restart bspwm config
-super + F7
-        bspc wm -r && SLEEP=2 && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
-
-# misc: change wallpaper
-super + Home
-        $HOME/.config/miscxrdb/exbin/fehbg
 
 # misc: open translate with nvim
 super + shift + o
         bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && $TERMINAL -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
 
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
-        #
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
-
 # misc: call window firefox (side by side)
-super + d
+super + shift + d
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win firefox 2
 
 # misc: call window zathura (side by side)
-super + a
+super + shift + a
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
 
 # misc: open link with mpv (or with proxychains)
@@ -236,7 +230,3 @@ super + shift + y
 # misc: open poweroff
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff
-
-# misc: run clipmenu
-# super + shift + c
-#         clipmenu

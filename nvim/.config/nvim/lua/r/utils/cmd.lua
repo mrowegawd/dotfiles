@@ -528,6 +528,8 @@ function M.get_visual_selection(opts)
       .. string.sub(lines[n], 1, cecol)
   end
 
+  -- RUtils.info "masdf"
+
   return {
     lines = lines,
     selection = selection,
@@ -569,13 +571,6 @@ M.execute_io_open = function(command)
   return output
 end
 
-------------------------------------------------------------------------------------------------------------------------
---  Lazy Requires
-------------------------------------------------------------------------------------------------------------------------
---- source: https://github.com/tjdevries/lazy-require.nvim
-
---- Require on index.
----
 --- Will only require the module after the first index of a module.
 --- Only works for modules that export a table.
 function M.reqidx(require_path)
@@ -589,21 +584,6 @@ function M.reqidx(require_path)
   })
 end
 
---- Require when an exported method is called.
----
---- Creates a new function. Cannot be used to compare functions,
---- set new values, etc. Only useful for waiting to do the require until you actually
---- call the code.
----
---- ```lua
---- -- This is not loaded yet
---- local lazy_mod = lazy.require_on_exported_call('my_module')
---- local lazy_func = lazy_mod.exported_func
----
---- -- ... some time later
---- lazy_func(42)  -- <- Only loads the module now
----
---- ```
 ---@param require_path string
 ---@return table<string, fun(...): any>
 function M.reqcall(require_path)
@@ -621,10 +601,6 @@ function M.reqcall(require_path)
   })
 end
 
---  ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
---  ╏                           test                           ╏
---  ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
 local function open_image_with_sxiv(url)
   local filename = url:match "^.+/(.+)$" or "image.jpg"
   local download_path = vim.fn.expand("/tmp/" .. filename)
@@ -639,7 +615,102 @@ local function open_image_with_sxiv(url)
   end)
 end
 
-local title, kind
+local function mvp_or_sxiv(url)
+  local sel_open_with = {
+    mpv = {
+      cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
+    },
+
+    -- Kendala dengan sxiv ini, tidak bisa open image dengan URL
+    ["image local"] = { cmd = { "tsp", "sxiv", "--ontop" } },
+
+    -- Kalau dengan feh ini, bisa membuka image URL, tapi ga bisa di zoom
+    ["image with feh"] = { cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
+
+    -- Kalau cara ini kita download, check function open_image_with_sxiv
+    ["image with DL"] = { cmd = {} },
+  }
+
+  if vim.bo.filetype == "git" then
+    sel_open_with = { DiffviewOpen = { cmd = { "DiffviewOpen" } } }
+  end
+
+  local sel_fzf = function()
+    local newtbl = {}
+    for i, _ in pairs(sel_open_with) do
+      newtbl[#newtbl + 1] = i
+    end
+
+    table.sort(newtbl)
+
+    return newtbl
+  end
+  local contents = sel_fzf()
+
+  local opts = RUtils.fzflua.open_lsp_code_action {
+    winopts = {
+      title = RUtils.fzflua.format_title("Select To Open With", RUtils.config.icons.documents.openfolder),
+      height = #contents + 3,
+    },
+    actions = {
+      ["default"] = function(selected)
+        if not selected then
+          return
+        end
+
+        local sel = selected[1]
+        local notif_msg
+
+        if sel == "URL_img_DL" then
+          open_image_with_sxiv(url)
+          notif_msg = "DL and Sxiv: " .. url
+        else
+          local cmds
+          for cmd_name, cmd_args in pairs(sel_open_with) do
+            if cmd_name == sel then
+              cmd_args.cmd[#cmd_args.cmd + 1] = url
+              cmds = cmd_args.cmd
+              notif_msg = cmd_name .. ": " .. url
+            end
+          end
+
+          if vim.bo.filetype == "git" then
+            vim.cmd(table.concat(cmds, " "))
+            return
+          end
+
+          local outputs = vim.system(cmds, { text = true }):wait()
+          if outputs.code ~= 0 then
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'", { title = "Open With" })
+            return
+          end
+        end
+
+        ---@diagnostic disable-next-line: undefined-field
+        RUtils.info(notif_msg, { title = "Open With" })
+      end,
+    },
+  }
+
+  require("fzf-lua").fzf_exec(contents, opts)
+end
+
+local function open_browser(url)
+  -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
+  local browser = os.getenv "NUBROWSER"
+  local notif_msg = "Open with browser: "
+  local cmds = { browser, url }
+
+  local outputs_cmd = vim.system(cmds, { text = true }):wait()
+  if outputs_cmd.code ~= 0 then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.error("Failed to run command: '" .. table.concat(cmds, " ") .. "'", { title = "Open With" })
+    return
+  end
+  ---@diagnostic disable-next-line: undefined-field
+  RUtils.info(notif_msg .. url, { title = "Open With" })
+end
 
 local function is_tag_or_link_at(line, col, opts)
   opts = opts or {}
@@ -720,118 +791,17 @@ end
 local function check_for_link_or_tag()
   local line = vim.api.nvim_get_current_line()
   local col = vim.fn.col "."
-  return is_tag_or_link_at(line, col, {}) -- TODO: ini adalah yang salah
+  return is_tag_or_link_at(line, col, {})
 end
 
-function M.open_with_mvp_or_sxiv(is_visual)
-  is_visual = is_visual or false
-
-  local url = vim.fn.expand "<cWORD>"
-
-  if is_visual then
-    local search_string = RUtils.map.getVisualSelection()
-    if search_string then
-      url = search_string
-    end
-  end
-
-  if vim.bo.filetype == "git" then
-    -- local sha = line:match "^parent%s+([a-f0-9]+)$"
-    url = url:match "([a-f0-9]+)$"
-  end
-
-  if not is_visual then
-    if vim.bo.filetype ~= "git" then
-      -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-      local match_pattern = [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]]
-      local uri = vim.fn.matchstr(url, match_pattern)
-      if uri and #uri == 0 then
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.warn("Failed to match '" .. url .. "' with regex pattern '" .. match_pattern .. "'")
-        return
-      end
-      url = uri
-    end
-  end
-
-  local sel_open_with = {
-    mpv = {
-      cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
-    },
-
-    -- Kendala dengan sxiv ini, tidak bisa open image URL
-    local_img = { cmd = { "tsp", "sxiv", "--ontop" } },
-
-    -- Kalau dengan feh ini, bisa membuka image URL, tapi ga bisa di zoom
-    URL_img_feh = { cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
-
-    -- Kalau cara ini kita download, check function open_image_with_sxiv
-    URL_img_DL = { cmd = {} },
-  }
-
-  if vim.bo.filetype == "git" then
-    sel_open_with = { DiffviewOpen = { cmd = { "DiffviewOpen" } } }
-  end
-
-  local sel_fzf = function()
-    local newtbl = {}
-    for i, _ in pairs(sel_open_with) do
-      newtbl[#newtbl + 1] = i
-    end
-    return newtbl
-  end
-  local contents = sel_fzf()
-
-  local opts = RUtils.fzflua.open_lsp_code_action {
-    winopts = {
-      title = RUtils.fzflua.format_title("Select To Open With", RUtils.config.icons.documents.openfolder),
-      height = #contents + 3,
-    },
-    actions = {
-      ["default"] = function(selected)
-        local sel = selected[1]
-        local notif_msg
-
-        if sel == "URL_img_DL" then
-          open_image_with_sxiv(url)
-          notif_msg = "DL and Sxiv: " .. url
-        else
-          local cmds
-          for cmd_name, cmd_args in pairs(sel_open_with) do
-            if cmd_name == sel then
-              cmd_args.cmd[#cmd_args.cmd + 1] = url
-              cmds = cmd_args.cmd
-              notif_msg = cmd_name .. ": " .. url
-            end
-          end
-
-          if vim.bo.filetype == "git" then
-            vim.cmd(table.concat(cmds, " "))
-            return
-          end
-
-          local outputs = vim.system(cmds, { text = true }):wait()
-          if outputs.code ~= 0 then
-            ---@diagnostic disable-next-line: undefined-field
-            RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'")
-            return
-          end
-        end
-
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info(notif_msg, { title = "Open With" })
-      end,
-    },
-  }
-
-  require("fzf-lua").fzf_exec(contents, opts)
-end
-
-function M.follow_link(is_selection)
-  is_selection = is_selection or false
-
+local function follow_link_markdown()
   local saved_reg = vim.fn.getreg '"0'
-  kind, _ = check_for_link_or_tag()
+  local kind, _ = check_for_link_or_tag()
+  if not kind then
+    return
+  end
+
+  local title
 
   if kind == "link" then
     vim.cmd "normal yi]"
@@ -840,102 +810,127 @@ function M.follow_link(is_selection)
     title = RUtils.cmd.remove_alias(title)
   end
 
-  if kind ~= nil then
-    vim.fn.setreg('"0', saved_reg)
+  vim.fn.setreg('"0', saved_reg)
 
-    local parts = vim.split(title, "#")
+  local parts
+  if title then
+    parts = vim.split(title, "#")
+  end
 
-    -- if there is a #
+  -- if there is a #
+  if parts and #parts ~= 1 then
+    title = parts[2]
+    parts = vim.split(title, "%^")
     if #parts ~= 1 then
       title = parts[2]
-      parts = vim.split(title, "%^")
-      if #parts ~= 1 then
-        title = parts[2]
-      end
-      -- local search = require "obsidian.search"
-      -- search.find_notes_async(".", title .. ".md")
-      local rg_opts =
-        [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
-
-      local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
-    else
-      if require("obsidian.api").cursor_link() then
-        vim.cmd "ObsidianFollowLink"
-      end
     end
-  else
-    local url = vim.fn.expand "<cWORD>"
+    local rg_opts =
+      [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
 
-    -- check jika terdapat `https` pada `url`
-    local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+    local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+    fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
+    return
+  end
 
-    -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
-    --   url = string.format("https://github.com/%s", url)
-    if uri ~= "" then
-      if vim.bo.filetype == "markdown" then
-        if require("obsidian.api").cursor_link() then
-          return vim.cmd "ObsidianFollowLink"
-        end
-      end
-      url = uri
-    else
-      if not is_selection then
-        url = string.format("https://google.com/search?q=%s", url)
-      end
-
-      vim.cmd "normal yy"
-      title = vim.fn.getreg '"0'
-      title = title:gsub("^(%[)(.+)(%])$", "%2")
-      title = RUtils.cmd.remove_alias(title)
-
-      local parts = vim.split(title, "#")
-      if #parts > 0 then
-        url = string.format("https://google.com/search?q=%s", parts[1])
-      end
-    end
-
-    -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
-    local browser = os.getenv "NUBROWSER"
-    local notif_msg = "Open with browser: "
-    local cmds = { browser, url }
-
-    vim.fn.jobstart(cmds, { detach = true })
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.info(notif_msg .. url, { title = "Open With" })
+  if require("obsidian.api").cursor_link() then
+    vim.cmd "ObsidianFollowLink"
   end
 end
 
-function M.EditSnippet()
-  local L = vim.log.levels
-  local scan = require "plenary.scandir"
+function M.open_with(what_mode, is_selection)
+  vim.validate { what_mode = { what_mode, "string" } }
+  is_selection = is_selection or false
 
-  local base_snippets = { "package", "global" }
-
-  local ft, _ = RUtils.buf.get_bo_buft()
-
-  if ft == "" then
-    return vim.notify("Belum dibuat??", L.WARN, { title = "No snippets" })
-  elseif ft == "typescript" then
-    ft = "javascript"
-  elseif ft == "sh" then
-    ft = "shell"
+  local debug_what_mode = { "mpv or svix", "browser", "go to file" }
+  if not vim.tbl_contains(debug_what_mode, what_mode) then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn("Available mode: " .. table.concat(debug_what_mode, ", "))
+    return
   end
 
-  local ft_snippet_path = RUtils.config.path.snippet_path .. "/snippets/"
+  local url
+
+  if is_selection then
+    url = RUtils.map.getVisualSelection()
+  else
+    url = vim.fn.expand "<cWORD>"
+  end
+
+  if not url then
+    RUtils.warn "Not continue"
+    return
+  end
+
+  -- Check jika terdapat `https` pada `url`
+  local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+  -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
+
+  if #uri > 0 then
+    url = uri
+  else
+    url = string.format("https://google.com/search?q=%s", url)
+  end
+
+  if what_mode == "browser" then
+    open_browser(url)
+    return
+  end
+
+  if what_mode == "mpv or svix" then
+    if vim.bo.filetype == "git" then
+      -- local sha = line:match "^parent%s+([a-f0-9]+)$"
+      url = url:match "([a-f0-9]+)$"
+    end
+
+    mvp_or_sxiv(url)
+    return
+  end
+
+  if what_mode == "go to file" then
+    if vim.bo.filetype == "markdown" then
+      follow_link_markdown()
+      return
+    end
+    return
+  end
+end
+
+function M.edit_snippet()
+  local Scan = require "plenary.scandir"
+
+  -- local base_snippets = { "package", "global" }
+  local base_snippets = {}
+
+  local ft, _ = RUtils.buf.get_bo_buft()
+  if ft == "" then
+    return
+  end
+
+  local snippet_path = RUtils.config.path.snippet_path .. "/snippets/"
+
+  local is_file = false
+  local is_dir = false
+
+  if RUtils.file.is_file(snippet_path .. ft .. ".json") then
+    is_file = true
+  end
+
+  if RUtils.file.is_dir(snippet_path .. ft) then
+    is_dir = true
+  end
+
+  if not is_file and not is_dir then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn("Snippet belum dibuat?", { title = "Snippets" })
+    return
+  end
 
   local snippets = {}
-  local is_file = true
 
-  if RUtils.file.is_dir(ft_snippet_path .. ft) then
-    if not RUtils.file.exists(ft_snippet_path .. ft) then
-      return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
-    end
-    -- Untuk akses ke snippet khusus dir harus di tambahkan ext sama `ft` nya
-    -- e.g path/ft-nya/<snippet.json>
-    ft_snippet_path = ft_snippet_path .. ft .. "/"
+  if is_dir then
+    snippet_path = snippet_path .. "/" .. ft
 
-    local dirs = scan.scan_dir(ft_snippet_path, { depth = 1, search_pattern = "json" })
+    local dirs = Scan.scan_dir(snippet_path, { depth = 1, search_pattern = "json" })
     for _, sp in pairs(dirs) do
       local nm = sp:match "[^/]*.json$"
       local sp_e = nm:gsub(".json", "")
@@ -945,31 +940,41 @@ function M.EditSnippet()
     for _, sp in pairs(base_snippets) do
       table.insert(snippets, sp)
     end
-  else
+  end
+
+  if is_file then
     snippets = { ft }
-
-    if not RUtils.file.exists(ft_snippet_path .. ft .. ".json") then
-      return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
-    end
-    if not RUtils.file.exists(ft_snippet_path .. ft .. ".json") then
-      return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
-    end
-
     for _, sp in pairs(base_snippets) do
       table.insert(snippets, sp)
     end
   end
 
+  if #snippets == 0 then
+    return
+  end
+
+  local filename
+
+  if #snippets == 1 then
+    filename = snippet_path .. "/" .. snippets[1] .. ".json"
+    vim.cmd(":vsplit " .. filename)
+    return
+  end
+
   vim.ui.select(snippets, { prompt = "Edit snippet> " }, function(choice)
-    if choice == nil then
+    if not choice then
       return
     end
+
     if is_file then
-      if not RUtils.file.exists(ft_snippet_path .. choice .. ".json") then
-        return vim.notify(ft_snippet_path .. choice .. ".json", L.WARN, { title = "Snippet file not exists" })
-      end
-      vim.cmd(":edit " .. ft_snippet_path .. choice .. ".json")
+      filename = snippet_path .. choice .. ".json"
     end
+
+    if is_dir then
+      filename = snippet_path .. "/" .. choice .. ".json"
+    end
+
+    vim.cmd(":vsplit " .. filename)
   end)
 end
 

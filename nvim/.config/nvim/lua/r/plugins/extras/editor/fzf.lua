@@ -212,11 +212,11 @@ return {
       },
 
       -- Git
-      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
-      { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" }, { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
       { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
       { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
       { "<Leader>gD", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
+      { "<Leader>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: open file from another branch [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
@@ -257,7 +257,7 @@ return {
         previewers = {
           builtin = {
             snacks_image = { enabled = false },
-            treesitter = { enabled = false }, -- disable treesitter-context
+            treesitter = { enabled = true, context = false }, -- disable treesitter-context
             extensions = {
               ["png"] = img_previewer,
               ["jpg"] = img_previewer,
@@ -301,25 +301,17 @@ return {
         fzf_opts = {
           ["--no-separator"] = "",
           ["--history"] = vim.fn.stdpath "data" .. "/fzf-lua-history",
+          ["--multi"] = true,
         }, -- remove separator line
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^o:peek  a-i:ignore  a-h:hidden]] },
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
           -- formatter = "path.filename_first",
           actions = {
-            ["alt-l"] = actions.file_sel_to_ll,
-            ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
-            ["alt-o"] = function(...)
-              local P = require "overlook.peek"
-              P.peek_fzflua(...)
-            end,
-            -- ["ctrl-q"] = actions.toggle_ignore,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -337,6 +329,16 @@ return {
                   }
                 end
               end
+            end,
+
+            ["alt-q"] = actions.file_sel_to_qf,
+            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-l"] = actions.file_sel_to_ll,
+            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+
+            ["ctrl-o"] = function(...)
+              local P = require "overlook.peek"
+              P.peek_fzflua(...)
             end,
             ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
@@ -383,45 +385,54 @@ return {
             no_header_i = false,
             winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            fzf_opts = { ["--multi"] = true },
             actions = {
-              ["left"] = false,
-              ["right"] = false,
-              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
               ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-l"] = actions.file_sel_to_ll,
               ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+
+              ["left"] = false,
+              ["right"] = false,
+
               ["ctrl-s"] = { actions.git_stage_unstage, actions.resume },
               ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
           },
-          commits = RUtils.fzflua.open_dock_bottom {
+          commits = RUtils.fzflua.open_fullscreen_vertical {
             no_header = true, -- disable default header
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
-            fzf_opts = { ["--header"] = [[^g:grep  ^y:copyhash  m-i:gitopen  m-h:compare  m-o:browser]] },
+            fzf_opts = {
+              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  m-c:compare  m-d:diffviewopen  m-i:fugitive  m-h:checkall]],
+              ["--multi"] = true,
+            },
             actions = {
               ["default"] = actions.git_buf_edit,
-              ["alt-l"] = RUtils.fzf_diffview.git_open_to_loc "Commits Hash",
-              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_loc "Commits Hash" },
+
               ["alt-q"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
               ["alt-Q"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash All" },
+              ["alt-l"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
+              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash" },
 
-              ["alt-o"] = RUtils.fzf_diffview.git_open_with_browser(),
-              ["alt-h"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
-              ["alt-i"] = RUtils.fzf_diffview.git_open_with_diffview(),
+              ["alt-c"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-d"] = RUtils.fzf_diffview.git_open_with_diffview(),
+              ["alt-i"] = RUtils.fzf_diffview.git_open_with_fugitive(),
+              ["alt-h"] = RUtils.fzf_diffview.git_check_all_changed_by_commit(),
 
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
 
+              ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
               ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
-          bcommits = RUtils.fzflua.open_dock_bottom {
+          bcommits = RUtils.fzflua.open_fullscreen_vertical {
             -- debug = true,
             no_header = true, -- disable default header
             preview = "git diff --color {1}~1 {1} -- <file>",
@@ -429,21 +440,26 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
-            fzf_opts = { ["--header"] = [[^g:grep  ^y:copyhash  m-i:gitopen  m-h:compare  m-o:browser]] },
+            fzf_opts = {
+              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  m-c:compare  m-d:diffviewopen  m-i:fugitive  m-h:checkall]],
+              ["--multi"] = true,
+            },
             actions = {
               ["default"] = actions.git_buf_edit,
-              ["alt-l"] = RUtils.fzf_diffview.git_open_to_loc "BCommits Hash",
-              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_loc "BCommits Hash" },
+              ["alt-l"] = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash",
+              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash" },
               ["alt-q"] = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash",
               ["alt-Q"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash All" },
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-v"] = actions.git_buf_vsplit,
 
-              ["alt-h"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
-              ["alt-o"] = RUtils.fzf_diffview.git_open_with_browser(),
-              ["alt-i"] = RUtils.fzf_diffview.git_open_with_diffview(),
+              ["alt-c"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-d"] = RUtils.fzf_diffview.git_open_with_diffview(),
+              ["alt-i"] = RUtils.fzf_diffview.git_open_with_fugitive(),
+              ["alt-h"] = RUtils.fzf_diffview.git_check_all_changed_by_commit(),
 
+              ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
               ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
@@ -482,7 +498,7 @@ return {
           -- debug = true,
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^x:grepcwd]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  m-d:selectcwd  m-i:ignore  m-h:hidden]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -628,15 +644,15 @@ return {
         },
         oldfiles = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
-          fzf_opts = { ["--header"] = [[m-h:oldfiles-current  m-o:oldfiles-all]] },
+          fzf_opts = { ["--header"] = [[m-i:oldfiles-current  m-h:oldfiles-all]] },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
           actions = {
-            ["alt-o"] = function()
+            ["alt-h"] = function()
               require("fzf-lua").oldfiles { cwd_only = false }
             end,
-            ["alt-h"] = function()
+            ["alt-i"] = function()
               require("fzf-lua").oldfiles { cwd_only = true }
             end,
           },

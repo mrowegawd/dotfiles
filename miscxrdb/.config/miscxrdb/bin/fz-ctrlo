@@ -50,9 +50,6 @@ _go_up() {
   tmux select-pane -U
 }
 
-# _check_pane_is_zsh() {
-#   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
-# }
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
@@ -65,8 +62,11 @@ _check_pane_is_yazi() {
 _check_pane_is_tclock() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
 }
+_check_pane_is_zsh() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
+}
 
-session_exists() {
+_is_session_exists() {
   tmux has-session -t "=$1"
 }
 
@@ -74,14 +74,14 @@ session_exists() {
 #  |                       APT AND DKPG                       |
 #  +----------------------------------------------------------+
 show_apt_search() {
-  select=$(apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
+  SELECT=$(apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
     --multi \
     --preview 'apt-cache show {1}' \
     --preview-window right:70%:nohidden)
 
-  [[ -z $select ]] && exit
+  [[ -z $SELECT ]] && exit
 
-  sudo \$aptget install -y "$select"
+  sudo \$aptget install -y "$SELECT"
 }
 
 #  +----------------------------------------------------------+
@@ -239,7 +239,7 @@ open_newsboat() {
 
   session="tmp_newsboat"
 
-  if ! session_exists "$session"; then
+  if ! _is_session_exists "$session"; then
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
       -E -d "#{pane_current_path}" \
@@ -273,7 +273,7 @@ open_calcure() {
 
   session="tmp_calcure"
 
-  if ! session_exists "$session"; then
+  if ! _is_session_exists "$session"; then
     set -gF status off
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
@@ -298,7 +298,7 @@ open_ps_btop() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_btop"
 
-  if ! session_exists "$session"; then
+  if ! _is_session_exists "$session"; then
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '90%' -h '60%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
@@ -322,7 +322,7 @@ open_ps_lsof() {
 
   session="tmp_lsof"
 
-  if ! session_exists "$session"; then
+  if ! _is_session_exists "$session"; then
 
     fzf_preview_cmd="ps -o pcpu,pmem,vsz,rss,thcount,start_time,time -p {2}"
 
@@ -395,7 +395,7 @@ open_lazydocker() {
   program_tool="lazydocker"
   session="tmp_$program_tool"
 
-  if ! session_exists "$session"; then
+  if ! _is_session_exists "$session"; then
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
       -E -d "#{pane_current_path}" \
@@ -419,6 +419,34 @@ open_lazygit() {
     -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
     -E -w 90% -h 90% \
     "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml" # Open Lazygit inside popup
+}
+
+capture_pane_and_save_to_file() {
+  if ! _check_pane_is_zsh; then
+    dunstify "[!] Capture pane" "Need to run inside zsh!"
+    exit
+  fi
+
+  tmux command-prompt -p 'save history to filename:' -I "$HOME/Downloads/tmux.history" 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
+}
+capture_pane() {
+  if ! _check_pane_is_zsh; then
+    dunstify "[!] Capture pane" "Need to run inside zsh!"
+    exit
+  fi
+
+  tmux send-keys "tmux capture-pane -S -32768 ; tmux save-buffer ~/Downloads/tmux.history ; tmux delete-buffer ; nvim ~/Downloads/tmux.history" Enter
+}
+capture_fzf() {
+  SELECT=$(echo -e "Capture pane and save to file\nCapture pane" | fzf-tmux -xC -w '30%' -h '20%' --prompt="Tmux> ")
+
+  [[ -z $SELECT ]] && exit
+
+  case $SELECT in
+  "Capture pane and save to file") capture_pane_and_save_to_file ;;
+  "Capture pane") capture_pane ;;
+  *) exit ;;
+  esac
 }
 
 #  +----------------------------------------------------------+
@@ -501,19 +529,19 @@ tmux_create_sess() {
   DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
   MARKED_PWD="$DROPBOX_PATH/marked-pwd"
 
-  select=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Create New Session> ' <"$MARKED_PWD")
+  SELECT=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Create New Session> ' <"$MARKED_PWD")
 
-  [[ -z $select ]] && exit
-  [[ ! -d $select ]] && notify-send "Path: $select" "Not found!" && exit
+  [[ -z $SELECT ]] && exit
+  [[ ! -d $SELECT ]] && notify-send "Path: $SELECT" "Not found!" && exit
 
-  ss_name=$(basename "$select" | sed -e "s/\./\_/g")
+  ss_name=$(basename "$SELECT" | sed -e "s/\./\_/g")
 
-  session_exists() {
+  _is_session_exists() {
     tmux has-session -t "=$ss_name"
   }
 
-  if ! session_exists; then
-    tmux new-session -d -s "$ss_name" -c "$select"
+  if ! _is_session_exists; then
+    tmux new-session -d -s "$ss_name" -c "$SELECT"
   fi
 
   tmux switch-client -t "$ss_name"
@@ -525,53 +553,49 @@ tmux_create_sess() {
 #  +----------------------------------------------------------+
 
 callme() {
-  MENULIST=" calculator\n calendar\n ps-lsof\n systemctlUI\n󰷛 btop"
-  MENULIST="$MENULIST\n toggle-status\n toggle-synchronize-panes\n clock-mode\n select-session"
-  MENULIST="$MENULIST\n rkill\n multilog\n newsboat\n apt-search"
+  MENULIST=$(
+    cat <<EOF
+ calculator
+ calendar
+ ps-lsof
+ apt: service system UI
+ apt: search
+󰷛 btop
+ tmux: toggle status
+ tmux: toggle synchronize panes
+ tmux: clock mode
+ tmux: select session
+ tmux: capture pane
+ tmux: capture pane with files
+ rkill
+ multilog
+ newsboat
+EOF
+  )
 
-  selected=$(echo -e "$MENULIST" | fzf-tmux -xC -w '30%' -h '40%' --prompt="⚡ " --border-label ' ALT-Y ')
-  [[ -z $selected ]] && exit
+  SELECTED=$(echo -e "$MENULIST" | fzf-tmux -xC -w '30%' -h '50%' --prompt="⚡ " --border-label ' ALT-Y ')
+  [[ -z $SELECTED ]] && exit
 
-  select=$(echo "$selected" | cut -d " " -f 2)
+  SELECT="${SELECTED#* }"
 
-  case $select in
+  case $SELECT in
   "calculator") open_calc ;;
   "calendar") open_calcure ;;
   "ps-lsof") open_ps_lsof ;;
   "btop") open_ps_btop ;;
-  "systemctlUI") open_systemctl_ui ;;
-  "clock-mode") tmux_clock_mode ;;
-  "select-session") tmux_select_sess ;;
-  "toggle-status") tmux_toggle_status ;;
-  "toggle-synchronize-panes") tmux_toggle_synchronize_panes ;;
-  "apt-search") show_apt_search ;;
+  "apt: search") show_apt_search ;;
+  "apt: service system UI") open_systemctl_ui ;;
+  "tmux: clock mode") tmux_clock_mode ;;
+  "tmux: select session") tmux_select_sess ;;
+  "tmux: toggle status") tmux_toggle_status ;;
+  "tmux: toggle synchronize panes") tmux_toggle_synchronize_panes ;;
+  "tmux: capture pane") capture_pane ;;
+  "tmux: capture pane with files") capture_pane_and_save_to_file ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
   "newsboat") open_newsboat ;;
   *) exit ;;
   esac
-}
-
-_check_pane_is_zsh() {
-  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
-}
-
-capture_pane() {
-  if ! _check_pane_is_zsh; then
-    dunstify "[!] Capture pane" "Need to run inside zsh!"
-    exit
-  fi
-
-  tmux send-keys "tmux capture-pane -S -32768 ; tmux save-buffer ~/Downloads/tmux.history ; tmux delete-buffer ; nvim ~/Downloads/tmux.history" Enter
-}
-
-capture_pane_and_save_to_file() {
-  if ! _check_pane_is_zsh; then
-    dunstify "[!] Capture pane" "Need to run inside zsh!"
-    exit
-  fi
-
-  tmux command-prompt -p 'save history to filename:' -I "$HOME/Downloads/tmux.history" 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
 }
 
 "$@"

@@ -7,7 +7,7 @@ return {
     keys = {
       { "<Localleader>t", mode = { "n", "t", "v" } },
       { "<a-f>", mode = { "n", "t", "v" } },
-      { "<a-t>", mode = { "n", "t", "v" } },
+      { "<a-T>", mode = { "n", "t", "v" } },
     },
     opts = {
       picker = {
