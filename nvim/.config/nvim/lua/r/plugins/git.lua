@@ -10,7 +10,9 @@ local git_sign = {
   changedelete = "~",
 }
 
-if vim.tbl_contains({ "neogotham", "vscode_modern", "base46-kanagawa" }, vim.g.colorscheme) then
+if
+  vim.tbl_contains({ "neogotham", "vscode_modern", "base46-kanagawa", "base46-material-darker" }, vim.g.colorscheme)
+then
   git_sign = {
     add = "▌",
     change = "▌",
@@ -57,6 +59,7 @@ return {
         "<Leader>gor",
         function()
           vim.cmd [[GitConflictRefresh]]
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.info("Start or refresh git conflict..", { title = "Git-conflict" })
         end,
         desc = "Git: start/refresh git conflict [gitconflict]",
@@ -81,13 +84,13 @@ return {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
     keys = {
       {
-        "<Leader>goo",
+        "<Leader>gob",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
         desc = "Open: gitlink on browser (normal or visual) [gitlinker]",
       },
       {
-        "<Leader>goO",
+        "<Leader>goB",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         desc = "Open: gitlink on browser [gitlinker]",
       },

@@ -17,9 +17,12 @@ local dropdown = function(opts)
     v_backdrop = 90
   end
 
-  return vim.tbl_deep_extend("force", {
+  local obj_fzf = {
     prompt = M.padding_prompt(),
-    fzf_opts = { ["--layout"] = "reverse" },
+    fzf_opts = {
+      ["--layout"] = "reverse",
+      ["--multi"] = true,
+    },
     winopts = {
       border = RUtils.config.icons.border.rectangle,
       title_pos = opts.winopts.title and "center" or nil,
@@ -34,7 +37,12 @@ local dropdown = function(opts)
         vertical = "up:50%",
       },
     },
-  }, opts)
+  }
+
+  -- RUtils.info(vim.inspect(obj_fzf))
+  -- RUtils.info(vim.inspect(opts))
+
+  return vim.tbl_deep_extend("force", obj_fzf, opts)
 end
 
 local layout_center = function(opts)
@@ -78,7 +86,6 @@ function M.layout_pojokan(opts)
   local win_height = math.ceil(lines * 0.5)
   return dropdown(vim.tbl_deep_extend("force", {
     winopts = {
-
       width = math.floor(math.min(60, vim.o.columns / 2)),
       height = win_height - 10,
       col = 0.85,
@@ -229,6 +236,7 @@ end
 
 function M.open_fullscreen_vertical(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
+    fzf_opts = { ["--multi"] = true },
     winopts = {
       fullscreen = true,
       preview = {
@@ -239,6 +247,21 @@ function M.open_fullscreen_vertical(opts)
       },
     },
   }, opts))
+end
+
+function M.git_open_fullscreen_vertical(opts)
+  return vim.tbl_deep_extend("force", {
+    fzf_opts = { ["--multi"] = true },
+    winopts = {
+      fullscreen = true,
+      preview = {
+        hidden = false,
+        layout = "vertical",
+        vertical = "up:60%",
+        horizontal = "up:25%",
+      },
+    },
+  }, opts)
 end
 
 function M.open_lsp_references(opts)
@@ -275,23 +298,49 @@ function M.open_lsp_code_action(opts)
 end
 
 function M.open_cmd_bulk(opts, opts_cmds)
+  local fzf_lua_ = require "fzf-lua"
+
+  local width_cmd = 1
+  for idx, _ in pairs(opts) do
+    local str_x = vim.split(idx, " ")
+    if width_cmd < #str_x[1] then
+      width_cmd = #str_x[1]
+    end
+  end
+
   local cmds = {}
   for idx, _ in pairs(opts) do
-    table.insert(cmds, idx)
+    local str_x = vim.split(idx, "-")
+    local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+    table.insert(cmds, string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2]))
   end
 
   table.sort(cmds)
 
-  fzf_lua().fzf_exec(
+  fzf_lua_.fzf_exec(
     cmds,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
       winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
-          local sel = selected[1]
-          if opts[sel] then
-            opts[sel]()
+          if not selected then
+            return
           end
+
+          local sel = selected[1]
+          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          local display_str_split = vim.split(display_str, "-")
+
+          local build_idx_cmd = RUtils.cmd.strip_whitespace(display_str_split[1])
+            .. " - "
+            .. RUtils.cmd.strip_whitespace(display_str_split[2])
+
+          if opts[build_idx_cmd] then
+            opts[build_idx_cmd]()
+            return
+          end
+
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(opts))
         end,
       },
     }, opts_cmds))

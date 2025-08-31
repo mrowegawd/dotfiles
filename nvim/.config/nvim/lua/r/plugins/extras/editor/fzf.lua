@@ -332,9 +332,9 @@ return {
             end,
 
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-l"] = actions.file_sel_to_ll,
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
 
             ["ctrl-o"] = function(...)
               local P = require "overlook.peek"
@@ -388,9 +388,9 @@ return {
             fzf_opts = { ["--multi"] = true },
             actions = {
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
               ["alt-l"] = actions.file_sel_to_ll,
-              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
 
               ["left"] = false,
               ["right"] = false,
@@ -399,7 +399,7 @@ return {
               ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
           },
-          commits = RUtils.fzflua.open_fullscreen_vertical {
+          commits = RUtils.fzflua.git_open_fullscreen_vertical {
             no_header = true, -- disable default header
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
@@ -407,16 +407,16 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  m-c:compare  m-d:diffviewopen  m-i:fugitive  m-h:checkall]],
+              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  a-c:compare  a-d:diffviewopen  a-i:fugitive  a-h:checkall]],
               ["--multi"] = true,
             },
             actions = {
               ["default"] = actions.git_buf_edit,
 
               ["alt-q"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
-              ["alt-Q"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash All" },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash All" },
               ["alt-l"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
-              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash" },
+              ["alt-L"] = { prefix = "toggle-all", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash" },
 
               ["alt-c"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
               ["alt-d"] = RUtils.fzf_diffview.git_open_with_diffview(),
@@ -432,7 +432,7 @@ return {
               ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
-          bcommits = RUtils.fzflua.open_fullscreen_vertical {
+          bcommits = RUtils.fzflua.git_open_fullscreen_vertical {
             -- debug = true,
             no_header = true, -- disable default header
             preview = "git diff --color {1}~1 {1} -- <file>",
@@ -441,15 +441,15 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  m-c:compare  m-d:diffviewopen  m-i:fugitive  m-h:checkall]],
+              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  a-c:compare  a-d:diffviewopen  a-i:fugitive  a-h:checkall]],
               ["--multi"] = true,
             },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["alt-l"] = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash",
-              ["alt-L"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash" },
+              ["alt-L"] = { prefix = "toggle-all", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash" },
               ["alt-q"] = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash",
-              ["alt-Q"] = { prefix = "select-all+accept", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash All" },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzf_diffview.git_open_to_qf "BCommits Hash All" },
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-v"] = actions.git_buf_vsplit,
@@ -472,8 +472,8 @@ return {
               ["default"] = actions.git_switch,
               ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
             },
           },
           stash = RUtils.fzflua.open_dock_bottom {
@@ -498,7 +498,7 @@ return {
           -- debug = true,
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  m-d:selectcwd  m-i:ignore  m-h:hidden]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^o:peek  m-d:selectcwd  m-i:ignore  m-h:hidden]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -577,10 +577,11 @@ return {
               }
             end,
             ["alt-l"] = actions.file_sel_to_ll,
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-o"] = function(...)
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+
+            ["ctrl-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
@@ -615,8 +616,8 @@ return {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
           },
         },
         jumps = RUtils.fzflua.open_center_big_vertical {},
@@ -664,9 +665,9 @@ return {
           actions = {
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-l"] = actions.file_sel_to_ll,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
-            ["alt-o"] = function(...)
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["ctrl-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
@@ -688,8 +689,8 @@ return {
             ["default"] = actions.buf_switch,
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["ctrl-x"] = { actions.buf_del, actions.resume },
           },
           fzf_opts = {
@@ -714,8 +715,8 @@ return {
 
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.buf_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -741,8 +742,8 @@ return {
 
             ["alt-l"] = actions.buf_sel_to_ll,
             ["alt-q"] = actions.buf_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -812,8 +813,8 @@ return {
           actions = {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
             ["ctrl-v"] = actions.file_vsplit,
             ["ctrl-s"] = actions.file_split,
             ["ctrl-t"] = actions.file_tabedit,
@@ -832,14 +833,14 @@ return {
             exec_empty_query = true,
             winopts = { title = extend_title.title },
             fzf_opts = {
-              ["--header"] = [[m-h:filter  m-o:workspace-symbols]],
+              ["--header"] = [[^o:peek  m-i:workspace-symbols  m-h:filter]],
               ["--reverse"] = false,
             },
             actions = {
               ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
               ["ctrl-g"] = actions.grep_lgrep,
               ["alt-h"] = function()
                 local opts = {
@@ -867,7 +868,7 @@ return {
                 }
                 RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
               end,
-              ["alt-o"] = function()
+              ["alt-i"] = function()
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 
@@ -875,6 +876,10 @@ return {
                   cwd = cwd,
                   winopts = { title = extend_title_cs.title, fullscreen = false },
                 }
+              end,
+              ["ctrl-o"] = function(...)
+                local P = require "overlook.peek"
+                P.peek_fzflua(...)
               end,
             },
           },
@@ -897,8 +902,8 @@ return {
             actions = {
               ["alt-l"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-              ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
             },
           },
         },
@@ -912,8 +917,8 @@ return {
           actions = {
             ["alt-l"] = actions.file_sel_to_ll,
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_qf },
-            ["alt-L"] = { prefix = "select-all+accept", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-L"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
           },
         },
         complete_path = RUtils.fzflua.open_lsp_code_action {

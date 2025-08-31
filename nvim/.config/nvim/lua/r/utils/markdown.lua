@@ -28,7 +28,7 @@ local function format_data_tags(data_tag)
     tag = RUtils.cmd.strip_whitespace(line),
     line_number = data_tag.line_number,
     path = data_tag.path.text,
-    title = "",
+    title = data_tag.title or "",
   }
 end
 
@@ -48,6 +48,20 @@ local function format_title_tag(data_tag)
   }
 end
 
+local function is_valid_json(str)
+  local ok, _ = pcall(vim.json.decode, str)
+  return ok
+end
+
+local function check_duplicate_element_data_tags(tbl, element)
+  for _, x in pairs(tbl) do
+    if x["text"] == element then
+      return true
+    end
+  end
+  return false
+end
+
 local function get_height_width_row_col_window()
   local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
   local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
@@ -58,6 +72,75 @@ local function get_height_width_row_col_window()
   local row = math.ceil((lines - win_height) * 1 - 3)
 
   return win_height, win_width, row, col
+end
+
+local function extracted_str_tags(entry, data_tbl)
+  local data = {}
+
+  local text = vim.split(entry, "|")
+  if not text then
+    return data
+  end
+
+  for _, x in pairs(data_tbl) do
+    local x_title_str = RUtils.fzflua.__strip_str(x.title)
+    if not x_title_str then
+      return data
+    end
+
+    if x_title_str == text[2] then
+      data = {
+        path = x.path,
+        line = x.line_number,
+        col = 1,
+        text = x_title_str,
+      }
+    end
+  end
+
+  return data
+end
+
+local function open_with(mode, entry, data_tbl, is_open_folded)
+  is_open_folded = is_open_folded or false
+
+  local data = extracted_str_tags(entry, data_tbl)
+
+  vim.cmd(mode .. " " .. data.path)
+  vim.api.nvim_win_set_cursor(0, { tonumber(data.line), 1 })
+  if is_open_folded then
+    vim.cmd "normal! zv"
+  end
+end
+
+local function extracted_selected_tags(selected, data_tbl)
+  local items = {}
+  if #selected > 1 then
+    for _, sel in pairs(selected) do
+      local data = extracted_str_tags(sel, data_tbl)
+
+      if not check_duplicate_element_data_tags(items, data.text) then
+        items[#items + 1] = {
+          filename = data.path,
+          lnum = data.line,
+          col = data.col,
+          text = data.text,
+        }
+      end
+    end
+  else
+    local data = extracted_str_tags(selected[1], data_tbl)
+    if not check_duplicate_element_data_tags(items, data.text) then
+      items[#items + 1] = {
+        filename = data.path,
+        lnum = data.line,
+        col = data.col,
+        text = data.text,
+      }
+    end
+  end
+
+  return items
 end
 
 local function json_output_wrapper(json_str)
@@ -91,43 +174,53 @@ local function collect_all_tags_async(data, cb, is_for_tags)
 
     RUtils.cmd.run_jobstart(msg_cmds, function(_, dataout, event)
       if event == "stdout" then
-        if dataout then
-          -- __AUTO_GENERATED_PRINT_VAR_START__
-          -- print([==[collect_all_tags_async#function#function#if#if dataout:]==], vim.inspect(dataout)) -- __AUTO_GENERATED_PRINT_VAR_END__
+        if dataout and #dataout > 0 then
           for _, line in ipairs(dataout) do
-            if line ~= "" then
-              if string.match(line, "binary_offset") == nil then
-                local json_data = json_output_wrapper(line)
-                if json_data then
-                  local match_data = json_data.data
-                  if match_data["path"] then
-                    if match_data["lines"] then
-                      local line_text = match_data.lines.text
+            if #line == 0 then
+              goto continue
+            end
 
-                      -- hanya butuh tag yang berada pada line frontmatter
-                      if string.match(line_text, "%s*- ") then
-                        if match_data.line_number < 23 then
-                          data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
-                          coroutine.resume(co, 0)
-                        end
-                      end
+            if string.match(line, "binary_offset") ~= nil then
+              goto continue
+            end
 
-                      if string.match(line_text, "^# ") then
-                        if match_data.line_number < 28 then
-                          data_title_out[#data_title_out + 1] = format_title_tag(match_data)
-                          coroutine.resume(co, 0)
-                        end
-                      end
-                    end
-                  end
-                end
+            if not is_valid_json(line) then
+              goto continue
+            end
+
+            local json_data = json_output_wrapper(line)
+            if not json_data then
+              goto continue
+            end
+
+            local match_data = json_data.data
+            if not match_data.path or not match_data.lines then
+              goto continue
+            end
+
+            local line_text = match_data.lines.text
+
+            -- hanya butuh tag yang berada pada line frontmatter
+            if string.match(line_text, "%s*- ") then
+              if match_data.line_number < 23 then
+                data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
+                coroutine.resume(co, 0)
               end
             end
+
+            if string.match(line_text, "^# ") then
+              if match_data.line_number < 28 then
+                data_title_out[#data_title_out + 1] = format_title_tag(match_data)
+                coroutine.resume(co, 0)
+              end
+            end
+
+            ::continue::
           end
         end
       elseif event == "stderr" then
         vim.cmd "echohl Error"
-        vim.cmd('echomsg "' .. table.concat(dataout, "") .. '"')
+        vim.cmd('echomsg "' .. table.concat(dataout, " ") .. '"')
         vim.cmd "echohl None"
         coroutine.resume(co, 2)
       elseif event == "exit" then
@@ -154,24 +247,6 @@ local function collect_all_tags_async(data, cb, is_for_tags)
   end)()
 end
 
-local function check_duplicate_element(tbl, element)
-  for _, x in pairs(tbl) do
-    if x == element then
-      return true
-    end
-  end
-  return false
-end
-
-local function check_duplicate_element_data_tags(tbl, element)
-  for _, x in pairs(tbl) do
-    if x["text"] == element then
-      return true
-    end
-  end
-  return false
-end
-
 local function format_prompt_strings(msg)
   msg = msg or ""
 
@@ -187,90 +262,140 @@ local function format_prompt_strings(msg)
   return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
 end
 
+local function processed_dataout(dataout)
+  local entries_data = {}
+  for _, line in ipairs(dataout) do
+    if #line == 0 then
+      goto continue
+    end
+
+    if string.match(line, "binary_offset") ~= nil then
+      goto continue
+    end
+
+    if not is_valid_json(line) then
+      goto continue
+    end
+
+    local json_data = json_output_wrapper(line)
+    if not json_data then
+      goto continue
+    end
+
+    local match_data = json_data.data
+    if not match_data.path or not match_data.lines then
+      goto continue
+    end
+
+    local line_text = match_data.lines.text
+    if not string.match(line_text, "%s%s*- ") then
+      goto continue
+    end
+
+    local formated_data_tags = format_data_tags(match_data)
+
+    for _, x in pairs(data_title_out) do
+      if x.path == formated_data_tags.path then
+        formated_data_tags.title = x.title
+      end
+    end
+
+    if #formated_data_tags.title > 0 then
+      entries_data[#entries_data + 1] = formated_data_tags
+      data_tags_table[#data_tags_table + 1] = formated_data_tags
+    end
+
+    ::continue::
+  end
+
+  return entries_data
+end
+
 local function picker(contents, actions, opts)
   opts = opts or {}
 
   actions = actions
     or {
       ["enter"] = function(selected, _)
-        local sel = selected[1]
-        sel = vim.split(sel, "|")
-        for _, x in pairs(data_tags_table) do
-          if x.title == sel[2] then
-            vim.cmd("e " .. x.path)
-            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
-            vim.cmd "normal! zv"
-          end
+        if not selected then
+          return
         end
+        open_with("edit", selected[1], data_tags_table, true)
       end,
 
       ["ctrl-v"] = function(selected, _)
-        local sel = selected[1]
-        sel = vim.split(sel, "|")
-        for _, x in pairs(data_tags_table) do
-          if x.title == sel[2] then
-            vim.cmd("vsplit " .. x.path)
-            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
-            vim.cmd "normal! zv"
-            break
-          end
+        if not selected then
+          return
         end
+        open_with("vsplit", selected[1], data_tags_table, true)
       end,
 
       ["ctrl-s"] = function(selected, _)
-        local sel = selected[1]
-        sel = vim.split(sel, "|")
-        for _, x in pairs(data_tags_table) do
-          if x.title == sel[2] then
-            vim.cmd("split " .. x.path)
-            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
-            vim.cmd "normal! zv"
-            break
-          end
+        if not selected then
+          return
         end
+        open_with("split", selected[1], data_tags_table, true)
       end,
 
       ["ctrl-t"] = function(selected, _)
-        local sel = selected[1]
-        sel = vim.split(sel, "|")
-        for _, x in pairs(data_tags_table) do
-          if x.title == sel[2] then
-            vim.cmd("tabe " .. x.path)
-            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
-            vim.cmd "normal! zv"
-            break
-          end
-        end
+        open_with("tabnew", selected[1], data_tags_table, true)
       end,
 
-      ["ctrl-f"] = function(selected, _)
-        local path_item
-        local path_items_tbl = {}
-        if #selected > 1 then
-          for _, sel in pairs(selected) do
-            local sel_strip = vim.split(sel, "|")
-            for _, x in pairs(data_tags_table) do
-              if x.title == sel_strip[2] then
-                if x.path and not check_duplicate_element(path_items_tbl, x.path) then
-                  path_items_tbl[#path_items_tbl + 1] = x.path
-                end
-              end
-            end
+      ["alt-q"] = function(selected, _)
+        if not selected then
+          return
+        end
+        local items = extracted_selected_tags(selected, data_tags_table)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note")
+      end,
+
+      -- https://github.com/ibhagwan/fzf-lua/discussions/1211
+      ["alt-Q"] = {
+        prefix = "toggle-all",
+        fn = function(selected, _)
+          if not selected then
+            return
           end
-        else
-          local sel = selected[1]
-          sel = vim.split(sel, "|")
-          for _, x in pairs(data_tags_table) do
-            if x.title == sel[2] then
-              path_item = x.path
-            end
-          end
+
+          local items = extracted_selected_tags(selected, data_tags_table)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All")
+        end,
+      },
+
+      ["alt-l"] = function(selected, _)
+        if not selected then
+          return
         end
 
-        if #path_items_tbl > 0 then
-          path_item = path_items_tbl
+        local items = extracted_selected_tags(selected, data_tags_table)
+        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note", true)
+      end,
+
+      ["alt-L"] = {
+        prefix = "toggle-all",
+        fn = function(selected, _)
+          if not selected then
+            return
+          end
+
+          local items = extracted_selected_tags(selected, data_tags_table)
+          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All", true)
+        end,
+      },
+
+      ["ctrl-f"] = function(selected, _)
+        if not selected then
+          return
         end
-        M.find_local_titles(path_item)
+
+        local items = extracted_selected_tags(selected, data_tags_table)
+
+        local path_items = {}
+        for _, x in pairs(items) do
+          path_items[#path_items + 1] = x.filename
+        end
+
+        M.find_local_titles(path_items)
       end,
 
       ["alt-i"] = function(selected, _)
@@ -301,180 +426,20 @@ local function picker(contents, actions, opts)
         M.find_note_by_tag()
       end,
 
-      -- https://github.com/ibhagwan/fzf-lua/discussions/1211
-      ["ctrl-g"] = {
-        fn = function(selected, _)
-          local item_data_tbl = {}
-          if #selected > 1 then
-            for _, sel in pairs(selected) do
-              local sel_strip = vim.split(sel, "|")
-              for _, x in pairs(data_tags_table) do
-                if x.title == sel_strip[2] then
-                  if not check_duplicate_element(item_data_tbl, x.path) then
-                    item_data_tbl[#item_data_tbl + 1] = x.path
-                  end
-                end
-              end
-            end
-          else
-            local sel_strip = vim.split(selected[1], "|")
-            for _, x in pairs(data_tags_table) do
-              if x.title == sel_strip[2] then
-                if not check_duplicate_element(item_data_tbl, x.path) then
-                  item_data_tbl[#item_data_tbl + 1] = x.path
-                end
-              end
-            end
-          end
-
-          local rg_opts_format = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
-            .. table.concat(item_data_tbl, " ")
-            .. " -e "
-
-          local opts_c = {
-            -- debug = true,
-            rg_opts = rg_opts_format,
-            no_esc = true,
-            rg_glob = false,
-            winopts = {
-              title = RUtils.fzflua.format_title("Grep filter note", " "),
-              preview = {
-                horizontal = "up:60%",
-              },
-            },
-          }
-
-          fzf_lua.live_grep(opts_c)
-        end,
-      },
-
-      ["alt-q"] = function(selected, _)
-        local items = {}
-        if #selected > 1 then
-          for _, sel in pairs(selected) do
-            local sel_str = vim.split(sel, "|")[2]
-
-            for _, tbl_tags in pairs(data_tags_table) do
-              if tbl_tags.title == sel_str then
-                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                  items[#items + 1] = {
-                    filename = tbl_tags.path,
-                    lnum = tbl_tags.line_number,
-                    col = 1,
-                    text = tbl_tags.title,
-                  }
-                end
-              end
-            end
-          end
-        else
-          local sel_str = vim.split(selected[1], "|")[2]
-          for _, tbl_tags in pairs(data_tags_table) do
-            if tbl_tags.title == sel_str then
-              if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                items[#items + 1] = {
-                  filename = tbl_tags.path,
-                  lnum = tbl_tags.line_number,
-                  col = 1,
-                  text = tbl_tags.title,
-                }
-                break
-              end
-            end
-          end
+      ["ctrl-g"] = function(selected, _)
+        if not selected then
+          return
         end
 
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note")
-      end,
+        local items = extracted_selected_tags(selected, data_tags_table)
 
-      ["alt-Q"] = {
-        prefix = "select-all+accept",
-        fn = function(selected, _)
-          local items = {}
-          for _, sel in pairs(selected) do
-            local sel_str = vim.split(sel, "|")[2]
-
-            for _, tbl_tags in pairs(data_tags_table) do
-              if tbl_tags.title == sel_str then
-                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                  items[#items + 1] = {
-                    filename = tbl_tags.path,
-                    lnum = tbl_tags.line_number,
-                    col = 1,
-                    text = tbl_tags.title,
-                  }
-                end
-              end
-            end
-          end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All")
-        end,
-      },
-
-      ["alt-l"] = function(selected, _)
-        local items = {}
-        if #selected > 1 then
-          for _, sel in pairs(selected) do
-            local sel_str = vim.split(sel, "|")[2]
-
-            for _, tbl_tags in pairs(data_tags_table) do
-              if tbl_tags.title == sel_str then
-                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                  items[#items + 1] = {
-                    filename = tbl_tags.path,
-                    lnum = tbl_tags.line_number,
-                    col = 1,
-                    text = tbl_tags.title,
-                  }
-                end
-              end
-            end
-          end
-        else
-          local sel_str = vim.split(selected[1], "|")[2]
-          for _, tbl_tags in pairs(data_tags_table) do
-            if tbl_tags.title == sel_str then
-              if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                items[#items + 1] = {
-                  filename = tbl_tags.path,
-                  lnum = tbl_tags.line_number,
-                  col = 1,
-                  text = tbl_tags.title,
-                }
-                break
-              end
-            end
-          end
+        local path_items = {}
+        for _, x in pairs(items) do
+          path_items[#path_items + 1] = x.filename
         end
 
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note", true)
+        M.live_grep_note(path_items)
       end,
-
-      ["alt-L"] = {
-        prefix = "select-all+accept",
-        fn = function(selected, _)
-          local items = {}
-          for _, sel in pairs(selected) do
-            local sel_str = vim.split(sel, "|")[2]
-
-            for _, tbl_tags in pairs(data_tags_table) do
-              if tbl_tags.title == sel_str then
-                if not check_duplicate_element_data_tags(items, tbl_tags.title) then
-                  items[#items + 1] = {
-                    filename = tbl_tags.path,
-                    lnum = tbl_tags.line_number,
-                    col = 1,
-                    text = tbl_tags.title,
-                  }
-                end
-              end
-            end
-          end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All", true)
-        end,
-      },
     }
 
   function Tagpreviewer:new(o, optsc, fzf_win)
@@ -484,58 +449,24 @@ local function picker(contents, actions, opts)
   end
 
   function Tagpreviewer:parse_entry(entry_str)
-    local text = vim.split(entry_str, "|")
-
-    local data
-    if text then
-      for _, x in pairs(data_tags_table) do
-        if x.title == text[2] then
-          data = {
-            path = x.path,
-            line = x.line_number,
-            col = 1,
-          }
-        end
-      end
+    local data = extracted_str_tags(entry_str, data_tags_table)
+    if not data then
+      return {}
     end
 
-    if data then
-      return data
-    end
-    return {}
+    return data
   end
 
-  local win_height, win_width, row, col = get_height_width_row_col_window()
   return fzf_lua.fzf_exec(
     contents,
-    vim.tbl_deep_extend("force", {}, {
+    RUtils.fzflua.open_center_big {
       previewer = Tagpreviewer,
       prompt = RUtils.fzflua.padding_prompt(),
-      winopts = {
-        title = format_prompt_strings "Search By Tag",
-        width = win_width,
-        height = win_height,
-        row = row,
-        col = col,
-        backdrop = 100,
-        fullscreen = false,
-        -- border = { "", "-", "", "", "", "", "", "" },
-        preview = {
-          -- border = { "", "-", "", "", "", "", "", "" },
-          lazyout = "horizontal",
-          vertical = "up:50%", -- up|down:size
-          horizontal = "right:50%", -- right|left:size
-        },
-      },
-      fzf_opts = { ["--header"] = [[^r:reload  ^g:grep  ^f:greptitle  m-i:filtertag  m-i:addtag]] },
+      winopts = { title = format_prompt_strings "Search By Tag" },
+      fzf_opts = { ["--header"] = [[^r:reload  ^g:grep  ^f:greptitle  a-i:filtertag  a-h:addtag]] },
       actions = actions,
-    }, opts)
+    }
   )
-end
-
-local function is_valid_json(str)
-  local ok, _ = pcall(vim.json.decode, str)
-  return ok
 end
 
 local function list_tags_async(all_tags, is_set)
@@ -582,60 +513,40 @@ local function list_tags_async(all_tags, is_set)
       local co = coroutine.running()
 
       RUtils.cmd.run_jobstart(msg_cmd, function(_, dataout, event)
+        local entries_data = {}
+
         if event == "stdout" then
           if dataout and #dataout > 0 then
-            for _, line in ipairs(dataout) do
-              if #line > 0 then
-                if string.match(line, "binary_offset") == nil then
-                  if is_valid_json(line) then
-                    local json_data = json_output_wrapper(line)
-                    if json_data then
-                      local match_data = json_data.data
+            entries_data = processed_dataout(dataout)
+            if vim.tbl_isempty(entries_data) then
+              return
+            end
 
-                      if match_data["path"] then
-                        if match_data["lines"] then
-                          local line_text = match_data.lines.text
-                          if string.match(line_text, "%s%s*- ") then
-                            local data_tags = format_data_tags(match_data)
+            -- data_tags_table = entries_data
 
-                            local title_s
-                            for _, x in pairs(data_title_out) do
-                              if x.path == data_tags.path then
-                                title_s = x.title
-                              end
-                            end
+            -- local get_width = function()
+            --   local width_tag = 1
+            --   for _, entry in pairs(entries_data) do
+            --     if width_tag < #entry.tag + 1 then
+            --       width_tag = #entry.tag + 1
+            --     end
+            --   end
+            --   return width_tag
+            -- end
+            -- local width_tag = get_width()
+            -- RUtils.info(width_tag)
 
-                            if title_s then
-                              data_tags.title = title_s
-                              data_tags_table[#data_tags_table + 1] = data_tags
-                              -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
+            for _, entry in pairs(entries_data) do
+              local fzf_str = string.format("%-57s %-4s |%s", entry.tag, "[" .. entry.line_number .. "]", entry.title)
 
-                              -- local fzf_str =
-                              --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
-
-                              local fzf_str = string.format(
-                                "%-30s %-4s |%s",
-                                data_tags.tag,
-                                "[" .. data_tags.line_number .. "]",
-                                data_tags.title
-                              )
-
-                              cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
-                                coroutine.resume(co, 0)
-                              end)
-                            end
-                          end
-                        end
-                      end
-                    end
-                  end
-                end
-              end
+              cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+                coroutine.resume(co, 0)
+              end)
             end
           end
         elseif event == "stderr" then
           vim.cmd "echohl Error"
-          vim.cmd('echomsg "' .. table.concat(dataout, "") .. '"')
+          vim.cmd('echomsg "' .. table.concat(dataout, " ") .. '"')
           vim.cmd "echohl None"
           coroutine.resume(co, 2)
         elseif event == "exit" then
@@ -716,10 +627,17 @@ function M.find_note_by_tag(data, is_set, is_for_tags)
 end
 
 function M.find_global_titles()
+  local filename
+
+  if not filename then
+    local starting_bufname = vim.api.nvim_buf_get_name(0)
+    filename = vim.fn.fnamemodify(starting_bufname, ":p")
+  end
+
   fzf_lua.grep {
     prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
-    search = is_markdown_file() and regex_title or regex_title_org,
+    search = is_markdown_file(filename) and regex_title or regex_title_org,
     rg_glob = false,
     no_esc = true,
     -- file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
@@ -740,6 +658,8 @@ function M.find_local_titles(item_paths)
   local _is_single = true
   local is_markdown_file_regex
   local filename = ""
+
+  local is_many = item_paths and #item_paths > 1
 
   if item_paths == nil then
     local starting_bufname = vim.api.nvim_buf_get_name(0)
@@ -770,32 +690,37 @@ function M.find_local_titles(item_paths)
     end
 
     if item_paths and type(item_paths) == "table" then
-      local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
-      -- Debug output:
-      -- tmuxconfig/.config/tmuxconfig/scripts/fzf_panes.tmux:10:1:# invoked by pane-focus-in event
-      if not entry_str_strip then
-        return {}
-      end
-
-      -- Split entry_str_strip to extract the filename
-      local entry_filename = vim.split(entry_str_strip, ":")[1]
-      if not entry_filename then
-        return {}
-      end
-
-      local is_found = false
-      local entry_full_filename = vim.fn.fnamemodify(entry_filename, ":p")
-
-      for _, item_path in pairs(item_paths) do
-        if item_path == entry_full_filename then
-          is_found = true
-          filename = item_path
+      if not is_many then
+        filename = item_paths[1]
+      else
+        local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
+        -- Debug output:
+        -- tmuxconfig/.config/tmuxconfig/scripts/fzf_panes.tmux:10:1:# invoked by pane-focus-in event
+        if not entry_str_strip then
+          return {}
         end
-      end
 
-      if not is_found then
-        RUtils.warn "An error occurred in the find_local_titles previewer"
-        return {}
+        -- Split entry_str_strip to extract the filename
+        local entry_filename = vim.split(entry_str_strip, ":")[1]
+        if not entry_filename then
+          return {}
+        end
+
+        local is_found = false
+        local entry_full_filename = vim.fn.fnamemodify(entry_filename, ":p")
+
+        for _, item_path in pairs(item_paths) do
+          if item_path == entry_full_filename then
+            is_found = true
+            filename = item_path
+          end
+        end
+
+        if not is_found then
+          ---@diagnostic disable-next-line: undefined-field
+          RUtils.warn "An error occurred in the find_local_titles previewer"
+          return {}
+        end
       end
     end
 
@@ -806,7 +731,7 @@ function M.find_local_titles(item_paths)
     }
   end
 
-  return fzf_lua.grep {
+  return fzf_lua.grep(RUtils.fzflua.open_center_big {
     prompt = RUtils.fzflua.padding_prompt(),
     previewer = Tagpreviewer,
     no_esc = true,
@@ -825,11 +750,6 @@ function M.find_local_titles(item_paths)
     },
     winopts = {
       title = format_prompt_strings "Jump Local Title",
-      fullscreen = false,
-      height = 0.90,
-      width = 0.90,
-      row = 0.50,
-      col = 0.50,
     },
     actions = {
       ["enter"] = function(selected, _)
@@ -995,7 +915,7 @@ function M.find_local_titles(item_paths)
         end
       end,
     },
-  }
+  })
 end
 
 function M.find_local_sitelink()
@@ -1054,6 +974,68 @@ function M.find_backlinks()
   }
 end
 
+function M.live_grep_note(path_items)
+  local is_many = true
+  if #path_items == 1 then
+    is_many = false
+  end
+
+  function Tagpreviewer:new(o, opts, fzf_win)
+    Tagpreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, Tagpreviewer)
+    return self
+  end
+
+  function Tagpreviewer:parse_entry(entry_str)
+    local str_e = RUtils.fzflua.__strip_str(entry_str)
+    -- Debug output:
+    -- tmuxconfig/.config/tmuxconfig/scripts/fzf_panes.tmux:10:1:# invoked by pane-focus-in event
+    if not str_e then
+      return {}
+    end
+
+    local split_entry = vim.split(str_e, ":")
+    if not split_entry then
+      return {}
+    end
+
+    local filename, line, col
+    if not is_many then
+      -- RUtils.info(vim.inspect(split_entry))
+      filename = path_items[1]
+      line = split_entry[1]
+      col = split_entry[2]
+    else
+      filename = vim.fn.fnamemodify(split_entry[1], ":p")
+      line = split_entry[2]
+      col = split_entry[3]
+    end
+
+    return {
+      path = filename,
+      line = line,
+      col = col,
+    }
+  end
+
+  local rg_opts_format = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+    .. table.concat(path_items, " ")
+    .. " -e "
+
+  fzf_lua.live_grep(RUtils.fzflua.open_center_big {
+    previewer = Tagpreviewer,
+    rg_opts = rg_opts_format,
+    no_esc = true,
+    rg_glob = false,
+    fzf_opts = {
+      ["--delimiter"] = "[:\t]",
+    },
+    winopts = {
+      title = RUtils.fzflua.format_title("Grep filter note", " "),
+    },
+  })
+end
+
 function M.insert_by_categories()
   local win_height, win_width, row, col = get_height_width_row_col_window()
   collect_all_tags_async(tags, function(all_tags)
@@ -1079,6 +1061,13 @@ function M.insert_by_categories()
 end
 
 function M.insert_local_titles()
+  local filename
+
+  if not filename then
+    local starting_bufname = vim.api.nvim_buf_get_name(0)
+    filename = vim.fn.fnamemodify(starting_bufname, ":p")
+  end
+
   fzf_lua.lgrep_curbuf {
     prompt = RUtils.fzflua.padding_prompt(),
     winopts = {
@@ -1117,12 +1106,19 @@ function M.insert_local_titles()
 end
 
 function M.insert_global_titles()
+  local filename
+
+  if not filename then
+    local starting_bufname = vim.api.nvim_buf_get_name(0)
+    filename = vim.fn.fnamemodify(starting_bufname, ":p")
+  end
+
   fzf_lua.grep {
     prompt = RUtils.fzflua.padding_prompt(),
     winopts = { title = format_prompt_strings "Insert By Global Title" },
     rg_glob = false,
     no_esc = true,
-    search = is_markdown_file() and regex_title or regex_title_org,
+    search = is_markdown_file(filename) and regex_title or regex_title_org,
     cwd = RUtils.config.path.wiki_path,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     actions = {

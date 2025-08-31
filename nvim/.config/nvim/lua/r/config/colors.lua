@@ -70,7 +70,7 @@ local base_cl = {
   panel_bottom_normal_fg_alter = -0.05,
   panel_bottom_normal_bg_alter = -0.2,
 
-  fold_fg = 0.12,
+  fold_fg = 0.18,
   fold_bg = 0.05,
 
   render_markdown_code_bg_alter = 0.3,
@@ -736,7 +736,8 @@ local general_overrides = function()
     {
       Folded = {
         fg = { from = "LineNr", attr = "fg", alter = fold_fg },
-        bg = { from = "Normal", attr = "bg", alter = fold_bg },
+        -- bg = { from = "Normal", attr = "bg", alter = fold_bg },
+        bg = "NONE",
       },
     },
     {
@@ -812,12 +813,14 @@ local general_overrides = function()
       deltaPlus = {
         fg = H.tint(H.darken(dark_green, delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
         bg = H.tint(H.darken(dark_green, delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
+        bold = true,
       },
     },
     {
       deltaMinus = {
         fg = H.tint(H.darken(dark_red, delta_minus_fg_alter, H.get("Normal", "bg")), -0.1),
         bg = H.tint(H.darken(dark_red, delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
+        bold = true,
       },
     },
 
@@ -832,28 +835,8 @@ local general_overrides = function()
     { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
 
-    -- { GitSignsAdd = { bg = { from = "diffAdd", attr = "bg" }, fg = dark_green } },
-    -- { GitSignsChange = { bg = { from = "diffChange", attr = "bg" }, fg = dark_yellow } },
-    -- { GitSignsDelete = { bg = { from = "diffDelete", attr = "bg" }, fg = dark_red } },
-
-    {
-      GitSignsAddInline = {
-        fg = { from = "diffAdded", attr = "bg", alter = 3 },
-        bg = { from = "diffAdded", attr = "bg", alter = 1 },
-      },
-    },
-    {
-      GitSignsChangeDelete = {
-        fg = { from = "diffChanged", attr = "bg", alter = 3 },
-        bg = "NONE",
-      },
-    },
-    {
-      GitSignsDeleteInline = {
-        fg = { from = "diffDelete", attr = "bg", alter = 3 },
-        bg = { from = "diffDelete", attr = "bg", alter = 1 },
-      },
-    },
+    { GitSignsAddInline = { inherit = "deltaPlus" } },
+    { GitSignsDeleteInline = { inherit = "deltaMinus" } },
 
     { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
     { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
@@ -2171,7 +2154,7 @@ local function on_sidebar_enter()
     EndOfBuffer = "PanelSideNormal",
     StatusLine = "PanelSideSt",
     SignColumn = "PanelSideNormal",
-    VertSplit = "PanelSideNormal", -- TODO: check ini, seharusnya bukan `PanelSideNormal, seharusnya VertSplit juga tpai khusus untuk sidebar
+    VertSplit = "PanelSideNormal", -- TODO: check ini, seharusnya bukan `PanelSideNormal, seharusnya VertSplit juga tapi khusus untuk sidebar
     WinSeparator = "PanelSideWinSeparator",
   }
 end

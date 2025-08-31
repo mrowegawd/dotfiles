@@ -3,8 +3,8 @@ local keymap, api, opt = vim.keymap, vim.api, vim.opt_local
 opt.foldexpr = ""
 opt.foldmethod = "syntax"
 
-opt.number = false
-opt.relativenumber = false
+-- opt.number = false
+-- opt.relativenumber = false
 opt.signcolumn = "no"
 
 keymap.set("n", "<Tab>", function()

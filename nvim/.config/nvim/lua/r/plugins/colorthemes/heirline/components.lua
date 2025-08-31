@@ -1572,6 +1572,7 @@ M.WinbarFilePath = {
 
       if Conditions.is_active() then
         fg = colors.winbar_keyword
+        is_bold = true
       end
 
       if self.is_fugitive() then

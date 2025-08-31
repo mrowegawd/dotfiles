@@ -1,9 +1,24 @@
+---@diagnostic disable: undefined-field
 local fzf_lua = require "fzf-lua"
 
 ---@class r.utils.fzf_diffview
 local M = {}
 
 local last_query = ""
+
+local status_cmd_git = {
+  ["open commit only"] = function(commit_hash)
+    --   -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
+    return "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
+  end,
+  ["open commit only with fugitive"] = function(commit_hash)
+    return "Gedit " .. commit_hash
+  end,
+  ["check all files changed"] = function(commit_hash)
+    RUtils.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
+    return "DiffviewOpen " .. commit_hash .. "~..HEAD"
+  end,
+}
 
 local set_last_query = function(query)
   last_query = query
@@ -558,17 +573,21 @@ function M.open_diff_view(commit, file_name, diff_plugin)
   vim.cmd(cmds)
 end
 
-function M.open_commit(commit_hash, diff_plugin)
-  local cmds
-  if diff_plugin == "diffview" then
-    cmds = "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
-    -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
-  elseif diff_plugin == "fugitive" then
-    cmds = "Gedit " .. commit_hash
+function M.open_commit(commit_hash, state_cmd)
+  local get_cmd = status_cmd_git[state_cmd]
+  if not get_cmd then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn("'" .. state_cmd .. "' its unknown command")
+    return
   end
 
-  RUtils.info(cmds)
-  vim.cmd(cmds)
+  local cmds = get_cmd(commit_hash)
+
+  if cmds then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.info(cmds)
+    vim.cmd(cmds)
+  end
 end
 
 function M.copy_to_clipboard(commit_hash)
@@ -618,7 +637,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[^y:copyhash  m-i:diffview  m-o:browser]],
+      ["--header"] = [[^y:copyhash  m-i:diffview  ^b:browser]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {
@@ -630,7 +649,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
       ["ctrl-v"] = M.git_open "vsplit",
       ["ctrl-t"] = M.git_open "tabe",
       ["default"] = M.git_open_default(bufnr),
-      ["alt-o"] = M.git_open_with_browser(),
+      ["ctrl-b"] = M.git_open_with_browser(),
       ["alt-i"] = M.git_open_with_diffview(),
       ["ctrl-y"] = M.git_copy_to_clipboard_or_yank(),
     },
@@ -687,7 +706,25 @@ function M.git_open_with_diffview()
   return function(selected, _)
     local commit_hash = extract_git_hash_single(selected)
     if commit_hash then
-      M.open_commit(commit_hash, "diffview")
+      M.open_commit(commit_hash, "open commit only")
+    end
+  end
+end
+
+function M.git_open_with_fugitive()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      M.open_commit(commit_hash, "open commit only with fugitive")
+    end
+  end
+end
+
+function M.git_check_all_changed_by_commit()
+  return function(selected, _)
+    local commit_hash = extract_git_hash_single(selected)
+    if commit_hash then
+      M.open_commit(commit_hash, "check all files changed")
     end
   end
 end

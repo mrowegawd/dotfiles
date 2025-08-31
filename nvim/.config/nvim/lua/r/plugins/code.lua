@@ -355,8 +355,8 @@ return {
   },
   -- RUNMUX
   {
-    -- "mrowegawd/rmux",
-    dir = "~/.local/src/nvim_plugins/rmux",
+    "mrowegawd/rmux",
+    -- dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
       { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
@@ -469,6 +469,15 @@ return {
         end)
       end
     end,
+  },
+  -- MARKER-GROUPS
+  {
+    "jameswolensky/marker-groups.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- Required
+      "nvim-telescope/telescope.nvim", -- Optional: for fuzzy search
+    },
+    opts = {},
   },
   -- GITIGNORE.NVIM
   {

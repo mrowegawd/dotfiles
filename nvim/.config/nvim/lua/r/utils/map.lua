@@ -9,7 +9,7 @@ local recursive_map = function(mode, lhs, rhs, opts)
   map(mode, lhs, rhs, opts)
 end
 
-local function countSpaces(input)
+local function count_spaces(input)
   local spaceCount = 0
 
   -- Iterasi setiap karakter dalam string
@@ -23,33 +23,56 @@ local function countSpaces(input)
   return spaceCount
 end
 M.show_help_buf_keymap = function()
-  local ft = vim.bo[0].ft
-  local tbl_maps = vim.api.nvim_buf_get_keymap(0, "n")
+  local Fzf = require "fzf-lua"
+
+  local ft = vim.bo.filetype
+  local tbl_maps_normal = vim.api.nvim_buf_get_keymap(0, "n")
+  local tbl_maps_insert = vim.api.nvim_buf_get_keymap(0, "i")
+  -- local tbl_maps_visual = vim.api.nvim_buf_get_keymap(0, "v")
+
+  local function merge_multiple_tables(...)
+    local result = {}
+    for _, tbl in ipairs { ... } do
+      for k, v in pairs(tbl) do
+        result[k] = v
+      end
+    end
+    return result
+  end
+
+  local tbl_maps = merge_multiple_tables(tbl_maps_normal, tbl_maps_insert)
 
   local col = {}
+
   for _, tbl in pairs(tbl_maps) do
     if tbl.desc == nil then -- remove nil desc
       tbl.desc = "<builtin>"
     end
 
-    ---@diagnostic disable-next-line: undefined-field
-    local count_spaces = countSpaces(tbl.lhs)
-    ---@diagnostic disable-next-line: undefined-field
+    local c_spaces = count_spaces(tbl.lhs)
+
     local lhs = tbl.lhs
-    if count_spaces > 0 then
-      ---@diagnostic disable-next-line: undefined-field
+    if c_spaces > 0 then
       lhs = "<space>" .. RUtils.cmd.strip_whitespace(tbl.lhs)
     end
 
-    ---@diagnostic disable-next-line: undefined-field
-    local map_desc = string.format("%-14s | %s", lhs, tbl.desc)
+    local mode_color = "GitSignsAdd"
+    if tbl.mode == "i" then
+      mode_color = "GitSignsChange"
+    elseif tbl.mode == "v" then
+      mode_color = "GitSignsDelete"
+    end
+
+    local mode = Fzf.utils.ansi_from_hl(mode_color, tbl.mode)
+    local icon_separator = Fzf.utils.ansi_from_hl("Tabline", "|")
+    local desc = Fzf.utils.ansi_from_hl(mode_color, tbl.desc)
+
+    local map_desc = string.format("%-14s %s mode:%s %s %s", lhs, icon_separator, mode, icon_separator, desc)
     col[#col + 1] = map_desc
   end
 
   local opts = RUtils.fzflua.open_center_height_small_but_wide {
-    winopts = {
-      title = "Keymaps For Curbuf (" .. ft .. ")",
-    },
+    winopts = { title = "Keymaps For Curbuf (" .. ft .. ")" },
     actions = {
       ["default"] = function(_, _)
         RUtils.info "Not implemented yet"
@@ -57,7 +80,9 @@ M.show_help_buf_keymap = function()
     },
   }
 
-  -- print(vim.inspect(tbl_map_help))
+  -- sort alphabetically
+  table.sort(col)
+
   return require("fzf-lua").fzf_exec(col, opts)
 end
 

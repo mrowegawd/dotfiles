@@ -18,14 +18,14 @@ not_in_tmux() {
 
 create_if_needed_and_attach() {
   if [[ $TERMINAL == "wezterm" ]]; then
-    dunstify "WARN: $TERMINAL tidak punya spesific cli command untuk akses api switch workspace"
-    dunstify "WARN: keymap -> alt+y"
+    dunstify "[!] $TERMINAL tidak punya spesific cli command untuk akses api switch workspace"
+    dunstify "[!] keymap -> alt+y"
     exit
   fi
 
   # if [[ $TERMINAL == "kitty" ]]; then
-  #   dunstify "WARN: $TERMINAL mempunyai spesific keymap untuk create window, pane"
-  #   dunstify "WARN: check ~/.config/kitty/kitty.conf"
+  #   dunstify "[!] $TERMINAL mempunyai spesific keymap untuk create window, pane"
+  #   dunstify "[!] check ~/.config/kitty/kitty.conf"
   #   exit
   # fi
 

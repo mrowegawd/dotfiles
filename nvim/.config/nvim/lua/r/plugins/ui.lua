@@ -14,7 +14,8 @@ return {
   },
   -- NOICE
   {
-    "folke/noice.nvim",
+    "MadKuntilanak/noice.nvim",
+    branch = "feat/update-actions-fzflua",
     event = "BufReadPost",
     dependencies = { "MunifTanjim/nui.nvim" },
     opts = function()

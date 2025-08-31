@@ -166,12 +166,12 @@ keymap.set("n", "<Leader>ff", function()
     actions = {
       ["alt-l"] = actions.file_sel_to_ll,
       ["alt-L"] = {
-        prefix = "select-all+accept",
+        prefix = "toggle-all",
         fn = actions.file_sel_to_ll,
       },
       ["alt-q"] = actions.file_sel_to_qf,
       ["alt-Q"] = {
-        prefix = "select-all+accept",
+        prefix = "toggle-all",
         fn = actions.file_sel_to_qf,
       },
       ["ctrl-s"] = actions.git_buf_split,

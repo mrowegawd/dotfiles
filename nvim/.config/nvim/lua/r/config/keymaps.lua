@@ -38,7 +38,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" })
+RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" }) -- <c-m> --> <c-enter>
 
 RUtils.map.nnoremap("<c-s>", "zO", { desc = "Fold: open all" })
 

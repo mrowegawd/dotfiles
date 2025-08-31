@@ -11,7 +11,7 @@
 
 [delta]
   features = woolly-mammoth
-  side-by-side = false
+  side-by-side = true
   ; line-numbers = true
   ; light = false
   ; tabs = 2
