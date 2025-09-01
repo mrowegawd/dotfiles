@@ -3,13 +3,6 @@ vim.g.lazyvim_blink_main = true
 local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local idx = 1
 
-local source_priority = {
-  snippets = 3,
-  lsp = 4,
-  path = 2,
-  buffer = 1,
-}
-
 return {
   {
     "iguanacucumber/magazine.nvim",
@@ -49,25 +42,6 @@ return {
         end,
       },
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
-      fuzzy = {
-        implementation = "rust",
-        sorts = {
-          function(a, b)
-            local a_priority = source_priority[a.source_id]
-            local b_priority = source_priority[b.source_id]
-            if not a_priority or not b_priority then
-              return false
-            end
-
-            if a_priority ~= b_priority then
-              return a_priority > b_priority
-            end
-          end,
-          -- "exact",
-          "score",
-          "sort_text",
-        },
-      },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
