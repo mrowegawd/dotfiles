@@ -42,10 +42,14 @@ return {
           { "<Leader>go", group = "open" },
 
           { "<Leader>o", group = "open/linking" },
-          { "<Leader>e", group = "run/tasks" },
+          { "<Leader>r", group = "run/tasks" },
 
           { "<Leader>t", group = "testing" },
           { "<Leader>tc", group = "coverage" },
+
+          { "<Leader>m", group = "marker" },
+          { "<Leader>mf", group = "picker" },
+          { "<Leader>mg", group = "groups" },
 
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "session" },

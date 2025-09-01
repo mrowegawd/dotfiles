@@ -42,7 +42,7 @@ RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" }) -- <c-m> --> <c
 
 RUtils.map.nnoremap("<c-s>", "zO", { desc = "Fold: open all" })
 
-RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+-- RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 RUtils.map.nnoremap("<c-a>", "zMzv", { desc = "Fold: close all folds except the current one" })
 
 RUtils.map.nnoremap("<c-x>", function()
@@ -454,10 +454,10 @@ RUtils.map.vnoremap("<Leader>oo", function()
   RUtils.cmd.open_with("go to file", true)
 end, { desc = "Open: open file under cursor (visual)" })
 
-RUtils.map.vnoremap("<Leader>eb", function()
+RUtils.map.vnoremap("<Leader>rb", function()
   RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser (visual)" })
-RUtils.map.nnoremap("<Leader>eb", function()
+RUtils.map.nnoremap("<Leader>rb", function()
   RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser" })
 

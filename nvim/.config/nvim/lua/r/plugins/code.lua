@@ -473,11 +473,46 @@ return {
   -- MARKER-GROUPS
   {
     "jameswolensky/marker-groups.nvim",
+    events = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim", -- Required
       "nvim-telescope/telescope.nvim", -- Optional: for fuzzy search
     },
-    opts = {},
+    config = function()
+      require("marker-groups").setup {
+        data_dir = RUtils.config.path.wiki_path .. "/marker/project-todo",
+        keymaps = {
+          enabled = true, -- Keybindings (declarative; override per entry or disable by setting to false)
+          prefix = "<leader>m",
+          mappings = {
+            marker = {
+              add = { suffix = "a", mode = { "n", "v" }, desc = "Add marker" },
+              edit = { suffix = "e", desc = "Edit marker at cursor" },
+              delete = { suffix = "d", desc = "Delete marker at cursor" },
+              list = { suffix = "l", desc = "List markers in buffer" },
+              info = { suffix = "i", desc = "Show marker at cursor" },
+            },
+            group = {
+              create = { suffix = "gc", desc = "Create marker group" },
+              select = { suffix = "gs", desc = "Select marker group" },
+              list = { suffix = "gl", desc = "List marker groups" },
+              rename = { suffix = "gr", desc = "Rename marker group" },
+              delete = { suffix = "gd", desc = "Delete marker group" },
+              info = { suffix = "gi", desc = "Show active group info" },
+              -- next/prev/toggle_last/cleanup removed
+              from_branch = { suffix = "gb", desc = "Create group from git branch" },
+            },
+            view = {
+              toggle = { suffix = "v", desc = "Toggle drawer marker viewer" },
+            },
+            telescope = {
+              groups = { suffix = "fg", desc = "Telescope: marker groups" },
+              markers = { suffix = "ff", desc = "Telescope: markers in active group" },
+            },
+          },
+        },
+      }
+    end,
   },
   -- GITIGNORE.NVIM
   {
@@ -485,9 +520,8 @@ return {
     ft = "gitignore",
     keys = {
       {
-        "<Leader>rf",
+        "<Leader>rG",
         "<CMD>Gitignore<CR>",
-        ft = "gitignore",
         desc = "Task: select gitignore generate",
       },
     },

@@ -291,6 +291,7 @@ reset_base_alter({ "base46-material-darker" }, {
   quickfixline_sp_alter = 0.5,
   render_markdown_code_inline_bg_alter = 0.15,
   snacks_indent_scope_fg_alter = 0.18,
+  tabline_fg_alter = 0.5,
   visual_bg_alter = -0.2,
   winseparator_alter = 0.4,
 })
