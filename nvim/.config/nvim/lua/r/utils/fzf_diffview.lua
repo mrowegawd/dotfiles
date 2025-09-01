@@ -590,11 +590,11 @@ function M.open_commit(commit_hash, state_cmd)
   end
 end
 
-function M.copy_to_clipboard(commit_hash)
-  RUtils.info("Copied commit hash " .. commit_hash .. " to clipboard", { title = "FZFGit" })
+function M.copy_to_clipboard(commit_or_branch_name)
+  RUtils.info("Copied `" .. commit_or_branch_name .. "` to clipboard", { title = "FZFGit" })
 
-  vim.fn.setreg("+", commit_hash)
-  vim.fn.setreg("*", commit_hash)
+  vim.fn.setreg("+", commit_or_branch_name)
+  vim.fn.setreg("*", commit_or_branch_name)
 end
 
 local get_browse_command = function(commit_hash)

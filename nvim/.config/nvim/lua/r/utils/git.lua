@@ -11,6 +11,37 @@ local function get_files_from_branch(branch)
   return result
 end
 
+local function extracted_entry_str(selected, deleted_files)
+  local sel = selected[1]
+  if not sel then
+    return
+  end
+
+  local sel_str = fzf_lua.utils.strip_ansi_coloring(sel)
+
+  local items = nil
+  for _, item in ipairs(deleted_files) do
+    local display_str = fzf_lua.utils.strip_ansi_coloring(item.display)
+    if display_str == sel_str then
+      items = item
+      break
+    end
+  end
+
+  if not items then
+    return
+  end
+
+  -- Example output:
+  --  {
+  --   commit = "4b3c088",
+  --   display = "\27[33m4b3c088\27[0m — \27[31mmiscxrdb/.config/miscxrdb/xresource-theme/base46-jabuti\27[0m",
+  --   path = "miscxrdb/.config/miscxrdb/xresource-theme/base46-jabuti"
+  -- }
+
+  return items
+end
+
 -- local function open_file_from_branch(branch, filepath)
 --   -- local cmd = string.format("git show %s:%s", branch, filepath)
 --   -- local content = vim.fn.systemlist(cmd)
@@ -35,40 +66,89 @@ end
 -- ┃ MAPPING                                                 ┃
 -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-local function default_select_deleted(deleted_files)
+local function default_select_deleted(deleted_files, is_fugitive)
+  return function(selected, _)
+    if not selected then
+      return
+    end
+
+    is_fugitive = is_fugitive or false
+
+    local items = extracted_entry_str(selected, deleted_files)
+    if not items then
+      return
+    end
+
+    if is_fugitive then
+      -- vim.cmd("Gclog " .. items.commit)
+      vim.cmd "vsplit"
+      vim.cmd("Gedit " .. items.commit)
+    else
+      vim.cmd("DiffviewOpen " .. items.commit .. "^.." .. items.commit)
+    end
+
+    local git_use = is_fugitive and "fugitive" or "diffview"
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.info("Open diff (with `" .. git_use .. "`) : " .. items.path)
+  end
+end
+
+local function open_deleted_files(mode, deleted_files)
+  return function(selected, _)
+    if not selected then
+      return
+    end
+
+    local items = extracted_entry_str(selected, deleted_files)
+    if not items then
+      return
+    end
+
+    local cmd_git = "Gclog " .. items.commit
+    -- local cmd_git = "Gclog " .. items.commit .. ":%"
+    -- local cmd_git = "Gedit " .. items.commit .. ":" .. items.path
+
+    vim.cmd(mode)
+    vim.cmd(cmd_git)
+  end
+end
+
+local function open_file_under_specific_branch(mode)
   return function(selected, _)
     if not selected then
       return
     end
 
     local sel = selected[1]
-    if not sel then
-      return {}
-    end
 
-    local sel_str = fzf_lua.utils.strip_ansi_coloring(sel)
+    vim.cmd(mode)
+    vim.cmd("Gedit " .. sel .. ":%")
+  end
+end
 
-    local choice = nil
-    for _, item in ipairs(deleted_files) do
-      local display_str = fzf_lua.utils.strip_ansi_coloring(item.display)
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.info(display_str)
-      if display_str == sel_str then
-        choice = item
-        break
-      end
-    end
-
-    if not choice then
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.warn "Choice is empty!"
+local function copy_hash(deleted_files)
+  return function(selected, _)
+    if not selected then
       return
     end
 
-    -- Selain dengan `DiffviewOpen`, bisa`juga memakai :Gclog -- path
-    vim.cmd("DiffviewOpen " .. choice.commit .. "^.." .. choice.commit)
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.info("Opened diff for: " .. choice.path)
+    local items = extracted_entry_str(selected, deleted_files)
+    if not items then
+      return
+    end
+
+    RUtils.fzf_diffview.copy_to_clipboard(items.commit)
+  end
+end
+
+local function copy_branch()
+  return function(selected, _)
+    if not selected then
+      return
+    end
+
+    local sel = selected[1]
+    RUtils.fzf_diffview.copy_to_clipboard(sel)
   end
 end
 
@@ -202,11 +282,15 @@ function M.trace_file_event()
     fzf_contents,
     RUtils.fzflua.open_dock_bottom {
       winopts = { title = RUtils.fzflua.format_title("Track Commit for Renamed or Deleted File", "") },
+      fzf_opts = { ["--header"] = [[^s/v/t:diffviewopen  ^y:copyhash  a-d:diffviewopen  a-i:fugitive]] },
       actions = {
-        ["default"] = default_select_deleted(deleted_files),
-        ["ctrl-s"] = default_select_deleted(deleted_files),
-        ["ctrl-v"] = default_select_deleted(deleted_files),
-        ["ctrl-t"] = default_select_deleted(deleted_files),
+        ["default"] = open_deleted_files("edit", deleted_files),
+        ["ctrl-s"] = open_deleted_files("split", deleted_files),
+        ["ctrl-v"] = open_deleted_files("vsplit", deleted_files),
+        ["ctrl-t"] = open_deleted_files("tabnew", deleted_files),
+        ["ctrl-y"] = copy_hash(deleted_files),
+        ["alt-d"] = default_select_deleted(deleted_files),
+        ["alt-i"] = default_select_deleted(deleted_files, true),
       },
     }
   )
@@ -218,11 +302,12 @@ function M.select_file_different_branch()
     branches,
     RUtils.fzflua.open_dock_bottom {
       prompt = RUtils.fzflua.padding_prompt(),
-      winopts = {
-        title = RUtils.fzflua.format_title "Select Branch",
-      },
+      winopts = { title = RUtils.fzflua.format_title "Select Branch" },
+      fzf_opts = { ["--header"] = [[^y:copybranch  ^o:open_file_from_branch]] },
       actions = {
         ["default"] = default_select_file_branch(),
+        ["ctrl-y"] = copy_branch(),
+        ["ctrl-o"] = open_file_under_specific_branch "vsplit",
       },
     }
   )

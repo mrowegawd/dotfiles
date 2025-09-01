@@ -216,7 +216,7 @@ return {
       { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
       { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
       { "<Leader>gD", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
-      { "<Leader>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: open file from another branch [fzflua]" },
+      { "<Leader>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"

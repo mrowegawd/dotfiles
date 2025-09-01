@@ -104,12 +104,15 @@ return {
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
-    "pwntester/octo.nvim",
+    -- "MadKuntilanak/octo.nvim",
+    dir = "~/.local/src/nvim_plugins/octo.nvim",
+    branch = "feat/enchanted-fzflua-listing-and-empty-pr-search",
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = {
       -- picker = "snacks",
       picker = "fzf-lua",
+      -- picker = "telescope",
       picker_config = {
         use_emojis = true,
         mappings = {
@@ -295,7 +298,7 @@ return {
           select_last_entry = { lhs = "]Q", desc = "move to last changed file [file panel]" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [file panel]" },
           toggle_viewed = { lhs = "<space><space>", desc = "toggle viewer viewed state [file panel]" },
-          review_commits = { lhs = "<spacer>C", desc = "review PR commits [file panel]" },
+          review_commits = { lhs = "<space>C", desc = "review PR commits [file panel]" },
         },
         notification = {
           read = { lhs = "<space>nr", desc = "mark notification as read" },
@@ -351,6 +354,7 @@ return {
         changedelete = { text = git_sign.changedelete },
         untracked = { text = "┆" },
       },
+      -- numhl = true,
       preview_config = {
         -- Options passed to nvim_open_win
         border = "rounded",
@@ -620,7 +624,6 @@ return {
 
           -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
           -- vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
-          -- vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
           -- vim.keymap.set("n", "<Leader>gP", "<Cmd>Git pull<CR>", { buffer = true })
           -- vim.keymap.set("n", "<Leader>gl", function()
           --   vim.cmd "Git log --oneline"
@@ -836,8 +839,8 @@ return {
             { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-panel]" } },
             { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-panel]" } },
 
-            { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
-            { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
+            -- { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
+            -- { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-panel]" } },
             -- { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-panel]" }, },
