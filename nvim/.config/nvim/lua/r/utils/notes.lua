@@ -129,7 +129,7 @@ function M.open_agenda_file_lists()
   local opts = {
     title = RUtils.config.icons.misc.pencil .. " Orgtodo Files",
     fzf_opts = {
-      ["--header"] = [[m-o:deleteCleanUp]],
+      ["--header"] = [[a-x:deleteCleanUp]],
     },
     actions = {
       ["default"] = function(selected, _)
@@ -166,7 +166,7 @@ function M.open_agenda_file_lists()
         end
       end,
       -- TODO: buat delete file, delete folder kosong
-      ["alt-o"] = function()
+      ["alt-x"] = function()
         local project_todo_path = RUtils.config.path.dropbox_path .. "/neorg/orgmode/project-todo"
         local dirs = scan.scan_dir(project_todo_path, { depth = 2, add_dirs = true })
 

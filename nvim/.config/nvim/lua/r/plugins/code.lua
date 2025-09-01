@@ -1,7 +1,7 @@
 return {
   -- MINI.PAIRS
   {
-    "echasnovski/mini.pairs",
+    "nvim-mini/mini.pairs",
     event = "InsertEnter",
     keys = {
       {
@@ -54,7 +54,7 @@ return {
   },
   -- MINI.AI (disabled)
   {
-    "echasnovski/mini.ai",
+    "nvim-mini/mini.ai",
     enabled = false,
     event = "LazyFile",
     opts = function()

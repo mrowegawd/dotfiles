@@ -1,7 +1,7 @@
 return {
   -- MINI.ICONS
   {
-    "echasnovski/mini.icons",
+    "nvim-mini/mini.icons",
     event = "BufReadPost",
     opts = {
       file = {

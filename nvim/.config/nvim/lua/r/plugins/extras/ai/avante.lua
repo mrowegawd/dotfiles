@@ -80,9 +80,9 @@ return {
       },
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      "echasnovski/mini.pick",
+      "nvim-mini/mini.pick",
       "ibhagwan/fzf-lua",
-      "echasnovski/mini.icons",
+      "nvim-mini/mini.icons",
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
