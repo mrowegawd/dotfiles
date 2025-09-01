@@ -29,7 +29,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        dockerls = {},
+        -- dockerls = {}, -- TODO: line ini dockerls
         docker_compose_language_service = {},
       },
     },

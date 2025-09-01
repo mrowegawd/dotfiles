@@ -9,9 +9,6 @@ local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
 end
 
-vim.cmd.highlight "Overnesting guibg=#E06C75"
-vim.fn.matchadd("Overnesting", ("\t"):rep(5) .. "\t*")
-
 -- {{{ Text editing
 -- Insert mode
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)

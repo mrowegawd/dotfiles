@@ -661,7 +661,7 @@ local function mvp_or_sxiv(url)
         local sel = selected[1]
         local notif_msg
 
-        if sel == "URL_img_DL" then
+        if sel == "image with DL" then
           open_image_with_sxiv(url)
           notif_msg = "DL and Sxiv: " .. url
         else
