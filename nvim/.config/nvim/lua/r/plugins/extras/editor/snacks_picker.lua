@@ -170,7 +170,7 @@ return {
       -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
       -- { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
       -- -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
-      -- { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
+      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
       -- { "<Leader>sj", function() Snacks.picker.jumps() end, desc = "Snackspicker: jumps", },
       -- {
       --   "<Leader>fk",

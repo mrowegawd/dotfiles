@@ -73,7 +73,7 @@ local base_cl = {
   fold_fg = 0.18,
   fold_bg = 0.05,
 
-  render_markdown_code_bg_alter = 0.3,
+  render_markdown_code_bg_alter = 0.4,
   render_markdown_code_inline_bg_alter = 0.12,
   render_markdown_code_inline_fg_alter = 0.1,
 
@@ -680,6 +680,12 @@ local general_overrides = function()
         fg = { from = "Normal", attr = "bg", alter = float_title_fg_alter },
         bg = { from = "Keyword", attr = "fg", alter = float_title_bg_alter },
         bold = true,
+      },
+    },
+    {
+      FloatCursorline = {
+        fg = "NONE",
+        bg = { from = "NormalFloat", attr = "bg", alter = 0.2 },
       },
     },
 

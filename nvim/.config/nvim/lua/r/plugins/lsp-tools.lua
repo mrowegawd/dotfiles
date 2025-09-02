@@ -115,13 +115,6 @@ return {
         desc = "LSP: peek item qf [overlook]",
       },
       {
-        "P",
-        function()
-          require("overlook.api").peek_definition()
-        end,
-        desc = "LSP: peek definition [overlook]",
-      },
-      {
         "<Leader>pd",
         function()
           require("overlook.api").peek_definition()

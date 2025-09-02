@@ -141,6 +141,7 @@ return {
   -- BLOCK.NVIM
   {
     "HampusHauffman/block.nvim",
+    enabled = false,
     cmd = { "BlockOn", "BlockOff", "Block" },
     keys = {
       {

@@ -638,7 +638,7 @@ return {
       return {
         outline_window = {
           position = "right",
-          winhl = "Normal:Normal,EndOfBuffer:None,NonText:Normal,CursorLine:CursorLine",
+          winhl = "Normal:Normal,EndOfBuffer:None,NonText:Normal,CursorLine:FloatCursorline",
           focus_on_open = false,
           show_cursorline = true,
           hide_cursor = false,

@@ -4,7 +4,9 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     branch = "main",
-    dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" } },
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
+    },
     event = { "LazyFile" },
     lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
@@ -51,6 +53,12 @@ return {
       require("nvim-treesitter").setup()
       require("nvim-treesitter-textobjects").setup()
       require("nvim-treesitter").install(opts.ensure_installed)
+
+      vim.treesitter.language.register("markdown", "codecompanion")
+      vim.treesitter.language.register("markdown", "blink-cmp-documentation")
+      vim.treesitter.language.register("markdown", "codecompanion")
+      -- vim.treesitter.language.register("yaml", "ghaction")
+
       vim.api.nvim_create_autocmd("FileType", {
         pattern = {
           "c",
@@ -67,28 +75,46 @@ return {
           "lua",
           "markdown",
           "mysql",
+          "octo",
+          "org",
           "pgsql",
           "php",
           "python",
           "ruby",
           "sh",
           "sql",
-          "octo",
           "terraform",
-          -- https://github.com/olimorris/codecompanion.nvim/discussions/1691#discussioncomment-13540919
-          "codecompanion",
           "toml",
           "typescript",
           "typescriptreact",
           "vim",
           "yaml",
           "yaml.ansible",
+
+          -- https://github.com/olimorris/codecompanion.nvim/discussions/1691#discussioncomment-13540919
+          "codecompanion",
         },
+
         group = vim.api.nvim_create_augroup("nvim-treesitter-fts", { clear = true }),
         callback = function(args)
-          vim.treesitter.start(args.buf)
+          local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+          if lang then
+            if lang ~= "org" and vim.treesitter.language.add(lang) then
+              vim.treesitter.start()
+              vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end
+          end
         end,
       })
+
+      vim.keymap.set("n", "<Leader>ui", function()
+        vim.treesitter.inspect_tree {
+          command = "vnew | wincmd L | vertical resize 60",
+          title = function()
+            return "InspectTree"
+          end,
+        }
+      end, { desc = "Toggle: open Inspecttree" })
 
       -- Select
       RUtils.map.xnoremap("if", function()
@@ -126,8 +152,10 @@ return {
           local tsc = require "treesitter-context"
           tsc.toggle()
           if RUtils.inject.get_upvalue(tsc.toggle, "enabled") then
+            ---@diagnostic disable-next-line: undefined-field
             RUtils.info("Enabled Treesitter Context", { title = "Option" })
           else
+            ---@diagnostic disable-next-line: undefined-field
             RUtils.warn("Disabled Treesitter Context", { title = "Option" })
           end
         end,

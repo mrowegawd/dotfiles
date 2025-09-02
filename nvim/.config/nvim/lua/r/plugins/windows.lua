@@ -165,8 +165,16 @@ return {
         {
           "<a-H>",
           function()
-            require("smart-splits").resize_left()
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+            if exclude_win.found then
+              local resizer_h = "+5"
+              if vim.api.nvim_win_get_number(0) == 1 then
+                resizer_h = "-5"
+              end
+              return vim.cmd("vertical resize " .. resizer_h)
+            end
             -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
+            require("smart-splits").resize_left()
           end,
           desc = "Window: resize window left [smart-splits]",
         },
@@ -193,8 +201,16 @@ return {
         {
           "<a-L>",
           function()
-            require("smart-splits").resize_right()
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+            if exclude_win.found then
+              local resizer_l = "-5"
+              if vim.api.nvim_win_get_number(0) == 1 then
+                resizer_l = "+5"
+              end
+              return vim.cmd("vertical resize " .. resizer_l)
+            end
             -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
+            require("smart-splits").resize_right()
           end,
           desc = "Window: resize window right [smart-splits]",
         },
