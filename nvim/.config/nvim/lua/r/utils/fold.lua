@@ -4,7 +4,7 @@ local M = {}
 ---@param winid number
 ---@param f fun(): any
 ---@return any
-local function winCall(winid, f)
+local function win_call(winid, f)
   if winid == 0 or winid == vim.api.nvim_get_current_win() then
     return f()
   else
@@ -18,7 +18,7 @@ local ft_disabled = { "neo-tree", "aerial" }
 ---@param lnum number
 ---@return number
 local function fold_closed(winid, lnum)
-  return winCall(winid, function()
+  return win_call(winid, function()
     return vim.fn.foldclosed(lnum)
   end)
 end
@@ -226,6 +226,7 @@ function M.handle_qf_open(is_jump_prev, qf_mode, is_only)
   local allowed_modes = { "open", "only", "cnext", "cprev", "lnext", "lprev" }
 
   if not vim.tbl_contains(allowed_modes, qf_mode) then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.warn("Mode yang tersedia: `" .. table.concat(allowed_modes, ", ") .. "`")
     return
   end
@@ -253,7 +254,7 @@ function M.handle_qf_open(is_jump_prev, qf_mode, is_only)
   local is_nav_disabled = false
 
   -- If the cursor is at the very bottom line
-  if tonumber(total_items) == current_idx and nav_key == "Down" then
+  if tonumber(total_items) == current_idx and nav_key == "Down" and not is_only then
     go_first_line()
     is_nav_disabled = true
 
@@ -263,7 +264,7 @@ function M.handle_qf_open(is_jump_prev, qf_mode, is_only)
   end
 
   -- If the cursor is at the very top line
-  if current_idx == 1 and nav_key == "Up" then
+  if current_idx == 1 and nav_key == "Up" and not is_only then
     go_last_line()
     is_nav_disabled = true
 
