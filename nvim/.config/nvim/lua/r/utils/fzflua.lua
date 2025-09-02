@@ -297,8 +297,8 @@ function M.open_lsp_code_action(opts)
   }, opts))
 end
 
-function M.open_cmd_bulk(opts, opts_cmds)
-  local fzf_lua_ = require "fzf-lua"
+local function get_extracted_cmds(fzf_lua_, opts, only_key)
+  only_key = only_key or false
 
   local width_cmd = 1
   for idx, _ in pairs(opts) do
@@ -309,13 +309,64 @@ function M.open_cmd_bulk(opts, opts_cmds)
   end
 
   local cmds = {}
+
+  local str_cmds
   for idx, _ in pairs(opts) do
-    local str_x = vim.split(idx, "-")
-    local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", str_x[1])
-    table.insert(cmds, string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2]))
+    if only_key then
+      local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", idx)
+      str_cmds = string.format("%s", str_x_hl)
+    else
+      local str_x = vim.split(idx, "-")
+      local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+      str_cmds = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
+    end
+    table.insert(cmds, str_cmds)
   end
 
   table.sort(cmds)
+
+  return cmds
+end
+
+function M.open_cmd_bulk_key_only(opts, opts_cmds)
+  local fzf_lua_ = require "fzf-lua"
+
+  local cmds = get_extracted_cmds(fzf_lua_, opts, true)
+
+  fzf_lua_.fzf_exec(
+    cmds,
+    layout_center(vim.tbl_deep_extend("force", {
+      winopts = {
+        title = opts_cmds.title and opts_cmds.title or "",
+        height = #cmds + 5,
+      },
+      actions = {
+        ["default"] = function(selected, _)
+          if not selected then
+            return
+          end
+
+          local sel = selected[1]
+          local sel_ansi = fzf_lua_.utils.strip_ansi_coloring(sel)
+
+          local build_idx_cmd = RUtils.cmd.strip_whitespace(sel_ansi)
+
+          if opts[build_idx_cmd] then
+            opts[build_idx_cmd]()
+            return
+          end
+
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(opts))
+        end,
+      },
+    }, opts_cmds))
+  )
+end
+
+function M.open_cmd_bulk(opts, opts_cmds)
+  local fzf_lua_ = require "fzf-lua"
+
+  local cmds = get_extracted_cmds(fzf_lua_, opts)
 
   fzf_lua_.fzf_exec(
     cmds,

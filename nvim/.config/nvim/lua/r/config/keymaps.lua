@@ -71,26 +71,33 @@ RUtils.map.tnoremap("<a-x>", function()
   local buf = vim.api.nvim_get_current_buf()
   require("bufdelete").bufdelete(buf, true)
 end, { desc = "Terminal: close terminal" })
--- RUtils.map.tnoremap("<a-t>", function()
---   RUtils.map.feedkey("<C-\\><C-n>", "t")
---   require("fzf-lua").tabs()
--- end, { desc = "Terminal: show tabs [fzflua]" })
 RUtils.map.tnoremap("<c-a-l>", function()
   RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
 end, { desc = "Terminal: next tab" })
 RUtils.map.tnoremap("<c-a-h>", function()
   RUtils.map.feedkey("<C-\\><C-n><c-a-h>", "t")
 end, { desc = "Terminal: prev tab" })
--- RUtils.map.tnoremap("<a-f>", function()
---   RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
---   -- RUtils.terminal.toggle_right_term()
--- end, { desc = "Terminal: new term split" })
 RUtils.map.tnoremap("<a-N>", function()
   RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
 end, { desc = "Terminal: new tabterm" })
 RUtils.map.tnoremap("<a-CR>", function()
   RUtils.terminal.smart_split()
 end, { desc = "Terminal: new term" })
+
+-- Move cursor from terminal mode
+RUtils.map.tnoremap("<a-l>", function()
+  RUtils.map.feedkey("<C-\\><C-n><C-w>l", "t")
+end, { desc = "Terminal: move cursor left" })
+RUtils.map.tnoremap("<a-k>", function()
+  RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t")
+end, { desc = "Terminal: move cursor up" })
+RUtils.map.tnoremap("<a-h>", function()
+  RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t")
+end, { desc = "Terminal: move cursor right" })
+RUtils.map.tnoremap("<a-j>", function()
+  RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
+end, { desc = "Terminal: move cursor down" })
+
 -- }}}
 -- {{{ Windows, view and nav
 
@@ -323,6 +330,11 @@ RUtils.map.vnoremap(
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
 if vim.fn.executable "lazygit" == 1 then
+  RUtils.map.nnoremap("<a-G>", function()
+    ---@diagnostic disable-next-line: missing-fields
+    Snacks.lazygit { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit (root dir) [snacks]" })
+
   RUtils.map.nnoremap("<Leader>gg", function()
     ---@diagnostic disable-next-line: missing-fields
     Snacks.lazygit { cwd = RUtils.root.git() }
@@ -585,13 +597,7 @@ end, { force = true, bang = true, nargs = "*" })
 -- {{{ Bulk commands
 -- These commands run outside tmux
 local ctrl_o_nvim = function()
-  local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
-  local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
-
-  local col = math.ceil((win_width / 2) - 40)
-  local row = math.ceil((RUtils.cmd.get_option "lines" - win_height) - 10)
-
-  RUtils.fzflua.open_cmd_bulk({
+  RUtils.fzflua.open_cmd_bulk_key_only({
     ["Clock mode"] = function()
       RUtils.terminal.clock_mode()
     end,
@@ -622,7 +628,7 @@ local ctrl_o_nvim = function()
     ["R-kill"] = function()
       RUtils.terminal.float_rkill()
     end,
-  }, { winopts = { title = "Bulk: ctrl-o cmds", row = row, col = col } })
+  }, { winopts = { title = "CtrlO" } })
 end
 
 RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
