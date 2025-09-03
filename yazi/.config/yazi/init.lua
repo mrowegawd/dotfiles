@@ -7,6 +7,6 @@ th.git.untracked_sign = ""
 th.git.ignored_sign = ""
 th.git.deleted_sign = "✖"
 th.git.updated_sign = ""
-require("git"):setup({
-	order = 500, -- order to show directory list. if 1500, gitsign go to rightmost
-})
+require("git"):setup {
+  order = 500, -- order to show directory list. if 1500, gitsign go to rightmost
+}
