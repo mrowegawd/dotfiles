@@ -1,4 +1,4 @@
-local base_cl = {
+local base_colors = {
   Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" },
   CurSearch = {
     fg = { from = "Dark_yellow", attr = "fg", alter = -1 },
@@ -114,486 +114,318 @@ local base_cl = {
   delta_minus_bg_alter = -0.4,
 }
 
-local function reset_base_alter(themes, alter_base)
-  for _, theme in pairs(themes) do
-    if theme == RUtils.config.colorscheme then
-      for key_alter, val_alter in pairs(alter_base) do
-        for key, _ in pairs(base_cl) do
-          if key == key_alter then
-            base_cl[key] = val_alter
-          end
-        end
-      end
-    end
-  end
+local update_col_colorscheme = {
+  ["base46-material-darker"] = {
+    comment_fg_alter = 0.6,
+    cursor_fg = "#16afca",
+    cursorline_alter = 0.07,
+    dapstopped_bg_alter = 0.2,
+    fzflua_border_fg_alter = 0.7,
+    fzflua_file_part_fg = 0.65,
+    linenr_fg_alter = 0.08,
+    noice_cmdline_fg_alter = 0.6,
+    pmenu_sp_alter = 2.2,
+    quickfixline_linenr_fg_alter = 0.3,
+    quickfixline_sp_alter = 0.5,
+    render_markdown_code_inline_bg_alter = 0.15,
+    snacks_indent_scope_fg_alter = 0.18,
+    tabline_fg_alter = 0.5,
+    visual_bg_alter = -0.2,
+    winseparator_alter = 0.4,
+  },
+  ["base46-jellybeans"] = {
+    cursor_fg = "#ffa560",
+    cursorline_alter = 0.6,
+    cursorline_fg_alter = "WinSeparator",
+    dapstopped_bg_alter = 0.2,
+    fzflua_border_fg_alter = 1.5,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = 0.2,
+    noice_cmdline_fg_alter = 0.65,
+    nontext_fg_alter = 2.5,
+    normal_keyword_alter = 0.14,
+    panel_sidebar_bg_alter = 4,
+    pmenu_bg_alter = 1.5,
+    pmenu_sp_alter = 3,
+    quickfixline_alter = 0.6,
+    quickfixline_header_fg_alter = 1.75,
+    render_markdown_code_bg_alter = 0.9,
+    render_markdown_code_inline_bg_alter = 0.15,
+    render_markdown_code_inline_fg_alter = 0.05,
+    tabline_fg_alter = 0.55,
+    trouble_indent_fg_alter = 0.7,
+    winbar_file_path_fg_alter = 1.5,
+    winseparator_alter = 0.9,
+  },
+  ["base46-kanagawa"] = {
+    cmpdocnormal_fg_alter = 0.1,
+    cursor_fg = "#b3276f",
+    cursorline_alter = 0.65,
+    cursorline_fg_alter = "WinSeparator",
+    dapstopped_bg_alter = 0.2,
+    fold_fg = 0.13,
+    fzflua_border_fg_alter = 0.8,
+    linenr_fg_alter = 0.2,
+    noice_cmdline_fsg_alter = 0.4,
+    nontext_fg_alter = 1.8,
+    normal_keyword_alter = 0.16,
+    pmenu_bg_alter = 0.8,
+    quickfixline_linenr_fg_alter = 0.35,
+    quickfixline_sp_alter = 0.7,
+    render_markdown_code_bg_alter = 0.38,
+    render_markdown_code_inline_bg_alter = 0.2,
+    snacks_indent_scope_fg_alter = 0.22,
+    tabline_fg_alter = 0.55,
+    winseparator_alter = 0.3,
+  },
+  ["base46-material-lighter"] = {
+    CurSearch = {
+      fg = { from = "Dark_red", attr = "fg", alter = 1 },
+      bg = { from = "Dark_red", attr = "fg", alter = -0.1 },
+      bold = true,
+    },
+    Search = {
+      fg = { from = "CurSearch", attr = "fg", alter = 0.15 },
+      bg = { from = "CurSearch", attr = "bg", alter = -0.15 },
+      bold = false,
+    },
+    blink_cmp_label_match_fg_alter = 0.6,
+    cmpdocnormal_fg_alter = 0.1,
+    comment_fg_alter = -0.19,
+    cursor_fg = "#dfdfe0",
+    cursorline_alter = -0.12,
+    dapstopped_bg_alter = 0.2,
+    fzflua_file_part_fg = -0.4,
+    fzflua_sel_bg_alter = 0.01,
+    linenr_fg_alter = -0.04,
+    lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
+    lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
+    lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.26 },
+    my_code_usage_bg_alter = 3.5,
+    my_code_usage_fg_alter = 0.7,
+    nontext_fg_alter = -0.45,
+    pmenu_fg_alter = -0.2,
+    pmenu_sel_bg_alter = -0.05,
+    quickfixline_alter = -0.1,
+    snacks_indent_scope_fg_alter = 0.7,
+    trouble_indent_fg_alter = 0.5,
+    winseparator_alter = -0.16,
+  },
+  ["base46-melange"] = {
+    blink_ghost_text_fg_alter = -0.4,
+    cursor_fg = "#ece1d7",
+    cursorline_alter = 0.05,
+    dapstopped_bg_alter = 0.15,
+    fold_fg = 0.2,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = -0.1,
+    noice_cmdline_fg_alter = 0.6,
+    normal_keyword_alter = 0.1,
+    pmenu_bg_alter = 0.5,
+    pmenu_sp_alter = 1.5,
+    render_markdown_code_bg_alter = 0.23,
+    snacks_indent_scope_fg_alter = 0.13,
+    trouble_indent_fg_alter = 0.6,
+    statusline_bg_alter = -0.4,
+    winbar_file_path_fg_alter = 0.95,
+    winseparator_alter = 0.35,
+  },
+  ["base46-oxocarbon"] = {
+    blink_cmp_label_kind_fg_alter = 0.75,
+    comment_fg_alter = 0.78,
+    cursor_fg = "#ffffff",
+    cursorline_alter = 0.5,
+    cursorline_fg_alter = "WinSeparator",
+    dapstopped_bg_alter = 0.2,
+    fold_fg = 0.18,
+    linenr_fg_alter = 0.3,
+    noice_cmdline_fg_alter = 1,
+    nontext_fg_alter = 2.7,
+    normal_keyword_alter = 0.18,
+    pmenu_bg_alter = 1.3,
+    pmenu_sp_alter = 3.5,
+    render_markdown_code_bg_alter = 0.85,
+    render_markdown_code_inline_bg_alter = 0.16,
+    tabline_fg_alter = 0.6,
+    trouble_indent_fg_alter = 1.65,
+    winbar_file_path_fg_alter = 1,
+    winseparator_alter = 0.5,
+  },
+  ["base46-seoul256_dark"] = {
+    blink_cmp_label_kind_fg_alter = 0.6,
+    blink_ghost_text_fg_alter = -0.45,
+    comment_fg_alter = 0.32,
+    cursor_fg = "#d75f87",
+    cursorline_alter = 0.03,
+    dapstopped_bg_alter = 0.2,
+    fold_bg = 0,
+    fold_fg = 0.1,
+    fzflua_border_fg_alter = 0.2,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = 0.07,
+    my_code_usage_bg_alter = -0.4,
+    my_code_usage_fg_alter = -0.02,
+    noice_cmdline_fg_alter = 0.4,
+    nontext_fg_alter = 0.8,
+    normal_keyword_alter = 0.12,
+    outline_indent_fg_alter = 0.15,
+    pmenu_bg_alter = 0.2,
+    pmenu_sel_bg_alter = 0.13,
+    pmenu_sp_alter = 1,
+    quickfixline_alter = 0.2,
 
-  local variable_map = {
-    CurSearch = "CurSearch",
-    Directory = "Directory",
-    Search = "Search",
-    blink_cmp_label_kind_fg_alter = "blink_cmp_label_kind_fg_alter",
-    blink_cmp_label_match_fg_alter = "blink_cmp_label_match_fg_alter",
-    blink_ghost_text_fg_alter = "blink_ghost_text_fg_alter",
-    bqf_keyword = "bqf_keyword",
-    cmpdocnormal_fg_alter = "cmpdocnormal_fg_alter",
-    comment_fg_alter = "comment_fg_alter",
-    cursor_fg = "cursor_fg",
-    cursorline_alter = "cursorline_alter",
-    cursorline_fg_alter = "cursorline_fg_alter",
-    dapstopped_bg_alter = "dapstopped_bg_alter",
-    delta_minus_bg_alter = "delta_minus_bg_alter",
-    delta_minus_fg_alter = "delta_minus_fg_alter",
-    delta_plus_bg_alter = "delta_plus_bg_alter",
-    delta_plus_fg_alter = "delta_plus_fg_alter",
-    diffadd_bg_alter = "diffadd_bg_alter",
-    diffadd_fg_alter = "diffadd_fg_alter",
-    diffchange_bg_alter = "diffchange_bg_alter",
-    diffchange_fg_alter = "diffchange_fg_alter",
-    diffdelete_bg_alter = "diffdelete_bg_alter",
-    diffdelete_fg_alter = "diffdelete_fg_alter",
-    difffile_bg_alter = "difffile_bg_alter",
-    difffile_fg_alter = "difffile_fg_alter",
-    difftext_bg_alter = "difftext_bg_alter",
-    difftext_fg_alter = "difftext_fg_alter",
-    float_title_bg_alter = "float_title_bg_alter",
-    float_title_fg_alter = "float_title_fg_alter",
-    fold_bg = "fold_bg",
-    fold_fg = "fold_fg",
-    fzflua_border_fg_alter = "fzflua_border_fg_alter",
-    fzflua_buf_linenr_bg_alter = "fzflua_buf_linenr_bg_alter",
-    fzflua_file_part_fg = "fzflua_file_part_fg",
-    fzflua_normal_bg_alter = "fzflua_normal_bg_alter",
-    fzflua_sel_bg_alter = "fzflua_sel_bg_alter",
-    fzflua_sel_sp_fg_alter = "fzflua_sel_sp_fg_alter",
-    hovered_cursorline_fg_alter = "hovered_cursorline_fg_alter",
-    linenr_fg_alter = "linenr_fg_alter",
-    lsp_reference_read_bg_alter = "lsp_reference_read_bg_alter",
-    lsp_reference_text_bg_alter = "lsp_reference_text_bg_alter",
-    lsp_reference_write_bg_alter = "lsp_reference_write_bg_alter",
-    my_code_usage_bg_alter = "my_code_usage_bg_alter",
-    my_code_usage_fg_alter = "my_code_usage_fg_alter",
-    noice_cmdline_fg_alter = "noice_cmdline_fg_alter",
-    nontext_fg_alter = "nontext_fg_alter",
-    normal_float_bg_alter = "normal_float_bg_alter",
-    normal_float_fg_alter = "normal_float_fg_alter",
-    normal_keyword_alter = "normal_keyword_alter",
-    outline_indent_fg_alter = "outline_indent_fg_alter",
-    panel_bottom_normal_bg_alter = "panel_bottom_normal_bg_alter",
-    panel_bottom_normal_fg_alter = "panel_bottom_normal_fg_alter",
-    pmenu_bg_alter = "pmenu_bg_alter",
-    pmenu_fg_alter = "pmenu_fg_alter",
-    pmenu_sel_bg_alter = "pmenu_sel_bg_alter",
-    pmenu_sp_alter = "pmenu_sp_alter",
-    pmenu_thumb_bg_alter = "pmenu_thumb_bg_alter",
-    quickfixline_alter = "quickfixline_alter",
-    quickfixline_header_bg_alter = "quickfixline_header_bg_alter",
-    quickfixline_header_fg_alter = "quickfixline_header_fg_alter",
-    quickfixline_header_tint_bg_alter = "quickfixline_header_tint_bg_alter",
-    quickfixline_header_tint_fg_alter = "quickfixline_header_tint_fg_alter",
-    quickfixline_linenr_fg_alter = "quickfixline_linenr_fg_alter",
-    quickfixline_separator_fg_alter = "quickfixline_separator_fg_alter",
-    quickfixline_sp_alter = "quickfixline_sp_alter",
-    snacks_indent_scope_fg_alter = "snacks_indent_scope_fg_alter",
-    statusline_bg_alter = "statusline_bg_alter",
-    tabline_bg_alter = "tabline_bg_alter",
-    tabline_fg_alter = "tabline_fg_alter",
-    trouble_indent_fg_alter = "trouble_indent_fg_alter",
-    visual_bg_alter = "visual_bg_alter",
-    winbar_file_path_fg_alter = "winbar_file_path_fg_alter",
-    winbar_keyword = "winbar_keyword",
-    winseparator_alter = "winseparator_alter",
+    quickfixline_header_bg_alter = 0.2,
+    quickfixline_header_fg_alter = 1,
+    quickfixline_linenr_fg_alter = 0.2,
+    quickfixline_sp_alter = 0.4,
 
-    panel_sidebar_bg_alter = "panel_sidebar_bg_alter",
-    panel_sidebar_fg_alter = "panel_sidebar_fg_alter",
+    render_markdown_code_bg_alter = 0.02,
+    render_markdown_code_inline_bg_alter = 0.04,
+    snacks_notifier_border_error_fg = -0.1,
+    snacks_notifier_border_warn_fg = -0.4,
+    tabline_fg_alter = 0.2,
+    trouble_indent_fg_alter = 0.2,
+    winbar_file_path_fg_alter = 0.5,
+    winseparator_alter = 0.08,
 
-    code_block_fg_alter = "code_block_fg_alter",
-    render_markdown_code_bg_alter = "render_markdown_code_bg_alter",
-    render_markdown_code_inline_bg_alter = "render_markdown_code_inline_bg_alter",
-    render_markdown_code_inline_fg_alter = "render_markdown_code_inline_fg_alter",
+    difffile_fg_alter = 0.05,
+    difffile_bg_alter = -0.5,
 
-    snacks_notifier_info_fg = "snacks_notifier_info_fg",
-    snacks_notifier_info_bg = "snacks_notifier_info_bg",
-    snacks_notifier_border_info_fg = "snacks_notifier_border_info_fg",
+    difftext_fg_alter = 0.2,
+    difftext_bg_alter = 0.3,
 
-    snacks_notifier_warn_fg = "snacks_notifier_warn_fg",
-    snacks_notifier_warn_bg = "snacks_notifier_warn_bg",
-    snacks_notifier_border_warn_fg = "snacks_notifier_border_warn_fg",
+    delta_plus_fg_alter = 1.2,
+    delta_minus_fg_alter = 1.5,
+  },
+  ["base46-zenburn"] = {
+    blink_cmp_label_kind_fg_alter = 0.7,
+    blink_ghost_text_fg_alter = -0.55,
+    comment_fg_alter = 0.38,
+    cursor_fg = "#f3eadb",
+    cursorline_alter = 0.04,
+    dapstopped_bg_alter = 0.15,
+    fold_bg = 0,
+    fzflua_border_fg_alter = 0.25,
+    my_code_usage_bg_alter = -0.4,
+    my_code_usage_fg_alter = 0.1,
+    nontext_fg_alter = 0.8,
+    normal_keyword_alter = 0.1,
+    pmenu_bg_alter = 0.2,
+    pmenu_sp_alter = 1,
 
-    snacks_notifier_error_fg = "snacks_notifier_error_fg",
-    snacks_notifier_error_bg = "snacks_notifier_error_bg",
-    snacks_notifier_border_error_fg = "snacks_notifier_border_error_fg",
-  }
+    quickfixline_alter = 0.25,
+    quickfixline_header_bg_alter = 0.2,
+    quickfixline_header_fg_alter = 1.3,
+    quickfixline_linenr_fg_alter = 0.2,
+    quickfixline_sp_alter = 0.4,
 
-  for key, var_name in pairs(variable_map) do
-    _G[var_name] = base_cl[key]
-  end
+    render_markdown_code_bg_alter = 0.07,
+    render_markdown_code_inline_bg_alter = 0.04,
+    snacks_indent_scope_fg_alter = 0.11,
+    snacks_notifier_border_error_fg = -0.1,
+    snacks_notifier_border_warn_fg = -0.4,
+    tabline_fg_alter = 0.25,
+    trouble_indent_fg_alter = 0.2,
+    winbar_file_path_fg_alter = 0.6,
+    winseparator_alter = 0.12,
+
+    difffile_bg_alter = -0.55,
+    difffile_fg_alter = -0.1,
+
+    difftext_fg_alter = 0.6,
+    difftext_bg_alter = 0.4,
+
+    delta_plus_fg_alter = 1.2,
+    delta_minus_fg_alter = 1.5,
+  },
+  ["lackluster"] = {
+    Directory = { fg = "#7788aa", bg = "NONE" },
+    bqf_keyword = "String",
+    comment_fg_alter = 0.5,
+    cursor_fg = "#deeeed",
+    cursorline_alter = 0.27,
+    fold_bg = 0,
+    fold_fg = 0.18,
+    fzflua_border_fg_alter = 2,
+    fzflua_file_part_fg = 1.2,
+    linenr_fg_alter = 0.15,
+    lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
+    lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
+    lsp_reference_write_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
+    my_code_usage_bg_alter = -0.35,
+    my_code_usage_fg_alter = -0.1,
+    noice_cmdline_fg_alter = 0.6,
+    nontext_fg_alter = 3.5,
+    normal_keyword_alter = 0.4,
+    outline_indent_fg_alter = 0.15,
+    pmenu_bg_alter = 2.2,
+    pmenu_sp_alter = 5,
+
+    quickfixline_alter = 0.3,
+    quickfixline_sp_alter = 0.45,
+
+    render_markdown_code_bg_alter = 1.35,
+    render_markdown_code_inline_bg_alter = 0.35,
+    snacks_notifier_info_fg = 1.6,
+    trouble_indent_fg_alter = 0.5,
+    visual_bg_alter = 0.05,
+    winbar_keyword = 0.9,
+    winseparator_alter = 1.2,
+
+    diffadd_fg_alter = -0.2,
+    diffadd_bg_alter = 0.18,
+
+    diffchange_fg_alter = -0.3,
+    diffchange_bg_alter = 0.18,
+
+    diffdelete_fg_alter = -0.3,
+    diffdelete_bg_alter = 0.2,
+  },
+  ["neogotham"] = {
+    comment_fg_alter = 0.8,
+    cursor_fg = "#98d1ce",
+    cursorline_alter = 0.05,
+    dapstopped_bg_alter = 0.15,
+    fold_fg = 0.18,
+    fzflua_border_fg_alter = 2.5,
+    linenr_fg_alter = 0.15,
+    noice_cmdline_fg_alter = 0.6,
+    nontext_fg_alter = 4,
+    normal_keyword_alter = 0.25,
+    pmenu_bg_alter = 2.3,
+    pmenu_sp_alter = 6,
+    render_markdown_code_bg_alter = 1.5,
+    trouble_indent_fg_alter = 0.6,
+    winbar_file_path_fg_alter = 0.7,
+    winseparator_alter = 1.4,
+  },
+  ["vscode_modern"] = {
+    Directory = { fg = "#569cd6", bg = "NONE" },
+    cmpdocnormal_fg_alter = 0.1,
+    comment_fg_alter = 0.6,
+    cursor_fg = "#fa1919",
+    cursorline_alter = 0.1,
+    dapstopped_bg_alter = 0.2,
+    fold_bg = 0,
+    fzflua_border_fg_alter = 0.7,
+    hovered_cursorline_fg_alter = 0.35,
+    lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
+    lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
+    lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
+    noice_cmdline_fg_alter = 0.6,
+    nontext_fg_alter = 1.8,
+    pmenu_bg_alter = 0.72,
+    render_markdown_code_bg_alter = 0.4,
+    snacks_indent_scope_fg_alter = 0.15,
+    winbar_file_path_fg_alter = 0.8,
+    winseparator_alter = 0.4,
+  },
+}
+
+local function update_base_colors(theme)
+  local cols = vim.deepcopy(base_colors)
+  return vim.tbl_deep_extend("force", update_col_colorscheme[theme] or {}, cols)
 end
-
-reset_base_alter({ "base46-jellybeans" }, {
-  cursor_fg = "#ffa560",
-  cursorline_alter = 0.6,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.2,
-  fzflua_border_fg_alter = 1.5,
-  fzflua_file_part_fg = 0.7,
-  linenr_fg_alter = 0.2,
-  noice_cmdline_fg_alter = 0.65,
-  nontext_fg_alter = 2.5,
-  normal_keyword_alter = 0.14,
-  panel_sidebar_bg_alter = 4,
-  pmenu_bg_alter = 1.5,
-  pmenu_sp_alter = 3,
-  quickfixline_alter = 0.6,
-  quickfixline_header_fg_alter = 1.75,
-  render_markdown_code_bg_alter = 0.9,
-  render_markdown_code_inline_bg_alter = 0.15,
-  render_markdown_code_inline_fg_alter = 0.05,
-  tabline_fg_alter = 0.55,
-  trouble_indent_fg_alter = 0.7,
-  winbar_file_path_fg_alter = 1.5,
-  winseparator_alter = 0.9,
-})
-reset_base_alter({ "base46-kanagawa" }, {
-  cmpdocnormal_fg_alter = 0.1,
-  cursor_fg = "#b3276f",
-  cursorline_alter = 0.65,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.2,
-  fold_fg = 0.13,
-  fzflua_border_fg_alter = 0.8,
-  linenr_fg_alter = 0.2,
-  noice_cmdline_fsg_alter = 0.4,
-  nontext_fg_alter = 1.8,
-  normal_keyword_alter = 0.16,
-  pmenu_bg_alter = 0.8,
-  quickfixline_linenr_fg_alter = 0.35,
-  quickfixline_sp_alter = 0.7,
-  render_markdown_code_bg_alter = 0.38,
-  render_markdown_code_inline_bg_alter = 0.2,
-  snacks_indent_scope_fg_alter = 0.22,
-  tabline_fg_alter = 0.55,
-  winseparator_alter = 0.3,
-})
-reset_base_alter({ "base46-jabuti" }, {
-  pmenu_bg_alter = 0.5,
-})
-reset_base_alter({ "base46-material-darker" }, {
-  comment_fg_alter = 0.6,
-  cursor_fg = "#16afca",
-  cursorline_alter = 0.07,
-  dapstopped_bg_alter = 0.2,
-  fzflua_border_fg_alter = 0.7,
-  fzflua_file_part_fg = 0.65,
-  linenr_fg_alter = 0.08,
-  noice_cmdline_fg_alter = 0.6,
-  pmenu_sp_alter = 2.2,
-  quickfixline_linenr_fg_alter = 0.3,
-  quickfixline_sp_alter = 0.5,
-  render_markdown_code_inline_bg_alter = 0.15,
-  snacks_indent_scope_fg_alter = 0.18,
-  tabline_fg_alter = 0.5,
-  visual_bg_alter = -0.2,
-  winseparator_alter = 0.4,
-})
-reset_base_alter({ "base46-material-lighter" }, {
-  CurSearch = {
-    fg = { from = "Dark_red", attr = "fg", alter = 1 },
-    bg = { from = "Dark_red", attr = "fg", alter = -0.1 },
-    bold = true,
-  },
-  Search = {
-    fg = { from = "CurSearch", attr = "fg", alter = 0.15 },
-    bg = { from = "CurSearch", attr = "bg", alter = -0.15 },
-    bold = false,
-  },
-  blink_cmp_label_match_fg_alter = 0.6,
-  cmpdocnormal_fg_alter = 0.1,
-  comment_fg_alter = -0.19,
-  cursor_fg = "#dfdfe0",
-  cursorline_alter = -0.12,
-  dapstopped_bg_alter = 0.2,
-  fzflua_file_part_fg = -0.4,
-  fzflua_sel_bg_alter = 0.01,
-  linenr_fg_alter = -0.04,
-  lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
-  lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
-  lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.26 },
-  my_code_usage_bg_alter = 3.5,
-  my_code_usage_fg_alter = 0.7,
-  nontext_fg_alter = -0.45,
-  pmenu_fg_alter = -0.2,
-  pmenu_sel_bg_alter = -0.05,
-  quickfixline_alter = -0.1,
-  snacks_indent_scope_fg_alter = 0.7,
-  trouble_indent_fg_alter = 0.5,
-  winseparator_alter = -0.16,
-})
-reset_base_alter({ "base46-melange" }, {
-  blink_ghost_text_fg_alter = -0.4,
-  cursor_fg = "#ece1d7",
-  cursorline_alter = 0.05,
-  dapstopped_bg_alter = 0.15,
-  fold_fg = 0.2,
-  fzflua_file_part_fg = 0.7,
-  linenr_fg_alter = -0.1,
-  noice_cmdline_fg_alter = 0.6,
-  normal_keyword_alter = 0.1,
-  pmenu_bg_alter = 0.5,
-  pmenu_sp_alter = 1.5,
-  render_markdown_code_bg_alter = 0.23,
-  snacks_indent_scope_fg_alter = 0.13,
-  trouble_indent_fg_alter = 0.6,
-  statusline_bg_alter = -0.4,
-  winbar_file_path_fg_alter = 0.95,
-  winseparator_alter = 0.35,
-})
-reset_base_alter({ "base46-oxocarbon" }, {
-  blink_cmp_label_kind_fg_alter = 0.75,
-  comment_fg_alter = 0.78,
-  cursor_fg = "#ffffff",
-  cursorline_alter = 0.5,
-  cursorline_fg_alter = "WinSeparator",
-  dapstopped_bg_alter = 0.2,
-  fold_fg = 0.18,
-  linenr_fg_alter = 0.3,
-  noice_cmdline_fg_alter = 1,
-  nontext_fg_alter = 2.7,
-  normal_keyword_alter = 0.18,
-  pmenu_bg_alter = 1.3,
-  pmenu_sp_alter = 3.5,
-  render_markdown_code_bg_alter = 0.85,
-  render_markdown_code_inline_bg_alter = 0.16,
-  tabline_fg_alter = 0.6,
-  trouble_indent_fg_alter = 1.65,
-  winbar_file_path_fg_alter = 1,
-  winseparator_alter = 0.5,
-})
-reset_base_alter({ "base46-seoul256_dark" }, {
-  blink_cmp_label_kind_fg_alter = 0.6,
-  blink_ghost_text_fg_alter = -0.45,
-  comment_fg_alter = 0.32,
-  cursor_fg = "#d75f87",
-  cursorline_alter = 0.03,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = 0,
-  fold_fg = 0.1,
-  fzflua_border_fg_alter = 0.2,
-  fzflua_file_part_fg = 0.7,
-  linenr_fg_alter = 0.07,
-  my_code_usage_bg_alter = -0.4,
-  my_code_usage_fg_alter = -0.02,
-  noice_cmdline_fg_alter = 0.4,
-  nontext_fg_alter = 0.8,
-  normal_keyword_alter = 0.12,
-  outline_indent_fg_alter = 0.15,
-  pmenu_bg_alter = 0.2,
-  pmenu_sel_bg_alter = 0.13,
-  pmenu_sp_alter = 1,
-  quickfixline_alter = 0.2,
-
-  quickfixline_header_bg_alter = 0.2,
-  quickfixline_header_fg_alter = 1,
-  quickfixline_linenr_fg_alter = 0.2,
-  quickfixline_sp_alter = 0.4,
-
-  render_markdown_code_bg_alter = 0.02,
-  render_markdown_code_inline_bg_alter = 0.04,
-  snacks_notifier_border_error_fg = -0.1,
-  snacks_notifier_border_warn_fg = -0.4,
-  tabline_fg_alter = 0.2,
-  trouble_indent_fg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.5,
-  winseparator_alter = 0.08,
-
-  difffile_fg_alter = 0.05,
-  difffile_bg_alter = -0.5,
-
-  difftext_fg_alter = 0.2,
-  difftext_bg_alter = 0.3,
-
-  delta_plus_fg_alter = 1.2,
-  delta_minus_fg_alter = 1.5,
-})
-reset_base_alter({ "base46-zenburn" }, {
-  blink_cmp_label_kind_fg_alter = 0.7,
-  blink_ghost_text_fg_alter = -0.55,
-  comment_fg_alter = 0.38,
-  cursor_fg = "#f3eadb",
-  cursorline_alter = 0.04,
-  dapstopped_bg_alter = 0.15,
-  fold_bg = 0,
-  fzflua_border_fg_alter = 0.25,
-  my_code_usage_bg_alter = -0.4,
-  my_code_usage_fg_alter = 0.1,
-  nontext_fg_alter = 0.8,
-  normal_keyword_alter = 0.1,
-  pmenu_bg_alter = 0.2,
-  pmenu_sp_alter = 1,
-
-  quickfixline_alter = 0.25,
-  quickfixline_header_bg_alter = 0.2,
-  quickfixline_header_fg_alter = 1.3,
-  quickfixline_linenr_fg_alter = 0.2,
-  quickfixline_sp_alter = 0.4,
-
-  render_markdown_code_bg_alter = 0.07,
-  render_markdown_code_inline_bg_alter = 0.04,
-  snacks_indent_scope_fg_alter = 0.11,
-  snacks_notifier_border_error_fg = -0.1,
-  snacks_notifier_border_warn_fg = -0.4,
-  tabline_fg_alter = 0.25,
-  trouble_indent_fg_alter = 0.2,
-  winbar_file_path_fg_alter = 0.6,
-  winseparator_alter = 0.12,
-
-  difffile_bg_alter = -0.55,
-  difffile_fg_alter = -0.1,
-
-  difftext_fg_alter = 0.6,
-  difftext_bg_alter = 0.4,
-
-  delta_plus_fg_alter = 1.2,
-  delta_minus_fg_alter = 1.5,
-})
-reset_base_alter({ "lackluster" }, {
-  Directory = { fg = "#7788aa", bg = "NONE" },
-  bqf_keyword = "String",
-  comment_fg_alter = 0.5,
-  cursor_fg = "#deeeed",
-  cursorline_alter = 0.27,
-  fold_bg = 0,
-  fold_fg = 0.18,
-  fzflua_border_fg_alter = 2,
-  fzflua_file_part_fg = 1.2,
-  linenr_fg_alter = 0.15,
-  lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-  lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
-  lsp_reference_write_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-  my_code_usage_bg_alter = -0.35,
-  my_code_usage_fg_alter = -0.1,
-  noice_cmdline_fg_alter = 0.6,
-  nontext_fg_alter = 3.5,
-  normal_keyword_alter = 0.4,
-  outline_indent_fg_alter = 0.15,
-  pmenu_bg_alter = 2.2,
-  pmenu_sp_alter = 5,
-
-  quickfixline_alter = 0.3,
-  quickfixline_sp_alter = 0.45,
-
-  render_markdown_code_bg_alter = 1.35,
-  render_markdown_code_inline_bg_alter = 0.35,
-  snacks_notifier_info_fg = 1.6,
-  trouble_indent_fg_alter = 0.5,
-  visual_bg_alter = 0.05,
-  winbar_keyword = 0.9,
-  winseparator_alter = 1.2,
-
-  diffadd_fg_alter = -0.2,
-  diffadd_bg_alter = 0.18,
-
-  diffchange_fg_alter = -0.3,
-  diffchange_bg_alter = 0.18,
-
-  diffdelete_fg_alter = -0.3,
-  diffdelete_bg_alter = 0.2,
-})
-reset_base_alter({ "neogotham" }, {
-  comment_fg_alter = 0.8,
-  cursor_fg = "#98d1ce",
-  cursorline_alter = 0.05,
-  dapstopped_bg_alter = 0.15,
-  fold_fg = 0.18,
-  fzflua_border_fg_alter = 2.5,
-  linenr_fg_alter = 0.15,
-  noice_cmdline_fg_alter = 0.6,
-  nontext_fg_alter = 4,
-  normal_keyword_alter = 0.25,
-  pmenu_bg_alter = 2.3,
-  pmenu_sp_alter = 6,
-  render_markdown_code_bg_alter = 1.5,
-  trouble_indent_fg_alter = 0.6,
-  winbar_file_path_fg_alter = 0.7,
-  winseparator_alter = 1.4,
-})
-reset_base_alter({ "rose-pine-dawn" }, {
-  CurSearch = {
-    fg = { from = "Dark_red", attr = "fg", alter = 1 },
-    bg = { from = "Dark_red", attr = "fg", alter = -0.1 },
-    bold = true,
-  },
-  Search = {
-    fg = { from = "CurSearch", attr = "fg", alter = 0.15 },
-    bg = { from = "CurSearch", attr = "bg", alter = -0.15 },
-    bold = false,
-  },
-  blink_cmp_label_kind_fg_alter = -0.32,
-  blink_cmp_label_match_fg_alter = 0.6,
-  cmpdocnormal_fg_alter = 0.1,
-  comment_fg_alter = -0.2,
-  cursor_fg = "#dfdfe0",
-  cursorline_alter = -0.14,
-  dapstopped_bg_alter = 0.2,
-  float_title_bg_alter = -0.2,
-  float_title_fg_alter = 1,
-  fold_bg = 0.02,
-  fold_fg = -0.25,
-  fzflua_buf_linenr_bg_alter = -0.2,
-  linenr_fg_alter = -0.01,
-  lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
-  lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
-  lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.26 },
-  my_code_usage_bg_alter = 0.2,
-  my_code_usage_fg_alter = -0.1,
-  noice_cmdline_fg_alter = -0.3,
-  nontext_fg_alter = -0.45,
-  pmenu_bg_alter = -0.1,
-  pmenu_sel_bg_alter = 1,
-  quickfixline_alter = -0.15,
-  quickfixline_linenr_fg_alter = -0.25,
-  quickfixline_separator_fg_alter = 0.2,
-  snacks_indent_scope_fg_alter = -1,
-  snacks_notifier_border_info_fg = -0.3,
-  snacks_notifier_info_fg = -0.5,
-  tabline_bg_alter = -0.02,
-  tabline_fg_alter = -0.2,
-  trouble_indent_fg_alter = -0.45,
-  winbar_file_path_fg_alter = -0.2,
-  winseparator_alter = -0.14,
-
-  render_markdown_code_bg_alter = -0.075,
-  code_block_fg_alter = 0.1,
-  render_markdown_code_inline_fg_alter = -0.05,
-  render_markdown_code_inline_bg_alter = 0.4,
-
-  snacks_notifier_warn_fg = -0.5,
-  snacks_notifier_border_warn_fg = -0.1,
-
-  snacks_notifier_error_fg = -0.5,
-  snacks_notifier_border_error_fg = -0.1,
-})
-
-reset_base_alter({ "vscode_modern" }, {
-  Directory = { fg = "#569cd6", bg = "NONE" },
-  cmpdocnormal_fg_alter = 0.1,
-  comment_fg_alter = 0.6,
-  cursor_fg = "#fa1919",
-  cursorline_alter = 0.1,
-  dapstopped_bg_alter = 0.2,
-  fold_bg = 0,
-  fzflua_border_fg_alter = 0.7,
-  hovered_cursorline_fg_alter = 0.35,
-  lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
-  lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
-  lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
-  noice_cmdline_fg_alter = 0.6,
-  nontext_fg_alter = 1.8,
-  pmenu_bg_alter = 0.72,
-  render_markdown_code_bg_alter = 0.4,
-  snacks_indent_scope_fg_alter = 0.15,
-  winbar_file_path_fg_alter = 0.8,
-  winseparator_alter = 0.4,
-})
 
 local general_overrides = function()
   local H = require "r.settings.highlights"
@@ -602,6 +434,8 @@ local general_overrides = function()
   local dark_green = H.tint(UIPallette.palette.green, 0.3)
   local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
   local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+
+  local colors = update_base_colors(RUtils.config.colorscheme)
 
   H.all {
     -- ╔═════════════════════════════════════════════════════════╗
@@ -612,21 +446,27 @@ local general_overrides = function()
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { ErrorMsg = { bg = "NONE" } },
 
-    { Directory = Directory },
+    { Directory = colors.Directory },
 
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
-    { NonText = { fg = { from = "Normal", attr = "bg", alter = nontext_fg_alter } } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = winseparator_alter }, bg = "NONE" } },
+    { NonText = { fg = { from = "Normal", attr = "bg", alter = colors.nontext_fg_alter } } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = colors.winseparator_alter }, bg = "NONE" } },
 
-    { LineNr = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = linenr_fg_alter }, bold = true } },
+    {
+      LineNr = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = colors.linenr_fg_alter }, bold = true },
+    },
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
-    { Comment = { fg = { from = "LineNr", attr = "fg", alter = comment_fg_alter }, italic = true } },
+    { Comment = { fg = { from = "LineNr", attr = "fg", alter = colors.comment_fg_alter }, italic = true } },
     { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
-    { CursorLine = { bg = H.darken(H.get(cursorline_fg_alter, "fg"), cursorline_alter, H.get("Normal", "bg")) } },
+    {
+      CursorLine = {
+        bg = H.darken(H.get(colors.cursorline_fg_alter, "fg"), colors.cursorline_alter, H.get("Normal", "bg")),
+      },
+    },
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
@@ -636,7 +476,7 @@ local general_overrides = function()
     },
     {
       Visual = {
-        bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), visual_bg_alter),
+        bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), colors.visual_bg_alter),
         fg = "NONE",
       },
     },
@@ -645,27 +485,27 @@ local general_overrides = function()
       StatusLine = {
         -- fg = { from = "WinSeparator", attr = "fg", alter = 0.85 },
         fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-        bg = { from = "WinSeparator", attr = "fg", alter = statusline_bg_alter },
+        bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
         reverse = false,
       },
     },
 
     {
       Pmenu = {
-        fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = pmenu_bg_alter },
-        sp = { from = "Normal", attr = "bg", alter = pmenu_sp_alter },
+        fg = { from = "Normal", attr = "fg", alter = colors.pmenu_fg_alter },
+        bg = { from = "Normal", attr = "bg", alter = colors.pmenu_bg_alter },
+        sp = { from = "Normal", attr = "bg", alter = colors.pmenu_sp_alter },
         reverse = false,
       },
     },
     { PmenuSel = { fg = "NONE", bg = "NONE", bold = true, underline = true, reverse = false } },
     { PmenuFloatBorder = { bg = { from = "Pmenu", attr = "bg" }, fg = { from = "Pmenu", attr = "bg" } } },
-    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = pmenu_thumb_bg_alter } } },
+    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = colors.pmenu_thumb_bg_alter } } },
 
     {
       NormalFloat = {
-        fg = { from = "Pmenu", attr = "fg", alter = normal_float_fg_alter },
-        bg = { from = "Pmenu", attr = "bg", alter = normal_float_bg_alter },
+        fg = { from = "Pmenu", attr = "fg", alter = colors.normal_float_fg_alter },
+        bg = { from = "Pmenu", attr = "bg", alter = colors.normal_float_bg_alter },
         reverse = false,
       },
     },
@@ -677,8 +517,8 @@ local general_overrides = function()
     },
     {
       FloatTitle = {
-        fg = { from = "Normal", attr = "bg", alter = float_title_fg_alter },
-        bg = { from = "Keyword", attr = "fg", alter = float_title_bg_alter },
+        fg = { from = "Normal", attr = "bg", alter = colors.float_title_fg_alter },
+        bg = { from = "Keyword", attr = "fg", alter = colors.float_title_bg_alter },
         bold = true,
       },
     },
@@ -689,7 +529,7 @@ local general_overrides = function()
       },
     },
 
-    { NormalKeyword = { fg = H.darken(H.get("Keyword", "fg"), normal_keyword_alter, H.get("Normal", "bg")) } },
+    { NormalKeyword = { fg = H.darken(H.get("Keyword", "fg"), colors.normal_keyword_alter, H.get("Normal", "bg")) } },
     {
       NormalKeyword = {
         bg = { from = "NormalKeyword", attr = "fg" },
@@ -711,21 +551,21 @@ local general_overrides = function()
     },
     {
       VisualBoxComment = {
-        fg = { from = "Normal", attr = "fg", alter = normal_float_fg_alter },
+        fg = { from = "Normal", attr = "fg", alter = colors.normal_float_fg_alter },
         bg = { from = "Keyword", attr = "fg", alter = -0.2 },
       },
     },
 
     {
       TabLine = {
-        bg = { from = "Pmenu", attr = "bg", alter = tabline_bg_alter },
+        bg = { from = "Pmenu", attr = "bg", alter = colors.tabline_bg_alter },
         reverse = false,
       },
     },
 
     {
       TabLine = {
-        fg = { from = "TabLine", attr = "bg", alter = tabline_fg_alter },
+        fg = { from = "TabLine", attr = "bg", alter = colors.tabline_fg_alter },
         reverse = false,
       },
     },
@@ -733,16 +573,16 @@ local general_overrides = function()
     { Dark_red = { fg = dark_red } },
     { Dark_yellow = { fg = dark_yellow } },
 
-    { CurSearch = CurSearch },
-    { Search = Search },
+    { CurSearch = colors.CurSearch },
+    { Search = colors.Search },
     { IncSearch = { inherit = "CurSearch" } },
-    { Cursor = { bg = cursor_fg, reverse = false } },
+    { Cursor = { bg = colors.cursor_fg, reverse = false } },
     { TermCursor = { inherit = "Cursor" } },
     { Substitute = { inherit = "Search" } },
 
     {
       Folded = {
-        fg = { from = "LineNr", attr = "fg", alter = fold_fg },
+        fg = { from = "LineNr", attr = "fg", alter = colors.fold_fg },
         -- bg = { from = "Normal", attr = "bg", alter = fold_bg },
         bg = "NONE",
       },
@@ -769,8 +609,8 @@ local general_overrides = function()
     -- ╚═════════════════════════════════════════════════════════╝
     {
       diffFile = {
-        fg = { from = "Directory", attr = "fg", alter = difffile_bg_alter },
-        bg = { from = "Directory", attr = "fg", alter = difffile_fg_alter },
+        fg = { from = "Directory", attr = "fg", alter = colors.difffile_bg_alter },
+        bg = { from = "Directory", attr = "fg", alter = colors.difffile_fg_alter },
         bold = true,
       },
     },
@@ -779,44 +619,44 @@ local general_overrides = function()
     {
       -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
       diffAdd = {
-        fg = H.tint(dark_green, diffadd_fg_alter),
-        bg = H.tint(H.darken(dark_green, diffadd_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = H.tint(dark_green, colors.diffadd_fg_alter),
+        bg = H.tint(H.darken(dark_green, colors.diffadd_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffChange = {
-        fg = H.tint(dark_yellow, diffchange_fg_alter),
-        bg = H.tint(H.darken(dark_yellow, diffchange_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = H.tint(dark_yellow, colors.diffchange_fg_alter),
+        bg = H.tint(H.darken(dark_yellow, colors.diffchange_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffDelete = {
-        fg = H.tint(dark_red, diffdelete_fg_alter),
-        bg = H.tint(H.darken(dark_red, diffdelete_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = H.tint(dark_red, colors.diffdelete_fg_alter),
+        bg = H.tint(H.darken(dark_red, colors.diffdelete_bg_alter, H.get("Normal", "bg")), -0.1),
         reverse = false,
       },
     },
     {
       diffText = {
-        fg = { from = "diffChange", attr = "fg", alter = difftext_fg_alter },
-        bg = { from = "diffChange", attr = "bg", alter = difftext_bg_alter },
+        fg = { from = "diffChange", attr = "fg", alter = colors.difftext_fg_alter },
+        bg = { from = "diffChange", attr = "bg", alter = colors.difftext_bg_alter },
         reverse = false,
       },
     },
 
     {
       deltaPlus = {
-        fg = H.tint(H.darken(dark_green, delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
-        bg = H.tint(H.darken(dark_green, delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = H.tint(H.darken(dark_green, colors.delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_green, colors.delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
         bold = true,
       },
     },
     {
       deltaMinus = {
-        fg = H.tint(H.darken(dark_red, delta_minus_fg_alter, H.get("Normal", "bg")), -0.1),
-        bg = H.tint(H.darken(dark_red, delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = H.tint(H.darken(dark_red, colors.delta_minus_fg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_red, colors.delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
         bold = true,
       },
     },
@@ -970,10 +810,10 @@ local general_overrides = function()
     { LspKindValue = { link = "@string" } },
     { LspInlayHint = { link = "@string" } },
 
-    { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" }, f } },
+    { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
     {
       LspReferenceText = {
-        bg = lsp_reference_text_bg_alter,
+        bg = colors.lsp_reference_text_bg_alter,
         fg = "NONE",
         underline = false,
         reverse = false,
@@ -982,7 +822,7 @@ local general_overrides = function()
     },
     {
       LspReferenceWrite = {
-        bg = lsp_reference_write_bg_alter,
+        bg = colors.lsp_reference_write_bg_alter,
         underline = false,
         reverse = false,
         undercurl = false,
@@ -991,7 +831,7 @@ local general_overrides = function()
 
     {
       LspReferenceRead = {
-        bg = lsp_reference_read_bg_alter,
+        bg = colors.lsp_reference_read_bg_alter,
         underline = false,
         reverse = false,
         undercurl = false,
@@ -1027,14 +867,15 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
-    { HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = hovered_cursorline_fg_alter } } },
-    --
+    {
+      HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = colors.hovered_cursorline_fg_alter } },
+    },
     { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
     {
       MyCodeUsage = {
-        fg = H.tint(H.get("String", "fg"), my_code_usage_fg_alter),
-        bg = H.tint(H.darken(H.get("String", "fg"), 0.7, H.get("Normal", "bg")), my_code_usage_bg_alter),
+        fg = H.tint(H.get("String", "fg"), colors.my_code_usage_fg_alter),
+        bg = H.tint(H.darken(H.get("String", "fg"), 0.7, H.get("Normal", "bg")), colors.my_code_usage_bg_alter),
         italic = true,
       },
     },
@@ -1056,17 +897,19 @@ local general_overrides = function()
 
     -- WINBAR
     { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
-    { WinbarFilepath = { fg = { from = "TabLine", attr = "bg", alter = winbar_file_path_fg_alter } } },
-    { WinbarKeyword = { fg = { from = "Keyword", attr = "fg", alter = winbar_keyword } } },
+    { WinbarFilepath = { fg = { from = "TabLine", attr = "bg", alter = colors.winbar_file_path_fg_alter } } },
+    { WinbarKeyword = { fg = { from = "Keyword", attr = "fg", alter = colors.winbar_keyword } } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                      PLUGIN COLORS                      ║
     -- ╚═════════════════════════════════════════════════════════╝
     --  ───────────────────────────────[ BEACON ]──────────────────────────────
-    { BeaconDefault = { bg = cursor_fg } },
+    { BeaconDefault = { bg = colors.cursor_fg } },
 
     --  ───────────────────────────────[ NOICE ]───────────────────────────────
-    { NoiceCmdline = { fg = { from = "StatusLine", attr = "fg", alter = noice_cmdline_fg_alter }, bg = "NONE" } },
+    {
+      NoiceCmdline = { fg = { from = "StatusLine", attr = "fg", alter = colors.noice_cmdline_fg_alter }, bg = "NONE" },
+    },
     {
       LspSignatureActiveParameter = {
         fg = H.darken(dark_yellow, 0.8, H.get("Normal", "fg")),
@@ -1085,7 +928,7 @@ local general_overrides = function()
     },
     {
       BlinkCmpGhostText = {
-        fg = { from = "NoiceCmdline", attr = "fg", alter = blink_ghost_text_fg_alter },
+        fg = { from = "NoiceCmdline", attr = "fg", alter = colors.blink_ghost_text_fg_alter },
         bg = "NONE",
       },
     },
@@ -1095,8 +938,10 @@ local general_overrides = function()
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
-    { BlinkCmpLabelMatch = { fg = { from = "diffDelete", attr = "fg", alter = blink_cmp_label_match_fg_alter } } },
-    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = blink_cmp_label_kind_fg_alter } } },
+    {
+      BlinkCmpLabelMatch = { fg = { from = "diffDelete", attr = "fg", alter = colors.blink_cmp_label_match_fg_alter } },
+    },
+    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = colors.blink_cmp_label_kind_fg_alter } } },
 
     --  ────────────────────────────────[ CMP ]────────────────────────────────
     { CmpGhostText = { link = "BlinkCmpGhostText" } },
@@ -1129,11 +974,11 @@ local general_overrides = function()
     -- ╰────────╯
     {
       CmpDocNormal = {
-        fg = { from = "Keyword", attr = "fg", alter = cmpdocnormal_fg_alter },
-        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "Keyword", attr = "fg", alter = colors.cmpdocnormal_fg_alter },
+        bg = { from = "Pmenu", attr = "bg", alter = -0.1 },
       },
     },
-    { CmpDocFloatBorder = { inherit = "PmenuFloatBorder" } },
+    { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
 
     -- ╭─────────╮
     -- │ CMPKIND │
@@ -1497,14 +1342,14 @@ local general_overrides = function()
 
     {
       FzfLuaBufLineNr = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = fzflua_buf_linenr_bg_alter },
+        fg = { from = "FzfLuaNormal", attr = "bg", alter = colors.fzflua_buf_linenr_bg_alter },
         bg = "NONE",
       },
     },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
 
-    { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), fzflua_file_part_fg, H.get("Normal", "bg")) } },
+    { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.25 } } },
@@ -1516,7 +1361,7 @@ local general_overrides = function()
       FzfLuaSel = {
         fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.35 },
         bg = { from = "FzfLuaNormal", attr = "bg" },
-        sp = { from = "FzfLuaFilePart", attr = "fg", alter = fzflua_sel_sp_fg_alter },
+        sp = { from = "FzfLuaFilePart", attr = "fg", alter = colors.fzflua_sel_sp_fg_alter },
         underline = true,
         bold = true,
       },
@@ -1625,7 +1470,7 @@ local general_overrides = function()
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = H.darken(dark_yellow, snacks_indent_scope_fg_alter, H.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = H.darken(dark_yellow, colors.snacks_indent_scope_fg_alter, H.get("Normal", "bg")) } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
@@ -1633,13 +1478,13 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "Comment", attr = "fg", alter = snacks_notifier_info_fg },
+        fg = { from = "Comment", attr = "fg", alter = colors.snacks_notifier_info_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "fg", alter = snacks_notifier_border_info_fg },
+        fg = { from = "SnacksNotifierInfo", attr = "fg", alter = colors.snacks_notifier_border_info_fg },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
@@ -1653,13 +1498,13 @@ local general_overrides = function()
     -- WARN
     {
       SnacksNotifierWarn = {
-        fg = { from = "diffChange", attr = "fg", alter = snacks_notifier_warn_fg },
+        fg = { from = "diffChange", attr = "fg", alter = colors.snacks_notifier_warn_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "fg", alter = snacks_notifier_border_warn_fg },
+        fg = { from = "SnacksNotifierWarn", attr = "fg", alter = colors.snacks_notifier_border_warn_fg },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
@@ -1673,13 +1518,13 @@ local general_overrides = function()
     -- ERROR
     {
       SnacksNotifierError = {
-        fg = { from = "diffDelete", attr = "fg", alter = snacks_notifier_error_fg },
+        fg = { from = "diffDelete", attr = "fg", alter = colors.snacks_notifier_error_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "fg", alter = snacks_notifier_border_error_fg },
+        fg = { from = "SnacksNotifierError", attr = "fg", alter = colors.snacks_notifier_border_error_fg },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
@@ -1767,11 +1612,11 @@ local general_overrides = function()
 
     --  ────────────────────────────────[ BQF ]────────────────────────────
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
-    { BqfPreviewBorder = { fg = { from = bqf_keyword, attr = "fg", alter = -0.5 }, bg = "NONE" } },
+    { BqfPreviewBorder = { fg = { from = colors.bqf_keyword, attr = "fg", alter = -0.5 }, bg = "NONE" } },
     { BqfPreviewThumb = { bg = { from = "BqfPreviewBorder", attr = "fg", alter = 0.2 } } },
     {
       BqfPreviewTitle = {
-        fg = { from = bqf_keyword, attr = "fg", alter = 0.1 },
+        fg = { from = colors.bqf_keyword, attr = "fg", alter = 0.1 },
         bg = { from = "BqfPreviewBorder", attr = "fg" },
       },
     },
@@ -1846,13 +1691,13 @@ local general_overrides = function()
       },
     },
 
-    { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = render_markdown_code_bg_alter } } },
+    { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = colors.render_markdown_code_bg_alter } } },
     -- code block for org file
-    { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = code_block_fg_alter } } },
+    { CodeBlock = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = colors.code_block_fg_alter } } },
     {
       RenderMarkdownCodeInline = {
-        fg = { from = "Keyword", attr = "fg", alter = render_markdown_code_inline_fg_alter },
-        bg = H.darken(H.get("Keyword", "fg"), render_markdown_code_inline_bg_alter, H.get("Normal", "bg")),
+        fg = { from = "Keyword", attr = "fg", alter = colors.render_markdown_code_inline_fg_alter },
+        bg = H.darken(H.get("Keyword", "fg"), colors.render_markdown_code_inline_bg_alter, H.get("Normal", "bg")),
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -1928,13 +1773,13 @@ local general_overrides = function()
     },
     {
       DapStopped = {
-        bg = H.tint(H.darken(dark_yellow, dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_yellow, colors.dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
         fg = "NONE",
       },
     },
     {
       DapStoppedIcon = {
-        bg = H.tint(H.darken(dark_yellow, dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_yellow, colors.dapstopped_bg_alter, H.get("Normal", "bg")), -0.1),
         fg = { from = "GitSignsChange", attr = "fg", alter = 0.6 },
       },
     },
@@ -1974,6 +1819,9 @@ end
 
 local function set_panel_highlight()
   local H = require "r.settings.highlights"
+
+  local colors = update_base_colors(RUtils.config.colorscheme)
+
   H.all {
     -- +---------+
     -- | SIDEBAR |
@@ -2008,8 +1856,8 @@ local function set_panel_highlight()
     -- +--------+
     {
       PanelBottomNormal = {
-        fg = { from = "NormalKeyword", attr = "fg", alter = panel_bottom_normal_fg_alter },
-        bg = { from = "NormalKeyword", attr = "bg", alter = panel_bottom_normal_bg_alter },
+        fg = { from = "NormalKeyword", attr = "fg", alter = colors.panel_bottom_normal_fg_alter },
+        bg = { from = "NormalKeyword", attr = "bg", alter = colors.panel_bottom_normal_bg_alter },
       },
     },
     { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },
@@ -2035,7 +1883,7 @@ local function set_panel_highlight()
       QuickFixLine = {
         fg = "NONE",
         bg = "NONE",
-        sp = { from = "NormalKeyword", attr = "bg", alter = quickfixline_sp_alter },
+        sp = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_sp_alter },
         underline = true,
         bold = true,
         reverse = false,
@@ -2043,11 +1891,11 @@ local function set_panel_highlight()
     },
     {
       QuickFixHeader = {
-        bg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_header_bg_alter },
-        fg = { from = "PanelBottomNormal", attr = "bg", alter = quickfixline_header_fg_alter },
+        bg = { from = "PanelBottomNormal", attr = "bg", alter = colors.quickfixline_header_bg_alter },
+        fg = { from = "PanelBottomNormal", attr = "bg", alter = colors.quickfixline_header_fg_alter },
       },
     },
-    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = quickfixline_linenr_fg_alter } } },
+    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_linenr_fg_alter } } },
     { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = -0.15 } } },
     { qfSeparator2 = { link = "qfSeparator1" } },
     { Delimiter = { link = "qfSeparator1" } },
@@ -2067,7 +1915,7 @@ local function set_panel_highlight()
 
     {
       TroubleIndent = {
-        fg = { from = "TroubleNormal", attr = "bg", alter = trouble_indent_fg_alter },
+        fg = { from = "TroubleNormal", attr = "bg", alter = colors.trouble_indent_fg_alter },
         bg = "NONE",
       },
     },
@@ -2119,7 +1967,10 @@ local function set_panel_highlight()
 
     --  ──────────────────────────────[ OUTLINE ]──────────────────────────────
     {
-      OutlineGuides = { fg = { from = "PanelSideNormal", attr = "bg", alter = outline_indent_fg_alter }, bg = "NONE" },
+      OutlineGuides = {
+        fg = { from = "PanelSideNormal", attr = "bg", alter = colors.outline_indent_fg_alter },
+        bg = "NONE",
+      },
     },
     {
       OutlineCurrent = {
@@ -2159,148 +2010,17 @@ end
 local function colorscheme_overrides()
   local H = require "r.settings.highlights"
 
-  local UIPallette = require("r.utils").uisec
-  local dark_green = H.tint(UIPallette.palette.green, 0.3)
-  local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
-  local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+  -- local UIPallette = require("r.utils").uisec
+  -- local dark_green = H.tint(UIPallette.palette.green, 0.3)
+  -- local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
+  -- local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
   local overrides = {
     ["base46-material-lighter"] = {
-      -- QF/QUICKER
       { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
       { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
       { qfSeparator2 = { link = "qfSeparator1" } },
       { Delimiter = { link = "qfSeparator1" } },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter },
-          bold = true,
-          underline = false,
-          reverse = false,
-        },
-      },
-
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
-        },
-      },
-    },
-    ["base46-solarized_dark"] = {
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.1 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.05 },
-        },
-      },
-    },
-    ["rose-pine"] = {
-      -- DIAGNOSTICS
-      {
-        diffAdd = {
-          fg = H.tint(H.darken(dark_green, 0.9, H.get("Normal", "bg")), -0.1),
-          bg = H.tint(H.darken(dark_green, 0.1, H.get("Normal", "bg")), -0.1),
-          reverse = false,
-        },
-      },
-      {
-        diffChange = {
-          fg = H.darken(dark_yellow, 0.55, H.get("Normal", "bg")),
-          bg = H.darken(dark_yellow, 0.1, H.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-      {
-        diffDelete = {
-          fg = H.darken(dark_red, 0.7, H.get("Normal", "bg")),
-          bg = H.darken(dark_red, 0.1, H.get("Normal", "bg")),
-          reverse = false,
-        },
-      },
-      {
-        diffText = {
-          fg = H.darken(dark_yellow, 0.8, H.get("Normal", "bg")),
-          bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
-          bold = true,
-          reverse = false,
-        },
-      },
-
-      { diffAdded = { inherit = "DiffAdd" } },
-      { diffChanged = { inherit = "DiffChange" } },
-      { diffRemoved = { inherit = "DiffDelete" } },
-
-      {
-        GitSignsAdd = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_green, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-
-      {
-        GitSignsChange = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_yellow, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-      {
-        GitSignsDelete = {
-          bg = "NONE",
-          fg = H.tint(H.darken(dark_red, 0.8, H.get("Normal", "bg")), -0.15),
-        },
-      },
-
-      {
-        GitSignsAddInline = {
-          fg = { from = "diffAdded", attr = "bg", alter = 3 },
-          bg = { from = "diffAdded", attr = "bg", alter = 1 },
-        },
-      },
-      {
-        GitSignsChangeDelete = {
-          fg = { from = "diffChanged", attr = "bg", alter = 3 },
-          bg = "NONE",
-        },
-      },
-      {
-        GitSignsDeleteInline = {
-          fg = { from = "diffDelete", attr = "bg", alter = 3 },
-          bg = { from = "diffDelete", attr = "bg", alter = 1 },
-        },
-      },
-
-      { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
-      { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
-      { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
-
-      { NeogitDiffAdd = { link = "diffAdd" } },
-      { NeogitDiffAddHighlight = { link = "diffAdd" } },
-      { NeogitDiffDelete = { link = "diffDelete" } },
-      { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
-
-      { DiffText = { link = "diffText" } },
-
-      -- -- ╭─────────────────╮
-      -- -- │ SNACKS NOTIFIER │
-      -- -- ╰─────────────────╯
-      -- -- SNACKS
-      -- { SnacksIndentScope = { fg = H.tint(H.darken(dark_yellow, 0.3, H.get("Normal", "bg")), -0.1) } },
-
-      -- GRUG-FAR
-      {
-        GrugFarResultsLineNr = {
-          inherit = "GrugFarResultsLineNr",
-          fg = { from = "GrugFarResultsLineNr", attr = "fg", alter = 0.3 },
-          bg = { from = "GrugFarResultsLineNr", attr = "bg", alter = 0.2 },
-        },
-      },
     },
   }
 

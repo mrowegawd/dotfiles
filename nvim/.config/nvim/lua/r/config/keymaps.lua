@@ -42,7 +42,7 @@ RUtils.map.nnoremap("<c-s>", "zO", { desc = "Fold: open all" })
 -- RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 RUtils.map.nnoremap("<c-a>", "zMzv", { desc = "Fold: close all folds except the current one" })
 
-RUtils.map.nnoremap("<c-r>", function()
+RUtils.map.nnoremap("<c-x>", function()
   return RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle level fold" })
 
