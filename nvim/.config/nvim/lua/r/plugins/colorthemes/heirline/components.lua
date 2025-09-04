@@ -58,6 +58,9 @@ local set_conditions = {
     local path = get_vars.path()
     return path:match "fugitive:/" or path:match "diffview:/"
   end,
+  is_terminal_ft = function()
+    return vim.bo.buftype == "terminal"
+  end,
   is_readonly = function()
     return not vim.bo.modifiable or vim.bo.readonly
   end,
@@ -246,17 +249,14 @@ local __colors = function()
     mode_git_fg = H.tint(H.get("diffChange", "fg"), col_opts.mode_git_fg),
     mode_git_bg = H.tint(H.get("diffChange", "bg"), col_opts.mode_git_bg),
 
-    mode_term_bg = H.get("Boolean", "fg"),
     mode_visual_bg = H.get("Visual", "bg"),
+    mode_term_fg = H.get("Boolean", "fg"),
+    mode_term_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.8, H.get("Normal", "bg")), 0.1),
+    mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.4, H.get("Normal", "bg")), 0.1),
+    mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.15, H.get("Normal", "bg")), 0.1),
 
-    -- branch_fg = H.darken(H.get("GitSignsDelete", "fg"), col_opts.branch_fg, H.get("WinSeparator", "fg")),
-    -- branch_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.4, H.get("Normal", "bg")),
-
-    -- branch_fg = H.tint(H.get("Keyword", "fg"), col_opts.branch_fg),
     branch_fg = H.tint(H.get("TabLine", "bg"), col_opts.branch_fg),
     branch_bg = H.get("StatusLine", "bg"),
-    -- branch_bg = H.get("Keyword", "fg"),
-    -- branch_bg = H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")),
 
     diff_add = col_opts.diff_add,
     diff_change = col_opts.diff_change,
@@ -423,7 +423,15 @@ M.Branch = {
       end
       return ""
     end,
-    hl = { fg = colors.branch_fg, bg = colors.branch_bg, bold = true },
+
+    hl = function()
+      local fg = colors.branch_fg
+      if set_conditions.is_terminal_ft() then
+        fg = colors.mode_term_fg
+      end
+
+      return { fg = fg, bold = true }
+    end,
   },
   -- {
   --   provider = RUtils.config.icons.misc.separator_up,
@@ -817,7 +825,7 @@ M.virtualenv = {
         return self.venv .. "  "
       end
     end,
-    hl = { fg = colors.mode_term_bg, bold = false },
+    hl = { fg = colors.mode_term_statusline_bg, bold = false },
   },
 }
 M.LSPActive = {
@@ -839,7 +847,7 @@ M.LSPActive = {
   end,
   {
     provider = " LSP(s): ",
-    hl = { fg = colors.statusline_fg, italic = true },
+    hl = { italic = true },
   },
   {
     provider = function(self)
@@ -1061,7 +1069,6 @@ M.Sessions = {
 
       return icon_ses .. ses_status .. "  "
     end,
-    hl = { fg = colors.statusline_fg },
   },
 }
 M.PinnedBuffer = {
@@ -1114,7 +1121,6 @@ M.BufferCwd = {
         return cwd .. " "
       end
     end,
-    hl = { fg = colors.statusline_fg },
   },
 }
 M.Tasks = {
@@ -1178,7 +1184,14 @@ M.RmuxTargetPane = {
         return RUtils.config.icons.misc.separator_down
       end
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg },
+
+    hl = function()
+      local fg = colors.statusline_bg
+      if set_conditions.is_terminal_ft() then
+        fg = colors.mode_term_statusline_bg
+      end
+      return { fg = fg, bg = colors.block_mux_bg }
+    end,
   },
   -- {
   --   provider = function(self)
@@ -1227,7 +1240,9 @@ M.Filetype = {
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 
     local status = rmux_pane()
+    self.run_with = status.run_with
     self.task = status.task
+    self.watch = status.watch
 
     local tasks_overseer = require("overseer.task_list").list_tasks { unique = true }
     local tasks_by_status = require("overseer.util").tbl_group_by(tasks_overseer, "status")
@@ -1247,11 +1262,20 @@ M.Filetype = {
         fg = colors.block_mux_bg
       end
 
+      if set_conditions.is_terminal_ft() then
+        fg = colors.mode_term_statusline_bg
+      end
+
       for i, _ in pairs(symbols_overseer) do
         if self.tasks_overseer[i] then
           fg = colors.block_mux_bg
         end
       end
+
+      if self.task > 0 or #self.watch > 0 then
+        fg = colors.block_mux_bg
+      end
+
       return { fg = fg, bg = colors.block_darken_bg }
     end,
   },
@@ -1449,7 +1473,17 @@ M.status_active_left = {
   M.Ruler,
   -- M.Clock,
 
-  hl = { fg = colors.statusline_fg, bg = colors.statusline_bg },
+  hl = function()
+    local fg = colors.statusline_fg
+    local bg = colors.statusline_bg
+
+    if set_conditions.is_terminal_ft() then
+      bg = colors.mode_term_statusline_bg
+      fg = colors.mode_term_statusline_fg
+    end
+
+    return { fg = fg, bg = bg }
+  end,
 }
 
 -- ╓
@@ -1600,6 +1634,7 @@ M.WinbarFilePath = {
           fg = colors.winbar_dap_keyword
         end
       end
+
       return { fg = fg, bg = bg, bold = is_bold, italic = is_italic }
     end,
   },
