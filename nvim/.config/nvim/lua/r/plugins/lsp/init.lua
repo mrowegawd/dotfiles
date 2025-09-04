@@ -9,9 +9,11 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = function()
-      -- WARN: root pattern pada lua_ls masih error, issue related:
-      -- https://github.com/LuaLS/lua-language-server/issues/2975
-      -- local root_pattern = require("lspconfig.util").root_pattern
+      local library = {
+        vim.api.nvim_get_runtime_file("", true),
+        "${3rd}/luv/library",
+        "${3rd}/busted/library",
+      }
 
       ---@class PluginLspOpts
       local ret = {
@@ -84,16 +86,14 @@ return {
             settings = {
               Lua = {
                 workspace = {
-                  library = {
-                    --   [".luarc.json"] = true,
-                    --   [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                    --   [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                    --   [vim.fn.stdpath("config") .. "/lua"] = true,
-                    -- [vim.fn.expand "$PWD/lua"] = true,
-                    [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-                    -- [vim.fn.stdpath "config" .. "/lua"] = true,
-                  },
-                  ignoreDir = { ".git", "node_modules", "linters" },
+                  -- library = {
+                  --   --   [".luarc.json"] = true,
+                  --   --   [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  --   --   [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                  --   --   [vim.fn.stdpath("config") .. "/lua"] = true,
+                  -- },
+                  library = library,
+                  -- ignoreDir = { ".git", "node_modules", "linters" },
                   checkThirdParty = false,
                 },
                 codeLens = {
@@ -278,19 +278,18 @@ return {
   },
   -- LAZYDEV
   {
-    "folke/lazydev.nvim",
+    "MadKuntilanak/lazydev.nvim",
+    branch = "fix/error-list",
     ft = "lua",
     dependencies = {
       { "justinsgithub/wezterm-types", lazy = true },
-      { "Bilal2453/luvit-meta", lazy = true },
     },
     opts = {
       library = {
         "lazy.nvim",
-        "luvit-meta/library",
-        -- { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-        -- { path = "snacks.nvim", words = { "Snacks" } },
+        { path = "snacks.nvim", words = { "Snacks" } },
         { path = "wezterm-types", mods = { "wezterm" } },
+        { path = "LazyVim", words = { "LazyVim" } },
         { path = "RUtils", words = { "RUtils" } },
       },
     },
@@ -351,9 +350,10 @@ return {
     "framallo/taskwarrior.vim",
     ft = "taskrc",
   },
-  -- GARBAGE-DAY
+  -- GARBAGE-DAY (disabled)
   {
     "zeioth/garbage-day.nvim",
+    enabled = false,
     event = "LspAttach",
     opts = {},
   },

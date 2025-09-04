@@ -9,6 +9,7 @@ local results = {
   location = {},
 }
 
+---@param is_loc? boolean
 function M.get_total_stack_qf(is_loc)
   is_loc = is_loc or false
 
@@ -34,6 +35,7 @@ function M.get_total_stack_qf(is_loc)
   return qflists
 end
 
+---@param is_loc? boolean
 function M.get_current_history_qf(is_loc)
   is_loc = is_loc or false
 
@@ -44,6 +46,7 @@ function M.get_current_history_qf(is_loc)
   return vim.fn.getloclist(0, { nr = 0 }).nr
 end
 
+---@param is_loc? boolean
 function M.get_current_idx_qf(is_loc)
   is_loc = is_loc or false
 
@@ -55,15 +58,18 @@ function M.get_current_idx_qf(is_loc)
 end
 
 -- example use; M.is_loclist() and "Location List" or "Quickfix List"
+---@param buf? integer
 function M.is_loclist(buf)
   buf = buf or 0
   return vim.fn.getloclist(buf, { filewinid = 1 }).filewinid ~= 0
 end
 
+---@param winnr integer
 function M.is_quickfix_win(winnr)
   return vim.fn.getwinvar(winnr, "&buftype") == "quickfix"
 end
 
+---@param winnr integer
 function M.is_loclist_win(winnr)
   local wininfo = vim.fn.getwininfo(vim.fn.win_getid(winnr))[1]
   return M.is_quickfix_win(winnr) and wininfo.loclist == 1
@@ -81,7 +87,7 @@ function M.get_qf_cursor_idx()
     count = #cur_list
   end
 
-  local item = api.nvim_win_get_cursor(0)[1]
+  local item = vim.api.nvim_win_get_cursor(0)[1]
   for _ = item, item + count - 1 do
     table.remove(cur_list, item)
   end
@@ -89,6 +95,7 @@ function M.get_qf_cursor_idx()
   return vim.fn.getqflist()[item]
 end
 
+---@param is_loc? boolean
 function M.get_title_qf(is_loc)
   is_loc = is_loc or false
   if not is_loc then
@@ -98,6 +105,7 @@ function M.get_title_qf(is_loc)
   return vim.fn.getloclist(0, { title = 0 }).title
 end
 
+---@param is_loc? boolean
 function M.get_list_qf(is_loc)
   is_loc = is_loc or false
   if not is_loc then

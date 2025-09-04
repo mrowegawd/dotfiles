@@ -39,7 +39,9 @@ function M.is_fs_root(path)
   end
 end
 
-function M.dirname(path)
+function M.dirname(path, is_windows)
+  is_windows = is_windows or false
+
   local strip_dir_pat = "/([^/]+)$"
   local strip_sep_pat = "/$"
   if not path or #path == 0 then

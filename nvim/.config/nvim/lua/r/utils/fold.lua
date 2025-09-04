@@ -117,23 +117,23 @@ local function open_qf_items(cmd, indices, opts, is_only)
 
     -- local is_new_tab_win = ""
 
-    if open_type == "t" then
-      vim.cmd "tabnew"
-      -- is_new_tab_win = "nt"
-      if opts.enable_autoquickfix then
-        if is_loc then
-          vim.cmd "lopen"
-        else
-          vim.cmd "copen"
-        end
-      end
-    elseif open_type == "v" then
-      vim.cmd "vertical split"
-      -- is_new_tab_win = "nw"
-    elseif open_type == "h" then
-      vim.cmd "split"
-      -- is_new_tab_win = "nw"
-    end
+    -- if open_type == "t" then
+    --   vim.cmd "tabnew"
+    --   -- is_new_tab_win = "nt"
+    --   if opts.enable_autoquickfix then
+    --     if is_loc then
+    --       vim.cmd "lopen"
+    --     else
+    --       vim.cmd "copen"
+    --     end
+    --   end
+    -- elseif open_type == "v" then
+    --   vim.cmd "vertical split"
+    --   -- is_new_tab_win = "nw"
+    -- elseif open_type == "h" then
+    --   vim.cmd "split"
+    --   -- is_new_tab_win = "nw"
+    -- end
 
     -- Execute open command
     if use_open then
@@ -145,7 +145,8 @@ local function open_qf_items(cmd, indices, opts, is_only)
     -- Apply policy
     local policy = opts.prevtabwin_policy
     -- local apply_qf_policy = policy == "qf" and cmd == "open" or (policy == "legacy" and open_type == "t")
-    local apply_qf_policy = policy == "qf" and not is_only or (policy == "legacy" and open_type == "t")
+    -- local apply_qf_policy = policy == "qf" and not is_only or (policy == "legacy" and open_type == "t")
+    local apply_qf_policy = policy == "qf" and not is_only or (policy == "legacy")
     if apply_qf_policy then
       -- vim.api.nvim_set_current_win(qf_winid)
       vim.cmd "wincmd p"
@@ -303,7 +304,7 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     end
   end
 
-  if vim.bo.filetype == "qf" and not qf_mode ~= "only" then
+  if vim.bo.filetype == "qf" then
     M.handle_qf_open(is_jump_prev)
     return
   end

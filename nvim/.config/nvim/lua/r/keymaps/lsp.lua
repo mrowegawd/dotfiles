@@ -1,6 +1,10 @@
 local M = {}
 
+---@type LazyKeysLspSpec[]|nil
 M._keys = nil
+
+---@alias LazyKeysLspSpec LazyKeysSpec|{has?:string|string[], cond?:fun():boolean}
+---@alias LazyKeysLsp LazyKeys|{has?:string|string[], cond?:fun():boolean}
 
 local diagnostic_goto = function(next, severity)
   local go = next and 1 or -1
@@ -238,7 +242,6 @@ function M.get()
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })
         vim.diagnostic.config { virtual_lines = new_value }
-        return new_value
       end,
       desc = "Toggle: virtual lines [diagnostic]",
     },

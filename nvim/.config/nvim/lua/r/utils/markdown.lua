@@ -113,6 +113,7 @@ local function open_with(mode, entry, data_tbl, is_open_folded)
   end
 end
 
+---@param selected string[]
 local function extracted_selected_tags(selected, data_tbl)
   local items = {}
   if #selected > 1 then
@@ -1038,7 +1039,7 @@ end
 
 function M.insert_by_categories()
   local win_height, win_width, row, col = get_height_width_row_col_window()
-  collect_all_tags_async(tags, function(all_tags)
+  collect_all_tags_async({}, function(all_tags)
     vim.schedule(function()
       picker(all_tags, {
         ["enter"] = function(selected, _)
@@ -1164,14 +1165,94 @@ function M.cursor_in_code_block(cursor_row, reverse)
   return true
 end
 
+local links = {
+  style = "markdown",
+  name_is_source = false,
+  transform_implicit = false,
+  transform_explicit = function(text)
+    text = text:gsub("[ /]", "-")
+    text = text:lower()
+    text = os.date "%Y-%m-%d_" .. text
+    return text
+  end,
+}
+
+local transformPath = function(text)
+  if type(links.transform_explicit) ~= "function" or not links.transform_explicit then
+    return text
+  else
+    return (links.transform_explicit(text))
+  end
+end
+
+local formatLink = function(text, source, part)
+  local replacement, path_text
+  -- If the text starts with a hash, format the link as an anchor link
+  if string.sub(text, 0, 1) == "#" and not source then
+    path_text = string.gsub(text, "[^%a%s%d%-_]", "")
+    text = string.gsub(text, "^#* *", "")
+    path_text = string.gsub(path_text, "^ ", "")
+    path_text = string.gsub(path_text, " ", "-")
+    path_text = string.gsub(path_text, "%-%-", "-")
+    path_text = "#" .. string.lower(path_text)
+  elseif not source then
+    path_text = transformPath(text)
+    -- If no path_text, end here
+    if not path_text then
+      return
+    end
+    if not links.implicit_extension then
+      path_text = path_text .. ".md"
+    end
+  else
+    path_text = source
+  end
+  -- Format the replacement depending on the user's link style preference
+  if links.style == "wiki" then
+    replacement = (links.name_is_source and { "[[" .. text .. "]]" }) or { "[[" .. path_text .. "|" .. text .. "]]" }
+  else
+    replacement = { "[" .. text .. "]" .. "(" .. path_text .. ")" }
+  end
+  -- Return the requested part
+  if part == nil then
+    return replacement
+  elseif part == 1 then
+    return text
+  elseif part == 2 then
+    return path_text
+  end
+end
+
+local cursorInCodeBlock = function(cursor_row, reverse)
+  if reverse == nil or reverse == false then
+    reverse = false
+  else
+    reverse = true
+  end
+  local lines = reverse and vim.api.nvim_buf_get_lines(0, cursor_row - 1, -1, false)
+    or vim.api.nvim_buf_get_lines(0, 0, cursor_row, false)
+  local fences = 0
+  for _, line_text in ipairs(lines) do
+    local _, count = string.gsub(line_text, "^```", "```")
+    fences = fences + count
+  end
+  if fences % 2 == 0 then
+    return false
+  end
+  return true
+end
+
 function M.go_to_heading(anchor_text, reverse)
+  local silent = true
+  local wrap = false
+
   -- Taken from and credit: https://github.com/jakewvincent/mkdnflow.nvim/blob/0fa1e682e35d46cd1a0102cedd05b0283e41d18d/lua/mkdnflow/cursor.lua#L138
 
   -- Record which line we're on; chances are the link goes to something later,
   -- so we'll start looking from here onwards and then circle back to the beginning
   local position = vim.api.nvim_win_get_cursor(0)
   local starting_row, continue = position[1], true
-  local in_fenced_code_block = M.cursor_in_code_block(starting_row, reverse)
+  local in_fenced_code_block = cursorInCodeBlock(starting_row, reverse)
   local row = (reverse and starting_row - 1) or starting_row + 1
   while continue do
     local line = (reverse and vim.api.nvim_buf_get_lines(0, row - 1, row, false))
@@ -1192,7 +1273,7 @@ function M.go_to_heading(anchor_text, reverse)
           continue = false
         else
           -- Format current heading to see if it matches our search term
-          local heading_as_anchor = links.formatLink(line[1], nil, 2)
+          local heading_as_anchor = formatLink(line[1], nil, 2)
           if anchor_text == heading_as_anchor then
             -- Set a mark
             vim.api.nvim_buf_set_mark(0, "`", position[1], position[2], {})
@@ -1204,8 +1285,7 @@ function M.go_to_heading(anchor_text, reverse)
       end
       row = (reverse and row - 1) or row + 1
       if row == starting_row + 1 then
-        ---@diagnostic disable-next-line: cast-local-type
-        continue = nil
+        continue = false
         if anchor_text == nil then
           local message = "⬇️  Couldn't find a heading to go to!"
           if not silent then
@@ -1224,8 +1304,7 @@ function M.go_to_heading(anchor_text, reverse)
         row = (reverse and vim.api.nvim_buf_line_count(0)) or 1
         in_fenced_code_block = false
       else
-        ---@diagnostic disable-next-line: cast-local-type
-        continue = nil
+        continue = false
         local place = (reverse and "beginning") or "end"
         local preposition = (reverse and "after") or "before"
         local message = "⬇️  There are no more headings " .. preposition .. " the " .. place .. " of the document!"

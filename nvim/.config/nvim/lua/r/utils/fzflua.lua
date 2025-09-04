@@ -145,7 +145,7 @@ function M.open_dock_bottom(opts)
       col = 0.50,
       preview = {
         hidden = false,
-        layout = vertical,
+        layout = "vertical",
         vertical = "right:50%",
       },
     },

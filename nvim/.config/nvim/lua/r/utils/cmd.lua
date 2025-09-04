@@ -1,6 +1,8 @@
 ---@class r.utils.cmd
 local M = {}
 
+---@param link string
+---@return string
 function M.remove_alias(link)
   local split_index = string.find(link, "%s*|")
   if split_index ~= nil and type(split_index) == "number" then
@@ -37,7 +39,7 @@ function M.get_total_wins()
   return tbl_winsplits
 end
 
----@param wins table
+---@param wins string|string[]
 function M.windows_is_opened(wins)
   local ft_wins = { "incline" }
 
@@ -65,13 +67,6 @@ function M.windows_is_opened(wins)
     local buf_buftype = vim.api.nvim_get_option_value("buftype", { buf = win_bufnr })
 
     local winid = vim.fn.win_findbuf(win_bufnr)[1] -- example winid: 1004, 1005
-    -- local win_config = vim.api.nvim_win_get_config(winid)
-    -- local is_float = win_config.relative ~= ""
-
-    -- RUtils.info(buf_ft)
-    -- RUtils.info(buf_buftype)
-    -- RUtils.info(is_float and "FLOATING" or "NORMAL")
-    -- RUtils.info "-----------------------------------"
 
     if vim.tbl_contains(ft_wins, buf_ft) or vim.tbl_contains(ft_wins, buf_buftype) then
       outline_tbl = { found = true, winbufnr = win_bufnr, winnr = winnr, winid = winid, ft = buf_ft }
@@ -132,6 +127,7 @@ function M.get_term_id()
   -- vim.fn.chansend(--[[  ]]t_idx, { "echo 'hello world'", "" })
 end
 
+---@param is_selection? boolean
 function M.browse_this_error(is_selection)
   is_selection = is_selection or false
 
@@ -610,7 +606,7 @@ local function open_image_with_sxiv(url)
     if dl.code == 0 then
       vim.system({ "sxiv", download_path }, { detach = true })
     else
-      vim.notify("Download failed: " .. dl.stderr, vim.log.levels.ERROR)
+      RUtils.info(string.format("Downlaod failed: %s", dl.stderr))
     end
   end)
 end

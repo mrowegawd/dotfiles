@@ -89,6 +89,7 @@ function M.get_plugin_path(name, path)
 end
 
 ---@param plugin string
+---@return boolean
 function M.has(plugin)
   return M.get_plugin(plugin) ~= nil
 end

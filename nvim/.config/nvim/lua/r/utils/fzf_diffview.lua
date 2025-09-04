@@ -1,6 +1,3 @@
----@diagnostic disable: undefined-field
-local fzf_lua = require "fzf-lua"
-
 ---@class r.utils.fzf_diffview
 local M = {}
 
@@ -437,7 +434,9 @@ end
 function M.git_diff_content_previewer(opts)
   opts = opts or { bufnr = nil }
 
-  return fzf_lua.shell.stringify_cmd(function(items)
+  local fzf_shell = require "fzf-lua.shell"
+
+  return fzf_shell.stringify_cmd(function(items)
     local selection = items[1]
     if selection then
       local hash = string.sub(selection, 1, 7)

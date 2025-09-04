@@ -163,6 +163,7 @@ function M.has(buffer, method)
   end
   return false
 end
+---@return LazyKeysLsp[]
 function M.resolve(buffer, spec_maps)
   local Keys = require "lazy.core.handler.keys"
   if not Keys.resolve then
@@ -190,6 +191,7 @@ function M.on_attach(_, buffer, spec_maps)
     local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
 
     if has and cond then
+      ---@type vim.keymap.set.Opts
       local opts = Keys.opts(keys)
       opts.cond = nil
       opts.has = nil

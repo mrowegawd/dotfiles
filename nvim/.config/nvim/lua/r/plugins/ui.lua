@@ -195,6 +195,7 @@ return {
       local function get_hl_as_hex(opts, ns)
         ns, opts = ns or 0, opts or {}
         opts.link = opts.link ~= nil and opts.link or false
+        ---@return vim.api.keyset.get_hl_info
         local hl = vim.api.nvim_get_hl(ns, opts)
         hl.fg = hl.fg and ("#%06x"):format(hl.fg)
         hl.bg = hl.bg and ("#%06x"):format(hl.bg)
