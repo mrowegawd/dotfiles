@@ -8,7 +8,7 @@ return {
   -- Formatter for html django
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "djlint", "html-lsp", "emmet-language-server" } },
+    opts = { ensure_installed = { "djlint" } },
   },
   {
     "stevearc/conform.nvim",

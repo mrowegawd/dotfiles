@@ -12,7 +12,7 @@ return {
   -- BLINK
   {
     "saghen/blink.cmp",
-    version = "1.*",
+    version = "^1", -- make sure to always set version to v1 even on development
     event = "InsertEnter",
     opts_extend = {
       "sources.completion.enabled_providers",
@@ -42,6 +42,7 @@ return {
         end,
       },
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
+      fuzzy = { implementation = "prefer_rust" },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },

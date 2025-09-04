@@ -46,7 +46,7 @@ return {
   },
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "markdownlint-cli2", "markdown-toc", "cbfmt", "codespell" } },
+    opts = { ensure_installed = { "markdownlint-cli2", "markdown-toc", "codespell" } },
   },
   {
     "mfussenegger/nvim-lint",

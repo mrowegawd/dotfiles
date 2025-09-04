@@ -19,7 +19,8 @@ return {
     },
   },
   {
-    "mason.nvim",
+    "mason-org/mason.nvim",
+    optional = true,
     opts = { ensure_installed = { "cmakelang", "cmakelint" } },
   },
   {
@@ -29,12 +30,6 @@ return {
         neocmake = {},
       },
     },
-  },
-
-  {
-    "mason-org/mason.nvim",
-    optional = true,
-    opts = { ensure_installed = { "neocmakelsp", "clangd" } },
   },
 
   {

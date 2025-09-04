@@ -1,7 +1,3 @@
--- return {}
-
--- TODO: lastedit, ansiblels ini slow, next time di update :)
-
 return {
   recommended = function()
     return RUtils.extras.wants {
@@ -9,14 +5,6 @@ return {
       root = { "ansible.cfg", ".ansible-lint" },
     }
   end,
-  {
-    "mason-org/mason.nvim",
-    opts = { ensure_installed = { "ansible-lint", "ansible-language-server" } },
-  },
-  -- {
-  --   "mason-org/mason-lspconfig.nvim",
-  --   opts = { ensure_installed = { "ansible-language-server" } },
-  -- },
   {
     "neovim/nvim-lspconfig",
     opts = {

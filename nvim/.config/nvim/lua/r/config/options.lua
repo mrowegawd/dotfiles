@@ -80,7 +80,7 @@ opt.termguicolors = true -- tmux need this!
 opt.textwidth = 80 -- max inserted text width for paste operations
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 opt.visualbell = false
-opt.winborder = "none"
+opt.winborder = "none" -- "none", "rounded"
 opt.wrapscan = true -- begin search from top of the file when nothing is found
 -- }}}
 -- {{{ List chars

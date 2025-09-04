@@ -10,6 +10,65 @@ local diagnostic_goto = function(next, severity)
   end
 end
 
+local function all_item_locations_equal(items)
+  if #items == 0 then
+    return false
+  end
+  for i = 2, #items do
+    local item = items[i]
+    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
+      return false
+    end
+  end
+  return true
+end
+
+local function wrap_location_method(yield, is_vsplit)
+  is_vsplit = is_vsplit or false
+  return function()
+    local from = vim.fn.getpos "."
+    yield {
+      ---@param t vim.lsp.LocationOpts.OnList
+      on_list = function(t)
+        local curpos = vim.fn.getpos "."
+        if not vim.deep_equal(from, curpos) then
+          -- We have moved the cursor since fetching locations, so abort
+          return
+        end
+
+        if is_vsplit then
+          vim.cmd "vsplit"
+        end
+
+        if all_item_locations_equal(t.items) then
+          -- Mostly copied from neovim source
+          local item = t.items[1]
+          local b = item.bufnr or vim.fn.bufadd(item.filename)
+
+          -- Save position in jumplist
+          vim.cmd "normal! m'"
+          -- Push a new item into tagstack
+          local tagname = vim.fn.expand "<cword>"
+          local tagstack = { { tagname = tagname, from = from } }
+          local winid = vim.api.nvim_get_current_win()
+          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
+
+          vim.bo[b].buflisted = true
+          vim.api.nvim_win_set_buf(winid, b)
+          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
+          vim._with({ win = winid }, function()
+            -- Open folds under the cursor
+            vim.cmd "normal! zv"
+          end)
+        else
+          vim.fn.setloclist(0, {}, " ", { title = t.title, items = t.items })
+          vim.cmd.lopen()
+        end
+      end,
+    }
+  end
+end
+
 function M.get()
   local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
@@ -24,7 +83,7 @@ function M.get()
     {
       "gk",
       function()
-        vim.lsp.buf.signature_help { border = RUtils.config.icons.border.line }
+        vim.lsp.buf.signature_help()
       end,
       has = "signatureHelp",
       desc = "LSP: signature help",
@@ -34,21 +93,52 @@ function M.get()
       function()
         vim.lsp.buf.hover {
           border = "single",
-          title = {
-            { " Hover ", "DiagnosticFloatTitle" },
-          },
+          title = { { " Hover ", "DiagnosticFloatTitle" } },
         }
       end,
       desc = "LSP: show hover [noice]",
     },
     {
       "gD",
-      function()
-        vim.cmd [[vsplit]]
-        fzf_lua.lsp_definitions { jump1 = true, ignore_current_line = true }
-      end,
+      -- wrap_location_method(vim.lsp.buf.declaration),
+      wrap_location_method(vim.lsp.buf.definition, true),
       has = "definition",
-      desc = "LSP: definitions [fzflua]",
+      desc = "LSP: definitions (vsplit)",
+    },
+    {
+      "gd",
+      wrap_location_method(vim.lsp.buf.definition),
+      has = "definition",
+      desc = "LSP: definitions",
+    },
+    {
+      "gI",
+      function()
+        fzf_lua.lsp_incoming_calls()
+      end,
+      desc = "LSP: incoming calls [fzflua]",
+    },
+    {
+      "gO",
+      function()
+        fzf_lua.lsp_outgoing_calls()
+      end,
+      desc = "LSP: outgoing calls [fzflua]",
+    },
+    {
+      "gr",
+      function()
+        fzf_lua.lsp_references()
+      end,
+      has = "references",
+      desc = "LSP: references [fzflua]",
+    },
+    {
+      "gt",
+      function()
+        Snacks.picker.lsp_type_definitions()
+      end,
+      desc = "LSP: type definitions [snacks]",
     },
 
     {
@@ -78,6 +168,23 @@ function M.get()
       desc = "LSP: prev word reference",
     },
 
+    {
+      "<Leader>ca",
+      function()
+        if vim.bo[0].filetype == "rust" then
+          return vim.cmd.RustLsp "codeAction"
+        end
+        -- vim.lsp.buf.code_action
+
+        if RUtils.has "tiny-code-action.nvim" then
+          ---@diagnostic disable-next-line: missing-parameter
+          return require("tiny-code-action").code_action()
+        end
+      end,
+      mode = { "n", "x" },
+      has = "codeAction",
+      desc = "Action: source action",
+    },
     { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action", has = "codeAction" },
     {
       "<Leader>cR",
@@ -86,28 +193,6 @@ function M.get()
       end,
       has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
       desc = "Action: rename file",
-    },
-    {
-      "gI",
-      function()
-        if RUtils.has "telescope.nvim" then
-          vim.cmd [[Telescope hierarchy incoming_calls]]
-        else
-          fzf_lua.lsp_incoming_calls()
-        end
-      end,
-      desc = "LSP: incoming calls [fzflua]",
-    },
-    {
-      "gO",
-      function()
-        if RUtils.has "telescope.nvim" then
-          vim.cmd [[Telescope hierarchy outgoing_calls]]
-        else
-          fzf_lua.lsp_outgoing_calls()
-        end
-      end,
-      desc = "LSP: outgoing calls [fzflua]",
     },
     {
       "<Leader>cc",
@@ -122,6 +207,16 @@ function M.get()
         vim.lsp.codelens.refresh()
       end,
       desc = "Action: codelens refresh",
+    },
+    {
+      "<Leader>cr",
+      function()
+        local inc_rename = require "inc_rename"
+        return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
+      end,
+      expr = true,
+      has = "rename",
+      desc = "Action: rename [inc_rename]",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -158,7 +253,7 @@ function M.get()
     --  LSP commands
     --  +----------------------------------------------------------+
     {
-      "gF",
+      "gof",
       function()
         local function check_current_ft(fts)
           local ft = vim.bo[0].filetype
@@ -211,8 +306,12 @@ function M.get()
           ["LSP - Show info log"] = function()
             vim.cmd [[LspInfo]]
           end,
-          ["LSP - Toggle lsp_lines"] = function()
-            require("lsp_lines").toggle()
+          ["Diagnostics - Toggle virtual_lines"] = function()
+            local new_value = not vim.diagnostic.config().virtual_lines
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })
+            vim.diagnostic.config { virtual_lines = new_value }
+            return new_value
           end,
         }, unpack(lang_lsp_cmds) or {})
 
@@ -221,127 +320,6 @@ function M.get()
       desc = "Bulk: LSP cmds",
     },
   }
-
-  if vim.bo[0].filetype == "rust" then
-    M._keys[#M._keys + 1] = {
-      "<Leader>ca",
-      function()
-        vim.cmd.RustLsp "codeAction"
-      end,
-      desc = "Action: code action [rustaceanvim]",
-      buffer = vim.api.nvim_get_current_buf(),
-    }
-  elseif RUtils.has "tiny-code-action.nvim" then
-    M._keys[#M._keys + 1] = {
-      "<Leader>ca",
-      require("tiny-code-action").code_action,
-      has = "codeAction",
-      desc = "Action: code action [tiny-code-action]",
-    }
-  else
-    M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "Action: code action" }
-  end
-
-  if RUtils.has "inc-rename.nvim" then
-    M._keys[#M._keys + 1] = {
-      "<Leader>cr",
-      function()
-        local inc_rename = require "inc_rename"
-        return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
-      end,
-      expr = true,
-      desc = "Action: rename [inc-rename]",
-      has = "rename",
-    }
-  elseif RUtils.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] =
-      { "<Leader>cr", "<CMD> Lspsaga rename <CR>", desc = "Action: rename [lspsaga]", has = "rename" }
-  else
-    M._keys[#M._keys + 1] = { "<Leader>cr", vim.lsp.buf.rename, desc = "Action: rename", has = "rename" }
-  end
-
-  if RUtils.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "grr",
-      "<CMD>Glance references<CR>",
-      has = "references",
-      desc = "LSP: references [glance]",
-    }
-  else
-    M._keys[#M._keys + 1] = {
-      "grr",
-      function()
-        fzf_lua.lsp_references()
-      end,
-      has = "references",
-      desc = "LSP: references [fzflua]",
-    }
-  end
-
-  if RUtils.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gd",
-      "<CMD>Glance definitions<CR>",
-      has = "definition",
-      desc = "LSP: definitions [glance]",
-    }
-  else
-    M._keys[#M._keys + 1] = {
-      "gd",
-      function()
-        fzf_lua.lsp_definitions { jump1 = true }
-      end,
-      desc = "LSP: definitions [fzflua]",
-      has = "definition",
-    }
-  end
-
-  if RUtils.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gt",
-      "<CMD>Glance type_definitions<CR>",
-      desc = "LSP: type definitions [glance]",
-    }
-  else
-    M._keys[#M._keys + 1] = {
-      "gt",
-      function()
-        require("telescope.builtin").lsp_type_definitions { reuse_win = true }
-      end,
-      desc = "LSP: type definitions",
-    }
-  end
-
-  -- if RUtils.has "goto-preview" then
-  --   M._keys[#M._keys + 1] = { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek [goto-preview]" }
-  -- else
-  --   M._keys[#M._keys + 1] = {
-  --     "gP",
-  --     function()
-  --       fzf_lua.lsp_definitions {
-  --         prompt = RUtils.fzflua.padding_prompt(),
-  --         winopts = {
-  --           title = RUtils.fzflua.format_title("LSP: Peek [fzflua]", RUtils.config.icons.misc.lsp),
-  --           relative = "editor",
-  --           backdrop = 60,
-  --           height = 0.80,
-  --           width = 0.60,
-  --           row = 0.50,
-  --           col = 0.50,
-  --           border = RUtils.config.icons.border.rectangle,
-  --           fullscreen = false,
-  --           preview = {
-  --             border = RUtils.config.icons.border.rectangle,
-  --             vertical = "up:80%", -- up|down:size
-  --             layout = "vertical", -- horizontal|vertical|flex
-  --           },
-  --         },
-  --       }
-  --     end,
-  --     has = "signatureHelp",
-  --     desc = "LSP: peek [fzflua]",
-  --   }
-  -- end
 
   return M._keys
 end

@@ -17,6 +17,11 @@ return {
     opts = { ensure_installed = { "dockerfile" } },
   },
   {
+    "mason-org/mason.nvim",
+    optional = true,
+    opts = { ensure_installed = { "hadolint" } },
+  },
+  {
     "mfussenegger/nvim-lint",
     optional = true,
     opts = {
@@ -29,15 +34,9 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- dockerls = {}, -- TODO: line ini dockerls
+        dockerls = {}, -- TODO: line ini dockerls
         docker_compose_language_service = {},
       },
     },
-  },
-
-  {
-    "mason-org/mason.nvim",
-    optional = true,
-    opts = { ensure_installed = { "docker-compose-language-service", "docker-language-server", "hadolint" } },
   },
 }

@@ -55,8 +55,7 @@ return {
       require("nvim-treesitter").install(opts.ensure_installed)
 
       vim.treesitter.language.register("markdown", "codecompanion")
-      vim.treesitter.language.register("markdown", "blink-cmp-documentation")
-      vim.treesitter.language.register("markdown", "codecompanion")
+      -- vim.treesitter.language.register("markdown", "blink-cmp-documentation")
       -- vim.treesitter.language.register("yaml", "ghaction")
 
       vim.api.nvim_create_autocmd("FileType", {

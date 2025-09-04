@@ -65,12 +65,6 @@ return {
   },
 
   {
-    "mason-org/mason.nvim",
-    optional = true,
-    opts = { ensure_installed = { "pyright", "ruff" } },
-  },
-
-  {
     "nvim-neotest/neotest",
     optional = true,
     dependencies = { "nvim-neotest/neotest-python" },

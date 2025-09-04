@@ -205,14 +205,28 @@ RUtils.map.nnoremap("zL", "z20l")
 RUtils.map.nnoremap("zH", "z20h")
 
 -- Scroll Up/Down
-RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
+RUtils.map.nnoremap("<C-d>", "<C-d>zz", { desc = "Scroll: downwards" }) -- make center
+RUtils.map.nnoremap("<C-u>", "<C-u>zz", { desc = "Scroll: upwards" })
+RUtils.map.nnoremap(
+  "<C-b>",
+  [[max([winheight(0) - 2, 1]) ."<C-u>zz".(line('w0') <= 1 ? "H" : "M")]],
+  { expr = true, desc = "Scroll: fast upwards" }
+)
 RUtils.map.nnoremap(
   "<C-f>",
-  [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
-  { expr = true }
+  [[max([winheight(0) - 2, 1]) ."<C-d>zz".(line('w$') >= line('$') ? "L" : "M")]],
+  { expr = true, desc = "Scroll: fast downwards" }
 )
-RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
-RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
+RUtils.map.nnoremap(
+  "<C-e>",
+  [[(line("w$") >= line('$') ? "2j" : "2<C-e>")]],
+  { expr = true, desc = "Scroll: down windows without moving the cursor" }
+)
+RUtils.map.nnoremap(
+  "<C-y>",
+  [[(line("w0") <= 1 ? "2k" : "2<C-y>")]],
+  { expr = true, desc = "Scroll: up windows without moving the cursor" }
+)
 -- }}}
 -- {{{ Buffers
 RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer into tab window" })

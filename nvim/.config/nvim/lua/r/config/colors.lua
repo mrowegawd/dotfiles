@@ -767,11 +767,6 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIFF COLOR                        ║
     -- ╚═════════════════════════════════════════════════════════╝
-    -- These highlights are syntax groups that are set in diff.vim
-    -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
-    -- { diffBDiffer = { link = 'WarningMsg' } },
-    -- { diffCommon = { link = 'WarningMsg' } },
-    -- { diffDiffer = { link = 'WarningMsg' } },
     {
       diffFile = {
         fg = { from = "Directory", attr = "fg", alter = difffile_bg_alter },
@@ -779,11 +774,6 @@ local general_overrides = function()
         bold = true,
       },
     },
-    -- { diffIdentical = { link = 'WarningMsg' } },
-    -- { diffIndexLine = { link = 'Number' } },
-    -- { diffIsA = { link = 'WarningMsg' } },
-    -- { diffNoEOL = { link = 'WarningMsg' } },
-    -- { diffOnly = { link = 'WarningMsg' } },
 
     -- Setting darken: gunakan paramater (setting_color, ukuran, base_color)
     {

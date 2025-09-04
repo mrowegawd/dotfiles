@@ -44,7 +44,7 @@ return {
   {
     "mason-org/mason.nvim",
     optional = true,
-    opts = { ensure_installed = { "erb-formatter", "erb-lint", "ruby-lsp", "rubocop" } },
+    opts = { ensure_installed = { "erb-formatter", "erb-lint" } },
   },
   {
     "mfussenegger/nvim-dap",

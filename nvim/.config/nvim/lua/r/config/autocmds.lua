@@ -267,17 +267,15 @@ RUtils.cmd.augroup("LocateLastPosition", {
     end
     vim.b[buf].lazyvim_last_loc = true
     local mark = vim.api.nvim_buf_get_mark(buf, '"')
-    local lcount = vim.api.nvim_buf_line_count(buf)
-    if mark[1] > 0 and mark[1] <= lcount then
+    if mark[1] > 0 and mark[1] <= vim.api.nvim_buf_line_count(buf) then
       pcall(vim.api.nvim_win_set_cursor, 0, mark)
     end
   end,
 })
 
 RUtils.cmd.augroup("CheckOutsideTime", {
-  event = "FocusGained",
+  event = { "FocusGained", "TermClose", "TermLeave" },
   pattern = "*",
-  -- command = "if getcmdwintype() == '' | checktime | endif",
   command = function()
     if vim.fn.getcmdwintype() == "" then
       vim.cmd "checktime"

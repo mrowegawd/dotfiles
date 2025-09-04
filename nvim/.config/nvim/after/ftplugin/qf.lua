@@ -3,13 +3,12 @@ local keymap, api, opt = vim.keymap, vim.api, vim.opt_local
 local builtin = require "fzf-lua.previewer.builtin"
 local QFPreviewer = builtin.buffer_or_file:extend()
 
--- opt.buflisted = false
--- opt.winfixheight = true
--- opt.scrolloff = 2
--- opt.cursorline = true
+opt.winfixheight = true
+opt.scrolloff = 2
 opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
+opt.buflisted = false
 
 -- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })

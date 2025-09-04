@@ -2,18 +2,17 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    -- event = "VeryLazy", -- LazyFile
-    event = vim.fn.has "nvim-0.11" == 1 and { "BufReadPre", "BufNewFile", "BufWritePre" } or "LazyFile",
+    event = "VeryLazy",
+    -- event = vim.fn.has "nvim-0.11" == 1 and { "BufReadPre", "BufNewFile", "BufWritePre" } or "LazyFile",
     dependencies = {
-      "mason.nvim",
-      {
-        "mason-org/mason-lspconfig.nvim",
-        version = vim.fn.has "nvim-0.11" == 0 and "1.32.0" or false,
-        opts = { ensure_installed = {} },
-        config = function() end,
-      },
+      { "mason-org/mason.nvim", opts = {} },
+      "neovim/nvim-lspconfig",
     },
     opts = function()
+      -- WARN: root pattern pada lua_ls masih error, issue related:
+      -- https://github.com/LuaLS/lua-language-server/issues/2975
+      -- local root_pattern = require("lspconfig.util").root_pattern
+
       ---@class PluginLspOpts
       local ret = {
         -- options for vim.diagnostic.config()
@@ -62,7 +61,7 @@ return {
           exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints
         },
         codelens = {
-          enabled = false,
+          enabled = true,
         },
         -- add any global capabilities here
         capabilities = {
@@ -79,19 +78,28 @@ return {
         },
         servers = {
           lua_ls = {
+            -- root_dir = root_pattern ".luarc.json",
             -- mason = false, -- set to false if you don't want this server to be installed with mason
             -- keys = {},
             settings = {
               Lua = {
                 workspace = {
+                  library = {
+                    --   [".luarc.json"] = true,
+                    --   [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                    --   [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                    --   [vim.fn.stdpath("config") .. "/lua"] = true,
+                    -- [vim.fn.expand "$PWD/lua"] = true,
+                    [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+                    -- [vim.fn.stdpath "config" .. "/lua"] = true,
+                  },
+                  ignoreDir = { ".git", "node_modules", "linters" },
                   checkThirdParty = false,
                 },
                 codeLens = {
                   enable = true,
                 },
-                completion = {
-                  callSnippet = "Replace",
-                },
+                completion = { callSnippet = "Replace" },
                 doc = {
                   privateName = { "^_" },
                 },
@@ -141,6 +149,8 @@ return {
       RUtils.lsp.setup()
       RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
+      local methods = vim.lsp.protocol.Methods
+
       -- diagnostics signs
       if vim.fn.has "nvim-0.10.0" == 0 then
         if type(opts.diagnostics.signs) ~= "boolean" then
@@ -156,7 +166,7 @@ return {
         -- inlay hints
         if opts.inlay_hints.enabled then
           ---@diagnostic disable-next-line: unused-local
-          RUtils.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
+          RUtils.lsp.on_supports_method(methods.textDocument_inlayHint, function(client, buffer)
             if
               vim.api.nvim_buf_is_valid(buffer)
               and vim.bo[buffer].buftype == ""
@@ -169,8 +179,7 @@ return {
 
         -- code lens
         if opts.codelens.enabled and vim.lsp.codelens then
-          ---@diagnostic disable-next-line: unused-local
-          RUtils.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
+          RUtils.lsp.on_supports_method(methods.textDocument_codeLens, function(_, buffer)
             vim.lsp.codelens.refresh()
             vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
               buffer = buffer,
@@ -210,106 +219,49 @@ return {
         opts.capabilities or {}
       )
 
-      -- local function setup(server)
-      --   local server_opts = vim.tbl_deep_extend("force", {
-      --     capabilities = vim.deepcopy(capabilities),
-      --   }, servers[server] or {})
-      --   if server_opts.enabled == false then
-      --     return
-      --   end
-      --
-      --   if opts.setup[server] then
-      --     if opts.setup[server](server, server_opts) then
-      --       return
-      --     end
-      --   elseif opts.setup["*"] then
-      --     if opts.setup["*"](server, server_opts) then
-      --       return
-      --     end
-      --   end
-      --   require("lspconfig")[server].setup(server_opts)
-      -- end
-
-      -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      local all_mslp_servers = {}
-      if have_mason and vim.fn.has "nvim-0.11" == 1 then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig").get_available_servers())
-      elseif have_mason then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
-      end
-
-      local exclude_automatic_enable = {} ---@type string[]
-
-      local function configure(server)
+      local function setup(server)
         local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
         }, servers[server] or {})
 
+        if server_opts.enabled == false then
+          return
+        end
+
         if opts.setup[server] then
           if opts.setup[server](server, server_opts) then
-            return true
+            return
           end
         elseif opts.setup["*"] then
           if opts.setup["*"](server, server_opts) then
-            return true
+            return
           end
         end
-        if vim.fn.has "nvim-0.11" == 1 then
-          vim.lsp.config(server, server_opts)
-        else
-          require("lspconfig")[server].setup(server_opts)
-        end
+        require("lspconfig")[server].setup(server_opts)
+      end
 
-        -- manually enable if mason=false or if this is a server that cannot be installed with mason-lspconfig
-        if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-          if vim.fn.has "nvim-0.11" == 1 then
-            vim.lsp.enable(server)
-          else
-            configure(server)
-          end
-          return true
-        end
-        return false
+      -- Get all the servers that are available through mason-lspconfig
+      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+      local all_mslp_servers = {}
+      if have_mason then
+        all_mslp_servers = mlsp.get_available_servers()
       end
 
       local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(servers) do
         if server_opts then
           server_opts = server_opts == true and {} or server_opts
-          if server_opts.enabled ~= false then
-            -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-            if configure(server) then
-              exclude_automatic_enable[#exclude_automatic_enable + 1] = server
-            else
-              ensure_installed[#ensure_installed + 1] = server
-            end
+          -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
+          if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
+            setup(server)
           else
-            exclude_automatic_enable[#exclude_automatic_enable + 1] = server
+            ensure_installed[#ensure_installed + 1] = server
           end
         end
       end
 
       if have_mason then
-        local setup_config = {
-          -- mlsp.setup {
-          ensure_installed = vim.tbl_deep_extend(
-            "force",
-            ensure_installed,
-            RUtils.opts("mason-lspconfig.nvim").ensure_installed or {}
-          ),
-          handlers = { setup },
-        }
-
-        if vim.fn.has "nvim-0.11" == 1 then
-          setup_config.automatic_enable = {
-            exclude = exclude_automatic_enable,
-          }
-        else
-          setup_config.handlers = { configure }
-        end
-
-        mlsp.setup(setup_config)
+        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
 
       if RUtils.lsp.is_enabled "denols" and RUtils.lsp.is_enabled "vtsls" then
@@ -323,6 +275,25 @@ return {
         end)
       end
     end,
+  },
+  -- LAZYDEV
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    dependencies = {
+      { "justinsgithub/wezterm-types", lazy = true },
+      { "Bilal2453/luvit-meta", lazy = true },
+    },
+    opts = {
+      library = {
+        "lazy.nvim",
+        "luvit-meta/library",
+        -- { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        -- { path = "snacks.nvim", words = { "Snacks" } },
+        { path = "wezterm-types", mods = { "wezterm" } },
+        { path = "RUtils", words = { "RUtils" } },
+      },
+    },
   },
   -- MASON NVIM
   {
@@ -350,22 +321,22 @@ return {
         end, 100)
       end)
 
-      mr.refresh(function()
+      local function ensure_installed()
         for _, tool in ipairs(opts.ensure_installed) do
           local p = mr.get_package(tool)
           if not p:is_installed() then
             p:install()
           end
         end
-      end)
+      end
+      if mr.refresh then
+        mr.refresh(ensure_installed)
+      else
+        ensure_installed()
+      end
     end,
   },
 
-  {
-    "mason-org/mason.nvim",
-    optional = true,
-    opts = { ensure_installed = { "lua-language-server" } },
-  },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   MISC                                                   │
   --  ╰──────────────────────────────────────────────────────────╯

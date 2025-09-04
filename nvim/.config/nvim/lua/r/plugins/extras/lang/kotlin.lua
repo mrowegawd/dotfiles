@@ -16,13 +16,8 @@ return {
   {
     "mason-org/mason.nvim",
     optional = true,
-    opts = { ensure_installed = { "ktlint", "kotlin-language-server" } },
+    opts = { ensure_installed = { "ktlint" } },
   },
-
-  -- kotlin
-  -- "ktlint",
-  -- "kotlin-debug-adapter",
-
   -- Add syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
