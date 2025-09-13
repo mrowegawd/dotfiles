@@ -2,12 +2,16 @@ return {
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
     branch = "main",
+    build = ":TSUpdate",
     dependencies = {
       { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
     },
-    event = { "LazyFile" },
+    event = {
+      "VeryLazy",
+      "BufRead",
+      "BufNewFile",
+    },
     lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts_extend = { "ensure_installed" },

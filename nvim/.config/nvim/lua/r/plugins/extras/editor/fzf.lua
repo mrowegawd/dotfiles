@@ -236,6 +236,8 @@ return {
         end
       end
 
+      ---@diagnostic disable: missing-fields
+      ---@type fzf-lua.config.Defaults
       return {
         hls = { cursor = "CurSearch" },
         fzf_colors = {

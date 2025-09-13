@@ -65,12 +65,12 @@ return {
         desc = "Git: start/refresh git conflict [gitconflict]",
       },
       {
-        "<g-down>",
+        "<Leader>g<down>",
         "<CMD>GitConflictNextConflict<CR>",
         desc = "Git: next conflict [gitconflict]",
       },
       {
-        "<g-up>",
+        "<Leader>g<up>",
         "<CMD>GitConflictPrevConflict<CR>",
         desc = "Git: prev conflict [gitconflict]",
       },
@@ -104,9 +104,9 @@ return {
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
-    -- "MadKuntilanak/octo.nvim",
-    dir = "~/.local/src/nvim_plugins/octo.nvim",
-    branch = "feat/enchanted-fzflua-listing-and-empty-pr-search",
+    "MadKuntilanak/octo.nvim",
+    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
+    branch = "feat/big-updates",
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = {
@@ -311,7 +311,8 @@ return {
   },
   -- OCTO
   {
-    "pwntester/octo.nvim",
+    "MadKuntilanak/octo.nvim",
+    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
     optional = true,
     opts = function()
       vim.treesitter.language.register("markdown", "octo")

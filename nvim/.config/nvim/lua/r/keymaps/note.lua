@@ -13,7 +13,7 @@ function M.neorg_mappings_ft(bufnr)
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
         end,
-        "Note: find http links (curbuf)",
+        "Note: find http link (curbuf)",
       },
       ["<Leader>fT"] = {
         function()

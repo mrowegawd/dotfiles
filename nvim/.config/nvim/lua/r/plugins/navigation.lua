@@ -479,79 +479,13 @@ return {
     "stevearc/aerial.nvim",
     enabled = false,
     event = "VeryLazy",
-    opts = function()
-      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
-      -- require("telescope").load_extension "aerial"
-
-      local vim_width = vim.o.columns
-      vim_width = math.floor(vim_width / 2 - 30)
-
-      return {
-        layout = { min_width = vim_width },
-        backends = { "lsp", "markdown", "asciidoc", "man" },
-        show_guides = true,
-        guides = {
-          mid_item = "├╴",
-          last_item = "└╴",
-          nested_top = "│ ",
-          whitespace = "  ",
-        },
-
-        nav = {
-          border = "rounded",
-          max_height = 0.9,
-          min_height = { 10, 0.1 },
-          max_width = 0.5,
-          min_width = { 0.2, 20 },
-          win_opts = {
-            cursorline = true,
-            winblend = 10,
-          },
-          -- Jump to symbol in source window when the cursor moves
-          autojump = false,
-          -- Show a preview of the code in the right column, when there are no child symbols
-          preview = true,
-          -- Keymaps in the nav window
-          keymaps = {
-            ["<CR>"] = "actions.jump",
-            ["<2-LeftMouse>"] = "actions.jump",
-            ["<C-v>"] = "actions.jump_vsplit",
-            ["<C-s>"] = "actions.jump_split",
-            ["h"] = "actions.left",
-            ["l"] = "actions.right",
-            ["<C-c>"] = "actions.close",
-          },
-        },
-        -- highlight_mode = "full_width",
-        manage_folds = false,
-        link_tree_to_folds = false,
-        link_folds_to_tree = false,
-        icons = RUtils.config.icons.kinds,
-        keymaps = {
-          ["<a-n>"] = "actions.down_and_scroll",
-          ["<a-p>"] = "actions.up_and_scroll",
-          ["{"] = false,
-          ["<BS>"] = "actions.tree_toggle",
-          ["o"] = "actions.jump",
-          ["}"] = false,
-          ["[["] = false,
-          ["]]"] = false,
-          ["zm"] = "actions.tree_close_all",
-          ["zO"] = "actions.tree_open_all",
-        },
-      }
-    end,
-  },
-  -- OUTLINE.NVIM
-  {
-    "mrowegawd/outline.nvim",
     keys = {
       {
         "<Leader>oa",
         function()
-          vim.cmd.Outline()
+          vim.cmd.AerialToggle()
         end,
-        desc = "Open: outline window [outline]",
+        desc = "Open: aerial window [aerial]",
       },
       {
         "<Leader>oA",
@@ -633,6 +567,84 @@ return {
       },
     },
     opts = function()
+      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+      -- require("telescope").load_extension "aerial"
+
+      local vim_width = vim.o.columns
+      vim_width = math.floor(vim_width / 2 - 45)
+      -- RUtils.info(vim.inspect(vim_width))
+
+      return {
+        layout = { min_width = vim_width, max_width = { 40, 0.2 } },
+        backends = { "lsp", "markdown", "asciidoc", "man" },
+        show_guides = true,
+        guides = {
+          mid_item = "├╴",
+          last_item = "└╴",
+          nested_top = "│ ",
+          whitespace = "  ",
+        },
+
+        nav = {
+          border = "rounded",
+          max_height = 0.9,
+          min_height = { 10, 0.1 },
+          max_width = 0.5,
+          min_width = { 0.2, 20 },
+          win_opts = {
+            cursorline = true,
+            winblend = 10,
+          },
+          -- Jump to symbol in source window when the cursor moves
+          autojump = false,
+          -- Show a preview of the code in the right column, when there are no child symbols
+          preview = true,
+          -- Keymaps in the nav window
+          keymaps = {
+            ["<CR>"] = "actions.jump",
+            ["<2-LeftMouse>"] = "actions.jump",
+            ["<C-v>"] = "actions.jump_vsplit",
+            ["<C-s>"] = "actions.jump_split",
+            ["h"] = "actions.left",
+            ["l"] = "actions.right",
+            ["<C-c>"] = "actions.close",
+          },
+        },
+        -- highlight_mode = "full_width",
+        manage_folds = false,
+        link_tree_to_folds = false,
+        link_folds_to_tree = false,
+        icons = RUtils.config.icons.kinds,
+        keymaps = {
+          ["<a-n>"] = "actions.down_and_scroll",
+          ["<a-p>"] = "actions.up_and_scroll",
+          ["{"] = false,
+          ["<BS>"] = "actions.tree_toggle",
+          ["o"] = "actions.jump",
+          ["}"] = false,
+          ["[["] = false,
+          ["]]"] = false,
+          ["zm"] = "actions.tree_close_all",
+          ["zO"] = "actions.tree_open_all",
+        },
+      }
+    end,
+  },
+  -- OUTLINE.NVIM
+  {
+    "MadKuntilanak/outline.nvim",
+    -- dir = "~/.local/src/nvim_plugins/outline.nvim",
+    branch = "feat/big-updates",
+    keys = {
+      {
+        "<Leader>oa",
+        function()
+          vim.cmd.Outline()
+        end,
+        desc = "Open: outline window [outline]",
+      },
+    },
+    opts = function()
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       local kind = RUtils.config.icons.kinds
       return {
@@ -684,22 +696,24 @@ return {
         },
         preview_window = {
           live = true,
+          auto_preview = false,
           winhl = "NormalFloat:NormalFloat",
         },
         providers = {
           priority = { "lsp", "markdown", "norg" },
         },
+        picker = "fzf-lua", -- fzf-lua, telescope
         -- These keymaps can be a string or a table for multiple keys.
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
           show_help = "?",
-          close = "q",
+          close = { "q", "<Leader><Tab>" },
           goto_location = { "<Cr>", "o" },
           peek_location = {},
           goto_and_close = {},
           restore_location = {},
           hover_symbol = {},
-          toggle_preview = { "P", "p" },
+          toggle_preview = { "P" },
           rename_symbol = {},
           code_actions = {},
           fold = "h",
@@ -711,6 +725,13 @@ return {
           fold_reset = "<space><space>",
           down_and_jump = { "<a-n>", "<c-n>" },
           up_and_jump = { "<a-p>", "<c-p>" },
+
+          -- open_in_vsplit = "<C-v>",
+          -- open_in_split = "<C-s>",
+          -- open_in_tab = "<C-t>",
+          -- open_in_float = "O",
+
+          filter_symbols = "<localleader>f",
         },
       }
     end,

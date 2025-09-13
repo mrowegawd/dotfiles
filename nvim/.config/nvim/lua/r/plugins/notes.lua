@@ -125,6 +125,7 @@ return {
           "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
           "PROGRESS(p)", -- task yang sedang dikerjakan
+          "NEXT(n)", -- task yang akan dialankan setelah 'progress' task selesai
           "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
           "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
@@ -133,11 +134,10 @@ return {
         },
         org_todo_keyword_faces = {
           CHECK = ":foreground royalblue :weight bold :slant",
-          -- TODO = ":foreground " .. todo_fg .. " :weight bold :slant",
+          NEXT = ":background blue:foreground white :weight bold :slant",
           TODO = ":foreground red :weight bold :slant",
           HBD = ":foreground pink :weight bold :slant",
           STATUS = ":foreground black :background magenta :weight bold :slant",
-          -- DONE = ":foreground " .. done_hi .. " :weight bold :slant",
           DONE = ":foreground gray :weight bold :slant",
 
           PROGRESS = ":foreground white :background red :weight bold :slant italic",

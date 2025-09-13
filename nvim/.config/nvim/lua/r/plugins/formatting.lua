@@ -4,9 +4,12 @@ local M = {}
 function M.setup(_, opts)
   for _, key in ipairs { "format_on_save", "format_after_save" } do
     if opts[key] then
-      local msg = "Don't set `opts.%s` for `conform.nvim`.\n**LazyVim** will use the conform formatter automatically"
-      RUtils.warn(msg:format(key))
-      ---@diagnostic disable-next-line: no-unknown
+      RUtils.warn(
+        string.format(
+          "Don't set `opts.%s` for `conform.nvim`.\n**LazyVim** will use the conform formatter automatically",
+          key
+        )
+      )
       opts[key] = nil
     end
   end

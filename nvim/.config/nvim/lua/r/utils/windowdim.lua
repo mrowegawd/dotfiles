@@ -151,6 +151,7 @@ autocmds.cursorline_blacklist = {
   ["NvimTree"] = true,
   ["Outline"] = true,
   ["TelescopePrompt"] = true,
+  ["aerial"] = true,
   ["alpha"] = true,
   ["command-t"] = true,
   ["dap-repl"] = true,

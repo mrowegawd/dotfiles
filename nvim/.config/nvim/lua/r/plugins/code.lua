@@ -362,7 +362,6 @@ return {
       { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
       { "<Leader>rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc" },
       { "<Leader>r?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
-      l,
     },
     opts = {
       base = {

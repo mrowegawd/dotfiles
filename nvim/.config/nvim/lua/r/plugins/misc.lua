@@ -49,7 +49,7 @@ return {
       {
         "<c-Up>",
         "<CMD> Hi{ <CR>",
-        desc = "Misc: prev [vim-highlighter]",
+        desc = "Misc: prev highlighter [vim-highlighter]",
       },
       {
         "t<CR>",
@@ -124,7 +124,6 @@ return {
     -- :KeyAnalyzer <C-M>x i 	  Show mappings starting with CTRL + M x in insert mode
     "meznaric/key-analyzer.nvim",
     cmd = "KeyAnalyzer",
-    enabled = false,
     opts = {},
   },
   -- FEED

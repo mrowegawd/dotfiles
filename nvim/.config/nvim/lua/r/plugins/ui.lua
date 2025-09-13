@@ -120,12 +120,12 @@ return {
     "jghauser/fold-cycle.nvim",
     keys = {
       {
-        "<a-u>",
+        "<c-s>",
         function()
           require("fold-cycle").open()
         end,
-        desc = "Fold: cycle fold [fold-cycle.nvim]",
         mode = { "v", "n" },
+        desc = "Fold: cycle fold [fold-cycle.nvim]",
       },
     },
     opts = true,

@@ -176,7 +176,8 @@ return {
 
   -- Show `impl` blocks in outline.nvim
   {
-    "mrowegawd/outline.nvim",
+    "MadKuntilanak/outline.nvim",
+    -- dir = "~/.local/src/nvim_plugins/outline.nvim",
     optional = true,
     opts = {
       symbols = {

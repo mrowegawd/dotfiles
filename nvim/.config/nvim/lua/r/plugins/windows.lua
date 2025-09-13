@@ -134,6 +134,7 @@ return {
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     keys = function()
       return {
+        --- CTRL
         {
           "<c-h>",
           function()
@@ -162,6 +163,37 @@ return {
           end,
           desc = "Window: move cursor right [smart-splits]",
         },
+
+        --- ARROW
+        {
+          "<c-Left>",
+          function()
+            require("smart-splits").move_cursor_left()
+          end,
+          desc = "Window: move cursor left [smart-splits]",
+        },
+        {
+          "<c-Down>",
+          function()
+            require("smart-splits").move_cursor_down()
+          end,
+          desc = "Window: move cursor down [smart-splits]",
+        },
+        {
+          "<c-Up>",
+          function()
+            require("smart-splits").move_cursor_up()
+          end,
+          desc = "Window: move cursor up [smart-splits]",
+        },
+        {
+          "<c-Right>",
+          function()
+            require("smart-splits").move_cursor_right()
+          end,
+          desc = "Window: move cursor right [smart-splits]",
+        },
+
         {
           "<a-H>",
           function()
