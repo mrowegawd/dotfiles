@@ -10,7 +10,7 @@ return {
     keys = {
       { "<Localleader>t", mode = { "n", "t", "v" } },
       { "<a-f>", mode = { "n", "t", "v" } },
-      { "<a-T>", mode = { "n", "t", "v" } },
+      { "<a-T>", mode = { "n", "t", "v", desc = "Terminal: open" } },
       { "<a-N>" },
     },
     opts = {
@@ -27,13 +27,13 @@ return {
 
         if is_new then
           local terms = require "ergoterm.terminal"
-          local p = terms.Terminal:new {
+          local term = terms.Terminal:new {
             name = "base",
             cmd = "zsh",
             layout = direction,
             -- dir = "git_dir",
           }
-          return p
+          return term
         end
 
         if not base_term and not is_new then

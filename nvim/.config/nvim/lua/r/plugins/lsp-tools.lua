@@ -189,10 +189,13 @@ return {
       preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
     },
   },
-  -- SYMBOL-USAGE
+  -- SYMBOL-USAGE (disabled)
   {
-    "Wansmer/symbol-usage.nvim",
+    "MadKuntilanak/symbol-usage.nvim",
+    -- dir = "~/.local/src/nvim_plugins/symbol-usage.nvim",
+    branch = "depcreated",
     event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    enabled = false,
     keys = {
       {
         "<Leader>us",
@@ -280,9 +283,18 @@ return {
       }
     end,
   },
+  -- LENSLINE (disabled)
+  {
+    "oribarilan/lensline.nvim",
+    enabled = false,
+    tag = "1.0.0", -- or: branch = 'release/1.x' for latest non-breaking updates
+    event = "LspAttach",
+    opts = {},
+  },
   -- KULALA
   {
     "mistweaverco/kulala.nvim",
+    branch = "develop",
     ft = "http",
     config = true,
     --stylua: ignore
@@ -312,6 +324,35 @@ return {
   {
     "rachartier/tiny-code-action.nvim",
     event = "LspAttach",
-    opts = {},
+    opts = {
+      backend = "delta",
+      picker = "fzf-lua",
+      backend_opts = {
+        delta = { header_lines_to_remove = 4 },
+        difftastic = {
+          header_lines_to_remove = 1,
+          args = {
+            "--color=always",
+            "--display=inline",
+            "--syntax-highlight=on",
+          },
+        },
+        diffsofancy = {
+          header_lines_to_remove = 4,
+        },
+      },
+      signs = {
+        quickfix = { "", { link = "DiagnosticWarn" } },
+        others = { "", { link = "DiagnosticWarn" } },
+        refactor = { "", { link = "DiagnosticInfo" } },
+        ["refactor.move"] = { "󰪹", { link = "DiagnosticInfo" } },
+        ["refactor.extract"] = { "", { link = "DiagnosticError" } },
+        ["source.organizeImports"] = { "", { link = "DiagnosticWarn" } },
+        ["source.fixAll"] = { "󰃢", { link = "DiagnosticError" } },
+        ["source"] = { "", { link = "DiagnosticError" } },
+        ["rename"] = { "󰑕", { link = "DiagnosticWarn" } },
+        ["codeAction"] = { "", { link = "DiagnosticWarn" } },
+      },
+    },
   },
 }

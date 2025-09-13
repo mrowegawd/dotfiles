@@ -21,6 +21,73 @@ local rg_opts =
 
 rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 
+-- local cursor_in_code_block_in_file = function(path, cursor_row, reverse)
+--   reverse = reverse or false
+--
+--   path = vim.fn.expand(path)
+--
+--   local lines = {}
+--
+--   local file = io.open(path, "r")
+--   if not file then
+--     RUtils.warn("Gagal membuka file: " .. path)
+--     return false
+--   end
+--
+--   for line in file:lines() do
+--     table.insert(lines, line)
+--   end
+--   file:close()
+--
+--   -- Grab bagian yang relevan
+--   local sliced_lines
+--   if reverse then
+--     sliced_lines = {}
+--     for i = cursor_row, #lines do
+--       table.insert(sliced_lines, lines[i])
+--     end
+--   else
+--     sliced_lines = {}
+--     for i = 1, cursor_row do
+--       table.insert(sliced_lines, lines[i])
+--     end
+--   end
+--
+--   -- Count fances ``` yang dtmukan
+--   local fences = 0
+--   for _, line_text in ipairs(sliced_lines) do
+--     -- if line_text:match "^```" then
+--     if line_text:match "```" then
+--       -- RUtils.info(line_text)
+--       fences = fences + 1
+--     end
+--   end
+--
+--   return fences % 2 == 1
+-- end
+
+local find_first_code_block_line = function(path)
+  path = vim.fn.expand(path)
+
+  local file = io.open(path, "r")
+  if not file then
+    RUtils.warn("Gagal membuka file: " .. path)
+    return nil
+  end
+
+  local line_number = 0
+  for line in file:lines() do
+    line_number = line_number + 1
+    if line:match "^```" then
+      file:close()
+      return line_number
+    end
+  end
+
+  file:close()
+  return nil -- Tidak ditemukan
+end
+
 local function format_data_tags(data_tag)
   local line = string.gsub(data_tag.lines.text, '"(%d+)"', "%1")
   line = string.gsub(line, "-%s", "")
@@ -41,11 +108,16 @@ end
 local function format_title_tag(data_tag)
   local line = string.gsub(data_tag.lines.text, '\\"', "")
   line = string.gsub(line, "#%s", "")
-  return {
-    title = RUtils.cmd.strip_whitespace(line),
-    line_number = data_tag.line_number,
-    path = data_tag.path.text,
-  }
+
+  local code_block_founded = find_first_code_block_line(data_tag.path.text)
+
+  if code_block_founded and code_block_founded > data_tag.line_number then
+    return {
+      title = RUtils.cmd.strip_whitespace(line),
+      line_number = data_tag.line_number,
+      path = data_tag.path.text,
+    }
+  end
 end
 
 local function is_valid_json(str)
@@ -74,13 +146,15 @@ local function get_height_width_row_col_window()
   return win_height, win_width, row, col
 end
 
-local function extracted_str_tags(entry, data_tbl)
+local function extracted_entry_str(entry, data_tbl)
   local data = {}
 
   local text = vim.split(entry, "|")
   if not text then
     return data
   end
+
+  local line_number = tonumber(entry:match "(%d+).") or nil
 
   for _, x in pairs(data_tbl) do
     local x_title_str = RUtils.fzflua.__strip_str(x.title)
@@ -90,10 +164,10 @@ local function extracted_str_tags(entry, data_tbl)
 
     if x_title_str == text[2] then
       data = {
+        text = x.title,
         path = x.path,
-        line = x.line_number,
+        line = line_number or x.line_number,
         col = 1,
-        text = x_title_str,
       }
     end
   end
@@ -104,7 +178,7 @@ end
 local function open_with(mode, entry, data_tbl, is_open_folded)
   is_open_folded = is_open_folded or false
 
-  local data = extracted_str_tags(entry, data_tbl)
+  local data = extracted_entry_str(entry, data_tbl)
 
   vim.cmd(mode .. " " .. data.path)
   vim.api.nvim_win_set_cursor(0, { tonumber(data.line), 1 })
@@ -118,7 +192,7 @@ local function extracted_selected_tags(selected, data_tbl)
   local items = {}
   if #selected > 1 then
     for _, sel in pairs(selected) do
-      local data = extracted_str_tags(sel, data_tbl)
+      local data = extracted_entry_str(sel, data_tbl)
 
       if not check_duplicate_element_data_tags(items, data.text) then
         items[#items + 1] = {
@@ -130,7 +204,7 @@ local function extracted_selected_tags(selected, data_tbl)
       end
     end
   else
-    local data = extracted_str_tags(selected[1], data_tbl)
+    local data = extracted_entry_str(selected[1], data_tbl)
     if not check_duplicate_element_data_tags(items, data.text) then
       items[#items + 1] = {
         filename = data.path,
@@ -211,8 +285,11 @@ local function collect_all_tags_async(data, cb, is_for_tags)
 
             if string.match(line_text, "^# ") then
               if match_data.line_number < 28 then
-                data_title_out[#data_title_out + 1] = format_title_tag(match_data)
-                coroutine.resume(co, 0)
+                local f_tag = format_title_tag(match_data)
+                if f_tag then
+                  data_title_out[#data_title_out + 1] = f_tag
+                  coroutine.resume(co, 0)
+                end
               end
             end
 
@@ -450,7 +527,7 @@ local function picker(contents, actions, opts)
   end
 
   function Tagpreviewer:parse_entry(entry_str)
-    local data = extracted_str_tags(entry_str, data_tags_table)
+    local data = extracted_entry_str(entry_str, data_tags_table)
     if not data then
       return {}
     end
@@ -1177,7 +1254,7 @@ local links = {
   end,
 }
 
-local transformPath = function(text)
+local transform_path = function(text)
   if type(links.transform_explicit) ~= "function" or not links.transform_explicit then
     return text
   else
@@ -1185,7 +1262,7 @@ local transformPath = function(text)
   end
 end
 
-local formatLink = function(text, source, part)
+local format_link = function(text, source, part)
   local replacement, path_text
   -- If the text starts with a hash, format the link as an anchor link
   if string.sub(text, 0, 1) == "#" and not source then
@@ -1196,7 +1273,7 @@ local formatLink = function(text, source, part)
     path_text = string.gsub(path_text, "%-%-", "-")
     path_text = "#" .. string.lower(path_text)
   elseif not source then
-    path_text = transformPath(text)
+    path_text = transform_path(text)
     -- If no path_text, end here
     if not path_text then
       return
@@ -1223,12 +1300,11 @@ local formatLink = function(text, source, part)
   end
 end
 
-local cursorInCodeBlock = function(cursor_row, reverse)
-  if reverse == nil or reverse == false then
-    reverse = false
-  else
-    reverse = true
-  end
+---@param cursor_row integer
+---@param reverse? boolean
+---@return boolean
+local cursor_in_code_block = function(cursor_row, reverse)
+  reverse = reverse or false
   local lines = reverse and vim.api.nvim_buf_get_lines(0, cursor_row - 1, -1, false)
     or vim.api.nvim_buf_get_lines(0, 0, cursor_row, false)
   local fences = 0
@@ -1252,7 +1328,7 @@ function M.go_to_heading(anchor_text, reverse)
   -- so we'll start looking from here onwards and then circle back to the beginning
   local position = vim.api.nvim_win_get_cursor(0)
   local starting_row, continue = position[1], true
-  local in_fenced_code_block = cursorInCodeBlock(starting_row, reverse)
+  local in_fenced_code_block = cursor_in_code_block(starting_row, reverse)
   local row = (reverse and starting_row - 1) or starting_row + 1
   while continue do
     local line = (reverse and vim.api.nvim_buf_get_lines(0, row - 1, row, false))
@@ -1273,7 +1349,7 @@ function M.go_to_heading(anchor_text, reverse)
           continue = false
         else
           -- Format current heading to see if it matches our search term
-          local heading_as_anchor = formatLink(line[1], nil, 2)
+          local heading_as_anchor = format_link(line[1], nil, 2)
           if anchor_text == heading_as_anchor then
             -- Set a mark
             vim.api.nvim_buf_set_mark(0, "`", position[1], position[2], {})

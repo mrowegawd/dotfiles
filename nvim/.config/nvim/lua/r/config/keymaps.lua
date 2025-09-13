@@ -33,13 +33,9 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 
 -- }}}
 -- {{{ Folds
--- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" }) -- <c-m> --> <c-enter>
 
-RUtils.map.nnoremap("<c-s>", "zO", { desc = "Fold: open all" })
-
--- RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 RUtils.map.nnoremap("<c-a>", "zMzv", { desc = "Fold: close all folds except the current one" })
 
 RUtils.map.nnoremap("<c-x>", function()
@@ -52,10 +48,10 @@ end, { desc = "Fold: cycle level fold" })
 
 RUtils.map.nnoremap("zo", function()
   vim.cmd "normal! zozz"
-end, { desc = "Fold: zo" })
+end, { desc = "Fold: open and centering" })
 RUtils.map.nnoremap("zO", function()
   vim.cmd "normal! zOzz"
-end, { desc = "Fold: zO" })
+end, { desc = "Fold: open and centering" })
 
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
@@ -85,16 +81,16 @@ RUtils.map.tnoremap("<a-CR>", function()
 end, { desc = "Terminal: new term" })
 
 -- Move cursor from terminal mode
-RUtils.map.tnoremap("<a-l>", function()
+RUtils.map.tnoremap("<c-w>l", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>l", "t")
 end, { desc = "Terminal: move cursor left" })
-RUtils.map.tnoremap("<a-k>", function()
+RUtils.map.tnoremap("<c-w>k", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t")
 end, { desc = "Terminal: move cursor up" })
-RUtils.map.tnoremap("<a-h>", function()
+RUtils.map.tnoremap("<c-w>h", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t")
 end, { desc = "Terminal: move cursor right" })
-RUtils.map.tnoremap("<a-j>", function()
+RUtils.map.tnoremap("<c-w>j", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
 end, { desc = "Terminal: move cursor down" })
 
@@ -149,7 +145,7 @@ RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (v
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
 RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
-RUtils.map.nnoremap("<Leader>wo", function()
+RUtils.map.nnoremap("<Leader>ow", function()
   local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history" }
 
   if vim.tbl_contains(right_win, vim.bo.filetype) then
@@ -205,16 +201,16 @@ RUtils.map.nnoremap("zL", "z20l")
 RUtils.map.nnoremap("zH", "z20h")
 
 -- Scroll Up/Down
-RUtils.map.nnoremap("<C-d>", "<C-d>zz", { desc = "Scroll: downwards" }) -- make center
-RUtils.map.nnoremap("<C-u>", "<C-u>zz", { desc = "Scroll: upwards" })
+RUtils.map.nnoremap("<C-d>", "<C-d>", { desc = "Scroll: downwards" })
+RUtils.map.nnoremap("<C-u>", "<C-u>", { desc = "Scroll: upwards" })
 RUtils.map.nnoremap(
   "<C-b>",
-  [[max([winheight(0) - 2, 1]) ."<C-u>zz".(line('w0') <= 1 ? "H" : "M")]],
+  [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]],
   { expr = true, desc = "Scroll: fast upwards" }
 )
 RUtils.map.nnoremap(
   "<C-f>",
-  [[max([winheight(0) - 2, 1]) ."<C-d>zz".(line('w$') >= line('$') ? "L" : "M")]],
+  [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
   { expr = true, desc = "Scroll: fast downwards" }
 )
 RUtils.map.nnoremap(

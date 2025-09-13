@@ -16,13 +16,14 @@ local dropdown = function(opts)
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
     v_backdrop = 90
   end
-
-  local obj_fzf = {
+  local fzf_tbl = {
     prompt = M.padding_prompt(),
     fzf_opts = {
       ["--layout"] = "reverse",
       ["--multi"] = true,
     },
+    ---@diagnostic disable: missing-fields
+    ---@type fzf-lua.config.Winopts
     winopts = {
       border = RUtils.config.icons.border.rectangle,
       title_pos = opts.winopts.title and "center" or nil,
@@ -32,21 +33,19 @@ local dropdown = function(opts)
       backdrop = v_backdrop,
       fullscreen = false,
       preview = {
-        hidden = "hidden",
+        hidden = false,
         layout = "vertical",
         vertical = "up:50%",
       },
     },
   }
-
-  -- RUtils.info(vim.inspect(obj_fzf))
-  -- RUtils.info(vim.inspect(opts))
-
-  return vim.tbl_deep_extend("force", obj_fzf, opts)
+  return vim.tbl_deep_extend("force", fzf_tbl, opts)
 end
 
 local layout_center = function(opts)
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@diagnostic disable: missing-fields
+    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = false,
       height = 20,
@@ -81,10 +80,13 @@ local __stripBeforeLastOccurrenceOf = function(str, sep)
   return str:sub(idx + 1), idx
 end
 
+---@diagnostic disable: missing-fields
+---@param opts fzf-lua.config.Defaults
 function M.layout_pojokan(opts)
   local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
   local win_height = math.ceil(lines * 0.5)
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       width = math.floor(math.min(60, vim.o.columns / 2)),
       height = win_height - 10,
@@ -94,6 +96,7 @@ function M.layout_pojokan(opts)
   }, opts))
 end
 
+---@param is_expand? boolean
 function M.padding_prompt(is_expand)
   is_expand = is_expand or false
   local padding = "  "
@@ -121,6 +124,7 @@ function M.open_cursor_dropdown(opts)
   end
 
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       width = math.floor(vim.o.columns / 2 + 8),
       height = math.floor(height / 2 - 5),
@@ -131,12 +135,8 @@ function M.open_cursor_dropdown(opts)
 end
 
 function M.open_dock_bottom(opts)
-  -- local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-  -- local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-  -- local win_height = math.ceil(lines * 0.5)
-  -- local win_width = math.ceil(columns * 1)
-
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = false,
       width = 1,
@@ -153,7 +153,8 @@ function M.open_dock_bottom(opts)
 end
 
 function M.open_center_big(opts)
-  return dropdown(vim.tbl_deep_extend("force", {
+  local open_center_big_opts = {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       title_pos = "center",
       width = 0.90,
@@ -168,11 +169,13 @@ function M.open_center_big(opts)
         horizontal = "up:45%",
       },
     },
-  }, opts))
+  }
+  return dropdown(vim.tbl_deep_extend("force", open_center_big_opts, opts))
 end
 
 function M.open_center_height_small_but_wide(opts)
-  return dropdown(vim.tbl_deep_extend("force", {
+  local fzf_tbl = {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       width = 0.80,
       height = 0.60,
@@ -185,11 +188,14 @@ function M.open_center_height_small_but_wide(opts)
         horizontal = "up:45%",
       },
     },
-  }, opts))
+  }
+
+  return dropdown(vim.tbl_deep_extend("force", fzf_tbl, opts))
 end
 
 function M.open_center_big_diagnostics(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       preview = {
         horizontal = "up:60%",
@@ -200,6 +206,7 @@ end
 
 function M.open_center_big_vertical(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       preview = {
         hidden = false,
@@ -213,6 +220,7 @@ end
 
 function M.open_center_medium(opts)
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = false,
       width = 0.6,
@@ -226,6 +234,7 @@ end
 
 function M.open_center_small_wide(opts)
   return M.open_center_medium(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       height = 0.4,
       width = 0.8,
@@ -237,6 +246,7 @@ end
 function M.open_fullscreen_vertical(opts)
   return M.open_center_big(vim.tbl_deep_extend("force", {
     fzf_opts = { ["--multi"] = true },
+    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = true,
       preview = {
@@ -250,8 +260,9 @@ function M.open_fullscreen_vertical(opts)
 end
 
 function M.git_open_fullscreen_vertical(opts)
-  return vim.tbl_deep_extend("force", {
+  local fullscree_vertical_opts = {
     fzf_opts = { ["--multi"] = true },
+    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = true,
       preview = {
@@ -261,11 +272,13 @@ function M.git_open_fullscreen_vertical(opts)
         horizontal = "up:25%",
       },
     },
-  }, opts)
+  }
+  return vim.tbl_deep_extend("force", fullscree_vertical_opts, opts)
 end
 
 function M.open_lsp_references(opts)
   return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       height = 0.70,
       width = 0.95,
@@ -286,7 +299,8 @@ function M.open_lsp_references(opts)
 end
 
 function M.open_lsp_code_action(opts)
-  return dropdown(vim.tbl_deep_extend("force", {
+  return dropdown(vim.tbl_deep_extend("force", opts, {
+    ---@type fzf-lua.config.Winopts
     winopts = {
       relative = "cursor",
       width = 0.40,
@@ -328,16 +342,16 @@ local function get_extracted_cmds(fzf_lua_, opts, only_key)
   return cmds
 end
 
-function M.open_cmd_bulk_key_only(opts, opts_cmds)
+function M.open_cmd_bulk_key_only(commands, opts)
   local fzf_lua_ = require "fzf-lua"
 
-  local cmds = get_extracted_cmds(fzf_lua_, opts, true)
+  local cmds = get_extracted_cmds(fzf_lua_, commands, true)
 
   fzf_lua_.fzf_exec(
     cmds,
     layout_center(vim.tbl_deep_extend("force", {
       winopts = {
-        title = opts_cmds.title and opts_cmds.title or "",
+        title = opts.title and opts.title or "",
         height = #cmds + 5,
       },
       actions = {
@@ -351,27 +365,27 @@ function M.open_cmd_bulk_key_only(opts, opts_cmds)
 
           local build_idx_cmd = RUtils.cmd.strip_whitespace(sel_ansi)
 
-          if opts[build_idx_cmd] then
-            opts[build_idx_cmd]()
+          if commands[build_idx_cmd] then
+            commands[build_idx_cmd]()
             return
           end
 
-          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(opts))
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(commands))
         end,
       },
-    }, opts_cmds))
+    }, opts))
   )
 end
 
-function M.open_cmd_bulk(opts, opts_cmds)
+function M.open_cmd_bulk(commands, opts)
   local fzf_lua_ = require "fzf-lua"
 
-  local cmds = get_extracted_cmds(fzf_lua_, opts)
+  local cmds = get_extracted_cmds(fzf_lua_, commands)
 
   fzf_lua_.fzf_exec(
     cmds,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
-      winopts = { title = opts_cmds.title and opts_cmds.title or "" },
+      winopts = { title = opts.title and opts.title or "" },
       actions = {
         ["default"] = function(selected, _)
           if not selected then
@@ -386,15 +400,15 @@ function M.open_cmd_bulk(opts, opts_cmds)
             .. " - "
             .. RUtils.cmd.strip_whitespace(display_str_split[2])
 
-          if opts[build_idx_cmd] then
-            opts[build_idx_cmd]()
+          if commands[build_idx_cmd] then
+            commands[build_idx_cmd]()
             return
           end
 
-          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(opts))
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(commands))
         end,
       },
-    }, opts_cmds))
+    }, opts))
   )
 end
 
@@ -450,6 +464,9 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
     str_cmds = { str_cmds, "string" },
     fzf_opts = { fzf_opts, "table" },
   }
+
+  local fzf = RUtils.cmd.reqcall "fzf-lua.make_entry"
+
   return function()
     local contents = function(cb)
       coroutine.wrap(function()
@@ -460,7 +477,7 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
             for _, file in ipairs(data) do
               if #file > 0 then
                 -- print(file)
-                cb(fzf_lua().make_entry.file(file, {}), function()
+                cb(fzf.file(file, {}), function()
                   coroutine.resume(co, 0)
                 end)
               end
