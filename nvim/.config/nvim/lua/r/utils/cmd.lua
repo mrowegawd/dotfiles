@@ -891,86 +891,164 @@ function M.open_with(what_mode, is_selection)
   end
 end
 
+local function formatted_snippets(filetype, opts, snippets_global)
+  local root_path = RUtils.config.path.snippet_path .. "/snippets/"
+
+  local snippets = {}
+  local frameworks = {}
+  local ft = ""
+
+  if #opts == 0 then
+    snippets = { filetype }
+    ft = filetype
+  else
+    ft = opts[1].ft
+
+    if opts[1].snippets then
+      for _, snip in pairs(opts[1].snippets) do
+        snippets[#snippets + 1] = snip
+      end
+    end
+
+    if opts[1].frameworks then
+      frameworks = opts[1].frameworks
+    end
+  end
+
+  -- Insert global snippets
+  if #snippets_global > 0 then
+    for _, snip in pairs(snippets_global) do
+      snippets[#snippets + 1] = snip
+    end
+  end
+
+  return {
+    filetype = filetype,
+    filetype_snippet = ft,
+    root_path = root_path,
+    snippets = snippets,
+    frameworks = frameworks,
+  }
+end
+
 function M.edit_snippet()
-  local Scan = require "plenary.scandir"
-
-  -- local base_snippets = { "package", "global" }
-  local base_snippets = {}
-
   local ft, _ = RUtils.buf.get_bo_buft()
   if ft == "" then
     return
   end
 
-  local snippet_path = RUtils.config.path.snippet_path .. "/snippets/"
+  local snippets_base = {}
+  local snippets_global = {} --  { "package", "global" }
 
-  local is_file = false
-  local is_dir = false
+  -- Redifined filetype karena beberapa filetype itu ter-affiliasi dgn filetype
+  -- yang lain, seperti contoh:
+  -- typescript -> javascript
+  -- typescriptreact -> javascript,
+  local ft_alias = {
+    typescriptreact = {
+      ft = "javascript",
+      snippets = { "javascript", "react", "html" },
+      frameworks = { "react" },
+    },
+  }
 
-  if RUtils.file.is_file(snippet_path .. ft .. ".json") then
-    is_file = true
+  if ft_alias[ft] then
+    snippets_base[#snippets_base + 1] = ft_alias[ft]
   end
 
-  if RUtils.file.is_dir(snippet_path .. ft) then
-    is_dir = true
-  end
+  snippets_base = formatted_snippets(ft, snippets_base, snippets_global)
+  -- RUtils.info(vim.inspect(snippets_base))
 
-  if not is_file and not is_dir then
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.warn("Snippet belum dibuat?", { title = "Snippets" })
-    return
-  end
+  local snippets_entry_tbl = {}
 
-  local snippets = {}
+  -- is_framework
+  local function update_snippets_entry(dirs, is_single, is_framework)
+    is_framework = is_framework or false
+    is_single = is_single or false
 
-  if is_dir then
-    snippet_path = snippet_path .. "/" .. ft
-
-    local dirs = Scan.scan_dir(snippet_path, { depth = 1, search_pattern = "json" })
     for _, sp in pairs(dirs) do
       local nm = sp:match "[^/]*.json$"
       local sp_e = nm:gsub(".json", "")
-      table.insert(snippets, sp_e)
-    end
 
-    for _, sp in pairs(base_snippets) do
-      table.insert(snippets, sp)
+      local entry = sp_e
+
+      if is_framework then
+        entry = "frameworks/" .. sp_e
+      end
+
+      if is_single then
+        entry = "single/" .. sp_e
+      end
+
+      table.insert(snippets_entry_tbl, { item = entry, path = sp })
     end
   end
 
-  if is_file then
-    snippets = { ft }
-    for _, sp in pairs(base_snippets) do
-      table.insert(snippets, sp)
+  local Scan = require "plenary.scandir"
+
+  for _, snip in pairs(snippets_base.snippets) do
+    local dirs = {}
+    local is_single = false
+
+    local path_snip = snippets_base.root_path .. snip
+    if RUtils.file.is_dir(path_snip) then
+      dirs = Scan.scan_dir(path_snip, { depth = 1, search_pattern = "json" })
+    end
+
+    local path_snip_json = path_snip .. ".json"
+    if RUtils.file.is_file(path_snip_json) then
+      dirs = { path_snip_json }
+      is_single = true
+    end
+
+    update_snippets_entry(dirs, is_single)
+  end
+
+  if snippets_base.frameworks and #snippets_base.frameworks > 0 then
+    for _, snip in pairs(snippets_base.frameworks) do
+      local dirs =
+        Scan.scan_dir(snippets_base.root_path .. "/frameworks/" .. snip, { depth = 1, search_pattern = "json" })
+      update_snippets_entry(dirs, false, true)
     end
   end
 
-  if #snippets == 0 then
+  local entry_snippets = {}
+  for _, sp in pairs(snippets_entry_tbl) do
+    table.insert(entry_snippets, sp.item)
+  end
+
+  if #entry_snippets == 0 then
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn("Filetype untuk `" .. ft .. "`, belum dibuat?", { title = "Snippets" })
+    --   RUtils.warn("file: `" .. snippet_path_file_json .. "`, not found?", { title = "Snippets" })
+    --   RUtils.warn("directory: `" .. snippet_path_dir .. "`, not found?", { title = "Snippets" })
     return
   end
 
-  local filename
+  local function open_with(open_mode, choice, is_auto_center)
+    is_auto_center = is_auto_center or false
+    for _, entry in pairs(snippets_entry_tbl) do
+      if choice == entry.item then
+        vim.cmd(open_mode .. " " .. entry.path)
+        break
+      end
+    end
 
-  if #snippets == 1 then
-    filename = snippet_path .. "/" .. snippets[1] .. ".json"
-    vim.cmd(":vsplit " .. filename)
+    if is_auto_center then
+      vim.cmd "wincmd ="
+    end
+  end
+
+  if #entry_snippets == 1 then
+    open_with("vsplit", entry_snippets[1], true)
     return
   end
 
-  vim.ui.select(snippets, { prompt = "Edit snippet> " }, function(choice)
+  vim.ui.select(entry_snippets, { prompt = "Edit snippet> " }, function(choice)
     if not choice then
       return
     end
-
-    if is_file then
-      filename = snippet_path .. choice .. ".json"
-    end
-
-    if is_dir then
-      filename = snippet_path .. "/" .. choice .. ".json"
-    end
-
-    vim.cmd(":vsplit " .. filename)
+    open_with("vsplit", choice, true)
   end)
 end
 
