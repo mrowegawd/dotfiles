@@ -2,15 +2,15 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
-    -- event = vim.fn.has "nvim-0.11" == 1 and { "BufReadPre", "BufNewFile", "BufWritePre" } or "LazyFile",
+    -- event = "VeryLazy",
+    event = vim.fn.has "nvim-0.11" == 1 and { "BufReadPre", "BufNewFile", "BufWritePre" } or "LazyFile",
     dependencies = {
       { "mason-org/mason.nvim", opts = {} },
       "neovim/nvim-lspconfig",
     },
     opts = function()
       local library = {
-        vim.api.nvim_get_runtime_file("", true),
+        -- vim.api.nvim_get_runtime_file("", true),
         "${3rd}/luv/library",
         "${3rd}/busted/library",
       }
@@ -279,7 +279,7 @@ return {
   -- LAZYDEV
   {
     "MadKuntilanak/lazydev.nvim",
-    branch = "fix/error-list",
+    branch = "fix/error-list-and-notify",
     ft = "lua",
     dependencies = {
       { "justinsgithub/wezterm-types", lazy = true },

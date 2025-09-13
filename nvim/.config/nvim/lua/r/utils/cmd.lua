@@ -1092,7 +1092,7 @@ function M.change_colors()
     __tab_statusline_fg = -0.17
   end
 
-  if vim.g.colorscheme == "base46-jellybeans" then
+  if vim.tbl_contains({ "base46-jellybeans", "base46-jabuti" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.3
     __tab_statusline_fg = -0.3
   end

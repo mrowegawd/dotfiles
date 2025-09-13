@@ -31,7 +31,6 @@ return {
             name = "base",
             cmd = "zsh",
             layout = direction,
-            -- dir = "git_dir",
           }
           return term
         end
@@ -39,7 +38,7 @@ return {
         if not base_term and not is_new then
           local terms = require "ergoterm.terminal"
           base_term = terms.Terminal:new {
-            name = "base",
+            name = "basec",
             cmd = "zsh",
             layout = direction,
           }

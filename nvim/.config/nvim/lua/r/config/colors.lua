@@ -115,6 +115,26 @@ local base_colors = {
 }
 
 local update_col_colorscheme = {
+  ["base46-jabuti"] = {
+    blink_ghost_text_fg_alter = -0.4,
+    cursor_fg = "#ece1d7",
+    cursorline_alter = 0.05,
+    dapstopped_bg_alter = 0.15,
+    fold_fg = 0.3,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = -0.05,
+    noice_cmdline_fg_alter = 0.6,
+    normal_keyword_alter = 0.1,
+    pmenu_bg_alter = 0.4,
+    pmenu_sp_alter = 1.5,
+    render_markdown_code_bg_alter = 0.23,
+    snacks_indent_scope_fg_alter = 0.13,
+    statusline_bg_alter = -0.1,
+    tabline_fg_alter = 0.3,
+    trouble_indent_fg_alter = 0.6,
+    winbar_file_path_fg_alter = 0.95,
+    winseparator_alter = 0.3,
+  },
   ["base46-material-darker"] = {
     comment_fg_alter = 0.6,
     cursor_fg = "#16afca",
@@ -399,6 +419,25 @@ local update_col_colorscheme = {
     winbar_file_path_fg_alter = 0.7,
     winseparator_alter = 1.4,
   },
+  ["tokyonight-night"] = {
+    blink_ghost_text_fg_alter = -0.4,
+    cursor_fg = "#ece1d7",
+    cursorline_alter = 0.05,
+    dapstopped_bg_alter = 0.15,
+    fold_fg = 0.3,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = -0.05,
+    noice_cmdline_fg_alter = 0.6,
+    normal_keyword_alter = 0.1,
+    pmenu_bg_alter = 0.9,
+    pmenu_sp_alter = 1.5,
+    render_markdown_code_bg_alter = 0.23,
+    snacks_indent_scope_fg_alter = 0.13,
+    statusline_bg_alter = -0.4,
+    trouble_indent_fg_alter = 0.6,
+    winbar_file_path_fg_alter = 0.95,
+    winseparator_alter = 0.8,
+  },
   ["vscode_modern"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
     cmpdocnormal_fg_alter = 0.1,
@@ -424,7 +463,7 @@ local update_col_colorscheme = {
 
 local function update_base_colors(theme)
   local cols = vim.deepcopy(base_colors)
-  return vim.tbl_deep_extend("force", update_col_colorscheme[theme] or {}, cols)
+  return vim.tbl_deep_extend("force", cols, update_col_colorscheme[theme] or {})
 end
 
 local general_overrides = function()
@@ -483,7 +522,7 @@ local general_overrides = function()
 
     {
       StatusLine = {
-        -- fg = { from = "WinSeparator", attr = "fg", alter = 0.85 },
+        -- fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
         fg = { from = "LineNr", attr = "fg", alter = 0.5 },
         bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
         reverse = false,
@@ -754,9 +793,9 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                     SEMANTIC TOKENS                     ║
     -- ╚═════════════════════════════════════════════════════════╝
-    { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Normal" } } },
-    { ["@lsp.type.selfKeyword"] = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
-    { ["@lsp.type.comment"] = { fg = "NONE" } },
+    -- { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Normal" } } },
+    -- { ["@lsp.type.selfKeyword"] = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
+    -- { ["@lsp.type.comment"] = { fg = "NONE" } },
 
     -- { ["@lsp.typemod.function.declaration"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
     -- { ["@lsp.typemod.function.defaultLibrary"] = { link = "Special" } },
@@ -1223,94 +1262,6 @@ local general_overrides = function()
     { CmpItemKindDefault = { bg = "NONE", fg = "#6172b0" } },
     { CmpItemKindCodeium = { bg = "NONE", fg = "#118c74" } },
     { CmpItemKindTabNine = { bg = "NONE", fg = "#118c74" } },
-
-    --  ──────────────────────────────[ AERIALS ]──────────────────────────────
-    { AerialGuide = { fg = { from = "WinSeparator", attr = "fg", alter = 0.04 } } },
-    { AerialBoolean = { link = "LspKindBoolean" } },
-    { AerialBooleanIcon = { link = "LspKindBoolean" } },
-
-    { AerialVariable = { link = "LspKindVariable" } },
-    { AerialVariableIcon = { link = "LspKindVariable" } },
-
-    { AerialInterface = { link = "LspKindInterface" } },
-    { AerialInterfaceIcon = { link = "LspKindInterface" } },
-
-    { AerialKey = { link = "LspKindKey" } },
-    { AerialKeyIcon = { link = "LspKindKey" } },
-
-    { AerialLine = { link = "LspInlayHint" } },
-
-    { AerialMethod = { link = "LspKindMethod" } },
-    { AerialMethodIcon = { link = "LspKindMethod" } },
-
-    { AerialModule = { link = "LspKindModule" } },
-    { AerialModuleIcon = { link = "LspKindModule" } },
-
-    { AerialNamespace = { link = "LspKindNamespace" } },
-    { AerialNamespaceIcon = { link = "LspKindNamespace" } },
-
-    { AerialText = { link = "LspKindText" } },
-    { AerialTextIcon = { link = "LspKindText" } },
-
-    { AerialFunction = { link = "LspKindFunction" } },
-    { AerialFunctionIcon = { link = "LspKindFunction" } },
-
-    { AerialArray = { link = "LspKindArray" } },
-    { AerialArrayIcon = { link = "LspKindArray" } },
-
-    { AerialObject = { link = "LspKindObject" } },
-    { AerialObjectIcon = { link = "LspKindObject" } },
-
-    { AerialString = { link = "LspKindString" } },
-    { AerialStringIcon = { link = "LspKindString" } },
-
-    { AerialNumber = { link = "LspKindNumber" } },
-    { AerialNumberIcon = { link = "LspKindNumber" } },
-
-    { AerialField = { link = "LspKindField" } },
-    { AerialFieldIcon = { link = "LspKindField" } },
-
-    { AerialConstant = { link = "LspKindConstant" } },
-    { AerialConstantIcon = { link = "LspKindConstant" } },
-
-    { AerialPackage = { link = "LspKindPackage" } },
-    { AerialPackageIcon = { link = "LspKindPackage" } },
-
-    { AerialProperty = { link = "LspKindProperty" } },
-    { AerialPropertyIcon = { link = "LspKindProperty" } },
-
-    { AerialNull = { link = "LspKindNull" } },
-    { AerialNullIcon = { link = "LspKindNull" } },
-
-    { AerialOperator = { link = "LspKindOperator" } },
-    { AerialOperatorIcon = { link = "LspKindOperator" } },
-
-    { AerialReference = { link = "LspKindReference" } },
-    { AerialReferenceIcon = { link = "LspKindReference" } },
-
-    { AerialSnippet = { link = "LspKindSnippet" } },
-    { AerialSnippetIcon = { link = "LspKindSnippet" } },
-
-    { AerialStruct = { link = "LspKindStruct" } },
-    { AerialStructIcon = { link = "LspKindStruct" } },
-
-    { AerialTypeParameter = { link = "LspKindTypeParameter" } },
-    { AerialTypeParameterIcon = { link = "LspKindTypeParameter" } },
-
-    { AerialUnit = { link = "LspKindUnit" } },
-    { AerialUnitIcon = { link = "LspKindUnit" } },
-
-    { AerialValue = { link = "LspKindValue" } },
-    { AerialValueIcon = { link = "LspKindValue" } },
-
-    { AerialEnum = { link = "LspKindEnum" } },
-    { AerialEnumIcon = { link = "LspKindEnum" } },
-
-    { AerialEnumMember = { link = "LspKindEnumMember" } },
-    { AerialEnumMemberIcon = { link = "LspKindEnumMember" } },
-
-    { AerialConstructor = { link = "LspKindConstructor" } },
-    { AerialConstructorIcon = { link = "LspKindConstructor" } },
 
     --  ────────────────────────[ TREESITTER CONTEXT ]─────────────────────
     {
@@ -1979,10 +1930,99 @@ local function set_panel_highlight()
         reverse = false,
       },
     },
-    { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.3 }, bg = "NONE", italic = true } },
+    { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.1 }, bg = "NONE", italic = true } },
     { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
     { OutlineLineno = { bg = "NONE" } },
     { OutlineFoldMarker = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.48 }, bg = "NONE" } },
+
+    --  ──────────────────────────────[ AERIALS ]──────────────────────────────
+    { AerialGuide = { inherit = "OutlineGuides" } },
+
+    { AerialBoolean = { link = "LspKindBoolean" } },
+    { AerialBooleanIcon = { link = "LspKindBoolean" } },
+
+    { AerialVariable = { link = "LspKindVariable" } },
+    { AerialVariableIcon = { link = "LspKindVariable" } },
+
+    { AerialInterface = { link = "LspKindInterface" } },
+    { AerialInterfaceIcon = { link = "LspKindInterface" } },
+
+    { AerialKey = { link = "LspKindKey" } },
+    { AerialKeyIcon = { link = "LspKindKey" } },
+
+    { AerialLine = { link = "LspInlayHint" } },
+
+    { AerialMethod = { link = "LspKindMethod" } },
+    { AerialMethodIcon = { link = "LspKindMethod" } },
+
+    { AerialModule = { link = "LspKindModule" } },
+    { AerialModuleIcon = { link = "LspKindModule" } },
+
+    { AerialNamespace = { link = "LspKindNamespace" } },
+    { AerialNamespaceIcon = { link = "LspKindNamespace" } },
+
+    { AerialText = { link = "LspKindText" } },
+    { AerialTextIcon = { link = "LspKindText" } },
+
+    { AerialFunction = { link = "LspKindFunction" } },
+    { AerialFunctionIcon = { link = "LspKindFunction" } },
+
+    { AerialArray = { link = "LspKindArray" } },
+    { AerialArrayIcon = { link = "LspKindArray" } },
+
+    { AerialObject = { link = "LspKindObject" } },
+    { AerialObjectIcon = { link = "LspKindObject" } },
+
+    { AerialString = { link = "LspKindString" } },
+    { AerialStringIcon = { link = "LspKindString" } },
+
+    { AerialNumber = { link = "LspKindNumber" } },
+    { AerialNumberIcon = { link = "LspKindNumber" } },
+
+    { AerialField = { link = "LspKindField" } },
+    { AerialFieldIcon = { link = "LspKindField" } },
+
+    { AerialConstant = { link = "LspKindConstant" } },
+    { AerialConstantIcon = { link = "LspKindConstant" } },
+
+    { AerialPackage = { link = "LspKindPackage" } },
+    { AerialPackageIcon = { link = "LspKindPackage" } },
+
+    { AerialProperty = { link = "LspKindProperty" } },
+    { AerialPropertyIcon = { link = "LspKindProperty" } },
+
+    { AerialNull = { link = "LspKindNull" } },
+    { AerialNullIcon = { link = "LspKindNull" } },
+
+    { AerialOperator = { link = "LspKindOperator" } },
+    { AerialOperatorIcon = { link = "LspKindOperator" } },
+
+    { AerialReference = { link = "LspKindReference" } },
+    { AerialReferenceIcon = { link = "LspKindReference" } },
+
+    { AerialSnippet = { link = "LspKindSnippet" } },
+    { AerialSnippetIcon = { link = "LspKindSnippet" } },
+
+    { AerialStruct = { link = "LspKindStruct" } },
+    { AerialStructIcon = { link = "LspKindStruct" } },
+
+    { AerialTypeParameter = { link = "LspKindTypeParameter" } },
+    { AerialTypeParameterIcon = { link = "LspKindTypeParameter" } },
+
+    { AerialUnit = { link = "LspKindUnit" } },
+    { AerialUnitIcon = { link = "LspKindUnit" } },
+
+    { AerialValue = { link = "LspKindValue" } },
+    { AerialValueIcon = { link = "LspKindValue" } },
+
+    { AerialEnum = { link = "LspKindEnum" } },
+    { AerialEnumIcon = { link = "LspKindEnum" } },
+
+    { AerialEnumMember = { link = "LspKindEnumMember" } },
+    { AerialEnumMemberIcon = { link = "LspKindEnumMember" } },
+
+    { AerialConstructor = { link = "LspKindConstructor" } },
+    { AerialConstructorIcon = { link = "LspKindConstructor" } },
   }
 end
 

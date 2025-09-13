@@ -24,6 +24,7 @@ const {
 unmap("H");
 unmap("<<");
 unmap(">>");
+unmap("L");
 
 // general settings
 settings.historyMUOrder = false;
@@ -87,6 +88,7 @@ map("<Ctrl-g>", "/");
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
+unmap("F");
 map("F", "gf");
 map("C", ";u");
 
