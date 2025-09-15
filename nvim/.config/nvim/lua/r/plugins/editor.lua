@@ -65,8 +65,8 @@ return {
   },
   -- TROUBLE.NVIM
   {
-    "MadKuntilanak/trouble.nvim",
-    branch = "fix/decoration-provider",
+    "folke/trouble.nvim",
+    -- branch = "fix/decoration-provider",
     cmd = "Trouble",
     keys = {
       {

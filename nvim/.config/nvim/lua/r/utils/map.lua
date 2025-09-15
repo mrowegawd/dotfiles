@@ -157,7 +157,7 @@ function M.has(buffer, method)
   method = method:find "/" and method or "textDocument/" .. method
   local clients = RUtils.lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
-    if client.supports_method(method) then
+    if client:supports_method(method) then
       return true
     end
   end
@@ -191,7 +191,6 @@ function M.on_attach(_, buffer, spec_maps)
     local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
 
     if has and cond then
-      ---@type vim.keymap.set.Opts
       local opts = Keys.opts(keys)
       opts.cond = nil
       opts.has = nil

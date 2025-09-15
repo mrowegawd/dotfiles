@@ -49,23 +49,22 @@ end
 
 ---@param client vim.lsp.Client
 function M._check_methods(client, buffer)
-  -- Don't trigger on invalid buffers
+  -- don't trigger on invalid buffers
   if not vim.api.nvim_buf_is_valid(buffer) then
     return
   end
-  -- Don't trigger on non-listed buffers
+  -- don't trigger on non-listed buffers
   if not vim.bo[buffer].buflisted then
     return
   end
-  -- Don't trigger on `nofile` buffers
+  -- don't trigger on nofile buffers
   if vim.bo[buffer].buftype == "nofile" then
     return
   end
-
   for method, clients in pairs(M._supports_method) do
     clients[client] = clients[client] or {}
     if not clients[client][buffer] then
-      if client.supports_method and client.supports_method(method, { bufnr = buffer }) then
+      if client.supports_method and client:supports_method(method, { bufnr = buffer }) then
         clients[client][buffer] = true
         vim.api.nvim_exec_autocmds("User", {
           pattern = "LspSupportsMethod",
@@ -133,6 +132,7 @@ end
 function M.disable(server, cond)
   local util = require "lspconfig.util"
   local def = M.get_config(server)
+  ---@diagnostic disable-next-line: undefined-field
   def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root_dir)
     if cond(root_dir, config) then
       config.enabled = false
@@ -158,8 +158,7 @@ function M.formatter(opts)
       local clients = M.get_clients(RUtils.merge({}, filter, { bufnr = buf }))
       ---@param client vim.lsp.Client
       local ret = vim.tbl_filter(function(client)
-        return client.supports_method("textDocument/formatting", { bufnr = buf })
-          or client.supports_method("textDocument/rangeFormatting", { bufnr = buf })
+        return client:supports_method "textDocument/formatting" or client:supports_method "textDocument/rangeFormatting"
       end, clients)
       ---@param client vim.lsp.Client
       return vim.tbl_map(function(client)

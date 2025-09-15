@@ -42,53 +42,21 @@ return {
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, { "codelldb" })
       if diagnostics == "bacon-ls" then
-        vim.list_extend(opts.ensure_installed, { "bacon", "bacon-ls" })
+        vim.list_extend(opts.ensure_installed, { "bacon" })
       end
     end,
   },
 
   {
     "mrcjkb/rustaceanvim",
-    version = vim.fn.has "nvim-0.10.0" == 0 and "^4" or false,
     ft = { "rust" },
-    -- keys = {
-    --   {
-    --     "<Leader>fH",
-    --     function()
-    --       vim.cmd.RustLsp "openDocs"
-    --     end,
-    --     desc = "LPS: open rust docs [rustaceanvim]",
-    --     ft = "rust",
-    --   },
-    --   --   {
-    --   --     "<Leader>ca",
-    --   --     function()
-    --   --       vim.cmd.RustLsp "codeAction"
-    --   --     end,
-    --   --     desc = "Action: code action [rustaceanvim]",
-    --   --     ft = "rust",
-    --   --   },
-    --   {
-    --     "<F5>",
-    --     function()
-    --       vim.cmd.RustLsp "debuggables"
-    --     end,
-    --     desc = "Debug: debuggables [rustaceanvim]",
-    --     ft = "rust",
-    --   },
-    -- },
     opts = {
-      tools = {
-        float_win_config = {
-          border = RUtils.config.icons.border.line,
-        },
-      },
       server = {
         on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<leader>cR", function()
+          vim.keymap.set("n", "<Leader>cR", function()
             vim.cmd.RustLsp "codeAction"
           end, { desc = "Action: code action", buffer = bufnr })
-          vim.keymap.set("n", "<leader>dr", function()
+          vim.keymap.set("n", "<Leader>dr", function()
             vim.cmd.RustLsp "debuggables"
           end, { desc = "Rust Debuggables", buffer = bufnr })
         end,
@@ -107,10 +75,14 @@ return {
             -- Enable diagnostics if using rust-analyzer
             diagnostics = {
               enable = diagnostics == "rust-analyzer",
-              disabled = { "proc-macro-disabled" },
             },
             procMacro = {
               enable = true,
+              ignored = {
+                ["async-trait"] = { "async_trait" },
+                ["napi-derive"] = { "napi" },
+                ["async-recursion"] = { "async_recursion" },
+              },
             },
             files = {
               excludeDirs = {
@@ -125,8 +97,6 @@ return {
                 ".venv",
               },
             },
-            -- Avoid Roots Scanned hanging, see https://github.com/rust-lang/rust-analyzer/issues/12613#issuecomment-2096386344
-            watcher = "client",
           },
         },
       },

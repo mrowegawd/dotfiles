@@ -167,18 +167,19 @@ opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
 -- opt.foldminlines = 0 -- allow closing even 1-line folds.
 
+opt.foldmethod = "expr"
 -- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
 -- opt.foldexpr = "v:lua.require'r.utils'.foldexpr()"
 -- opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
-opt.foldmethod = "expr"
-if vim.treesitter.foldexpr then
-  opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-  -- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
-  opt.foldtext = ""
-else
-  opt.foldexpr = "nvim_treesitter#foldexpr()"
-  opt.foldtext = ""
-end
+--
+-- if vim.treesitter.foldexpr then
+-- opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+opt.foldtext = ""
+-- else
+-- opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- opt.foldtext = ""
+-- end
 -- end
 -- }}}
 -- {{{ Timings

@@ -1,16 +1,12 @@
--- if lazyvim_docs then
---   -- LSP Server to use for PHP.
---   -- Set to "intelephense" to use intelephense instead of phpactor.
---   vim.g.lazyvim_php_lsp = "intelephense"
--- end
+vim.g.lazyvim_php_lsp = "intelephense"
 
 local lsp = vim.g.lazyvim_php_lsp or "phpactor"
 
 return {
-  -- recommended = {
-  --   ft = "php",
-  --   root = { "composer.json", ".phpactor.json", ".phpactor.yml" },
-  -- },
+  recommended = {
+    ft = "php",
+    root = { "composer.json", ".phpactor.json", ".phpactor.yml" },
+  },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -36,12 +32,6 @@ return {
 
   {
     "mason-org/mason.nvim",
-    optional = true,
-    opts = { ensure_installed = { "phpactor" } },
-  },
-
-  {
-    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "phpcs",
@@ -49,19 +39,18 @@ return {
       },
     },
   },
-  -- {
-  --   "mfussenegger/nvim-dap",
-  --   optional = true,
-  --   opts = function()
-  --     local dap = require "dap"
-  --     local path = require("mason-registry").get_package("php-debug-adapter"):get_install_path()
-  --     dap.adapters.php = {
-  --       type = "executable",
-  --       command = "node",
-  --       args = { path .. "/extension/out/phpDebug.js" },
-  --     }
-  --   end,
-  -- },
+  {
+    "mfussenegger/nvim-dap",
+    optional = true,
+    opts = function()
+      local dap = require "dap"
+      dap.adapters.php = {
+        type = "executable",
+        command = "php-debug-adapter",
+        args = {},
+      }
+    end,
+  },
   {
     "mfussenegger/nvim-lint",
     optional = true,
