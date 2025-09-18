@@ -1,18 +1,6 @@
 ---@class r.utils.deprecated
 local M = {}
 
--- local deprecated = {
---   get_clients = "lsp",
---   on_attach = "lsp",
---   on_rename = "lsp",
---   root_patterns = { "root", "patterns" },
---   get_root = { "root", "get" },
---   float_term = { "terminal", "open" },
---   toggle_diagnostics = { "toggle", "diagnostics" },
---   toggle_number = { "toggle", "number" },
---   fg = "ui",
--- }
-
 M.moved = {
   lsp = {
     rename_file = { "Snacks.rename.rename_file" },
@@ -24,7 +12,7 @@ M.moved = {
     __call = { "Snacks.terminal" },
   },
   ui = {
-    -- statuscolumn = { "Snacks.statuscolumn" },
+    statuscolumn = { "Snacks.statuscolumn" },
     bufremove = { "Snacks.bufdelete" },
     foldexpr = { "RUtils.treesitter.foldexpr", stacktrace = false },
     fg = {

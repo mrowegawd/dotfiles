@@ -69,7 +69,7 @@ local set_conditions = {
 local stl_lsp_clients = function()
   local clients = vim.lsp.get_clients { bufnr = 0 }
   if not state.lsp_clients_visible then
-    return { { name = fmt("%d attached", #clients), priority = 7 } }
+    return { { name = string.format("%d attached", #clients), priority = 7 } }
   end
 
   local lint = package.loaded.lint
@@ -255,6 +255,8 @@ local __colors = function()
     mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.4, H.get("Normal", "bg")), 0.1),
     mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.15, H.get("Normal", "bg")), 0.1),
 
+    mode_virtualenv_fg = H.increase_saturation(H.tint(H.get("Boolean", "fg"), -0.1), 0.6),
+
     branch_fg = H.tint(H.get("TabLine", "bg"), col_opts.branch_fg),
     branch_bg = H.get("StatusLine", "bg"),
 
@@ -427,7 +429,7 @@ M.Branch = {
     hl = function()
       local fg = colors.branch_fg
       if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_fg
+        fg = tostring(colors.mode_term_fg)
       end
 
       return { fg = fg, bold = true }
@@ -800,7 +802,7 @@ M.virtualenv = {
   end,
   init = function(self)
     local python_logo = " "
-    local poetry_status = python_logo .. "UV Virtualenv"
+    local poetry_status = python_logo .. "Venv:"
     local msg = ""
 
     local venv_root = RUtils.extras.wants {
@@ -825,7 +827,7 @@ M.virtualenv = {
         return self.venv .. "  "
       end
     end,
-    hl = { fg = colors.mode_term_statusline_bg, bold = false },
+    hl = { fg = colors.mode_virtualenv_fg, bold = false },
   },
 }
 M.LSPActive = {
@@ -853,7 +855,7 @@ M.LSPActive = {
     provider = function(self)
       local lsp_clients_str = table.concat(self.names, ", ") -- "  "
       if not Conditions.width_percent_below(#lsp_clients_str, 0.33) then
-        return "~too many~"
+        lsp_clients_str = "~too many~"
       end
       return lsp_clients_str
     end,

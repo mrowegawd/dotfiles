@@ -1,7 +1,19 @@
-local rg_opts =
-  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors 'match:fg:yellow'  -e "
+local rg_opts = "--column "
+  .. "--hidden "
+  .. "--line-number "
+  .. "--no-heading "
+  .. "--ignore-case "
+  .. "--smart-case "
+  .. "--color=always "
+  .. "--max-columns=4096 "
+  .. "--colors 'match:fg:yellow' "
+  .. "-e "
 
-local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc' --exclude '*.pytest_cache']]
+local fd_opts = "--color never "
+  .. "--type f "
+  .. "--hidden "
+  .. "--follow "
+  .. "--exclude .git --exclude '*.pyc' --exclude '*.pytest_cache'"
 
 return {
   -- FZF-LUA
@@ -169,8 +181,8 @@ return {
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- LSP
-      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
-      { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
+      { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
+      { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
 
       -- Diagnostics
       { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
@@ -663,7 +675,6 @@ return {
         buffers = RUtils.fzflua.open_center_medium {
           winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
-          fzf_opts = { ["--with-nth"] = "-1.." },
           actions = {
             ["alt-q"] = actions.file_sel_to_qf,
             ["alt-l"] = actions.file_sel_to_ll,

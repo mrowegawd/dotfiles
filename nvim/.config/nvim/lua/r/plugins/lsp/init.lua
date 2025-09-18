@@ -2,7 +2,7 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile", "BufWritePre" },
+    event = "LazyFile",
     dependencies = {
       "mason.nvim",
       { "mason-org/mason-lspconfig.nvim", config = function() end },
@@ -58,6 +58,12 @@ return {
         codelens = {
           enabled = true,
         },
+        -- Enable this to enable the builtin LSP folding on Neovim.
+        -- Be aware that you also will need to properly configure your LSP server to
+        -- provide the folds.
+        folds = {
+          enabled = false,
+        },
         -- add any global capabilities here
         capabilities = {
           workspace = {
@@ -86,12 +92,6 @@ return {
             settings = {
               Lua = {
                 workspace = {
-                  -- library = {
-                  --   -- vim.api.nvim_get_runtime_file("", true),
-                  --   "${3rd}/luv/library",
-                  --   "${3rd}/busted/library",
-                  -- },
-                  -- ignoreDir = { ".git", "node_modules", "linters" },
                   checkThirdParty = false,
                 },
                 codeLens = {
@@ -131,7 +131,7 @@ return {
       return ret
     end,
     ---@param opts PluginLspOpts
-    config = function(_, opts)
+    config = vim.schedule_wrap(function(_, opts)
       -- setup autoformat
       RUtils.format.register(RUtils.lsp.formatter())
 
@@ -162,6 +162,15 @@ return {
           then
             vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
           end
+        end)
+      end
+
+      -- folds
+      if opts.folds.enabled then
+        RUtils.lsp.on_supports_method(methods.textDocument_foldingRange, function(client, buffer)
+          local win = vim.api.nvim_get_current_win()
+          vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+          vim.wo[win][0].foldmethod = "expr"
         end)
       end
 
@@ -269,38 +278,21 @@ return {
         resolve "denols"
         resolve "vtsls"
       end
-    end,
-  },
-  -- LAZYDEV
-  {
-    -- "MadKuntilanak/lazydev.nvim",
-    -- branch = "fix/error-list-and-notify",
-    "folke/lazydev.nvim",
-    ft = "lua",
-    dependencies = {
-      { "justinsgithub/wezterm-types", lazy = true },
-    },
-    opts = {
-      library = {
-        "lazy.nvim",
-        { path = "snacks.nvim", words = { "Snacks" } },
-        { path = "wezterm-types", mods = { "wezterm" } },
-        { path = "LazyVim", words = { "LazyVim" } },
-        { path = "RUtils", words = { "RUtils" } },
-      },
-    },
+    end),
   },
   -- MASON NVIM
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
-    version = vim.fn.has "nvim-0.11" == 0 and "1.11.0" or false,
+    keys = { { "<Leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },
+    ---@class MasonSettings
     opts = {
-      ensure_installed = { "shfmt", "stylua" },
-      automatic_installation = true,
-      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
+      ensure_installed = {
+        "shfmt",
+        "stylua",
+      },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
@@ -331,26 +323,22 @@ return {
       end
     end,
   },
-
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │   MISC                                                   │
-  --  ╰──────────────────────────────────────────────────────────╯
-  -- LOG SYNTAX
+  -- LAZYDEV
   {
-    "fei6409/log-highlight.nvim",
-    event = "BufRead *.log",
-    opts = {},
-  },
-  -- TASKWARRIOR SYNTAX
-  {
-    "framallo/taskwarrior.vim",
-    ft = "taskrc",
-  },
-  -- GARBAGE-DAY (disabled)
-  {
-    "zeioth/garbage-day.nvim",
-    enabled = false,
-    event = "LspAttach",
-    opts = {},
+    "folke/lazydev.nvim",
+    ft = "lua",
+    cmd = "LazyDev",
+    dependencies = {
+      { "justinsgithub/wezterm-types", lazy = true },
+    },
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        -- { path = "snacks.nvim", words = { "Snacks" } },
+        -- { path = "wezterm-types", mods = { "wezterm" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
+        { path = "RUtils", words = { "RUtils" } },
+      },
+    },
   },
 }

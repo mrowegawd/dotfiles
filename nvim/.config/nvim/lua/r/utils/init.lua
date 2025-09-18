@@ -1,15 +1,15 @@
 local LazyUtil = require "lazy.core.util"
 
 ---@class r.utils: LazyUtilCore
----@field config LazyVimConfig
 ---@field buf r.utils.buf
 ---@field cmd r.utils.cmd
 ---@field cmp r.utils.cmp
 ---@field codecompanion_fidget r.utils.codecompanion_fidget
+---@field config LazyVimConfig
+---@field deprecated r.utils.deprecated
 ---@field extras r.utils.extras
 ---@field file r.utils.file
 ---@field fold r.utils.fold
----@field foldexpr r.utils.foldexpr
 ---@field format r.utils.format
 ---@field fzf_diffview r.utils.fzf_diffview
 ---@field fzflua r.utils.fzflua
@@ -29,44 +29,27 @@ local LazyUtil = require "lazy.core.util"
 ---@field qf r.utils.qf
 ---@field root r.utils.root
 ---@field session r.utils.session
+---@field statuscolumn r.utils.statuscolumn
 ---@field terminal r.utils.terminal
 ---@field tiling r.utils.tiling
 ---@field todocomments r.utils.todocomments
----@field ui r.utils.ui
+---@field treesitter r.utils.treesitter
 ---@field uisec r.utils.uisec
 ---@field windowdim r.utils.windowdim
 local M = {}
-
----@type table<string, string|string[]>
-local deprecated = {
-  get_clients = "lsp",
-  on_attach = "lsp",
-  on_rename = "lsp",
-  root_patterns = { "root", "patterns" },
-  get_root = { "root", "get" },
-  float_term = { "terminal", "open" },
-  toggle_diagnostics = { "toggle", "diagnostics" },
-  toggle_number = { "toggle", "number" },
-  fg = "ui",
-}
+M.deprecated = require "r.utils.depcreated"
 
 setmetatable(M, {
   __index = function(t, k)
     if LazyUtil[k] then
       return LazyUtil[k]
     end
-
-    local dep = deprecated[k]
-    if dep then
-      local mod = type(dep) == "table" and dep[1] or dep
-      local key = type(dep) == "table" and dep[2] or k
-      M.deprecate([[RUtils.]] .. k, [[RUtils.]] .. mod .. "." .. key)
-      ---@diagnostic disable-next-line: no-unknown
-      t[mod] = require("r.utils." .. mod) -- load here to prevent loops
-      return t[mod][key]
+    if M.deprecated[k] then
+      return M.deprecated[k]()
     end
     ---@diagnostic disable-next-line: no-unknown
     t[k] = require("r.utils." .. k)
+    M.deprecated.decorate(k, t[k])
     return t[k]
   end,
 })
@@ -163,13 +146,17 @@ function M.opts(name)
   return Plugin.values(plugin, "opts", false)
 end
 
-function M.deprecate(old, new)
-  M.warn(("`%s` is deprecated. Please use `%s` instead"):format(old, new), {
-    title = "LazyVim",
-    once = true,
-    stacktrace = true,
-    stacklevel = 6,
-  })
+---@param opts? LazyNotifyOpts
+function M.deprecate(old, new, opts)
+  M.warn(
+    ("`%s` is deprecated. Please use `%s` instead"):format(old, new),
+    vim.tbl_extend("force", {
+      title = "RUtils",
+      once = true,
+      stacktrace = true,
+      stacklevel = 6,
+    }, opts or {})
+  )
 end
 
 -- delay notifications till vim.notify was replaced or after 500ms
@@ -183,6 +170,10 @@ function M.lazy_notify()
   vim.notify = temp
 
   local timer = vim.uv.new_timer()
+  if not timer then
+    return
+  end
+
   local check = assert(vim.uv.new_check())
 
   local replay = function()
@@ -337,7 +328,7 @@ end
 for _, level in ipairs { "info", "warn", "error" } do
   M[level] = function(msg, opts)
     opts = opts or {}
-    opts.title = opts.title or "LazyVim"
+    opts.title = opts.title or "RUtils"
     return LazyUtil[level](msg, opts)
   end
 end

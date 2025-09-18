@@ -36,6 +36,8 @@ return {
           { "<Leader>j", group = "jumpTo" },
           { "<Leader>p", group = "peek" },
 
+          { "<Leader>l", group = "LSP" },
+
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
@@ -80,7 +82,10 @@ return {
           { "<Localleader>f", group = "telescope" },
           { "<Localleader>n", group = "noice" },
           { "<Localleader>o", group = "open/misc" },
+
           { "<Localleader>r", group = "refactoring" },
+          { "<Localleader>re", group = "extract" },
+
           { "<Localleader>s", group = "snacks" },
           { "<Localleader>w", group = "swap" },
         },

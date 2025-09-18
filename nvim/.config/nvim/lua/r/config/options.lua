@@ -138,10 +138,8 @@ opt.shiftwidth = 2 -- Indent/outdent by two columns
 opt.shiftround = true -- Always indent/outdent to nearest tabstop
 opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
-opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
+opt.statuscolumn = [[%!v:lua.require'r.utils'.statuscolumn.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
--- opt.formatoptions = vim.opt.formatoptions + "j" -- remove comment leader when joining comment lines
--- opt.formatoptions = vim.opt.formatoptions + "n" -- smart auto-indenting inside numbered lists
 opt.formatoptions = "tcqjn12" -- "cront",
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
@@ -153,7 +151,6 @@ opt.fillchars = {
   eob = " ", -- suppress ~ at endofbuffer
   diff = "░", -- alternatives = ⣿ ░ ╱
   -- msgsep = " ", -- alternatives: ‾ ─
-  --
   -- fold = "▶",
   vert = "│", -- "¦", "┃", "┃", "\\", "▕", "│"
   -- horiz = "-",
@@ -162,25 +159,12 @@ opt.fillchars = {
   foldclose = "", -- '▶'
   foldsep = " ",
 }
-opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in nvim 0.9
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
--- opt.foldminlines = 0 -- allow closing even 1-line folds.
-
-opt.foldmethod = "expr"
--- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
--- opt.foldexpr = "v:lua.require'r.utils'.foldexpr()"
--- opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
---
--- if vim.treesitter.foldexpr then
--- opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+opt.foldmethod = "indent"
+-- opt.foldexpr = "v:lua.require'r.utils'.treesitter.foldexpr()"
+-- opt.indentexpr = "v:lua.require'r.utils'.treesitter.indentexpr()" -- treesitter indents
 opt.foldtext = ""
--- else
--- opt.foldexpr = "nvim_treesitter#foldexpr()"
--- opt.foldtext = ""
--- end
--- end
 -- }}}
 -- {{{ Timings
 opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key

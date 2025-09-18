@@ -640,7 +640,9 @@ return {
     dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
     opts = {
       sources = {
-        per_filetype = { org = { "buffer", "path", "orgmode", "snippets" } },
+        per_filetype = {
+          org = { "buffer", "path", "orgmode", "snippets" },
+        },
         providers = {
           orgmode = {
             name = "Orgmode",

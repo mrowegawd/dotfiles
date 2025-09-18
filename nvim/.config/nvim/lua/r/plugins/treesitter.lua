@@ -1,14 +1,29 @@
 return {
-  -- TREESITTER
+  -- NVIM-TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- last release is way too old and doesn't work on Windows
     branch = "main",
-    build = ":TSUpdate",
-    lazy = true,
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    version = false, -- last release is way too old and doesn't work on Windows
+    build = function()
+      local TS = require "nvim-treesitter"
+      if not TS.get_installed then
+        RUtils.error "Please restart Neovim and run `:TSUpdate` to use the `nvim-treesitter` **main** branch."
+        return
+      end
+      RUtils.treesitter.ensure_treesitter_cli(function()
+        TS.update(nil, { summary = true })
+      end)
+    end,
+    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    event = { "LazyFile", "VeryLazy" },
+    cmd = { "TSUpdate", "TSInstall", "TSLog", "TSUninstall" },
     opts_extend = { "ensure_installed" },
+    ---@class lazyvim.TSConfig: TSConfig
     opts = {
+      -- LazyVim config for treesitter
+      indent = { enable = true },
+      highlight = { enable = true },
+      folds = { enable = true },
       ensure_installed = {
         "bash",
         "c",
@@ -43,84 +58,58 @@ return {
         "zathurarc",
       },
     },
-    init = function() end,
-    ---@param opts TSConfig
+    ---@param opts lazyvim.TSConfig
     config = function(_, opts)
-      if vim.fn.executable "tree-sitter" == 0 then
-        RUtils.error "**treesitter-main** requires the `tree-sitter` executable to be installed"
-        return
-      end
-      if type(opts.ensure_installed) ~= "table" then
-        error "opts.ensure_installed must be a table"
-      end
-
       local TS = require "nvim-treesitter"
+
+      -- some quick sanity checks
+      if not TS.get_installed then
+        return RUtils.error "Please use `:Lazy` and update `nvim-treesitter`"
+      elseif type(opts.ensure_installed) ~= "table" then
+        return RUtils.error "`nvim-treesitter` opts.ensure_installed must be a table"
+      end
+
+      -- setup treesitter
       TS.setup(opts)
+      RUtils.treesitter.get_installed(true) -- initialize the installed langs
 
-      local needed = RUtils.dedup(opts.ensure_installed --[[@as string[] ]])
-      local installed = TS.get_installed "parsers"
+      -- install missing parsers
       local install = vim.tbl_filter(function(lang)
-        return not vim.tbl_contains(installed, lang)
-      end, needed)
-
+        return not RUtils.treesitter.have(lang)
+      end, opts.ensure_installed or {})
       if #install > 0 then
-        TS.install(install, { summary = true })
-        vim.list_extend(installed, install)
+        RUtils.treesitter.ensure_treesitter_cli(function()
+          TS.install(install, { summary = true }):await(function()
+            RUtils.treesitter.get_installed(true) -- refresh the installed langs
+          end)
+        end)
       end
 
-      -- backwards compatibility with the old treesitter config for highlight and indent
-      local highlight, indent = vim.tbl_get(opts, "highlight", "enable"), vim.tbl_get(opts, "indent", "enable")
-      if highlight or indent then
-        vim.api.nvim_create_autocmd("FileType", {
-          callback = function(ev)
-            local lang = vim.treesitter.language.get_lang(ev.match)
-            if not vim.tbl_contains(installed, lang) then
-              return
-            end
-            if highlight then
-              pcall(vim.treesitter.start)
-            end
-            if indent then
-              vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-            end
-          end,
-        })
-      end
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("lazyvim_treesitter", { clear = true }),
+        callback = function(ev)
+          if not RUtils.treesitter.have(ev.match) then
+            return
+          end
+
+          -- highlighting
+          if vim.tbl_get(opts, "highlight", "enable") ~= false then
+            pcall(vim.treesitter.start)
+          end
+
+          -- indents
+          if vim.tbl_get(opts, "indent", "enable") ~= false then
+            vim.bo[ev.buf].indentexpr = "v:lua.require'r.utils'.treesitter.indentexpr()"
+          end
+
+          -- folds
+          if vim.tbl_get(opts, "folds", "enable") ~= false then
+            vim.wo.foldmethod = "expr"
+            vim.wo.foldexpr = "v:lua.require'r.utils'.treesitter.foldexpr()"
+          end
+        end,
+      })
     end,
-
-    --   vim.keymap.set("n", "<Leader>ui", function()
-    --     vim.treesitter.inspect_tree {
-    --       command = "vnew | wincmd L | vertical resize 60",
-    --       title = function()
-    --         return "InspectTree"
-    --       end,
-    --     }
-    --   end, { desc = "Toggle: open Inspecttree" })
-    --
-    --   -- Select
-    --   RUtils.map.xnoremap("if", function()
-    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-    --   end, { desc = "LSP: select visual inner" })
-    --   RUtils.map.onoremap("if", function()
-    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-    --   end, { desc = "LSP: select visual inner" })
-    --
-    --   RUtils.map.xnoremap("af", function()
-    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-    --   end, { desc = "LSP: select visual outer" })
-    --   RUtils.map.onoremap("af", function()
-    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-    --   end, { desc = "LSP: select visual outer" })
-    --
-    --   -- Swap
-    --   RUtils.map.nnoremap("<Localleader>ww", function()
-    --     require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner"
-    --   end, { desc = "LSP: swap parameter next" })
-    --
-    --   RUtils.map.nnoremap("<Localleader>wW", function()
-    --     require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
-    --   end, { desc = "LSP: swap parameter prev" })
-    -- end,
   },
   -- NVIM-TREESITTER-TEXTOBJECTS
   {
@@ -145,6 +134,10 @@ return {
           ret[#ret + 1] = {
             key,
             function()
+              -- don't use treesitter if in diff mode and the key is one of the c/C keys
+              if vim.wo.diff and key:find "[cC]" then
+                return vim.cmd("normal! " .. key)
+              end
               require("nvim-treesitter-textobjects.move")[method](query, "textobjects")
             end,
             desc = desc,
@@ -156,8 +149,19 @@ return {
       return ret
     end,
     config = function(_, opts)
-      require("nvim-treesitter-textobjects").setup(opts)
+      local TS = require "nvim-treesitter-textobjects"
+      if not TS.setup then
+        RUtils.error "Please use `:Lazy` and update `nvim-treesitter`"
+        return
+      end
+      TS.setup(opts)
     end,
+  },
+  -- NVIM-TS-AUTOTAG
+  {
+    "windwp/nvim-ts-autotag",
+    event = "LazyFile",
+    opts = {},
   },
   -- NVIM-TREESITTER-CONTEXT
   {
@@ -418,31 +422,5 @@ return {
         end,
       }
     end,
-  },
-  -- NVIM-TS-AUTOTAG
-  {
-    "windwp/nvim-ts-autotag", -- Autoclose and autorename HTML and Vue tags
-    event = "LazyFile",
-    ft = {
-      "html",
-      "xml",
-      "javascript",
-      "typescript",
-      "javascriptreact",
-      "typescriptreact",
-      "svelte",
-      "vue",
-      "tsx",
-      "jsx",
-      "rescript",
-      "php",
-      "glimmer",
-      "handlebars",
-      "hbs",
-      "markdown",
-    },
-    -- disabled here because I have it overridden somewhere else in order to
-    -- achieve compatibility with luasnip
-    opts = { enable_close_on_slash = false },
   },
 }

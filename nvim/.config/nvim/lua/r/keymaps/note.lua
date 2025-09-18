@@ -32,27 +32,27 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
       },
-      ["gs"] = {
+      ["<Leader>lw"] = {
         function()
           RUtils.markdown.find_local_titles()
           vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
         end,
         "Note: search local titles [markdown]",
       },
-      ["gS"] = {
+      ["<Leader>lW"] = {
         function()
           RUtils.markdown.find_global_titles()
           vim.cmd "normal! zRzz"
         end,
         "Note: search global titles [markdown]",
       },
-      ["grr"] = {
+      ["<Leader>lr"] = {
         function()
           RUtils.markdown.find_backlinks()
         end,
         "Note: find backlinks (like references)",
       },
-      ["gD"] = {
+      ["<Leader>lD"] = {
         function()
           if vim.bo.filetype == "org" then
             vim.cmd "vsplit"
@@ -63,7 +63,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: followlink vertical split",
       },
-      ["gd"] = {
+      ["<Leader>ld"] = {
         function()
           if vim.bo.filetype == "org" then
             require("orgmode").action "org_mappings.open_at_point"
