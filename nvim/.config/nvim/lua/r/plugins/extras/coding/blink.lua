@@ -13,7 +13,7 @@ return {
   {
     "saghen/blink.cmp",
     version = "^1", -- make sure to always set version to v1 even on development
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     opts_extend = {
       "sources.completion.enabled_providers",
       "sources.compat",
@@ -78,6 +78,11 @@ return {
                   if ctx.deprecated then
                     return "BlinkCmpLabelDeprecated"
                   end
+
+                  if ctx.kind == "Text" then
+                    return ""
+                  end
+
                   return "CmpItemKind" .. ctx.kind
                 end,
               },
@@ -451,8 +456,9 @@ return {
     "saghen/blink.cmp",
     opts = {
       sources = {
-        -- add lazydev to your completion providers
-        default = { "lazydev" },
+        per_filetype = {
+          lua = { inherit_defaults = true, "lazydev" },
+        },
         providers = {
           lazydev = {
             name = "LazyDev",

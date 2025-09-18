@@ -2,17 +2,10 @@ return {
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
+    version = false, -- last release is way too old and doesn't work on Windows
     branch = "main",
     build = ":TSUpdate",
-    dependencies = {
-      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
-    },
-    event = {
-      "VeryLazy",
-      "BufRead",
-      "BufNewFile",
-    },
-    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    lazy = true,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts_extend = { "ensure_installed" },
     opts = {
@@ -50,98 +43,120 @@ return {
         "zathurarc",
       },
     },
+    init = function() end,
+    ---@param opts TSConfig
     config = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        opts.ensure_installed = RUtils.dedup(opts.ensure_installed)
+      if vim.fn.executable "tree-sitter" == 0 then
+        RUtils.error "**treesitter-main** requires the `tree-sitter` executable to be installed"
+        return
       end
-      require("nvim-treesitter").setup()
-      require("nvim-treesitter-textobjects").setup()
-      require("nvim-treesitter").install(opts.ensure_installed)
+      if type(opts.ensure_installed) ~= "table" then
+        error "opts.ensure_installed must be a table"
+      end
 
-      vim.treesitter.language.register("markdown", "codecompanion")
-      -- vim.treesitter.language.register("markdown", "blink-cmp-documentation")
-      -- vim.treesitter.language.register("yaml", "ghaction")
+      local TS = require "nvim-treesitter"
+      TS.setup(opts)
 
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = {
-          "c",
-          "copilot-chat",
-          "cpp",
-          "diff",
-          "dockerfile",
-          "gitdiff",
-          "gitignore",
-          "go",
-          "graphql",
-          "javascript",
-          "javascriptreact",
-          "lua",
-          "markdown",
-          "mysql",
-          "octo",
-          "org",
-          "pgsql",
-          "php",
-          "python",
-          "ruby",
-          "sh",
-          "sql",
-          "terraform",
-          "toml",
-          "typescript",
-          "typescriptreact",
-          "vim",
-          "yaml",
-          "yaml.ansible",
+      local needed = RUtils.dedup(opts.ensure_installed --[[@as string[] ]])
+      local installed = TS.get_installed "parsers"
+      local install = vim.tbl_filter(function(lang)
+        return not vim.tbl_contains(installed, lang)
+      end, needed)
 
-          -- https://github.com/olimorris/codecompanion.nvim/discussions/1691#discussioncomment-13540919
-          "codecompanion",
-        },
+      if #install > 0 then
+        TS.install(install, { summary = true })
+        vim.list_extend(installed, install)
+      end
 
-        group = vim.api.nvim_create_augroup("nvim-treesitter-fts", { clear = true }),
-        callback = function(args)
-          local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
-          if lang then
-            if lang ~= "org" and vim.treesitter.language.add(lang) then
-              vim.treesitter.start()
-              vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      -- backwards compatibility with the old treesitter config for highlight and indent
+      local highlight, indent = vim.tbl_get(opts, "highlight", "enable"), vim.tbl_get(opts, "indent", "enable")
+      if highlight or indent then
+        vim.api.nvim_create_autocmd("FileType", {
+          callback = function(ev)
+            local lang = vim.treesitter.language.get_lang(ev.match)
+            if not vim.tbl_contains(installed, lang) then
+              return
             end
-          end
-        end,
-      })
-
-      vim.keymap.set("n", "<Leader>ui", function()
-        vim.treesitter.inspect_tree {
-          command = "vnew | wincmd L | vertical resize 60",
-          title = function()
-            return "InspectTree"
+            if highlight then
+              pcall(vim.treesitter.start)
+            end
+            if indent then
+              vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end
           end,
-        }
-      end, { desc = "Toggle: open Inspecttree" })
+        })
+      end
+    end,
 
-      -- Select
-      RUtils.map.xnoremap("if", function()
-        require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-      end, { desc = "LSP: select visual inner" })
-      RUtils.map.onoremap("if", function()
-        require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-      end, { desc = "LSP: select visual inner" })
-
-      RUtils.map.xnoremap("af", function()
-        require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-      end, { desc = "LSP: select visual outer" })
-      RUtils.map.onoremap("af", function()
-        require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-      end, { desc = "LSP: select visual outer" })
-
-      -- Swap
-      RUtils.map.nnoremap("<Localleader>ww", function()
-        require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner"
-      end, { desc = "LSP: swap parameter next" })
-
-      RUtils.map.nnoremap("<Localleader>wW", function()
-        require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
-      end, { desc = "LSP: swap parameter prev" })
+    --   vim.keymap.set("n", "<Leader>ui", function()
+    --     vim.treesitter.inspect_tree {
+    --       command = "vnew | wincmd L | vertical resize 60",
+    --       title = function()
+    --         return "InspectTree"
+    --       end,
+    --     }
+    --   end, { desc = "Toggle: open Inspecttree" })
+    --
+    --   -- Select
+    --   RUtils.map.xnoremap("if", function()
+    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+    --   end, { desc = "LSP: select visual inner" })
+    --   RUtils.map.onoremap("if", function()
+    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+    --   end, { desc = "LSP: select visual inner" })
+    --
+    --   RUtils.map.xnoremap("af", function()
+    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+    --   end, { desc = "LSP: select visual outer" })
+    --   RUtils.map.onoremap("af", function()
+    --     require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+    --   end, { desc = "LSP: select visual outer" })
+    --
+    --   -- Swap
+    --   RUtils.map.nnoremap("<Localleader>ww", function()
+    --     require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner"
+    --   end, { desc = "LSP: swap parameter next" })
+    --
+    --   RUtils.map.nnoremap("<Localleader>wW", function()
+    --     require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
+    --   end, { desc = "LSP: swap parameter prev" })
+    -- end,
+  },
+  -- NVIM-TREESITTER-TEXTOBJECTS
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
+    event = "VeryLazy",
+    opts = {},
+    keys = function()
+      local moves = {
+        goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+        goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+        goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+        goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
+      }
+      local ret = {} ---@type LazyKeysSpec[]
+      for method, keymaps in pairs(moves) do
+        for key, query in pairs(keymaps) do
+          local desc = query:gsub("@", ""):gsub("%..*", "")
+          desc = desc:sub(1, 1):upper() .. desc:sub(2)
+          desc = (key:sub(1, 1) == "[" and "Prev " or "Next ") .. desc
+          desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and " End" or " Start")
+          ret[#ret + 1] = {
+            key,
+            function()
+              require("nvim-treesitter-textobjects.move")[method](query, "textobjects")
+            end,
+            desc = desc,
+            mode = { "n", "x", "o" },
+            silent = true,
+          }
+        end
+      end
+      return ret
+    end,
+    config = function(_, opts)
+      require("nvim-treesitter-textobjects").setup(opts)
     end,
   },
   -- NVIM-TREESITTER-CONTEXT

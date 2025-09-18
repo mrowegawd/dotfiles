@@ -29,7 +29,7 @@ function M.detectors.lsp(buf)
     return {}
   end
   local roots = {} ---@type string[]
-  local clients = RUtils.lsp.get_clients { bufnr = buf }
+  local clients = vim.lsp.get_clients { bufnr = buf }
   clients = vim.tbl_filter(function(client)
     return not vim.tbl_contains(vim.g.root_lsp_ignore or {}, client.name)
   end, clients)

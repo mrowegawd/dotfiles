@@ -1,4 +1,4 @@
--- This is the same as in lspconfig.server_configurations.jdtls, but avoids
+-- This is the same as in lspconfig.configs.jdtls, but avoids
 -- needing to require that when this module loads.
 local java_filetypes = { "java" }
 
@@ -87,15 +87,11 @@ return {
     opts = function()
       local cmd = { vim.fn.exepath "jdtls" }
       if RUtils.has "mason.nvim" then
-        -- local mason_registry = require "mason-registry"
-        -- local lombok_jar = mason_registry.get_package("jdtls"):get_install_path() .. "/lombok.jar"
         local lombok_jar = vim.fn.expand "$MASON/share/jdtls/lombok.jar"
         table.insert(cmd, string.format("--jvm-arg=-javaagent:%s", lombok_jar))
       end
       return {
-        -- How to find the root dir for a given filename. The default comes from
-        -- lspconfig which provides a function specifically for java projects.
-        root_dir = RUtils.lsp.get_raw_config("jdtls").default_config.root_dir,
+        root_dir = require("lspconfig.util").root_pattern(vim.lsp.config.jdtls.root_markers),
 
         -- How to find the project name for a given root dir.
         project_name = function(root_dir)
@@ -131,6 +127,7 @@ return {
 
         -- These depend on nvim-dap, but can additionally be disabled by setting false here.
         dap = { hotcodereplace = "auto", config_overrides = {} },
+        -- Can set this to false to disable main class scan, which is a performance killer for large project
         dap_main = {},
         test = true,
         settings = {
