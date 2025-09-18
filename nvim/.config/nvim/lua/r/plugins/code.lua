@@ -384,44 +384,112 @@ return {
   -- REFACTORING
   {
     "ThePrimeagen/refactoring.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
     keys = {
       {
-        "<Localleader>rs",
+        "<Localleader>rf",
         function()
-          require("telescope").extensions.refactoring.refactors()
+          local refactoring = require "refactoring"
+          local fzf_lua = require "fzf-lua"
+          local results = refactoring.get_refactors()
+
+          local opts = {
+            prompt = "  ",
+            winopts = {
+              title = RUtils.fzflua.format_title("Refactoring?", ""),
+              border = "rounded",
+              height = #results + 3,
+              width = 0.30,
+              row = 1.05,
+              backdrop = 100,
+              relative = "cursor",
+            },
+            actions = {
+              ["default"] = function(selected)
+                refactoring.refactor(selected[1])
+              end,
+            },
+          }
+          fzf_lua.fzf_exec(results, opts)
         end,
-        mode = "v",
-        desc = "Task: select (visual) [refactoring]",
+        mode = { "n", "x" },
+        desc = "Refactoring: select or pick [refactoring]",
       },
-      -- {
-      --   "<Localleader>rP",
-      --   function()
-      --     require("refactoring").debug.printf { below = false }
-      --   end,
-      --   desc = "Reactoring: debug print [refactoring]",
-      -- },
+
+      -- Extract
+      {
+        "<Localleader>rei",
+        function()
+          return require("refactoring").refactor "Inline Variable"
+        end,
+        mode = { "n", "x" },
+        desc = "Refactoring: inline variable [refactoring]",
+        expr = true,
+      },
+      {
+        "<Localleader>reb",
+        function()
+          return require("refactoring").refactor "Extract Block"
+        end,
+        mode = { "n", "x" },
+        desc = "Refactoring: extract block [refactoring]",
+        expr = true,
+      },
+      {
+        "<Localleader>ref",
+        function()
+          return require("refactoring").refactor "Extract Function"
+        end,
+        mode = { "n", "x" },
+        desc = "Refactoring:: extract function [refactoring]",
+        expr = true,
+      },
+      {
+        "<Localleader>rev",
+        function()
+          return require("refactoring").refactor "Extract Variable"
+        end,
+        mode = { "n", "x" },
+        desc = "Refactoring:: extract variable [refactoring]",
+        expr = true,
+      },
+      {
+        "<Localleader>reF",
+        function()
+          return require("refactoring").refactor "Extract Function To File"
+        end,
+        mode = { "n", "x" },
+        desc = "Refactoring:: extract function to file [refactoring]",
+        expr = true,
+      },
+
+      -- Printout
+      {
+        "<Localleader>rP",
+        function()
+          require("refactoring").debug.printf { below = false }
+        end,
+        desc = "Refactoring: debug print [refactoring]",
+      },
       {
         "<Localleader>rp",
         function()
           require("refactoring").debug.print_var { normal = true }
         end,
-        desc = "Reactoring: debug print variable [refactoring]",
+        desc = "Refactoring: debug print variable [refactoring]",
       },
+
       {
-        "<Localleader>ec",
+        "<Localleader>rC",
         function()
           require("refactoring").debug.cleanup {}
         end,
-        desc = "Task: debug cleanup [refactoring]",
+        desc = "Refactoring: debug cleanup [refactoring]",
       },
-      -- {
-      --   "<Localleader>rp",
-      --   function()
-      --     require("refactoring").debug.print_var {}
-      --   end,
-      --   mode = "v",
-      --   desc = "Task: debug print variable [refactoring]",
-      -- },
     },
     opts = {
       prompt_func_return_type = {
@@ -456,9 +524,10 @@ return {
       end
     end,
   },
-  -- MARKER-GROUPS
+  -- MARKER-GROUPS (disabled)
   {
     "jameswolensky/marker-groups.nvim",
+    enabled = false,
     events = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim", -- Required
