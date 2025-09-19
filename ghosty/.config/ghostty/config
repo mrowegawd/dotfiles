@@ -1,7 +1,8 @@
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-font-family    = "Maple Mono NL NF"
+# font-family    = "Maple Mono NL NF"
+font-family    = "JetBrainsMono Nerd Font"
 # font-family = "Cousins hug"
 # font-family = "Cousins hug" # "JetBrainsMono NF"
 # font-family = "JetBrainsMono NF"
@@ -23,7 +24,7 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = vscode_modern
+theme = base46-kanagawa
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
@@ -39,7 +40,7 @@ window-theme                    = ghostty
 # +-----------------------------------------------------------+
 # | MISC                                                      |
 # +-----------------------------------------------------------+
-custom-shader = "./shaders/cursor_blaze.glsl"
+custom-shader = "./shaders/cursor_smear_fade.glsl"
 
 resize-overlay                  = never
 cursor-style                    = block
@@ -102,8 +103,9 @@ keybind = ctrl+shift+l=goto_split:right
 # keybind = alt+l=new_split:right
 # keybind = ctrl+space,j=new_split:new_split:right
 
-keybind = ctrl+shift+o=new_split:right
-keybind = ctrl+shift+p=new_split:down
+# keybind = ctrl+shift+o=new_split:right
+# keybind = ctrl+shift+p=new_split:down
+# keybind = ctrl+shift+p=new_split:down
 
 keybind = ctrl+alt+shift+k=resize_split:up,20
 keybind = ctrl+alt+shift+h=resize_split:left,20
