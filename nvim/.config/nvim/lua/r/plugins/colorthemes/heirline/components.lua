@@ -1260,6 +1260,7 @@ M.Filetype = {
     end,
     hl = function(self)
       local fg = colors.statusline_bg
+
       if self.task > 0 then
         fg = colors.block_mux_bg
       end
@@ -1276,6 +1277,10 @@ M.Filetype = {
 
       if self.task > 0 or #self.watch > 0 then
         fg = colors.block_mux_bg
+      end
+
+      if not set_conditions.hide_in_col_width(120) then
+        fg = colors.statusline_bg
       end
 
       return { fg = fg, bg = colors.block_darken_bg }
