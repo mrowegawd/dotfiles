@@ -52,64 +52,75 @@ return {
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: new float (visual) [ergoterm]" })
       RUtils.map.nnoremap("<Localleader>t", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: new float [ergoterm]" })
       RUtils.map.tnoremap("<Localleader>t", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: new float (terminal) [ergoterm]" })
 
       RUtils.map.vnoremap("<a-f>", function()
         local t = open_term_with_singleton()
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle (visual) [ergoterm]" })
       RUtils.map.nnoremap("<a-f>", function()
         local t = open_term_with_singleton()
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle (visual) [ergoterm]" })
       RUtils.map.tnoremap("<a-f>", function()
         local t = open_term_with_singleton()
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle (visual) [ergoterm]" })
 
       RUtils.map.vnoremap("<a-T>", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle (visual) [ergoterm]" })
       RUtils.map.nnoremap("<a-T>", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle [ergoterm]" })
       RUtils.map.tnoremap("<a-T>", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: toggle [ergoterm]" })
 
       RUtils.map.nnoremap("<a-N>", function()
         local t = open_term_with_singleton(true, "tab")
         if t then
           t:toggle()
         end
-      end, { desc = "toggle base terminal" })
+      end, { desc = "Terminal: terminal tab [ergoterm" })
+
+      RUtils.map.tnoremap("<Localleader>T", function()
+        RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
+        vim.cmd [[TermSelect]]
+      end, { desc = "Terminal: select term (terminal) [ergoterm]" })
+      RUtils.map.nnoremap("<Localleader>T", function()
+        vim.cmd [[TermSelect]]
+      end, { desc = "Terminal: select term [ergoterm]" })
+      RUtils.map.vnoremap("<Localleader>T", function()
+        vim.cmd [[TermSelect]]
+      end, { desc = "Terminal: select term (visual) [ergoterm]" })
     end,
   },
   -- FLOATERM (disabled)
