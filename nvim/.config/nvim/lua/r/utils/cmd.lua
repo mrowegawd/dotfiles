@@ -137,12 +137,12 @@ function M.browse_this_error(is_selection)
   str_sel = M.remove_alias(str_sel)
 
   local open_search = {
-    ["Search Error For General Purpose?"] = {
+    ["Search Error - Single Search (google, github, stackoverflow)"] = {
       google = "https://google.com/search?q=",
       github_issue = "https://github.com/search?q=",
       stackoverflow = "https://stackoverflow.com/search?q=",
     },
-    ["Search Error with Google Footprint?"] = {
+    ["Search Error - Targeted Google Blueprint"] = {
       google = {
         url = "https://google.com/search?q=",
         on_site = "site%3Astackoverflow.com",
@@ -159,7 +159,7 @@ function M.browse_this_error(is_selection)
         match = true,
       },
     },
-    ["Search Error For Nvim Footprint?"] = {
+    ["Search Error - Nvim Footprint"] = {
       google_stackoverflow = {
         url = "https://google.com/search?q=",
         on_site = "site%3Astackoverflow.com",
@@ -176,7 +176,7 @@ function M.browse_this_error(is_selection)
         match = true,
       },
     },
-    ["Search Error For Emacs Footprint?"] = {
+    ["Search Error - Emacs Footprint"] = {
       google_matching = {
         url = "https://google.com/search?q=",
         on_site = "site%3Aemacs.stackexchange.com",
@@ -198,7 +198,7 @@ function M.browse_this_error(is_selection)
     --   },
     -- },
 
-    ["Search For Reverse Engineering?"] = {
+    ["Search - Reverse Engineering"] = {
       google_matching = {
         url = "https://google.com/search?q=",
         on_site = "site%3Areverseengineering.stackexchange.com",
@@ -228,6 +228,9 @@ function M.browse_this_error(is_selection)
       end
 
       local cmds = { browser, c }
+
+      table.sort(cmds)
+
       vim.fn.jobstart(cmds, { detach = true })
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info(vim.inspect(cmds))

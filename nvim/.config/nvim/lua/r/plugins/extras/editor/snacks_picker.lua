@@ -207,8 +207,8 @@ return {
       { "<Localleader>sc", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes [snackspicker]", },
 
       -- LSP
-      { "gs", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },
-      { "gS", function() Snacks.picker.lsp_workspace_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Workspace Symbols" },
+      { "<Leader>lw", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },
+      { "<Leader>lW", function() Snacks.picker.lsp_workspace_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Workspace Symbols" },
     },
   },
 }

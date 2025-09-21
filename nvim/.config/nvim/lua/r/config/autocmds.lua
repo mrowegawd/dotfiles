@@ -122,7 +122,7 @@ RUtils.cmd.augroup("WindowBehaviour", {
   end,
 }, {
   event = "FileType",
-  pattern = { "gitcommit", "NeogitCommitMessage" },
+  pattern = { "gitcommit", "NeogitCommitMessage", "orgagenda" },
   command = function()
     vim.opt_local.spell = true
     vim.opt_local.wrap = true

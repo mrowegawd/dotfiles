@@ -28,7 +28,8 @@ build-install() {
 
   if ! command -v pass >/dev/null; then
     echo "Installing: pass - The standard unix password manager"
-    sudo apt install pass ydotool ydotoold -y
+    sudo apt install pass -y
+    # sudo apt install pass ydotool ydotoold -y
   fi
 
   if ! command -v urlview >/dev/null; then
@@ -135,6 +136,7 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # if ! command -v bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
+    # sudo apt install ydotool ydotool -y
     cargo install bat
     asdf reshim rust
   # fi
@@ -213,7 +215,8 @@ build-install() {
 
   # if ! command -v yazi >/dev/null; then
     echo "Installing: yazi - File manager tui"
-    cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
+    # cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
+    cargo install --locked yazi-fm yazi-cli
     asdf reshim rust
     # yazi git integration
     # ya pack -a yazi-rs/plugins:git
@@ -236,7 +239,7 @@ build-install() {
 
   # if ! command -v sesh >/dev/null; then
     echo "Installing: sesh - Handle tmux session"
-    go install github.com/joshmedeski/sesh@latest
+    go install github.com/joshmedeski/sesh/v2@latest
     asdf reshim golang
   # fi
 
@@ -372,12 +375,18 @@ zle -N run-mark
 bindkey '^o' run-mark
 
 function fg-bg() {
-  if [[ $#BUFFER -eq 0 ]]; then
-    fg
+  if [[ -z $BUFFER ]]; then
+    if jobs % &>/dev/null; then
+      fg
+    else
+      print -Pn "\a%F{red}❌ no current job%f\n" >&2
+      zle accept-line
+    fi
   else
     zle push-input
   fi
 }
+
 zle -N fg-bg
 bindkey '^z' fg-bg
 

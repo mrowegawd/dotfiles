@@ -62,7 +62,7 @@ startup_command = ""
 [[session]]
 name = "News"
 path = "~/moxconf/development/project/misc"
-startup_command = ""
+startup_command = "newsboat"
 
 [[session]]
 name = "Bench"
