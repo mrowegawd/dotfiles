@@ -60,7 +60,7 @@ return {
       -- },
     },
     opts = function()
-      RUtils.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+      RUtils.map.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
 
       local Preview = require "neo-tree.sources.common.preview"
       -- local events = require "neo-tree.events"
@@ -567,7 +567,7 @@ return {
       },
     },
     opts = function()
-      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+      RUtils.map.disable_ctrl_i_and_o("NoAerial", { "aerial" })
       -- require("telescope").load_extension "aerial"
 
       local vim_width = vim.o.columns
@@ -645,7 +645,7 @@ return {
       },
     },
     opts = function()
-      RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      RUtils.map.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       local kind = RUtils.config.icons.kinds
       return {
         outline_window = {

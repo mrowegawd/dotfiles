@@ -12,7 +12,20 @@ return {
       { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
       { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      -- Kegunaan: ini akan menselect semua function, jadi tekan v, lalu R
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search" },
+      { "<c-s>",
+        function()
+          require("flash").treesitter({
+            actions = {
+              ["<c-space>"] = "next",
+              ["<BS>"] = "prev"
+            }
+          })
+        end,
+        mode = { "n", "o", "x" },
+        desc = "Flash: treesitter incremental selection"
+      },
     },
   },
   -- GRUG-FAR.NVIM
@@ -110,7 +123,7 @@ return {
           end
           vim.cmd [[Trouble todo toggle filter.buf=0]]
         end,
-        desc = "Exec: check TodoTrouble curbuf [trouble]",
+        desc = "Exec: check todotrouble curbuf [trouble]",
       },
       {
         "<Leader>xT",
@@ -121,7 +134,7 @@ return {
           end
           vim.cmd [[TodoTrouble]]
         end,
-        desc = "Exec: check TodoTrouble global [trouble]",
+        desc = "Exec: check todotrouble global [trouble]",
       },
       {
         "<Leader>xD",

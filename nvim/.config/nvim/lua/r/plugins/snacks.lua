@@ -87,7 +87,7 @@ return {
           unstagedChangesColor = { fg = "DiagnosticError" },
         },
       },
-      words = { enabled = true },
+      words = { enabled = false },
       styles = {
         snacks_image = {
           relative = "editor",

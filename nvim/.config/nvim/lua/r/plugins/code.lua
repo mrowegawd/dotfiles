@@ -101,8 +101,19 @@ return {
   {
     -- how to use it: `ysiw`, `yc<brackets>`, `yd<brackets>`
     "kylechui/nvim-surround",
-    event = "InsertEnter",
+    event = "VeryLazy",
     version = "*",
+    keys = {
+      { "ys", mode = "n", desc = "Surround: motion [nvim-surround]" },
+      { "ySS", mode = "n", desc = "Surround: current line [nvim-surround]" },
+      -- { "yS", mode = "n", desc = "Surround + motion + line" },
+      { "<c-x>s", mode = "i", desc = "Surround: surround (insert) [nvim-surround]" },
+      { "S", mode = "v", desc = "Surround: motion (visual) [nvim-surround]" },
+      -- { "gS", mode = "v", desc = "Surround + line" },
+      { "yd", mode = "n", desc = "Surround: delete surround [nvim-surround]" },
+      { "yc", mode = "n", desc = "Surround: change surround [nvim-surround]" },
+      { "yC", mode = "n", desc = "Surround: change line [nvim-surround]" },
+    },
     config = function()
       local input = require("nvim-surround.input").get_input
       require("nvim-surround").setup {
