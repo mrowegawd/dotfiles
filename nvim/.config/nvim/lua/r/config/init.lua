@@ -315,7 +315,7 @@ local defaults = {
 }
 
 M.json = {
-  version = 2,
+  version = 8,
   loaded = false,
   path = vim.g.lazyvim_json or vim.fn.stdpath "config" .. "/lazyvim.json",
   data = {
