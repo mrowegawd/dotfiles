@@ -1,12 +1,13 @@
 {
   "$schema": "./cspell.schema.json",
   "version": "0.2",
-  "cache": {
-    "useCache": true,
-    "cacheLocation": "./.cspell/.cspellcache",
-    "cacheStrategy": "content"
-  },
   "dictionaryDefinitions": [
+    {
+      "name": "indonesia",
+      "path": "./indonesia-dict.txt",
+      "description": "Indonesian Dictionary",
+      "addWords": true
+    },
     {
       "name": "workspace",
       "path": "./cspell-dict.txt",
@@ -21,7 +22,7 @@
       "noSuggest": true
     }
   ],
-  "dictionaries": ["workspace", "ignore words"],
+  "dictionaries": ["indonesia", "workspace", "ignore words"],
   "ignorePaths": [
     ".eslintignore",
     ".git",
