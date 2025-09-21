@@ -183,9 +183,9 @@ local update_col_colorscheme = {
     cursorline_alter = 0.65,
     cursorline_fg_alter = "WinSeparator",
     dapstopped_bg_alter = 0.2,
-    fold_fg = 0.13,
+    fold_fg = 0.3,
     fzflua_border_fg_alter = 0.8,
-    linenr_fg_alter = 0.2,
+    linenr_fg_alter = -0.05,
     noice_cmdline_fsg_alter = 0.4,
     nontext_fg_alter = 1.8,
     normal_keyword_alter = 0.16,
@@ -195,8 +195,9 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.38,
     render_markdown_code_inline_bg_alter = 0.2,
     snacks_indent_scope_fg_alter = 0.22,
+    statusline_bg_alter = -0.1,
     tabline_fg_alter = 0.55,
-    winseparator_alter = 0.3,
+    winseparator_alter = 0.6,
   },
   ["base46-material-lighter"] = {
     CurSearch = {
@@ -433,7 +434,7 @@ local update_col_colorscheme = {
     pmenu_sp_alter = 1.5,
     render_markdown_code_bg_alter = 0.23,
     snacks_indent_scope_fg_alter = 0.13,
-    statusline_bg_alter = -0.4,
+    statusline_bg_alter = -0.15,
     trouble_indent_fg_alter = 0.6,
     winbar_file_path_fg_alter = 0.95,
     winseparator_alter = 0.8,
@@ -852,8 +853,10 @@ local general_overrides = function()
     { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
     {
       LspReferenceText = {
-        bg = colors.lsp_reference_text_bg_alter,
-        fg = "NONE",
+        -- bg = colors.lsp_reference_text_bg_alter,
+        -- fg = "NONE",
+        bg = "#6A5ACD", -- Slate Blue
+        fg = "#ffffff", -- White text for strong contrast
         underline = false,
         reverse = false,
         undercurl = false,
@@ -861,16 +864,19 @@ local general_overrides = function()
     },
     {
       LspReferenceWrite = {
-        bg = colors.lsp_reference_write_bg_alter,
+        -- bg = colors.lsp_reference_write_bg_alter,
+        bg = "#FF4500", -- OrangeRed (menonjol untuk write)
+        fg = "#000000", -- Black text for contrast
         underline = false,
         reverse = false,
         undercurl = false,
       },
     },
-
     {
       LspReferenceRead = {
-        bg = colors.lsp_reference_read_bg_alter,
+        -- bg = colors.lsp_reference_read_bg_alter,
+        bg = "#32CD32", -- Lime Green
+        fg = "#000000",
         underline = false,
         reverse = false,
         undercurl = false,
@@ -942,6 +948,20 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                      PLUGIN COLORS                      ║
     -- ╚═════════════════════════════════════════════════════════╝
+
+    -- ╭────────╮
+    -- │ CMPDOC │
+    -- ╰────────╯
+    -- Ditaruh disini untuk sementara waktu, karena blink mengadopsi color
+    -- `CmpDocFloatBorder` ini
+    {
+      CmpDocNormal = {
+        fg = { from = "Keyword", attr = "fg", alter = colors.cmpdocnormal_fg_alter },
+        bg = { from = "Pmenu", attr = "bg", alter = 0.15 },
+      },
+    },
+    { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
+
     --  ───────────────────────────────[ BEACON ]──────────────────────────────
     { BeaconDefault = { bg = colors.cursor_fg } },
 
@@ -973,8 +993,8 @@ local general_overrides = function()
     },
     {
       BlinkCmpDocSeparator = {
-        fg = { from = "FloatBorder", attr = "fg" },
-        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "CmpDocNormal", attr = "bg", alter = 0.15 },
+        bg = { from = "CmpDocNormal", attr = "bg" },
       },
     },
     {
@@ -1007,17 +1027,6 @@ local general_overrides = function()
     -- │ CMPITEM │
     -- ╰─────────╯
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
-
-    -- ╭────────╮
-    -- │ CMPDOC │
-    -- ╰────────╯
-    {
-      CmpDocNormal = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.cmpdocnormal_fg_alter },
-        bg = { from = "Pmenu", attr = "bg", alter = -0.1 },
-      },
-    },
-    { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
 
     -- ╭─────────╮
     -- │ CMPKIND │
@@ -1576,6 +1585,9 @@ local general_overrides = function()
     { TodoSignWarn = { bg = "NONE", fg = "#FBBF24" } },
     { TodoSignFIX = { bg = "NONE", fg = "#DC2626" } }, -- for error
     { TodoSignTODO = { bg = "NONE", fg = "#2563EB" } },
+
+    --  ───────────────────────────[ MASON ]────────────────────────
+    { MasonNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
 
     --  ──────────────────────────────[ GLANCE ]───────────────────────────
     { GlancePreviewNormal = { bg = "#111231" } },

@@ -1,16 +1,8 @@
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-# font-family    = "Maple Mono NL NF"
-font-family    = "JetBrainsMono Nerd Font"
-# font-family = "Cousins hug"
-# font-family = "Cousins hug" # "JetBrainsMono NF"
-# font-family = "JetBrainsMono NF"
-# font-family-bold = "SF Mono"
-# font-family-italic = "Maple Mono Italic"
-# font-family-bold-italic = "Maple Mono Bold Italic"
+font-family                     = "JetBrainsMono Nerd Font"
 
-# 11.8
 font-size                       = 13.8
 # font-feature                    = -calt
 # font-feature                    = -liga

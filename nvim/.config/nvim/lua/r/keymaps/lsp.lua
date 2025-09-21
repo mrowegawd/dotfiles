@@ -6,6 +6,45 @@ M._keys = nil
 ---@alias LazyKeysLspSpec LazyKeysSpec|{has?:string|string[], cond?:fun():boolean}
 ---@alias LazyKeysLsp LazyKeys|{has?:string|string[], cond?:fun():boolean}
 
+local document_highlight_enabled = false
+local highlight_augroup = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = true })
+
+local function enable_document_highlight()
+  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+    group = highlight_augroup,
+    callback = function()
+      if document_highlight_enabled then
+        vim.lsp.buf.document_highlight()
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    group = highlight_augroup,
+    callback = function()
+      vim.lsp.buf.clear_references()
+    end,
+  })
+
+  document_highlight_enabled = true
+  RUtils.info "LSP Document Highlight: ON"
+end
+
+local function disable_document_highlight()
+  vim.api.nvim_clear_autocmds { group = highlight_augroup }
+  vim.lsp.buf.clear_references()
+  document_highlight_enabled = false
+  RUtils.info "LSP Document Highlight: OFF"
+end
+
+local function toggle_document_highlight()
+  if document_highlight_enabled then
+    disable_document_highlight()
+  else
+    enable_document_highlight()
+  end
+end
+
 local diagnostic_goto = function(next, severity)
   local go = next and 1 or -1
   severity = severity and vim.diagnostic.severity[severity] or nil
@@ -103,34 +142,50 @@ function M.get()
       desc = "LSP: show hover [noice]",
     },
     {
-      "gD",
+      "<Leader>lD",
       -- wrap_location_method(vim.lsp.buf.declaration),
       wrap_location_method(vim.lsp.buf.definition, true),
       has = "definition",
       desc = "LSP: definitions (vsplit)",
     },
     {
-      "gd",
+      "<Leader>ld",
       wrap_location_method(vim.lsp.buf.definition),
       has = "definition",
       desc = "LSP: definitions",
     },
     {
-      "gI",
+      "<Leader>li",
       function()
         fzf_lua.lsp_incoming_calls()
       end,
       desc = "LSP: incoming calls [fzflua]",
     },
     {
-      "gO",
+      "<Leader>lo",
       function()
         fzf_lua.lsp_outgoing_calls()
       end,
       desc = "LSP: outgoing calls [fzflua]",
     },
+
     {
-      "gr",
+      "<Leader>lh",
+      function()
+        toggle_document_highlight()
+      end,
+      desc = "LSP: document highlight toggle",
+    },
+    {
+      "<Leader>lH",
+      function()
+        disable_document_highlight()
+      end,
+      desc = "LSP: document highlight disabled",
+    },
+
+    {
+      "<Leader>lr",
       function()
         fzf_lua.lsp_references()
       end,
@@ -138,7 +193,7 @@ function M.get()
       desc = "LSP: references [fzflua]",
     },
     {
-      "gt",
+      "<Leader>lt",
       function()
         Snacks.picker.lsp_type_definitions()
       end,
@@ -256,11 +311,10 @@ function M.get()
     --  LSP commands
     --  +----------------------------------------------------------+
     {
-      "gof",
+      "<Leader>lf",
       function()
         local function check_current_ft(fts)
-          local ft = vim.bo[0].filetype
-          if vim.tbl_contains(fts, ft) then
+          if vim.tbl_contains(fts, vim.bo[0].filetype) then
             return true
           end
           return false

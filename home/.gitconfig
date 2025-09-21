@@ -4,19 +4,20 @@
 
 [core]
   excludesfile = ~/.gitignore-global
-  pager = delta
+  pager = [ "${COLUMNS}" -ge 160 ] && delta --side-by-side || delta
+  ; pager = delta
+  ; pager = DELTA_FEATURES=$([[ $COLUMNS >= 160 ]] && echo "side-by-side") delta
+
 
 [interactive]
   diffFilter = delta --color-only
 
 [delta]
   features = woolly-mammoth
-  side-by-side = true
-  ; line-numbers = true
-  ; light = false
-  ; tabs = 2
+  side-by-side = false
+  ; width = -2
   ; navigate = true
-  ; whitespace-error-style = 22 reverse
+  ; wrap-max-lines = 0
 
 [delta "interactive"]
   keep-plus-minus-markers = false
