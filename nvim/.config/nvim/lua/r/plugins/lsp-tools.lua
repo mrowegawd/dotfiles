@@ -367,4 +367,21 @@ return {
       },
     },
   },
+  -- LOG SYNTAX-HIGHLIGHT
+  {
+    "fei6409/log-highlight.nvim",
+    event = "BufRead *.log",
+    opts = {},
+  },
+  -- TASKWARRIOR SYNTAX
+  {
+    "framallo/taskwarrior.vim",
+    ft = "taskrc",
+  },
+  -- GARBAGE-DAY
+  {
+    "zeioth/garbage-day.nvim",
+    event = "LspAttach",
+    opts = {},
+  },
 }
