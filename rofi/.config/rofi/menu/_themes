@@ -37,70 +37,11 @@ GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 
 # GET_COL_16="#6c8cac"
 GET_COL_17="#333333"
-# GET_COL_18="#5b5b5b"
-# GET_COL_19="#131313"
-# GET_COL_20="#262626"
-# GET_COL_21="#262626"
-# GET_COL_22="#181818"
-# GET_COL_23="#5f5f5f"
-# GET_COL_24="#ffb49d"
-# GET_COL_25="#2f2f2f"
-# GET_COL_26="#5f5f5f"
-# GET_COL_27="#ffb49d"
-# GET_COL_28="#ffb49d"
 
 MASTER_THEME_FILE=/tmp/master-colors-themes
 
 if [[ -f "$MASTER_THEME_FILE" ]]; then
-  # GET_COL_16=$(grep -i color16 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_17=$(grep -i color17 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_18=$(grep -i color18 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_19=$(grep -i color19 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  #
-  # GET_COL_20=$(grep -i color20 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_21=$(grep -i color21 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_22=$(grep -i color22 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_23=$(grep -i color23 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_24=$(grep -i color24 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_25=$(grep -i color25 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_26=$(grep -i color26 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_27=$(grep -i color27 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  # Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
-  # GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  #  Delta: plus-emph-style, plus-style
-  # GET_COL_33=$(grep -i color33 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_34=$(grep -i color34 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  # Delta: plus-emph-style, minus-emph-style
-  # GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  # ZSH-AUTOSUGGESTIONS
-  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-
-  # YAZI
-  # GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_40=$(grep -i color40 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_41=$(grep -i color41 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_42=$(grep -i color42 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_43=$(grep -i color43 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  #
-  # GET_COL_44=$(grep -i color44 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_45=$(grep -i color45 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  #
-  # GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_51=$(grep -i color51 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -835,10 +776,15 @@ set_polybar() {
 set_shaders_color() {
   _GHOSTTY_PATH="$DOTFILES_PATH/ghosty/.config/ghostty"
   _SHADERS_CURSOR_SMEAR_FADE="$_GHOSTTY_PATH/shaders/cursor_smear_fade.glsl"
+  _SHADERS_CURSOR_BLAZE="$_GHOSTTY_PATH/shaders/cursor_blaze.glsl"
 
   if [ -f "$_SHADERS_CURSOR_SMEAR_FADE" ]; then
 
-    VSCODE_SHADERS_SMEAR="vec4(1.0, 1.0, 1.0, 1.0);" # white
+    VSCODE_SHADERS_SMEAR="vec4(1.0, 1.0, 1.0, 1.0);"
+    VSCODE_TRAIL_COLOR_ACCENT="vec4(1.0, 0., 0., 1.0);"
+
+    # Default color untuk cursor_blaze
+    # const vec4 TRAIL_COLOR = vec4(1.0, 0.725, 0.161, 1.0); // yellow
 
     if [ "$1" == "base46-aylin" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
@@ -872,6 +818,11 @@ set_shaders_color() {
     fi
     if [ "$1" == "base46-material-darker" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.086, 0.686, 0.792, 1.0);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.086, 0.686, 0.792, 1.0);"
+    fi
+    if [ "$1" == "base46-melange" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.925, 0.882, 0.843, 1.0);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.925, 0.882, 0.843, 1.0);"
     fi
     if [ "$1" == "base46-onenord" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.219, 0.475, 0.773, 1.0);"
@@ -881,6 +832,7 @@ set_shaders_color() {
     fi
     if [ "$1" == "base46-seoul256_dark" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.843, 0.373, 0.529, 1.0);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.843, 0.373, 0.529, 1.0);"
     fi
     if [ "$1" == "base46-solarized_dark" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.439, 0.510, 0.518, 1.0);"
@@ -890,6 +842,7 @@ set_shaders_color() {
     fi
     if [ "$1" == "lackluster" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.871, 0.933, 0.929, 1.0);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.871, 0.933, 0.929, 1.0);"
     fi
     if [ "$1" == "tokyonight-night" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.620, 0.055, 0.024, 1.0);"
@@ -897,10 +850,19 @@ set_shaders_color() {
     if [ "$1" == "tokyonight-storm" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.702, 0.153, 0.435, 1.0);"
     fi
+    if [ "$1" == "neogotham" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.596, 0.820, 0.808, 0.5);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.596, 0.820, 0.808, 1.0);"
+    fi
     if [ "$1" == "vscode_modern" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.980, 0.098, 0.098, 1.0);"
     fi
+    # cursor_smear_fade
     sed -i -e "s/^const vec4 TRAIL_COLOR\s=.*$/const vec4 TRAIL_COLOR = $VSCODE_SHADERS_SMEAR/g" "$_SHADERS_CURSOR_SMEAR_FADE"
+
+    # cursor_blaze
+    sed -i -e "s/^const vec4 TRAIL_COLOR\s=.*$/const vec4 TRAIL_COLOR = $VSCODE_SHADERS_SMEAR/g" "$_SHADERS_CURSOR_BLAZE"
+    # sed -i -e "s/^const vec4 TRAIL_COLOR_ACCENT\s=.*$/const vec4 TRAIL_COLOR_ACCENT = $VSCODE_TRAIL_COLOR_ACCENT/g" "$_SHADERS_CURSOR_BLAZE"
   fi
 }
 

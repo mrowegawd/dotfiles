@@ -76,9 +76,9 @@ end, { desc = "Terminal: prev tab" })
 RUtils.map.tnoremap("<a-N>", function()
   RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
 end, { desc = "Terminal: new tabterm" })
-RUtils.map.tnoremap("<a-CR>", function()
-  RUtils.terminal.smart_split()
-end, { desc = "Terminal: new term" })
+-- RUtils.map.tnoremap("<a-CR>", function()
+--   RUtils.terminal.smart_split()
+-- end, { desc = "Terminal: new term" })
 
 -- Move cursor from terminal mode
 RUtils.map.tnoremap("<c-w>l", function()
@@ -145,9 +145,10 @@ RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (v
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
 RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
-RUtils.map.nnoremap("<Leader>ow", function()
-  local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history" }
+local function jump_back_to_back_windows()
+  local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
 
+  -- Go back to the window if any windows are open
   if vim.tbl_contains(right_win, vim.bo.filetype) then
     vim.cmd [[wincmd p]]
     return
@@ -160,7 +161,10 @@ RUtils.map.nnoremap("<Leader>ow", function()
       break
     end
   end
-end, { desc = "Window: jump to or from spesific window" })
+end
+
+RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
+RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
 
 -- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
 --   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })

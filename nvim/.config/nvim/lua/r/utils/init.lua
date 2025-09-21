@@ -359,7 +359,7 @@ function M.set_default(option, value)
     if not by_rtp then
       if vim.g.lazyvim_debug_set_default then
         RUtils.warn(
-          ("Not setting option `%s` to `%s` because it was changed by a filetype plugin."):format(option, value),
+          ("Not setting option `%s` to `%q` because it was changed by a plugin."):format(option, value),
           { title = "RUtils", once = true }
         )
       end
