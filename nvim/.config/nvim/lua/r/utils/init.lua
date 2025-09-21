@@ -248,32 +248,6 @@ function M.safe_keymap_set(mode, lhs, rhs, opts)
   end
 end
 
-function M.disable_ctrl_i_and_o(au_name, tbl_ft)
-  local augroup = vim.api.nvim_create_augroup(au_name, { clear = true })
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = tbl_ft,
-    group = augroup,
-    callback = function()
-      vim.keymap.set("n", "<c-i>", "<Nop>", {
-        buffer = vim.api.nvim_get_current_buf(),
-      })
-      vim.keymap.set("n", "<c-o>", "<Nop>", {
-        buffer = vim.api.nvim_get_current_buf(),
-      })
-
-      if vim.tbl_contains({ "Outline", "gitcommit" }, vim.bo.filetype) then
-        vim.keymap.set("n", "ss", "<Nop>", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-
-        vim.keymap.set("n", "sv", "<Nop>", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-      end
-    end,
-  })
-end
-
 ---@generic T
 ---@param list T[]
 ---@return T[]
@@ -346,6 +320,65 @@ function M.memoize(fn)
     end
     return cache[fn][key]
   end
+end
+
+-- Safe wrapper around snacks to prevent errors when LazyVim is still installing
+function M.statuscolumnc()
+  return package.loaded.snacks and require("snacks.statuscolumn").get() or ""
+end
+
+local _defaults = {} ---@type table<string, boolean>
+
+-- Determines whether it's safe to set an option to a default value.
+--
+-- It will only set the option if:
+-- * it is the same as the global value
+-- * it's current value is a default value
+-- * it was last set by a script in $VIMRUNTIME
+---@param option string
+---@param value string|number|boolean
+---@return boolean was_set
+function M.set_default(option, value)
+  local l = vim.api.nvim_get_option_value(option, { scope = "local" })
+  local g = RUtils.config._options[option] or vim.api.nvim_get_option_value(option, { scope = "global" })
+
+  _defaults[("%s=%s"):format(option, value)] = true
+  local key = ("%s=%s"):format(option, l)
+
+  local source = ""
+  if l ~= g and not _defaults[key] then
+    -- Option does not match global and is not a default value
+    -- Check if it was set by a script in $VIMRUNTIME
+    local info = vim.api.nvim_get_option_info2(option, { scope = "local" })
+    ---@param e vim.fn.getscriptinfo.ret
+    local scriptinfo = vim.tbl_filter(function(e)
+      return e.sid == info.last_set_sid
+    end, vim.fn.getscriptinfo())
+    source = scriptinfo[1] and scriptinfo[1].name or ""
+    local by_rtp = #scriptinfo == 1 and vim.startswith(scriptinfo[1].name, vim.fn.expand "$VIMRUNTIME")
+    if not by_rtp then
+      if vim.g.lazyvim_debug_set_default then
+        RUtils.warn(
+          ("Not setting option `%s` to `%s` because it was changed by a filetype plugin."):format(option, value),
+          { title = "RUtils", once = true }
+        )
+      end
+      return false
+    end
+  end
+
+  if vim.g.lazyvim_debug_set_default then
+    RUtils.info({
+      ("Setting option `%s` to `%q`"):format(option, value),
+      ("Was: %q"):format(l),
+      ("Global: %q"):format(g),
+      source ~= "" and ("Last set by: %s"):format(source) or "",
+      "buf: " .. vim.api.nvim_buf_get_name(0),
+    }, { title = "LazyVim", once = true })
+  end
+
+  vim.api.nvim_set_option_value(option, value, { scope = "local" })
+  return true
 end
 
 return M

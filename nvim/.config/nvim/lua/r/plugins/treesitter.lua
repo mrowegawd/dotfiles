@@ -98,14 +98,15 @@ return {
           end
 
           -- indents
-          if vim.tbl_get(opts, "indent", "enable") ~= false then
-            vim.bo[ev.buf].indentexpr = "v:lua.require'r.utils'.treesitter.indentexpr()"
+          if vim.tbl_get(opts, "indent", "enable") ~= false and RUtils.treesitter.have(ev.match, "indents") then
+            RUtils.set_default("indentexpr", "v:lua.require'r.utils'.treesitter.indentexpr()")
           end
 
           -- folds
-          if vim.tbl_get(opts, "folds", "enable") ~= false then
-            vim.wo.foldmethod = "expr"
-            vim.wo.foldexpr = "v:lua.require'r.utils'.treesitter.foldexpr()"
+          if vim.tbl_get(opts, "folds", "enable") ~= false and RUtils.treesitter.have(ev.match, "folds") then
+            if RUtils.set_default("foldmethod", "expr") then
+              RUtils.set_default("foldexpr", "v:lua.require'r.utils'.treesitter.foldexpr()")
+            end
           end
         end,
       })

@@ -750,7 +750,7 @@ return {
     },
     opts = function()
       local actions = require "diffview.actions"
-      RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+      RUtils.map.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
 
       return {
         enhanced_diff_hl = true,

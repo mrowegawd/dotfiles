@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "vscode_modern"
+local colorscheme = "base46-kanagawa"
 
 _G.base = {}
 
@@ -173,16 +173,11 @@ local defaults = {
     },
 
     dap = {
-      -- Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+      Stopped = "󰁕 ",
       Breakpoint = " ",
-      -- BreakpointCondition = " ",
-      -- BreakpointRejected  = { " ", "DiagnosticError" },
-      -- Breakpoint = " ",
-      -- Breakpoint           = " ",  -- " "
       BreakpointCondition = " ",
       BreakpointRejected = " ",
       LogPoint = ".>",
-      Stopped = "󰁕 ",
       Pause = " ",
       Play = " ",
       Step_into = " ",
@@ -324,7 +319,7 @@ M.json = {
   loaded = false,
   path = vim.g.lazyvim_json or vim.fn.stdpath "config" .. "/lazyvim.json",
   data = {
-    version = nil, ---@type string?
+    version = nil, ---@type number?
     install_version = nil, ---@type number?
     news = {}, ---@type table<string, string>
     extras = {}, ---@type string[]
@@ -377,7 +372,7 @@ function M.setup(opts)
       end
 
       RUtils.format.setup()
-      -- R.news.setup()
+      -- RUtils.news.setup()
       RUtils.root.setup()
 
       vim.api.nvim_create_user_command("LazyExtras", function()
@@ -395,6 +390,7 @@ function M.setup(opts)
         "desc",
         "vscode",
       })
+
       if vim.g.lazyvim_check_order == false then
         return
       end
@@ -423,7 +419,7 @@ function M.setup(opts)
           "vim.g.lazyvim_check_order = false",
           "```",
         }
-        vim.notify(table.concat(msg, "\n"), "warn", { title = "LazyVim" })
+        vim.notify(table.concat(msg, "\n"), "warn", { title = "RUtils" })
       end
     end,
   })
@@ -487,6 +483,8 @@ function M.load(name)
 end
 
 M.did_init = false
+M._options = {} ---@type vim.wo|vim.bo
+
 function M.init()
   if M.did_init then
     return
@@ -509,6 +507,12 @@ function M.init()
   -- this is needed to make sure options will be correctly applied
   -- after installing missing plugins
   M.load "options"
+
+  -- save some options to track defaults
+  M._options.indentexpr = vim.o.indentexpr
+  M._options.foldmethod = vim.o.foldmethod
+  M._options.foldexpr = vim.o.foldexpr
+
   -- defer built-in clipboard handling: "xsel" and "pbcopy" can be slow
   lazy_clipboard = vim.opt.clipboard
   vim.opt.clipboard = ""
@@ -538,7 +542,6 @@ function M.get_defaults()
       { name = "telescope", extra = "editor.telescope" },
     },
     cmp = {
-      -- { name = "blink.cmp", extra = "coding.blink", enabled = vim.fn.has "nvim-0.10" == 1 },
       { name = "blink.cmp", extra = "coding.blink" },
       { name = "nvim-cmp", extra = "coding.nvim-cmp" },
     },
@@ -558,7 +561,7 @@ function M.get_defaults()
   for name, check in pairs(checks) do
     local valid = {} ---@type string[]
     for _, extra in ipairs(check) do
-      if type(extra) == "table" and extra.enabled ~= false then
+      if extra.enabled ~= false then
         valid[#valid + 1] = extra.name
       end
     end
@@ -567,8 +570,7 @@ function M.get_defaults()
     use = vim.tbl_contains(valid, use or "auto") and use or nil
     origin = use and "global" or origin
     for _, extra in ipairs(use and {} or check) do
-      -- print(extra.extra .. " :" .. tostring(RUtils.has_extra(extra.extra)))
-      if type(extra) == "table" and extra.enabled ~= false and RUtils.has_extra(extra.extra) then
+      if extra.enabled ~= false and RUtils.has_extra(extra.extra) then
         use = extra.name
         break
       end
@@ -576,15 +578,13 @@ function M.get_defaults()
     origin = use and "extra" or origin
     use = use or valid[1]
     for _, extra in ipairs(check) do
-      if type(extra) == "table" then
-        local import = "r.plugins.extras." .. extra.extra
-        extra = vim.deepcopy(extra)
-        extra.enabled = extra.name == use
-        if extra.enabled then
-          extra.origin = origin
-        end
-        default_extras[import] = extra
+      local import = "r.plugins.extras." .. extra.extra
+      extra = vim.deepcopy(extra)
+      extra.enabled = extra.name == use
+      if extra.enabled then
+        extra.origin = origin
       end
+      default_extras[import] = extra
     end
   end
   return default_extras

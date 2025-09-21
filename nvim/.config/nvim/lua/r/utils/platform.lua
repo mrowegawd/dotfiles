@@ -1,5 +1,6 @@
 ---@class r.utils.platform
 local M = {}
+
 local uname = vim.uv.os_uname()
 
 local arch_aliases = {

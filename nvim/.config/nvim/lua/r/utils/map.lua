@@ -232,4 +232,30 @@ function M.feedkey(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+function M.disable_ctrl_i_and_o(au_name, tbl_ft)
+  local augroup = vim.api.nvim_create_augroup(au_name, { clear = true })
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = tbl_ft,
+    group = augroup,
+    callback = function()
+      vim.keymap.set("n", "<c-i>", "<Nop>", {
+        buffer = vim.api.nvim_get_current_buf(),
+      })
+      vim.keymap.set("n", "<c-o>", "<Nop>", {
+        buffer = vim.api.nvim_get_current_buf(),
+      })
+
+      if vim.tbl_contains({ "Outline", "gitcommit" }, vim.bo.filetype) then
+        vim.keymap.set("n", "ss", "<Nop>", {
+          buffer = vim.api.nvim_get_current_buf(),
+        })
+
+        vim.keymap.set("n", "sv", "<Nop>", {
+          buffer = vim.api.nvim_get_current_buf(),
+        })
+      end
+    end,
+  })
+end
+
 return M
