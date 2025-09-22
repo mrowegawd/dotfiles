@@ -10,7 +10,7 @@ return {
     -- stylua: ignore
     keys = {
       { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
-      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter" },
+      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote" },
       -- Kegunaan: ini akan menselect semua function, jadi tekan v, lalu R
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search" },
