@@ -1,0 +1,56 @@
+#!/bin/bash
+
+TOR_PROXYCHAINS="$HOME/.local/src/tor-proxychains"
+
+if [[ ! -d "$TOR_PROXYCHAINS" ]]; then
+  git clone https://github.com/mrowegawd/tor-proxychains.git "$TOR_PROXYCHAINS"
+
+  cd "$TOR_PROXYCHAINS/tor-proxy" || return
+  chmod +x run.sh
+  ./run.sh
+
+  cd "$TOR_PROXYCHAINS/proxychains" || return
+  chmod +x run.sh
+  ./run.sh
+fi
+
+TARGET_CONTAINER="torproxy"
+WAIT_TIME=30     # waktu maksimal menunggu
+SLEEP_INTERVAL=2 # cek setiap berapa detik
+
+if ! docker ps --filter "name=^/${TARGET_CONTAINER}$" --format '{{.Names}}' | grep -wq "$TARGET_CONTAINER"; then
+  echo "Container '$TARGET_CONTAINER' belum berjalan. Menjalankan..."
+
+  docker start "$TARGET_CONTAINER" # run target docker
+
+  SECONDS_WAITED=0
+  while ! docker ps --filter "name=^/${TARGET_CONTAINER}$" --format '{{.Names}}' | grep -wq "$TARGET_CONTAINER"; do
+    sleep "$SLEEP_INTERVAL"
+    SECONDS_WAITED=$((SECONDS_WAITED + SLEEP_INTERVAL))
+
+    if [ "$SECONDS_WAITED" -ge "$WAIT_TIME" ]; then
+      dunstify "Timeout: Container '$TARGET_CONTAINER' belum aktif setelah $WAIT_TIME detik."
+      exit 1
+    fi
+  done
+fi
+
+if ! docker ps --format '{{.Names}}' | grep -wq "$TARGET_CONTAINER"; then
+  dunstify "Set whilte timeout for\nchecking '$LOG_KEYWORD': verifying if Tor is active."
+
+  LOG_KEYWORD="done"
+  TIMEOUT=60 # batas waktu for waiting
+
+  timeout "$TIMEOUT" bash -c "
+  until docker logs -f --tail 0 \"$TARGET_CONTAINER\" 2>&1 | grep -q \"$LOG_KEYWORD\"; do
+    sleep 1
+  done
+"
+
+  sleep 10
+fi
+
+# Cek apakah berhasil atau timeout
+if [ $? -eq 0 ]; then
+  proxychains -q newsboat
+fi

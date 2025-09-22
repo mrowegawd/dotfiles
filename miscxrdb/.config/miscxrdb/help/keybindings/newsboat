@@ -18,17 +18,20 @@ bind K
 # articlelist: show the url
 bind U
 
+# bookmark: add current page
+bind <c-b>
+
 # macro: prefix macro
 bind ,
 
-# macro: open video (watch youtube)
+# macro: open video in mpv (like watching youtube)
 bind ,v
 
 # misc: edit/open urllist with vim
 bind <c-v>
 
 # misc: set flag (isikan "s" saja)
-bind F
+bind <c-f>
 
 # misc: open list tags
 bind t
@@ -41,6 +44,7 @@ bind <c-g>
 
 # misc: reload all article list (check new update)
 bind R
+
 
 # misc: reload the article (check new update)
 bind r

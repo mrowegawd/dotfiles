@@ -49,7 +49,7 @@ color listnormal            color4    default
 color listfocus             color15   default bold
 color listnormal_unread     color5    default bold
 color listfocus_unread      color8    color5  bold
-color info                  color8    default bold
+color info                  color241  default bold
 color article               color3    default
 
 # FEEDLIST --------------------------------------------------------------------
@@ -113,4 +113,4 @@ bind-key   v            toggle-article-read
 
 # macro mapping use `,`
 
-macro v set browser "dunstify 'Newsboat' 'Open mpv - %u' && tsp mpv --no-terminal -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 %u"; open-in-browser ; set browser "$BROWSER"
+macro v set browser "dunstify 'Newsboat' 'Watching %u' && tsp mpv --no-terminal -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 %u"; open-in-browser ; set browser "$BROWSER"

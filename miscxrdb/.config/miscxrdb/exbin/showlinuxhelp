@@ -107,7 +107,7 @@ ncmpcpp() {
   copy_selected "$SELECT"
 }
 newsboat() {
-  NEWSBOAT_PATH="$HOME/.newsboat/helpmappings"
+  NEWSBOAT_PATH="$HOME/.config/miscxrdb/help/keybindings/newsboat"
   is_path_exits "$NEWSBOAT_PATH"
   SELECT=$(awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' "$NEWSBOAT_PATH" | sed 's/#//' |
     column -t -s $'\t' | $FZF_COMMAND --prompt="Snippets[$1] ")
