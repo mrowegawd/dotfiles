@@ -223,7 +223,7 @@ return {
 
             org_agenda_filter = "/",
             org_agenda_refile = "<prefix>r",
-            org_agenda_add_note = "<prefix>a",
+            org_agenda_add_note = "<prefix>n",
 
             org_agenda_quit = "q",
             org_agenda_show_help = "?",
@@ -241,8 +241,8 @@ return {
           org = {
             org_timestamp_up_day = "<UP>",
             org_timestamp_down_day = "<DOWN>",
-            org_timestamp_up = "<C-a>",
-            org_timestamp_down = "<C-x>",
+            org_timestamp_up = "<c-PageUp>",
+            org_timestamp_down = "<c-PageDown>",
 
             org_todo = "<prefix>t",
             org_todo_prev = "<prefix>T",
@@ -254,8 +254,8 @@ return {
             org_edit_special = "<prefix>'",
 
             -- fold/unfold
-            org_cycle = "<TAB>",
-            org_global_cycle = "<S-TAB>",
+            org_cycle = { "<TAB>", "<c-a>" },
+            org_global_cycle = { "<S-TAB>", "<c-t>" },
 
             org_archive_subtree = "<F9>",
             org_toggle_archive_tag = "<Leader><F9>",
@@ -269,6 +269,7 @@ return {
 
             org_next_visible_heading = "<c-n>",
             org_previous_visible_heading = "<c-p>",
+
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
 
@@ -301,6 +302,7 @@ return {
             org_do_demote = ">",
             org_promote_subtree = "<a-<>",
             org_demote_subtree = "<a->>",
+
             org_move_subtree_up = "<a-p>",
             org_move_subtree_down = "<a-n>",
 

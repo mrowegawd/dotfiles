@@ -115,13 +115,13 @@ return {
       require("noice").setup(opts)
     end,
   },
-  -- FOLD CYCLE (disabled)
+  -- FOLD CYCLE
   {
     "jghauser/fold-cycle.nvim",
-    enabled = false,
+    -- enabled = false,
     keys = {
       {
-        "<c-s>",
+        "<c-t>",
         function()
           require("fold-cycle").open()
         end,
