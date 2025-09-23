@@ -907,8 +907,8 @@ return {
             { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview-history]" } },
 
 
-            { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
-            { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
+            -- { "n", "<c-u>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
+            -- { "n", "<c-d>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview-history]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview-history]" } },
 
