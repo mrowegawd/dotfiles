@@ -1,3 +1,4 @@
+# vim: foldmethod=marker foldlevel=0 ft=cfg
 
 MISC---------------------------------------------------------------------------
 "query:My Favorite:flags #\"s\""
@@ -10,9 +11,9 @@ MISC---------------------------------------------------------------------------
 "query:Productivity:tags =~ \"programming|productivity\" and (title =~ \"productivity\")"
 "query:Bundler:tags =~ \"programming|tool\" and (title =~ \"rollup|webpack\")"
 "query:Testing or Debugging Programming:tags =~ \"programming\" and (title =~ \"testing|debug|debugging|Testing|Debug\")"
-"query:Programming or Productivity Tips:tags =~ \"programming|productivity|tool\" and (title =~ \"tips|trick\")"
+"query:Programming or Productivity Tips:tags =~ \"programming|productivity|tool\" and (title =~ \"tips|trick|Trick|Tips\")"
 "query:Saas:tags =~ \"programming|productivity|tool|webdev\" and (title =~ \"Saas|saas\")"
-"query:Security:tags =~ \"programming|productivity|linux\" and (title =~ \"hack|security\")"
+"query:Security:tags =~ \"programming|productivity|linux|tool\" and (title =~ \"hack|security|Security|Hack\")"
 "query:Composition:title =~ \"Composition|composition\""
 
 # query feeds
@@ -26,12 +27,21 @@ MISC---------------------------------------------------------------------------
 
 FORUMS-------------------------------------------------------------------------
 # https://www.reddit.com/r/unixporn.rss "~REDDIT: Unixporn" tool
-https://www.reddit.com/r/zsh+tmux+commandline.rss "~REDDIT: ZshTmuxCommandline" tool
+https://www.reddit.com/r/zsh+commandline.rss "~REDDIT: ZshCommandline" tool
+https://www.reddit.com/r/tmux.rss "~REDDIT: Tmux" tool
 https://www.reddit.com/r/ScriptSwap+UsefulScripts.rss "~REDDIT: ScriptSwapUsefulscripts" tool
+
+https://www.reddit.com/r/bots+automation.rss "~REDDIT: Bots" bot
+https://www.reddit.com/r/cheatengine+AutoHotkey.rss "~REDDIT: GameBots" gamebot bot
+https://www.reddit.com/r/opencv.rss "~REDDIT: OpenCv" gamebot bot
+https://www.reddit.com/r/TelegramBots+tradingbots.rss "~REDDIT: Telegram and Trading Bots" gamebot bot
+https://www.reddit.com/r/BitcoinMarkets+algotrading.rss "~REDDIT: Bitcoin and Trading Bots" trading bot
+
 
 https://www.reddit.com/r/opendirectories.rss "~REDDIT: Opendirectories" storage tool
 https://www.reddit.com/r/coolgithubprojects.rss "~REDDIT: CoolGithubprojects" tool
-https://www.reddit.com/r/UnixProTips+linux+linuxquestions+linuxadmin.rss "~REDDIT: LinuxAll" linux
+https://www.reddit.com/r/linuxquestions+linuxadmin.rss "~REDDIT: Linux Admin and Questions" linux
+https://www.reddit.com/r/UnixProTips+linux.rss "~REDDIT: LinuxAll Check" linux
 
 https://www.reddit.com/r/askprogramming+programming.rss "~REDDIT: Programming" learnprogramming programming
 
@@ -53,7 +63,7 @@ https://www.reddit.com/r/webdev+web_design.rss "~REDDIT: WebdevWebDesign" webdev
 https://www.reddit.com/r/reactjs+react+sveltejs.rss "~REDDIT: ReactjsSvelte" react webdev
 
 https://www.reddit.com/r/tailwindcss.rss "~REDDIT: Tailwindcss" css framework webdev
-https://www.reddit.com/r/frontend.rss "~REDDIT: Frontend" webdev programming
+https://www.reddit.com/r/frontend+backend.rss "~REDDIT: Frontend & Backend" webdev programming
 
 https://www.reddit.com/r/firefox.rss "~REDDIT: Firefox" browser tool
 https://www.reddit.com/r/nginx.rss "~REDDIT: Nginx" webdev tool

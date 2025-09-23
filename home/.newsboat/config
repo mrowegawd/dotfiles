@@ -46,7 +46,7 @@ dialogs-title-format        "Dialogs"
 
 # color background          white     black
 color listnormal            color4    default
-color listfocus             color15   default bold
+color listfocus             color8    color5  bold
 color listnormal_unread     color5    default bold
 color listfocus_unread      color8    color5  bold
 color info                  color241  default bold
