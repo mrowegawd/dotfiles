@@ -1,17 +1,18 @@
 
 MISC---------------------------------------------------------------------------
-"query:Favorite [watch/read later]:flags #\"s\""
-"query:Earn money:tags =~ \"internetmarketing\" and (title =~ \"method|METHOD|journey\")"
-"query:Seo guide:tags =~ \"internetmarketing\" and (title =~ \"keyword|KEYWORD|seo|SEO\")"
-"query:Cpa|cpd|cpm:tags =~ \"internetmarketing\" and (title =~ \"ppd|cpm|cpa\")"
-"query:Proxy:tags =~ \"internetmarketing\" and (title =~ \"proxy\")"
+"query:My Favorite:flags #\"s\""
+"query:MONEY>Earn money:tags =~ \"internetmarketing\" and (title =~ \"method|METHOD|journey\")"
+"query:MONEY>Seo guide:tags =~ \"internetmarketing\" and (title =~ \"keyword|KEYWORD|seo|SEO\")"
+"query:MONEY>Cpa|cpd|cpm:tags =~ \"internetmarketing\" and (title =~ \"ppd|cpm|cpa\")"
+"query:MONEY>Youtube method:tags =~ \"internetmarketing|tool\" and (title =~ \"Youtube|youtube|YOUTUBE\")"
+"query:Proxy:tags =~ \"internetmarketing|tool\" and (title =~ \"proxy\")"
 "query:Bspwm:tags =~ \"tool\" and (title =~ \"bspwm\")"
-"query:Testing:tags =~ \"programming\" and (title =~ \"golang|kotlin|javascript|typescript\")"
 "query:Productivity:tags =~ \"programming|productivity\" and (title =~ \"productivity\")"
 "query:Bundler:tags =~ \"programming|tool\" and (title =~ \"rollup|webpack\")"
-"query:Tips:tags =~ \"programming|productivity\" and (title =~ \"tips|trick\")"
+"query:Testing or Debugging Programming:tags =~ \"programming\" and (title =~ \"testing|debug|debugging|Testing|Debug\")"
+"query:Programming or Productivity Tips:tags =~ \"programming|productivity|tool\" and (title =~ \"tips|trick\")"
+"query:Saas:tags =~ \"programming|productivity|tool|webdev\" and (title =~ \"Saas|saas\")"
 "query:Security:tags =~ \"programming|productivity|linux\" and (title =~ \"hack|security\")"
-"query:Youtube method:tags =~ \"internetmarketing\" and (title =~ \"Youtube|YOUTUBE\")"
 "query:Composition:title =~ \"Composition|composition\""
 
 # query feeds
@@ -19,7 +20,7 @@ MISC---------------------------------------------------------------------------
 "query:Unread Articles (1 year old):unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\" and age between 0:365"
 "query:Unread Articles (1 month old):unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\" and age between 0:31"
 "query:Unread Articles (1 week old):unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\" and age between 0:7"
-"query:Unread Articles (favourite):unread = \"yes\" and tags # \"favourite\""
+# "query:Unread Articles (favourite):unread = \"yes\" and tags # \"favourite\""
 
 # "query:========================== :flags #\"z\""
 
