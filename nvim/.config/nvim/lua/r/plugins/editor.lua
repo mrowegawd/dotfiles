@@ -79,7 +79,6 @@ return {
   -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
-    -- branch = "fix/decoration-provider",
     cmd = "Trouble",
     keys = {
       {
