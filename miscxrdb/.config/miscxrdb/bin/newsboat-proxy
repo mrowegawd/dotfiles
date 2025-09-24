@@ -52,5 +52,11 @@ fi
 
 # Cek apakah berhasil atau timeout
 if [ $? -eq 0 ]; then
-  proxychains -q newsboat
+  NEWSBOATURLS_PATH="$HOME/Dropbox/data.programming.forprivate/newsboat-urls"
+
+  if [[ -f "$NEWSBOATURLS_PATH" ]]; then
+    proxychains -q newsboat -u "$NEWSBOATURLS_PATH"
+  else
+    notify-send "Newsboat" "Path $NEWSBOATURLS_PATH not found"
+  fi
 fi
