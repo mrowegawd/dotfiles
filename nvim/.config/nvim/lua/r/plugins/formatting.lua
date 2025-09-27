@@ -80,10 +80,9 @@ return {
           fish = { "fish_indent" },
           sh = { "shfmt" },
 
-          ["norg"] = { "trim_whitespace", "trim_newlines" },
-          ["org"] = { "trim_whitespace", "trim_newlines" },
-
-          ["_"] = { "trim_whitespace" },
+          ["norg"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
+          ["org"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
+          ["_"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
         },
         -- The options you set here will be merged with the builtin formatters.
         -- You can also define any custom formatters here.
