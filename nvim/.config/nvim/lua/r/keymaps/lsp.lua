@@ -193,7 +193,7 @@ function M.get()
       desc = "LSP: references [fzflua]",
     },
     {
-      "<Leader>lt",
+      "<Leader>le",
       function()
         Snacks.picker.lsp_type_definitions()
       end,

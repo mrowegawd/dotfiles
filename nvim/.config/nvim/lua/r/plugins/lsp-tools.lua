@@ -384,4 +384,63 @@ return {
     event = "LspAttach",
     opts = {},
   },
+  -- MEOWYARN
+  {
+    "retran/meow.yarn.nvim",
+    cmd = "MeowYarn",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    keys = {
+      {
+        "<Leader>lt",
+        function()
+          require("meow.yarn").open_tree("type_hierarchy", "supertypes")
+        end,
+        desc = "Yarn: type hierarchy (super)",
+      },
+      {
+        "<Leader>lT",
+        function()
+          require("meow.yarn").open_tree("type_hierarchy", "subtypes")
+        end,
+        desc = "Yarn: type hierarchy (subtypes)",
+      },
+      {
+        "<Leader>lc",
+        function()
+          require("meow.yarn").open_tree("call_hierarchy", "callers")
+        end,
+        desc = "Yarn: call hierarchy (callers)",
+      },
+      {
+        "<Leader>lC",
+        function()
+          require("meow.yarn").open_tree("call_hierarchy", "callees")
+        end,
+        desc = "Yarn: call hierarchy (callees)",
+      },
+    },
+    opts = {
+      hierarchies = {
+        type_hierarchy = {
+          icons = {
+            class = RUtils.config.icons.kinds.Class,
+            struct = RUtils.config.icons.kinds.Struct,
+            interface = RUtils.config.icons.kinds.Interface,
+            default = "",
+          },
+        },
+        call_hierarchy = {
+          icons = {
+            method = RUtils.config.icons.kinds.Method,
+            func = RUtils.config.icons.kinds.Function,
+            variable = RUtils.config.icons.kinds.Variable,
+            default = "",
+          },
+        },
+      },
+    },
+    config = function(_, opts)
+      require("meow.yarn").setup(opts)
+    end,
+  },
 }
