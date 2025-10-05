@@ -46,6 +46,20 @@ return {
       return false
     end,
   },
+  -- JELLYBEANS
+  {
+    "wtfox/jellybeans.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local jellybeans_theme = { "jellybeans", "jellybeans-mono" }
+      if vim.tbl_contains(jellybeans_theme, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {},
+  },
   -- NVIM-BASE46
   {
     "yardnsm/nvim-base46",
@@ -61,7 +75,7 @@ return {
         "base46-gruvchad",
         "base46-horizon",
         "base46-jabuti",
-        "base46-jellybeans",
+        -- "base46-jellybeans",
         "base46-kanagawa",
         "base46-material-darker",
         "base46-material-lighter",

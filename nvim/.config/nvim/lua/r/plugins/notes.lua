@@ -74,7 +74,7 @@ return {
     opts = function()
       -- local Highlight = require "r.settings.highlights"
       -- local done_hi = Highlight.get("Comment", "fg")
-      -- -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
+      -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
       -- local todo_fg = Highlight.get("KeywordMatch", "fg")
       return {
         ui = {

@@ -85,17 +85,22 @@ local find_first_code_block_line = function(path)
   end
 
   file:close()
-  return nil -- Tidak ditemukan
+
+  -- Sometimes, code blocks are not found in note files.
+  -- In such cases, add a default line_number with a large value.
+  return 100
 end
 
-local function format_data_tags(data_tag)
-  local line = string.gsub(data_tag.lines.text, '"(%d+)"', "%1")
-  line = string.gsub(line, "-%s", "")
+local function format_data_tags(tag_data)
+  -- Clean the string if it contains an integer; we will remove it.
+  local tag_name = string.gsub(tag_data.lines.text, '"(%d+)"', "%1")
+  tag_name = RUtils.cmd.strip_whitespace(string.gsub(tag_name, "-%s", ""))
+
   return {
-    tag = RUtils.cmd.strip_whitespace(line),
-    line_number = data_tag.line_number,
-    path = data_tag.path.text,
-    title = data_tag.title or "",
+    title = tag_data.title or "",
+    tag = tag_name,
+    path = tag_data.path.text,
+    line_number = tag_data.line_number,
   }
 end
 
@@ -227,8 +232,9 @@ local function json_output_wrapper(json_str)
 
   if ok then
     output = decoded
-    return output
   end
+
+  return output
 end
 
 local function collect_all_tags_async(data, cb, is_for_tags)
@@ -340,9 +346,10 @@ local function format_prompt_strings(msg)
   return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
 end
 
-local function processed_dataout(dataout)
+local function processed_dataout(contents)
   local entries_data = {}
-  for _, line in ipairs(dataout) do
+
+  for _, line in ipairs(contents) do
     if #line == 0 then
       goto continue
     end
@@ -366,7 +373,7 @@ local function processed_dataout(dataout)
     end
 
     local line_text = match_data.lines.text
-    if not string.match(line_text, "%s%s*- ") then
+    if not string.match(line_text, "%s%s- ") then
       goto continue
     end
 
@@ -573,15 +580,15 @@ local function list_tags_async(all_tags, is_set)
     return search_terms
   end
 
-  local rg_optsc = "--no-config --json --type=md --ignore-case"
+  local rg_optsc = "--no-config --json --type=md --ignore-case "
 
   local line_e = ""
   if #all_tags > 1 then
     for _, x in pairs(concatting_tags()) do
-      line_e = line_e .. string.format(' -e "%s" ', x)
+      line_e = line_e .. string.format('-e "%s" ', x)
     end
   else
-    line_e = string.format(' -e "%s" ', "^\\s\\s*- " .. all_tags[1] .. "$")
+    line_e = string.format('-e "%s" ', "^\\s\\s*- " .. all_tags[1] .. "$")
   end
 
   local msg_cmd = "rg " .. rg_optsc .. line_e .. RUtils.config.path.wiki_path
@@ -1079,7 +1086,6 @@ function M.live_grep_note(path_items)
 
     local filename, line, col
     if not is_many then
-      -- RUtils.info(vim.inspect(split_entry))
       filename = path_items[1]
       line = split_entry[1]
       col = split_entry[2]

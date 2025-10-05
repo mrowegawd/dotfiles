@@ -1055,6 +1055,56 @@ function M.edit_snippet()
   end)
 end
 
+function M.send_to_file(contents, path, is_theme)
+  path = path or "/tmp/master-colors-themes"
+  is_theme = is_theme or false
+
+  if RUtils.file.is_file(path) then
+    vim.system { "rm", path }
+    vim.system { "touch", path }
+  end
+
+  local file = io.open(path, "w")
+
+  local msg_notify_send
+
+  local is_done = false
+
+  if file and not is_done then
+    file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
+
+    if type(contents) == "table" then
+      for i, x in pairs(contents) do
+        if is_theme then
+          for idx, j in pairs(x) do
+            file:write(i .. "_" .. idx .. ": " .. j .. "\n")
+          end
+        else
+          -- file:write(tostring(x) .. "\n")
+          file:write(vim.inspect(x) .. "\n")
+          is_done = true
+        end
+      end
+
+      if is_theme then
+        msg_notify_send = "Theme changes detected. Don't forget to reload."
+      else
+        msg_notify_send = string.format("Something write in path: '%s'", path)
+      end
+    end
+
+    if type(contents) == "string" then
+      file:write(contents .. "\n")
+      msg_notify_send = string.format("Something write in path: '%s'", path)
+    end
+
+    file:close()
+
+    ---@diagnostic disable-next-line: undefined-field
+    RUtils.warn(msg_notify_send)
+  end
+end
+
 function M.change_colors()
   local H = require "r.settings.highlights"
 
@@ -1095,7 +1145,7 @@ function M.change_colors()
     __tab_statusline_fg = -0.17
   end
 
-  if vim.tbl_contains({ "base46-jellybeans", "base46-jabuti" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-jellybeans", "base46-jabuti", "jellybeans", "jellybeans-mono" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.3
     __tab_statusline_fg = -0.3
   end
@@ -1130,7 +1180,8 @@ function M.change_colors()
     zsh_sugest_fg = 0.45
   end
 
-  if vim.g.colorscheme == "base46-jellybeans" then
+  local zsh_contras_themes_jelly = { "base46-jellybeans", "jellybeans-mono", "jellybeans" }
+  if vim.tbl_contains(zsh_contras_themes_jelly, vim.g.colorscheme) then
     zsh_lines_fg = 0.4
     zsh_sugest_fg = 0.7
   end
@@ -1409,26 +1460,7 @@ function M.change_colors()
     },
   }
 
-  local master_color_path = "/tmp/master-colors-themes"
-  if RUtils.file.is_file(master_color_path) then
-    vim.system { "rm", master_color_path }
-    vim.system { "touch", master_color_path }
-  end
-
-  local file = io.open(master_color_path, "w")
-  if file then
-    file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
-
-    for i, x in pairs(defined_cols) do
-      for idx, j in pairs(x) do
-        file:write(i .. "_" .. idx .. ": " .. j .. "\n")
-      end
-    end
-    file:close()
-
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.warn "Theme changes detected. Don't forget to reload."
-  end
+  M.send_to_file(defined_cols, "/tmp/master-colors-themes", true)
 end
 
 function M.infoFoldPreview()

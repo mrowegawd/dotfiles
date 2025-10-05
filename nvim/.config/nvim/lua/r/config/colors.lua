@@ -142,7 +142,7 @@ local update_col_colorscheme = {
     dapstopped_bg_alter = 0.2,
     fzflua_border_fg_alter = 0.7,
     fzflua_file_part_fg = 0.65,
-    linenr_fg_alter = 0.08,
+    linenr_fg_alter = -0.02,
     noice_cmdline_fg_alter = 0.6,
     pmenu_sp_alter = 2.2,
     quickfixline_linenr_fg_alter = 0.3,
@@ -358,6 +358,30 @@ local update_col_colorscheme = {
 
     delta_plus_fg_alter = 1.2,
     delta_minus_fg_alter = 1.5,
+  },
+  ["jellybeans"] = {
+    cursor_fg = "#ffa560",
+    cursorline_alter = 0.6,
+    cursorline_fg_alter = "WinSeparator",
+    dapstopped_bg_alter = 0.2,
+    fzflua_border_fg_alter = 1.5,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = -0.02,
+    noice_cmdline_fg_alter = 0.65,
+    nontext_fg_alter = 2.5,
+    normal_keyword_alter = 0.14,
+    panel_sidebar_bg_alter = 4,
+    pmenu_bg_alter = 1.5,
+    pmenu_sp_alter = 3,
+    quickfixline_alter = 0.6,
+    quickfixline_header_fg_alter = 1.75,
+    render_markdown_code_bg_alter = 0.9,
+    render_markdown_code_inline_bg_alter = 0.15,
+    render_markdown_code_inline_fg_alter = 0.05,
+    tabline_fg_alter = 0.55,
+    trouble_indent_fg_alter = 0.7,
+    winbar_file_path_fg_alter = 1.5,
+    winseparator_alter = 1,
   },
   ["lackluster"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
@@ -1073,13 +1097,13 @@ local general_overrides = function()
         bg = { from = "LspKindModule", attr = "fg", alter = -0.65 },
       },
     },
-    {
-      CmpItemKindText = {
-        inherit = "LspKindText",
-        fg = { from = "LspKindText", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindText", attr = "fg", alter = -0.65 },
-      },
-    },
+    -- {
+    --   CmpItemKindText = {
+    --     inherit = "LspKindText",
+    --     fg = { from = "LspKindText", attr = "fg", alter = 0.1 },
+    --     bg = { from = "LspKindText", attr = "fg", alter = -0.65 },
+    --   },
+    -- },
     -- {
     --   CmpItemKindClass = {
     --     fg = { from = "LspKindClass", attr = "fg", alter = 0.1 },
@@ -1514,11 +1538,12 @@ local general_overrides = function()
 
     {
       ["@org.agenda.today"] = {
-        fg = { from = "@org.headline.level2.org", attr = "fg" },
+        fg = { from = "Statement", attr = "fg", alter = 0.35 },
         bold = true,
         italic = true,
       },
     },
+
     { ["@org.timestamp.active"] = { inherit = "PreProc" } },
     { ["@org.bullet"] = { inherit = "Identifier" } },
     { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
@@ -1758,6 +1783,8 @@ local general_overrides = function()
     { OverseerTaskBorder = { fg = { from = "WinSeparator", attr = "fg" }, bg = "NONE" } },
 
     --  ─────────────────────────────[ WHICH KEY ]─────────────────────────────
+    { WhichKey = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { WhichKeySeparator = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { WhichKeyTitle = { inherit = "FzfLuaTitle" } },
     { WhichKeyNormal = { inherit = "FzfLuaNormal", fg = { from = "Function", attr = "fg", alter = 0.1 } } }, -- <----
     { WhichKeyGroup = { inherit = "FzfLuaNormal", fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
