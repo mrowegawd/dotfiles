@@ -80,7 +80,7 @@ return {
 
           { "<Localleader>d", group = "database" },
           { "<Localleader>f", group = "telescope" },
-          { "<Localleader>n", group = "noice" },
+          { "<Localleader>n", group = "notification" },
           { "<Localleader>o", group = "open/misc" },
 
           { "<Localleader>r", group = "refactoring" },

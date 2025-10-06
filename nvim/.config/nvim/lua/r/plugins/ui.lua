@@ -18,6 +18,22 @@ return {
     branch = "feat/update-actions-fzflua",
     event = "BufReadPost",
     dependencies = { "MunifTanjim/nui.nvim" },
+    keys = {
+      {
+        "<Localleader>nf",
+        function()
+          vim.cmd "Noice fzf"
+        end,
+        desc = "Notification: show notification [fzflua]",
+      },
+      {
+        "<Localleader>nl",
+        function()
+          require("noice").cmd "all"
+        end,
+        desc = "Notification: show all messages",
+      },
+    },
     opts = function()
       return {
         -- debug = true,
