@@ -199,6 +199,24 @@ return {
       }
     end,
   },
+  -- NEOSCROLL
+  {
+    "karb94/neoscroll.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = {
+      easing = "quadratic",
+      hide_cursor = false,
+      mappings = {
+        "<C-u>",
+        "<C-d>",
+        "zz",
+        -- "zt",
+        -- "zb",
+      },
+    },
+  },
+
   -- BUFDELETE
   {
     "famiu/bufdelete.nvim",

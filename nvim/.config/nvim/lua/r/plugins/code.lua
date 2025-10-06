@@ -2,21 +2,7 @@ return {
   -- MINI.PAIRS
   {
     "nvim-mini/mini.pairs",
-    event = "InsertEnter",
-    keys = {
-      {
-        "<Leader>up",
-        function()
-          vim.g.minipairs_disable = not vim.g.minipairs_disable
-          if vim.g.minipairs_disable then
-            RUtils.warn("Disabled auto pairs", { title = "Option" })
-          else
-            RUtils.info("Enabled auto pairs", { title = "Option" })
-          end
-        end,
-        desc = "Toggle: auto pairs [mini.pairs]",
-      },
-    },
+    event = "VeryLazy",
     opts = {
       modes = { insert = true, command = true, terminal = false },
       -- Skip `autopair` when next character is one of these
