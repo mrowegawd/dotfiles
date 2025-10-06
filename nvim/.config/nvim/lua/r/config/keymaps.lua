@@ -582,6 +582,19 @@ if vim.lsp.inlay_hint then
   Snacks.toggle.inlay_hints():map "<Leader>uh"
 end
 
+RUtils.map.nnoremap("<Leader>uC", function()
+  local msg_notify
+  if not vim.g.is_set_global_cursoline then
+    vim.g.is_set_global_cursoline = true
+    msg_notify = "Turn On"
+  else
+    vim.g.is_set_global_cursoline = false
+    msg_notify = "Turn Off"
+  end
+
+  RUtils.info("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
+end, { desc = "Toggle: cursorline" })
+
 -- RUtils.map.nnoremap("<space><F9>", function()
 --   Snacks.notify.error("This is error", {})
 --   Snacks.notify.warn("This is warn", {})
