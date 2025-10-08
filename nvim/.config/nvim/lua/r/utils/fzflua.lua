@@ -292,7 +292,7 @@ function M.open_lsp_references(opts)
         hidden = false,
         layout = "horizontal",
         vertical = "down:45%",
-        horizontal = "left:55%",
+        horizontal = "up:60%",
       },
     },
   }, opts))
