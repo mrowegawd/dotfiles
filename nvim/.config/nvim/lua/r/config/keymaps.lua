@@ -94,6 +94,14 @@ RUtils.map.tnoremap("<c-w>j", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
 end, { desc = "Terminal: move cursor down" })
 
+-- Open notes
+RUtils.map.nnoremap("<a-W>", function()
+  RUtils.terminal.float_note()
+end, { desc = "Misc: open notes" })
+RUtils.map.tnoremap("<a-W>", function()
+  RUtils.terminal.float_note()
+end, { desc = "Misc: open notes (terminal)" })
+
 -- }}}
 -- {{{ Windows, view and nav
 

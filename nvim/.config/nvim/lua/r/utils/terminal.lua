@@ -264,6 +264,31 @@ function M.float_calcure()
   return calcure:toggle()
 end
 
+local base_term = nil
+
+local open_term_with_singleton = function(is_new, direction)
+  direction = direction or "float"
+  is_new = is_new or false
+
+  if not base_term and not is_new then
+    local terms = require "ergoterm.terminal"
+    base_term = terms.Terminal:new {
+      name = "Notes Wiki",
+      cmd = "cd ~/Dropbox/neorg/; nvim",
+      layout = direction,
+    }
+  end
+
+  return base_term
+end
+
+function M.float_note()
+  local t = open_term_with_singleton()
+  if t then
+    t:toggle()
+  end
+end
+
 function M.float_newsboat()
   return newsboat:toggle()
 end
