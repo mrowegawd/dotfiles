@@ -78,3 +78,8 @@ startup_command = ""
 name = "Nvimplugin"
 path = "~/.local/src/nvim_plugins"
 startup_command = ""
+
+[[session]]
+name = "Notes"
+path = "~/Dropbox/neorg"
+startup_command = ""
