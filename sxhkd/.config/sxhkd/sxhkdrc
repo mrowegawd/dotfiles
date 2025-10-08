@@ -203,8 +203,8 @@ super + shift + s
 super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float ncmpcpp
 
-# misc: open note inbox
-super + shift + i
+# misc: open nvim note
+super + shift + w
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
 
 # misc: open bookmark and pass

@@ -5,9 +5,16 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
-is_path_exits() {
+is_file_exists() {
   if [[ ! -f "$1" ]]; then
-    dunstify "[!] Showlinuxhelp" "path $1 not exists or deleted!"
+    dunstify -u critical "Showlinuxhelp" "File path '$1' does not exist or has been deleted."
+    exit
+  fi
+}
+
+is_dir_exists() {
+  if [[ ! -d "$1" ]]; then
+    dunstify -u critical "Showlinuxhelp" "Directory path '$1' does not exist or has been deleted."
     exit
   fi
 }
@@ -26,15 +33,18 @@ open_float() {
 }
 
 open_note() {
+  DIR_NOTES="$HOME/Dropbox"
+
   # elif [ "$1" == 'addnote' ]; then
   # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
-  # zsh -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
+  # zsh -i -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
 
   # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \ %%
-  #   zsh -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org" %%
+  #   zsh -i -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org" %%
 
-  bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \
-    zsh -c "source ~/.fzf.zsh; nvim -c \"Obsidian today\""
+  is_dir_exists "$DIR_NOTES"
+  bspc rule -a \* -o state=floating center=true rectangle=1600x900+0+0 && $TERMINAL -e \
+    zsh -i -c "cd $DIR_NOTES; nvim"
 }
 
 open_mpv() {
@@ -64,7 +74,7 @@ remember_me_snippet() {
   [[ $TERMINAL == "wezterm" ]] && SPAWN_TERMINAL="st"
 
   SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet"
-  is_path_exits "$SNIPPET_PATH"
+  is_file_exists "$SNIPPET_PATH"
   bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
 
   # test
