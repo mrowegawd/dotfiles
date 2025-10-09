@@ -361,7 +361,7 @@ local update_col_colorscheme = {
   },
   ["jellybeans"] = {
     cursor_fg = "#ffa560",
-    cursorline_alter = 0.6,
+    cursorline_alter = 2.5,
     cursorline_fg_alter = "WinSeparator",
     dapstopped_bg_alter = 0.2,
     fzflua_border_fg_alter = 1.5,
