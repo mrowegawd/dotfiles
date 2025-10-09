@@ -172,6 +172,9 @@ return {
         end,
         keymap = {
           preset = "none",
+          ["<Right>"] = false,
+          ["<Left>"] = false,
+
           ["<C-y>"] = { "select_and_accept" },
 
           ["<C-j>"] = {

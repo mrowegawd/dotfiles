@@ -193,19 +193,4 @@ return {
       }
     end,
   },
-  -- {
-  --   -- NOTE: mengatasi masalah `too many open files`
-  --   -- https://github.com/obsidian-nvim/obsidian.nvim/issues/387#issuecomment-3244691862
-  --   -- tapi ketika diaktifkan, dia ini error
-  --   "saghen/blink.cmp",
-  --   optional = true,
-  --   dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
-  --   opts = {
-  --     sources = {
-  --       per_filetype = {
-  --         markdown = { inherit_defaults = true },
-  --       },
-  --     },
-  --   },
-  -- },
 }
