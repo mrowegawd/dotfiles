@@ -197,7 +197,7 @@ return {
         {
           "<a-H>",
           function()
-            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
             if exclude_win.found then
               local resizer_h = "+5"
               if vim.api.nvim_win_get_number(0) == 1 then
@@ -233,7 +233,7 @@ return {
         {
           "<a-L>",
           function()
-            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
             if exclude_win.found then
               local resizer_l = "-5"
               if vim.api.nvim_win_get_number(0) == 1 then
