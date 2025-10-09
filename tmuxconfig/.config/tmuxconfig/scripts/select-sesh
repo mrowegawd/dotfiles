@@ -21,9 +21,7 @@ SELECT=$(
     --bind 'ctrl-x:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
     --bind 'ctrl-z:change-prompt(📁 )+reload(sesh list -z --icons)' \
     --preview-window 'right:nohidden:55%:border-none' \
-    --preview "$preview_cmd" \
-    -- --ansi
-  # --preview "sesh preview")
+    --preview "$preview_cmd"
 )
 
 [[ -z $SELECT ]] && exit
