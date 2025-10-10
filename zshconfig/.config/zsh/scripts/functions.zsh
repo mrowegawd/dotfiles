@@ -42,6 +42,11 @@ build-install() {
     sudo apt install ripgrep -y
   fi
 
+  if ! command -v sqlite3 >/dev/null; then
+    echo "Installing: sqlite3"
+    sudo apt install sqlite3 -y
+  fi
+
   # if ! command -v betterlockscreen >/dev/null; then
   #   echo "Installing: i3lock - screen lock"
   #   sudo apt install autoconf gcc make pkg-config libpam0g-dev \

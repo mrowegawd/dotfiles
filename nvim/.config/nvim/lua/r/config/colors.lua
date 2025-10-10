@@ -1621,12 +1621,12 @@ local general_overrides = function()
     { GlancePreviewCursorLine = { bg = "#1b1c4b" } },
 
     --  ─────────────────────────────[ MARKDOWN ]──────────────────────────
-    { ["@markup.heading.1.markdown"] = { fg = "#4d85c3", bold = true, italic = true } },
-    { ["@markup.heading.2.markdown"] = { fg = "#389674", bold = true, italic = true } },
-    { ["@markup.heading.3.markdown"] = { fg = "#b0be1e", bold = true, italic = true } },
-    { ["@markup.heading.4.markdown"] = { fg = "#8594c8", bold = true, italic = true } },
-    { ["@markup.heading.5.markdown"] = { fg = "#f76328", bold = true, italic = true } },
-    { ["@markup.heading.6.markdown"] = { fg = "#fccf3e", bold = true, italic = true } },
+    { ["@markup.heading.1.markdown"] = { fg = "#4d85c3", bold = true, italic = true, bg = "NONE" } },
+    { ["@markup.heading.2.markdown"] = { fg = "#389674", bold = true, italic = true, bg = "NONE" } },
+    { ["@markup.heading.3.markdown"] = { fg = "#b0be1e", bold = true, italic = true, bg = "NONE" } },
+    { ["@markup.heading.4.markdown"] = { fg = "#8594c8", bold = true, italic = true, bg = "NONE" } },
+    { ["@markup.heading.5.markdown"] = { fg = "#f76328", bold = true, italic = true, bg = "NONE" } },
+    { ["@markup.heading.6.markdown"] = { fg = "#fccf3e", bold = true, italic = true, bg = "NONE" } },
     { ["@markup.raw.block.markdown"] = { bg = "NONE" } },
     { ["@markup.list.markdown"] = { bg = "NONE" } },
 
