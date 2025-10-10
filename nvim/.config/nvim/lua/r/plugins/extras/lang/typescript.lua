@@ -299,17 +299,22 @@ return {
     "vuki656/package-info.nvim",
     event = "BufEnter package.json",
     opts = {
-      colors = { -- specify both colors
-        up_to_date = "#0DB9D7",
-        outdated = "#d19a66",
+      highlights = { -- specify both colors
+        up_to_date = {
+          fg = "#0DB9D7",
+        },
+        outdated = {
+
+          fg = "#d19a66",
+        },
       },
     },
     config = function(_, opts)
       -- Color not attach
       -- https://github.com/vuki656/package-info.nvim/issues/155#issuecomment-2270572104
       require("package-info").setup(opts)
-      vim.cmd([[highlight PackageInfoUpToDateVersion guifg=]] .. opts.colors.up_to_date)
-      vim.cmd([[highlight PackageInfoOutdatedVersion guifg=]] .. opts.colors.outdated)
+      vim.cmd([[highlight PackageInfoUpToDateVersion guifg=]] .. opts.highlights.up_to_date.fg)
+      vim.cmd([[highlight PackageInfoOutdatedVersion guifg=]] .. opts.highlights.outdated.fg)
     end,
   },
 
