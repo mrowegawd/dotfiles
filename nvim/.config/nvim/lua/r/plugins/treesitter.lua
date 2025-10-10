@@ -18,12 +18,13 @@ return {
     event = { "LazyFile", "VeryLazy" },
     cmd = { "TSUpdate", "TSInstall", "TSLog", "TSUninstall" },
     opts_extend = { "ensure_installed" },
+    ---@alias lazyvim.TSFeat { enable?: boolean, disable?: string[] }
     ---@class lazyvim.TSConfig: TSConfig
     opts = {
       -- LazyVim config for treesitter
-      indent = { enable = true },
-      highlight = { enable = true },
-      folds = { enable = true },
+      indent = { enable = true }, ---@type lazyvim.TSFeat
+      highlight = { enable = true }, ---@type lazyvim.TSFeat
+      folds = { enable = true }, ---@type lazyvim.TSFeat
       ensure_installed = {
         "bash",
         "c",
@@ -103,8 +104,18 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("lazyvim_treesitter", { clear = true }),
         callback = function(ev)
+          local ft, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
           if not RUtils.treesitter.have(ev.match) then
             return
+          end
+
+          ---@param feat string
+          ---@param query string
+          local function enabled(feat, query)
+            local f = opts[feat] or {} ---@type lazyvim.TSFeat
+            return f.enable ~= false
+              and not vim.tbl_contains(f.disable or {}, lang)
+              and RUtils.treesitter.have(ft, query)
           end
 
           -- highlighting
@@ -113,12 +124,12 @@ return {
           end
 
           -- indents
-          if vim.tbl_get(opts, "indent", "enable") ~= false and RUtils.treesitter.have(ev.match, "indents") then
+          if enabled("indent", "indents") then
             RUtils.set_default("indentexpr", "v:lua.require'r.utils'.treesitter.indentexpr()")
           end
 
           -- folds
-          if vim.tbl_get(opts, "folds", "enable") ~= false and RUtils.treesitter.have(ev.match, "folds") then
+          if enabled("folds", "folds") then
             if RUtils.set_default("foldmethod", "expr") then
               RUtils.set_default("foldexpr", "v:lua.require'r.utils'.treesitter.foldexpr()")
             end
