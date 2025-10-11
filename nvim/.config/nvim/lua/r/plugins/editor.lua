@@ -1,3 +1,12 @@
+local alts = {
+  FIX = { "FIXME", "BUG", "FIXIT", "ISSUE", "ERROR" },
+  DONE = { "DONE", "DONE!", "DONE.", "FIXED", "WONTFIX" },
+  TODO = { "PLAN", "TODO", "TASK", "START", "BEGIN" },
+  WARN = { "WARNING", "WARN", "HACK" },
+  PREF = { "PERF", "OPTIM", "OPTIMIZE", "PERFORMANCE" },
+  INFO = { "INFO" },
+}
+
 return {
   -- FLASH.NVIM
   {
@@ -12,7 +21,7 @@ return {
       { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
       { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote" },
-      -- Kegunaan: ini akan menselect semua function, jadi tekan v, lalu R
+      -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search" },
       { "<c-s>",
         function()
@@ -258,18 +267,10 @@ return {
       signs = true, -- show icons in the signs column
       sign_priority = 8, -- sign priority
       keywords = {
-        FIX = {
-          icon = RUtils.config.icons.misc.tools,
-          color = "error",
-          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-        },
-        WARN = {
-          icon = RUtils.config.icons.misc.bug,
-          color = "warning",
-          alt = { "WARNING", "WARN" },
-        },
-        TODO = { icon = RUtils.config.icons.misc.check_big, color = "info" },
-        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        FIX = { icon = RUtils.config.icons.misc.tools, color = "error", alt = alts.FIX },
+        WARN = { icon = RUtils.config.icons.misc.bug, color = "warning", alt = alts.WARN },
+        TODO = { icon = RUtils.config.icons.misc.todo, color = "info", alt = alts.TODO },
+        NOTE = { icon = RUtils.config.icons.misc.note, color = "hint", alt = alts.INFO },
       },
       -- merge_keywords = false,
       highlight = {
