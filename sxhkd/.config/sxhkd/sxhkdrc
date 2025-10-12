@@ -24,7 +24,7 @@ super + F9
 super + F10
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
 
-# state: toggle expand, shirnk
+# state: toggle zoom-in-out
 super + F8
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall win_big_zoom_toggle
 
