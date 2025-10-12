@@ -42,7 +42,15 @@ return {
         end,
       },
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
-      fuzzy = { implementation = "prefer_rust" },
+      fuzzy = {
+        implementation = "rust",
+        sorts = {
+          "exact",
+          -- defaults
+          "score",
+          "sort_text",
+        },
+      },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
