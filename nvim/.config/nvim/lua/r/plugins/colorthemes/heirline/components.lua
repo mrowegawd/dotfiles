@@ -50,10 +50,6 @@ local set_conditions = {
     local gitdir = vim.fn.finddir(".git", filepath .. ";")
     return gitdir and #gitdir > 0 and #gitdir < #filepath
   end,
-  is_dap_ft = function()
-    local dap_ft = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }
-    return vim.tbl_contains(dap_ft, vim.bo.filetype)
-  end,
   is_path_git_relative = function()
     local path = get_vars.path()
     return path:match "fugitive:/" or path:match "diffview:/"
@@ -63,6 +59,16 @@ local set_conditions = {
   end,
   is_readonly = function()
     return not vim.bo.modifiable or vim.bo.readonly
+  end,
+
+  is_gray_ft = function()
+    local dap_ft = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes", "dbui" }
+    return vim.tbl_contains(dap_ft, vim.bo.filetype)
+  end,
+
+  is_green_ft = function()
+    local dap_ft = { "help" }
+    return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
 }
 
@@ -136,7 +142,6 @@ local rmux_pane = function()
 end
 local __colors = function()
   local H = require "r.settings.highlights"
-  local UIPallette = require("r.utils").uisec
 
   local set_col_light = {
     block_bg = 0.2,
@@ -150,18 +155,6 @@ local __colors = function()
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
-
-    mode_git_bg = 0.1,
-    mode_git_fg = 1,
-    mode_git_fg_active = 5,
-
-    mode_readonly_bg = 0.1,
-    mode_readonly_fg = 1,
-    mode_readonly_fg_active = 5,
-
-    winbar_dap_keyword = 1.5,
-    winbar_dap_fg = 0.6,
-    winbar_dap_bg = -0.03,
   }
 
   local set_col_normal = {
@@ -176,18 +169,6 @@ local __colors = function()
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
-
-    winbar_dap_keyword = 1.5,
-    winbar_dap_fg = 0.6,
-    winbar_dap_bg = -0.2,
-
-    mode_git_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
-    mode_git_fg = vim.g.colorscheme == "lackluster" and 0.1 or -0.04,
-    mode_git_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
-
-    mode_readonly_bg = vim.g.colorscheme == "lackluster" and 0.1 or -0.1,
-    mode_readonly_fg = vim.g.colorscheme == "lackluster" and 0.1 or 0.1,
-    mode_readonly_fg_active = vim.g.colorscheme == "lackluster" and 1 or 0.6,
   }
 
   local light_themes = vim.g.lightthemes
@@ -231,23 +212,28 @@ local __colors = function()
     winbar_quickfix_fg_loc = H.tint(H.get("Keyword", "fg"), -0.8),
     winbar_quickfix_bg_loc = H.tint(H.get("Keyword", "fg"), 0.35),
 
-    winbar_dap_keyword = H.tint(
-      H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")),
-      col_opts.winbar_dap_keyword
-    ),
-    winbar_dap_fg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), col_opts.winbar_dap_fg),
-    winbar_dap_bg = H.tint(H.darken(UIPallette.palette.light_gray, 0.4, H.get("Normal", "bg")), col_opts.winbar_dap_bg),
-
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
-    mode_readonly_fg_active = H.tint(H.get("diffDelete", "fg"), col_opts.mode_readonly_fg_active),
-    mode_readonly_fg = H.tint(H.get("diffDelete", "fg"), col_opts.mode_readonly_fg),
-    mode_readonly_bg = H.tint(H.get("diffDelete", "bg"), col_opts.mode_readonly_bg),
+    -- Termasuk filetype: debug dap, dbui
+    mode_gray_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
+    mode_gray_fg = H.tint(H.get("PanelSideBackground", "bg"), 2),
+    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.25),
 
-    mode_git_fg_active = H.tint(H.get("diffChange", "fg"), col_opts.mode_git_fg_active),
-    mode_git_fg = H.tint(H.get("diffChange", "fg"), col_opts.mode_git_fg),
-    mode_git_bg = H.tint(H.get("diffChange", "bg"), col_opts.mode_git_bg),
+    -- Termasuk filetype: readonly, commit
+    mode_red_fg_active = H.tint(H.get("diffDelete", "fg"), 0.5),
+    mode_red_fg = H.tint(H.get("diffDelete", "fg"), 0.2),
+    mode_red_bg = H.tint(H.get("diffDelete", "bg"), 0.3),
+
+    -- Termasuk filetype: git fugtive-relative
+    mode_yellow_fg_active = H.tint(H.get("diffChange", "fg"), 0.6),
+    mode_yellow_fg = H.tint(H.get("diffChange", "fg"), 0.1),
+    mode_yellow_bg = H.tint(H.get("diffChange", "bg"), 0.15),
+
+    -- Termasuk filetype: help,
+    mode_green_fg_active = H.tint(H.get("diffAdd", "fg"), 0.45),
+    mode_green_fg = H.tint(H.get("diffAdd", "fg"), 0.2),
+    mode_green_bg = H.tint(H.get("diffAdd", "bg"), 0.2),
 
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
@@ -1585,19 +1571,24 @@ M.WinbarFilePath = {
       end
 
       if self.is_fugitive() then
-        fg = tostring(colors.mode_git_fg)
+        fg = tostring(colors.mode_yellow_fg)
       end
 
       if self.is_readonly() then
-        fg = tostring(colors.mode_readonly_fg)
+        fg = tostring(colors.mode_red_fg)
       end
 
-      if set_conditions.is_dap_ft() then
-        fg = colors.winbar_dap_fg
+      if set_conditions.is_gray_ft() then
+        fg = colors.mode_gray_fg
         if Conditions.is_active() then
-          fg = colors.winbar_keyword
+          fg = colors.mode_gray_fg_keyword
         end
       end
+
+      if set_conditions.is_green_ft() then
+        fg = colors.mode_green_fg
+      end
+
       return { fg = fg, bold = is_bold }
     end,
   },
@@ -1614,31 +1605,38 @@ M.WinbarFilePath = {
       if Conditions.is_active() then
         fg = colors.winbar_keyword
         is_bold = true
+        is_italic = true
       end
 
       if self.is_fugitive() then
-        fg = tostring(colors.mode_git_fg)
-        bg = tostring(colors.mode_git_bg)
+        fg = tostring(colors.mode_yellow_fg)
+        bg = tostring(colors.mode_yellow_bg)
         if Conditions.is_active() then
-          fg = tostring(colors.mode_git_fg_active)
-          is_italic = true
+          fg = tostring(colors.mode_yellow_fg_active)
         end
       end
 
       if self.is_readonly() then
-        fg = tostring(colors.mode_readonly_fg)
-        bg = tostring(colors.mode_readonly_bg)
+        fg = tostring(colors.mode_red_fg)
+        bg = tostring(colors.mode_red_bg)
         if Conditions.is_active() then
-          fg = tostring(colors.mode_readonly_fg_active)
-          is_italic = true
+          fg = tostring(colors.mode_red_fg_active)
         end
       end
 
-      if set_conditions.is_dap_ft() then
-        fg = colors.winbar_dap_fg
-        bg = colors.winbar_dap_bg
+      if set_conditions.is_gray_ft() then
+        fg = colors.mode_gray_fg
+        bg = colors.mode_gray_bg
         if Conditions.is_active() then
-          fg = colors.winbar_dap_keyword
+          fg = colors.mode_gray_fg_keyword
+        end
+      end
+
+      if set_conditions.is_green_ft() then
+        fg = colors.mode_green_fg
+        bg = colors.mode_green_bg
+        if Conditions.is_active() then
+          fg = colors.mode_green_fg_active
         end
       end
 
@@ -1665,16 +1663,21 @@ M.status_winbar_active_left = {
     end
 
     if set_conditions.is_path_git_relative() then
-      bg = colors.mode_git_bg
+      bg = colors.mode_yellow_bg
     end
 
     if set_conditions.is_readonly() then
-      bg = colors.mode_readonly_bg
+      bg = colors.mode_red_bg
     end
 
-    if set_conditions.is_dap_ft() then
-      fg = colors.winbar_dap_fg
-      bg = colors.winbar_dap_bg
+    if set_conditions.is_gray_ft() then
+      fg = colors.mode_gray_fg
+      bg = colors.mode_gray_bg
+    end
+
+    if set_conditions.is_green_ft() then
+      fg = colors.mode_green_fg
+      bg = colors.mode_green_bg
     end
 
     return { fg = fg, bg = bg }

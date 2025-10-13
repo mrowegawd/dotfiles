@@ -40,8 +40,8 @@ return {
             local buft = vim.bo[buf].buftype
 
             local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-            local is_buftype = vim.tbl_contains({ "help", "prompt", "nofile" }, buft)
-            local is_buftype_with_no_file = vim.tbl_contains({ "help", "prompt" }, buft)
+            local is_buftype = vim.tbl_contains({ "prompt", "nofile" }, buft)
+            local is_buftype_with_no_file = vim.tbl_contains({ "prompt" }, buft)
             local is_filetype = vim.tbl_contains({
               "DiffviewFileHistory",
               "DiffviewFiles",

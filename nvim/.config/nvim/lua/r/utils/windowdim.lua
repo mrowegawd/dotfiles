@@ -134,6 +134,13 @@ autocmds.bottom_panel = {
 autocmds.side_panel = {
   ["Outline"] = true,
   ["aerial"] = true,
+  ["dbui"] = true,
+
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dap-repl"] = true,
 }
 
 autocmds.blacklist_hl_folded = {
