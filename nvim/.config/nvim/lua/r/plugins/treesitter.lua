@@ -10,7 +10,7 @@ return {
         RUtils.error "Please restart Neovim and run `:TSUpdate` to use the `nvim-treesitter` **main** branch."
         return
       end
-      RUtils.treesitter.ensure_treesitter_cli(function()
+      RUtils.treesitter.build(function()
         TS.update(nil, { summary = true })
       end)
     end,
@@ -94,7 +94,7 @@ return {
         return not RUtils.treesitter.have(lang)
       end, opts.ensure_installed or {})
       if #install > 0 then
-        RUtils.treesitter.ensure_treesitter_cli(function()
+        RUtils.treesitter.build(function()
           TS.install(install, { summary = true }):await(function()
             RUtils.treesitter.get_installed(true) -- refresh the installed langs
           end)
@@ -105,7 +105,7 @@ return {
         group = vim.api.nvim_create_augroup("lazyvim_treesitter", { clear = true }),
         callback = function(ev)
           local ft, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
-          if not RUtils.treesitter.have(ev.match) then
+          if not RUtils.treesitter.have(ft) then
             return
           end
 
@@ -119,7 +119,7 @@ return {
           end
 
           -- highlighting
-          if vim.tbl_get(opts, "highlight", "enable") ~= false then
+          if enabled("highlight", "highlights") then
             pcall(vim.treesitter.start)
           end
 
