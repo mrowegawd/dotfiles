@@ -5,7 +5,7 @@ return {
     branch = "feat/allow-customize-ui-adapter",
     opts = {
       ui = {
-        size_ratio = 0.60,
+        size_ratio = 0.70,
         min_width = 40,
         min_height = 20,
       },
@@ -57,7 +57,7 @@ return {
               win_col = 50,
               win_row = 5,
 
-              win_width = 70,
+              win_width = 80,
               win_height = 25,
             }
 

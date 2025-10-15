@@ -26,10 +26,9 @@ return {
       {
         "<Leader>uE",
         function()
-          local wiki_path = RUtils.config.path.wiki_path
-          vim.cmd(string.format("Neotree dir=%s right", wiki_path))
+          vim.cmd "Neotree focus reveal right"
         end,
-        desc = "Toggle: open file wikis explore [neotree]",
+        desc = "Toggle: open file explore [neotree]",
       },
     },
 
@@ -93,6 +92,25 @@ return {
               NeoTreeTabSeparatorInactive = {
                 inherit = "NeoTreeTabInactive",
                 fg = { from = "PanelSideDarkBackground", attr = "bg" },
+              },
+            },
+
+            {
+              NeoTreeFloatNormal = {
+                inherit = "NormalFloat",
+                bg = { from = "NormalFloat", attr = "bg", alter = 0.2 },
+              },
+            },
+            {
+              NeoTreeFloatBorder = {
+                fg = { from = "NeoTreeFloatNormal", attr = "bg" },
+                bg = { from = "NeoTreeFloatNormal", attr = "bg" },
+              },
+            },
+            {
+              NeoTreeTitleBar = {
+                inherit = "NeoTreeFloatNormal",
+                fg = { from = "NeoTreeFloatNormal", attr = "bg", alter = 1 },
               },
             },
           },
@@ -650,34 +668,34 @@ return {
         symbols = {
           filter = nil,
           icons = {
-            File = { icon = kind.File, hl = "Identifier" },
-            Module = { icon = kind.Module, hl = "Include" },
-            Namespace = { icon = kind.Namespace, hl = "Include" },
-            Package = { icon = kind.Package, hl = "Include" },
-            Class = { icon = kind.Class, hl = "Type" },
-            Method = { icon = kind.Method, hl = "Function" },
-            Property = { icon = kind.Property, hl = "Identifier" },
-            Field = { icon = kind.Field, hl = "Identifier" },
-            Constructor = { icon = kind.Constructor, hl = "Special" },
-            Enum = { icon = kind.Enum, hl = "Type" },
-            Interface = { icon = kind.Interface, hl = "Type" },
-            Function = { icon = kind.Function, hl = "Function" },
-            Variable = { icon = kind.Variable, hl = "Constant" },
-            Constant = { icon = kind.Constant, hl = "Constant" },
-            String = { icon = kind.String, hl = "String" },
-            Number = { icon = kind.number, hl = "Number" },
-            Boolean = { icon = kind.Boolean, hl = "Boolean" },
-            Array = { icon = kind.Array, hl = "Constant" },
-            Object = { icon = kind.Object, hl = "Type" },
-            Key = { icon = kind.Key, hl = "Type" },
-            Null = { icon = kind.Null, hl = "Type" },
-            EnumMember = { icon = kind.EnumNumber, hl = "Identifier" },
-            Struct = { icon = kind.Struct, hl = "Structure" },
-            Event = { icon = kind.Event, hl = "Type" },
-            Operator = { icon = kind.Operator, hl = "Identifier" },
-            TypeParameter = { icon = kind.TypeParameter, hl = "Identifier" },
-            Component = { icon = kind.Component, hl = "Function" },
-            Fragment = { icon = "󰅴", hl = "Constant" },
+            File = { icon = kind.File, hl = "LspKindFile" },
+            Module = { icon = kind.Module, hl = "LspKindModule" },
+            Namespace = { icon = kind.Namespace, hl = "LspKindNamespace" },
+            Package = { icon = kind.Package, hl = "LspKindPackage" },
+            Class = { icon = kind.Class, hl = "Type" }, -- INI BELUM!
+            Method = { icon = kind.Method, hl = "LspKindMethod" },
+            Property = { icon = kind.Property, hl = "LspKindProperty" },
+            Field = { icon = kind.Field, hl = "LspKindField" },
+            Constructor = { icon = kind.Constructor, hl = "LspKindConstructor" },
+            Enum = { icon = kind.Enum, hl = "LspKindEnum" },
+            Interface = { icon = kind.Interface, hl = "LspKindInterface" },
+            Function = { icon = kind.Function, hl = "LspKindFunction" },
+            Variable = { icon = kind.Variable, hl = "LspKindVariable" },
+            Constant = { icon = kind.Constant, hl = "LspKindConstant" },
+            String = { icon = kind.String, hl = "LspKindString" },
+            Number = { icon = kind.number, hl = "LspKindNumber" },
+            Boolean = { icon = kind.Boolean, hl = "LspKindBoolean" },
+            Array = { icon = kind.Array, hl = "LspKindObject" },
+            Object = { icon = kind.Object, hl = "LspKindObject" },
+            Key = { icon = kind.Key, hl = "LspKindKey" },
+            Null = { icon = kind.Null, hl = "LspKindNull" },
+            EnumMember = { icon = kind.EnumNumber, hl = "LspKindEnumMember" },
+            Struct = { icon = kind.Struct, hl = "LspKindStruct" },
+            Event = { icon = kind.Event, hl = "LspKindEvent" },
+            Operator = { icon = kind.Operator, hl = "LspKindOperator" },
+            TypeParameter = { icon = kind.TypeParameter, hl = "LspKindTypeParameter" },
+            Component = { icon = kind.Component, hl = "Function" }, -- INI BELUM
+            Fragment = { icon = "󰅴", hl = "Constant" }, -- INI BELUM
 
             TypeAlias = { icon = kind.TypeAlias, hl = "Type" },
             Parameter = { icon = kind.Parameter, hl = "Identifier" },

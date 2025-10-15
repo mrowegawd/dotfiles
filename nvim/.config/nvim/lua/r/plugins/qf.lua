@@ -44,7 +44,8 @@ return {
   -- QUICKER
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
-    event = "FileType qf",
+    event = "VeryLazy",
+    ft = "qf",
     opts = {},
   },
   -- QFSILET
@@ -61,8 +62,8 @@ return {
       { "<Leader>fn" },
       { "<Leader>fp" },
 
-      { "<Leader>qq" }, -- save
-      { "<Leader>qy" }, -- load
+      { "<Leader>qy" }, -- save
+      { "<Leader>qY" }, -- load
 
       { "<Leader>qb" }, -- mark
       { "<Leader>qf" }, -- select mark fzf
@@ -122,8 +123,8 @@ return {
       },
       keymap = {
         quickfix = {
-          save_local = "<Leader>qq",
-          load_local = "<Leader>qy",
+          save_local = "<Leader>qy",
+          load_local = "<Leader>qY",
 
           toggle_open_qf = "<Leader>qj",
           toggle_open_loclist = "<Leader>ql",

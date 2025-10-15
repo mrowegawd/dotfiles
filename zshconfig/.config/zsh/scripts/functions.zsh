@@ -295,6 +295,8 @@ build-install() {
 
   # if ! command -v yt-dlp >/dev/null; then
     echo "Installing: yt-dlp - A tool for download youtube video"
+    # To force an update, use the --force option, for example:
+    # 'pipx install yt-dlp --force'
     pipx install yt-dlp
     asdf reshim python
   # fi

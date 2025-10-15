@@ -527,8 +527,6 @@ function M.get_visual_selection(opts)
       .. string.sub(lines[n], 1, cecol)
   end
 
-  -- RUtils.info "masdf"
-
   return {
     lines = lines,
     selection = selection,

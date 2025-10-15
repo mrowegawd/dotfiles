@@ -526,8 +526,10 @@ return {
       {
         "<Leader>gd",
         function()
-          local tsc = require "treesitter-context"
-          tsc.disable()
+          local ok, treesitter_context = pcall(require, "treesitter-context")
+          if ok then
+            treesitter_context.disable()
+          end
 
           -- after 0.5 sec, run this command
           vim.defer_fn(function()

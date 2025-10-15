@@ -142,6 +142,13 @@ function M.get()
       desc = "LSP: show hover [noice]",
     },
     {
+      "gK",
+      function()
+        RUtils.hover_eldoc.hover_in_split()
+      end,
+      desc = "LSP: show hover (split) [hover_eglot]",
+    },
+    {
       "<Leader>lD",
       -- wrap_location_method(vim.lsp.buf.declaration),
       wrap_location_method(vim.lsp.buf.definition, true),

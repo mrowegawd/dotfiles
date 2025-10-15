@@ -19,10 +19,10 @@ return {
     -- stylua: ignore
     keys = {
       { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
-      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote" },
+      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter (visual, normal)" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (visual)" },
       -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search (visual)" },
       { "<c-s>",
         function()
           require("flash").treesitter({
@@ -33,7 +33,7 @@ return {
           })
         end,
         mode = { "n", "o", "x" },
-        desc = "Flash: treesitter incremental selection"
+        desc = "Flash: treesitter incremental selection (visual, normal)"
       },
     },
   },
