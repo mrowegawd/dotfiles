@@ -153,6 +153,12 @@ return {
       -- setup keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
+        if
+          client.name
+          and not vim.tbl_contains({ "copilot", "ruff", "tailwindcss", "emmet_language_server" }, client.name)
+        then
+          require("nvim-navic").attach(client, bufnr)
+        end
       end)
 
       RUtils.lsp.setup()
@@ -299,10 +305,7 @@ return {
     opts = {
       library = {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-        -- { path = "snacks.nvim", words = { "Snacks" } },
-        -- { path = "wezterm-types", mods = { "wezterm" } },
-        { path = "lazy.nvim", words = { "LazyVim" } },
-        { path = "RUtils", words = { "RUtils" } },
+        { path = require("lazy.core.config").options.root .. "/lazy.nvim", words = { "LazyVim" } },
       },
     },
   },

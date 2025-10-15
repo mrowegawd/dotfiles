@@ -129,7 +129,7 @@ local update_col_colorscheme = {
     pmenu_sp_alter = 1.5,
     render_markdown_code_bg_alter = 0.23,
     snacks_indent_scope_fg_alter = 0.13,
-    statusline_bg_alter = -0.1,
+    statusline_bg_alter = -0.08,
     tabline_fg_alter = 0.3,
     trouble_indent_fg_alter = 0.6,
     winbar_file_path_fg_alter = 0.95,
@@ -547,7 +547,6 @@ local general_overrides = function()
 
     {
       StatusLine = {
-        -- fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
         fg = { from = "LineNr", attr = "fg", alter = 0.5 },
         bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
         reverse = false,
@@ -965,6 +964,18 @@ local general_overrides = function()
     { StatusLineFontNotice = { fg = { from = "Function", attr = "fg", alter = 0.2 } } },
 
     -- WINBAR
+    {
+      WinBar = {
+        fg = { from = "StatusLine", attr = "bg", alter = 2 },
+        bg = { from = "StatusLine", attr = "bg" },
+      },
+    },
+    {
+      WinBarNC = {
+        fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+        bg = { from = "StatusLine", attr = "bg" },
+      },
+    },
     { StatusLineFontWhite = { fg = { from = "Keyword", attr = "fg" } } },
     { WinbarFilepath = { fg = { from = "TabLine", attr = "bg", alter = colors.winbar_file_path_fg_alter } } },
     { WinbarKeyword = { fg = { from = "Keyword", attr = "fg", alter = colors.winbar_keyword } } },
@@ -1819,7 +1830,8 @@ local function set_panel_highlight()
     {
       PanelSideNormal = {
         fg = { from = "Normal", attr = "fg", alter = -0.05 },
-        bg = { from = "NormalKeyword", attr = "bg", alter = -0.1 },
+        -- bg = { from = "NormalKeyword", attr = "bg", alter = -0.1 },
+        bg = { from = "WinBar", attr = "bg" },
       },
     },
     { PanelSideBackground = { link = "PanelSideNormal", fg = "NONE" } },
@@ -1847,7 +1859,8 @@ local function set_panel_highlight()
     {
       PanelBottomNormal = {
         fg = { from = "NormalKeyword", attr = "fg", alter = colors.panel_bottom_normal_fg_alter },
-        bg = { from = "NormalKeyword", attr = "bg", alter = colors.panel_bottom_normal_bg_alter },
+        -- bg = { from = "NormalKeyword", attr = "bg", alter = colors.panel_bottom_normal_bg_alter },
+        bg = { from = "WinBar", attr = "bg" },
       },
     },
     { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },
@@ -2062,6 +2075,40 @@ local function set_panel_highlight()
 
     { AerialConstructor = { link = "LspKindConstructor" } },
     { AerialConstructorIcon = { link = "LspKindConstructor" } },
+
+    --  ──────────────────────────────[ NAVIC ]──────────────────────────────
+    { NavicIconsText = { link = "LspKindText" } },
+    { NavicIconsBoolean = { link = "LspKindBoolean" } },
+    { NavicIconsVariable = { link = "LspKindVariable" } },
+    { NavicIconsConstant = { link = "LspKindConstant" } },
+    { NavicIconsModule = { link = "LspKindModule" } },
+    { NavicIconsPackage = { link = "LspKindPackage" } },
+    { NavicIconsKeyword = { link = "LspKindKeyword" } },
+    { NavicIconsFunction = { link = "LspKindFunction" } },
+    { NavicIconsStruct = { link = "LspKindStruct" } },
+    { NavicIconsArray = { link = "LspKindObject" } },
+    { NavicIconsOperator = { link = "LspKindOperator" } },
+    { NavicIconsObject = { link = "LspKindObject" } },
+    { NavicIconsString = { link = "LspKindString" } },
+    { NavicIconsField = { link = "LspKindField" } },
+    { NavicIconsNumber = { link = "LspKindNumber" } },
+    { NavicIconsProperty = { link = "LspKindProperty" } },
+    { NavicIconsReference = { link = "LspKindReference" } },
+    { NavicIconsEvent = { link = "LspKindEvent" } },
+    { NavicIconsFile = { link = "LspKindFile" } },
+    { NavicIconsFolder = { link = "LspKindFolder" } },
+    { NavicIconsInterface = { link = "LspKindInterface" } },
+    { NavicIconsKey = { link = "LspKindKey" } },
+    { NavicIconsMethod = { link = "LspKindMethod" } },
+    { NavicIconsNamespace = { link = "LspKindNamespace" } },
+    { NavicIconsNull = { link = "LspKindNull" } },
+    { NavicIconsUnit = { link = "LspKindUnit" } },
+    { NavicIconsEnum = { link = "LspKindEnum" } },
+    { NavicIconsEnumMember = { link = "LspKindEnumMember" } },
+    { NavicIconsConstructor = { link = "LspKindConstructor" } },
+    { NavicIconsTypeParameter = { link = "LspKindTypeParameter" } },
+    { NavicIconsValue = { link = "LspKindValue" } },
+    { LspInlayHint = { link = "LspInlayHint" } },
   }
 end
 

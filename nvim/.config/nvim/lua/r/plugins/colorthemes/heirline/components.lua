@@ -57,15 +57,17 @@ local set_conditions = {
   is_terminal_ft = function()
     return vim.bo.buftype == "terminal"
   end,
+  is_lsp_attached = function()
+    return next(vim.lsp.get_clients { bufnr = 0 }) ~= nil
+  end,
+
   is_readonly = function()
     return not vim.bo.modifiable or vim.bo.readonly
   end,
-
   is_gray_ft = function()
     local dap_ft = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes", "dbui" }
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
-
   is_green_ft = function()
     local dap_ft = { "help" }
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
@@ -160,8 +162,8 @@ local __colors = function()
   local set_col_normal = {
     block_bg = 0.6,
     block_darken_bg = 0.4,
-    block_darken_fg = 0.3,
-    block_fg = 0.5,
+    block_darken_fg = 0.5,
+    block_fg = 0.85,
 
     keyword_fg = 0.7,
 
@@ -203,9 +205,12 @@ local __colors = function()
     block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")), -0.5),
     block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.1),
 
-    winbar_fg = H.get("Function", "fg"),
-    winbar_bg = H.get("PanelBottomNormal", "bg"),
-    winbar_keyword = H.get("WinbarKeyword", "fg"),
+    winbar_keyword = H.get("Keyword", "fg"),
+    winbar_fg = H.get("WinBar", "fg"),
+    winbar_bg = H.get("WinBar", "bg"),
+    winbarNC_fg = H.get("WinBarNC", "bg"),
+    winbarNC_bg = H.get("WinBarNC", "bg"),
+    winbar_bg_right_block = H.tint(H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")), 0.1),
 
     winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
     winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),
@@ -218,22 +223,25 @@ local __colors = function()
     -- Termasuk filetype: debug dap, dbui
     mode_gray_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
     mode_gray_fg = H.tint(H.get("PanelSideBackground", "bg"), 2),
-    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.25),
+    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.15),
 
     -- Termasuk filetype: readonly, commit
     mode_red_fg_active = H.tint(H.get("diffDelete", "fg"), 0.5),
     mode_red_fg = H.tint(H.get("diffDelete", "fg"), 0.2),
-    mode_red_bg = H.tint(H.get("diffDelete", "bg"), 0.3),
+    mode_red_bg = H.tint(H.darken(H.get("diffDelete", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
+    mode_red_bg_right_block = H.tint(H.get("diffDelete", "bg"), 0.3),
 
     -- Termasuk filetype: git fugtive-relative
     mode_yellow_fg_active = H.tint(H.get("diffChange", "fg"), 0.6),
-    mode_yellow_fg = H.tint(H.get("diffChange", "fg"), 0.1),
-    mode_yellow_bg = H.tint(H.get("diffChange", "bg"), 0.15),
+    mode_yellow_fg = H.tint(H.get("diffChange", "fg"), -0.08),
+    mode_yellow_bg = H.tint(H.darken(H.get("diffChange", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
+    mode_yellow_bg_right_block = H.tint(H.get("diffChange", "bg"), 0.1),
 
     -- Termasuk filetype: help,
     mode_green_fg_active = H.tint(H.get("diffAdd", "fg"), 0.45),
     mode_green_fg = H.tint(H.get("diffAdd", "fg"), 0.2),
-    mode_green_bg = H.tint(H.get("diffAdd", "bg"), 0.2),
+    mode_green_bg = H.tint(H.darken(H.get("diffAdd", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
+    mode_green_bg_right_block = H.tint(H.get("diffAdd", "bg"), 0.2),
 
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
@@ -257,6 +265,81 @@ local __colors = function()
   }
 end
 local colors = __colors()
+
+local set_hl = function(is_base)
+  is_base = is_base or false
+
+  local hl_opts = {
+    fg = colors.winbar_keyword,
+    bg = colors.winbar_bg_right_block,
+  }
+
+  if is_base then
+    hl_opts.fg = colors.statusline_fg
+    hl_opts.bg = colors.statusline_bg
+  end
+
+  if set_conditions.is_path_git_relative() then
+    hl_opts.fg = tostring(colors.mode_yellow_fg)
+    hl_opts.bg = colors.mode_yellow_bg_right_block
+    if is_base then
+      hl_opts.bg = colors.mode_yellow_bg
+    end
+  end
+
+  if set_conditions.is_readonly() then
+    hl_opts.fg = tostring(colors.mode_red_fg)
+    hl_opts.bg = colors.mode_red_bg_right_block
+    if is_base then
+      hl_opts.fg = tostring(colors.mode_red_fg)
+      hl_opts.bg = colors.mode_red_bg
+    end
+  end
+
+  if set_conditions.is_gray_ft() then
+    hl_opts.fg = colors.mode_gray_fg
+    hl_opts.bg = colors.mode_gray_bg
+  end
+
+  if set_conditions.is_green_ft() then
+    hl_opts.fg = colors.mode_green_fg
+    hl_opts.bg = colors.mode_green_bg_right_block
+    if is_base then
+      hl_opts.fg = colors.mode_green_fg
+      hl_opts.bg = colors.mode_green_bg
+    end
+  end
+
+  return hl_opts
+end
+local set_hl_separator = function()
+  local hl_opts = {
+    fg = colors.winbar_bg_right_block,
+    bg = colors.statusline_bg,
+  }
+
+  if set_conditions.is_path_git_relative() then
+    hl_opts.fg = colors.mode_yellow_bg_right_block
+    hl_opts.bg = colors.mode_yellow_bg
+  end
+
+  if set_conditions.is_readonly() then
+    hl_opts.fg = colors.mode_red_bg_right_block
+    hl_opts.bg = colors.mode_red_bg
+  end
+
+  if set_conditions.is_gray_ft() then
+    hl_opts.fg = colors.mode_gray_bg
+    hl_opts.bg = colors.mode_gray_bg
+  end
+
+  if set_conditions.is_green_ft() then
+    hl_opts.fg = colors.mode_green_bg_right_block
+    hl_opts.bg = colors.mode_green_bg
+  end
+
+  return hl_opts
+end
 
 local function get_branch_name(buf)
   buf = buf or 0
@@ -421,16 +504,6 @@ M.Branch = {
       return { fg = fg, bold = true }
     end,
   },
-  -- {
-  --   provider = RUtils.config.icons.misc.separator_up,
-  --   hl = function()
-  --     local fg = colors.statusline_bg
-  --     if Conditions.is_git_repo() or (#get_branch_name() > 0) then
-  --       fg = colors.branch_bg
-  --     end
-  --     return { fg = fg }
-  --   end,
-  -- },
 }
 M.FilePath = {
   init = function(self)
@@ -441,17 +514,17 @@ M.FilePath = {
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
   end,
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.block_bg
-      if Conditions.is_git_repo() or (#get_branch_name() > 0) then
-        fg = tostring(colors.branch_bg)
-      end
-      -- return { fg = fg, bg = colors.block_bg }
-      return { fg = fg }
-    end,
-  },
+  -- {
+  --   provider = RUtils.config.icons.misc.separator_up,
+  --   hl = function()
+  --     local fg = colors.block_bg
+  --     if Conditions.is_git_repo() or (#get_branch_name() > 0) then
+  --       fg = tostring(colors.branch_bg)
+  --     end
+  --     -- return { fg = fg, bg = colors.block_bg }
+  --     return { fg = fg }
+  --   end,
+  -- },
   {
     provider = function(self)
       local opts = {
@@ -460,7 +533,6 @@ M.FilePath = {
       }
 
       local path = vim.fn.expand "%:p" --[[@as string]]
-      -- RUtils.info(path)
       if path == "" then
         return ""
       end
@@ -510,13 +582,12 @@ M.FilePath = {
         end
       end
     end,
-    -- hl = { fg = colors.block_fg, bg = colors.block_bg },
     hl = { fg = colors.block_fg },
   },
   {
     provider = function(self)
       if #self.filename == 0 then
-        return " " .. vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
+        return " " .. vim.api.nvim_get_option_value("filetype", { buf = 0 })
       end
 
       if vim.bo.filetype == "qf" then
@@ -524,9 +595,9 @@ M.FilePath = {
         if path:find(RUtils.config.path.home, 1, true) == 1 then
           path = path:sub(#RUtils.config.path.home + 2)
         end
-        return " " .. path .. " "
+        return " " .. path
       end
-      return RUtils.file.basename(self.filename) .. " "
+      return RUtils.file.basename(self.filename)
     end,
     hl = function(self)
       local fg = tostring(colors.keyword)
@@ -539,7 +610,6 @@ M.FilePath = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    -- hl = { fg = colors.block_bg, bg = colors.statusline_bg },
     hl = { fg = colors.statusline_bg },
   },
 }
@@ -561,7 +631,8 @@ M.FileIcon = {
     return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
-    return { fg = self.icon_color }
+    local hl_opts = set_hl()
+    return { fg = self.icon_color, bg = hl_opts.bg }
   end,
 }
 M.Git = {
@@ -671,7 +742,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.winbar_quickfix_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.winbar_bg_right_block },
   },
   {
     provider = function(self)
@@ -699,15 +770,15 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_quickfix_fg, bg = colors.winbar_quickfix_bg },
+    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_quickfix_bg, bg = colors.winbar_bg },
+    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.winbar_quickfix_bg },
+    hl = { fg = colors.winbar_bg, bg = colors.winbar_bg_right_block },
   },
   {
     provider = function(self)
@@ -719,27 +790,11 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_quickfix_fg, bg = colors.winbar_quickfix_bg },
+    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_quickfix_bg, bg = colors.winbar_bg },
-  },
-}
-M.TroubleStatus = {
-  condition = function()
-    return vim.bo.filetype == "trouble"
-  end,
-  {
-    provider = function()
-      RUtils.info "mantap"
-      return "Trouble"
-    end,
-    hl = function()
-      local fg = colors.block_fg_qf
-      local bg = colors.block_bg_qf
-      return { fg = fg, bg = bg, bold = true }
-    end,
+    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg },
   },
 }
 M.FileFlags = {
@@ -783,42 +838,48 @@ M.Dap = {
 }
 M.virtualenv = {
   condition = function()
-    -- return set_conditions.hide_in_col_width(130) and RUtils.has "venv-selector.nvim"
     return set_conditions.hide_in_col_width(130) and (vim.env.VIRTUAL_ENV ~= nil)
   end,
   init = function(self)
-    local python_logo = " "
-    local poetry_status = python_logo .. "Venv:"
-    local msg = ""
+    local bufname = get_vars.bufname()
+    local filename = get_vars.filename(bufname)
+    local extension = get_vars.extension(filename)
+    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 
-    local venv_root = RUtils.extras.wants {
-      ft = "python",
-      root = {
-        "pyproject.toml",
-        "pyrightconfig.json",
-      },
-    }
-    -- local venv_name = require("venv-selector").venv()
-    local venv_name = vim.env.VIRTUAL_ENV
-    if venv_name ~= nil and venv_root then
-      if venv_name:find "%.venv" then
-        msg = poetry_status .. " ON"
-      end
+    local python_logo = "" -- Icon Python
+    local venv_path = vim.env.VIRTUAL_ENV or ""
+    local venv_name = ""
+
+    -- Ambil nama folder virtualenv (nama environment)
+    if venv_path ~= "" then
+      venv_name = venv_path:match "([^/\\]+)$" or venv_path
     end
-    self.venv = msg
+
+    -- Cek apakah ini Poetry (.venv biasanya Poetry default)
+    local is_poetry_venv = venv_name:find "%.venv" ~= nil
+
+    if is_poetry_venv then
+      self.venv = string.format("%s Poetry %s", python_logo, RUtils.config.icons.misc.check_big)
+    elseif venv_name ~= "" then
+      self.venv = string.format("%s venv: %s", python_logo, venv_name)
+    else
+      self.venv = ""
+    end
   end,
   {
     provider = function(self)
-      if #self.venv > 0 then
-        return self.venv .. "  "
+      if self.venv and #self.venv > 0 then
+        return self.venv .. " "
       end
+      return ""
     end,
-    hl = { fg = colors.mode_virtualenv_fg, bold = false },
+    hl = function(self)
+      return { fg = self.icon_color, bold = true }
+    end,
   },
 }
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
-
   condition = function()
     return Conditions.lsp_attached and set_conditions.hide_in_col_width(120) and vim.bo.filetype ~= "qf"
   end,
@@ -834,8 +895,8 @@ M.LSPActive = {
     self.names = lsp_clients
   end,
   {
-    provider = " LSP(s): ",
-    hl = { italic = true },
+    provider = " LSP ",
+    hl = { italic = false },
   },
   {
     provider = function(self)
@@ -861,15 +922,11 @@ M.SearchCount = {
     self.result = s_count
     self.isok = ok
   end,
-
-  provider = function(self)
-    if not self.isok or self.result.current == nil or self.result.total == 0 then
-      return ""
-    end
-  end,
-
   {
     condition = function(self)
+      if vim.v.hlsearch == 0 then
+        return false
+      end
       if self.result ~= nil and self.result.current ~= nil then
         if self.result.current == 0 then
           return false
@@ -880,15 +937,21 @@ M.SearchCount = {
 
     provider = function(self)
       if self.result.incomplete == 1 then
-        return "?/?"
+        return ""
       end
+
+      -- Retrieve the current search query from Neovim's search register.
+      -- This gets the last pattern used for searching with '/' in normal mode.
+      local search_query = vim.fn.getreg "/"
 
       local too_many = (">%d"):format(self.result.maxcount)
       local current = self.result.current > self.result.maxcount and too_many or self.result.current
       local total = self.result.total > self.result.maxcount and too_many or self.result.total
-
-      -- return "%#MyStatusLine_red_fg#" .. string.format(" %s/%s ", current, total) .. "%*"
-      return string.format(" %s/%s  ", current, total)
+      if search_query == "" then
+        return string.format("%d/%d  ", current, total)
+      else
+        return string.format("(%s) %d/%d  ", search_query, current, total)
+      end
     end,
     hl = { fg = colors.diagnostic_err },
   },
@@ -1049,13 +1112,12 @@ M.Sessions = {
   end,
   {
     provider = function(self)
-      local icon_ses = "󰅟 " -- "  "
       local ses_status = self.ses_status
       if self.ses_status == nil then
         return
       end
 
-      return icon_ses .. ses_status .. "  "
+      return RUtils.config.icons.misc.session .. ses_status .. "  "
     end,
   },
 }
@@ -1104,9 +1166,7 @@ M.BufferCwd = {
         if not cwd or cwd == "" then
           return ""
         end
-        -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
-        -- return " " .. cwd .. "%*"
-        return cwd .. " "
+        return RUtils.config.icons.misc.folder .. cwd .. " "
       end
     end,
   },
@@ -1181,15 +1241,6 @@ M.RmuxTargetPane = {
       return { fg = fg, bg = colors.block_mux_bg }
     end,
   },
-  -- {
-  --   provider = function(self)
-  --     if self.run_with and self.task > 0 then
-  --       return self.run_with
-  --     end
-  --   end,
-  --   hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
-  -- },
-
   {
     provider = function(self)
       if self.task > 0 then
@@ -1198,7 +1249,6 @@ M.RmuxTargetPane = {
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
   },
-
   {
     provider = function(self)
       if #self.watch > 0 then
@@ -1452,6 +1502,7 @@ M.status_active_left = {
   M.LazyStatus,
   M.Dap,
   M.Diagnostics,
+  M.SearchCount,
   M.LSPActive,
   M.virtualenv,
   -- M.SnacksProfile,
@@ -1489,12 +1540,6 @@ M.WinbarFilePath = {
   init = function(self)
     self.bufname = get_vars.bufname()
     self.filename = get_vars.filename(self.bufname)
-    self.is_fugitive = function()
-      return set_conditions.is_path_git_relative()
-    end
-    self.is_readonly = function()
-      return set_conditions.is_readonly()
-    end
   end,
   condition = function()
     return vim.bo[0].filetype ~= "qf"
@@ -1507,7 +1552,6 @@ M.WinbarFilePath = {
       }
 
       local path = vim.fn.expand "%:p" --[[@as string]]
-      -- RUtils.info("BRO >> " .. path)
 
       if path == "" then
         return ""
@@ -1521,9 +1565,9 @@ M.WinbarFilePath = {
       local cwd = RUtils.root.cwd()
 
       if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
-        path = path:sub(#cwd + 2)
+        path = path:sub(#cwd + 3)
       elseif path:find(root, 1, true) == 1 then
-        path = path:sub(#root + 2)
+        path = path:sub(#root + 3)
       end
 
       local sep = package.config:sub(1, 1)
@@ -1533,154 +1577,74 @@ M.WinbarFilePath = {
         parts = parts
       elseif #parts > opts.length and opts.relative == "cwd" then
         -- remove the last one to modified hl self.filename
-        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
+        parts = { "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
+        -- parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
       else
         -- remove the last one too
-        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
+        -- parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
+        parts = { "…", unpack(parts, #parts - opts.length + 1, #parts - 1) }
       end
 
-      if not Conditions.width_percent_below(#self.filename, 0.2) and not set_conditions.hide_in_width(80) then
+      if not set_conditions.is_terminal_ft() then
+        local jparts = vim.split(self.filename, "[\\/]")
+        if #jparts == 1 then
+          return ""
+        end
+
         path = table.concat(parts, sep)
         if #path > 0 then
           return path .. sep
         end
       end
-
-      parts = vim.split(self.filename, "[\\/]")
-      if #parts == 1 then
-        return ""
-      end
-
-      table.remove(parts, #parts)
-      path = table.concat(parts, sep)
-      if #path > 0 then
-        if path:find(RUtils.config.path.home, 1, true) == 1 then
-          path = path:sub(#RUtils.config.path.home + 2)
-        end
-        return path .. sep
-      end
-
-      -- return statusline path untuk non active window
-      return self.filename
     end,
-    hl = function(self)
-      local fg = colors.winbar_fg
-      local is_bold = false
-      if Conditions.is_active() then
-        is_bold = true
-      end
-
-      if self.is_fugitive() then
-        fg = tostring(colors.mode_yellow_fg)
-      end
-
-      if self.is_readonly() then
-        fg = tostring(colors.mode_red_fg)
-      end
-
-      if set_conditions.is_gray_ft() then
-        fg = colors.mode_gray_fg
-        if Conditions.is_active() then
-          fg = colors.mode_gray_fg_keyword
-        end
-      end
-
-      if set_conditions.is_green_ft() then
-        fg = colors.mode_green_fg
-      end
-
-      return { fg = fg, bold = is_bold }
+    hl = function()
+      local hl_opts = set_hl()
+      return { fg = hl_opts.fg, bg = hl_opts.bg }
     end,
   },
   {
     provider = function(self)
       return RUtils.file.basename(self.filename) .. " "
     end,
-    hl = function(self)
-      local fg = colors.winbar_fg
-      local bg = colors.normal_bg
-      local is_bold = false
-      local is_italic = false
-
-      if Conditions.is_active() then
-        fg = colors.winbar_keyword
-        is_bold = true
-        is_italic = true
-      end
-
-      if self.is_fugitive() then
-        fg = tostring(colors.mode_yellow_fg)
-        bg = tostring(colors.mode_yellow_bg)
-        if Conditions.is_active() then
-          fg = tostring(colors.mode_yellow_fg_active)
-        end
-      end
-
-      if self.is_readonly() then
-        fg = tostring(colors.mode_red_fg)
-        bg = tostring(colors.mode_red_bg)
-        if Conditions.is_active() then
-          fg = tostring(colors.mode_red_fg_active)
-        end
-      end
-
-      if set_conditions.is_gray_ft() then
-        fg = colors.mode_gray_fg
-        bg = colors.mode_gray_bg
-        if Conditions.is_active() then
-          fg = colors.mode_gray_fg_keyword
-        end
-      end
-
-      if set_conditions.is_green_ft() then
-        fg = colors.mode_green_fg
-        bg = colors.mode_green_bg
-        if Conditions.is_active() then
-          fg = colors.mode_green_fg_active
-        end
-      end
-
-      return { fg = fg, bg = bg, bold = is_bold, italic = is_italic }
+    hl = function()
+      local hl_opts = set_hl()
+      return { fg = hl_opts.fg, bg = hl_opts.bg }
     end,
   },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local hl_opts = set_hl_separator()
+      return { fg = hl_opts.fg, bg = hl_opts.bg }
+    end,
+  },
+}
+M.WinBarNavic = {
+  condition = function()
+    return set_conditions.is_lsp_attached()
+      and require("nvim-navic").is_available()
+      and not set_conditions.is_path_git_relative()
+      and not set_conditions.is_terminal_ft()
+      and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
+  end,
+  provider = function()
+    return string.format(" %s", require("nvim-navic").get_location())
+  end,
+  hl = { fg = colors.mode_yellow_fg, bg = colors.statusline_bg },
 }
 
 M.status_winbar_active_left = {
   -- M.WinbarSeparator,
   M.FileIcon,
   M.WinbarFilePath,
+  M.WinBarNavic,
   M.QuickfixStatus,
-  M.TroubleStatus,
 
   M.Gap,
 
   hl = function()
-    local fg = colors.statusline_fg
-    local bg = colors.normal_bg
-
-    if vim.bo.filetype == "qf" then
-      bg = colors.winbar_bg
-    end
-
-    if set_conditions.is_path_git_relative() then
-      bg = colors.mode_yellow_bg
-    end
-
-    if set_conditions.is_readonly() then
-      bg = colors.mode_red_bg
-    end
-
-    if set_conditions.is_gray_ft() then
-      fg = colors.mode_gray_fg
-      bg = colors.mode_gray_bg
-    end
-
-    if set_conditions.is_green_ft() then
-      fg = colors.mode_green_fg
-      bg = colors.mode_green_bg
-    end
-
-    return { fg = fg, bg = bg }
+    local hl_opts = set_hl(true)
+    return { fg = hl_opts.fg, bg = hl_opts.bg }
   end,
 }
 

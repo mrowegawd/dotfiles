@@ -200,9 +200,10 @@ return {
     event = "LazyFile",
     opts = {},
   },
-  -- NVIM-TREESITTER-CONTEXT
+  -- NVIM-TREESITTER-CONTEXT (disabled)
   {
     "mrowegawd/nvim-treesitter-context",
+    enabled = false,
     event = "BufReadPost",
     keys = {
       {
