@@ -335,11 +335,6 @@ end
 vim.g.is_set_global_cursoline = false
 
 local set_cursorline = function(active)
-  if vim.g.is_set_global_cursoline == nil or not vim.g.is_set_global_cursoline then
-    vim.cmd "set nocursorline"
-    return
-  end
-
   local filetype, buftype = RUtils.buf.get_bo_buft()
   local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
@@ -349,7 +344,13 @@ local set_cursorline = function(active)
   end
 
   if not autocmds.cursorline_blacklist[filetype] then
-    wo.cursorline = active
+    if not vim.g.is_set_global_cursoline then
+      vim.cmd "set nocursorline"
+    end
+
+    if vim.g.is_set_global_cursoline then
+      wo.cursorline = active
+    end
 
     if saved_cursorline_hl then
       restore_cursorline()
@@ -358,6 +359,7 @@ local set_cursorline = function(active)
   end
 
   if buftype == "quickfix" and filetype == "qf" then
+    vim.g.is_set_global_cursoline = true
     save_cursorline_hl()
     set_bright_cursorline()
   end

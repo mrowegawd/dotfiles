@@ -68,7 +68,7 @@ local base_colors = {
   normal_keyword_alter = 0.14,
 
   panel_bottom_normal_fg_alter = -0.05,
-  panel_bottom_normal_bg_alter = -0.1,
+  panel_bottom_normal_bg_alter = 0.1,
 
   fold_fg = 0.18,
   fold_bg = 0.05,

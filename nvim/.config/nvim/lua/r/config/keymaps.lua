@@ -592,15 +592,23 @@ end
 
 RUtils.map.nnoremap("<Leader>uC", function()
   local msg_notify
-  if not vim.g.is_set_global_cursoline then
-    vim.g.is_set_global_cursoline = true
-    msg_notify = "Turn On"
-  else
-    vim.g.is_set_global_cursoline = false
+  local quickfix_cursorline_active = vim.g.is_quickfix_cursorline_active
+  if quickfix_cursorline_active then
+    vim.g.is_quickfix_cursorline_active = false
     msg_notify = "Turn Off"
+  else
+    vim.g.is_quickfix_cursorline_active = true
+    msg_notify = "Turn On"
   end
 
-  RUtils.info("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
+  local should_update_all_cursorlines = vim.g.should_update_all_cursorlines
+  if should_update_all_cursorlines then
+    vim.g.should_update_all_cursorlines = false
+  else
+    vim.g.should_update_all_cursorlines = true
+  end
+
+  RUtils.warn("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
 end, { desc = "Toggle: cursorline" })
 
 -- RUtils.map.nnoremap("<space><F9>", function()
