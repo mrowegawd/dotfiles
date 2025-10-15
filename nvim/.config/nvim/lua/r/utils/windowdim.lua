@@ -46,6 +46,7 @@ local winhighlight_sidebar_panel = table.concat({
 }, ",")
 
 local winhighlight_custom_folded = table.concat({
+  "NormalFloat:Normal",
   "Folded:FoldedMarkdown",
 }, ",")
 
@@ -149,6 +150,7 @@ autocmds.blacklist_hl_folded = {
   ["orgagenda"] = true,
   ["org"] = true,
   ["git"] = true,
+  ["codecompanion"] = true,
 }
 
 autocmds.cursorline_blacklist = {
@@ -332,7 +334,8 @@ local function restore_cursorline()
   end
 end
 
-vim.g.is_set_global_cursoline = false
+vim.g.is_quickfix_cursorline_active = false
+vim.g.should_update_all_cursorlines = false
 
 local set_cursorline = function(active)
   local filetype, buftype = RUtils.buf.get_bo_buft()
@@ -343,28 +346,42 @@ local set_cursorline = function(active)
     return
   end
 
-  if not autocmds.cursorline_blacklist[filetype] then
-    if not vim.g.is_set_global_cursoline then
-      vim.cmd "set nocursorline"
-    end
+  if buftype == "quickfix" and filetype == "qf" then
+    vim.g.is_quickfix_cursorline_active = true
+    save_cursorline_hl()
+    set_bright_cursorline()
+    return
+  end
 
-    if vim.g.is_set_global_cursoline then
-      wo.cursorline = active
+  if not autocmds.cursorline_blacklist[filetype] then
+    if vim.g.is_quickfix_cursorline_active then
+      vim.wo.cursorline = active
+    else
+      vim.wo.cursorline = false
     end
 
     if saved_cursorline_hl then
       restore_cursorline()
     end
-    return
+  else
+    vim.wo.cursorline = false
   end
+end
 
-  if buftype == "quickfix" and filetype == "qf" then
-    vim.g.is_set_global_cursoline = true
-    save_cursorline_hl()
-    set_bright_cursorline()
+autocmds.update_cursorline_for_all_windows = function()
+  if not vim.g.should_update_all_cursorlines then
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local filetype = vim.bo[buf].filetype
+      local buftype = vim.bo[buf].buftype
+
+      if buftype == "quickfix" and filetype == "qf" then
+        vim.g.is_quickfix_cursorline_active = true
+      else
+        vim.g.is_quickfix_cursorline_active = false
+      end
+    end
   end
-
-  wo.cursorline = false
 end
 
 autocmds.buf_enter = function()
@@ -378,7 +395,7 @@ autocmds.focus_gained = function()
 end
 
 autocmds.focus_lost = function()
-  -- set_cursorline(true)
+  set_cursorline(false)
   blurred_window()
 end
 

@@ -215,6 +215,14 @@ RUtils.cmd.augroup("WindowDim", {
     end
     RUtils.windowdim.win_leave()
   end,
+}, {
+  event = { "WinEnter", "BufEnter", "BufWinEnter", "WinLeave", "FileType" },
+  pattern = "*",
+  command = function()
+    vim.defer_fn(function()
+      RUtils.windowdim.update_cursorline_for_all_windows()
+    end, 10)
+  end,
 })
 
 ---------------------------------
