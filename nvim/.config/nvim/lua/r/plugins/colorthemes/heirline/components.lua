@@ -205,12 +205,12 @@ local __colors = function()
     block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")), -0.5),
     block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.1),
 
-    winbar_keyword = H.get("Keyword", "fg"),
+    winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
     winbarNC_fg = H.get("WinBarNC", "bg"),
     winbarNC_bg = H.get("WinBarNC", "bg"),
-    winbar_bg_right_block = H.tint(H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")), 0.1),
+    winbar_bg_right_block = H.get("WinBarRightBlock", "bg"),
 
     winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
     winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),

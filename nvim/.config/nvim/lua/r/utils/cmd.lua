@@ -1112,7 +1112,7 @@ function M.change_colors()
   local __tab_active_fg = -0.3
   local __tab_active_bg = -0.7
 
-  if vim.tbl_contains({ "vscode_modern", "base46-kanagawa" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "base46-kanagawa" }, vim.g.colorscheme) then
     __tab_active_bg = -0.6
   end
 
@@ -1129,6 +1129,16 @@ function M.change_colors()
   if vim.g.colorscheme == "base46-zenburn" then
     __tab_active_fg = -0.2
     __tab_active_bg = -0.6
+  end
+
+  if vim.g.colorscheme == "neogotham" then
+    __tab_active_fg = 0.2
+    __tab_active_bg = -0.65
+  end
+
+  if vim.g.colorscheme == "vscode_modern" then
+    __tab_active_fg = -0.1
+    __tab_active_bg = -0.65
   end
 
   local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
