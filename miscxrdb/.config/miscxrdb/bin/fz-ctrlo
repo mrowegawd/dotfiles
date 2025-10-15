@@ -593,13 +593,18 @@ callme() {
  tmux: select session
  tmux: capture pane
  tmux: capture pane with files
- rkill
+󰭲 rkill
  multilog
- newsboat
+󰎕 news
+ Rust upserv
+ Rust upserv 2
+ Rust benc
+ Grav term
+ Log Meta
 EOF
   )
 
-  SELECTED=$(echo -e "$MENULIST" | fzf-tmux -xC -w '30%' -h '50%' --prompt="⚡ " --border-label ' ALT-Y ')
+  SELECTED=$(echo -e "$MENULIST" | fzf-tmux -xC -w '30%' -h '55%' --prompt="⚡" --border-label ' ALT-O ')
   [[ -z $SELECTED ]] && exit
 
   SELECT="${SELECTED#* }"
@@ -619,7 +624,7 @@ EOF
   "tmux: capture pane with files") capture_pane_and_save_to_file ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
-  "newsboat") open_newsboat ;;
+  "news") open_newsboat ;;
   *) exit ;;
   esac
 }

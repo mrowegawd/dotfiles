@@ -644,7 +644,7 @@ local ctrl_o_nvim = function()
     ["Clock mode"] = function()
       RUtils.terminal.clock_mode()
     end,
-    ["Newsboat"] = function()
+    ["News"] = function()
       RUtils.terminal.float_newsboat()
     end,
     ["Calendar"] = function()
