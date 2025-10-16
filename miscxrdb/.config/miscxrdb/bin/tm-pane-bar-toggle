@@ -30,14 +30,10 @@ toggle_border_visibility_and_file_manager() {
   pane_count=$(tmux list-panes | wc -l)
 
   if [ "$pane_count" -eq 1 ] || [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
-    if [[ "$1" == 1 ]]; then
-      tmux set-option -g pane-border-status off
-    fi
+    # tmux set-option -g pane-border-status off
     tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_INACTIVE"
   else
-    if [[ "$1" == 1 ]]; then
-      tmux set-option -g pane-border-status top
-    fi
+    # tmux set-option -g pane-border-status top
     tmux set-option -g pane-active-border-style "bg=$TMUX_BG,fg=$BORDER_ACTIVE"
   fi
   _force_color_filemanager
