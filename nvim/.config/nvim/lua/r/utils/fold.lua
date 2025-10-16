@@ -135,11 +135,25 @@ local function open_qf_items(cmd, indices, opts, is_only)
     --   -- is_new_tab_win = "nw"
     -- end
 
+    local is_failed = false
+
     -- Execute open command
     if use_open then
-      vim.cmd(qf_open_cmd .. " " .. idx)
+      local _, err = pcall(function()
+        vim.cmd(qf_open_cmd .. " " .. idx)
+      end)
+
+      if err and string.match(err, "E42") then
+        is_failed = true
+      end
     else
-      vim.cmd(qf_open_cmd)
+      local _, err = pcall(function()
+        vim.cmd(qf_open_cmd)
+      end)
+
+      if err and string.match(err, "E553") then
+        is_failed = true
+      end
     end
 
     -- Apply policy
@@ -147,7 +161,7 @@ local function open_qf_items(cmd, indices, opts, is_only)
     -- local apply_qf_policy = policy == "qf" and cmd == "open" or (policy == "legacy" and open_type == "t")
     -- local apply_qf_policy = policy == "qf" and not is_only or (policy == "legacy" and open_type == "t")
     local apply_qf_policy = policy == "qf" and not is_only or (policy == "legacy")
-    if apply_qf_policy then
+    if apply_qf_policy and not is_failed then
       -- vim.api.nvim_set_current_win(qf_winid)
       vim.cmd "wincmd p"
     end
@@ -274,13 +288,13 @@ function M.handle_qf_open(is_jump_prev, qf_mode, is_only)
     end
   end
 
-  if not is_nav_disabled then
-    if not is_loclist and qf_mode ~= "only" then
-      RUtils.map.feedkey("<" .. nav_key .. ">", "n")
-    end
-  end
-
   vim.schedule(function()
+    if not is_nav_disabled then
+      if not is_loclist and qf_mode ~= "only" then
+        RUtils.map.feedkey("<" .. nav_key .. ">", "n")
+      end
+    end
+
     local indices = { vim.fn.line "." }
     open_qf_items(qf_mode, indices, opts, is_only)
   end)
