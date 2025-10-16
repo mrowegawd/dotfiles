@@ -288,11 +288,13 @@ local set_hl = function(is_base)
   end
 
   if set_conditions.is_readonly() then
-    hl_opts.fg = tostring(colors.mode_red_fg)
-    hl_opts.bg = colors.mode_red_bg_right_block
-    if is_base then
+    if vim.bo.filetype ~= "qf" then
       hl_opts.fg = tostring(colors.mode_red_fg)
-      hl_opts.bg = colors.mode_red_bg
+      hl_opts.bg = colors.mode_red_bg_right_block
+      if is_base then
+        hl_opts.fg = tostring(colors.mode_red_fg)
+        hl_opts.bg = colors.mode_red_bg
+      end
     end
   end
 
