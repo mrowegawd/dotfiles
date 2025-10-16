@@ -8,23 +8,23 @@ file-modified-label = [M]
 file-removed-label = [-]
 file-renamed-label = [R]
 # file-decoration-style = "#606018" overline
-file-style = "#4984b5" bold "#1b3144"
+file-style = "#1b3144" bold "#4984b5"
 hunk-header-decoration-style = none
 hunk-header-style = syntax bold "#383838"
 line-numbers = true
-line-numbers-left-format = "{nm:>1}┊"
-line-numbers-left-style = red
-line-numbers-minus-style = "#c55348" italic
-line-numbers-plus-style = "#76975e" italic
-line-numbers-right-format = "{np:>1}┊"
-line-numbers-right-style = green
-line-numbers-zero-style = "#545474" italic
+line-numbers-left-format = "▎{nm:>1} ▎"
+# line-numbers-left-style = green
+line-numbers-minus-style = "#de5d51" italic
+line-numbers-plus-style = "#a2cf81" italic
+line-numbers-right-format =  "▎{np:>1} ▎"
+# line-numbers-right-style = green
+line-numbers-zero-style = "#454545"
 
-minus-emph-style = "#ff7464" bold "#592520"
-minus-style = "#c55348" bold "#401b17"
+minus-emph-style = "#de5d51" bold "#693631"
+minus-style = "#de5d51" bold "#3f2725"
 
-plus-emph-style = "#a5d383" bold "#445836"
-plus-style = "#76975e" bold "#313f27"
+plus-emph-style = "#a2cf81" bold "#576c48"
+plus-style = "#9dca7d" bold "#394332"
 
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse

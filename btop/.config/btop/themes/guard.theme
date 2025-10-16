@@ -10,7 +10,7 @@ theme[main_fg]="#a3a3a3"
 theme[title]="#447cab"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="#d85b4f"
+theme[hi_fg]="#f46659"
 
 # Color cursorline
 theme[selected_fg]="#acffff"

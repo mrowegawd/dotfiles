@@ -951,6 +951,12 @@ function M.edit_snippet()
       snippets = { "javascript", "react", "html" },
       frameworks = { "react" },
     },
+
+    htmldjango = {
+      ft = "htmldjango",
+      snippets = { "html", "css" },
+      frameworks = { "djangohtml" },
+    },
   }
 
   if ft_alias[ft] then
@@ -1149,7 +1155,7 @@ function M.change_colors()
   local __tab_statusline_fg = -0.25
 
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-kanagawa" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.17
+    __tab_inactive_fg = -0.2
     __tab_statusline_fg = -0.17
   end
 

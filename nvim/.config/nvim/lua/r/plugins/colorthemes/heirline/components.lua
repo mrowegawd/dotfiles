@@ -895,7 +895,7 @@ M.LSPActive = {
     self.names = lsp_clients
   end,
   {
-    provider = " LSP ",
+    provider = " LSP: ",
     hl = { italic = false },
   },
   {

@@ -37,7 +37,7 @@ gui:
   border: "rounded" # one of 'rounded' | 'single' | 'double' | 'hidden'
   theme:
     activeBorderColor:
-      - "#3c6d95"
+      - "#4d8cc0"
       - bold
     inactiveBorderColor:
       - "#373737"
