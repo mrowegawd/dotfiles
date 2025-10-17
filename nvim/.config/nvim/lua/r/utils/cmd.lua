@@ -1180,7 +1180,7 @@ function M.change_colors()
 
   -- Border Pane =====================================================
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  local border_inactive = H.get("WinSeparator", "fg")
+  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.05)
   ---
   --------------------------------------------------------------------
 

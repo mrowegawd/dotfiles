@@ -246,7 +246,7 @@ local __colors = function()
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
     mode_term_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.8, H.get("Normal", "bg")), 0.1),
-    mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.4, H.get("Normal", "bg")), 0.1),
+    mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.5, H.get("Normal", "bg")), 0.15),
     mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.15, H.get("Normal", "bg")), 0.1),
 
     mode_virtualenv_fg = H.increase_saturation(H.tint(H.get("Boolean", "fg"), -0.1), 0.6),
@@ -1524,8 +1524,8 @@ M.status_active_left = {
     local bg = colors.statusline_bg
 
     if set_conditions.is_terminal_ft() then
-      bg = colors.mode_term_statusline_bg
       fg = colors.mode_term_statusline_fg
+      bg = colors.mode_term_statusline_bg
     end
 
     return { fg = fg, bg = bg }

@@ -536,6 +536,16 @@ tmux_clock_mode() {
 }
 tmux_toggle_status() {
   tmux set-option -g status
+
+  if [[ ! -f /tmp/tm_status_toggle ]]; then
+    touch /tmp/tm_status_toggle
+    tmux set-option -g pane-border-status off
+    # dunstify "toggle Off"
+  else
+    rm /tmp/tm_status_toggle
+    tmux set-option -g pane-border-status top
+    # dunstify "toggle On"
+  fi
 }
 tmux_toggle_synchronize_panes() {
   file_sync="/tmp/.tmux_toggle_synchronize_panes"

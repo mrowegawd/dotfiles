@@ -311,7 +311,7 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.2,
     quickfixline_sp_alter = 0.4,
 
-    render_markdown_code_bg_alter = 0.02,
+    render_markdown_code_bg_alter = 0.08,
     render_markdown_code_inline_bg_alter = 0.04,
     snacks_notifier_border_error_fg = -0.1,
     snacks_notifier_border_warn_fg = -0.4,
@@ -396,7 +396,7 @@ local update_col_colorscheme = {
     render_markdown_code_inline_fg_alter = 0.05,
     tabline_fg_alter = 0.55,
     trouble_indent_fg_alter = 0.7,
-    winbar_fg_alter = 2.5,
+    winbar_fg_alter = 2,
     winbar_right_block_bg_alter = 1,
     winbar_file_path_fg_alter = 1.5,
     winseparator_alter = 1,
