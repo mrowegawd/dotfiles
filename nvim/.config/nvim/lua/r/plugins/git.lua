@@ -65,7 +65,7 @@ return {
           ---@diagnostic disable-next-line: undefined-field
           RUtils.info("Start or refresh git conflict..", { title = "Git-conflict" })
         end,
-        desc = "Git: start/refresh git conflict [gitconflict]",
+        desc = "Gitopen: start/refresh git conflict [gitconflict]",
       },
       {
         "<Leader>g<down>",
@@ -90,16 +90,16 @@ return {
         "<Leader>gob",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
-        desc = "Open: gitlink on browser (normal or visual) [gitlinker]",
+        desc = "Gitopen: gitlink on browser (normal or visual) [gitlinker]",
       },
       {
         "<Leader>goB",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Open: gitlink on browser [gitlinker]",
+        desc = "Gitopen: gitlink on browser [gitlinker]",
       },
       {
         "<Leader>gy",
-        desc = "Git: copy hash link [gitlinker]",
+        desc = "Gitopen: copy hash link [gitlinker]",
       },
     },
     opts = { mappings = "<Leader>gy" },
@@ -418,11 +418,12 @@ return {
         end, "Hunk: preview (visual) [gitsigns]")
 
         -- Toggle
-        -- map("n", "<Leader>gub", function()
-        --   gs.blame()
-        -- end, "Toggle: git blame [gitsigns]")
-        -- map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: to check diff changes [gitsigns]")
-        -- map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
+        map("n", "<Leader>gub", function()
+          gs.blame()
+        end, "Gittoggle: git blame [gitsigns]")
+        map("n", "<Leader>gud", gs.toggle_deleted, "Gittoggle: to check diff changes [gitsigns]")
+        map("n", "<Leader>guw", gs.toggle_word_diff, "Gittoggle: word diff [gitsigns]")
+        map("n", "<Leader>gul", gs.toggle_linehl, "Gittoggle: linehl [gitsigns]")
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -695,14 +696,14 @@ return {
     event = "LazyFile",
     keys = {
       {
-        "<Leader>goD",
+        "<Leader>goo",
         "<CMD>DiffviewOpen<CR>",
-        desc = "Open: DiffviewOpen [diffview]",
+        desc = "Gitopen: DiffviewOpen [diffview]",
       },
       {
-        "<Leader>god",
+        "<Leader>goh",
         "<CMD>DiffviewFileHistory<CR>",
-        desc = "Open: DiffviewFileHistory repo [diffview]",
+        desc = "Gitopen: DiffviewFileHistory repo [diffview]",
       },
       {
         "<Leader>gl",
