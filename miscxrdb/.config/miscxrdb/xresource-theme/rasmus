@@ -1,0 +1,29 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! Rasmus colorscheme converted from kitty.conf to Xresources
+
+*.cursorColor:      #b6b6b5
+*.foreground:       #d1d1d1
+*.background:       #1a1a19
+*.selectionForeground: #d1d1d1
+*.selectionBackground: #2a2a29
+
+! Normal colors
+*.color0:  #333332
+*.color1:  #ff968c
+*.color2:  #61957f
+*.color3:  #ffc591
+*.color4:  #8db4d4
+*.color5:  #de9bc8
+*.color6:  #7bb099
+*.color7:  #d1d1d1
+
+! Bright colors
+*.color8:  #4c4c4b
+*.color9:  #ffafa5
+*.color10: #7aae98
+*.color11: #ffdeaa
+*.color12: #a6cded
+*.color13: #f7b4e1
+*.color14: #94c9b2
+*.color15: #eaeaea
+*.color15: #8db4d4

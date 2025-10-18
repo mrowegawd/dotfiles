@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- RASMUS
+  {
+    "kvrohit/rasmus.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local rasmus_themes = { "rasmus" }
+      if vim.tbl_contains(rasmus_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- ZENBURN
   {
     "phha/zenburn.nvim",
