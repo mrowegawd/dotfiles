@@ -26,7 +26,7 @@ return {
         is_new = is_new or false
 
         if is_new then
-          local terms = require "ergoterm.terminal"
+          local terms = require "ergoterm"
           local term = terms.Terminal:new {
             name = "base",
             cmd = "zsh",
@@ -36,7 +36,7 @@ return {
         end
 
         if not base_term and not is_new then
-          local terms = require "ergoterm.terminal"
+          local terms = require "ergoterm"
           base_term = terms.Terminal:new {
             name = "basec",
             cmd = "zsh",

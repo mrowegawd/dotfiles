@@ -271,7 +271,7 @@ local open_term_with_singleton = function(is_new, direction)
   is_new = is_new or false
 
   if not base_term and not is_new then
-    local terms = require "ergoterm.terminal"
+    local terms = require "ergoterm"
     base_term = terms.Terminal:new {
       name = "Notes Wiki",
       cmd = "cd ~/Dropbox/neorg/; nvim",
