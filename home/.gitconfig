@@ -193,14 +193,11 @@
 
   #### LOGGING ####
   l = log --color=always --graph --pretty=format:\"%C(blue)%h %Creset- %C(green)(%cr) %Creset%s - %C(cyan)%aN %C(magenta)%d\" --date=auto:human
+  ll = l --cc
   log-all = l --all
   log-author = "!sh -c \"git l $@ --author=\"$NAME\"\""
-  ll = l --cc
   log-no-merges= l --no-merges
   ; patch = !git --no-pager diff --no-color | pbcopy | echo "Patch copied to clipboard"
-
-  ; l = log --graph --abbrev-commit --decorate --format=lg1
-  ; ll = "log --pretty=rlf"
 
   log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
   log-timeline = log --format='%h %an %ar - %s'
