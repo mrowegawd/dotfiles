@@ -1137,6 +1137,16 @@ function M.change_colors()
     __tab_active_bg = -0.6
   end
 
+  if vim.g.colorscheme == "ashen" then
+    __tab_active_fg = -0.4
+    __tab_active_bg = -0.75
+  end
+
+  if vim.g.colorscheme == "zenburn" then
+    __tab_active_fg = -0.2
+    __tab_active_bg = -0.6
+  end
+
   if vim.g.colorscheme == "neogotham" then
     __tab_active_fg = 0.2
     __tab_active_bg = -0.65
@@ -1166,6 +1176,16 @@ function M.change_colors()
 
   if vim.g.colorscheme == "neogotham" then
     __tab_inactive_fg = -0.22
+    __tab_statusline_fg = -0.22
+  end
+
+  if vim.g.colorscheme == "minimal" then
+    __tab_inactive_fg = -0.3
+    __tab_statusline_fg = -0.22
+  end
+
+  if vim.g.colorscheme == "zenburn" then
+    __tab_inactive_fg = -0.5
     __tab_statusline_fg = -0.22
   end
 
@@ -1205,7 +1225,27 @@ function M.change_colors()
     zsh_sugest_fg = 0.7
   end
 
-  if vim.g.colorscheme == "base46-kanagawa" then
+  if vim.g.colorscheme == "nonode" then
+    zsh_lines_fg = 0.15
+    zsh_sugest_fg = 0.7
+  end
+
+  if vim.g.colorscheme == "ashen" then
+    zsh_lines_fg = 0.5
+    zsh_sugest_fg = 0.7
+  end
+
+  if vim.g.colorscheme == "minimal" then
+    zsh_lines_fg = 0.4
+  end
+
+  if vim.g.colorscheme == "zenburn" then
+    zsh_lines_fg = 0.15
+    zsh_sugest_fg = 0.28
+  end
+
+  local soft_themes = { "nanode", "base46-kanagawa" }
+  if vim.tbl_contains(soft_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.45
     zsh_sugest_fg = 0.8
   end

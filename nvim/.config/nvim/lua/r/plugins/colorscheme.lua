@@ -7,6 +7,64 @@
 -- https://base2t.one
 
 return {
+  -- ZENBURN
+  {
+    "phha/zenburn.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local zenburn_themes = { "zenburn" }
+      if vim.tbl_contains(zenburn_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- XENO
+  {
+    "kyza0d/xeno.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local xeno_themes = { "xenos" }
+      if vim.tbl_contains(xeno_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      require("xeno").new_theme("xenos", {
+        base = "#1a1a1a",
+        accent = "#7aa2f7",
+      })
+    end,
+  },
+  -- MINIMAL
+  {
+    "Yazeed1s/minimal.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local minimal_themes = { "minimal" }
+      if vim.tbl_contains(minimal_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- OXOCARBON
+  {
+    "nyoom-engineering/oxocarbon.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local oxocarbon_themes = { "oxocarbon" }
+      if vim.tbl_contains(oxocarbon_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NEOGOTHAM
   {
     "https://gitlab.com/shmerl/neogotham.git",
@@ -81,7 +139,7 @@ return {
         "base46-material-lighter",
         "base46-melange",
         "base46-onenord",
-        "base46-oxocarbon",
+        -- "base46-oxocarbon",
         "base46-seoul256_dark",
         "base46-solarized_dark",
         "base46-vscode_dark",
@@ -102,20 +160,6 @@ return {
     enabled = function()
       local ashen_theme = { "ashen" }
       if vim.tbl_contains(ashen_theme, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- ZENBURN
-  {
-    "phha/zenburn.nvim",
-    lazy = false,
-    as = "zenburn",
-    priority = 1000,
-    enabled = function()
-      local zenbones_theme = { "zenburn" }
-      if vim.tbl_contains(zenbones_theme, vim.g.colorscheme) then
         return true
       end
       return false

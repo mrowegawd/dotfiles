@@ -26,7 +26,6 @@ local base_colors = {
   fzflua_buf_linenr_bg_alter = 0.5,
   fzflua_file_part_fg = 0.85,
   fzflua_normal_bg_alter = 0.5,
-  fzflua_sel_bg_alter = 2,
   fzflua_sel_sp_fg_alter = -0.3,
   hovered_cursorline_fg_alter = 0.2,
   linenr_fg_alter = 0.08,
@@ -57,6 +56,7 @@ local base_colors = {
   quickfixline_sp_alter = 1,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = 0,
+  statusline_fg_alter = 0.5,
   tabline_bg_alter = 0.05,
   tabline_fg_alter = 0.4,
   trouble_indent_fg_alter = 0.55,
@@ -118,6 +118,19 @@ local base_colors = {
 }
 
 local update_col_colorscheme = {
+  ["ashen"] = {
+    comment_fg_alter = 0.7,
+    fold_fg = 0.25,
+    fzflua_file_part_fg = 0.6,
+    linenr_fg_alter = -0.05,
+    nontext_fg_alter = 3,
+    pmenu_bg_alter = 1.8,
+    render_markdown_code_bg_alter = 1.2,
+    statusline_fg_alter = 0.8,
+    winbar_right_block_bg_alter = 0.6,
+    winbar_right_block_fg_alter = -0.25,
+    winseparator_alter = 1.2,
+  },
   ["base46-jabuti"] = {
     blink_ghost_text_fg_alter = -0.4,
     cursor_fg = "#ece1d7",
@@ -224,7 +237,6 @@ local update_col_colorscheme = {
     cursorline_alter = -0.12,
     dapstopped_bg_alter = 0.2,
     fzflua_file_part_fg = -0.4,
-    fzflua_sel_bg_alter = 0.01,
     linenr_fg_alter = -0.04,
     lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
     lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
@@ -446,6 +458,50 @@ local update_col_colorscheme = {
     diffdelete_fg_alter = -0.3,
     diffdelete_bg_alter = 0.2,
   },
+  ["nanode"] = {
+    -- blink_ghost_text_fg_alter = -0.4,
+    -- cursor_fg = "#ece1d7",
+    -- cursorline_alter = 0.05,
+    -- dapstopped_bg_alter = 0.15,
+    -- fold_fg = 0.3,
+    -- fzflua_file_part_fg = 0.7,
+    -- linenr_fg_alter = -0.02,
+    -- noice_cmdline_fg_alter = 0.6,
+    -- normal_keyword_alter = 0.1,
+    -- pmenu_bg_alter = 1,
+    -- pmenu_sp_alter = 2,
+    -- render_markdown_code_bg_alter = 0.23,
+    -- snacks_indent_scope_fg_alter = 0.13,
+    -- statusline_bg_alter = -0.08,
+    -- tabline_fg_alter = 0.3,
+    -- trouble_indent_fg_alter = 0.6,
+    -- winbar_fg_alter = 1.2,
+    -- winbar_file_path_fg_alter = 0.7,
+    -- winbar_right_block_bg_alter = 0.5,
+    winseparator_alter = 0.4,
+  },
+  ["minimal"] = {
+    blink_ghost_text_fg_alter = -0.4,
+    cursor_fg = "#ece1d7",
+    cursorline_alter = 0.05,
+    dapstopped_bg_alter = 0.15,
+    fold_fg = 0.3,
+    fzflua_file_part_fg = 0.7,
+    linenr_fg_alter = -0.02,
+    noice_cmdline_fg_alter = 0.6,
+    normal_keyword_alter = 0.1,
+    pmenu_bg_alter = 1,
+    pmenu_sp_alter = 2,
+    render_markdown_code_bg_alter = 0.23,
+    snacks_indent_scope_fg_alter = 0.13,
+    statusline_bg_alter = -0.08,
+    tabline_fg_alter = 0.3,
+    trouble_indent_fg_alter = 0.6,
+    winbar_fg_alter = 1.2,
+    winbar_file_path_fg_alter = 0.7,
+    winbar_right_block_bg_alter = 0.5,
+    winseparator_alter = 0.7,
+  },
   ["neogotham"] = {
     comment_fg_alter = 0.8,
     cursor_fg = "#98d1ce",
@@ -453,7 +509,7 @@ local update_col_colorscheme = {
     dapstopped_bg_alter = 0.15,
     fold_fg = 0.18,
     fzflua_border_fg_alter = 2.5,
-    linenr_fg_alter = 0.15,
+    linenr_fg_alter = -0.05,
     noice_cmdline_fg_alter = 0.6,
     nontext_fg_alter = 4,
     normal_keyword_alter = 0.25,
@@ -463,7 +519,30 @@ local update_col_colorscheme = {
     trouble_indent_fg_alter = 0.6,
     winbar_file_path_fg_alter = 0.7,
     winbar_right_block_bg_alter = 1.1,
-    winseparator_alter = 1.55,
+    winseparator_alter = 2,
+  },
+  ["oxocarbon"] = {
+    blink_cmp_label_kind_fg_alter = 0.75,
+    comment_fg_alter = 0.8,
+    cursor_fg = "#ffffff",
+    cursorline_alter = 0.5,
+    cursorline_fg_alter = "WinSeparator",
+    dapstopped_bg_alter = 0.2,
+    fold_fg = 0.5,
+    linenr_fg_alter = -0.08,
+    noice_cmdline_fg_alter = 1,
+    nontext_fg_alter = 2.7,
+    normal_keyword_alter = 0.18,
+    pmenu_bg_alter = 1.3,
+    pmenu_sp_alter = 3.5,
+    render_markdown_code_bg_alter = 0.85,
+    render_markdown_code_inline_bg_alter = 0.16,
+    statusline_bg_alter = -0.08,
+    tabline_fg_alter = 0.6,
+    trouble_indent_fg_alter = 1.65,
+    winbar_file_path_fg_alter = 1,
+    winbar_right_block_bg_alter = 0.6,
+    winseparator_alter = 1,
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.4,
@@ -508,6 +587,25 @@ local update_col_colorscheme = {
     winbar_right_block_bg_alter = 0.4,
     winbar_right_block_fg_alter = 0.2,
     winseparator_alter = 0.4,
+  },
+  ["xenos"] = {
+    fold_fg = 0.25,
+    linenr_fg_alter = -0.05,
+    statusline_fg_alter = 0.8,
+    winbar_fg_alter = 1.3,
+    winbar_right_block_fg_alter = -0.1,
+    winseparator_alter = 0.5,
+  },
+  ["zenburn"] = {
+    comment_fg_alter = 0.5,
+    linenr_fg_alter = 0.02,
+    noice_cmdline_fg_alter = 0.1,
+    pmenu_bg_alter = 0.25,
+    pmenu_sp_alter = 2,
+    statusline_fg_alter = 0.8,
+    winbar_fg_alter = 1,
+    winbar_right_block_bg_alter = 0.15,
+    winseparator_alter = 0.1,
   },
 }
 
@@ -572,7 +670,7 @@ local general_overrides = function()
 
     {
       StatusLine = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+        fg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_fg_alter },
         bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
         reverse = false,
       },
@@ -901,8 +999,6 @@ local general_overrides = function()
     { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
     {
       LspReferenceText = {
-        -- bg = colors.lsp_reference_text_bg_alter,
-        -- fg = "NONE",
         bg = "#6A5ACD", -- Slate Blue
         fg = "#ffffff", -- White text for strong contrast
         underline = false,
@@ -912,7 +1008,6 @@ local general_overrides = function()
     },
     {
       LspReferenceWrite = {
-        -- bg = colors.lsp_reference_write_bg_alter,
         bg = "#FF4500", -- OrangeRed (menonjol untuk write)
         fg = "#000000", -- Black text for contrast
         underline = false,
@@ -922,7 +1017,6 @@ local general_overrides = function()
     },
     {
       LspReferenceRead = {
-        -- bg = colors.lsp_reference_read_bg_alter,
         bg = "#32CD32", -- Lime Green
         fg = "#000000",
         underline = false,
@@ -934,10 +1028,10 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       TREESITTER                        ║
     -- ╚═════════════════════════════════════════════════════════╝
-    { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
+    -- { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
     -- { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
     -- { ["@variable"] = { fg =  { from = "Directory", attr = "fg", alter = -0.1 } } },
-    { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
+    -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
     -- { ["@error"] = { fg = "fg", bg = "NONE" } },
     -- { ["@text.diff.add"] = { link = "DiffAdd" } },
     -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
