@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- GITHUB_DARK (masih belum diimplementasi, dilihat-lihat)
+  {
+    "lewis6991/github_dark.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local github_dark_themes = { "github_dark" }
+      if vim.tbl_contains(github_dark_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- RASMUS
   {
     "kvrohit/rasmus.nvim",
@@ -97,8 +110,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local techbase_theme = { "techbase" }
-      if vim.tbl_contains(techbase_theme, vim.g.colorscheme) then
+      local techbase_themes = { "techbase" }
+      if vim.tbl_contains(techbase_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -110,8 +123,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local kanso_theme = { "kanso-ink", "kanso-zen", "kanso-pearl" }
-      if vim.tbl_contains(kanso_theme, vim.g.colorscheme) then
+      local kanso_themes = { "kanso-ink", "kanso-zen", "kanso-pearl" }
+      if vim.tbl_contains(kanso_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -123,8 +136,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local jellybeans_theme = { "jellybeans", "jellybeans-mono" }
-      if vim.tbl_contains(jellybeans_theme, vim.g.colorscheme) then
+      local jellybeans_themes = { "jellybeans", "jellybeans-mono" }
+      if vim.tbl_contains(jellybeans_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -137,7 +150,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local base46_theme = {
+      local base46_themes = {
         "base46-aylin",
         "base46-catppuccin",
         "base46-chocolate",
@@ -159,7 +172,7 @@ return {
         "base46-wombat",
         "base46-zenburn",
       }
-      if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
+      if vim.tbl_contains(base46_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -171,8 +184,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local ashen_theme = { "ashen" }
-      if vim.tbl_contains(ashen_theme, vim.g.colorscheme) then
+      local ashen_themes = { "ashen" }
+      if vim.tbl_contains(ashen_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -185,8 +198,8 @@ return {
     priority = 1000,
     name = "rose-pine",
     enabled = function()
-      local rosepine_theme = { "rose-pine-dawn", "rose-pine" }
-      if vim.tbl_contains(rosepine_theme, vim.g.colorscheme) then
+      local rosepine_themes = { "rose-pine-dawn", "rose-pine" }
+      if vim.tbl_contains(rosepine_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -198,8 +211,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack", "lackluster-dark" }
-      if vim.tbl_contains(lackluster_theme, vim.g.colorscheme) then
+      local lackluster_themes = { "lackluster", "lackluster-mint", "lackluster-hack", "lackluster-dark" }
+      if vim.tbl_contains(lackluster_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -211,8 +224,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local vscode_modern_theme = { "vscode_modern" }
-      if vim.tbl_contains(vscode_modern_theme, vim.g.colorscheme) then
+      local vscode_modern_themes = { "vscode_modern" }
+      if vim.tbl_contains(vscode_modern_themes, vim.g.colorscheme) then
         return true
       end
       return false
@@ -230,8 +243,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local colorstokyonight = { "tokyonight-night", "tokyonight-storm" }
-      if vim.tbl_contains(colorstokyonight, vim.g.colorscheme) then
+      local tokyonight_themes = { "tokyonight-night", "tokyonight-storm" }
+      if vim.tbl_contains(tokyonight_themes, vim.g.colorscheme) then
         return true
       end
     end,

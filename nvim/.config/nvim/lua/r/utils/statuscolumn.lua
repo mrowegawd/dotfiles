@@ -236,7 +236,7 @@ function M._get()
   end
 
   local ret = table.concat(components, "")
-  return "%@v:lua.require'r.utils.ui'.click_fold@" .. ret .. "%T"
+  return "%@v:lua.require'r.utils.statuscolumn'.click_fold@" .. ret .. "%T"
 end
 
 function M.get()

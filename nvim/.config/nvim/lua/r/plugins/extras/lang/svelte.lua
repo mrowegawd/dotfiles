@@ -26,9 +26,9 @@ return {
         svelte = {
           keys = {
             {
-              "<leader>co",
+              "<Leader>cli",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
+              desc = "ActionLSP: organize imports [svelte]",
             },
           },
         },

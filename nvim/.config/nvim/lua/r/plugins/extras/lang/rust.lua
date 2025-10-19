@@ -53,12 +53,12 @@ return {
     opts = {
       server = {
         on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<Leader>cR", function()
+          vim.keymap.set("n", "<Leader>cla", function()
             vim.cmd.RustLsp "codeAction"
-          end, { desc = "Action: code action", buffer = bufnr })
-          vim.keymap.set("n", "<Leader>dr", function()
+          end, { desc = "ActionLSP: code action", buffer = bufnr })
+          vim.keymap.set("n", "<Leader>dlr", function()
             vim.cmd.RustLsp "debuggables"
-          end, { desc = "Rust Debuggables", buffer = bufnr })
+          end, { desc = "DebugLSP: rust debuggables", buffer = bufnr })
         end,
         default_settings = {
           -- rust-analyzer language server configuration
@@ -78,16 +78,12 @@ return {
             },
             procMacro = {
               enable = true,
-              ignored = {
-                ["async-trait"] = { "async_trait" },
-                ["napi-derive"] = { "napi" },
-                ["async-recursion"] = { "async_recursion" },
-              },
             },
             files = {
-              excludeDirs = {
+              exclude = {
                 ".direnv",
                 ".git",
+                ".jj",
                 ".github",
                 ".gitlab",
                 "bin",
@@ -96,6 +92,8 @@ return {
                 "venv",
                 ".venv",
               },
+              -- Avoid Roots Scanned hanging, see https://github.com/rust-lang/rust-analyzer/issues/12613#issuecomment-2096386344
+              watcher = "client",
             },
           },
         },
@@ -112,7 +110,6 @@ return {
       end
       vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
       if vim.fn.executable "rust-analyzer" == 0 then
-        ---@diagnostic disable-next-line: undefined-field
         RUtils.error(
           "**rust-analyzer** not found in PATH, please install it.\nhttps://rust-analyzer.github.io/",
           { title = "rustaceanvim" }
@@ -140,20 +137,6 @@ return {
     opts = {
       adapters = {
         ["rustaceanvim.neotest"] = {},
-      },
-    },
-  },
-
-  -- Show `impl` blocks in outline.nvim
-  {
-    "MadKuntilanak/outline.nvim",
-    -- dir = "~/.local/src/nvim_plugins/outline.nvim",
-    optional = true,
-    opts = {
-      symbols = {
-        filter = {
-          rust = vim.list_extend(vim.deepcopy(RUtils.config.kind_filter["default"]), { "Object" }),
-        },
       },
     },
   },

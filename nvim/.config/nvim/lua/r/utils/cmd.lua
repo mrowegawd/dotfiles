@@ -1144,7 +1144,7 @@ function M.change_colors()
 
   if vim.g.colorscheme == "zenburn" then
     __tab_active_fg = -0.2
-    __tab_active_bg = -0.6
+    __tab_active_bg = -0.63
   end
 
   if vim.g.colorscheme == "neogotham" then
@@ -1185,8 +1185,8 @@ function M.change_colors()
   end
 
   if vim.g.colorscheme == "zenburn" then
-    __tab_inactive_fg = -0.5
-    __tab_statusline_fg = -0.22
+    __tab_inactive_fg = -0.6
+    __tab_statusline_fg = -0.35
   end
 
   if vim.g.colorscheme == "base46-oxocarbon" then
@@ -1227,6 +1227,11 @@ function M.change_colors()
 
   if vim.g.colorscheme == "nonode" then
     zsh_lines_fg = 0.15
+    zsh_sugest_fg = 0.7
+  end
+
+  if vim.g.colorscheme == "techbase" then
+    zsh_lines_fg = 0.45
     zsh_sugest_fg = 0.7
   end
 

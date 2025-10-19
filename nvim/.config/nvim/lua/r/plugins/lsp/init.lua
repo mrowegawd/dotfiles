@@ -153,10 +153,9 @@ return {
       -- setup keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
-        if
-          client.name
-          and not vim.tbl_contains({ "copilot", "ruff", "tailwindcss", "emmet_language_server" }, client.name)
-        then
+
+        local client_names = { "copilot", "ruff", "tailwindcss", "emmet_language_server", "eslint" }
+        if client.name and not vim.tbl_contains(client_names, client.name) then
           require("nvim-navic").attach(client, bufnr)
         end
       end)
@@ -260,7 +259,7 @@ return {
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
-    keys = { { "<Leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+    keys = { { "<Leader>cm", "<cmd>Mason<cr>", desc = "Action: open Mason" } },
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },
     ---@class MasonSettings

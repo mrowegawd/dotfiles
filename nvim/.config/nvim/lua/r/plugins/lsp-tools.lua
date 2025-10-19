@@ -112,63 +112,63 @@ return {
           P.peek_qf()
         end,
         ft = "qf",
-        desc = "LSP: peek item qf [overlook]",
+        desc = "Peek: peek item qf [overlook]",
       },
       {
         "<Leader>pd",
         function()
           require("overlook.api").peek_definition()
         end,
-        desc = "LSP: peek definition [overlook]",
+        desc = "Peek: peek definition [overlook]",
       },
       {
         "<Leader>pc",
         function()
           require("overlook.api").close_all()
         end,
-        desc = "LSP: close all popup [overlook]",
+        desc = "Peek: close all popup [overlook]",
       },
       {
         "<Leader>pu",
         function()
           require("overlook.api").restore_popup()
         end,
-        desc = "LSP: restore popup [overlook]",
+        desc = "Peek: restore popup [overlook]",
       },
       {
         "<Leader>pU",
         function()
           require("overlook.api").restore_all_popups()
         end,
-        desc = "LSP: restore all popup [overlook]",
+        desc = "Peek: restore all popup [overlook]",
       },
       {
         "<Leader>pv",
         function()
           require("overlook.api").open_in_vsplit()
         end,
-        desc = "LSP: open in  vsplit [overlook]",
+        desc = "Peek: open in  vsplit [overlook]",
       },
       {
         "<Leader>ps",
         function()
           require("overlook.api").open_in_split()
         end,
-        desc = "LSP: open in split [overlook]",
+        desc = "Peek: open in split [overlook]",
       },
       {
         "<Leader>pt",
         function()
           require("overlook.api").open_in_tab()
         end,
-        desc = "LSP: open in tab [overlook]",
+        desc = "Peek: open in tab [overlook]",
       },
       {
         "<Leader>pw",
         function()
           require("overlook.api").switch_focus()
         end,
-        desc = "LSP: switch focus [overlook]",
+        desc = "Peek: switch focus [overlook]",
       },
     },
   },
@@ -306,30 +306,27 @@ return {
   -- KULALA
   {
     "mistweaverco/kulala.nvim",
-    branch = "develop",
     ft = "http",
-    config = true,
     --stylua: ignore
     keys = {
-      { "<Leader>r", "", desc = "Kulala: rest", ft = "http" },
-      { "<Leader>rb", "<cmd>lua require('kulala').scratchpad()<cr>", desc = "Tasks: open scratchpad [kulala]", ft = "http" },
-      { "<Leader>rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Tasks: copy as cURL [kulala]", ft = "http" },
-      { "<Leader>rf", "<cmd>lua require('kulala').run()<cr>", desc = "Tasks: send the request [kulala]", ft = "http" },
-      { "<Leader>rH", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body [kulala]", ft = "http", },
-      { "<Leader>ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Tasks: inspect current request [kulala]", ft = "http", },
-      { "<Leader>rr", "<cmd>lua require('kulala').close()<cr>", desc = "Tasks: close window [kulala]", ft = "http" },
+      { "<Leader>R", "", desc = "Kulala: rest", ft = "http" },
+      { "<Leader>Rb", "<cmd>lua require('kulala').scratchpad()<cr>", desc = "Kulala: open scratchpad [kulala]", ft = "http" },
+      { "<Leader>Rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Kulala: copy as cURL [kulala]", ft = "http" },
+      { "<leader>RC", "<cmd>lua require('kulala').from_curl()<cr>", desc = "Kulala: paste from curl [kulala]", ft = "http" },
+      { "<leader>Re", "<cmd>lua require('kulala').set_selected_env()<cr>", desc = "Kulala: set environment [kulala]", ft = "http" },
       {
-        "<a-p>",
-        "<cmd>lua require('kulala').jump_prev()<cr>",
-        desc = "Kulala: jump to previous request",
+        "<Leader>Rg",
+        "<cmd>lua require('kulala').download_graphql_schema()<cr>",
+        desc = "Kulala: download GraphQL schema [kulala]",
         ft = "http",
       },
-      {
-        "<a-n>",
-        "<cmd>lua require('kulala').jump_next()<cr>",
-        desc = "Kulala: jump to next request",
-        ft = "http",
-      },
+
+      { "<Leader>Ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Kulala: inspect current request [kulala]", ft = "http" },
+      { "<Leader>Rq", "<cmd>lua require('kulala').close()<cr>", desc = "Kulala: close window [kulala]", ft = "http" },
+      { "<Leader>RL", "<cmd>lua require('kulala').replay()<cr>", desc = "Kulala: replay the last request [kulala]", ft ="http" },
+      { "<Leader>Rr", "<cmd>lua require('kulala').run()<cr>", desc = "Kulala: send the request [kulala]", ft = "http" },
+      { "<Leader>RS", "<cmd>lua require('kulala').show_stats()<cr>", desc = "Kulala: show stats [kulala]", ft = "http" },
+      { "<Leader>Rt", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body [kulala]", ft = "http" },
     },
   },
   -- TINY-CODE-ACTION

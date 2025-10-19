@@ -323,6 +323,21 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     return
   end
 
+  if vim.bo.filetype == "http" then
+    local ok, kulala = pcall(require, "kulala")
+    if not ok then
+      return
+    end
+
+    if is_jump_prev then
+      kulala.jump_prev()
+    else
+      kulala.jump_next()
+    end
+
+    return
+  end
+
   if vim.bo[0].filetype == "markdown" then
     if is_jump_prev then
       return RUtils.markdown.go_to_heading(nil, {})

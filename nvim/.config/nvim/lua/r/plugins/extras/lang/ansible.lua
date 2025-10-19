@@ -18,12 +18,12 @@ return {
     ft = { "yaml" },
     keys = {
       {
-        "<leader>ct",
+        "<Leader>clr",
         function()
           require("ansible").run()
         end,
         ft = "yaml.ansible",
-        desc = "Ansible Run Playbook/Role",
+        desc = "ActionLSP: ansible run playbook/role",
         silent = true,
       },
     },

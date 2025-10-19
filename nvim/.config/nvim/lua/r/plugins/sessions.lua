@@ -23,6 +23,11 @@ return {
           return true
         end
 
+        -- save terminal
+        if vim.bo[bufnr].buftype == "terminal" then
+          return true
+        end
+
         if vim.bo.filetype == "trouble" then
           return false
         end

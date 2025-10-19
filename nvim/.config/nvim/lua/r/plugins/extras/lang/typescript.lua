@@ -90,31 +90,31 @@ return {
             --   desc = "LSP: file references [vtsls]",
             -- },
             {
-              "<Leader>co",
+              "<Leader>cli",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Action: organize imports [vtsls]",
+              desc = "ActionLSP: organize imports [vtsls]",
             },
             {
-              "<Leader>cM",
+              "<Leader>clI",
               RUtils.lsp.action["source.addMissingImports.ts"],
-              desc = "Action: add missing imports [vtsls]",
+              desc = "ActionLSP: add missing imports [vtsls]",
             },
             {
-              "<Leader>cu",
+              "<Leader>clR",
               RUtils.lsp.action["source.removeUnused.ts"],
-              desc = "Action: remove unused imports [vtsls]",
+              desc = "ActionLSP: remove unused imports [vtsls]",
             },
             {
-              "<Leader>cD",
+              "<Leader>clf",
               RUtils.lsp.action["source.fixAll.ts"],
-              desc = "Action: fix all diagnostics [vtsls]",
+              desc = "ActionLSP: fix all diagnostics [vtsls]",
             },
             {
-              "<Leader>cV",
+              "<Leader>clv",
               function()
                 RUtils.lsp.execute { command = "typescript.selectTypeScriptVersion" }
               end,
-              desc = "Action: select ts workspace version [vtsls]",
+              desc = "ActionLSP: select ts workspace version [vtsls]",
             },
           },
         },
@@ -290,6 +290,17 @@ return {
   {
     "dmmulroy/tsc.nvim",
     cmd = { "TSC" },
+    ft = { "typescript", "javascript", "typescriptreact" },
+    keys = {
+      {
+        "<Leader>clr",
+        function()
+          vim.cmd "TSC"
+        end,
+        ft = { "typescript", "javascript", "typescriptreact" },
+        desc = "ActionLSP: run tsc [tsc]",
+      },
+    },
     config = function()
       require("tsc").setup()
     end,

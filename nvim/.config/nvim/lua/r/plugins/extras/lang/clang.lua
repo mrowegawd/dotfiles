@@ -60,7 +60,7 @@ return {
         -- Ensure mason installs the server
         clangd = {
           keys = {
-            { "<leader>ch", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+            { "<Leader>clh", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "ActionLSP: switch source/header (C/C++)" },
           },
           root_markers = {
             "compile_commands.json",

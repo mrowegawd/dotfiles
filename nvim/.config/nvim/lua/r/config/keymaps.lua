@@ -81,16 +81,29 @@ end, { desc = "Terminal: new tabterm" })
 -- end, { desc = "Terminal: new term" })
 
 -- Move cursor from terminal mode
-RUtils.map.tnoremap("<c-w>l", function()
+-- RUtils.map.tnoremap("<c-w>l", function()
+--   RUtils.map.feedkey("<C-\\><C-n><C-w>l", "t")
+-- end, { desc = "Terminal: move cursor left" })
+-- RUtils.map.tnoremap("<c-w>k", function()
+--   RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t")
+-- end, { desc = "Terminal: move cursor up" })
+-- RUtils.map.tnoremap("<c-w>h", function()
+--   RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t")
+-- end, { desc = "Terminal: move cursor right" })
+-- RUtils.map.tnoremap("<c-w>j", function()
+--   RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
+-- end, { desc = "Terminal: move cursor down" })
+
+RUtils.map.tnoremap("<a-l>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>l", "t")
 end, { desc = "Terminal: move cursor left" })
-RUtils.map.tnoremap("<c-w>k", function()
+RUtils.map.tnoremap("<a-k>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t")
 end, { desc = "Terminal: move cursor up" })
-RUtils.map.tnoremap("<c-w>h", function()
+RUtils.map.tnoremap("<a-h>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t")
 end, { desc = "Terminal: move cursor right" })
-RUtils.map.tnoremap("<c-w>j", function()
+RUtils.map.tnoremap("<a-j>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
 end, { desc = "Terminal: move cursor down" })
 
@@ -256,10 +269,10 @@ RUtils.map.nnoremap("gl", function()
 end, { desc = "Buffer: magic gl (qf)" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
-RUtils.map.nnoremap("<Leader>R", function()
-  vim.cmd [[wall!]]
-  vim.cmd [[restart]]
-end, { desc = "Buffer: restart nvim" })
+-- RUtils.map.nnoremap("<Leader>R", function()
+--   vim.cmd [[wall!]]
+--   vim.cmd [[restart]]
+-- end, { desc = "Buffer: restart nvim" })
 RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 RUtils.map.nnoremap("<Leader>bk", RUtils.map.show_help_buf_keymap, {
   desc = "Buffer: show keymaps curbuf",

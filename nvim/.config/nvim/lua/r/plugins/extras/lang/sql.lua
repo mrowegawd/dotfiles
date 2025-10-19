@@ -23,11 +23,7 @@ return {
     cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
     dependencies = "vim-dadbod",
     keys = {
-      -- { "<leader>D", "<cmd>DBUIToggle<CR>", desc = "Toggle DBUI" },
-      { "<Localleader>dt", "<CMD>DBUIToggle<CR>", desc = "Database: toggle UI [dadbod]" },
-      -- { "<Localleader>dD", "<CMD>DBUIFindBuffer<CR>", desc = "Database: find buffer [dadbod]" },
-      { "<Localleader>dr", "<CMD>DBUIRenameBuffer<cr>", desc = "Database: rename buffer [dadbod]" },
-      { "<Localleader>dl", "<CMD>DBUILastQueryInfo<cr>", desc = "Database: last query info [dadbod]" },
+      { "<Leader>D", "<cmd>DBUIToggle<CR>", desc = "Database: toggle DBUI" },
     },
     init = function()
       local data_path = vim.fn.stdpath "data"
@@ -63,7 +59,7 @@ return {
       table.insert(opts.right, {
         title = "Database",
         ft = "dbui",
-        pinned = false,
+        pinned = true,
         width = 0.3,
         open = function()
           vim.cmd "DBUI"
@@ -82,7 +78,6 @@ return {
   {
     "saghen/blink.cmp",
     optional = true,
-    dependencies = { "kristijanhusak/vim-dadbod-completion" },
     opts = {
       sources = {
         default = { "dadbod" },
@@ -90,6 +85,9 @@ return {
           dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
         },
       },
+    },
+    dependencies = {
+      "kristijanhusak/vim-dadbod-completion",
     },
   },
 

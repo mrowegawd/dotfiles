@@ -14,6 +14,11 @@ keymap.set("n", "gd", "<c-]>", {
   desc = "Help: go to definition",
 })
 
+keymap.set("n", "<Leader>ld", "<c-]>", {
+  buffer = true,
+  desc = "Help: go to definition",
+})
+
 keymap.set("n", "<BS>", "<c-t>", {
   buffer = true,
   desc = "Help: go back last definition",

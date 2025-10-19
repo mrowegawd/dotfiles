@@ -303,6 +303,10 @@ local function save_cursorline_hl()
       more_bright = 0.3
     end
 
+    if vim.g.colorscheme == "zenburn" then
+      more_bright = 0.3
+    end
+
     color_cursorline_bright = H.tint(hl.bg, more_bright)
 
     if hl then

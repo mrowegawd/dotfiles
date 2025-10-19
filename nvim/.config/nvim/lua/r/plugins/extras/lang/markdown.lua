@@ -87,7 +87,7 @@ return {
     ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
     keys = {
       {
-        "<Leader>uR",
+        "<Leader>clr",
         function()
           local m = require "render-markdown"
           if not is_render_markdown then
@@ -100,7 +100,7 @@ return {
         end,
         ft = { "markdown", "neorg", "org", "rmd" },
         mode = { "v", "n" },
-        desc = "Note: toggle render markdown [render-markdown]",
+        desc = "ActionLSP: toggle render markdown [render-markdown]",
       },
     },
     opts = function()

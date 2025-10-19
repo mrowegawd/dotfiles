@@ -36,9 +36,18 @@ return {
           },
           keys = {
             {
-              "<leader>co",
+              "<Leader>cli",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
+              desc = "ActionLSP: organize imports [ruff]",
+            },
+          },
+        },
+        ruff_lsp = {
+          keys = {
+            {
+              "<Leader>cli",
+              RUtils.lsp.action["source.organizeImports"],
+              desc = "ActionLSP: organize imports [ruff_lsp]",
             },
           },
         },
@@ -56,7 +65,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
-      local servers = { "pyright", "basedpyright", "ruff", ruff, lsp }
+      local servers = { "pyright", "basedpyright", "ruff", "ruff_lsp", ruff, lsp }
       for _, server in ipairs(servers) do
         opts.servers[server] = opts.servers[server] or {}
         opts.servers[server].enabled = server == lsp or server == ruff
@@ -67,24 +76,8 @@ return {
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = { "nvim-neotest/neotest-python" },
-    keys = {
-      {
-        "<Leader>dam",
-        function()
-          require("dap-python").test_method()
-        end,
-        desc = "Debug: debug method [dap-python]",
-        ft = "python",
-      },
-      {
-        "<Leader>dac",
-        function()
-          require("dap-python").test_class()
-        end,
-        desc = "Debug: debug class [dap-python]",
-        ft = "python",
-      },
+    dependencies = {
+      "nvim-neotest/neotest-python",
     },
     opts = {
       adapters = {
@@ -103,26 +96,11 @@ return {
       "mfussenegger/nvim-dap-python",
       -- stylua: ignore
       keys = {
-        { "<leader>dPt", function() require("dap-python").test_method() end, desc = "Debug Method", ft = "python" },
-        { "<leader>dPc", function() require("dap-python").test_class() end, desc = "Debug Class", ft = "python" },
+        { "<Leader>dlm", function() require("dap-python").test_method() end, desc = "DebugLSP: Method", ft = "python" },
+        { "<Leader>dlc", function() require("dap-python").test_class() end, desc = "DebugLSP: Class", ft = "python" },
       },
       config = function()
-        -- require("dap-python").setup "debugpy-adapter"
-        if vim.fn.has "win32" == 1 then
-          require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/Scripts/pythonw.exe"))
-          return
-        end
-        -- try loading python path configured in neoconf (pyright)
-        if RUtils.has "neoconf.nvim" and RUtils.is_loaded "neoconf.nvim" then
-          local ncf = require("neoconf").get()
-          local pypath = ((ncf.lspconfig or {}).pyright or {})["python.pythonPath"]
-          if pypath ~= nil then
-            pypath = vim.fn.expand(pypath)
-            require("dap-python").setup(nil, { pythonPath = pypath })
-            return
-          end
-        end
-        require("dap-python").setup(RUtils.get_pkg_path("debugpy", "/venv/bin/python"))
+        require("dap-python").setup "debugpy-adapter"
       end,
     },
   },
@@ -151,9 +129,9 @@ return {
     ft = "python",
     keys = {
       {
-        "<Leader>cv",
+        "<Leader>clv",
         "<cmd>lua require('uv').pick_uv_commands()<CR>",
-        desc = "Action: select command [uv.nvim]",
+        desc = "ActionLSP: select command [uv.nvim]",
         ft = "python",
       },
     },

@@ -106,7 +106,7 @@ return {
 
       { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
       { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
-      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
+      { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug: run last" },
 
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
       { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
@@ -276,7 +276,7 @@ return {
     "rcarriga/nvim-dap-ui",
     -- stylua: ignore
     keys = {
-      { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
+      { "<Leader>duu", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
       { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug: reset UI [dapui]" },
       { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover [dapui]" },
     },
