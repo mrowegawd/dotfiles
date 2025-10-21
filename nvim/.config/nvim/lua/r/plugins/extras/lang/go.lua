@@ -41,7 +41,6 @@ return {
                 rangeVariableTypes = true,
               },
               analyses = {
-                fieldalignment = true,
                 nilness = true,
                 unusedparams = true,
                 unusedwrite = true,
@@ -88,6 +87,41 @@ return {
     opts = { ensure_installed = { "goimports", "gofumpt" } },
   },
   {
+    "nvimtools/none-ls.nvim",
+    optional = true,
+    dependencies = {
+      {
+        "mason-org/mason.nvim",
+        opts = { ensure_installed = { "gomodifytags", "impl" } },
+      },
+    },
+    opts = function(_, opts)
+      local nls = require "null-ls"
+      opts.sources = vim.list_extend(opts.sources or {}, {
+        nls.builtins.code_actions.gomodifytags,
+        nls.builtins.code_actions.impl,
+        nls.builtins.formatting.goimports,
+        nls.builtins.formatting.gofumpt,
+      })
+    end,
+  },
+  -- Add linting
+  {
+    "mfussenegger/nvim-lint",
+    optional = true,
+    dependencies = {
+      {
+        "mason-org/mason.nvim",
+        opts = { ensure_installed = { "golangci-lint" } },
+      },
+    },
+    opts = {
+      linters_by_ft = {
+        go = { "golangcilint" },
+      },
+    },
+  },
+  {
     "stevearc/conform.nvim",
     optional = true,
     opts = {
@@ -113,12 +147,14 @@ return {
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = { "fredrikaverpil/neotest-golang" },
+    dependencies = {
+      "fredrikaverpil/neotest-golang",
+    },
     opts = {
       adapters = {
         ["neotest-golang"] = {
-          -- Here we can set options for neotest-go, e.g.
-          -- args = { "-tags=integration" }
+          -- Here we can set options for neotest-golang, e.g.
+          -- go_test_args = { "-v", "-race", "-count=1", "-timeout=60s" },
           dap_go_enabled = true, -- requires leoluz/nvim-dap-go
         },
       },

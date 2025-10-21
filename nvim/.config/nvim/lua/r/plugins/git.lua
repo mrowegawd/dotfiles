@@ -26,22 +26,49 @@ then
 end
 
 return {
+  { "ldelossa/litee.nvim", lazy = true },
+
   -- GH.NVIM
   {
     "ldelossa/gh.nvim",
     cmd = { "GHOpenPR", "GHOpenIssue", "GHSearchIssues" },
-    dependencies = {
-      {
-        "ldelossa/litee.nvim",
-        config = function()
-          require("litee.lib").setup()
-        end,
-      },
+    keys = {
+      { "<Leader>G", "", desc = "+Github" },
+      { "<Leader>Gc", "", desc = "+Commits" },
+      { "<Leader>Gcc", "<cmd>GHCloseCommit<cr>", desc = "Close" },
+      { "<Leader>Gce", "<cmd>GHExpandCommit<cr>", desc = "Expand" },
+      { "<Leader>Gco", "<cmd>GHOpenToCommit<cr>", desc = "Open To" },
+      { "<Leader>Gcp", "<cmd>GHPopOutCommit<cr>", desc = "Pop Out" },
+      { "<Leader>Gcz", "<cmd>GHCollapseCommit<cr>", desc = "Collapse" },
+      { "<Leader>Gi", "", desc = "+Issues" },
+      { "<Leader>Gip", "<cmd>GHPreviewIssue<cr>", desc = "Preview" },
+      { "<Leader>Gio", "<cmd>GHOpenIssue<cr>", desc = "Open" },
+      { "<Leader>Gl", "", desc = "+Litee" },
+      { "<Leader>Glt", "<cmd>LTPanel<cr>", desc = "Toggle Panel" },
+      { "<Leader>Gp", "", desc = "+Pull Request" },
+      { "<Leader>Gpc", "<cmd>GHClosePR<cr>", desc = "Close" },
+      { "<Leader>Gpd", "<cmd>GHPRDetails<cr>", desc = "Details" },
+      { "<Leader>Gpe", "<cmd>GHExpandPR<cr>", desc = "Expand" },
+      { "<Leader>Gpo", "<cmd>GHOpenPR<cr>", desc = "Open" },
+      { "<Leader>Gpp", "<cmd>GHPopOutPR<cr>", desc = "PopOut" },
+      { "<Leader>Gpr", "<cmd>GHRefreshPR<cr>", desc = "Refresh" },
+      { "<Leader>Gpt", "<cmd>GHOpenToPR<cr>", desc = "Open To" },
+      { "<Leader>Gpz", "<cmd>GHCollapsePR<cr>", desc = "Collapse" },
+      { "<Leader>Gr", "", desc = "+Review" },
+      { "<Leader>Grb", "<cmd>GHStartReview<cr>", desc = "Begin" },
+      { "<Leader>Grc", "<cmd>GHCloseReview<cr>", desc = "Close" },
+      { "<Leader>Grd", "<cmd>GHDeleteReview<cr>", desc = "Delete" },
+      { "<Leader>Gre", "<cmd>GHExpandReview<cr>", desc = "Expand" },
+      { "<Leader>Grs", "<cmd>GHSubmitReview<cr>", desc = "Submit" },
+      { "<Leader>Grz", "<cmd>GHCollapseReview<cr>", desc = "Collapse" },
+      { "<Leader>Gt", "", desc = "+Threads" },
+      { "<Leader>Gtc", "<cmd>GHCreateThread<cr>", desc = "Create" },
+      { "<Leader>Gtn", "<cmd>GHNextThread<cr>", desc = "Next" },
+      { "<Leader>Gtt", "<cmd>GHToggleThread<cr>", desc = "Toggle" },
     },
-    config = function()
-      require("litee.gh").setup {
-        debug_logging = true,
-      }
+    config = function(_, opts)
+      require("litee.lib").setup()
+      require("litee.gh").setup(opts)
     end,
   },
   -- GIT CONFLICT
@@ -386,7 +413,7 @@ return {
 
         -- Hunk
         map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
-        map("v", "<Leader>ghs", function()
+        map("x", "<Leader>ghs", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
@@ -394,7 +421,7 @@ return {
           gs.stage_hunk { from, to }
         end, "Hunk: stage (visual) [gitsigns]")
         map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
-        map("v", "<Leader>ghr", function()
+        map("x", "<Leader>ghr", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
@@ -408,7 +435,7 @@ return {
         -- Hunk preview
         map("n", "<Leader>ghp", gs.preview_hunk_inline, "Hunk: preview hunk [gitsigns]")
         map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
-        map("v", "<Leader>ghP", function()
+        map("x", "<Leader>ghP", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
@@ -525,7 +552,7 @@ return {
         "<Leader>gN",
         "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
-        mode = { "n", "v" },
+        mode = { "n", "x" },
       },
       {
         "<Leader>gd",
@@ -750,7 +777,7 @@ return {
             string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
           vim.cmd(str_cmds)
         end,
-        mode = "v",
+        mode = "x",
         desc = "Git: DiffviewFileHistory line (visual) [diffview]",
       },
     },
@@ -960,7 +987,7 @@ return {
           vim.cmd "Neogit"
         end,
         desc = "Git: open neogit [neogit]",
-        mode = { "n", "v" },
+        mode = { "n", "x" },
       },
     },
     opts = function()

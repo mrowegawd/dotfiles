@@ -96,6 +96,7 @@ return {
       "mfussenegger/nvim-dap-python",
       -- stylua: ignore
       keys = {
+        { "<Leader>dl", "", desc = "+DebugLSP" },
         { "<Leader>dlm", function() require("dap-python").test_method() end, desc = "DebugLSP: Method", ft = "python" },
         { "<Leader>dlc", function() require("dap-python").test_class() end, desc = "DebugLSP: Class", ft = "python" },
       },
@@ -128,6 +129,7 @@ return {
     "benomahony/uv.nvim",
     ft = "python",
     keys = {
+      { "<Leader>cl", "", desc = "+ActionLSP" },
       {
         "<Leader>clv",
         "<cmd>lua require('uv').pick_uv_commands()<CR>",
