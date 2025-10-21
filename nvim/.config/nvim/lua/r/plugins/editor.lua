@@ -60,7 +60,7 @@ return {
             },
           }
         end,
-        mode = { "v" },
+        mode = { "n", "x" },
         desc = "Open: grug far (visual) [grugfar]",
       },
     },

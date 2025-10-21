@@ -88,7 +88,7 @@ return {
       	mode = "i",
       },
 
-      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "v" } },
+      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
       { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
       { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
       { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
@@ -135,7 +135,7 @@ return {
             end
           end
         end,
-        mode = { "v" },
+        mode = { "x" },
         desc = "Picker: help (visual) [fzflua]",
       },
       {
@@ -160,7 +160,7 @@ return {
       },
 
       -- Buffers
-      { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep on buffers [fzflua]", mode = { "n", "v" } },
+      { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep on buffers [fzflua]", mode = { "n", "x" } },
       { "<Leader>bf", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
       { "<Leader>bg", function() require("fzf-lua").blines() end, desc = "Buffer: live grep on curbuf [fzflua]" },
       {
@@ -180,7 +180,7 @@ return {
           end)
         end,
         desc = "Buffer: live grep on curbuf (visual) [fzflua]",
-        mode = { "v" },
+        mode = { "x" },
       },
 
       -- Jump To
@@ -198,7 +198,7 @@ return {
       -- Grep
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
       { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Picker: grep [fzflua]" },
-      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "x" } },
       {
         "<Leader>fw",
         function()
@@ -228,7 +228,7 @@ return {
           }
         end,
         desc = "Picker: grep word visual [fzflua]",
-        mode = { "v" },
+        mode = { "x" },
       },
 
       -- Git

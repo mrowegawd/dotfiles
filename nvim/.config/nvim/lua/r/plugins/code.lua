@@ -94,8 +94,7 @@ return {
       { "ySS", mode = "n", desc = "Surround: current line [nvim-surround]" },
       -- { "yS", mode = "n", desc = "Surround + motion + line" },
       { "<c-x>s", mode = "i", desc = "Surround: surround (insert) [nvim-surround]" },
-      { "S", mode = "v", desc = "Surround: motion (visual) [nvim-surround]" },
-      -- { "gS", mode = "v", desc = "Surround + line" },
+      { "S", mode = "x", desc = "Surround: motion (visual) [nvim-surround]" },
       { "yd", mode = "n", desc = "Surround: delete surround [nvim-surround]" },
       { "yc", mode = "n", desc = "Surround: change surround [nvim-surround]" },
       { "yC", mode = "n", desc = "Surround: change line [nvim-surround]" },
@@ -346,7 +345,7 @@ return {
       { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
 
       { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
-      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual)", mode = { "v" } },
+      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual)", mode = { "x" } },
       { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt" },
       { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt all" },
 
@@ -538,7 +537,7 @@ return {
           prefix = "<leader>m",
           mappings = {
             marker = {
-              add = { suffix = "a", mode = { "n", "v" }, desc = "Add marker" },
+              add = { suffix = "a", mode = { "n", "x" }, desc = "Add marker" },
               edit = { suffix = "e", desc = "Edit marker at cursor" },
               delete = { suffix = "d", desc = "Delete marker at cursor" },
               list = { suffix = "l", desc = "List markers in buffer" },
@@ -555,7 +554,7 @@ return {
               from_branch = { suffix = "gb", desc = "Create group from git branch" },
             },
             view = {
-              toggle = { suffix = "v", desc = "Toggle drawer marker viewer" },
+              toggle = { suffix = "x", desc = "Toggle drawer marker viewer" },
             },
             telescope = {
               groups = { suffix = "fg", desc = "Telescope: marker groups" },

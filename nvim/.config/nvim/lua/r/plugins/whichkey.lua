@@ -22,7 +22,7 @@ return {
       },
       spec = {
         {
-          mode = { "n", "v" },
+          mode = { "n", "x" },
           { "<Leader>a", group = "ai" },
 
           { "<Leader>q", group = "quickfix" },

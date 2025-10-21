@@ -65,7 +65,7 @@ return {
           --   end
           require("avante.api").ask(opts)
         end,
-        mode = { "n", "v" },
+        mode = { "n", "x" },
         desc = "Avante: toggle",
       },
     },

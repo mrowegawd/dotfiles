@@ -87,7 +87,7 @@ return {
       "fdschmidt93/telescope-corrode.nvim",
     },
     keys = {
-      -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
+      -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "x" } },
       -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Diagnostic: document diagnostics [telescope]" },
       -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "Diagnostic: workspace diagnostics [telescope]" },
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
@@ -111,7 +111,7 @@ return {
       --   desc = "Telescope(lsp): goto symbol (Workspace)",
       -- },
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
-      -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "v" } },
+      -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "x" } },
       -- {
       --   "<Leader>sn",
       --   function()
@@ -119,7 +119,7 @@ return {
       --   end,
       --   desc = "Telescope: luasnip list",
       -- },
-      -- { "<Localleader>ff", "<CMD>Telescope find_files<CR>", desc = "Telescope: files", mode = { "n", "v" } },
+      -- { "<Localleader>ff", "<CMD>Telescope find_files<CR>", desc = "Telescope: files", mode = { "n", "x" } },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
@@ -147,7 +147,7 @@ return {
       --     return require("telescope").extensions.menufacture.grep_string()
       --   end,
       --   desc = "Telescope-manufacture: live_grep (visual)",
-      --   mode = { "v" },
+      --   mode = { "x" },
       -- },
       --
       -- {

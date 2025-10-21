@@ -388,7 +388,7 @@ return {
           end
         end,
         desc = "Note: grep (visual) [obsidian]",
-        mode = "v",
+        mode = "x",
       },
       {
         "<Localleader>aff",

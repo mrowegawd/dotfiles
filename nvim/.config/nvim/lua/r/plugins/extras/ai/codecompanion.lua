@@ -137,7 +137,7 @@ return {
         "<Leader>ac",
         ":CodeCompanion ",
         desc = "Codecompanion: run :CodeCompanion command in normal or visual mode",
-        mode = { "n", "v" },
+        mode = { "n", "x" },
       },
       {
         "<Leader>aa",
@@ -343,7 +343,7 @@ return {
           local results = results_formats()
           require("fzf-lua").fzf_exec(results, opts)
         end,
-        mode = { "n", "v" },
+        mode = { "n", "x" },
         desc = "Codecompanion: select custome prompt",
       },
     },

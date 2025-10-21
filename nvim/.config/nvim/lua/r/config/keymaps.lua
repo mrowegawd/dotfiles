@@ -155,16 +155,16 @@ RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" 
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 
 RUtils.map.nnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J" })
-RUtils.map.vnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })
+RUtils.map.xnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })
 
 RUtils.map.nnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K" })
-RUtils.map.vnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
+RUtils.map.xnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
 
 RUtils.map.nnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H" })
-RUtils.map.vnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
+RUtils.map.xnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
 
 RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
-RUtils.map.vnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
+RUtils.map.xnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
 local function jump_back_to_back_windows()
   local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
@@ -273,7 +273,7 @@ RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit
 --   vim.cmd [[wall!]]
 --   vim.cmd [[restart]]
 -- end, { desc = "Buffer: restart nvim" })
-RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
+RUtils.map.xnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 RUtils.map.nnoremap("<Leader>bk", RUtils.map.show_help_buf_keymap, {
   desc = "Buffer: show keymaps curbuf",
   silent = true,
@@ -359,7 +359,7 @@ end, {
   range = true,
 })
 
-RUtils.map.vnoremap(
+RUtils.map.xnoremap(
   "<Leader>gy",
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
@@ -433,8 +433,8 @@ RUtils.map.nnoremap(
   "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
   { desc = "Misc: redraw / clear hlsearch / diff update" }
 )
-RUtils.map.vnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
-RUtils.map.vnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
+RUtils.map.xnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
+RUtils.map.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
 RUtils.map.nnoremap("<Leader>P", function()
   local cwd = vim.fn.expand "%:p:h"
@@ -474,31 +474,31 @@ local function replace_keymap(confirmation, visual)
   end
 end
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: Search and replace under cursor" })
-RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: Search and replace under cursor (visual)" })
+RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: Search and replace under cursor (visual)" })
 RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: open lazy log [lazy]" })
 
 RUtils.map.nnoremap("<Leader>ob", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Open: browse/link under cursor" })
-RUtils.map.vnoremap("<Leader>ob", function()
+end, { desc = "Open the browser or the link under the cursor" })
+RUtils.map.xnoremap("<Leader>ob", function()
   RUtils.cmd.open_with("browser", true)
-end, { desc = "Open: browse/link under cursor (visual)" })
+end, { desc = "Open the browser or the link under the cursor (visual mode)" })
 
 RUtils.map.nnoremap("<Leader>oB", function()
   return RUtils.cmd.open_with "mpv or svix"
 end, { desc = "Open: mpv or svix" })
-RUtils.map.vnoremap("<Leader>oB", function()
+RUtils.map.xnoremap("<Leader>oB", function()
   return RUtils.cmd.open_with("mpv or svix", true)
 end, { desc = "Open: mpv or svix (visual" })
 
 RUtils.map.nnoremap("<Leader>oo", function()
   RUtils.cmd.open_with "go to file"
 end, { desc = "Open: open file under cursor" })
-RUtils.map.vnoremap("<Leader>oo", function()
+RUtils.map.xnoremap("<Leader>oo", function()
   RUtils.cmd.open_with("go to file", true)
 end, { desc = "Open: open file under cursor (visual)" })
 
-RUtils.map.vnoremap("<Leader>rb", function()
+RUtils.map.xnoremap("<Leader>rb", function()
   RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: Search for error messages in the browser (visual)" })
 RUtils.map.nnoremap("<Leader>rb", function()
@@ -689,7 +689,7 @@ end
 
 RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
 RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.vnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
+RUtils.map.xnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   RUtils.fzflua.open_cmd_bulk({
@@ -717,7 +717,7 @@ end
 
 RUtils.map.nnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
 RUtils.map.tnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
-RUtils.map.vnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds (visual)" })
+RUtils.map.xnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds (visual)" })
 
 local bulk_cmd_git = function()
   RUtils.fzflua.open_cmd_bulk({
@@ -786,7 +786,7 @@ end
 
 RUtils.map.nnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
 RUtils.map.tnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
-RUtils.map.vnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
+RUtils.map.xnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
 
 -- }}}
 -- {{{ Tmux integration
@@ -795,21 +795,21 @@ local fm_manager = vim.env.TERM_FILEMANAGER
 RUtils.map.nnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
 end, { desc = "CTRL_o: btop" })
-RUtils.map.vnoremap("<a-B>", function()
+RUtils.map.xnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
 end, { desc = "CTRL_o: btop" })
 
 RUtils.map.nnoremap("<a-M>", function()
   RUtils.terminal.float_newsboat()
 end, { desc = "CTRL_o: newsboat" })
-RUtils.map.vnoremap("<a-M>", function()
+RUtils.map.xnoremap("<a-M>", function()
   RUtils.terminal.float_newsboat()
 end, { desc = "CTRL_o: newsboat" })
 
 RUtils.map.nnoremap("<a-C>", function()
   RUtils.terminal.float_rkill()
 end, { desc = "CTRL_o: rkill" })
-RUtils.map.vnoremap("<a-C>", function()
+RUtils.map.xnoremap("<a-C>", function()
   RUtils.terminal.float_rkill()
 end, { desc = "CTRL_o: rkill" })
 

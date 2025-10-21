@@ -141,7 +141,7 @@ return {
         function()
           require("fold-cycle").open()
         end,
-        mode = { "v", "n" },
+        mode = { "n", "x" },
         desc = "Fold: cycle fold [fold-cycle.nvim]",
       },
     },

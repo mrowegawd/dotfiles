@@ -8,9 +8,9 @@ return {
     "waiting-for-dev/ergoterm.nvim",
     cmd = "TermNew",
     keys = {
-      { "<Localleader>t", mode = { "n", "t", "v" } },
-      { "<a-f>", mode = { "n", "t", "v" } },
-      { "<a-T>", mode = { "n", "t", "v", desc = "Terminal: open" } },
+      { "<Localleader>t", mode = { "n", "t", "x" } },
+      { "<a-f>", mode = { "n", "t", "x" } },
+      { "<a-T>", mode = { "n", "t", "x", desc = "Terminal: open" } },
       { "<a-N>" },
     },
     opts = {
@@ -47,7 +47,7 @@ return {
         return base_term
       end
 
-      RUtils.map.vnoremap("<Localleader>t", function()
+      RUtils.map.xnoremap("<Localleader>t", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
@@ -66,7 +66,7 @@ return {
         end
       end, { desc = "Terminal: new float (terminal) [ergoterm]" })
 
-      RUtils.map.vnoremap("<a-f>", function()
+      RUtils.map.xnoremap("<a-f>", function()
         local t = open_term_with_singleton()
         if t then
           t:toggle()
@@ -85,7 +85,7 @@ return {
         end
       end, { desc = "Terminal: toggle (visual) [ergoterm]" })
 
-      RUtils.map.vnoremap("<a-T>", function()
+      RUtils.map.xnoremap("<a-T>", function()
         local t = open_term_with_singleton(true, "float")
         if t then
           t:toggle()
@@ -118,7 +118,7 @@ return {
       RUtils.map.nnoremap("<Localleader>T", function()
         vim.cmd [[TermSelect]]
       end, { desc = "Terminal: select term [ergoterm]" })
-      RUtils.map.vnoremap("<Localleader>T", function()
+      RUtils.map.xnoremap("<Localleader>T", function()
         vim.cmd [[TermSelect]]
       end, { desc = "Terminal: select term (visual) [ergoterm]" })
     end,
@@ -137,7 +137,7 @@ return {
           vim.cmd [[FloatermToggle]]
         end,
         desc = "Terminal: toggle [floaterm]",
-        mode = { "n", "v", "t" },
+        mode = { "n", "x", "t" },
       },
       {
         "<a-f>",
@@ -145,7 +145,7 @@ return {
           vim.cmd [[FloatermToggle]]
         end,
         desc = "Terminal: toggle [floaterm]",
-        mode = { "n", "v", "t" },
+        mode = { "n", "x", "t" },
       },
     },
   },

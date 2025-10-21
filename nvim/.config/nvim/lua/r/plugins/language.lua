@@ -10,7 +10,7 @@ return {
         "<Leader>ut",
         "<Plug>TranslateWV",
         desc = "Misc: translate on select visual mode [vim-translator]",
-        mode = { "v" },
+        mode = { "x" },
       },
     },
   },

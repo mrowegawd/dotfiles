@@ -99,7 +99,7 @@ return {
           end
         end,
         ft = { "markdown", "neorg", "org", "rmd" },
-        mode = { "v", "n" },
+        mode = { "n", "x" },
         desc = "ActionLSP: toggle render markdown [render-markdown]",
       },
     },

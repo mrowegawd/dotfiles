@@ -27,7 +27,7 @@ return {
         function()
           require("scissors").addNewSnippet()
         end,
-        mode = { "n", "v" },
+        mode = { "n", "x" },
         desc = "Misc: add snippet [nvim-scissors]",
       },
     },

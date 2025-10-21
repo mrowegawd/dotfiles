@@ -89,7 +89,7 @@ return {
       {
         "<Leader>gob",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        mode = { "n", "v" },
+        mode = { "n", "x" },
         desc = "Gitopen: gitlink on browser (normal or visual) [gitlinker]",
       },
       {
