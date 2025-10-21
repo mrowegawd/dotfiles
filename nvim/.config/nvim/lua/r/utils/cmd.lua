@@ -1161,8 +1161,8 @@ function M.change_colors()
   local tab_active_bg = H.tint(H.get("Keyword", "fg"), __tab_active_bg)
 
   -- Inactive Tab ====================================================
-  local __tab_inactive_fg = -0.25
-  local __tab_statusline_fg = -0.25
+  local __tab_inactive_fg = -0.1
+  local __tab_statusline_fg = -0.1
 
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-kanagawa" }, vim.g.colorscheme) then
     __tab_inactive_fg = -0.2
@@ -1179,28 +1179,33 @@ function M.change_colors()
     __tab_statusline_fg = -0.22
   end
 
-  if vim.g.colorscheme == "minimal" then
-    __tab_inactive_fg = -0.3
-    __tab_statusline_fg = -0.22
+  if vim.g.colorscheme == "ashen" then
+    __tab_inactive_fg = 0.07
+    __tab_statusline_fg = 0.07
   end
 
   if vim.g.colorscheme == "zenburn" then
-    __tab_inactive_fg = -0.6
-    __tab_statusline_fg = -0.35
+    __tab_inactive_fg = -0.08
+    __tab_statusline_fg = -0.1
   end
 
-  if vim.g.colorscheme == "base46-oxocarbon" then
-    __tab_inactive_fg = -0.18
-    __tab_statusline_fg = -0.18
+  if vim.tbl_contains({ "vscode_modern", "techbase" }, vim.g.colorscheme) then
+    __tab_inactive_fg = -0.05
+    __tab_statusline_fg = -0.05
   end
 
-  local tab_inactive_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_inactive_fg)
+  if vim.tbl_contains({ "oxocarbon", "minimal" }, vim.g.colorscheme) then
+    __tab_inactive_fg = 0.02
+    __tab_statusline_fg = 0.02
+  end
+
+  local tab_inactive_fg = H.tint(H.get("StatusLine", "fg"), __tab_inactive_fg)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("WinbarFilepath", "fg"), __tab_statusline_fg)
+  local tab_statusline_fg = H.tint(H.get("StatusLine", "fg"), __tab_statusline_fg)
 
   -- Border Pane =====================================================
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.05)
+  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.1)
   ---
   --------------------------------------------------------------------
 

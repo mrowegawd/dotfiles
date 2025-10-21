@@ -69,8 +69,8 @@ return {
       { "<Leader>qf" }, -- select mark fzf
       { "<Leader>qc" }, -- copy
 
-      { "<a-k>" }, -- move win to above
-      { "<a-j>" }, -- move win to bottom
+      { "<a-k>", ft = "qf" }, -- move win to above
+      { "<a-j>", ft = "qf" }, -- move win to bottom
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",

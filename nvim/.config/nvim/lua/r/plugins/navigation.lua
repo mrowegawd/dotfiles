@@ -664,6 +664,7 @@ return {
           focus_on_open = false,
           show_cursorline = true,
           hide_cursor = false,
+          width = 20,
         },
         symbols = {
           filter = nil,
