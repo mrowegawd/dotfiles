@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- DARCUBOX
+  {
+    "Koalhack/darcubox-nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local darcubox_themes = { "darcubox" }
+      if vim.tbl_contains(darcubox_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NIGHTINGALE
   {
     "xeind/nightingale.nvim",
@@ -15,19 +28,6 @@ return {
     enabled = function()
       local nightingale_themes = { "nightingale" }
       if vim.tbl_contains(nightingale_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- RASMUS
-  {
-    "kvrohit/rasmus.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local rasmus_themes = { "rasmus" }
-      if vim.tbl_contains(rasmus_themes, vim.g.colorscheme) then
         return true
       end
       return false

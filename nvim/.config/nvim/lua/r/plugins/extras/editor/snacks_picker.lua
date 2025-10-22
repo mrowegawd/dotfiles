@@ -99,9 +99,9 @@ return {
             layout = {
               layout = {
                 box = "vertical",
-                width = 0.50,
-                min_width = 0.9,
-                height = 0.50,
+                width = 0.85,
+                min_width = 0.6,
+                height = 0.85,
                 -- border = "rounded",
                 { win = "preview", title = "{preview}", border = "rounded" },
                 {

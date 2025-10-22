@@ -1,0 +1,27 @@
+# ~/.config/ghostty/config
+
+# Tema Darcubox‑Nvim untuk Ghostty
+
+background               = #0E1214
+foreground               = #C8C8C8
+cursor-color             = #C8C8C8
+selection-background     = #2E2E2E
+selection-foreground     = #FFFFFF
+
+# ANSI palette (0‑15)
+palette = 0=#0E1214
+palette = 1=#FF5C57
+palette = 2=#8AF52B
+palette = 3=#FFB86C
+palette = 4=#5DA7FF
+palette = 5=#FF6EFF
+palette = 6=#5AFFD6
+palette = 7=#E6E6E6
+palette = 8=#555A5C
+palette = 9=#FF8787
+palette = 10=#C5FF6B
+palette = 11=#FFDA92
+palette = 12=#7EB3FF
+palette = 13=#FF9CFF
+palette = 14=#8BFFEF
+palette = 15=#FFFFFF

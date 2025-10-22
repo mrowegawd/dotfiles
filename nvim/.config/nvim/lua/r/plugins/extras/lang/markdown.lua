@@ -87,7 +87,7 @@ return {
     ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
     keys = {
       {
-        "<Leader>clr",
+        "<Leader>uR",
         function()
           local m = require "render-markdown"
           if not is_render_markdown then

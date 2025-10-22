@@ -1152,6 +1152,11 @@ function M.change_colors()
     __tab_active_bg = -0.65
   end
 
+  if vim.g.colorscheme == "darcubox" then
+    __tab_active_fg = -0.2
+    __tab_active_bg = -0.6
+  end
+
   if vim.g.colorscheme == "nightingale" then
     __tab_active_fg = 0.1
     __tab_active_bg = -0.6
@@ -1194,6 +1199,11 @@ function M.change_colors()
     __tab_statusline_fg = -0.1
   end
 
+  if vim.g.colorscheme == "darcubox" then
+    __tab_inactive_fg = 0.05
+    __tab_statusline_fg = 0.05
+  end
+
   if vim.g.colorscheme == "nightingale" then
     __tab_inactive_fg = 0.02
     __tab_statusline_fg = 0.02
@@ -1215,7 +1225,7 @@ function M.change_colors()
 
   -- Border Pane =====================================================
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.1)
+  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.15)
   ---
   --------------------------------------------------------------------
 
@@ -1262,6 +1272,10 @@ function M.change_colors()
   if vim.g.colorscheme == "zenburn" then
     zsh_lines_fg = 0.15
     zsh_sugest_fg = 0.28
+  end
+
+  if vim.g.colorscheme == "darcubox" then
+    zsh_lines_fg = 0.6
   end
 
   local soft_themes = { "nanode", "base46-kanagawa" }
