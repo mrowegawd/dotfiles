@@ -8,6 +8,43 @@ local alts = {
 }
 
 return {
+  -- MINIBUFFER (disabled)
+  {
+    -- mesti di set-> on, dengan line ini?
+    -- require("vim._extui").enable { enable = true, msg = { target = "msg" } }
+    "simifalaye/minibuffer.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    dependencies = {
+      {
+        "nvim-mini/mini.pick",
+        dependencies = { "echasnovski/mini.extra" },
+      },
+    },
+    config = function()
+      -- local minibuffer = require "minibuffer"
+      local minipick = require "mini.pick"
+
+      -- TODO: conflict with fzf-lua
+      -- vim.ui.select = require "minibuffer.builtin.ui_select"
+      -- vim.ui.input = require "minibuffer.builtin.ui_input"
+
+      local pick_mb = require "minibuffer.integrations.mini-pick"
+      minipick.is_picker_active = pick_mb.is_picker_active
+      minipick.set_picker_items = pick_mb.set_picker_items
+      minipick.start = pick_mb.start
+
+      vim.keymap.set("n", "<a-r>", function()
+        minipick.builtin.files {}
+      end)
+
+      -- vim.keymap.set("n", "<leader>.", require "minibuffer.examples.files")
+      -- vim.keymap.set("n", "<Leader>.", function()
+      --   minipick.builtin.buffers {}
+      -- end)
+      vim.keymap.set("n", ":", require "minibuffer.builtin.cmdline")
+    end,
+  },
   -- FLASH.NVIM
   {
     "folke/flash.nvim",

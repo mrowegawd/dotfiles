@@ -287,11 +287,12 @@ local function save_cursorline_hl()
     local hl = H.h "CursorLine"
 
     local more_bright = 0.5
+
     if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
       more_bright = 0.1
     end
 
-    if vim.g.colorscheme == "ashen" then
+    if vim.tbl_contains({ "ashen", "rose-pine" }, vim.g.colorscheme) then
       more_bright = 1
     end
 
@@ -301,10 +302,6 @@ local function save_cursorline_hl()
 
     if vim.g.colorscheme == "neogotham" then
       more_bright = 1.4
-    end
-
-    if vim.g.colorscheme == "base46-melange" then
-      more_bright = 0.3
     end
 
     if vim.g.colorscheme == "zenburn" then

@@ -1154,12 +1154,17 @@ function M.change_colors()
 
   if vim.g.colorscheme == "darcubox" then
     __tab_active_fg = -0.2
-    __tab_active_bg = -0.6
+    __tab_active_bg = -0.65
   end
 
   if vim.g.colorscheme == "nightingale" then
     __tab_active_fg = 0.1
     __tab_active_bg = -0.6
+  end
+
+  if vim.g.colorscheme == "rose-pine" then
+    __tab_active_fg = -0.05
+    __tab_active_bg = -0.5
   end
 
   if vim.g.colorscheme == "vscode_modern" then

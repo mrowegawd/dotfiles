@@ -164,16 +164,20 @@ function M.get()
     {
       "<Leader>li",
       function()
-        fzf_lua.lsp_incoming_calls()
+        -- fzf_lua.lsp_incoming_calls()
+        Snacks.picker.lsp_incoming_calls()
       end,
-      desc = "LSP: incoming calls [fzflua]",
+      has = "callHierarchy/incomingCalls",
+      desc = "LSP: incoming calls [Snacks]",
     },
     {
       "<Leader>lo",
       function()
-        fzf_lua.lsp_outgoing_calls()
+        -- fzf_lua.lsp_outgoing_calls()
+        Snacks.picker.lsp_outgoing_calls()
       end,
-      desc = "LSP: outgoing calls [fzflua]",
+      has = "callHierarchy/outgoingCalls",
+      desc = "LSP: outgoing calls [Snacks]",
     },
 
     {

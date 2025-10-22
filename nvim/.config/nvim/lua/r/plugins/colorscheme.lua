@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- Y9NIKA
+  {
+    "y9san9/y9nika.nvim", -- sangat-sangat minimal color highlight nya!
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local y9nika_themes = { "y9nika" }
+      if vim.tbl_contains(y9nika_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- DARCUBOX
   {
     "Koalhack/darcubox-nvim",
