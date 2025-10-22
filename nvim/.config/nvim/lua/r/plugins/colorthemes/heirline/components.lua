@@ -950,9 +950,9 @@ M.SearchCount = {
       local current = self.result.current > self.result.maxcount and too_many or self.result.current
       local total = self.result.total > self.result.maxcount and too_many or self.result.total
       if search_query == "" then
-        return string.format("%d/%d  ", current, total)
+        return string.format("%s/%s  ", current, total)
       else
-        return string.format("(%s) %d/%d  ", search_query, current, total)
+        return string.format("(%s) %s/%s  ", search_query, current, total)
       end
     end,
     hl = { fg = colors.diagnostic_err },
