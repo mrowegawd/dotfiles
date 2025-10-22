@@ -1,0 +1,49 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+
+! Nightingale.nvim inspired Xresources
+! Background & foreground
+*background:       #1f1e1c
+*foreground:       #d9d7c5
+
+! ANSI colours
+! Black
+*color0:          #1f1e1c
+*color8:          #595652
+
+! Red
+*color1:          #d75f5f
+*color9:          #ff8787
+
+! Green
+*color2:          #87af5f
+*color10:         #bce06f
+
+! Yellow
+*color3:          #ffaf5f
+*color11:         #ffd787
+
+! Blue
+*color4:          #5f87ff
+*color12:         #afd7ff
+
+! Magenta / Purple
+*color5:          #8787af
+*color13:         #d7d7ff
+
+! Cyan
+*color6:          #5fafd7
+*color14:         #bfeffd
+
+! White
+*color7:          #d9d7c5
+*color15:         #ffffff
+
+*color16:         #569cd6
+
+! Cursor colours
+*cursorColor:     #d9d7c5
+*reverseCursor:   #1f1e1c
+
+! Mouse-colors (optional)
+*pointerColor:    #ffaf5f
+*pointerShapeColour: #ffaf5f

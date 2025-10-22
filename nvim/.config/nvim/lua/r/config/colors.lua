@@ -520,6 +520,13 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = 0.1,
     winseparator_alter = 0.72,
   },
+  ["nightingale"] = {
+    fold_fg = 0.25,
+    linenr_fg_alter = -0.02,
+    statusline_fg_alter = 0.7,
+    winbar_right_block_fg_alter = 0.1,
+    winseparator_alter = 0.45,
+  },
   ["neogotham"] = {
     comment_fg_alter = 0.8,
     cursor_fg = "#98d1ce",

@@ -7,14 +7,14 @@
 -- https://base2t.one
 
 return {
-  -- GITHUB_DARK (masih belum diimplementasi, dilihat-lihat)
+  -- NIGHTINGALE
   {
-    "lewis6991/github_dark.nvim",
+    "xeind/nightingale.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local github_dark_themes = { "github_dark" }
-      if vim.tbl_contains(github_dark_themes, vim.g.colorscheme) then
+      local nightingale_themes = { "nightingale" }
+      if vim.tbl_contains(nightingale_themes, vim.g.colorscheme) then
         return true
       end
       return false
