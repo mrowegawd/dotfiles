@@ -291,6 +291,10 @@ local function save_cursorline_hl()
       more_bright = 0.1
     end
 
+    if vim.g.colorscheme == "ashen" then
+      more_bright = 1
+    end
+
     if vim.g.colorscheme == "lackluster" then
       more_bright = 0.32
     end

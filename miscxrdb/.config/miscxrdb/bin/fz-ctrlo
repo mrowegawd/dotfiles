@@ -154,19 +154,22 @@ open_find_path() {
       exit
     fi
 
-    message="Open to Nvim"
-    filename="$1"
-    line="$2"
+    HEADER_MSG="Open Target to Nvim"
+    FILENAME="$1"
+    LINE="$2"
 
-    tmux send-keys -t "$pane_id" ":vsp $filename" Enter
+    tmux send-keys -t "$pane_id" ":vsp $FILENAME" Enter
     tmux select-pane -t "$pane_id"
 
     if [ -n "$line" ]; then
-      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line, 1 })" Enter
-      line=", line: $line"
+      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $LINE, 1 })" Enter
+      line=", line: $LINE"
     fi
 
-    dunstify "$message" "$filename$line"
+    tmux send-keys -t "$pane_id" ":wincmd =" Enter
+    # tmux send-keys -t "$pane_id" "zz" Enter
+
+    dunstify "$HEADER_MSG" "$FILENAME$LINE"
   }
 
   get_fzf_options() {

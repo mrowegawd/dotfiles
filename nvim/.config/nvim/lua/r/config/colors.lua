@@ -117,17 +117,17 @@ local base_colors = {
 
 local update_col_colorscheme = {
   ["ashen"] = {
-    comment_fg_alter = 0.7,
+    comment_fg_alter = 0.85,
     fold_fg = 0.25,
     fzflua_file_part_fg = 0.6,
     linenr_fg_alter = -0.05,
     nontext_fg_alter = 3,
     pmenu_bg_alter = 1.8,
-    render_markdown_code_bg_alter = 1.2,
+    render_markdown_code_bg_alter = 1.4,
     statusline_fg_alter = 0.8,
     winbar_right_block_bg_alter = 0.6,
     winbar_right_block_fg_alter = -0.25,
-    winseparator_alter = 1.2,
+    winseparator_alter = 1.3,
   },
   ["base46-jabuti"] = {
     blink_ghost_text_fg_alter = -0.4,

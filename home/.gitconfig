@@ -4,9 +4,10 @@
 
 [core]
   excludesfile = ~/.gitignore-global
-  pager = [ "${COLUMNS}" -ge 160 ] && delta --side-by-side || delta
   ; pager = delta
   ; pager = DELTA_FEATURES=$([[ $COLUMNS >= 160 ]] && echo "side-by-side") delta
+  pager = [ "${COLUMNS}" -ge 160 ] && delta --side-by-side || delta
+	commentChar = ";"
 
 
 [interactive]
