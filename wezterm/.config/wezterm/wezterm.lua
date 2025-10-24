@@ -128,7 +128,7 @@ end
 -- Dim window
 config.inactive_pane_hsb = {
   saturation = 1,
-  brightness = 0.4,
+  brightness = 0.8,
 }
 
 -- ├┤ FRAME ├───────────────────────────────────────────────────────────┤
@@ -179,8 +179,8 @@ config.colors = {
   tab_bar = {
     background = Color.bg,
     new_tab = { -- color tanda "+" pada tab bar
-      bg_color = Color.bg,
       fg_color = Color.statusline_inactive_fg,
+      bg_color = Color.bg,
       intensity = "Half",
     },
   },
@@ -201,12 +201,12 @@ config.hyperlink_rules = Hyperlinks
 -- Download font: https://monaspace.githubnext.com/
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
-config.font = font_with_fallback "SF Mono NF CN"
+config.font = font_with_fallback "JetBrainsMono Nerd Font"
 config.font_rules = {
   {
     intensity = "Normal",
     italic = true,
-    font = wezterm.font("Maple Mono NF CN", { style = "Italic" }),
+    font = wezterm.font("JetBrainsMono Nerd Font", { style = "Italic" }),
   },
 }
 

@@ -3,8 +3,17 @@ local wezterm = require "wezterm"
 local M = {}
 
 function M.get_foreground_process_name(pane, name)
-  return string.match(pane:get_foreground_process_name(), name)
+  local process_name_pane = pane:get_foreground_process_name()
+  if process_name_pane then
+    local get_process_name = string.match(process_name_pane, name)
+    if get_process_name then
+      return true
+    end
+  end
+
+  return false
 end
+
 function M.cmd_call(params)
   local handle = io.popen(params)
   if handle == nil then

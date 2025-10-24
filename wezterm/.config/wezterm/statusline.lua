@@ -21,7 +21,7 @@ wezterm.on("update-right-status", function(window, pane)
   local clock_fg = Color.red
   local bg = Color.bg
 
-  turn_off_tab_bar(window, pane, { "ncmpcpp", "lazygit", "lazydocker" })
+  turn_off_tab_bar(window, pane, { "ncmpcpp", "lazygit", "lazydocker", "btop" })
 
   -- local date = wezterm.strftime("%Y-%m-%d %H:%M")
   local date = wezterm.strftime "%H:%M"

@@ -191,12 +191,17 @@ end
 RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
 RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
 
--- if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
---   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
---   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
---   RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
---   RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
--- end
+if not RUtils.has "smart-splits.nvim" then
+  RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: increase window height" })
+  RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: decrease window height" })
+  RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
+  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
+
+  RUtils.map.nnoremap("<C-h>", "<C-w>h")
+  RUtils.map.nnoremap("<C-j>", "<C-w>j")
+  RUtils.map.nnoremap("<C-k>", "<C-w>k")
+  RUtils.map.nnoremap("<C-l>", "<C-w>l")
+end
 
 -- Tab
 RUtils.map.nnoremap("tn", function()
@@ -230,8 +235,6 @@ RUtils.map.nnoremap("zL", "z20l")
 RUtils.map.nnoremap("zH", "z20h")
 
 -- Scroll Up/Down
-RUtils.map.nnoremap("<C-d>", "<C-d>", { desc = "Scroll: downwards" })
-RUtils.map.nnoremap("<C-u>", "<C-u>", { desc = "Scroll: upwards" })
 RUtils.map.nnoremap(
   "<C-b>",
   [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]],

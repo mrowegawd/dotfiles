@@ -33,7 +33,8 @@ if Util.is_os_windows() then
 
     statusline_bg_message = "#e5c463",
     statusline_fg = statusline_fg,
-    statusline_inactive_fg = tint(statusline_inactive_fg, -0.2),
+    -- statusline_inactive_fg = Util.tint(statusline_inactive_fg, -0.2),
+    statusline_inactive_fg = statusline_fg,
 
     selection_tab = active_bg,
     separator_fg = separator_fg,
@@ -42,13 +43,16 @@ end
 
 local MASTER_THEME_FILE = "/tmp/master-colors-themes"
 if Util.is_file_exists(MASTER_THEME_FILE) then
-  active_fg = Util.cmd_call("grep -i color17 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  active_bg = Util.cmd_call("grep -i color44 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  separator_fg = Util.cmd_call("grep -i color18 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  statusline_fg = Util.cmd_call("grep -i color21 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+  active_fg = Util.cmd_call("grep -i tmux_tab_active_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+  active_bg = Util.cmd_call("grep -i tmux_tab_active_bg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+  separator_fg =
+    Util.cmd_call("grep -i tmux_border_inactive <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+  statusline_fg =
+    Util.cmd_call("grep -i tmux_statusline_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
 
-  statusline_inactive_fg =
-    Util.cmd_call("grep -i color21 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+  statusline_inactive_fg = Util.cmd_call(
+    "grep -i tmux_border_inactive_status_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs"
+  )
 end
 
 return {

@@ -6,7 +6,7 @@ local Constant = require "constant"
 local wezterm = require "wezterm"
 local act = wezterm.action
 
-local mod_key = wezterm.target_triple:find "windows" and "SHIFT|CTRL" or "ALT"
+local mod_key = wezterm.target_triple:find "windows" and "SHIFT|CTRL" or "SHIFT|ALT"
 
 -- Load the plugin
 local workspace_switcher = wezterm.plugin.require "https://github.com/MLFlexer/smart_workspace_switcher.wezterm"
@@ -35,10 +35,10 @@ return {
   --
   { -- select session
     key = "y",
-    mods = mod_key,
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "y", mods = mod_key } }, pane)
+        window:perform_action({ SendKey = { key = "y", mods = "ALT" } }, pane)
       else
         window:perform_action(workspace_switcher.switch_workspace(), pane)
       end
@@ -46,10 +46,10 @@ return {
   },
   { -- last session
     key = "b",
-    mods = mod_key,
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
+        window:perform_action({ SendKey = { key = "b", mods = "ALT" } }, pane)
       else
         KeymapUtil.switch_to_previous_workspace(window, pane)
       end
@@ -89,7 +89,7 @@ return {
     end),
   },
   { -- alternate session
-    key = "B",
+    key = "b",
     mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
@@ -107,8 +107,8 @@ return {
     end),
   },
   { -- scroll pane up
-    mods = mod_key,
     key = "PageUp",
+    mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
         window:perform_action({ SendKey = { key = "PageUp", mods = mod_key } }, pane)
@@ -140,10 +140,10 @@ return {
     end),
   },
 
-  KeymapUtil.split_nav("move", "ALT", "h", "Left"),
-  KeymapUtil.split_nav("move", "ALT", "j", "Down"),
-  KeymapUtil.split_nav("move", "ALT", "k", "Up"),
-  KeymapUtil.split_nav("move", "ALT", "l", "Right"),
+  KeymapUtil.split_nav("move", "CTRL", "h", "Left"),
+  KeymapUtil.split_nav("move", "CTRL", "j", "Down"),
+  KeymapUtil.split_nav("move", "CTRL", "k", "Up"),
+  KeymapUtil.split_nav("move", "CTRL", "l", "Right"),
 
   KeymapUtil.split_nav("resize", mod_key, "L", "Right"),
   KeymapUtil.split_nav("resize", mod_key, "H", "Left"),
@@ -241,17 +241,17 @@ return {
       end
     end),
   },
-  { -- capture pane
-    key = "c",
-    mods = mod_key,
-    action = wezterm.action_callback(function(window, pane)
-      if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "c", mods = mod_key } }, pane)
-      else
-        window:perform_action(act.EmitEvent "trigger-nvim-with-scrollback", pane)
-      end
-    end),
-  },
+  -- { -- capture pane
+  --   key = "c",
+  --   mods = mod_key,
+  --   action = wezterm.action_callback(function(window, pane)
+  --     if KeymapUtil.is_in_tmux(pane) then
+  --       window:perform_action({ SendKey = { key = "c", mods = mod_key } }, pane)
+  --     else
+  --       window:perform_action(act.EmitEvent "trigger-nvim-with-scrollback", pane)
+  --     end
+  --   end),
+  -- },
   { -- reset pane size
     key = "w",
     mods = mod_key,
@@ -368,33 +368,12 @@ return {
       end
     end),
   },
-  { -- open lazydocker
-    key = "d",
-    mods = mod_key,
-    action = wezterm.action_callback(function(window, pane)
-      if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "g", mods = "LEADER" } }, pane)
-      else
-        local cwd_uri = pane:get_current_working_dir()
-        -- window:toast_notification("wezterm", cwd_uri.file_path, nil, 4000)
-        KeymapUtil.spawn_child_process {
-          "wezterm",
-          "start",
-          "--cwd",
-          cwd_uri.file_path,
-          "--class",
-          "if-select",
-          "lazydocker",
-        }
-      end
-    end),
-  },
   { -- open lazygit
     key = "g",
     mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "g", mods = "LEADER" } }, pane)
+        window:perform_action({ SendKey = { key = "g", mods = mod_key } }, pane)
       else
         local cwd_uri = pane:get_current_working_dir()
         -- window:toast_notification("wezterm", cwd_uri.file_path, nil, 4000)
@@ -414,10 +393,10 @@ return {
   },
   { -- open lazydocker
     key = "d",
-    mods = "LEADER",
+    mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "d", mods = "LEADER" } }, pane)
+        window:perform_action({ SendKey = { key = "d", mods = mod_key } }, pane)
       else
         KeymapUtil.spawn_child_process {
           "wezterm",
@@ -432,11 +411,11 @@ return {
     end),
   },
   { -- open btop
-    key = "o",
+    key = "b",
     mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "b", mods = "LEADER" } }, pane)
+        window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
       else
         local cwd_uri = pane:get_current_working_dir()
         KeymapUtil.spawn_child_process {
@@ -451,34 +430,13 @@ return {
       end
     end),
   },
-  { -- open newsboat
-    key = "N",
-    mods = "LEADER",
-    action = wezterm.action_callback(function(window, pane)
-      if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "N", mods = "LEADER" } }, pane)
-      else
-        local cwd_uri = pane:get_current_working_dir()
-        KeymapUtil.spawn_child_process {
-          "wezterm",
-          "start",
-          "--cwd",
-          cwd_uri.file_path,
-          "--class",
-          "if-select",
-          "proxychains",
-          "-q",
-          "newsboat",
-        }
-      end
-    end),
-  },
   { -- open rkill
-    key = "k",
-    mods = "LEADER",
+    -- TODO: check ini r_kill nya ga bisa jalan di wezterm, mungkin env nya ga ada?
+    key = "c",
+    mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "k", mods = "LEADER" } }, pane)
+        window:perform_action({ SendKey = { key = "c", mods = mod_key } }, pane)
       else
         -- KeymapUtil.spawn_command_with_split(window, pane, 80, "rkll")
         local cwd_uri = pane:get_current_working_dir()
@@ -489,20 +447,24 @@ return {
           cwd_uri.file_path,
           "--class",
           "if-select",
-          "rkll",
+          -- "r_kill",
+          --
+          "bash",
+          "-c",
+          "r_kill",
         }
       end
     end),
   },
-  { -- open calc
-    key = "A",
-    mods = "LEADER",
+  { -- open snippets
+    -- TODO: ini juga sama
+    key = "s",
+    mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "c", mods = "LEADER" } }, pane)
+        window:perform_action({ SendKey = { key = "s", mods = mod_key } }, pane)
       else
-        -- local cwd_uri = pane:get_current_working_dir()
-        -- KeymapUtil.spawn_command_with_split(window, pane, 80, "calc")
+        -- KeymapUtil.spawn_command_with_split(window, pane, 80, "rkll")
         local cwd_uri = pane:get_current_working_dir()
         KeymapUtil.spawn_child_process {
           "wezterm",
@@ -511,14 +473,16 @@ return {
           cwd_uri.file_path,
           "--class",
           "if-select",
-          "calc",
+          "bash",
+          "-c",
+          "$HOME/.config/miscxrdb/bin/snippet",
         }
       end
     end),
   },
   { -- open terminal <a-f>
-    mods = mod_key,
     key = "f",
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
         window:perform_action({ SendKey = { key = "f", mods = mod_key } }, pane)

@@ -9,7 +9,6 @@ function M.split_nav(resize_or_move, mods, key, dir)
 
   wezterm.on(event, function(window, pane)
     if M.is_in_tmux(pane) then
-      -- window:toast_notification("wezterm", mods .. " keys " .. key, nil, 4000)
       window:perform_action({ SendKey = { key = key, mods = mods } }, pane)
     else
       local panes = pane:tab():panes_with_info()
@@ -30,17 +29,9 @@ function M.split_nav(resize_or_move, mods, key, dir)
         return
       end
 
-      -- window:toast_notification("wezterm", "pane is zoom " .. tostring(is_zoomed), nil, 4000)
-
       if not is_zoomed then
-        -- dir = dir == "Up" or dir == "Right" and "Next" or "Prev"
         window:perform_action({ ActivatePaneDirection = dir }, pane)
-        -- 	return
       end
-      --
-      -- window:toast_notification("wezterm", dir, nil, 4000)
-      -- window:perform_action({ ActivatePaneDirection = dir }, pane)
-      -- window:perform_action({ SetPaneZoomState = is_zoomed }, pane)
     end
   end)
   return {
@@ -49,14 +40,6 @@ function M.split_nav(resize_or_move, mods, key, dir)
     action = wezterm.action.EmitEvent(event),
   }
 end
-
--- local function active_pane(tab)
--- 	for _, item in ipairs(tab:panes_with_info()) do
--- 		if item.is_active then
--- 			return item.pane
--- 		end
--- 	end
--- end
 
 function M.nav_numbers(key)
   return {
@@ -178,8 +161,8 @@ function M.is_in_tmux(pane)
 end
 
 function M.is_in_nvim(pane)
-  -- or pane:get_foreground_process_name():find("n?vim")
-  return pane:get_user_vars().IS_NVIM == "true"
+  -- or pane:get_user_vars().IS_NVIM == "true"
+  return pane:get_foreground_process_name():find "n?vim"
 end
 
 function M.is_in_nnn(pane)

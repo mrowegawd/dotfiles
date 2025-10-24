@@ -1229,8 +1229,14 @@ function M.change_colors()
   local tab_statusline_fg = H.tint(H.get("StatusLine", "fg"), __tab_statusline_fg)
 
   -- Border Pane =====================================================
+  local __border_tmux_inactive_fg = 0.15
+
+  if vim.g.colorscheme == "zenburn" then
+    __border_tmux_inactive_fg = 0.05
+  end
+
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  local border_inactive = H.tint(H.get("WinSeparator", "fg"), 0.15)
+  local border_inactive = H.tint(H.get("WinSeparator", "fg"), __border_tmux_inactive_fg)
   ---
   --------------------------------------------------------------------
 
