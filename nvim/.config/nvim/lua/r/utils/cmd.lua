@@ -1162,6 +1162,11 @@ function M.change_colors()
     __tab_active_bg = -0.6
   end
 
+  if vim.g.colorscheme == "tokyonight-night" then
+    __tab_active_fg = -0.2
+    __tab_active_bg = -0.65
+  end
+
   if vim.g.colorscheme == "rose-pine" then
     __tab_active_fg = -0.05
     __tab_active_bg = -0.5
@@ -1200,18 +1205,13 @@ function M.change_colors()
   end
 
   if vim.g.colorscheme == "zenburn" then
-    __tab_inactive_fg = -0.08
-    __tab_statusline_fg = -0.1
-  end
-
-  if vim.g.colorscheme == "darcubox" then
-    __tab_inactive_fg = 0.05
-    __tab_statusline_fg = 0.05
-  end
-
-  if vim.g.colorscheme == "nightingale" then
     __tab_inactive_fg = 0.02
     __tab_statusline_fg = 0.02
+  end
+
+  if vim.tbl_contains({ "darcubox", "tokyonight-night" }, vim.g.colorscheme) then
+    __tab_inactive_fg = 0.05
+    __tab_statusline_fg = 0.05
   end
 
   if vim.tbl_contains({ "vscode_modern", "techbase" }, vim.g.colorscheme) then
@@ -1219,7 +1219,7 @@ function M.change_colors()
     __tab_statusline_fg = -0.05
   end
 
-  if vim.tbl_contains({ "oxocarbon", "minimal" }, vim.g.colorscheme) then
+  if vim.tbl_contains({ "oxocarbon", "minimal", "nightingale" }, vim.g.colorscheme) then
     __tab_inactive_fg = 0.02
     __tab_statusline_fg = 0.02
   end

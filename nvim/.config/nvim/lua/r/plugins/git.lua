@@ -18,6 +18,7 @@ local normal_themes = {
   "rose-pine",
   "vscode_modern",
   "y9nika",
+  "darcubox",
 }
 
 if vim.tbl_contains(normal_themes, vim.g.colorscheme) then

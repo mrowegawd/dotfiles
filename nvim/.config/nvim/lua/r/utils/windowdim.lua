@@ -292,19 +292,19 @@ local function save_cursorline_hl()
       more_bright = 0.1
     end
 
-    if vim.tbl_contains({ "ashen", "rose-pine" }, vim.g.colorscheme) then
-      more_bright = 1
+    if vim.tbl_contains({ "ashen", "rose-pine", "neogotham" }, vim.g.colorscheme) then
+      more_bright = 1.3
     end
 
-    if vim.g.colorscheme == "lackluster" then
-      more_bright = 0.32
+    if vim.g.colorscheme == "darcubox" then
+      more_bright = 1.8
     end
 
-    if vim.g.colorscheme == "neogotham" then
-      more_bright = 1.4
+    if vim.tbl_contains({ "tokyonight-night", "nightingale", "minimal" }, vim.g.colorscheme) then
+      more_bright = 0.8
     end
 
-    if vim.g.colorscheme == "zenburn" then
+    if vim.tbl_contains({ "zenburn", "lackluster" }, vim.g.colorscheme) then
       more_bright = 0.3
     end
 
