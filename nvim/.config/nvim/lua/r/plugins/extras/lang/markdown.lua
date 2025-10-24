@@ -84,7 +84,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
+    ft = { "markdown", "norg", "rmd", "org", "codecompanion", "octo" },
     keys = {
       {
         "<Leader>uR",
@@ -98,7 +98,7 @@ return {
             is_render_markdown = false
           end
         end,
-        ft = { "markdown", "neorg", "org", "rmd" },
+        ft = { "markdown", "neorg", "org", "rmd", "octo" },
         mode = { "n", "x" },
         desc = "ActionLSP: toggle render markdown [render-markdown]",
       },

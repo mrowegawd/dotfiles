@@ -140,6 +140,7 @@ return {
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
+    -- "pwntester/octo.nvim",
     "MadKuntilanak/octo.nvim",
     -- dir = "~/.local/src/nvim_plugins/octo.nvim",
     branch = "feat/big-updates",
@@ -347,6 +348,7 @@ return {
   },
   -- OCTO
   {
+    -- "pwntester/octo.nvim",
     "MadKuntilanak/octo.nvim",
     -- dir = "~/.local/src/nvim_plugins/octo.nvim",
     optional = true,

@@ -806,13 +806,6 @@ RUtils.map.xnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
 end, { desc = "CTRL_o: btop" })
 
-RUtils.map.nnoremap("<a-M>", function()
-  RUtils.terminal.float_newsboat()
-end, { desc = "CTRL_o: newsboat" })
-RUtils.map.xnoremap("<a-M>", function()
-  RUtils.terminal.float_newsboat()
-end, { desc = "CTRL_o: newsboat" })
-
 RUtils.map.nnoremap("<a-C>", function()
   RUtils.terminal.float_rkill()
 end, { desc = "CTRL_o: rkill" })

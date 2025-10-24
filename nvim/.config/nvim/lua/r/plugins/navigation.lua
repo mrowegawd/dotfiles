@@ -83,7 +83,7 @@ return {
               },
             },
 
-            { NeoTreeIndentMarker = { fg = { from = "TroubleIndent", attr = "fg" }, bold = false } },
+            { NeoTreeIndentMarker = { fg = { from = "OutlineGuides", attr = "fg" }, bold = false } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelSideNormal", fg = { from = "Comment" } } },
 
             { NeoTreeGitAdded = { link = "GitSignsAdd" } },

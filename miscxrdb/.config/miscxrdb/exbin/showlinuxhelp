@@ -129,6 +129,7 @@ mpv() {
     print $1,"\t\t",last;
   }
   {last=""} /^#/{last=$0}' "$MPV_PATH" | sort |
+      column -t -s $'\t' |
       sed 's/#//g' |
       fzf-tmux -xC -w 80% -h 60% \
         --header="^x:edit  ^r:reload" \
@@ -139,6 +140,7 @@ mpv() {
   )
 
   copy_selected "$SELECT"
+
 }
 sxhkdrc() {
   SXHKDRC_PATH="$HOME/.config/sxhkd/sxhkdrc"
