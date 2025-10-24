@@ -23,7 +23,7 @@ wezterm.on("update-right-status", function(window, pane)
 
   turn_off_tab_bar(window, pane, { "ncmpcpp", "lazygit", "lazydocker", "btop" })
 
-  -- local date = wezterm.strftime("%Y-%m-%d %H:%M")
+  local calendar = wezterm.strftime "%A, %d-%b-%Y"
   local date = wezterm.strftime "%H:%M"
   local username = os.getenv "USER" or os.getenv "LOGNAME" or os.getenv "USERNAME"
 
@@ -34,6 +34,8 @@ wezterm.on("update-right-status", function(window, pane)
 
   window:set_right_status(wezterm.format {
     { Attribute = { Intensity = "Bold" } },
+    { Foreground = { Color = statusline_fg } },
+    { Text = "  " .. calendar .. " " },
     { Foreground = { Color = clock_fg } },
     { Background = { Color = bg } },
     { Text = "  " .. date .. " " },

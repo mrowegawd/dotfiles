@@ -151,12 +151,12 @@ return {
     },
     opts = true,
   },
-  -- SMEAR-CURSOR
+  -- SMEAR-CURSOR (disabled)
   {
     "sphamba/smear-cursor.nvim", -- disabled karena slow
     event = "LazyFile",
     enabled = false,
-    -- cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
+    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = {},
   },
   -- BLOCK.NVIM

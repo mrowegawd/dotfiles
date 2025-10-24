@@ -854,11 +854,17 @@ set_shaders_color() {
       VSCODE_SHADERS_SMEAR="vec4(0.596, 0.820, 0.808, 0.5);"
       VSCODE_TRAIL_COLOR_ACCENT="vec4(0.596, 0.820, 0.808, 1.0);"
     fi
+    if [ "$1" == "zenburn" ]; then
+      VSCODE_SHADERS_SMEAR="vec4(0.451, 0.388, 0.353, 1.0);"
+      VSCODE_TRAIL_COLOR_ACCENT="vec4(0.451, 0.388, 0.353, 1.0);"
+    fi
     if [ "$1" == "vscode_modern" ]; then
       VSCODE_SHADERS_SMEAR="vec4(0.980, 0.098, 0.098, 1.0);"
     fi
+
     # cursor_smear_fade
     sed -i -e "s/^const vec4 TRAIL_COLOR\s=.*$/const vec4 TRAIL_COLOR = $VSCODE_SHADERS_SMEAR/g" "$_SHADERS_CURSOR_SMEAR_FADE"
+    sed -i -e "s/^const vec4 TRAIL_COLOR_ACCENT\s=.*$/const vec4 TRAIL_COLOR_ACCENT = $VSCODE_TRAIL_COLOR_ACCENT/g" "$_SHADERS_CURSOR_SMEAR_FADE"
 
     # cursor_blaze
     sed -i -e "s/^const vec4 TRAIL_COLOR\s=.*$/const vec4 TRAIL_COLOR = $VSCODE_SHADERS_SMEAR/g" "$_SHADERS_CURSOR_BLAZE"

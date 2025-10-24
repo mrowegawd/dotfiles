@@ -18,8 +18,7 @@ not_in_tmux() {
 
 create_if_needed_and_attach() {
   if [[ $TERMINAL == "wezterm" ]]; then
-    dunstify "[!] $TERMINAL tidak punya spesific cli command untuk akses api switch workspace"
-    dunstify "[!] keymap -> alt+y"
+    dunstify "[!] Session Access" "Press Alt+Y to continue"
     exit
   fi
 

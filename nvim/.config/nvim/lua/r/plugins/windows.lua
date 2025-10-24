@@ -130,7 +130,6 @@ return {
   {
     "mrjones2014/smart-splits.nvim",
     event = "LazyFile",
-    -- enabled = false,
     -- enabled = not vim.tbl_contains({ "wezterm" }, os.getenv "TERMINAL"),
     keys = function()
       return {

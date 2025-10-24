@@ -11,6 +11,40 @@ local mod_key = wezterm.target_triple:find "windows" and "SHIFT|CTRL" or "SHIFT|
 -- Load the plugin
 local workspace_switcher = wezterm.plugin.require "https://github.com/MLFlexer/smart_workspace_switcher.wezterm"
 
+-- Nama session / overlay
+local NOTES_SESSION = "notes_wiki"
+local NOTES_PATH = os.getenv "HOME" .. "/Dropbox/neorg"
+
+wezterm.on("open-notes", function(window, pane)
+  local mux = wezterm.mux
+
+  -- Cari window mux yang sudah ada dengan title sama
+  local existing_window = nil
+  for _, w in ipairs(mux.all_windows()) do
+    if w:get_title() == NOTES_SESSION then
+      existing_window = w
+      break
+    end
+  end
+
+  if existing_window then
+    -- Fokus ke window yang sudah ada
+    wezterm.log_info "Attaching to existing notes_wiki window"
+    window:toast_notification("Notes", "Attached to existing window", nil, 2000)
+    window:perform_action(wezterm.action.ActivateWindow(existing_window:window_id()), pane)
+    return
+  end
+
+  -- Spawn window baru jika gui_window() nil
+  wezterm.log_info "Creating new notes_wiki window"
+  window:toast_notification("Notes", "Opening new window...", nil, 2000)
+  mux.spawn_window {
+    workspace = NOTES_SESSION,
+    cwd = NOTES_PATH,
+    cmd = { "nvim", NOTES_PATH },
+  }
+end)
+
 return {
   -- General --------------------------------------------------------------- {{{
   --
@@ -456,8 +490,19 @@ return {
       end
     end),
   },
+  { -- open notes
+    key = "w",
+    mods = mod_key,
+    action = wezterm.action_callback(function(window, pane)
+      if KeymapUtil.is_in_tmux(pane) then
+        window:perform_action({ SendKey = { key = "w", mods = mod_key } }, pane)
+      else
+        -- window:toast_notification("Open Notes", "emang terbuka?", nil, 4000)
+        wezterm.emit("open-notes", window, pane)
+      end
+    end),
+  },
   { -- open snippets
-    -- TODO: ini juga sama
     key = "s",
     mods = mod_key,
     action = wezterm.action_callback(function(window, pane)
