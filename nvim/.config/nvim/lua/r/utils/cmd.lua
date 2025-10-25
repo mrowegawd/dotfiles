@@ -1137,6 +1137,11 @@ function M.change_colors()
     __tab_active_bg = -0.6
   end
 
+  if vim.g.colorscheme == "base46-melange" then
+    __tab_active_fg = -0.2
+    __tab_active_bg = -0.65
+  end
+
   if vim.g.colorscheme == "ashen" then
     __tab_active_fg = -0.4
     __tab_active_bg = -0.75
@@ -1209,6 +1214,11 @@ function M.change_colors()
     __tab_statusline_fg = 0.02
   end
 
+  if vim.g.colorscheme == "xenos" then
+    __tab_inactive_fg = -0.01
+    __tab_statusline_fg = -0.01
+  end
+
   if vim.tbl_contains({ "darcubox", "tokyonight-night" }, vim.g.colorscheme) then
     __tab_inactive_fg = 0.05
     __tab_statusline_fg = 0.05
@@ -1276,7 +1286,7 @@ function M.change_colors()
     zsh_sugest_fg = 0.7
   end
 
-  if vim.g.colorscheme == "minimal" then
+  if vim.tbl_contains({ "minimal", "xenos" }, vim.g.colorscheme) then
     zsh_lines_fg = 0.4
   end
 
@@ -1289,7 +1299,7 @@ function M.change_colors()
     zsh_lines_fg = 0.6
   end
 
-  local soft_themes = { "nanode", "base46-kanagawa" }
+  local soft_themes = { "nanode", "base46-kanagawa", "base46-melange" }
   if vim.tbl_contains(soft_themes, vim.g.colorscheme) then
     zsh_lines_fg = 0.45
     zsh_sugest_fg = 0.8

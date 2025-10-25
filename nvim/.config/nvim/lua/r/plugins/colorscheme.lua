@@ -172,6 +172,7 @@ return {
         "base46-gruvchad",
         "base46-horizon",
         "base46-jabuti",
+        "base46-palenight",
         -- "base46-jellybeans",
         "base46-kanagawa",
         "base46-material-darker",
