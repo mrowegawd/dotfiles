@@ -301,11 +301,11 @@ return {
             ["<PageDown>"] = "preview-page-down",
             ["<PageUp>"] = "preview-page-up",
 
-            ["<c-u>"] = "preview-page-up",
-            ["<c-d>"] = "preview-page-down",
+            ["<c-u>"] = "preview-up",
+            ["<c-d>"] = "preview-down",
 
-            ["<c-Up>"] = "preview-page-up",
-            ["<c-Down>"] = "preview-page-down",
+            ["<c-Up>"] = "preview-up",
+            ["<c-Down>"] = "preview-down",
           },
           fzf = {
             ["alt-a"] = "toggle-all",
