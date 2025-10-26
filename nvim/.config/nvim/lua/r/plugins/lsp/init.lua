@@ -238,11 +238,6 @@ return {
         end
       end
 
-      -- attach nvim-navic
-      Snacks.util.lsp.on({ method = "textDocument/documentSymbol" }, function(buffer, client)
-        require("nvim-navic").attach(client, buffer)
-      end)
-
       -- inlay hints
       if opts.inlay_hints.enabled then
         Snacks.util.lsp.on({ method = "textDocument/inlayHint" }, function(buffer)

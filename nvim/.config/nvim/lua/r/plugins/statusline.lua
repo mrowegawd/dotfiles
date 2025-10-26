@@ -23,9 +23,16 @@ return {
   -- NVIM-NAVIC
   {
     "SmiteshP/nvim-navic",
-    config = function()
+    lazy = true,
+    init = function()
+      vim.g.navic_silence = true
+    end,
+    opts = function()
       local kind = RUtils.config.icons.kinds
-      require("nvim-navic").setup {
+      Snacks.util.lsp.on({ method = "textDocument/documentSymbol" }, function(buffer, client)
+        require("nvim-navic").attach(client, buffer)
+      end)
+      return {
         highlight = true,
         separator = "  ",
         icons = {
