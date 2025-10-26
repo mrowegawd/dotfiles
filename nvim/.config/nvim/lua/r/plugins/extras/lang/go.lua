@@ -1,10 +1,10 @@
 return {
-  -- recommended = function()
-  --   return RUtils.extras.wants {
-  --     ft = { "go", "gomod", "gowork", "gotmpl" },
-  --     root = { "go.work", "go.mod" },
-  --   }
-  -- end,
+  recommended = function()
+    return RUtils.extras.wants {
+      ft = { "go", "gomod", "gowork", "gotmpl" },
+      root = { "go.work", "go.mod" },
+    }
+  end,
   {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "go", "gomod", "gowork", "gosum" } },
@@ -80,7 +80,6 @@ return {
   -- Ensure Go tools are installed
   {
     "mason-org/mason.nvim",
-    optional = true,
     opts = { ensure_installed = { "goimports", "gofumpt" } },
   },
   {

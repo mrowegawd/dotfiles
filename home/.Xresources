@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/vscode_modern"
+#include ".config/miscxrdb/xresource-theme/tokyonight-storm"
 
 ! --------------
 ! XFT SETTINGS

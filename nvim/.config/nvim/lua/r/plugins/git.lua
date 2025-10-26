@@ -454,7 +454,7 @@ return {
 
         -- Toggle
         map("n", "<Leader>gub", function()
-          gs.blame()
+          vim.cmd "G blame"
         end, "Gittoggle: git blame [gitsigns]")
         map("n", "<Leader>gud", gs.toggle_deleted, "Gittoggle: to check diff changes [gitsigns]")
         map("n", "<Leader>guw", gs.toggle_word_diff, "Gittoggle: word diff [gitsigns]")
@@ -521,12 +521,12 @@ return {
       "GlLog",
       "Gclog",
       "Gdiffsplit",
+      "Gblame",
       "Gedit",
       "Git",
       "GitEditChanged",
       "GitHistory",
       "Gwrite",
-      -- "GitEditDiff",
     },
     keys = {
       {

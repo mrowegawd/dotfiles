@@ -21,6 +21,7 @@ return {
       "disable_ft",
     },
     dependencies = {
+      -- "saghen/filler-begone.nvim",
       -- add blink.compat to dependencies
       {
         "saghen/blink.compat",
