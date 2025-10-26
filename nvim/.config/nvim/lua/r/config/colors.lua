@@ -565,6 +565,19 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = 0.2,
     winseparator_alter = 0.7,
   },
+  ["rose-pine-moon"] = {
+    comment_fg_alter = 0.6,
+    fold_fg = 0.25,
+    hovered_cursorline_fg_alter = 0.6,
+    linenr_fg_alter = 0.1,
+    nontext_fg_alter = 2,
+    pmenu_bg_alter = 0.5,
+    render_markdown_code_bg_alter = 0.5,
+    statusline_bg_alter = -0.05,
+    winbar_right_block_bg_alter = 0.45,
+    winbar_right_block_fg_alter = 0.2,
+    winseparator_alter = 0.3,
+  },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.5,
     comment_fg_alter = 0.7,
@@ -586,6 +599,13 @@ local update_col_colorscheme = {
     winbar_fg_alter = 1.5,
     winbar_right_block_bg_alter = 0.4,
     winseparator_alter = 0.7,
+  },
+  ["tokyonight-storm"] = {
+    comment_fg_alter = 0.6,
+    fzflua_file_part_fg = 0.6,
+    pmenu_bg_alter = 0.4,
+    render_markdown_code_bg_alter = 0.23,
+    winbar_right_block_bg_alter = 0.3,
   },
   ["vscode_modern"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },

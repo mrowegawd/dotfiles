@@ -231,16 +231,17 @@ return {
       end
       vim.keymap.del("s", "<C-s>")
 
-      -- attach nvim-navic
-      Snacks.util.lsp.on({ method = "textDocument/documentSymbol" }, function(buffer, client)
-        require("nvim-navic").attach(client, buffer)
-      end)
-
+      -- setup keymaps
       for server, server_opts in pairs(opts.servers) do
         if type(server_opts) == "table" and server_opts.keys then
           require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
         end
       end
+
+      -- attach nvim-navic
+      Snacks.util.lsp.on({ method = "textDocument/documentSymbol" }, function(buffer, client)
+        require("nvim-navic").attach(client, buffer)
+      end)
 
       -- inlay hints
       if opts.inlay_hints.enabled then

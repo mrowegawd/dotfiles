@@ -414,28 +414,28 @@ return {
         function()
           require("meow.yarn").open_tree("type_hierarchy", "supertypes")
         end,
-        desc = "Yarn: type hierarchy (super)",
+        desc = "LSP: type hierarchy (super) [meow.yarn]",
       },
       {
         "<Leader>lT",
         function()
           require("meow.yarn").open_tree("type_hierarchy", "subtypes")
         end,
-        desc = "Yarn: type hierarchy (subtypes)",
+        desc = "LSP: type hierarchy (subtypes) [meow.yarn]",
       },
       {
         "<Leader>lc",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callers")
         end,
-        desc = "Yarn: call hierarchy (callers)",
+        desc = "LSP: call hierarchy (callers) [meow.yarn]",
       },
       {
         "<Leader>lC",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callees")
         end,
-        desc = "Yarn: call hierarchy (callees)",
+        desc = "LSP: call hierarchy (callees) [meow.yarn]",
       },
     },
     opts = {

@@ -1167,12 +1167,12 @@ function M.change_colors()
     __tab_active_bg = -0.6
   end
 
-  if vim.g.colorscheme == "tokyonight-night" then
+  if vim.tbl_contains({ "tokyonight-night", "tokyonight-storm" }, vim.g.colorscheme) then
     __tab_active_fg = -0.2
-    __tab_active_bg = -0.65
+    __tab_active_bg = -0.62
   end
 
-  if vim.g.colorscheme == "rose-pine" then
+  if vim.tbl_contains({ "rose-pine", "rose-pine-moon" }, vim.g.colorscheme) then
     __tab_active_fg = -0.05
     __tab_active_bg = -0.5
   end
@@ -1215,6 +1215,11 @@ function M.change_colors()
   end
 
   if vim.g.colorscheme == "xenos" then
+    __tab_inactive_fg = -0.01
+    __tab_statusline_fg = -0.01
+  end
+
+  if vim.g.colorscheme == "rose-pine-moon" then
     __tab_inactive_fg = -0.01
     __tab_statusline_fg = -0.01
   end
@@ -1297,6 +1302,10 @@ function M.change_colors()
 
   if vim.g.colorscheme == "darcubox" then
     zsh_lines_fg = 0.6
+  end
+
+  if vim.g.colorscheme == "tokyonight-storm" then
+    zsh_lines_fg = 0.4
   end
 
   local soft_themes = { "nanode", "base46-kanagawa", "base46-melange" }

@@ -212,7 +212,7 @@ return {
     priority = 1000,
     name = "rose-pine",
     enabled = function()
-      local rosepine_themes = { "rose-pine-dawn", "rose-pine" }
+      local rosepine_themes = { "rose-pine-dawn", "rose-pine", "rose-pine-moon" }
       if vim.tbl_contains(rosepine_themes, vim.g.colorscheme) then
         return true
       end
