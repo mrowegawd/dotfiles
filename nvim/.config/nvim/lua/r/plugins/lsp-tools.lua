@@ -351,6 +351,12 @@ return {
       { "<Leader>Rt", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body [kulala]", ft = "http" },
     },
   },
+  -- TINY-INLINE-DIAGNOSTIC
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "VeryLazy",
+    config = true,
+  },
   -- TINY-CODE-ACTION
   {
     "rachartier/tiny-code-action.nvim",
