@@ -189,7 +189,7 @@ function M._get()
 
   if show_signs then
     local buf = vim.api.nvim_win_get_buf(win)
-    local is_file = vim.bo[buf].buftype == ""
+    -- local is_file = vim.bo[buf].buftype == ""
     local signs = M.line_signs(win, buf, vim.v.lnum)
 
     if #signs > 0 then
@@ -224,16 +224,21 @@ function M._get()
       -- components[1] = left and M.icon(left) or "  " -- left
       -- components[3] = is_file and (right and M.icon(right) or "  ") or "" -- right
 
-      components[1] = left and M.icon(left) or (right and M.icon(right) or " ") or " " -- left
-      components[3] = " " -- right
+      components[1] = left and M.icon(left) or (right and M.icon(right) or " ") or "" -- left
     else
       -- components[1] = "  "
-      -- components[3] = is_file and "  " or ""
+      -- components[3] = is_file and "" or " "
 
-      components[1] = ""
-      components[3] = is_file and " " or " "
+      if vim.bo[buf].filetype == "qf" then
+        components[1] = ""
+      else
+        components[1] = " "
+      end
     end
   end
+
+  -- always ensure there is exactly one space at the end
+  components[3] = " " -- right
 
   local ret = table.concat(components, "")
   return "%@v:lua.require'r.utils.statuscolumn'.click_fold@" .. ret .. "%T"
@@ -262,39 +267,6 @@ function M.click_fold()
       vim.cmd "normal! za"
     end
   end)
-end
-
--- Override default `foldtext()`, which produces something like:
---
---   +---  2 lines: source $HOME/.config/nvim/pack/bundle/opt/vim-pathogen/autoload/pathogen.vim--------------------------------
---
--- Instead returning:
---
---   »··[2ℓ]··: source $HOME/.config/nvim/pack/bundle/opt/vim-pathogen/autoload/pathogen.vim···································
---
-
-function M.foldtext()
-  --   -- local line = vim.fn.getline(vim.v.foldstart)
-  --   -- local line_count = vim.v.foldend - vim.v.foldstart + 1
-  --   -- return " ⚡ " .. line .. ": " .. line_count .. " lines"
-  --   return vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1]
-
-  local line_count = vim.v.foldend - vim.v.foldstart + 1
-  local lines = "[" .. line_count .. small_l .. "]"
-  local first = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldstart, true)[1]
-  local tabs = first:match("^%s*"):gsub(" +", ""):len()
-  local spaces = first:match("^%s*"):gsub("\t", ""):len()
-  local indent = spaces + tabs * vim.bo.tabstop
-  local stripped = first:match "^%s*(.-)$"
-  local prefix = raquo .. middot .. middot .. lines
-  local suffix = ": "
-
-  -- Can't usefully use string.len() on UTF-8.
-  local prefix_len = tostring(line_count):len() + 6
-
-  local dash_count = math.max(indent - prefix_len - string.len(suffix), 0)
-  local dashes = string.rep(middot, dash_count)
-  return prefix .. dashes .. suffix .. stripped
 end
 
 return M

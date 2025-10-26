@@ -175,7 +175,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
           open_with("tabnew", tbl_cts, selected[1], is_open_folded)
         end,
 
-        ["alt-l"] = function(selected, _)
+        ["alt-v"] = function(selected, _)
           if not selected then
             return
           end
@@ -187,7 +187,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
 
           RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note", true)
         end,
-        ["alt-L"] = {
+        ["alt-V"] = {
           prefix = "toggle-all",
           fn = function(selected, _)
             if not selected then
