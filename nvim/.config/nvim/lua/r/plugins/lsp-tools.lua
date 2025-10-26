@@ -189,6 +189,28 @@ return {
       preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
     },
   },
+  -- LSP Keymaps
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        ["*"] = {
+          keys = {
+            {
+              "<Leader>cr",
+              function()
+                local inc_rename = require "inc_rename"
+                return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
+              end,
+              expr = true,
+              desc = "Action: rename [inc_rename]",
+              has = "rename",
+            },
+          },
+        },
+      },
+    },
+  },
   -- SYMBOL-USAGE (disabled)
   {
     "MadKuntilanak/symbol-usage.nvim",

@@ -20,7 +20,6 @@ return {
   end,
   {
     "nvim-treesitter/nvim-treesitter",
-    optional = true,
     opts = { ensure_installed = { "ninja", "rst" } },
   },
   {
@@ -54,10 +53,10 @@ return {
       },
       setup = {
         [ruff] = function()
-          RUtils.lsp.on_attach(function(client, _)
+          Snacks.util.lsp.on({ name = ruff }, function(_, client)
             -- Disable hover in favor of Pyright
             client.server_capabilities.hoverProvider = false
-          end, ruff)
+          end)
         end,
       },
     },

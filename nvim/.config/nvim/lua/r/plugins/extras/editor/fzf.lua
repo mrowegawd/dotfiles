@@ -188,10 +188,6 @@ return {
       { "<Leader>jJ", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
-      -- LSP
-      { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
-      { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
-
       -- Diagnostics
       { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
 
@@ -991,5 +987,93 @@ return {
     optional = true,
     dependencies = { "mangelozzi/nvim-rgflow.lua", "saghen/blink.compat" },
     opts = { sources = { per_filetype = { rgflow = { "buffer", "path" } } } },
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        ["*"] = {
+          keys = {
+            { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
+            { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
+            {
+              "<Leader>lr",
+              function()
+                fzf_lua.lsp_references()
+              end,
+              has = "references",
+              desc = "LSP: references [fzflua]",
+            },
+            {
+              "<Leader>lf",
+              function()
+                local function check_current_ft(fts)
+                  if vim.tbl_contains(fts, vim.bo[0].filetype) then
+                    return true
+                  end
+                  return false
+                end
+
+                local lang_lsp_cmds = {}
+
+                if check_current_ft { "typescriptreact", "typescript" } then
+                  table.insert(lang_lsp_cmds, {
+                    ["Run TSC"] = function()
+                      vim.cmd [[TSC]]
+                    end,
+                    ["LSP - Organizer Imports"] = function()
+                      vim.cmd [[TSToolsOrganizeImports]]
+                    end,
+                    ["LSP - Short Imports"] = function()
+                      vim.cmd [[TSToolsSortImports]]
+                    end,
+                    ["LSP - Remove Unused imports"] = function()
+                      vim.cmd [[TSToolsRemoveUnusedImports]]
+                    end,
+                    ["Eslint - Fix all"] = function()
+                      vim.cmd [[TSToolsFixAll]]
+                    end,
+                    ["LSP - Check missing imports"] = function()
+                      vim.cmd [[TSToolsAddMissingImports]]
+                    end,
+                  })
+                end
+
+                if check_current_ft { "go" } then
+                  table.insert(lang_lsp_cmds, {
+                    ["Run Gomod"] = function()
+                      vim.cmd [[GoGenerate %]]
+                    end,
+                    ["Run go tidy"] = function()
+                      vim.cmd [[GoMod tidy]]
+                    end,
+                  })
+                end
+
+                local lsp_cmds = vim.tbl_deep_extend("force", {
+                  ["Lazy - Show format info"] = function()
+                    vim.cmd [[LazyFormatInfo]]
+                  end,
+                  ["LSP - Show info log"] = function()
+                    vim.cmd [[LspInfo]]
+                  end,
+                  ["Diagnostics - Toggle virtual_lines"] = function()
+                    local new_value = not vim.diagnostic.config().virtual_lines
+                    ---@diagnostic disable-next-line: undefined-field
+                    RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })
+                    vim.diagnostic.config { virtual_lines = new_value }
+                    return new_value
+                  end,
+                }, unpack(lang_lsp_cmds) or {})
+
+                RUtils.fzflua.open_cmd_bulk(lsp_cmds, { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } })
+              end,
+              desc = "Bulk: LSP cmds",
+            },
+          },
+        },
+      },
+    },
   },
 }

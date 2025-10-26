@@ -1,7 +1,9 @@
 local map = vim.keymap.set
 
 ---@class r.utils.map
-local M = {}
+local M = {
+  lsp = {},
+}
 
 local recursive_map = function(mode, lhs, rhs, opts)
   opts = opts or {}
@@ -256,6 +258,90 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
       end
     end,
   })
+end
+
+local function all_item_locations_equal(items)
+  if #items == 0 then
+    return false
+  end
+  for i = 2, #items do
+    local item = items[i]
+    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
+      return false
+    end
+  end
+  return true
+end
+
+function M.lsp.wrap_location_method(yield, is_vsplit)
+  is_vsplit = is_vsplit or false
+  return function()
+    local from = vim.fn.getpos "."
+    yield {
+      ---@param t vim.lsp.LocationOpts.OnList
+      on_list = function(t)
+        local curpos = vim.fn.getpos "."
+        if not vim.deep_equal(from, curpos) then
+          -- We have moved the cursor since fetching locations, so abort
+          return
+        end
+
+        if is_vsplit then
+          vim.cmd "vsplit"
+        end
+
+        if all_item_locations_equal(t.items) then
+          -- Mostly copied from neovim source
+          local item = t.items[1]
+          local b = item.bufnr or vim.fn.bufadd(item.filename)
+
+          -- Save position in jumplist
+          vim.cmd "normal! m'"
+          -- Push a new item into tagstack
+          local tagname = vim.fn.expand "<cword>"
+          local tagstack = { { tagname = tagname, from = from } }
+          local winid = vim.api.nvim_get_current_win()
+          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
+
+          vim.bo[b].buflisted = true
+          vim.api.nvim_win_set_buf(winid, b)
+          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
+          vim._with({ win = winid }, function()
+            -- Open folds under the cursor
+            vim.cmd "normal! zv"
+          end)
+        else
+          vim.fn.setloclist(0, {}, " ", { title = t.title, items = t.items })
+          vim.cmd.lopen()
+        end
+      end,
+    }
+  end
+end
+
+function M.lsp.diagnostic_goto(next, severity)
+  local go = next and 1 or -1
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    vim.diagnostic.jump { severity = severity, float = false, count = go }
+  end
+end
+
+local is_set_toggle_words = false
+function M.lsp.toggle_words()
+  local notify_msg
+  local is_enabled = Snacks.words.enabled
+
+  if is_enabled and is_set_toggle_words then
+    Snacks.words.disable()
+    is_set_toggle_words = false
+    notify_msg = "LSP Document Highlight: OFF"
+  else
+    Snacks.words.enable()
+    is_set_toggle_words = true
+    notify_msg = "LSP Document Highlight: ON"
+  end
+  RUtils.info(notify_msg)
 end
 
 return M

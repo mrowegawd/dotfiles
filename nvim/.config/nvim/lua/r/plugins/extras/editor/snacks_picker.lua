@@ -206,9 +206,21 @@ return {
       -- ui
       { "<Localleader>sc", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes [snackspicker]", },
 
-      -- LSP
-      { "<Leader>lw", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },
-      { "<Leader>lW", function() Snacks.picker.lsp_workspace_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Workspace Symbols" },
+    },
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        ["*"] = {
+        -- stylua: ignore
+        keys = {
+          { "<Leader>li", function() Snacks.picker.lsp_incoming_calls() end, desc = "LSP: incoming calls [Snacks]", has = "callHierarchy/incomingCalls" },
+          { "<Leader>lo", function() Snacks.picker.lsp_outgoing_calls() end, desc = "LSP: outgoing calls [Snacks]", has = "callHierarchy/outgoingCalls" },
+        },
+        },
+      },
     },
   },
 }
