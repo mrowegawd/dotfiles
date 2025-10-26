@@ -1,5 +1,3 @@
-vim.opt.list = false
-
 vim.opt_local.commentstring = "//%s"
 vim.opt_local.expandtab = false
 vim.opt_local.shiftwidth = 4

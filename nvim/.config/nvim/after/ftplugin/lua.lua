@@ -3,7 +3,6 @@ local keymap = vim.keymap
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.list = false
 
 vim.b.make = "luajit"
 

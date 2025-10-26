@@ -9,6 +9,7 @@ opt.number = false
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 opt.buflisted = false
+opt.list = false
 
 -- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })

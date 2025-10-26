@@ -55,7 +55,6 @@ keymap.set("n", "<Leader>rf", function()
 end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false
-opt.list = false
 opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
 
 local function has_surrounding_fencemarks(lnum)
