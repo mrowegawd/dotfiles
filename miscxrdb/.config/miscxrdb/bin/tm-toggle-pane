@@ -98,20 +98,15 @@ split_normal_h() {
   tmux split-window -vl 20 -c '#{pane_current_path}'
 }
 last_session() {
-  if _check_pane_is_yazi; then
-    tmux send-keys M-b
-  else
-    current_session=$(tmux display-message -p '#S')
-    last_session=$(tmux display-message -p '#{client_last_session}')
+  current_session=$(tmux display-message -p '#S')
+  last_session=$(tmux display-message -p '#{client_last_session}')
 
-    if [[ $(tmux list-sessions | wc -l) -eq 1 ]]; then
-      # tmux display-message "Only one session found. Aborting!"
-      tmux display-message "#[fill=$COL_RED bg=$COL_RED fg=$COL_BG bold align=left] Only one session found. Aborting!"
-    elif [[ -z "$last_session" ]]; then
-      tmux display-message "The last session no longer exists. Try to find another one"
-    else
-      tmux switch-client -l
-    fi
+  if [[ $(tmux list-sessions | wc -l) -eq 1 ]]; then
+    tmux display-message "#[fill=$COL_RED bg=$COL_RED fg=$COL_BG bold align=left] Only one session found. Aborting!"
+  elif [[ -z "$last_session" ]]; then
+    tmux display-message "The last session no longer exists. Try to find another one"
+  else
+    tmux switch-client -l
   fi
 }
 

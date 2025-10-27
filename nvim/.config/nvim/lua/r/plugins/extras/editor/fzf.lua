@@ -1000,7 +1000,7 @@ return {
             {
               "<Leader>lr",
               function()
-                fzf_lua.lsp_references()
+                require("fzf-lua").lsp_references()
               end,
               has = "references",
               desc = "LSP: references [fzflua]",
