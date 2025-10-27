@@ -109,7 +109,7 @@ win_big_zoom_toggle() {
     xdotool windowsize "$wid" "$width" "$height"
     rm "$STATE_FILE"
 
-    dunstify "BSPC-WINCALL" "⤺ Restore to ${width}x${height}"
+    dunstify --timeout=1000 "BSPC-WINCALL" "⤺ Restore to ${width}x${height}"
   else
     # Save current size, and then expand
     read -r x y width height < <(get_window_size)
@@ -132,7 +132,7 @@ win_big_zoom_toggle() {
     xdotool windowsize "$wid" "$target_width" "$target_height"
     xdotool windowmove "$wid" "$center_x" "$center_y"
 
-    dunstify "BSPC-WINCALL" "⤒ Expand to 1000x800"
+    dunstify --timeout=1000 "BSPC-WINCALL" "⤒ Expand to 1000x800"
   fi
 }
 

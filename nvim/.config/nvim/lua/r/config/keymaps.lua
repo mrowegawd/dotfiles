@@ -1,5 +1,3 @@
--- vim: foldmethod=marker foldlevel=0
-
 local silent = { silent = true }
 local nosilent = { silent = false }
 
@@ -711,6 +709,19 @@ local bulk_cmd_misc = function()
     end,
     ["Kulala - Run"] = function()
       require("kulala").run()
+    end,
+    ["TestNotify - Run to test notification display"] = function()
+      -- to replace an existing notification just use the same id.
+      -- you can also use the return value of the notify function as id.
+      for i = 1, 10 do
+        vim.defer_fn(function()
+          vim.notify("Hello " .. i, "info", { id = "test" })
+        end, i * 500)
+      end
+
+      RUtils.info "this RUtils info"
+      RUtils.warn "this RUtils warn"
+      RUtils.error "this RUtils error"
     end,
     ["Browser - Open devdocs (with input)"] = function()
       local query = vim.fn.input "Search DevDocs: "

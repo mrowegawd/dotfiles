@@ -16,115 +16,158 @@ return {
   {
     "MadKuntilanak/noice.nvim",
     branch = "feat/update-actions-fzflua",
-    event = "BufReadPost",
-    dependencies = { "MunifTanjim/nui.nvim" },
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      {
+        "rcarriga/nvim-notify",
+        opts = {
+          timeout = 2000,
+        },
+      },
+    },
     keys = {
       {
         "<Localleader>nf",
         function()
           vim.cmd "Noice fzf"
         end,
-        desc = "Notification: show notification [fzflua]",
+        desc = "Noice: show list notifications",
       },
       {
         "<Localleader>nl",
         function()
           require("noice").cmd "all"
         end,
-        desc = "Notification: show all messages",
+        desc = "Noice: show all messages",
+      },
+      {
+        "<Localleader>nd",
+        function()
+          require("noice").cmd "dismiss"
+        end,
+        desc = "Noice: dismiss",
       },
     },
-    opts = function()
-      return {
-        -- debug = true,
-        lsp = {
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
-            ["vim.lsp.util.stylize_markdown"] = false,
-            ["cmp.entry.get_documentation"] = false,
-          },
-          signature = { enabled = false },
-          progress = { enabled = true },
+    opts = {
+      -- debug = true,
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+          ["vim.lsp.util.stylize_markdown"] = false,
+          ["cmp.entry.get_documentation"] = false,
         },
-        cmdline = { view = "cmdline" },
-        redirect = { view = "popup", filter = { event = "msg_show" } },
-        views = {
-          cmdline_popup = { position = { row = -2, col = "1%" } },
-          cmdline_popupmenu = {
-            position = { row = -2.1, col = "1%" },
-            size = { width = "auto", height = "auto" },
-            win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
+        signature = { enabled = false },
+        progress = {
+          enabled = true,
+          spinner = "aesthetic",
+          -- format = "lsp_progress_done",
+          format = {
+            -- {
+            --   "{progress} ",
+            --   key = "progress.percentage",
+            --   contents = {
+            --     { "{data.progress.message} " },
+            --   },
+            -- },
+            "({data.progress.percentage}%) ",
+            { "{spinner} ", hl_group = "NoiceLspProgressSpinner" },
+            { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
+            { "{data.progress.client} ", hl_group = "NoiceLspProgressClient" },
           },
-          mini = {
-            position = { row = "98%", col = "100%" },
-            size = { height = "5%" },
-          },
-          popupmenu = {
-            border = {},
-            relative = "editor",
-            position = { row = "55%", col = "50%" },
-            size = { width = 60, height = 12 },
-            win_options = { winblend = 0, winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" } },
-          },
-          hover = { win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" } } },
         },
-        routes = {
-          {
-            filter = {
-              event = "msg_show",
-              any = {
-                { find = "%d+ change" },
-                { find = "%d+ line" },
-                { find = "%d+ lines, %d+ bytes" },
-                { find = "%d+ more line" },
-                -- { find = "%d+L, %d+B" },
-                { find = "; after #%d+" },
-                { find = "; before #%d+" },
-                { find = "^Hunk %d+ of %d" },
-                { find = "written" },
-                { kind = "line %d+ of %d+" },
-                { kind = "search_count" },
-              },
-            },
-            view = "mini",
-          },
-          {
-            view = "mini",
-            filter = {
-              any = {
-                { event = "msg_show", find = "^E486:" },
-                -- { event = "notify", max_height = 1 }, -- comment this!
-              },
-            }, -- minimise pattern not found messages
-          },
-          {
-            opts = { skip = true },
-            filter = {
-              any = {
-                { event = "msg_show", find = "written" },
-                { event = "msg_show", find = "%d+ lines, %d+ bytes" },
-                { event = "msg_show", kind = "search_count" },
-                { event = "msg_show", find = "%d+L, %d+B" },
-                { event = "msg_show", find = "^Hunk %d+ of %d" },
-                { event = "msg_show", find = "%d+ change" },
-                { event = "msg_show", find = "%d+ line" },
-                { event = "msg_show", find = "%d+ more line" },
-              },
-            },
+      },
+      format = {
+        spinner = {
+          ---@type Spinner
+          name = "circleFull",
+        },
+      },
+      cmdline = { view = "cmdline" },
+      redirect = { view = "popup", filter = { event = "msg_show" } },
+      views = {
+        cmdline_popup = { position = { row = -2, col = "1%" } },
+        cmdline_popupmenu = {
+          position = { row = -2.1, col = "1%" },
+          size = { width = "auto", height = "auto" },
+          win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
+        },
+        mini = {
+          position = { row = "98%", col = "100%" },
+          size = { height = "5%" },
+        },
+        popupmenu = {
+          border = {},
+          relative = "editor",
+          position = { row = "55%", col = "50%" },
+          size = { width = 60, height = 12 },
+          win_options = { winblend = 0, winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" } },
+        },
+        hover = {
+          win_options = {
+            winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" },
           },
         },
         notify = {
-          enabled = false,
-          view = "notify",
+          render = "wrapped-compact",
         },
-        presets = {
-          bottom_search = true,
-          command_palette = true,
-          long_message_to_split = true,
-          lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+      notify = {
+        enabled = true,
+        view = "notify",
+      },
+      routes = {
+        {
+          filter = {
+            event = "msg_show",
+            any = {
+              { find = "%d+ change" },
+              { find = "%d+ line" },
+              { find = "%d+ lines, %d+ bytes" },
+              { find = "%d+ more line" },
+              -- { find = "%d+L, %d+B" },
+              { find = "; after #%d+" },
+              { find = "; before #%d+" },
+              { find = "^Hunk %d+ of %d" },
+              { find = "written" },
+              { kind = "line %d+ of %d+" },
+              { kind = "search_count" },
+            },
+          },
+          view = "mini",
         },
-      }
-    end,
+        {
+          view = "mini",
+          filter = {
+            any = {
+              { event = "msg_show", find = "^E486:" },
+              -- { event = "notify", max_height = 1 }, -- comment this!
+            },
+          }, -- minimise pattern not found messages
+        },
+        {
+          opts = { skip = true },
+          filter = {
+            any = {
+              { event = "msg_show", find = "written" },
+              { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+              { event = "msg_show", kind = "search_count" },
+              { event = "msg_show", find = "%d+L, %d+B" },
+              { event = "msg_show", find = "^Hunk %d+ of %d" },
+              { event = "msg_show", find = "%d+ change" },
+              { event = "msg_show", find = "%d+ line" },
+              { event = "msg_show", find = "%d+ more line" },
+            },
+          },
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+    },
     config = function(_, opts)
       -- HACK: noice shows messages from before it was enabled,
       -- but this is not ideal when Lazy is installing plugins,
@@ -220,7 +263,6 @@ return {
       },
     },
   },
-
   -- BUFDELETE
   {
     "famiu/bufdelete.nvim",

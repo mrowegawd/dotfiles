@@ -77,17 +77,15 @@ local base_colors = {
 
   code_block_fg_alter = 0.12, -- for Org file (better to leave it as is)
 
-  snacks_notifier_info_fg = 1.2,
   snacks_notifier_info_bg = 0.5,
   snacks_notifier_border_info_fg = -0.5,
 
-  snacks_notifier_warn_fg = 1,
   snacks_notifier_warn_bg = 0.3,
   snacks_notifier_border_warn_fg = -0.6,
 
   snacks_notifier_error_fg = 0.1,
   snacks_notifier_error_bg = 0.3,
-  snacks_notifier_border_error_fg = -0.3,
+  snacks_notifier_border_error_fg = -0.4,
 
   -- diff
   diffadd_fg_alter = -0.2,
@@ -196,7 +194,7 @@ local update_col_colorscheme = {
     dapstopped_bg_alter = 0.2,
     fzflua_border_fg_alter = 1.5,
     fzflua_file_part_fg = 0.7,
-    linenr_fg_alter = 0.2,
+    linenr_fg_alter = 0.15,
     noice_cmdline_fg_alter = 0.65,
     nontext_fg_alter = 2.5,
     normal_keyword_alter = 0.14,
@@ -502,6 +500,7 @@ local update_col_colorscheme = {
     comment_fg_alter = 0.6,
     fold_fg = 0.15,
     nontext_fg_alter = -0.4,
+    quickfixline_linenr_fg_alter = 0.4,
     statusline_fg_alter = 0.7,
     winbar_fg_alter = 1.2,
     winbar_right_block_bg_alter = -0.5,
@@ -555,6 +554,7 @@ local update_col_colorscheme = {
     linenr_fg_alter = 0.1,
     nontext_fg_alter = -0.2,
     pmenu_bg_alter = 1,
+    quickfixline_linenr_fg_alter = 0.65,
     render_markdown_code_bg_alter = 0.5,
     statusline_bg_alter = -0.05,
     winbar_right_block_bg_alter = -0.35,
@@ -577,7 +577,7 @@ local update_col_colorscheme = {
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.5,
-    comment_fg_alter = 0.7,
+    comment_fg_alter = 0.6,
     cursor_fg = "#ece1d7",
     cursorline_alter = 0.05,
     dapstopped_bg_alter = 0.15,
@@ -603,7 +603,7 @@ local update_col_colorscheme = {
     comment_fg_alter = 0.6,
     fzflua_file_part_fg = 0.6,
     pmenu_bg_alter = 0.4,
-    quickfixline_linenr_fg_alter = 0.15,
+    quickfixline_linenr_fg_alter = 0.2,
     render_markdown_code_bg_alter = 0.23,
     winbar_fg_alter = 1,
     winbar_right_block_fg_alter = -0.15,
@@ -658,13 +658,14 @@ local update_col_colorscheme = {
   },
   ["zenburn"] = {
     comment_fg_alter = 0.5,
+    fold_fg = 0.15,
+    fzflua_file_part_fg = 0.7,
     linenr_fg_alter = 0.02,
     noice_cmdline_fg_alter = 0.65,
     pmenu_bg_alter = 0.25,
     pmenu_sp_alter = 2,
-    quickfixline_linenr_fg_alter = 0.02,
+    quickfixline_linenr_fg_alter = 0.04,
     render_markdown_code_bg_alter = 0.08,
-    fzflua_file_part_fg = 0.7,
     render_markdown_code_inline_bg_alter = 0.05,
     render_markdown_code_inline_fg_alter = -0.05,
     statusline_bg_alter = -0.02,
@@ -1663,7 +1664,7 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "Comment", attr = "fg", alter = colors.snacks_notifier_info_fg },
+        fg = { from = "String", attr = "fg" },
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -1676,14 +1677,14 @@ local general_overrides = function()
     {
       SnacksNotifierTitleInfo = {
         fg = { from = "Normal", attr = "bg" },
-        bg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.5 },
+        bg = { from = "SnacksNotifierInfo", attr = "fg", alter = 0.2 },
         bold = true,
       },
     },
     -- WARN
     {
       SnacksNotifierWarn = {
-        fg = { from = "diffChange", attr = "fg", alter = colors.snacks_notifier_warn_fg },
+        fg = { from = "Type", attr = "fg" },
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -1696,7 +1697,7 @@ local general_overrides = function()
     {
       SnacksNotifierTitleWarn = {
         fg = { from = "Normal", attr = "bg" },
-        bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.5 },
+        bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.4 },
         bold = true,
       },
     },
@@ -1725,6 +1726,32 @@ local general_overrides = function()
     -- │ SNACKS MISC │
     -- ╰─────────────╯
     { SnacksNotifierHistory = { link = "NormalFloat" } },
+
+    -- ────────────────────────────[ NOTIFY.NVIM ]────────────────────────────
+    { NotifyBackground = { bg = { from = "Keyword", attr = "fg" } } },
+
+    -- INFO
+    { NotifyINFOBody = { inherit = "SnacksNotifierInfo" } },
+    { NotifyINFOBorder = { inherit = "SnacksNotifierBorderInfo", bg = "NONE" } },
+    { NotifyINFOTitle = { fg = { from = "SnacksNotifierTitleInfo", attr = "bg" }, bg = "NONE" } },
+    { NotifyINFOIcon = { fg = { from = "SnacksNotifierTitleInfo", attr = "bg" }, bg = "NONE" } },
+    -- WARN
+    { NotifyWARNBody = { inherit = "SnacksNotifierWarn" } },
+    { NotifyWARNBorder = { inherit = "SnacksNotifierBorderWarn", bg = "NONE" } },
+    { NotifyWARNTitle = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
+    { NotifyWARNIcon = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
+    -- ERROR
+    { NotifyERRORBody = { inherit = "SnacksNotifierError" } },
+    { NotifyERRORBorder = { inherit = "SnacksNotifierBorderError", bg = "NONE" } },
+    { NotifyERRORTitle = { fg = { from = "SnacksNotifierTitleError", attr = "bg" }, bg = "NONE" } },
+    { NotifyERRORIcon = { fg = { from = "SnacksNotifierTitleError", attr = "bg" }, bg = "NONE" } },
+
+    -- ───────────────────────────────[ OCTO ]────────────────────────────
+    {
+      OctoStatusColumn = {
+        fg = H.darken(H.get("Keyword", "fg"), 0.3, H.get("Error", "fg")),
+      },
+    },
 
     --  ──────────────────────────────[ ORGMODE ]──────────────────────────────
     { ["@org.agenda.scheduled"] = { fg = H.darken("#3f9f31", 0.8, H.get("Normal", "bg")) } },
@@ -2307,7 +2334,6 @@ local sidebar_fts = {
   "packer",
   "flutterToolsOutline",
   "undotree",
-  -- "Outline",
   "dbui",
   "neotest-summary",
   "pr",
@@ -2344,6 +2370,47 @@ local function colorscheme_overrides()
       { qfSeparator1 = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
       { qfSeparator2 = { link = "qfSeparator1" } },
       { Delimiter = { link = "qfSeparator1" } },
+    },
+
+    ["gruvbox-material"] = {
+      { ErrorMsg = { underline = false } },
+    },
+
+    ["jellybeans"] = {
+      {
+        OctoStatusColumn = {
+          fg = H.darken(H.get("Keyword", "fg"), 0.4, H.get("Error", "fg")),
+        },
+      },
+    },
+
+    ["xenos"] = {
+      -- WARN
+      {
+        SnacksNotifierWarn = {
+          fg = { from = "diffChange", attr = "fg" },
+          bg = { from = "Normal", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierBorderWarn = {
+          fg = { from = "SnacksNotifierWarn", attr = "fg", alter = -0.2 },
+          bg = { from = "SnacksNotifierWarn", attr = "bg" },
+        },
+      },
+      {
+        SnacksNotifierTitleWarn = {
+          fg = { from = "Normal", attr = "bg" },
+          bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.4 },
+          bold = true,
+        },
+      },
+
+      -- WARN
+      { NotifyWARNBody = { inherit = "SnacksNotifierWarn" } },
+      { NotifyWARNBorder = { inherit = "SnacksNotifierBorderWarn", bg = "NONE" } },
+      { NotifyWARNTitle = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
+      { NotifyWARNIcon = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
     },
   }
 

@@ -189,7 +189,7 @@ return {
       preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
     },
   },
-  -- LSP Keymaps
+  -- INCRENAME KEYMAP
   {
     "neovim/nvim-lspconfig",
     opts = {
