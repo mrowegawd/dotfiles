@@ -83,7 +83,7 @@ local function get_output_string_cmd(cmd, arg)
   local child, _ = Command(cmd):arg(arg):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
 
   if not child then
-    return fail("OPEN_WITH_WEZTERM: Get pane_id went wrong", err)
+    return fail "OPEN_WITH_WEZTERM: Get pane_id went wrong"
   end
   return child.stdout:gsub("\n$", "")
 end
@@ -189,10 +189,10 @@ local function open_with_wezterm(action, fpath, fpath_ext)
     { "-c", "wezterm cli list | awk -v pane_id=" .. current_pane_id .. " '$3==pane_id { print $6 }'" }
   )
 
-  -- local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
+  -- local wezterm_list = Command("wezterm"):arg({ "cli", "list" }):stdout(Command.PIPED):spawn()
   -- fail(wezterm_list:take_stdout())
   -- local child, _ = Command("awk")
-  -- 	:args({
+  -- 	:arg({
   -- 		"-v",
   -- 		"pane_id=" .. tostring(current_pane_id),
   -- 		"$3==pane_id { print $6 }",

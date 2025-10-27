@@ -109,32 +109,34 @@ local gen_cmd_ext = function(pane_id, fpath_ext, fpath)
 end
 
 local function get_output_string_cmd(cmd, args)
-  local child, _ = Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  local child, _ = Command(cmd):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
 
-  local output, err = child:wait_with_output()
-  if not output then
-    return fail("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(args, " "), err)
-  elseif not output.status.success and output.status.code ~= 130 then
-    return fail(
-      "Command failed! Command: %s, Args: %s, Exit status code: %s",
-      cmd,
-      table.concat(args, " "),
-      output.status.code
-    )
+  if not child then
+    return fail "OPEN_WITH_WEZTERM: Get pane_id went wrong"
   end
 
-  return tostring(output.stdout:gsub("'", ""))
+  return child.stdout:gsub("\n$", "")
 end
 
 local function send_text_cmds(cmd, args)
-  local child, _ = Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  if type(args) ~= "table" then
+    fail "`args` must be a table"
+    return
+  end
+
+  local child, err_cmd =
+    Command(cmd):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+
+  if not child then
+    return fail("Spawn `cmd` failed with error code", err_cmd)
+  end
 
   local output, err = child:wait_with_output()
   if not output then
     return fail("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(args, " "), err)
   elseif not output.status.success and output.status.code ~= 130 then
     return fail(
-      "Command failed! Command: %s, Args: %s, Exit status code: %s",
+      "Command failed! Command: `%s`, Args: `%s`, Exit status code: %s",
       cmd,
       table.concat(args, " "),
       output.status.code
@@ -149,18 +151,16 @@ local function open_with_tmux(fpath_ext, fpath)
   end
 
   if fpath_ext ~= "jpg" then
-    fail "Only image files can be previewed"
+    fail "Only image/png/jpeg files can be previewed"
     return
   end
 
-  -- local is_pane_at_bottom = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_at_bottom}'" })
   local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
-  -- local pane_id = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_index}'" })
 
   if tonumber(list_panes) < 3 or (tonumber(list_panes) == 2) then
-    send_text_cmds("tmux", { "split-window", "-vl", "20", "-c", "'#{pane_current_path}'" })
-    send_text_cmds("tmux", { "splitw", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
-    send_text_cmds("tmux", { "resize-pane", "-D", "10" })
+    send_text_cmds("tmux", { "split-window", "-vl", "40", "-c", "#{pane_current_path}" })
+    send_text_cmds("tmux", { "split-window", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
+    send_text_cmds("tmux", { "resize-pane", "-U", "2" })
     send_text_cmds("tmux", { "last-pane" })
   end
 
