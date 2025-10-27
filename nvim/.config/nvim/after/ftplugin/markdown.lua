@@ -1,6 +1,11 @@
 local keymap, opt = vim.keymap, vim.opt_local
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
+opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
+
+opt.wrap = false
+opt.list = false
+
 keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 
 local notif_msg = ""
@@ -53,9 +58,6 @@ keymap.set("n", "<Leader>rf", function()
 
   fzf_lua.fzf_exec(tbl_cmds, opts)
 end, { buffer = true, desc = "Tasks: runner" })
-
-opt.wrap = false
-opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
 
 local function has_surrounding_fencemarks(lnum)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)

@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/tokyonight-storm"
+#include ".config/miscxrdb/xresource-theme/zenburn"
 
 ! --------------
 ! XFT SETTINGS

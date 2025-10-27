@@ -72,6 +72,7 @@ return {
     -- Redirect output of vim or external command into scratch buffer,
     "sbulav/nredir.nvim",
     cmd = { "Nredir" },
+    opts = {},
   },
   -- SG.NVIM (disabled)
   {

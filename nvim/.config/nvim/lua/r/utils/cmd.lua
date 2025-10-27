@@ -1112,269 +1112,45 @@ end
 function M.change_colors()
   local H = require "r.settings.highlights"
 
-  -- TAB -------------------------------------------------------------
-  --
-  -- Active Tab ======================================================
-  local __tab_active_fg = -0.3
-  local __tab_active_bg = -0.7
+  -- ─< TAB >────────────────────────────────────────────────────────────
+  -- Active Tab
+  local tab_active_fg = H.get("WinBarRightBlock", "fg")
+  local tab_active_bg = H.get("WinBarRightBlock", "bg")
 
-  if vim.tbl_contains({ "base46-kanagawa" }, vim.g.colorscheme) then
-    __tab_active_bg = -0.6
-  end
-
-  if vim.g.colorscheme == "lackluster" then
-    __tab_active_fg = 0.1
-    __tab_active_bg = -0.45
-  end
-
-  if vim.g.colorscheme == "base46-seoul256_dark" then
-    __tab_active_fg = -0.15
-    __tab_active_bg = -0.55
-  end
-
-  if vim.g.colorscheme == "base46-zenburn" then
-    __tab_active_fg = -0.2
-    __tab_active_bg = -0.6
-  end
-
-  if vim.g.colorscheme == "base46-melange" then
-    __tab_active_fg = -0.2
-    __tab_active_bg = -0.65
-  end
-
-  if vim.g.colorscheme == "ashen" then
-    __tab_active_fg = -0.4
-    __tab_active_bg = -0.75
-  end
-
-  if vim.g.colorscheme == "zenburn" then
-    __tab_active_fg = -0.2
-    __tab_active_bg = -0.63
-  end
-
-  if vim.g.colorscheme == "neogotham" then
-    __tab_active_fg = 0.2
-    __tab_active_bg = -0.65
-  end
-
-  if vim.g.colorscheme == "darcubox" then
-    __tab_active_fg = -0.2
-    __tab_active_bg = -0.65
-  end
-
-  if vim.g.colorscheme == "nightingale" then
-    __tab_active_fg = 0.1
-    __tab_active_bg = -0.6
-  end
-
-  if vim.tbl_contains({ "tokyonight-night", "tokyonight-storm" }, vim.g.colorscheme) then
-    __tab_active_fg = -0.2
-    __tab_active_bg = -0.62
-  end
-
-  if vim.tbl_contains({ "rose-pine", "rose-pine-moon" }, vim.g.colorscheme) then
-    __tab_active_fg = -0.05
-    __tab_active_bg = -0.5
-  end
-
-  if vim.g.colorscheme == "vscode_modern" then
-    __tab_active_fg = -0.1
-    __tab_active_bg = -0.65
-  end
-
-  local tab_active_fg = H.tint(H.get("Keyword", "fg"), __tab_active_fg)
-  local tab_active_bg = H.tint(H.get("Keyword", "fg"), __tab_active_bg)
-
-  -- Inactive Tab ====================================================
-  local __tab_inactive_fg = -0.1
-  local __tab_statusline_fg = -0.1
-
-  if vim.tbl_contains({ "base46-seoul256_dark", "base46-kanagawa" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.2
-    __tab_statusline_fg = -0.17
-  end
-
-  if vim.tbl_contains({ "base46-jellybeans", "base46-jabuti", "jellybeans", "jellybeans-mono" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.3
-    __tab_statusline_fg = -0.3
-  end
-
-  if vim.g.colorscheme == "neogotham" then
-    __tab_inactive_fg = -0.22
-    __tab_statusline_fg = -0.22
-  end
-
-  if vim.g.colorscheme == "ashen" then
-    __tab_inactive_fg = 0.07
-    __tab_statusline_fg = 0.07
-  end
-
-  if vim.g.colorscheme == "zenburn" then
-    __tab_inactive_fg = 0.02
-    __tab_statusline_fg = 0.02
-  end
-
-  if vim.g.colorscheme == "xenos" then
-    __tab_inactive_fg = -0.01
-    __tab_statusline_fg = -0.01
-  end
-
-  if vim.g.colorscheme == "rose-pine-moon" then
-    __tab_inactive_fg = -0.01
-    __tab_statusline_fg = -0.01
-  end
-
-  if vim.tbl_contains({ "darcubox", "tokyonight-night" }, vim.g.colorscheme) then
-    __tab_inactive_fg = 0.05
-    __tab_statusline_fg = 0.05
-  end
-
-  if vim.tbl_contains({ "vscode_modern", "techbase" }, vim.g.colorscheme) then
-    __tab_inactive_fg = -0.05
-    __tab_statusline_fg = -0.05
-  end
-
-  if vim.tbl_contains({ "oxocarbon", "minimal", "nightingale" }, vim.g.colorscheme) then
-    __tab_inactive_fg = 0.02
-    __tab_statusline_fg = 0.02
-  end
-
-  local tab_inactive_fg = H.tint(H.get("StatusLine", "fg"), __tab_inactive_fg)
+  -- Inactive Tab
+  local tab_inactive_fg = H.tint(H.get("WinBar", "fg"), -0.23)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("StatusLine", "fg"), __tab_statusline_fg)
+  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.23)
 
-  -- Border Pane =====================================================
+  -- Border Pane
   local __border_tmux_inactive_fg = 0.15
-
   if vim.g.colorscheme == "zenburn" then
     __border_tmux_inactive_fg = 0.05
   end
-
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
   local border_inactive = H.tint(H.get("WinSeparator", "fg"), __border_tmux_inactive_fg)
-  ---
-  --------------------------------------------------------------------
 
-  -- ZSH -------------------------------------------------------------
-  local zsh_lines_fg = 0.35
-  local zsh_sugest_fg = 0.65
+  -- ─< ZSH >────────────────────────────────────────────────────────────
+  local zsh_lines = H.tint(H.get("StatusLine", "fg"), -0.1)
+  local zsh_sugest = H.tint(H.get("StatusLine", "fg"), -0.02)
 
-  local zsh_contras_themes = { "base46-seoul256_dark", "base46-zenburn" }
-  if vim.tbl_contains(zsh_contras_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.2
-    zsh_sugest_fg = 0.45
-  end
-
-  local zsh_contras_themes_jelly = { "base46-jellybeans", "jellybeans-mono", "jellybeans" }
-  if vim.tbl_contains(zsh_contras_themes_jelly, vim.g.colorscheme) then
-    zsh_lines_fg = 0.4
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.g.colorscheme == "base46-melange" then
-    zsh_lines_fg = 0.15
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.g.colorscheme == "nonode" then
-    zsh_lines_fg = 0.15
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.g.colorscheme == "techbase" then
-    zsh_lines_fg = 0.45
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.g.colorscheme == "ashen" then
-    zsh_lines_fg = 0.5
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.tbl_contains({ "minimal", "xenos" }, vim.g.colorscheme) then
-    zsh_lines_fg = 0.4
-  end
-
-  if vim.g.colorscheme == "zenburn" then
-    zsh_lines_fg = 0.15
-    zsh_sugest_fg = 0.28
-  end
-
-  if vim.g.colorscheme == "darcubox" then
-    zsh_lines_fg = 0.6
-  end
-
-  if vim.g.colorscheme == "tokyonight-storm" then
-    zsh_lines_fg = 0.4
-  end
-
-  local soft_themes = { "nanode", "base46-kanagawa", "base46-melange" }
-  if vim.tbl_contains(soft_themes, vim.g.colorscheme) then
-    zsh_lines_fg = 0.45
-    zsh_sugest_fg = 0.8
-  end
-
-  if vim.g.colorscheme == "lackluster" then
-    zsh_lines_fg = 0.5
-    zsh_sugest_fg = 0.7
-  end
-
-  if vim.g.colorscheme == "neogotham" then
-    zsh_lines_fg = 0.65
-  end
-
-  if vim.g.colorscheme == "nightingale" then
-    zsh_lines_fg = 0.45
-  end
-
-  if vim.g.colorscheme == "vscode_modern" then
-    zsh_sugest_fg = 0.75
-  end
-
-  if vim.g.colorscheme == "base46-oxocarbon" then
-    zsh_lines_fg = 0.55
-    zsh_sugest_fg = 1.2
-  end
-
-  local zsh_lines = H.tint(H.get("WinSeparator", "fg"), zsh_lines_fg)
-  local zsh_sugest = H.tint(H.get("WinSeparator", "fg"), zsh_sugest_fg)
-  ---
-  --------------------------------------------------------------------
-  ---
-
-  -- YAZI ------------------------------------------------------------
-  --
+  -- ─< YAZI >───────────────────────────────────────────────────────────
   local yazi_hovered_fg = 0
   local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
-  ---
-  --------------------------------------------------------------------
-  ---
 
-  -- LAZYGIT ---------------------------------------------------------
-  --
+  -- ─< LAZYGIT >────────────────────────────────────────────────────────
   local lazygit_inactive_border_fg = 0.3
-
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
-  ---
-  --------------------------------------------------------------------
-  ---
 
-  -- EWW -------------------------------------------------------------
-  ---
+  -- ─< EWW >────────────────────────────────────────────────────────────
   local __eww_icon_fg = 0.6
-
   if vim.g.colorscheme == "base46-jellybeans" then
     __eww_icon_fg = 0.5
   end
-
   if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
     __eww_icon_fg = 0.5
   end
-
   local eww_icon_fg = H.tint(H.get("WinSeparator", "fg"), __eww_icon_fg)
-  ---
-  --------------------------------------------------------------------
-  ---
 
   local defined_cols = {
     fzf = {

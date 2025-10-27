@@ -211,6 +211,7 @@ local __colors = function()
     winbarNC_fg = H.get("WinBarNC", "bg"),
     winbarNC_bg = H.get("WinBarNC", "bg"),
     winbar_bg_right_block = H.get("WinBarRightBlock", "bg"),
+    winbar_fg_right_block = H.get("WinBarRightBlock", "fg"),
 
     winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
     winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),
@@ -1601,7 +1602,7 @@ M.WinbarFilePath = {
     end,
     hl = function()
       local hl_opts = set_hl()
-      return { fg = hl_opts.fg, bg = hl_opts.bg }
+      return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
     end,
   },
   {
@@ -1610,7 +1611,7 @@ M.WinbarFilePath = {
     end,
     hl = function()
       local hl_opts = set_hl()
-      return { fg = hl_opts.fg, bg = hl_opts.bg }
+      return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
     end,
   },
   {

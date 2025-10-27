@@ -1,4 +1,3 @@
--- vim: foldmethod=marker foldlevel=0
 local opt, fn, g, env, loop = vim.opt, vim.fn, vim.g, vim.env, vim.uv
 
 g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
@@ -88,8 +87,8 @@ opt.list = true -- Show some invisible characters (tabs...
 opt.listchars = {
   eol = nil,
   tab = "→ ", -- Alternatives: '▷▷',
-  extends = "░", -- Alternatives: … » ›
-  precedes = "░", -- Alternatives: … « ‹
+  extends = "»", -- Alternatives: … » › ░
+  precedes = "«", -- Alternatives: … « ‹ ░
   trail = "•", -- BULLET (U+2022, UTF-8: E2 80 A2)
 }
 -- }}}

@@ -74,6 +74,43 @@ return {
       },
     },
   },
+  -- CANDELA
+  {
+    "KieranCanter/candela.nvim",
+    cmd = "Candela",
+    -- keys = {
+    --   {
+    --     "<Leader>of",
+    --     function()
+    --       local misc_cmds = {
+    --         ["CandelaUI - Open CandelaUI"] = function()
+    --           vim.cmd [[<Plug>CandelaUI]]
+    --         end,
+    --         -- ["LSP - Organizer Imports"] = function()
+    --         --   vim.cmd [[TSToolsOrganizeImports]]
+    --         -- end,
+    --         -- ["LSP - Short Imports"] = function()
+    --         --   vim.cmd [[TSToolsSortImports]]
+    --         -- end,
+    --         -- ["LSP - Remove Unused imports"] = function()
+    --         --   vim.cmd [[TSToolsRemoveUnusedImports]]
+    --         -- end,
+    --         -- ["Eslint - Fix all"] = function()
+    --         --   vim.cmd [[TSToolsFixAll]]
+    --         -- end,
+    --         -- ["LSP - Check missing imports"] = function()
+    --         --   vim.cmd [[TSToolsAddMissingImports]]
+    --         -- end,
+    --       }
+    --
+    --       RUtils.fzflua.open_cmd_bulk(misc_cmds, { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } })
+    --     end,
+    --     ft = { "log", "bigfile" },
+    --     desc = "Bulk: LSP cmds",
+    --   },
+    -- },
+    opts = {},
+  },
   -- GRUG-FAR.NVIM
   {
     "MagicDuck/grug-far.nvim",

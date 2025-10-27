@@ -8,23 +8,23 @@ file-modified-label = [M]
 file-removed-label = [-]
 file-renamed-label = [R]
 # file-decoration-style = "#606018" overline
-file-style = "#27334f" bold "#6789d1"
+file-style = "#464641" bold "#bbbbad"
 hunk-header-decoration-style = none
-hunk-header-style = syntax bold "#363c57"
+hunk-header-style = syntax bold "#545454"
 line-numbers = true
 line-numbers-left-format = "▎{nm:>1} ▎"
 # line-numbers-left-style = green
 line-numbers-minus-style = "#de5d51" italic
-line-numbers-plus-style = "#a2d084" italic
+line-numbers-plus-style = "#a5d285" italic
 line-numbers-right-format =  "▎{np:>1} ▎"
 # line-numbers-right-style = green
-line-numbers-zero-style = "#485175"
+line-numbers-zero-style = "#636363"
 
-minus-emph-style = "#de5d51" bold "#6c3b40"
-minus-style = "#de5d51" bold "#422e3a"
+minus-emph-style = "#de5d51" bold "#7b4742"
+minus-style = "#de5d51" bold "#563f3d"
 
-plus-emph-style = "#a2d084" bold "#5a7058"
-plus-style = "#9dca7d" bold "#3d4a47"
+plus-emph-style = "#a5d285" bold "#697d5a"
+plus-style = "#9dca7d" bold "#515a49"
 
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse

@@ -33,6 +33,21 @@ return {
       return false
     end,
   },
+  -- GRUVBOX-MATERIAL
+  {
+    "sainnhe/gruvbox-material",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local gruvbox_themes = { "gruvbox-material" }
+      -- TODO: gruvbox_material_background ini harus dibuat segeneric mungkin?
+      vim.g.gruvbox_material_background = "medium"
+      if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NIGHTINGALE
   {
     "xeind/nightingale.nvim",

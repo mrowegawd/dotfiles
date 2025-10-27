@@ -387,8 +387,8 @@ return {
       library = {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
         { path = require("lazy.core.config").options.root .. "/lazy.nvim", words = { "LazyVim" } },
-        { path = "LazyVim", words = { "LazyVim" } },
-        { path = "snacks.nvim", words = { "Snacks" } },
+        -- { path = "LazyVim", words = { "LazyVim" } },
+        -- { path = "snacks.nvim", words = { "Snacks" } },
       },
     },
   },
