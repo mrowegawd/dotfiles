@@ -87,6 +87,22 @@ local function shell_escape_single_quote(s)
   return s:gsub("'", "'\\''")
 end
 
+local function shell_kill_process_by_name(process_name)
+  if not process_name then
+    error "program_name required"
+  end
+
+  -- try sending SIGTERM first, wait a bit, then use SIGKILL if it’s still running.
+  -- use pkill if it’s available. Redirect the output to /dev/null.
+  local kill_cmd = [[
+        pkill -15 -x ]] .. process_name .. [[ >/dev/null 2>&1 || true
+        sleep 0.15
+        pkill -9 -x ]] .. process_name .. [[ >/dev/null 2>&1 || true
+    ]]
+
+  os.execute(kill_cmd)
+end
+
 local function play_with_mpv_nohup(fpath, only_sound)
   if not fpath then
     error "fpath required"
@@ -94,23 +110,15 @@ local function play_with_mpv_nohup(fpath, only_sound)
 
   local fpath_esc = shell_escape_single_quote(fpath)
 
-  -- perintah untuk mencoba SIGTERM dulu, tunggu sebentar, lalu SIGKILL jika masih ada.
-  -- gunakan pkill jika tersedia. Redirect output ke /dev/null.
-  local kill_cmd = [[
-        pkill -15 -x mpv >/dev/null 2>&1 || true
-        sleep 0.15
-        pkill -9 -x mpv >/dev/null 2>&1 || true
-    ]]
-
-  os.execute(kill_cmd)
+  shell_kill_process_by_name "mpv"
 
   local play_cmd
 
   if not only_sound then
-    -- untuk mp4, gif
+    -- for mp4, gif
     play_cmd = "nohup mpv --really-quiet --autofit=1000x900 '" .. fpath_esc .. "' >/dev/null 2>&1 &"
   else
-    -- untuk mp3
+    -- for mp3
     play_cmd = "nohup mpv --really-quiet '" .. fpath_esc .. "' >/dev/null 2>&1 &"
   end
 
@@ -123,7 +131,8 @@ local gen_cmd_ext = function(pane_id, fpath_ext, fpath)
   end
 
   if fpath_ext == "pdf" then
-    os.execute("zathura '" .. fpath .. "' >/dev/null 2>&1 &")
+    shell_kill_process_by_name "zathura"
+    os.execute("nohup zathura '" .. fpath .. "' >/dev/null 2>&1 &")
   end
 
   if fpath_ext == "mp4" then
@@ -131,6 +140,11 @@ local gen_cmd_ext = function(pane_id, fpath_ext, fpath)
   end
 
   if fpath_ext == "jpg" then
+    if not pane_id or (pane_id == 0) then
+      error "must define `pane_id`"
+      return
+    end
+
     if os.getenv "TERMINAL" == "st" then
       os.execute('sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
     else
@@ -185,24 +199,21 @@ local function open_with_tmux(fpath_ext, fpath)
     return
   end
 
-  if fpath_ext == "jpg" then
-    local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
-    if tonumber(list_panes) < 3 or (tonumber(list_panes) == 2) then
-      send_text_cmds("tmux", { "split-window", "-vl", "40", "-c", "#{pane_current_path}" })
-      send_text_cmds("tmux", { "split-window", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
-      send_text_cmds("tmux", { "resize-pane", "-U", "2" })
-      send_text_cmds("tmux", { "last-pane" })
-    end
-    gen_cmd_ext(3, fpath_ext, fpath)
+  if fpath_ext ~= "jpg" then
+    gen_cmd_ext(nil, fpath_ext, fpath)
+    return
   end
 
-  if fpath_ext == "mp4" then
-    gen_cmd_ext(nil, fpath_ext, fpath)
+  local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
+
+  if tonumber(list_panes) < 3 or (tonumber(list_panes) == 2) then
+    send_text_cmds("tmux", { "split-window", "-vl", "40", "-c", "#{pane_current_path}" })
+    send_text_cmds("tmux", { "split-window", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
+    send_text_cmds("tmux", { "resize-pane", "-U", "2" })
+    send_text_cmds("tmux", { "last-pane" })
   end
 
-  if fpath_ext == "mp3" then
-    gen_cmd_ext(nil, fpath_ext, fpath)
-  end
+  gen_cmd_ext(3, fpath_ext, fpath)
 end
 
 local function open_with_wezterm(fpath_ext, fpath)
