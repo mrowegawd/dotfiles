@@ -64,8 +64,8 @@ return {
         function()
           require("flash").treesitter({
             actions = {
-              ["<c-space>"] = "next",
-              ["<BS>"] = "prev"
+              ["<c-j>"] = "next",
+              ["<c-k>"] = "prev"
             }
           })
         end,

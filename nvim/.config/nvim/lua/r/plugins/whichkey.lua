@@ -34,7 +34,7 @@ return {
           { "<Leader>f", group = "fzflua" },
 
           { "<Leader>j", group = "jumpTo" },
-          { "<Leader>p", group = "peek" },
+          { "<Leader>k", group = "peek" },
 
           { "<Leader>l", group = "LSP" },
 

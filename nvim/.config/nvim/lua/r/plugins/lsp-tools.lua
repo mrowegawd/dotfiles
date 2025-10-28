@@ -106,65 +106,74 @@ return {
     },
     keys = {
       {
+        "K",
+        function()
+          local P = require "overlook.peek"
+          P.peek_qf()
+        end,
+        ft = "qf",
+        desc = "Peek: peek on qf item [overlook]",
+      },
+      {
         "P",
         function()
           local P = require "overlook.peek"
           P.peek_qf()
         end,
         ft = "qf",
-        desc = "Peek: peek item qf [overlook]",
+        desc = "Peek: peek on qf item (alternatif) [overlook]",
       },
       {
-        "<Leader>pd",
+        "<Leader>kd",
         function()
           require("overlook.api").peek_definition()
         end,
         desc = "Peek: peek definition [overlook]",
       },
       {
-        "<Leader>pc",
+        "<Leader>kc",
         function()
           require("overlook.api").close_all()
         end,
         desc = "Peek: close all popup [overlook]",
       },
       {
-        "<Leader>pu",
+        "<Leader>kr",
         function()
           require("overlook.api").restore_popup()
         end,
         desc = "Peek: restore popup [overlook]",
       },
       {
-        "<Leader>pU",
+        "<Leader>kR",
         function()
           require("overlook.api").restore_all_popups()
         end,
         desc = "Peek: restore all popup [overlook]",
       },
       {
-        "<Leader>pv",
+        "<Leader>kv",
         function()
           require("overlook.api").open_in_vsplit()
         end,
         desc = "Peek: open in  vsplit [overlook]",
       },
       {
-        "<Leader>ps",
+        "<Leader>ks",
         function()
           require("overlook.api").open_in_split()
         end,
         desc = "Peek: open in split [overlook]",
       },
       {
-        "<Leader>pt",
+        "<Leader>kt",
         function()
           require("overlook.api").open_in_tab()
         end,
         desc = "Peek: open in tab [overlook]",
       },
       {
-        "<Leader>pw",
+        "<Leader>kw",
         function()
           require("overlook.api").switch_focus()
         end,

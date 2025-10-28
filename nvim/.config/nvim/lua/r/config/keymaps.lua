@@ -15,9 +15,6 @@ RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
 
-RUtils.map.xnoremap("<C-j>", "}")
-RUtils.map.xnoremap("<C-k>", "{")
-
 -- RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)

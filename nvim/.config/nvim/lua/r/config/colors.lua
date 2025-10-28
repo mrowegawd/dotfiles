@@ -623,11 +623,13 @@ local update_col_colorscheme = {
     lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
     lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
     noice_cmdline_fg_alter = 0.6,
+    nontext_fg_alter = -0.4,
     pmenu_bg_alter = 0.72,
+    quickfixline_linenr_fg_alter = 0.45,
     render_markdown_code_bg_alter = 0.4,
     snacks_indent_scope_fg_alter = 0.15,
-    winbar_right_block_bg_alter = 0.4,
-    winbar_right_block_fg_alter = 0.2,
+    winbar_fg_alter = 1.2,
+    winbar_right_block_bg_alter = -0.55,
     winseparator_alter = 0.5,
   },
   ["xenos"] = {
@@ -1835,9 +1837,10 @@ local general_overrides = function()
     },
 
     --  ───────────────────────────[ TODO-COMMENT ]────────────────────────
-    { TodoSignWarn = { bg = "NONE", fg = "#FBBF24" } },
-    { TodoSignFIX = { bg = "NONE", fg = "#DC2626" } }, -- for error
-    { TodoSignTODO = { bg = "NONE", fg = "#2563EB" } },
+    { TodoSignWarn = { bg = "NONE" } },
+    { TodoSignFIX = { bg = "NONE" } }, -- for error
+    { TodoSignTODO = { bg = "NONE" } },
+    { TodoSignNOTE = { bg = "NONE" } },
 
     --  ───────────────────────────[ MASON ]────────────────────────
     { MasonNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
