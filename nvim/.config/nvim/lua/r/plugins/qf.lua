@@ -41,16 +41,27 @@ return {
       },
     },
   },
-  -- QUICKER
+  -- QUICKER (disabled)
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "VeryLazy",
+    -- enabled = false,
     ft = "qf",
     opts = {},
+  },
+  -- QFBOOKMARK
+  {
+    dir = "~/.local/src/nvim_plugins/qfbookmark",
+    event = "LazyFile",
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    opts = {
+      save_dir = RUtils.config.path.wiki_path .. "/orgmode/qfbookmark",
+    },
   },
   -- QFSILET
   {
     "mrowegawd/qfsilet",
+    enabled = false,
     -- dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "LazyFile", -- use `LazyFile` agar sign mark bisa di load dgn benar
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },

@@ -1114,8 +1114,11 @@ function M.change_colors()
 
   -- ─< TAB >────────────────────────────────────────────────────────────
   -- Active Tab
-  local tab_active_fg = H.get("WinBarRightBlock", "fg")
-  local tab_active_bg = H.get("WinBarRightBlock", "bg")
+  local tab_session_fg = H.get("WinBarRightBlock", "fg")
+  local tab_session_bg = H.get("WinBarRightBlock", "bg")
+
+  local tab_active_fg = H.darken(H.get("WinBarRightBlock", "fg"), 0.6, H.get("Normal", "bg"))
+  local tab_active_bg = H.darken(H.get("WinBarRightBlock", "bg"), 0.7, H.get("Normal", "bg"))
 
   -- Inactive Tab
   local tab_inactive_fg = H.tint(H.get("WinBar", "fg"), -0.23)
@@ -1182,13 +1185,16 @@ function M.change_colors()
 
       keyword = H.get("Keyword", "fg"),
 
+      -- tab_active_fg = H.get("Normal", "bg"),
+      -- tab_active_bg = H.tint(H.get("WinSeparator", "fg"), 5),
+
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
       statusline_fg = tab_statusline_fg,
 
-      session_fg = H.get("Normal", "bg"),
-      session_bg = H.tint(H.get("WinSeparator", "fg"), 5),
+      session_fg = tab_session_fg,
+      session_bg = tab_session_bg,
 
       message_bg = H.tint(H.get("diffChange", "fg"), 0.6),
 

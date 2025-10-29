@@ -91,7 +91,7 @@ frame_width = 2
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#5d6d7d"
+frame_color = "#569cd6"
 
 # Define a color for the separator.
 # possible values are:
@@ -154,7 +154,7 @@ markup = full
 #   %%  Literal %
 # Markup is allowed
 # format = "<b>%s</b>\n%b"
-format = "<b><span foreground='#ffffff'>%s</span></b>\n%b"
+format = "<b><span foreground='#81eaff'>%s</span></b>\n%b"
 
 # Alignment of message text.
 # Possible values are "left", "center" and "right".
@@ -293,16 +293,16 @@ per_monitor_dpi = false
 # test
 
 [urgency_low]
-background = "#676767"
-foreground = "#cfcfcf"
-frame_color = "#3e3e3e"
+background = "#454545"
+foreground = "#8a8a8a"
+frame_color = "#292929"
 timeout = 5
 default_icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_normal]
-background = "#847a60"
-foreground = "#fff5c0"
-frame_color = "#847a60"
+background = "#2f5575"
+foreground = "#5eabeb"
+frame_color = "#2f5575"
 timeout = 10
 default_icon = ~/.config/miscxrdb/icons/bell-notification.png
 

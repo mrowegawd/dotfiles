@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/zenburn"
+#include ".config/miscxrdb/xresource-theme/vscode_modern"
 
 ! --------------
 ! XFT SETTINGS

@@ -2415,6 +2415,15 @@ local function colorscheme_overrides()
       { NotifyWARNTitle = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
       { NotifyWARNIcon = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
     },
+
+    ["vscode_modern"] = {
+      {
+        LspCodeLens = {
+          fg = { from = "LineNr", attr = "fg", alter = 0.9 },
+          bg = { from = "LineNr", attr = "fg", alter = 0.15 },
+        },
+      },
+    },
   }
 
   local hls = overrides[vim.g.colors_name]

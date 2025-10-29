@@ -130,26 +130,34 @@ return {
               icon = " ",
               key = "f",
               desc = "Find File",
-              action = ':lua require("fzf-lua").files()',
+              action = function()
+                require("fzf-lua").files()
+              end,
             },
             { icon = " ", hidden = true, key = "n", desc = "New File", action = ":ene | startinsert" },
             {
               icon = " ",
-              key = "r",
+              key = "o",
               desc = "Recent Files",
-              action = ':lua require("fzf-lua").oldfiles()',
+              action = function()
+                require("fzf-lua").oldfiles()
+              end,
             },
             {
               icon = " ",
               key = "L",
               desc = "Select Session",
-              action = ':lua require("r.utils.sessions").load_ses_dashboard()',
+              action = function()
+                require("r.utils.sessions").load_ses_dashboard()
+              end,
             },
             {
               icon = " ",
               key = "l",
               desc = "Restore Last Session",
-              action = ':lua require("r.utils.sessions").load_ses_dashboard(true)',
+              action = function()
+                require("r.utils.sessions").load_ses_dashboard(true)
+              end,
             },
             { icon = "󰒲 ", key = "y", desc = "Lazy", action = ":Lazy" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
@@ -200,14 +208,14 @@ return {
         },
         sections = {
           {
-            {
-              -- { section = "header", align = "center" },
-              pane = 1,
-              section = "terminal",
-              cmd = set_img_dashboard(),
-              height = 28,
-              align = "center",
-            },
+            -- {
+            --   -- { section = "header", align = "center" },
+            --   section = "terminal",
+            --   pane = 1,
+            --   cmd = set_img_dashboard(),
+            --   height = 28,
+            --   align = "center",
+            -- },
           },
           {
             pane = 2,
@@ -222,15 +230,15 @@ return {
                 padding = 2,
                 hl = "Normal",
               },
-              {
-                section = "terminal",
-                icon = " ",
-                title = "GIT STATUS",
-                enabled = vim.fn.isdirectory ".git" == 1,
-                cmd = "hub diff --stat -B -M -C",
-                -- cmd = "git status --short --branch --renames",
-                height = 8,
-              },
+              -- {
+              --   section = "terminal",
+              --   icon = " ",
+              --   title = "GIT STATUS",
+              --   enabled = vim.fn.isdirectory ".git" == 1,
+              --   cmd = "hub diff --stat -B -M -C",
+              --   -- cmd = "git status --short --branch --renames",
+              --   height = 8,
+              -- },
             },
           },
           { section = "startup", align = "center", indent = 60 },
