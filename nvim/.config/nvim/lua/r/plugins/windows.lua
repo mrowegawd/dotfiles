@@ -163,6 +163,36 @@ return {
           desc = "Window: move cursor right [smart-splits]",
         },
 
+        -- ALT
+        {
+          "<a-h>",
+          function()
+            require("smart-splits").move_cursor_left()
+          end,
+          desc = "Window: move cursor left [smart-splits]",
+        },
+        {
+          "<a-j>",
+          function()
+            require("smart-splits").move_cursor_down()
+          end,
+          desc = "Window: move cursor down [smart-splits]",
+        },
+        {
+          "<a-k>",
+          function()
+            require("smart-splits").move_cursor_up()
+          end,
+          desc = "Window: move cursor up [smart-splits]",
+        },
+        {
+          "<a-l>",
+          function()
+            require("smart-splits").move_cursor_right()
+          end,
+          desc = "Window: move cursor right [smart-splits]",
+        },
+
         --- ARROW
         {
           "<c-Left>",
@@ -193,6 +223,7 @@ return {
           desc = "Window: move cursor right [smart-splits]",
         },
 
+        -- RESIZE WINDOW
         {
           "<a-H>",
           function()

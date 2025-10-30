@@ -89,6 +89,28 @@ return {
       end
     end),
   },
+  { -- prev session
+    key = "k",
+    mods = "CTRL|ALT",
+    action = wezterm.action_callback(function(window, pane)
+      if KeymapUtil.is_in_tmux(pane) then
+        window:perform_action({ SendKey = { key = "k", mods = "CTRL|ALT" } }, pane)
+      else
+        KeymapUtil.switch_to_previous_workspace(window, pane)
+      end
+    end),
+  },
+  { -- next session
+    key = "j",
+    mods = "CTRL|ALT",
+    action = wezterm.action_callback(function(window, pane)
+      if KeymapUtil.is_in_tmux(pane) then
+        window:perform_action({ SendKey = { key = "j", mods = "CTRL|ALT" } }, pane)
+      else
+        KeymapUtil.switch_to_previous_workspace(window, pane)
+      end
+    end),
+  },
   --
   -- }}}
   -- Pane ------------------------------------------------------------------ {{{
@@ -381,11 +403,11 @@ return {
   --
   { -- open file tree manager
     key = "e",
-    mods = mod_key,
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       -- window:toast_notification("wezterm", nil, 4000)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "e", mods = mod_key } }, pane)
+        window:perform_action({ SendKey = { key = "e", mods = "ALT" } }, pane)
       else
         if KeymapUtil.is_in_nnn(pane) or KeymapUtil.is_in_lf(pane) or KeymapUtil.is_in_yazi(pane) then
           window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)

@@ -1,3 +1,4 @@
+---@type BaseColors
 local Color = require "colors"
 local Hyperlinks = require "hyperlinks"
 

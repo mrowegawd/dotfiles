@@ -1,6 +1,15 @@
 local wezterm = require "wezterm"
+---@type BaseColors
 local Color = require "colors"
+
 local Util = require "utils"
+
+local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
+-- local SOLID_LEFT_MOST = utf8.char(0x2588)
+local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
+
+local username = os.getenv "USER" or os.getenv "LOGNAME" or os.getenv "USERNAME"
+local date = wezterm.strftime "%H:%M"
 
 local function turn_off_tab_bar(window, pane, process_names)
   local overrides = window:get_config_overrides() or {}
@@ -24,13 +33,6 @@ wezterm.on("update-right-status", function(window, pane)
   turn_off_tab_bar(window, pane, { "ncmpcpp", "lazygit", "lazydocker", "btop" })
 
   local calendar = wezterm.strftime "%A, %d-%b-%Y"
-  local date = wezterm.strftime "%H:%M"
-  local username = os.getenv "USER" or os.getenv "LOGNAME" or os.getenv "USERNAME"
-
-  local session = window:active_workspace()
-
-  local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
-  local right_arrow = SOLID_RIGHT_ARROW
 
   window:set_right_status(wezterm.format {
     { Attribute = { Intensity = "Bold" } },
@@ -42,16 +44,48 @@ wezterm.on("update-right-status", function(window, pane)
     { Foreground = { Color = statusline_fg } },
     { Text = " Alt " },
     { Text = " 👨 " .. username .. " " },
-    { Foreground = { Color = Color.bg } },
-    { Background = { Color = Color.white } },
-    { Text = right_arrow },
-    { Text = " ❐ " .. session .. " " },
   })
 end)
 
-local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
-local SOLID_LEFT_MOST = utf8.char(0x2588)
-local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
+-- local function active_tab_for_gui_window(gui_window)
+--   for _, item in ipairs(gui_window:mux_window():tabs_with_info()) do
+--     if item.is_active then
+--       return item.tab
+--     end
+--   end
+-- end
+
+wezterm.on("update-status", function(window, pane)
+  local session = window:active_workspace()
+  local basename_session = session:match "([^/]+)$"
+
+  local left_arrow = SOLID_LEFT_ARROW
+
+  -- TODO: perbaiki utk detect pada tab index di posisi pertama
+  -- Attempt: cara ini salah
+  -- local tab_idx = pane:tab():active_pane():pane_id()
+  -- wezterm.log_info(pane_id)
+  --
+  -- Attempt 2: cara juga salah
+  -- local tab_idx = active_tab_for_gui_window(window)
+  -- wezterm.log_info(pane_id:tab_id())
+
+  -- local tab_id = active_tab_for_gui_window(window)
+  -- wezterm.log_info(tab_id:tab_id())
+
+  local left_arrow_color = Color.bg
+  -- if tab_id == 0 then
+  --   left_arrow_color = Color.tab_active_bg
+  -- end
+
+  window:set_left_status(wezterm.format {
+    { Foreground = { Color = Color.session_fg } },
+    { Background = { Color = Color.session_bg } },
+    { Text = " ❐ " .. basename_session .. " " },
+    { Foreground = { Color = left_arrow_color } },
+    { Text = left_arrow },
+  })
+end)
 
 --stylua: ignore
 local SUP_IDX = { "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰",
@@ -76,29 +110,32 @@ local function basename_dir(s)
   return basename
 end
 
----@diagnostic disable-next-line: unused-local
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local edge_background = Color.bg
-  local background = Color.bg
+  local dim_fg = Color.red_alt
+  local zoom_fg = Color.statusline_inactive_fg
+
   local foreground = Color.statusline_fg
-  local dim_foreground = Color.red_alt
-  local zoom_foreground = Color.statusline_inactive_fg
+  local background = Color.bg
+
+  local edge_fg = background
+  local edge_bg = background
 
   if tab.is_active then
-    background = Color.active_bg
-    foreground = Color.active_fg
-    zoom_foreground = Color.yellow
+    foreground = Color.tab_active_fg
+    background = Color.tab_active_bg
+    edge_fg = background
+    edge_bg = Color.bg
+    zoom_fg = Color.yellow
   elseif hover then
-    background = Color.active_fg
-    foreground = Color.bg
+    background = Color.keyword
+    edge_fg = background
+    edge_bg = Color.bg
   end
-
-  local edge_foreground = background
 
   local left_arrow = SOLID_LEFT_ARROW
-  if tab.tab_index == 0 then
-    left_arrow = SOLID_LEFT_MOST
-  end
+  -- if tab.tab_index == 0 then
+  --   left_arrow = SOLID_LEFT_MOST
+  -- end
 
   local zoomed = ""
   if tab.active_pane.is_zoomed then
@@ -120,19 +157,19 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 
   return {
     { Attribute = { Intensity = "Bold" } },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
+    { Background = { Color = edge_bg } },
+    { Foreground = { Color = edge_fg } },
     { Text = left_arrow },
     { Background = { Color = background } },
     { Foreground = { Color = foreground } },
     { Text = id .. " " },
     { Text = pwd }, -- title
-    { Foreground = { Color = zoom_foreground } },
+    { Foreground = { Color = zoom_fg } },
     { Text = " " .. zoomed },
-    { Foreground = { Color = dim_foreground } },
+    { Foreground = { Color = dim_fg } },
     { Text = pid },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
+    { Background = { Color = edge_bg } },
+    { Foreground = { Color = edge_fg } },
     { Text = SOLID_RIGHT_ARROW },
     { Attribute = { Intensity = "Normal" } },
   }

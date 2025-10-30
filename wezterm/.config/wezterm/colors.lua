@@ -1,90 +1,160 @@
 local Util = require "utils"
+-- local wezterm = require "wezterm"
 
-local active_fg = "#df5476"
-local active_bg = "#7c2f42"
-local separator_fg = "#484349"
-local statusline_fg = "#645d66"
-local statusline_inactive_fg = "#6e659e"
+---@class ColorSpec
+---@field color string
+---@field xrdb? string
+---@field regex_str_from_file? string
 
-if Util.is_os_windows() then
-  return {
-    fg = "#dcd7ba",
-    bg = "#1f1f28",
+---@class OptsBaseColors
+---@field fg ColorSpec
+---@field bg ColorSpec
+---@field black ColorSpec
+---@field black_alt ColorSpec
+---@field red ColorSpec
+---@field red_alt ColorSpec
+---@field green ColorSpec
+---@field green_alt ColorSpec
+---@field yellow ColorSpec
+---@field yellow_alt ColorSpec
+---@field blue ColorSpec
+---@field blue_alt ColorSpec
+---@field magenta ColorSpec
+---@field magenta_alt ColorSpec
+---@field cyan ColorSpec
+---@field cyan_alt ColorSpec
+---@field white ColorSpec
+---@field white_alt ColorSpec
+---@field cursor ColorSpec
+---@field tab_active_fg ColorSpec
+---@field tab_active_bg ColorSpec
+---@field statusline_fg ColorSpec
+---@field statusline_bg ColorSpec
+---@field session_fg ColorSpec
+---@field session_bg ColorSpec
+---@field statusline_bg_message ColorSpec
+---@field statusline_inactive_fg ColorSpec
+---@field separator_fg ColorSpec
+---@field keyword ColorSpec
 
-    black = "#090618",
-    black_alt = "#727169",
-    red = "#c34043",
-    red_alt = "#e82424",
-    green = "#76946a",
-    green_alt = "#98bb6c",
-    yellow = "#c0a36e",
-    yellow_alt = "#e6c384",
-    blue = "#7e9cd8",
-    blue_alt = "7fb4ca",
-    magenta = "#957fb8",
-    magenta_alt = "#938aa9",
-    cyan = "#6a9589",
-    cyan_alt = "#7aa89f",
-    white = "#c8c093",
-    white_alt = "#dcd7ba",
+---@class BaseColors
+---@field fg string
+---@field bg string
+---@field black string
+---@field black_alt string
+---@field red string
+---@field red_alt string
+---@field green string
+---@field green_alt string
+---@field yellow string
+---@field yellow_alt string
+---@field blue string
+---@field blue_alt string
+---@field magenta string
+---@field magenta_alt string
+---@field cyan string
+---@field cyan_alt string
+---@field white string
+---@field white_alt string
+---@field cursor string
+---@field tab_active_fg string
+---@field tab_active_bg string
+---@field session_fg string
+---@field session_bg string
+---@field statusline_fg string
+---@field statusline_bg string
+---@field statusline_bg_message string
+---@field statusline_inactive_fg string
+---@field separator_fg string
+---@field keyword string
 
-    active_fg = active_fg,
-    active_bg = active_bg,
-
-    statusline_bg_message = "#e5c463",
-    statusline_fg = statusline_fg,
-    -- statusline_inactive_fg = Util.tint(statusline_inactive_fg, -0.2),
-    statusline_inactive_fg = statusline_fg,
-
-    selection_tab = active_bg,
-    separator_fg = separator_fg,
-  }
-end
-
+local local_file_color = false
 local MASTER_THEME_FILE = "/tmp/master-colors-themes"
 if Util.is_file_exists(MASTER_THEME_FILE) then
-  active_fg = Util.cmd_call("grep -i tmux_tab_active_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  active_bg = Util.cmd_call("grep -i tmux_tab_active_bg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  separator_fg =
-    Util.cmd_call("grep -i tmux_border_inactive <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-  statusline_fg =
-    Util.cmd_call("grep -i tmux_statusline_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-
-  statusline_inactive_fg = Util.cmd_call(
-    "grep -i tmux_border_inactive_status_fg <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs"
-  )
+  local_file_color = true
 end
 
-return {
-  fg = Util.cmd_call "xrdb -query | grep -i foreground | cut -d':' -f2 | xargs",
-  bg = Util.cmd_call "xrdb -query | grep -i background | cut -d':' -f2 | xargs",
+---@param opts_color ColorSpec
+---@return string
+local function get_color_from_xrdb_or_file(opts_color)
+  local cl
 
-  cursor = Util.cmd_call "xrdb -query | grep -i cursor | cut -d':' -f2 | xargs",
+  if opts_color.regex_str_from_file and #opts_color.regex_str_from_file > 0 then
+    if local_file_color then
+      cl = Util.cmd_call(
+        "grep -i "
+          .. opts_color.regex_str_from_file
+          .. " <"
+          .. MASTER_THEME_FILE
+          .. " | cut -d':' -f2 | head -1 | xargs"
+      )
+    end
+  end
 
-  black = Util.cmd_call "xrdb -query | grep -i .color0 | cut -d':' -f2 | head -1 | xargs",
-  black_alt = Util.cmd_call "xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs",
-  red = Util.cmd_call "xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs",
-  red_alt = Util.cmd_call "xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs",
-  green = Util.cmd_call "xrdb -query | grep -i .color2 | cut -d':' -f2 | head -1 | xargs",
-  green_alt = Util.cmd_call "xrdb -query | grep -i .color10 | cut -d':' -f2 | head -1 | xargs",
-  yellow = Util.cmd_call "xrdb -query | grep -i .color3 | cut -d':' -f2 | head -1 | xargs",
-  yellow_alt = Util.cmd_call "xrdb -query | grep -i .color11 | cut -d':' -f2 | head -1 | xargs",
-  blue = Util.cmd_call "xrdb -query | grep -i .color4 | cut -d':' -f2 | head -1 | xargs",
-  blue_alt = Util.cmd_call "xrdb -query | grep -i .color12 | cut -d':' -f2 | head -1 | xargs",
-  magenta = Util.cmd_call "xrdb -query | grep -i .color5 | cut -d':' -f2 | head -1 | xargs",
-  magenta_alt = Util.cmd_call "xrdb -query | grep -i .color13 | cut -d':' -f2 | head -1 | xargs",
-  cyan = Util.cmd_call "xrdb -query | grep -i .color6 | cut -d':' -f2 | head -1 | xargs",
-  cyan_alt = Util.cmd_call "xrdb -query | grep -i .color14 | cut -d':' -f2 | head -1 | xargs",
-  white = Util.cmd_call "xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs",
-  white_alt = Util.cmd_call "xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs",
+  if opts_color.xrdb and #opts_color.xrdb > 0 then
+    cl = Util.cmd_call("xrdb -query | grep -i " .. opts_color.xrdb .. " | cut -d':' -f2 | head -1 | xargs")
+  end
 
-  active_fg = active_fg,
-  active_bg = active_bg,
+  if cl then
+    return cl
+  end
 
-  statusline_bg_message = "#e5c463",
-  statusline_fg = statusline_fg,
-  statusline_inactive_fg = Util.tint(statusline_inactive_fg, -0.2),
+  return opts_color.color
+end
 
-  selection_tab = active_bg,
-  separator_fg = separator_fg,
+---@type OptsBaseColors
+local __base_colors = {
+  fg = { color = "#dcd7ba", xrdb = "foreground" },
+  bg = { color = "#1f1f28", xrdb = "background" },
+
+  black = { color = "#090618", xrdb = ".color0" },
+  black_alt = { color = "#727169", xrdb = ".color8" },
+  red = { color = "#c34043", xrdb = ".color1" },
+  red_alt = { color = "#e82424", xrdb = ".color9" },
+  green = { color = "#76946a", xrdb = ".color2" },
+  green_alt = { color = "#98bb6c", xrdb = ".color10" },
+  yellow = { color = "#c0a36e", xrdb = ".color3" },
+  yellow_alt = { color = "#e6c384", xrdb = ".color11" },
+  blue = { color = "#7e9cd8", xrdb = ".color4" },
+  blue_alt = { color = "#7fb4ca", xrdb = ".color12" },
+  magenta = { color = "#957fb8", xrdb = ".color5" },
+  magenta_alt = { color = "#938aa9", xrdb = ".color13" },
+  cyan = { color = "#6a9589", xrdb = ".color4" },
+  cyan_alt = { color = "#7aa89f", xrdb = ".color14" },
+  white = { color = "#c8c093", xrdb = ".color7" },
+  white_alt = { color = "#dcd7ba", xrdb = ".color15" },
+  cursor = { color = "#df5476", xrdb = "cursor" },
+
+  tab_active_fg = { color = "#df5476", regex_str_from_file = "tmux_tab_active_fg" },
+  tab_active_bg = { color = "#7c2f42", regex_str_from_file = "tmux_tab_active_bg" },
+
+  keyword = { color = "#7c2f42", regex_str_from_file = "tmux_keyword" },
+
+  session_fg = { color = "#df5476", regex_str_from_file = "tmux_session_fg" },
+  session_bg = { color = "#7c2f42", regex_str_from_file = "tmux_session_bg" },
+
+  statusline_fg = { color = "#df5476", regex_str_from_file = "tmux_statusline_fg" },
+  statusline_bg = { color = "#df5476", regex_str_from_file = "tmux_statusline_bg" },
+  statusline_bg_message = { color = "#df5476", regex_str_from_file = "tmux_message_bg" },
+
+  statusline_inactive_fg = { color = "#6e659e", regex_str_from_file = "tmux_border_inactive_status_fg" },
+
+  separator_fg = { color = "#484349", regex_str_from_file = "tmux_border_inactive" },
 }
+
+local base_colors = {}
+
+if Util.is_os_windows() then
+  for i, _ in pairs(__base_colors) do
+    base_colors[i] = __base_colors[i].color
+  end
+else
+  for i, _ in pairs(__base_colors) do
+    base_colors[i] = get_color_from_xrdb_or_file(__base_colors[i])
+  end
+end
+
+-- wezterm.log_info(base_colors)
+
+---@return BaseColors
+return base_colors
