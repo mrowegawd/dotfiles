@@ -129,7 +129,7 @@ return {
           if #status_dap(require "dap") > 0 then
             require("dap").step_out()
           else
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("H", true, true, true), "n", true)
+            RUtils.map.feedkey "H"
           end
         end,
         desc = "Debug: step out",
@@ -145,7 +145,7 @@ return {
           if #status_dap(require "dap") > 0 then
             require("dap").step_into()
           else
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("L", true, true, true), "n", true)
+            RUtils.map.feedkey "L"
           end
         end,
         desc = "Debug: step into",
@@ -162,7 +162,7 @@ return {
             require("dap").step_over()
           else
             -- vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("J", true, true, true), "n", true)
+            RUtils.map.feedkey "J"
           end
         end,
         desc = "Debug: step over",

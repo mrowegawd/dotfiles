@@ -167,7 +167,7 @@ return {
         "<Leader>bg",
         function()
           local visual_selection = RUtils.cmd.get_visual_selection { strict = true }
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, true, true), "n", false)
+          RUtils.map.feedkey("<Esc>" )
           vim.schedule(function()
             if not visual_selection or not visual_selection.selection or visual_selection.selection == "" then
               ---@diagnostic disable-next-line: undefined-field

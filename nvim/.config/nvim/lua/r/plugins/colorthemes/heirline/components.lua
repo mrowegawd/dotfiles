@@ -216,7 +216,7 @@ local __colors = function()
     winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
     winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),
     winbar_quickfix_fg_loc = H.tint(H.get("Keyword", "fg"), -0.8),
-    winbar_quickfix_bg_loc = H.tint(H.get("Keyword", "fg"), 0.35),
+    winbar_quickfix_bg_loc = H.tint(H.get("diffDelete", "fg"), 0.35),
 
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
@@ -750,27 +750,13 @@ M.QuickfixStatus = {
   {
     provider = function(self)
       local parts = {}
-      if RUtils.qf.is_loclist() then
-        local index_loclist = RUtils.qf.get_current_idx_qf(true)
-        local current_stack_loclist = RUtils.qf.get_current_history_qf(true)
-        table.insert(
-          parts,
-          string.format(
-            "  %d/%d 󱗿 %d/%d ",
-            index_loclist,
-            self.height,
-            current_stack_loclist,
-            self.stack_loclists
-          )
-        )
-      else
-        local index_qf = RUtils.qf.get_current_idx_qf()
-        local current_stack_qf = RUtils.qf.get_current_history_qf()
-        table.insert(
-          parts,
-          string.format("  %d/%d 󱗿 %d/%d ", index_qf, self.height, current_stack_qf, self.stack_qflists)
-        )
-      end
+      local stacklists = #RUtils.qf.get_total_stack_qf(RUtils.qf.is_loclist())
+      local current_stacklists = RUtils.qf.get_current_history_qf(RUtils.qf.is_loclist())
+      local idx_lists = RUtils.qf.get_current_idx_qf(RUtils.qf.is_loclist())
+      table.insert(
+        parts,
+        string.format("  %d/%d 󱗿 %d/%d ", idx_lists, self.height, current_stacklists, stacklists)
+      )
       return table.concat(parts, " ")
     end,
     hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block },

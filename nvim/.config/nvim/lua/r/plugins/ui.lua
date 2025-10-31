@@ -181,7 +181,6 @@ return {
   -- FOLD CYCLE
   {
     "jghauser/fold-cycle.nvim",
-    -- enabled = false,
     keys = {
       {
         "<c-t>",

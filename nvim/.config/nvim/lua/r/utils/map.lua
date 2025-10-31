@@ -5,6 +5,12 @@ local M = {
   lsp = {},
 }
 
+---@alias ModeKey "n" | "i" | "x" | "o" | "v"
+
+---@param mode ModeKey
+---@param lhs string
+---@param rhs string | function
+---@param opts vim.keymap.set.Opts
 local recursive_map = function(mode, lhs, rhs, opts)
   opts = opts or {}
   opts.remap = true
@@ -165,6 +171,7 @@ function M.has(buffer, method)
   end
   return false
 end
+
 ---@return LazyKeysLsp[]
 function M.resolve(buffer, spec_maps)
   local Keys = require "lazy.core.handler.keys"
@@ -184,6 +191,7 @@ function M.resolve(buffer, spec_maps)
   end
   return Keys.resolve(spec)
 end
+
 function M.on_attach(_, buffer, spec_maps)
   local Keys = require "lazy.core.handler.keys"
   local keymaps = M.resolve(buffer, spec_maps)
@@ -206,18 +214,13 @@ function M.on_attach(_, buffer, spec_maps)
   end
 end
 
-function M.type_no_escape(text)
-  vim.api.nvim_feedkeys(text, "n", false)
-end
-function M.type_escape(text)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(text, true, true, true), "n", false)
-end
 function M.escape(text, additional_char)
   if not additional_char then
     additional_char = ""
   end
   return vim.fn.escape(text, "/" .. additional_char)
 end
+
 function M.getVisualSelection()
   vim.cmd 'noau normal! "vy"'
   local text = vim.fn.getreg "v"
@@ -230,10 +233,33 @@ function M.getVisualSelection()
   end
 end
 
+---@param key string
+---@param mode? ModeKey
 function M.feedkey(key, mode)
+  mode = mode or "n"
+  if mode == "" then
+    mode = "n"
+  end
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+---@param key string
+function M.feedkey_with_no_escape(key)
+  vim.api.nvim_feedkeys(key, "n", false)
+end
+
+---@param cmd string
+function M.wrap_fold_cmd(cmd)
+  local _, err = pcall(function()
+    vim.cmd(cmd)
+  end)
+  if err and (string.match(err, "E490") or string.match(err, "No fold found")) then
+    RUtils.warn "No fold found"
+  end
+end
+
+---@param au_name string
+---@param tbl_ft table<string>
 function M.disable_ctrl_i_and_o(au_name, tbl_ft)
   local augroup = vim.api.nvim_create_augroup(au_name, { clear = true })
   vim.api.nvim_create_autocmd("FileType", {
@@ -246,20 +272,11 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
       vim.keymap.set("n", "<c-o>", "<Nop>", {
         buffer = vim.api.nvim_get_current_buf(),
       })
-
-      if vim.tbl_contains({ "Outline", "gitcommit" }, vim.bo.filetype) then
-        vim.keymap.set("n", "ss", "<Nop>", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-
-        vim.keymap.set("n", "sv", "<Nop>", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-      end
     end,
   })
 end
 
+---@param items {bufnr: integer, filename: string, lnum:integer}
 local function all_item_locations_equal(items)
   if #items == 0 then
     return false
@@ -273,8 +290,11 @@ local function all_item_locations_equal(items)
   return true
 end
 
-function M.lsp.wrap_location_method(yield, is_vsplit)
-  is_vsplit = is_vsplit or false
+---@param yield any
+---@param open_mode? "vsplit" | "split" | "newtab" | "none"
+function M.lsp.wrap_location_method(yield, open_mode)
+  open_mode = open_mode or "none"
+
   return function()
     local from = vim.fn.getpos "."
     yield {
@@ -286,8 +306,8 @@ function M.lsp.wrap_location_method(yield, is_vsplit)
           return
         end
 
-        if is_vsplit then
-          vim.cmd "vsplit"
+        if open_mode ~= "none" then
+          vim.cmd(open_mode)
         end
 
         if all_item_locations_equal(t.items) then
@@ -319,6 +339,8 @@ function M.lsp.wrap_location_method(yield, is_vsplit)
   end
 end
 
+---@param next integer
+---@param severity vim.diagnostic.Severity | nil
 function M.lsp.diagnostic_goto(next, severity)
   local go = next and 1 or -1
   severity = severity and vim.diagnostic.severity[severity] or nil
@@ -342,6 +364,144 @@ function M.lsp.toggle_words()
     notify_msg = "LSP Document Highlight: ON"
   end
   RUtils.info(notify_msg)
+end
+
+---@param is_next? boolean
+function M.go_prev_or_next_buffer(is_next)
+  is_next = is_next or false
+
+  local cmd_msg
+
+  if is_next then
+    cmd_msg = "bnext"
+  else
+    cmd_msg = "bprev"
+  end
+
+  vim.cmd(cmd_msg)
+end
+
+---@param winid number
+---@param f fun(): any
+---@return any
+local function win_call(winid, f)
+  if winid == 0 or winid == vim.api.nvim_get_current_win() then
+    return f()
+  else
+    return vim.api.nvim_win_call(winid, f)
+  end
+end
+
+local ft_disabled = { "neo-tree", "aerial" }
+
+---@param winid number
+---@param lnum number
+---@return number
+local function fold_closed(winid, lnum)
+  return win_call(winid, function()
+    return vim.fn.foldclosed(lnum)
+  end)
+end
+
+---@param is_jump_prev boolean
+---@param is_toggle boolean
+local function go_next_or_prev_fold(is_jump_prev, is_toggle)
+  is_toggle = is_toggle or false
+  local count = vim.v.count1
+  local cnt = 0
+  local lnum
+  if is_jump_prev then
+    local curLnum = vim.api.nvim_win_get_cursor(0)[1]
+    for i = curLnum - 1, 1, -1 do
+      if fold_closed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
+        end
+      end
+    end
+
+    if lnum then
+      vim.cmd "norm! m`"
+      vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+
+      if is_toggle then
+        if vim.fn.foldclosed(vim.fn.line ".") ~= -1 then
+          vim.cmd "normal! zMzvzz"
+        end
+      end
+    else
+      vim.cmd "norm! zk"
+    end
+  else
+    local curLnum = vim.api.nvim_win_get_cursor(0)[1]
+    local lineCount = vim.api.nvim_buf_line_count(0)
+    for i = curLnum + 1, lineCount do
+      if fold_closed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
+        end
+      end
+    end
+
+    if lnum then
+      vim.cmd "norm! m`"
+      vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+
+      if is_toggle then
+        if vim.fn.foldclosed(vim.fn.line ".") ~= -1 then
+          vim.cmd "normal! zMzvzz"
+        end
+      end
+    else
+      vim.cmd "norm! zj"
+    end
+  end
+end
+
+---@param is_jump_prev? boolean
+function M.magic_jump(is_jump_prev)
+  is_jump_prev = is_jump_prev or false
+
+  if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
+    if is_jump_prev then
+      return RUtils.map.feedkey("<c-p>", "n")
+    end
+    return RUtils.map.feedkey("<c-n>", "n")
+  end
+
+  if vim.wo.diff then
+    if is_jump_prev then
+      return RUtils.map.feedkey("[c", "n")
+    else
+      return RUtils.map.feedkey("]c", "n")
+    end
+  end
+
+  if vim.bo.filetype == "http" then
+    local ok, kulala = pcall(require, "kulala")
+    if not ok then
+      return
+    end
+
+    if is_jump_prev then
+      return kulala.jump_prev()
+    end
+
+    return kulala.jump_next()
+  end
+
+  if vim.bo[0].filetype == "markdown" then
+    if is_jump_prev then
+      return RUtils.markdown.go_to_heading(nil, {})
+    end
+    return RUtils.markdown.go_to_heading(nil)
+  end
+
+  go_next_or_prev_fold(is_jump_prev, false)
 end
 
 return M

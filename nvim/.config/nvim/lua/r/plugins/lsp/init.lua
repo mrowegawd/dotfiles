@@ -100,10 +100,12 @@ return {
               --  +----------------------------------------------------------+
               { "<Leader>ld",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition), has = "definition", desc = "LSP: definitions", },
               { "<Leader>lr", vim.lsp.buf.references, desc = "LSP: references", nowait = true },
-              { "<Leader>lI", vim.lsp.buf.implementation, desc = "LSP: goto implementation" },
+              { "<Leader>lI",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.type_definition, "vsplit"), desc = "LSP: goto definition" },
               { "<Leader>ly", vim.lsp.buf.type_definition, desc = "LSP: goto type Definition" },
               { "<Leader>lh", RUtils.map.lsp.toggle_words, desc = "LSP: toggle words references", },
-              { "<Leader>lD",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, true), has = "definition", desc = "LSP: definitions (vsplit)", },
+              { "<Leader>lD",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.implementation), desc = "LSP: goto implementation", },
+              { "<Leader>lv",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"), has = "definition", desc = "LSP: definitions (vsplit)", },
+              { "<Leader>ls",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"), has = "definition", desc = "LSP: definitions (split)", },
 
               { "<Leader>clf", function() Snacks.picker.lsp_config() end, desc = "LSP: LSP Info" },
 
@@ -389,6 +391,9 @@ return {
         { path = require("lazy.core.config").options.root .. "/lazy.nvim", words = { "LazyVim" } },
         -- { path = "LazyVim", words = { "LazyVim" } },
         -- { path = "snacks.nvim", words = { "Snacks" } },
+
+        --    tambahkan ini 👇
+        { path = "justinsgithub/wezterm-types", words = { "wezterm" } },
       },
     },
   },

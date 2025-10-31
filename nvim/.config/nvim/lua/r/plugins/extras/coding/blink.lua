@@ -190,10 +190,10 @@ return {
             function()
               local type = vim.fn.getcmdtype()
               if type == "/" or type == "?" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                return RUtils.map.feedkey "<C-Down>"
               end
               if type == ":" or type == "@" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                return RUtils.map.feedkey "<C-Down>"
               end
             end,
           },
@@ -201,10 +201,10 @@ return {
             function()
               local type = vim.fn.getcmdtype()
               if type == "/" or type == "?" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                return RUtils.map.feedkey "<C-Up>"
               end
               if type == ":" or type == "@" then
-                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                return RUtils.map.feedkey "<C-Up>"
               end
             end,
           },
@@ -213,10 +213,10 @@ return {
               if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                  return RUtils.map.feedkey "<C-Down>"
                 end
                 if type == ":" or type == "@" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                  return RUtils.map.feedkey "<C-Down>"
                 end
               else
                 cmp.select_next()
@@ -228,10 +228,10 @@ return {
               if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                  return RUtils.map.feedkey "<C-Up>"
                 end
                 if type == ":" or type == "@" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                  return RUtils.map.feedkey "<C-Up>"
                 end
               else
                 cmp.select_prev()
@@ -248,7 +248,7 @@ return {
             "cancel",
             function()
               if vim.fn.getcmdtype() ~= "" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+                return RUtils.map.feedkey "<C-c>"
               end
             end,
           },
@@ -348,7 +348,7 @@ return {
           "cancel",
           function()
             if vim.fn.getcmdtype() ~= "" then
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+              RUtils.map.feedkey "<C-c>"
             end
           end,
         },

@@ -32,31 +32,27 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 
 -- }}}
 -- {{{ Folds
-RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("<c-m>", "zM", { desc = "Fold: close all" }) -- <c-m> --> <c-enter>
-
-RUtils.map.nnoremap("<c-a>", "zMzv", { desc = "Fold: close all folds except the current one" })
-
-RUtils.map.nnoremap("<c-x>", function()
-  return RUtils.fold.cycle_fold_level()
+RUtils.map.nnoremap("zm", function()
+  RUtils.map.wrap_fold_cmd "normal! zM"
+end, { desc = "Fold: close all" })
+RUtils.map.nnoremap("<c-a>", function()
+  RUtils.map.wrap_fold_cmd "normal! zMzv"
+end, { desc = "Fold: toggle close all folds except the current one" })
+RUtils.map.nnoremap("<C-r>", function()
+  RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle level fold" })
-
-RUtils.map.nnoremap("zr", function()
-  return RUtils.fold.cycle_fold_level()
-end, { desc = "Fold: cycle level fold" })
-
 RUtils.map.nnoremap("zo", function()
-  vim.cmd "normal! zozz"
+  RUtils.map.wrap_fold_cmd "normal! zozz"
 end, { desc = "Fold: open and centering" })
 RUtils.map.nnoremap("zO", function()
-  vim.cmd "normal! zOzz"
+  RUtils.map.wrap_fold_cmd "normal! zOzz"
 end, { desc = "Fold: open and centering" })
 
 RUtils.map.nnoremap("<c-n>", function()
-  return RUtils.fold.magic_jump_qf_or_fold()
+  RUtils.map.magic_jump()
 end, { desc = "Fold: magic jump next fold/qf" })
 RUtils.map.nnoremap("<c-p>", function()
-  return RUtils.fold.magic_jump_qf_or_fold(true)
+  RUtils.map.magic_jump(true)
 end, { desc = "Fold: magic jump prev fold/qf" })
 -- }}}
 -- {{{ Terminal
@@ -153,17 +149,17 @@ end
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 
-RUtils.map.nnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J" })
-RUtils.map.xnoremap("<Leader>wj", arange_wins "J", { desc = "Window: wincmd J (visual)" })
+RUtils.map.nnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: wincmd J" })
+RUtils.map.xnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: wincmd J (visual)" })
 
-RUtils.map.nnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K" })
-RUtils.map.xnoremap("<Leader>wk", arange_wins "K", { desc = "Window: wincmd K (visual)" })
+RUtils.map.nnoremap("<Leader>wK", arange_wins "K", { desc = "Window: wincmd K" })
+RUtils.map.xnoremap("<Leader>wK", arange_wins "K", { desc = "Window: wincmd K (visual)" })
 
-RUtils.map.nnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H" })
-RUtils.map.xnoremap("<Leader>wh", arange_wins "H", { desc = "Window: wincmd H (visual)" })
+RUtils.map.nnoremap("<Leader>wH", arange_wins "H", { desc = "Window: wincmd H" })
+RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: wincmd H (visual)" })
 
-RUtils.map.nnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L" })
-RUtils.map.xnoremap("<Leader>wl", arange_wins "L", { desc = "Window: wincmd L (visual)" })
+RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: wincmd L" })
+RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: wincmd L (visual)" })
 
 local function jump_back_to_back_windows()
   local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
@@ -183,8 +179,8 @@ local function jump_back_to_back_windows()
   end
 end
 
-RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
-RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to or from spesific window" })
+RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump back to back spesific window" })
+RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump back to back spesific window" })
 
 if not RUtils.has "smart-splits.nvim" then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: increase window height" })
@@ -263,12 +259,12 @@ RUtils.map.nnoremap("<Leader>bO", function()
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
 end, { desc = "Buffer: delete all other buffers" })
-RUtils.map.nnoremap("gh", function()
-  return RUtils.fold.magic_nextprev_list_qf_or_buf(true)
-end, { desc = "Buffer: magic gh (qf)" })
 RUtils.map.nnoremap("gl", function()
-  return RUtils.fold.magic_nextprev_list_qf_or_buf()
-end, { desc = "Buffer: magic gl (qf)" })
+  RUtils.map.go_prev_or_next_buffer(true)
+end, { desc = "Buffer: go next" })
+RUtils.map.nnoremap("gh", function()
+  RUtils.map.go_prev_or_next_buffer()
+end, { desc = "Buffer: go prev" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 -- RUtils.map.nnoremap("<Leader>R", function()
@@ -447,32 +443,32 @@ end, { desc = "Misc: printout current path" })
 local function replace_keymap(confirmation, visual)
   confirmation = confirmation or false
   visual = visual or false
-  local text = [[:%s/]]
+  local key = [[:%s/]]
   local search_string = ""
   if visual then
     search_string = RUtils.map.getVisualSelection()
   else
-    text = text .. [[\<]]
+    key = key .. [[\<]]
     search_string = vim.fn.expand "<cword>"
   end
-  text = text .. RUtils.map.escape(search_string, "[]")
+  key = key .. RUtils.map.escape(search_string, "[]")
   if not visual then
-    text = text .. [[\>]]
+    key = key .. [[\>]]
   end
-  text = text .. "/" .. RUtils.map.escape(search_string, "&")
+  key = key .. "/" .. RUtils.map.escape(search_string, "&")
   if confirmation then
-    text = text .. [[/gcI]]
+    key = key .. [[/gcI]]
   else
-    text = text .. [[/gI]]
+    key = key .. [[/gI]]
   end
-  RUtils.map.type_no_escape(text)
+  RUtils.map.feedkey(key)
 
   if not_vscode() then
-    local move_text = [[<Left><Left><Left>]]
+    local key_move = [[<Left><Left><Left>]]
     if confirmation then
-      move_text = move_text .. [[<Left>]]
+      key_move = key_move .. [[<Left>]]
     end
-    RUtils.map.type_escape(move_text)
+    RUtils.map.feedkey(key_move)
   end
 end
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: Search and replace under cursor" })
@@ -591,7 +587,7 @@ Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 -- Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
 -- Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
 -- Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
-Snacks.toggle.zoom():map "<Leader>wm"
+Snacks.toggle.zoom():map "<a-m>"
 Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.diagnostics():map "<Leader>ud"
 Snacks.toggle.treesitter():map "<Leader>uT"
@@ -647,10 +643,10 @@ RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
 
-vim.api.nvim_create_user_command("Cfilter", function(opts)
-  vim.cmd.packadd "cfilter"
-  vim.cmd.Cfilter { args = opts.fargs, bang = opts.bang }
-end, { force = true, bang = true, nargs = "*" })
+-- vim.api.nvim_create_user_command("Cfilter", function(opts)
+--   vim.cmd.packadd "cfilter"
+--   vim.cmd.Cfilter { args = opts.fargs, bang = opts.bang }
+-- end, { force = true, bang = true, nargs = "*" })
 -- }}}
 -- {{{ Bulk commands
 -- These commands run outside tmux
@@ -694,7 +690,7 @@ RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
 RUtils.map.xnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
-  RUtils.fzflua.open_cmd_bulk({
+  local cmds = {
     ["Qf - Load qf/lf list"] = function()
       cmd "LoadQf"
     end,
@@ -727,7 +723,21 @@ local bulk_cmd_misc = function()
         os.execute(encodedURL)
       end
     end,
-  }, { winopts = { title = "Bulk Misc" } })
+  }
+
+  if RUtils.has "candela.nvim" then
+    cmds["Candela - Add color for log highlights"] = function()
+      if not vim.tbl_contains({ "log", "bigfile" }, vim.bo.filetype) then
+        RUtils.warn "Not log file!"
+        return
+      end
+
+      local CandelaUi = require "candela.ui"
+      CandelaUi.toggle()
+    end
+  end
+
+  RUtils.fzflua.open_cmd_bulk(cmds, { winopts = { title = "Bulk Misc" } })
 end
 
 RUtils.map.nnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })

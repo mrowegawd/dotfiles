@@ -134,11 +134,11 @@ return {
   -- { key = "v", mods = "LEADER", action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
   -- { key = "R", mods = "ALT", action = wezterm.action({ ActivatePaneDirection = "Next" }) },
   { -- rotate pane
-    key = "R",
-    mods = mod_key,
+    key = "r",
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "R", mods = mod_key } }, pane)
+        window:perform_action({ SendKey = { key = "r", mods = "ALT" } }, pane)
       else
         window:perform_action(wezterm.action.RotatePanes "Clockwise", pane)
       end
@@ -309,13 +309,13 @@ return {
   --   end),
   -- },
   { -- reset pane size
-    key = "w",
-    mods = mod_key,
+    key = "0",
+    mods = "ALT",
     action = wezterm.action_callback(function(window, pane)
       if KeymapUtil.is_in_tmux(pane) then
-        window:perform_action({ SendKey = { key = "w", mods = mod_key } }, pane)
+        window:perform_action({ SendKey = { key = "w", mods = "ALT" } }, pane)
       else
-        window:toast_notification("wezterm", "Reset pane size: this feature is not implemented yet", nil, 4000)
+        window:toast_notification("wezterm", "Reset size: not implemented yet", nil, 4000)
         -- window:perform_action(act.ShowTabNavigator, pane)
         -- local panes = pane:tab():panes_with_info()
         -- panes[#panes].pane:activate()

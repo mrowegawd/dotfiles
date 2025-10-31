@@ -119,6 +119,7 @@ return {
           string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/qfbookmark/**/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = string.format("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {

@@ -19,58 +19,6 @@ local fzf_lua = function()
   return RUtils.cmd.reqcall "fzf-lua"
 end
 
--- Func untuk mengatasi error `no room enaough` saat open split/vsplit pada qf item,
--- jadi dibutuhkan expand window height jika itu terjadi.
-local open_split_or_vsplit = function(vsp_or_sp)
-  if vim.bo.buftype ~= "quickfix" then
-    vim.notify("Sorry, you are not in the qf window!", vim.log.levels.WARN)
-    return
-  end
-
-  local increase_by_multiple = 3
-  local is_split = vsp_or_sp == "split"
-  -- local split_or_vsplit = is_split and "aboveleft split" or "topleft vsplit"
-
-  local qf_win = api.nvim_get_current_win()
-  local original_height = api.nvim_win_get_height(qf_win)
-
-  if original_height < 50 then
-    if original_height == 2 or original_height == 1 then
-      original_height = 6
-    end
-    api.nvim_win_set_height(qf_win, original_height * increase_by_multiple)
-  end
-
-  if is_split then
-    RUtils.map.feedkey("<C-W><CR>", "n")
-  else
-    RUtils.map.feedkey("<C-W><CR><C-W>Lzz", "n")
-  end
-
-  -- Ensure that it returns to the original QF height
-  vim.defer_fn(function()
-    if api.nvim_win_is_valid(qf_win) then
-      api.nvim_win_set_height(qf_win, original_height)
-    end
-  end, 10)
-end
-
-keymap.set("n", "<C-s>", function()
-  open_split_or_vsplit "split"
-end, { buffer = api.nvim_get_current_buf() })
-
-keymap.set("n", "<Leader>ws", function()
-  open_split_or_vsplit "split"
-end, { buffer = api.nvim_get_current_buf() })
-
-keymap.set("n", "<C-v>", function()
-  open_split_or_vsplit "vsplit"
-end, { buffer = api.nvim_get_current_buf() })
-
-keymap.set("n", "<Leader>wv", function()
-  open_split_or_vsplit "vsplit"
-end, { buffer = api.nvim_get_current_buf() })
-
 local __get_vars = {
   title_list = function()
     if RUtils.qf.is_loclist() then
@@ -94,68 +42,6 @@ local get_items_list = function()
   local results = RUtils.qf.get_data_qf()
   return results.quickfix.items
 end
-
-vim.keymap.set("v", "<c-v>", function()
-  local items = get_items_list()
-
-  -- local from, to = vim.fn.line ".", vim.fn.line "v"
-  local from, to = vim.fn.line ".", vim.fn.line "v"
-  if from > to then
-    from, to = to, from
-  end
-
-  for i = from, to do
-    local item = items[i]
-    if item then
-      vim.cmd [[wincmd p]]
-
-      local filename = item.filename
-
-      -- buka lewat dgn tabnew
-      -- vim.cmd("tabnew " .. filename)
-
-      -- atau vertical split
-      vim.cmd("vsp " .. filename)
-    end
-  end
-
-  vim.cmd [[wincmd =]]
-end, { buffer = vim.api.nvim_get_current_buf() })
-
-keymap.set("n", "o", function()
-  if RUtils.qf.is_loclist() then
-    RUtils.map.feedkey("<CR>", "n")
-    vim.schedule(function()
-      local folded_line = vim.fn.foldclosed(vim.fn.line ".")
-      if folded_line ~= -1 then
-        vim.cmd "normal! zvzz" -- buka fold
-        return
-      end
-      vim.cmd "normal! zz"
-    end)
-    return
-  end
-
-  RUtils.fold.handle_qf_open(true, "only", true)
-end, {
-  buffer = api.nvim_get_current_buf(),
-  desc = "QF: open item",
-})
-
--- keymap.set("n", "<CR>", function()
---   RUtils.map.feedkey("<CR>", "n")
---   vim.schedule(function()
---     local folded_line = vim.fn.foldclosed(vim.fn.line ".")
---     if folded_line ~= -1 then
---       vim.cmd "normal! zvzz" -- buka fold
---       return
---     end
---     vim.cmd "normal! zz"
---   end)
--- end, {
---   buffer = api.nvim_get_current_buf(),
---   desc = "QF: open item",
--- })
 
 keymap.set("n", "<Leader>ff", function()
   local actions = require "fzf-lua.actions"
@@ -237,46 +123,6 @@ keymap.set("n", "<Leader>fg", function()
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: live grep list of items [fzflua]",
-})
-
-keymap.set("n", "L", function()
-  local _qf = RUtils.cmd.windows_is_opened { "qf" }
-  if _qf.found then
-    if not RUtils.qf.is_loclist() then
-      vim.cmd "cclose"
-      local title = RUtils.qf.get_title_qf()
-      local results = RUtils.qf.get_data_qf()
-      if #results.quickfix.items > 0 then
-        RUtils.qf.save_to_qf_and_auto_open_qf(results.quickfix.items, title, true)
-      end
-      return
-    end
-    vim.cmd "lclose"
-  end
-  vim.cmd "Trouble loclist toggle focus=true"
-end, {
-  buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert loclist into trouble or quickfix",
-})
-
-keymap.set("n", "Q", function()
-  local _qf = RUtils.cmd.windows_is_opened { "qf" }
-  if _qf.found then
-    if RUtils.qf.is_loclist() then
-      vim.cmd "lclose"
-      local title = RUtils.qf.get_title_qf(true)
-      local results = RUtils.qf.get_data_qf(true)
-      if #results.location.items > 0 then
-        RUtils.qf.save_to_qf_and_auto_open_qf(results.location.items, title)
-      end
-      return
-    end
-    vim.cmd "cclose"
-  end
-  vim.cmd "Trouble quickfix toggle focus=true"
-end, {
-  buffer = api.nvim_get_current_buf(),
-  desc = "QF: convert qf into trouble or loclist",
 })
 
 keymap.set("n", "<Leader>fw", function()

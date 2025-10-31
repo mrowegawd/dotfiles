@@ -75,6 +75,7 @@ return {
           },
 
           { "<Localleader>a", group = "note" },
+          { "<Localleader>g", group = "+GrepEnchanted" },
           { "<Localleader>af", group = "find" },
           { "<Localleader>afg", group = "orgmode/obsidian" },
 

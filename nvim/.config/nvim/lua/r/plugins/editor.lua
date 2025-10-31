@@ -74,56 +74,39 @@ return {
       },
     },
   },
-  -- CANDELA
+  -- CANDELA: HIGHLIGHTS FOR STRING REGEX IN LOG FILE
   {
     "KieranCanter/candela.nvim",
     cmd = "Candela",
-    -- keys = {
-    --   {
-    --     "<Leader>of",
-    --     function()
-    --       local misc_cmds = {
-    --         ["CandelaUI - Open CandelaUI"] = function()
-    --           vim.cmd [[<Plug>CandelaUI]]
-    --         end,
-    --         -- ["LSP - Organizer Imports"] = function()
-    --         --   vim.cmd [[TSToolsOrganizeImports]]
-    --         -- end,
-    --         -- ["LSP - Short Imports"] = function()
-    --         --   vim.cmd [[TSToolsSortImports]]
-    --         -- end,
-    --         -- ["LSP - Remove Unused imports"] = function()
-    --         --   vim.cmd [[TSToolsRemoveUnusedImports]]
-    --         -- end,
-    --         -- ["Eslint - Fix all"] = function()
-    --         --   vim.cmd [[TSToolsFixAll]]
-    --         -- end,
-    --         -- ["LSP - Check missing imports"] = function()
-    --         --   vim.cmd [[TSToolsAddMissingImports]]
-    --         -- end,
-    --       }
-    --
-    --       RUtils.fzflua.open_cmd_bulk(misc_cmds, { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } })
-    --     end,
-    --     ft = { "log", "bigfile" },
-    --     desc = "Bulk: LSP cmds",
-    --   },
-    -- },
     opts = {},
   },
   -- GRUG-FAR.NVIM
   {
     "MagicDuck/grug-far.nvim",
-    cmd = { "GrugFar", "GrugFarWithin" },
+    cmd = { "GrugFar" },
     dependencies = { "mrjones2014/smart-splits.nvim" },
     keys = {
       {
-        "<Leader>oF",
-        "<CMD>GrugFar<CR>",
-        desc = "Open: grug far [grugfar]",
+        "<Localleader>gb",
+        function()
+          local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
+          local grug = require "grug-far"
+          grug.open {
+            prefills = {
+              search = "",
+              replacement = "",
+              filesFilter = "",
+              flags = "",
+              paths = path,
+            },
+            -- instanceName = "far",
+            staticTitle = "Find and Replace",
+          }
+        end,
+        desc = "GrepEnchanted: grug far [grugfar]",
       },
       {
-        "<Leader>oF",
+        "<Localleader>gg",
         function()
           local grug = require "grug-far"
           local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"
@@ -131,14 +114,16 @@ return {
             transient = true,
             prefills = {
               filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+              flags = "--hidden",
             },
           }
         end,
-        mode = { "n", "x" },
-        desc = "Open: grug far (visual) [grugfar]",
+        mode = { "x", "n" },
+        desc = "GrepEnchanted: grug far (normal or visual) [grugfar]",
       },
     },
     opts = {
+      smartInputHandling = false,
       keymaps = {
         replace = { n = "<c-c>" },
         qflist = { n = "<c-q>" },
@@ -378,6 +363,36 @@ return {
           "!node_modules/**",
           "-g",
           "!.git/**",
+        },
+      },
+    },
+  },
+  -- ATONE.NVIM -> UNDOTREE
+  {
+    "XXiaoA/atone.nvim",
+    cmd = "Atone",
+    keys = {
+      {
+        "<Leader>ou",
+        "<CMD>Atone toggle<CR>",
+        desc = "Open: undotree [atone.nvim]",
+      },
+    },
+    opts = {
+      keymaps = {
+        tree = {
+          quit = { "<C-c>", "q" },
+          next_node = "j", -- support v:count
+          pre_node = "k", -- support v:count
+          undo_to = "<CR>",
+          help = { "?", "g?" },
+        },
+        auto_diff = {
+          quit = { "<C-c>", "q" },
+          help = { "?", "g?" },
+        },
+        help = {
+          quit_help = { "<C-c>", "q" },
         },
       },
     },

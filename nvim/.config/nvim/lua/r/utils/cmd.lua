@@ -479,7 +479,7 @@ function M.get_visual_selection(opts)
       cscol, cecol = 0, 999
     end
     -- exit visual mode
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+    RUtils.map.feedkey "<Esc>"
   else
     -- otherwise, use the last known visual position
     _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
@@ -1059,6 +1059,9 @@ function M.edit_snippet()
   end)
 end
 
+---@param contents string | table
+---@param path string
+---@param is_theme boolean
 function M.send_to_file(contents, path, is_theme)
   path = path or "/tmp/master-colors-themes"
   is_theme = is_theme or false
@@ -1117,7 +1120,8 @@ function M.change_colors()
   local tab_session_fg = H.get("WinBarRightBlock", "fg")
   local tab_session_bg = H.get("WinBarRightBlock", "bg")
 
-  local tab_active_fg = H.darken(H.get("WinBarRightBlock", "fg"), 0.6, H.get("Normal", "bg"))
+  -- local tab_active_fg = H.darken(H.get("WinBarRightBlock", "fg"), 0.6, H.get("Normal", "bg"))
+  local tab_active_fg = H.get("Normal", "fg")
   local tab_active_bg = H.darken(H.get("WinBarRightBlock", "bg"), 0.7, H.get("Normal", "bg"))
 
   -- Inactive Tab
