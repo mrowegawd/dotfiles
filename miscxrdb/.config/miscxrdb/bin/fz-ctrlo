@@ -7,15 +7,13 @@ set -uo pipefail
 # ╰──────────────────────────────────────────────────────────╯
 
 # COL_STATUSLINE_BG_MESSAGE="yellow"
-COL_TAB_ACTIVE_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+COL_TAB_ACTIVE_FG=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
 COL_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+COL_RED=$(xrdb -query | grep -i 'color9:' | cut -d':' -f2 | xargs)
 
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  # COL_STATUSLINE_BG_MESSAGE=$(grep -i STATUSLINE_BG_MESSAGE <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  COL_TAB_ACTIVE_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COL_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  # COL_FG=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COL_RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
@@ -587,6 +585,11 @@ tmux_create_sess() {
   notify-send "create new session and detach --> $ss_name"
 }
 
+tmux_clear_main_id_workspace() {
+  rm /tmp/tmux-toggle-pane-*
+  dunstify "Cleared tmux main IDs"
+}
+
 #  +----------------------------------------------------------+
 #  |                         MENULIST                         |
 #  +----------------------------------------------------------+
@@ -606,6 +609,7 @@ callme() {
  tmux: select session
  tmux: capture pane
  tmux: capture pane with files
+ tmux: clear main pane id
 󰭲 rkill
  multilog
 󰎕 news
@@ -635,8 +639,10 @@ EOF
   "tmux: toggle synchronize panes") tmux_toggle_synchronize_panes ;;
   "tmux: capture pane") capture_pane ;;
   "tmux: capture pane with files") capture_pane_and_save_to_file ;;
+  "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
+
   "news") open_newsboat ;;
   *) exit ;;
   esac
