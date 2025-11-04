@@ -37,6 +37,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field uisec r.utils.uisec
 ---@field windowdim r.utils.windowdim
 ---@field hover_eldoc r.utils.hover_eldoc
+---@field logo r.utils.logo
 local M = {}
 M.deprecated = require "r.utils.depcreated"
 
@@ -380,6 +381,256 @@ function M.set_default(option, value)
 
   vim.api.nvim_set_option_value(option, value, { scope = "local" })
   return true
+end
+
+---@return string
+function M.get_lines_under_cusor()
+  return vim.fn.expand "<cWORD>"
+end
+
+---@return { pos: integer, col: integer, line: string, buf: integer} | nil
+function M.get_curpos_under_cursor()
+  local pos, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local line = vim.api.nvim_get_current_line()
+  local buf = vim.api.nvim_get_current_buf()
+  return { pos = pos, col = col, line = line, buf = buf }
+end
+
+---@param name_opt string
+---@param scope? string
+function M.get_option(name_opt, scope)
+  scope = scope or "local"
+  return vim.api.nvim_get_option_value(name_opt, { scope = scope })
+end
+
+---@param callback function
+---@param tbl table
+function M.foreach(callback, tbl)
+  for k, v in pairs(tbl) do
+    callback(v, k)
+  end
+end
+
+---@param tbl table
+---@param element any
+---@return boolean
+function M.check_tbl_element(tbl, element)
+  for _, x in pairs(tbl) do
+    if x == element then
+      return true
+    end
+  end
+  return false
+end
+
+---@param old_tbl table
+---@return table
+function M.remove_duplicates_table(old_tbl)
+  local new_tbl = {}
+  for _, element in pairs(old_tbl) do
+    if not M.check_tbl_element(new_tbl, element) then
+      table.insert(new_tbl, element)
+    end
+  end
+
+  return new_tbl
+end
+
+---@param str string
+---@return string
+function M.rstrip_whitespace(str)
+  str = string.gsub(str, "%s+$", "")
+  return str
+end
+
+---@param str string
+---@param limit? integer
+---@return string
+function M.lstrip_whitespace(str, limit)
+  if limit ~= nil then
+    local num_found = 0
+    while num_found < limit do
+      str = string.gsub(str, "^%s", "")
+      num_found = num_found + 1
+    end
+  else
+    str = string.gsub(str, "^%s+", "")
+  end
+  return str
+end
+
+---@param str string
+---@return string
+function M.strip_whitespaces(str)
+  if str then
+    return M.rstrip_whitespace(M.lstrip_whitespace(str))
+  end
+  return ""
+end
+
+---@param tbl table
+---@param delimiter string
+---@return string
+function M.tryjoin_table_with_delimeter(tbl, delimiter)
+  delimiter = delimiter or ""
+  local result = ""
+  local len = #tbl
+  for i, item in ipairs(tbl) do
+    if i == len then
+      result = result .. item
+    else
+      result = result .. item .. delimiter
+    end
+  end
+  return result
+end
+
+---@param command string
+---@param on_stdout function
+function M.run_jobstart(command, on_stdout)
+  vim.fn.jobstart(command, {
+    on_stdout = on_stdout,
+    on_stderr = on_stdout,
+    stdout_buffered = false,
+    stderr_buffered = false,
+  })
+end
+
+---@param item any
+---@return any
+function M.falsy(item)
+  if not item then
+    return true
+  end
+  local item_type = type(item)
+  if item_type == "boolean" then
+    return not item
+  end
+  if item_type == "string" then
+    return item == ""
+  end
+  if item_type == "number" then
+    return item <= 0
+  end
+  if item_type == "table" then
+    return vim.tbl_isempty(item)
+  end
+  return item ~= nil
+end
+
+---@param name string
+---@param rhs string | function
+---@param opts?  vim.api.keyset.user_command
+function M.create_command(name, rhs, opts)
+  opts = opts or {}
+  vim.api.nvim_create_user_command(name, rhs, opts)
+end
+
+---@param opts? { strict: boolean }
+---@return { line: string, selection: string, csrow: integer, cscol: integer, cerow:integer, cecol: integer } | nil
+function M.get_visual_selection(opts)
+  -- vim.cmd 'noau normal! "vy"'
+  -- local text = vim.fn.getreg "v"
+  -- vim.fn.setreg("v", {})
+  -- text = string.gsub(text, "\n", "")
+  -- if #text > 0 then
+  --   return text
+  -- else
+  --   return ""
+  -- end
+
+  opts = opts or {}
+  -- Adapted from fzf-lua:
+  -- https://github.com/ibhagwan/fzf-lua/blob/6ee73fdf2a79bbd74ec56d980262e29993b46f2b/lua/fzf-lua/utils.lua#L434-L466
+  -- this will exit visual mode
+  -- use 'gv' to reselect the text
+  local _, csrow, cscol, cerow, cecol
+  local mode = vim.fn.mode()
+  if opts.strict and not vim.endswith(string.lower(mode), "v") then
+    return
+  end
+
+  if mode == "v" or mode == "V" or mode == "" then
+    -- if we are in visual mode use the live position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos ".")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "v")
+    if mode == "V" then
+      -- visual line doesn't provide columns
+      cscol, cecol = 0, 999
+    end
+    -- exit visual mode
+    RUtils.map.feedkey "<Esc>"
+  else
+    -- otherwise, use the last known visual position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "'>")
+  end
+
+  -- Swap vars if needed
+  if cerow < csrow then
+    csrow, cerow = cerow, csrow
+    cscol, cecol = cecol, cscol
+  elseif cerow == csrow and cecol < cscol then
+    cscol, cecol = cecol, cscol
+  end
+
+  local lines = vim.fn.getline(csrow, cerow)
+  assert(type(lines) == "table")
+  if vim.tbl_isempty(lines) then
+    return
+  end
+
+  -- When the whole line is selected via visual line mode ("V"), cscol / cecol will be equal to "v:maxcol"
+  -- for some odd reason. So change that to what they should be here. See ':h getpos' for more info.
+  local maxcol = vim.api.nvim_get_vvar "maxcol"
+  if cscol == maxcol then
+    cscol = string.len(lines[1])
+  end
+  if cecol == maxcol then
+    cecol = string.len(lines[#lines])
+  end
+
+  ---@type string
+  local selection
+  local n = #lines
+  if n <= 0 then
+    selection = ""
+  elseif n == 1 then
+    selection = string.sub(lines[1], cscol, cecol)
+  elseif n == 2 then
+    selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
+  else
+    selection = string.sub(lines[1], cscol)
+      .. "\n"
+      .. table.concat(lines, "\n", 2, n - 1)
+      .. "\n"
+      .. string.sub(lines[n], 1, cecol)
+  end
+
+  return {
+    lines = lines,
+    selection = selection,
+    csrow = csrow,
+    cscol = cscol,
+    cerow = cerow,
+    cecol = cecol,
+  }
+end
+
+--- Executes a command and returns the output
+--- @param command string
+--- @return string returns empty string upon error
+M.execute_io_open = function(command)
+  local handle = io.popen(command)
+
+  if handle == nil then
+    return ""
+  end
+
+  local output = handle:read "*a"
+  handle:close()
+
+  return output
 end
 
 return M

@@ -2438,7 +2438,7 @@ local function user_highlights()
   colorscheme_overrides()
 end
 
-RUtils.cmd.augroup("UserHighlights", {
+RUtils.map.augroup("UserHighlights", {
   event = "ColorScheme",
   command = function()
     user_highlights()

@@ -66,11 +66,13 @@ rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 --   return fences % 2 == 1
 -- end
 
+---@param path string
 local find_first_code_block_line = function(path)
   path = vim.fn.expand(path)
 
   local file = io.open(path, "r")
   if not file then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.warn("Gagal membuka file: " .. path)
     return nil
   end
@@ -94,7 +96,7 @@ end
 local function format_data_tags(tag_data)
   -- Clean the string if it contains an integer; we will remove it.
   local tag_name = string.gsub(tag_data.lines.text, '"(%d+)"', "%1")
-  tag_name = RUtils.cmd.strip_whitespace(string.gsub(tag_name, "-%s", ""))
+  tag_name = RUtils.strip_whitespaces(string.gsub(tag_name, "-%s", ""))
 
   return {
     title = tag_data.title or "",
@@ -107,7 +109,7 @@ end
 local function format_tag_text(data_tag)
   local line = string.gsub(data_tag.lines.text, '\\"', "")
   line = string.gsub(line, "-%s", "") -- remove strip '- tags'
-  return RUtils.cmd.strip_whitespace(line)
+  return RUtils.strip_whitespaces(line)
 end
 
 local function format_title_tag(data_tag)
@@ -118,7 +120,7 @@ local function format_title_tag(data_tag)
 
   if code_block_founded and code_block_founded > data_tag.line_number then
     return {
-      title = RUtils.cmd.strip_whitespace(line),
+      title = RUtils.strip_whitespaces(line),
       line_number = data_tag.line_number,
       path = data_tag.path.text,
     }
@@ -253,7 +255,7 @@ local function collect_all_tags_async(data, cb, is_for_tags)
   coroutine.wrap(function()
     local co = coroutine.running()
 
-    RUtils.cmd.run_jobstart(msg_cmds, function(_, dataout, event)
+    RUtils.run_jobstart(msg_cmds, function(_, dataout, event)
       if event == "stdout" then
         if dataout and #dataout > 0 then
           for _, line in ipairs(dataout) do
@@ -318,7 +320,7 @@ local function collect_all_tags_async(data, cb, is_for_tags)
     until ret ~= 0
 
     if #data_tags_out > 0 then
-      local data_tags = RUtils.cmd.remove_duplicates_tbl(data_tags_out)
+      local data_tags = RUtils.remove_duplicates_table(data_tags_out)
 
       if is_for_tags then
         for _, x in pairs(data_tags) do
@@ -343,7 +345,7 @@ local function format_prompt_strings(msg)
     local tags = "[" .. table.concat(insert_tags, ", ") .. "]"
     title_fzf = string.format("%s > %s", title_fzf, tags)
   end
-  return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
+  return RUtils.fzflua.format_title(title_fzf, RUtils.strip_whitespaces(RUtils.config.icons.misc.tag))
 end
 
 local function processed_dataout(contents)
@@ -488,7 +490,7 @@ local function picker(contents, actions, opts)
         sel = vim.split(sel, " ")
 
         table.insert(insert_tags, sel[1])
-        insert_tags = RUtils.cmd.remove_duplicates_tbl(insert_tags)
+        insert_tags = RUtils.remove_duplicates_table(insert_tags)
 
         ---@diagnostic disable-next-line: undefined-field
         RUtils.info("Add tag: " .. vim.inspect(insert_tags), { title = "Markdown" })
@@ -597,7 +599,7 @@ local function list_tags_async(all_tags, is_set)
     coroutine.wrap(function()
       local co = coroutine.running()
 
-      RUtils.cmd.run_jobstart(msg_cmd, function(_, dataout, event)
+      RUtils.run_jobstart(msg_cmd, function(_, dataout, event)
         local entries_data = {}
 
         if event == "stdout" then
@@ -682,7 +684,7 @@ function M.find_note_by_tag(data, is_set, is_for_tags)
 
   if vim.tbl_isempty(tags) then
     -- Check for visual selection.
-    local viz = RUtils.cmd.get_visual_selection { strict = true }
+    local viz = RUtils.get_visual_selection { strict = true }
     if viz and #viz.lines == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
       local tag = viz.selection
 

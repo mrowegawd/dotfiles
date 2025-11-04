@@ -1,18 +1,9 @@
 local cmd = vim.cmd
 
----- Only show cursorline in the current window and save last visited window id
-local cline_acg = vim.api.nvim_create_augroup("cline", { clear = true })
-vim.api.nvim_create_autocmd("WinLeave", {
-  group = cline_acg,
-  callback = function()
-    _G.LastWinId = vim.fn.win_getid()
-  end,
-})
-
 ---------------------------------
 -- LSP
 ---------------------------------
-RUtils.cmd.augroup("LSPUserBehaviour", {
+RUtils.map.augroup("LSPUserBehaviour", {
   event = "LspDetach",
   command = function(event)
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -37,12 +28,23 @@ RUtils.cmd.augroup("LSPUserBehaviour", {
       client:stop()
     end
   end,
+}, {
+  event = "BufReadPre",
+  pattern = {
+    "*/node_modules/*",
+    "*/.venv/*",
+  },
+  desc = "Disable inlay hint file patterns",
+  command = function()
+    local inlay_hint = vim.lsp.inlay_hint
+    inlay_hint.enable(false, inlay_hint.get { bufnr = 0 })
+  end,
 })
 
 ---------------------------------
 -- BUFFER MAPPING
 ---------------------------------
-RUtils.cmd.augroup("SmartClose", {
+RUtils.map.augroup("SmartClose", {
   event = "FileType",
   pattern = {
     "DressingSelect",
@@ -102,7 +104,7 @@ RUtils.cmd.augroup("SmartClose", {
 ---------------------------------
 -- WINDOW
 ---------------------------------
-RUtils.cmd.augroup("WindowBehaviour", {
+RUtils.map.augroup("WindowBehaviour", {
   event = "FileType",
   pattern = {
     "orgagenda",
@@ -120,6 +122,20 @@ RUtils.cmd.augroup("WindowBehaviour", {
       cmd [[resize 20]]
     end
   end,
+}, {
+  event = "WinLeave",
+  command = function()
+    _G.LastWinId = vim.fn.win_getid()
+  end,
+  desc = "Only show cursorline in the current window and save last visited window id",
+}, {
+  event = { "QuitPre", "BufDelete" },
+  command = function()
+    if vim.bo.filetype ~= "qf" then
+      vim.cmd.lclose { mods = { silent = true } }
+    end
+  end,
+  desc = "Auto-close loclist when quitting a window",
 }, {
   event = "FileType",
   pattern = { "gitcommit", "NeogitCommitMessage", "orgagenda" },
@@ -160,7 +176,7 @@ RUtils.cmd.augroup("WindowBehaviour", {
 
 local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
 
-RUtils.cmd.augroup("AutoFoldOnBufferEvents", {
+RUtils.map.augroup("AutoFoldOnBufferEvents", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",
   command = function(event)
@@ -170,7 +186,7 @@ RUtils.cmd.augroup("AutoFoldOnBufferEvents", {
   end,
 })
 
-RUtils.cmd.augroup("WindowDim", {
+RUtils.map.augroup("WindowDim", {
   event = { "BufRead" },
   pattern = { "*" },
   command = function()
@@ -228,7 +244,7 @@ RUtils.cmd.augroup("WindowDim", {
 ---------------------------------
 -- MISC
 ---------------------------------
-RUtils.cmd.augroup("WrapFiletype", {
+RUtils.map.augroup("WrapFiletype", {
   event = "FileType",
   pattern = { "typescriptreact", "typescript" },
   command = function()
@@ -245,7 +261,7 @@ RUtils.cmd.augroup("WrapFiletype", {
   end,
 })
 
-RUtils.cmd.augroup("DisableJsonConceal", {
+RUtils.map.augroup("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
   command = function()
@@ -253,7 +269,7 @@ RUtils.cmd.augroup("DisableJsonConceal", {
   end,
 })
 
-RUtils.cmd.augroup("TextYankHighlight", {
+RUtils.map.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
     (vim.hl or vim.highlight).on_yank {
@@ -264,7 +280,7 @@ RUtils.cmd.augroup("TextYankHighlight", {
   end,
 })
 
-RUtils.cmd.augroup("LocateLastPosition", {
+RUtils.map.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
   command = function(event)
@@ -281,11 +297,11 @@ RUtils.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-RUtils.cmd.augroup("CheckOutsideTime", {
+RUtils.map.augroup("CheckOutsideTime", {
   event = { "FocusGained", "TermClose", "TermLeave" },
   pattern = "*",
   command = function()
-    if vim.fn.getcmdwintype() == "" then
+    if vim.o.buftype ~= "nofile" then
       vim.cmd "checktime"
     end
   end,
@@ -300,7 +316,7 @@ RUtils.cmd.augroup("CheckOutsideTime", {
   end,
 })
 
-RUtils.cmd.augroup("GetErrorMessageNvimWhenQuit", {
+RUtils.map.augroup("GetErrorMessageNvimWhenQuit", {
   -- To check error when quit from nvim, commented when you not using it
   -- https://www.reddit.com/r/neovim/comments/10magvp/how_to_see_messages_that_are_displayed_when
   event = "VimLeave",
@@ -310,7 +326,7 @@ RUtils.cmd.augroup("GetErrorMessageNvimWhenQuit", {
   end,
 })
 
-RUtils.cmd.augroup("OpenFileImages", {
+RUtils.map.augroup("OpenFileImages", {
   event = "BufEnter",
   pattern = { "*.png", "*.jpg" },
   command = function()
@@ -327,7 +343,7 @@ RUtils.cmd.augroup("OpenFileImages", {
 ---------------------------------
 -- COPY PASTE
 ---------------------------------
-RUtils.cmd.augroup("SetNopaste", {
+RUtils.map.augroup("SetNopaste", {
   event = { "InsertLeave" },
   pattern = "*",
   command = "set nopaste",
@@ -336,7 +352,7 @@ RUtils.cmd.augroup("SetNopaste", {
 -- Copy/Paste when using ssh on a remote server
 -- Only works on Neovim >= 0.10.0
 if vim.clipboard and vim.clipboard.osc52 then
-  RUtils.cmd.augroup("SSH_clipboard", {
+  RUtils.map.augroup("SSH_clipboard", {
     event = { "VimEnter" },
     command = function()
       if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then

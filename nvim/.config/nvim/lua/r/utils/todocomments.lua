@@ -38,7 +38,7 @@ local function open_with(mode, tbl_cts, sel, is_open_folded)
     if x.text == data_sel.text and x.basename == data_sel.basename and x.lnum == data_sel.lnum then
       vim.cmd(mode .. " " .. x.filename)
       if is_open_folded then
-        RUtils.map.feedkey("zO", "n")
+        RUtils.map.feedkey "zO"
       end
       vim.api.nvim_win_set_cursor(0, { tonumber(x.lnum), 1 })
     end
@@ -142,7 +142,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
       winopts = {
         title = RUtils.fzflua.format_title(
           "Todocomments > " .. fzf_opts.title,
-          RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.check_big)
+          RUtils.strip_whitespaces(RUtils.config.icons.misc.check_big)
         ),
       },
       prompt = RUtils.fzflua.padding_prompt(),

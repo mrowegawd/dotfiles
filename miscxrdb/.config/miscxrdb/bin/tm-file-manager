@@ -5,11 +5,16 @@ SIZE_PANE=35 # 45 for normal window, tapi jika kecil 30 saja
 
 [ -z "$TMUX" ] && exit
 
+GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
+
 _go_left() {
   tmux select-pane -L
 }
 _go_right() {
   tmux select-pane -R
+}
+_go_select_pane_with_id() {
+  tmux select-pane -t "$1"
 }
 _go_last_pane() {
   tmux last-pane
@@ -43,12 +48,10 @@ _open_file_manager_window() {
   fi
 }
 
-_open_wiki_file_manager_window() {
-  _open_file_manager_window "wiki"
-
+_open_file_manager_window_under_pane() {
+  tmux send-keys -t "$TARGET_PANE_FOR_FILEMANAGER" "clear" C-m
+  tmux send-keys -t "$TARGET_PANE_FOR_FILEMANAGER" "$FILE_MANAGER" C-m
 }
-
-GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
 
 clean_tree() {
   if _check_pane_is_nnn; then
@@ -87,12 +90,36 @@ clean_tree() {
     tmux kill-pane
     exit
   fi
+}
 
+get_pane_id_left_or_right() {
+  local pane_left_or_right
+
+  CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
+
+  if [[ $1 == "left" ]]; then
+    pane_left_or_right=$(tmux display -p '#{pane_at_left}')
+    if [ "$pane_left_or_right" == 0 ]; then
+      tmux list-panes -F '#{pane_id} #{pane_left} #{pane_active}' | awk -v cur="$CURRENT_PANE" '
+$3 = 1 {cur_left = $2} 
+$2 == cur_left {print $1}
+' | head -n 1
+    fi
+  fi
+
+  if [[ $1 == "right" ]]; then
+    pane_left_or_right=$(tmux display -p '#{pane_at_right}')
+    if [ "$pane_left_or_right" == 0 ]; then
+      tmux list-panes -F '#{pane_id} #{pane_left}' | awk '
+      NR == 1 || $2 > max_left {max_left = $2; rightmost = $1}
+      END {print rightmost} '
+    fi
+  fi
 }
 
 open_tree_cwd() {
   if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
-    _open_file_manager_window "fm"
+    _open_file_manager_window
   else
     is_pane_is_right=$(tmux display -p '#{pane_at_right}')
     if [ "$is_pane_is_right" == 0 ]; then
@@ -107,26 +134,48 @@ open_tree_cwd() {
     else
       clean_tree
       _go_right
-      _open_file_manager_window "fm"
+      _open_file_manager_window
     fi
   fi
 }
 
-open_tree_wiki() {
-  is_pane_is_right=$(tmux display -p '#{pane_at_right}')
-  if ! _check_pane_is_yazi && [[ $is_pane_is_right == "1" ]]; then
-    _open_wiki_file_manager_window
+handle_open_filetree() {
+  CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
+
+  if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
+    dunstify "Seharusnya buat script untuk buat create open left atau right"
   else
-    clean_tree
-    _go_right
+    TARGET_PANE_FOR_FILEMANAGER=$(get_pane_id_left_or_right "$1")
+    COMMAND_PROCESS=$(tmux display -p -t "$TARGET_PANE_FOR_FILEMANAGER" '#{pane_current_command}')
+    COMMAND_PROCESS=${COMMAND_PROCESS%$'\n'} # hapus newline di akhir
+
+    if [[ "$TARGET_PANE_FOR_FILEMANAGER" == "" ]]; then
+      _go_last_pane
+
+    elif [[ "$COMMAND_PROCESS" == "yazi" ]]; then
+      tmux send-keys -t "$TARGET_PANE_FOR_FILEMANAGER" "q" C-m
+      tmux send-keys -t "$TARGET_PANE_FOR_FILEMANAGER" "clear" C-m
+      _go_select_pane_with_id "$TARGET_PANE_FOR_FILEMANAGER"
+      _go_select_pane_with_id "$CURRENT_PANE"
+
+    elif [[ "$COMMAND_PROCESS" == "nvim" ]]; then
+      tmux send-keys -t "$TARGET_PANE_FOR_FILEMANAGER" ":q" C-m
+      _go_select_pane_with_id "$TARGET_PANE_FOR_FILEMANAGER"
+    else
+
+      _go_select_pane_with_id "$TARGET_PANE_FOR_FILEMANAGER"
+
+      # Open file manager
+      _open_file_manager_window_under_pane "$TARGET_PANE_FOR_FILEMANAGER"
+    fi
   fi
 }
 
 main() {
   if [[ $1 == "wiki" ]]; then
-    open_tree_wiki
+    _open_file_manager_window "wiki"
   else
-    open_tree_cwd
+    handle_open_filetree "left"
   fi
 
 }

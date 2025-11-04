@@ -119,7 +119,7 @@ return {
           string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/qfbookmark/**/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = string.format("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {
@@ -188,130 +188,147 @@ return {
             org_agenda = "<Localleader>aa",
           },
           agenda = {
+            -- Views
             org_agenda_day_view = "vd",
             org_agenda_week_view = "vw",
             org_agenda_month_view = "vm",
             org_agenda_year_view = "vy",
 
-            org_agenda_switch_to = "<TAB>",
-            org_agenda_goto_today = "~",
-            org_agenda_goto = "<CR>",
-            org_agenda_goto_date = "<prefix>D",
-
+            -- Navigation
             org_agenda_later = "f",
             org_agenda_earlier = "b",
-            org_agenda_redo = "r",
-            org_agenda_todo = "<prefix>t",
+            org_agenda_goto_today = "t",
+            org_agenda_goto = { "<CR>", "o" },
+            org_agenda_goto_date = "D",
 
-            org_agenda_set_effort = "<prefix>e",
+            org_agenda_switch_to = "<TAB>", -- tidak dipakai?
 
-            org_agenda_clock_cancel = "<prefix>cc",
-            org_agenda_clock_goto = "<prefix>cG",
-            org_agenda_clock_in = "<prefix>ci",
-            org_agenda_clock_out = "<prefix>co",
-            org_agenda_clockreport_mode = "<prefix>cP",
+            -- Todo Effort
+            org_agenda_todo = "t",
+            org_agenda_set_effort = "e",
 
-            org_agenda_priority = "<prefix>P",
-            org_agenda_priority_up = "<S-Up>",
-            org_agenda_priority_down = "<S-Down>",
+            -- Clock
+            org_agenda_clock_in = "ci",
+            org_agenda_clock_out = "co",
+            org_agenda_clock_goto = "cg",
+            org_agenda_clock_cancel = "cc",
 
-            org_agenda_archive = "<F9>",
+            org_agenda_clockreport_mode = "<prefix>cP", -- tidak dipakai?
+
+            -- Priority
+            org_agenda_priority = "P",
+            org_agenda_priority_up = "<S-up>",
+            org_agenda_priority_down = "<S-down>",
+
+            org_agenda_archive = "<F9>", -- tidak terpakai?
+
+            --- Tags, Refile / Notes
+            org_agenda_set_tags = "g",
+            org_agenda_refile = "r",
+            org_agenda_add_note = "in",
+
             org_agenda_toggle_archive_tag = "<prefix><F9>",
 
             org_agenda_deadline = "<prefix>d",
             org_agenda_schedule = "<prefix>s",
-            org_agenda_set_tags = "<prefix>g",
 
+            -- Misc
             org_agenda_filter = "/",
-            org_agenda_refile = "<prefix>r",
-            org_agenda_add_note = "<prefix>n",
-
+            org_agenda_redo = "R",
             org_agenda_quit = "q",
             org_agenda_show_help = "?",
           },
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>or",
-            org_capture_kill = { "<Leader><TAB>", "q", "<c-q>" },
+            org_capture_kill = { "<Leader><TAB>", "q", "<C-q>" },
             org_capture_show_help = "?",
           },
           note = {
             org_note_finalize = { "<C-c>", "<C-s>" },
-            org_note_kill = { "<Leader><TAB>", "q", "<c-q>" },
+            org_note_kill = { "<Leader><TAB>", "q", "<C-q>" },
           },
           org = {
-            org_timestamp_up_day = "<UP>",
-            org_timestamp_down_day = "<DOWN>",
-            org_timestamp_up = "<c-PageUp>",
-            org_timestamp_down = "<c-PageDown>",
+            -- Timestamp
+            org_timestamp_up_day = "<Up>",
+            org_timestamp_down_day = "<Down>",
+            org_timestamp_up = "<C-PageUp>",
+            org_timestamp_down = "<C-PageDown>",
 
-            org_todo = "<prefix>t",
-            org_todo_prev = "<prefix>T",
+            -- Todo / Heading
+            org_todo = "t",
+            org_todo_prev = "T",
+            org_toggle_heading = "*",
 
-            org_toggle_checkbox = "<C-c>",
-            org_toggle_heading = "<prefix>*",
-
-            org_open_at_point = { "<Leader>oo", "gd" },
-            org_edit_special = "<prefix>'",
-
-            -- fold/unfold
-            org_cycle = { "<TAB>", "<c-a>" },
-            org_global_cycle = { "<S-TAB>", "<c-t>" },
-
-            org_archive_subtree = "<F9>",
-            org_toggle_archive_tag = "<Leader><F9>",
-
-            org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
-            org_return = "<F11>",
-
-            org_insert_heading_respect_content = "<prefix>i<CR>", -- Add new headling after current heading block with same level
-            org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
-            org_insert_todo_heading_respect_content = "<c-t>", -- Add new todo headling after current heading block on same level
-
+            -- Navigation
             org_next_visible_heading = "<c-n>",
             org_previous_visible_heading = "<c-p>",
-
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
-
             outline_up_heading = "g{",
 
-            org_deadline = "<prefix>d",
-            org_schedule = "<prefix>s",
-            org_set_tags_command = "<prefix>g",
+            -- Insert
+            org_insert_heading_respect_content = "i<CR>",
+            org_insert_todo_heading = "iT",
+            org_insert_todo_heading_respect_content = "<C-t>",
 
-            org_time_stamp = "<Leader>it",
-            org_time_stamp_inactive = "<Leader>ii",
-            org_toggle_timestamp_type = "<Leader>iT",
-            org_export = "<Leader>ue",
+            -- Fold / Cycle
+            org_cycle = { "<TAB>", "zo", "oz" },
+            org_global_cycle = { "<S-TAB>", "zn", "nz", "zi" },
 
-            org_insert_link = "<Leader>il",
-            org_store_link = "<Leader>iL",
+            -- Clock
+            org_clock_in = "ci",
+            org_clock_out = "co",
+            org_clock_cancel = "cc",
+            org_clock_goto = "cg",
 
-            org_set_effort = "<prefix>e",
-
-            org_clock_cancel = "<prefix>cc",
-            org_clock_goto = "<prefix>cG",
-            org_clock_in = "<prefix>ci",
-            org_clock_out = "<prefix>co",
-
-            org_priority = "<prefix>P",
+            -- Priority
+            org_priority = "P",
             org_priority_up = "<S-Up>",
             org_priority_down = "<S-Down>",
 
+            -- Promote / Demote
             org_do_promote = "<",
             org_do_demote = ">",
             org_promote_subtree = "<a-<>",
             org_demote_subtree = "<a->>",
 
+            -- Move subtree
             org_move_subtree_up = "<a-p>",
             org_move_subtree_down = "<a-n>",
 
-            org_refile = "<prefix>r",
-            org_add_note = "<prefix>n",
+            -- Tags / Refile / Notes
+            org_set_tags_command = "g",
+            org_refile = "r",
+
+            -- Links
+            org_insert_link = "il",
+            org_store_link = "iL",
+
+            -- Timestamp Insert
+            org_time_stamp = "it",
+            org_time_stamp_inactive = "ii",
+            org_toggle_timestamp_type = "iT",
+
+            -- Insert Deadline or Schedule
+            org_deadline = "id",
+            org_schedule = "is",
+            org_set_effort = "e",
+            org_add_note = "in",
+
+            -- Export / Babel
+            org_export = "ue",
+            org_babel_tangle = "bt",
+
+            org_toggle_checkbox = "<C-c>",
+            org_open_at_point = { "<Leader>oo", "<Leader>ld" },
+            org_edit_special = "<prefix>'",
+            org_archive_subtree = "<F9>",
+            org_toggle_archive_tag = "<Leader><F9>",
+            org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
+            org_return = "<F11>",
 
             org_show_help = "?",
-            org_babel_tangle = "<prefix>bt",
           },
         },
       }
@@ -332,7 +349,7 @@ return {
         },
       }
 
-      RUtils.cmd.augroup("ManageNoteMappingOrg", {
+      RUtils.map.augroup("ManageNoteMappingOrg", {
         event = { "FileType" },
         pattern = { "org" },
         command = function()
@@ -359,7 +376,7 @@ return {
             winopts = {
               title = RUtils.fzflua.format_title(
                 "Obsidian > Grep",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
               ),
             },
           }
@@ -370,7 +387,7 @@ return {
         "<Localleader>afgg",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          local viz = RUtils.cmd.get_visual_selection { strict = true }
+          local viz = RUtils.get_visual_selection { strict = true }
           if viz then
             return fzf_lua.grep {
               prompt = RUtils.fzflua.padding_prompt(),
@@ -382,7 +399,7 @@ return {
               winopts = {
                 title = RUtils.fzflua.format_title(
                   "Obsidian > Grep",
-                  RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
+                  RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
                 ),
               },
             }
@@ -405,7 +422,7 @@ return {
               -- fullscreen = true,
               title = RUtils.fzflua.format_title(
                 "Obsidian > Note files",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.bookmark)
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
               ),
             },
           }
@@ -578,7 +595,7 @@ return {
     config = function(_, opts)
       require("obsidian").setup(opts)
 
-      RUtils.cmd.augroup("ManageNoteMappingMarkdown", {
+      RUtils.map.augroup("ManageNoteMappingMarkdown", {
         event = { "FileType" },
         pattern = { "markdown" },
         command = function()

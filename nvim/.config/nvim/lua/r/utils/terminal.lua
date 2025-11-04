@@ -179,7 +179,7 @@ function M.clock_mode()
     vim.api.nvim_win_set_height(0, 10)
     vim.cmd [[wincmd k]]
     vim.cmd [[wincmd h]]
-    RUtils.map.feedkey("<esc>", "n")
+    RUtils.map.feedkey "<esc>"
   end
 end
 

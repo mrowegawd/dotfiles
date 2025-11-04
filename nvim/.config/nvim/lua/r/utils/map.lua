@@ -5,7 +5,7 @@ local M = {
   lsp = {},
 }
 
----@alias ModeKey "n" | "i" | "x" | "o" | "v"
+---@alias ModeKey "n" | "i" | "x" | "o" | "v" | "t"
 
 ---@param mode ModeKey
 ---@param lhs string
@@ -61,7 +61,7 @@ M.show_help_buf_keymap = function()
 
     local lhs = tbl.lhs
     if c_spaces > 0 then
-      lhs = "<space>" .. RUtils.cmd.strip_whitespace(tbl.lhs)
+      lhs = "<space>" .. RUtils.strip_whitespaces(tbl.lhs)
     end
 
     local mode_color = "GitSignsAdd"
@@ -152,85 +152,94 @@ M.cabbrev = function(short, long)
   vim.cmd.cnoreabbrev(short, long)
 end
 
----@param method string|string[]
-function M.has(buffer, method)
-  if type(method) == "table" then
-    for _, m in ipairs(method) do
-      if M.has(buffer, m) then
-        return true
-      end
-    end
-    return false
+-- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+-- ╎ AUGROUP                                                 ╎
+-- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+---@param callback function
+---@param list table
+---@param accum table
+---@return table
+function M.fold(callback, list, accum)
+  accum = accum or {}
+  for k, v in pairs(list) do
+    accum = callback(accum, v, k)
+    assert(accum ~= nil, "The accumulator must be returned on each iteration")
   end
-  method = method:find "/" and method or "textDocument/" .. method
-  local clients = vim.lsp.get_clients { bufnr = buffer }
-  for _, client in ipairs(clients) do
-    if client:supports_method(method) then
-      return true
-    end
-  end
-  return false
+  return accum
 end
 
----@return LazyKeysLsp[]
-function M.resolve(buffer, spec_maps)
-  local Keys = require "lazy.core.handler.keys"
-  if not Keys.resolve then
-    return {}
-  end
-  local spec = vim.tbl_extend("force", {}, spec_maps)
-  local opts = RUtils.opts "nvim-lspconfig"
-  if opts ~= nil then
-    local clients = vim.lsp.get_clients { bufnr = buffer }
-    for _, client in ipairs(clients) do
-      if opts.servers ~= nil then
-        local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-        vim.list_extend(spec, maps)
-      end
-    end
-  end
-  return Keys.resolve(spec)
-end
-
-function M.on_attach(_, buffer, spec_maps)
-  local Keys = require "lazy.core.handler.keys"
-  local keymaps = M.resolve(buffer, spec_maps)
-
-  for _, keys in pairs(keymaps) do
-    local has = not keys.has or M.has(buffer, keys.has)
-    local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
-
-    if has and cond then
-      local opts = Keys.opts(keys)
-      opts.cond = nil
-      opts.has = nil
-      opts.silent = opts.silent ~= false
-      opts.buffer = buffer
-      -- if opts.unique == nil then
-      --   opts.unique = true
-      -- end
-      map(keys.mode or "n", keys.lhs, keys.rhs, opts)
-    end
+---@param augroup_name string
+---@param bufnr integer
+function M.delete_augroup_name(augroup_name, bufnr)
+  local cmds_found, cmds = pcall(vim.api.nvim_get_autocmds, { group = augroup_name, buffer = bufnr })
+  if cmds_found then
+    vim.tbl_map(function(cmd)
+      vim.api.nvim_del_autocmd(cmd.id)
+    end, cmds)
   end
 end
+
+local autocmd_keys = {
+  "event",
+  "buffer",
+  "pattern",
+  "desc",
+  "command",
+  "group",
+  "once",
+  "nested",
+}
+
+---@param name string
+local function validate_autocmd(name, command)
+  local incorrect = M.fold(function(accum, _, key)
+    if not vim.tbl_contains(autocmd_keys, key) then
+      table.insert(accum, key)
+    end
+    return accum
+  end, command, {})
+
+  if #incorrect > 0 then
+    vim.schedule(function()
+      local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
+      ---@diagnostic disable-next-line: param-type-mismatch
+      vim.notify(msg, "error", { title = string.format("Autocmd: %s", name) })
+    end)
+  end
+end
+
+function M.augroup(name, ...)
+  local commands = { ... }
+  assert(name ~= "User", "The name of an augroup CANNOT be User")
+  assert(#commands > 0, string.format("You must specify at least one autocommand for %s", name))
+  local id = vim.api.nvim_create_augroup(name, { clear = true })
+  for _, autocmd in ipairs(commands) do
+    validate_autocmd(name, autocmd)
+    local is_callback = type(autocmd.command) == "function"
+    vim.api.nvim_create_autocmd(autocmd.event, {
+      group = name,
+      pattern = autocmd.pattern,
+      desc = autocmd.desc,
+      callback = is_callback and autocmd.command or nil,
+      command = not is_callback and autocmd.command or nil,
+      once = autocmd.once,
+      nested = autocmd.nested,
+      buffer = autocmd.buffer,
+    })
+  end
+  return id
+end
+
+-- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+-- ╎ MISC                                                    ╎
+-- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 function M.escape(text, additional_char)
   if not additional_char then
     additional_char = ""
   end
   return vim.fn.escape(text, "/" .. additional_char)
-end
-
-function M.getVisualSelection()
-  vim.cmd 'noau normal! "vy"'
-  local text = vim.fn.getreg "v"
-  vim.fn.setreg("v", {})
-  text = string.gsub(text, "\n", "")
-  if #text > 0 then
-    return text
-  else
-    return ""
-  end
 end
 
 ---@param key string
@@ -261,11 +270,11 @@ end
 ---@param au_name string
 ---@param tbl_ft table<string>
 function M.disable_ctrl_i_and_o(au_name, tbl_ft)
-  local augroup = vim.api.nvim_create_augroup(au_name, { clear = true })
-  vim.api.nvim_create_autocmd("FileType", {
+  M.augroup(au_name, {
+    event = "FileType",
     pattern = tbl_ft,
-    group = augroup,
-    callback = function()
+    desc = "Disable mapping C-o and C-i",
+    command = function()
       vim.keymap.set("n", "<c-i>", "<Nop>", {
         buffer = vim.api.nvim_get_current_buf(),
       })
@@ -274,96 +283,6 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
       })
     end,
   })
-end
-
----@param items {bufnr: integer, filename: string, lnum:integer}
-local function all_item_locations_equal(items)
-  if #items == 0 then
-    return false
-  end
-  for i = 2, #items do
-    local item = items[i]
-    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
-      return false
-    end
-  end
-  return true
-end
-
----@param yield any
----@param open_mode? "vsplit" | "split" | "newtab" | "none"
-function M.lsp.wrap_location_method(yield, open_mode)
-  open_mode = open_mode or "none"
-
-  return function()
-    local from = vim.fn.getpos "."
-    yield {
-      ---@param t vim.lsp.LocationOpts.OnList
-      on_list = function(t)
-        local curpos = vim.fn.getpos "."
-        if not vim.deep_equal(from, curpos) then
-          -- We have moved the cursor since fetching locations, so abort
-          return
-        end
-
-        if open_mode ~= "none" then
-          vim.cmd(open_mode)
-        end
-
-        if all_item_locations_equal(t.items) then
-          -- Mostly copied from neovim source
-          local item = t.items[1]
-          local b = item.bufnr or vim.fn.bufadd(item.filename)
-
-          -- Save position in jumplist
-          vim.cmd "normal! m'"
-          -- Push a new item into tagstack
-          local tagname = vim.fn.expand "<cword>"
-          local tagstack = { { tagname = tagname, from = from } }
-          local winid = vim.api.nvim_get_current_win()
-          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
-
-          vim.bo[b].buflisted = true
-          vim.api.nvim_win_set_buf(winid, b)
-          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
-          vim._with({ win = winid }, function()
-            -- Open folds under the cursor
-            vim.cmd "normal! zv"
-          end)
-        else
-          vim.fn.setloclist(0, {}, " ", { title = t.title, items = t.items })
-          vim.cmd.lopen()
-        end
-      end,
-    }
-  end
-end
-
----@param next integer
----@param severity vim.diagnostic.Severity | nil
-function M.lsp.diagnostic_goto(next, severity)
-  local go = next and 1 or -1
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    vim.diagnostic.jump { severity = severity, float = false, count = go }
-  end
-end
-
-local is_set_toggle_words = false
-function M.lsp.toggle_words()
-  local notify_msg
-  local is_enabled = Snacks.words.enabled
-
-  if is_enabled and is_set_toggle_words then
-    Snacks.words.disable()
-    is_set_toggle_words = false
-    notify_msg = "LSP Document Highlight: OFF"
-  else
-    Snacks.words.enable()
-    is_set_toggle_words = true
-    notify_msg = "LSP Document Highlight: ON"
-  end
-  RUtils.info(notify_msg)
 end
 
 ---@param is_next? boolean
@@ -405,7 +324,7 @@ end
 
 ---@param is_jump_prev boolean
 ---@param is_toggle boolean
-local function go_next_or_prev_fold(is_jump_prev, is_toggle)
+local function go_next_or_prev_folded_line(is_jump_prev, is_toggle)
   is_toggle = is_toggle or false
   local count = vim.v.count1
   local cnt = 0
@@ -468,16 +387,16 @@ function M.magic_jump(is_jump_prev)
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
     if is_jump_prev then
-      return RUtils.map.feedkey("<c-p>", "n")
+      return RUtils.map.feedkey "<c-p>"
     end
-    return RUtils.map.feedkey("<c-n>", "n")
+    return RUtils.map.feedkey "<c-n>"
   end
 
   if vim.wo.diff then
     if is_jump_prev then
-      return RUtils.map.feedkey("[c", "n")
+      return RUtils.map.feedkey "[c"
     else
-      return RUtils.map.feedkey("]c", "n")
+      return RUtils.map.feedkey "]c"
     end
   end
 
@@ -501,7 +420,274 @@ function M.magic_jump(is_jump_prev)
     return RUtils.markdown.go_to_heading(nil)
   end
 
-  go_next_or_prev_fold(is_jump_prev, false)
+  go_next_or_prev_folded_line(is_jump_prev, false)
+end
+
+-- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+-- ╎ LSP                                                     ╎
+-- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+---@param method string|string[]
+function M.has(buffer, method)
+  if type(method) == "table" then
+    for _, m in ipairs(method) do
+      if M.has(buffer, m) then
+        return true
+      end
+    end
+    return false
+  end
+  method = method:find "/" and method or "textDocument/" .. method
+  local clients = vim.lsp.get_clients { bufnr = buffer }
+  for _, client in ipairs(clients) do
+    if client:supports_method(method) then
+      return true
+    end
+  end
+  return false
+end
+
+---@return LazyKeysLsp[]
+function M.resolve(buffer, spec_maps)
+  local Keys = require "lazy.core.handler.keys"
+  if not Keys.resolve then
+    return {}
+  end
+  local spec = vim.tbl_extend("force", {}, spec_maps)
+  local opts = RUtils.opts "nvim-lspconfig"
+  if opts ~= nil then
+    local clients = vim.lsp.get_clients { bufnr = buffer }
+    for _, client in ipairs(clients) do
+      if opts.servers ~= nil then
+        local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
+        vim.list_extend(spec, maps)
+      end
+    end
+  end
+  return Keys.resolve(spec)
+end
+
+function M.on_attach(_, buffer, spec_maps)
+  local Keys = require "lazy.core.handler.keys"
+  local keymaps = M.resolve(buffer, spec_maps)
+
+  for _, keys in pairs(keymaps) do
+    local has = not keys.has or M.has(buffer, keys.has)
+    local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
+
+    if has and cond then
+      local opts = Keys.opts(keys)
+      ---@cast opts snacks.keymap.set.Opts
+      opts.cond = nil
+      opts.has = nil
+      opts.silent = opts.silent ~= false
+      opts.buffer = buffer
+      if opts.unique == nil then
+        opts.unique = true
+      end
+      map(keys.mode or "n", keys.lhs, keys.rhs, opts)
+    end
+  end
+end
+
+---@param items {bufnr: integer, filename: string, lnum:integer}
+local function all_item_locations_equal(items)
+  if #items == 0 then
+    return false
+  end
+  for i = 2, #items do
+    local item = items[i]
+    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
+      return false
+    end
+  end
+  return true
+end
+
+---@param yield any
+---@param open_mode? "vsplit" | "split" | "newtab" | "none"
+function M.lsp.wrap_location_method(yield, open_mode)
+  open_mode = open_mode or "none"
+  return function()
+    local from = RUtils.get_curpos_under_cursor()
+    if not from then
+      return
+    end
+
+    yield {
+      ---@param t vim.lsp.LocationOpts.OnList
+      on_list = function(t)
+        local curpos = RUtils.get_curpos_under_cursor()
+        if not vim.deep_equal(from, curpos) then
+          -- We have moved the cursor since fetching locations, so abort
+          RUtils.warn "Abort it, because your cursor postion has been changed!"
+          return
+        end
+
+        if open_mode ~= "none" then
+          vim.cmd(open_mode)
+        end
+
+        if all_item_locations_equal(t.items) then
+          -- Mostly copied from neovim source
+          local item = t.items[1]
+          local b = item.bufnr or vim.fn.bufadd(item.filename)
+
+          -- Save position in jumplist
+          vim.cmd "normal! m'"
+          -- Push a new item into tagstack
+          local tagname = vim.fn.expand "<cword>"
+          local tagstack = { { tagname = tagname, from = from } }
+          local winid = vim.api.nvim_get_current_win()
+          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
+
+          vim.bo[b].buflisted = true
+          vim.api.nvim_win_set_buf(winid, b)
+          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
+          vim._with({ win = winid }, function()
+            -- Open folds under the cursor
+            vim.cmd "normal! zv"
+          end)
+        else
+          RUtils.info(t.title .. ": " .. from.line)
+          -- vim.fn.setloclist(0, {}, " ", {
+          --   title = t.title .. ": " .. word_under_cursor,
+          --   items = t.items,
+          local items = t.items
+          if #t.items == 3 or #t.items == 2 then
+            if not vim.deep_equal(t.items[1], t.items[2]) then
+              items[#items + 1] = t.items[1]
+            end
+          end
+          -- vim.cmd.lopen()
+
+          vim.fn.setqflist({}, " ", {
+            title = t.title .. ": " .. from.line,
+            items = items,
+            context = t.context,
+          })
+          vim.cmd.copen()
+        end
+      end,
+    }
+  end
+end
+
+---@param curpos { pos: integer, col: integer, line: string, buf: integer }
+---@return string | nil
+local function get_extracted_strings(curpos)
+  local word_under_cursor
+
+  -- Ambil karakter di posisi kursor (bisa nil kalau di ujung baris)
+  local char_at_cursor = curpos.line:sub(curpos.col + 1, curpos.col + 1)
+
+  -- Ambil bagian sebelum dan sesudah kursor
+  local before = curpos.line:sub(1, curpos.col):match "[_%w%.:]+$"
+  local after = curpos.line:sub(curpos.col + 1):match "^[%w_%.:]+" or ""
+
+  -- Jika kursor berada di titik pemisah seperti '.', maka abaikan `after`
+  if char_at_cursor == "." or char_at_cursor == ":" then
+    word_under_cursor = before
+  else
+    word_under_cursor = (before or "") .. after
+  end
+
+  if not word_under_cursor or word_under_cursor == "" then
+    RUtils.warn "No string found under cursor."
+    return
+  end
+
+  return word_under_cursor
+end
+
+function M.lsp.wrap_references_to_send_qf()
+  local from = RUtils.get_curpos_under_cursor()
+  if not from then
+    return
+  end
+
+  local target_strings = get_extracted_strings(from)
+  if not target_strings then
+    return
+  end
+
+  RUtils.info("Call References: `" .. target_strings .. "`")
+
+  vim.lsp.buf.references(nil, {
+    on_list = function(t)
+      local curpos = RUtils.get_curpos_under_cursor()
+
+      -- if all_item_locations_equal(t.items) then
+      if not vim.islist(t.items) or type(t.items) ~= "table" or #t.items == 0 then
+        RUtils.warn("No references found for: " .. from.line)
+        return
+      end
+
+      local set_jump = false
+
+      if not vim.deep_equal(from, curpos) then
+        if #t.items > 1 then
+          vim.cmd("vsplit " .. vim.api.nvim_buf_get_name(from.buf))
+        end
+        set_jump = true
+      end
+
+      local QfbookmarkUtils = require "qfbookmark.utils"
+      local qf_win = QfbookmarkUtils.windows_is_opened "qf"
+      if qf_win.found then
+        pcall(vim.api.nvim_win_close, qf_win.winnr, true)
+      end
+
+      local items = t.items
+      if #t.items == 3 or #t.items == 2 then
+        if not vim.deep_equal(t.items[1], t.items[2]) then
+          items[#items + 1] = t.items[1]
+        end
+      end
+
+      vim.fn.setqflist({}, " ", {
+        title = "LSP " .. t.title .. ": " .. from.line,
+        items = items,
+        context = t.context,
+      })
+      vim.cmd(RUtils.qf.copen)
+
+      if vim.bo.filetype == "qf" then
+        vim.cmd "wincmd p"
+      end
+      if set_jump then
+        pcall(vim.api.nvim_win_set_cursor, 0, { from.pos, from.col - 1 })
+        vim.cmd "normal! m'"
+      end
+    end,
+  })
+end
+
+---@param next integer
+---@param severity vim.diagnostic.Severity | nil
+function M.lsp.diagnostic_goto(next, severity)
+  local go = next and 1 or -1
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    vim.diagnostic.jump { severity = severity, float = false, count = go }
+  end
+end
+
+local is_set_toggle_words = false
+function M.lsp.toggle_words()
+  local notify_msg
+  local is_enabled = Snacks.words.enabled
+
+  if is_enabled and is_set_toggle_words then
+    Snacks.words.disable()
+    is_set_toggle_words = false
+    notify_msg = "LSP Document Highlight: OFF"
+  else
+    Snacks.words.enable()
+    is_set_toggle_words = true
+    notify_msg = "LSP Document Highlight: ON"
+  end
+  RUtils.info(notify_msg)
 end
 
 return M

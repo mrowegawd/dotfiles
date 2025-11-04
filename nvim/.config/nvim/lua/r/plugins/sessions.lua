@@ -101,7 +101,7 @@ return {
         end, 50)
       end
 
-      RUtils.cmd.augroup("ResessionLeave", {
+      RUtils.map.augroup("ResessionLeave", {
         event = { "VimLeavePre" },
         command = function()
           resession.save "last"

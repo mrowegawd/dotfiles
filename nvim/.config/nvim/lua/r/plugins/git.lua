@@ -33,7 +33,6 @@ end
 
 return {
   { "ldelossa/litee.nvim", lazy = true },
-
   -- GH.NVIM
   {
     "ldelossa/gh.nvim",
@@ -98,7 +97,7 @@ return {
           ---@diagnostic disable-next-line: undefined-field
           RUtils.info("Start or refresh git conflict..", { title = "Git-conflict" })
         end,
-        desc = "Gitopen: start/refresh git conflict [gitconflict]",
+        desc = "Git: start/refresh git conflict [gitconflict]",
       },
       {
         "<Leader>g<down>",
@@ -123,16 +122,16 @@ return {
         "<Leader>gob",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "x" },
-        desc = "Gitopen: gitlink on browser (normal or visual) [gitlinker]",
+        desc = "Git: gitlink on browser (normal or visual) [gitlinker]",
       },
       {
         "<Leader>goB",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Gitopen: gitlink on browser [gitlinker]",
+        desc = "Git: gitlink on browser [gitlinker]",
       },
       {
         "<Leader>gy",
-        desc = "Gitopen: copy hash link [gitlinker]",
+        desc = "Git: copy hash link [gitlinker]",
       },
     },
     opts = { mappings = "<Leader>gy" },
@@ -402,7 +401,7 @@ return {
         row = 0,
         col = 1,
       },
-      on_attach = function()
+      on_attach = function(buffer)
         local gs = package.loaded.gitsigns
 
         local function map(mode, l, r, desc)
@@ -420,45 +419,45 @@ return {
         -- end
 
         -- Hunk
-        map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
+        map("n", "<Leader>ghs", gs.stage_hunk, "Git: stage [gitsigns]")
         map("x", "<Leader>ghs", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
           end
           gs.stage_hunk { from, to }
-        end, "Hunk: stage (visual) [gitsigns]")
-        map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
+        end, "Git: stage (visual) [gitsigns]")
+        map("n", "<Leader>ghr", gs.reset_hunk, "Git: reset [gitsigns]")
         map("x", "<Leader>ghr", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
           end
           gs.reset_hunk { from, to }
-        end, "Hunk: reset (visual) [gitsigns]")
-        map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
-        map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
-        map("n", "<Leader>ghR", gs.reset_buffer, "Hunk: reset buffer [gitsigns]")
+        end, "Git: reset (visual) [gitsigns]")
+        map("n", "<Leader>ghu", gs.undo_stage_hunk, "Git: undo [gitsigns]")
+        map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
+        map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
 
         -- Hunk preview
-        map("n", "<Leader>ghp", gs.preview_hunk_inline, "Hunk: preview hunk [gitsigns]")
-        map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
+        map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk [gitsigns]")
+        map("n", "<Leader>ghP", gs.preview_hunk, "Git: preview hunk [gitsigns]")
         map("x", "<Leader>ghP", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
           end
-          print(from, to)
+          -- print(from, to)
           gs.preview_hunk()
-        end, "Hunk: preview (visual) [gitsigns]")
+        end, "Git: preview (visual) [gitsigns]")
 
         -- Toggle
         map("n", "<Leader>gub", function()
           vim.cmd "G blame"
-        end, "Gittoggle: git blame [gitsigns]")
-        map("n", "<Leader>gud", gs.toggle_deleted, "Gittoggle: to check diff changes [gitsigns]")
-        map("n", "<Leader>guw", gs.toggle_word_diff, "Gittoggle: word diff [gitsigns]")
-        map("n", "<Leader>gul", gs.toggle_linehl, "Gittoggle: linehl [gitsigns]")
+        end, "Git: open blame [gitsigns]")
+        map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
+        map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
+        map("n", "<Leader>gul", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -506,7 +505,7 @@ return {
               )
             end)
           end
-        end, "Git: last hunk [gitsigns]")
+        end, "Git: prev hunk [gitsigns]")
       end,
     },
   },
@@ -623,7 +622,7 @@ return {
       -- vim.api.nvim_create_autocmd("FileType", {
       --   group = vim.api.nvim_create_augroup("ps_fugitive", { clear = true }),
 
-      RUtils.cmd.augroup("ps_fugitive", {
+      RUtils.map.augroup("ps_fugitive", {
         event = "FileType",
         pattern = { "fugitive" }, -- gstatus
         command = function(e)
@@ -706,12 +705,12 @@ return {
       {
         "<Leader>goo",
         "<CMD>DiffviewOpen<CR>",
-        desc = "Gitopen: DiffviewOpen [diffview]",
+        desc = "Git: DiffviewOpen [diffview]",
       },
       {
         "<Leader>goh",
         "<CMD>DiffviewFileHistory<CR>",
-        desc = "Gitopen: DiffviewFileHistory repo [diffview]",
+        desc = "Git: DiffviewFileHistory repo [diffview]",
       },
       {
         "<Leader>gl",
@@ -775,6 +774,32 @@ return {
             -- Turn off cursor line for diffview windows because of bg conflict
             -- https://github.com/neovim/neovim/issues/9800
             vim.wo[winid].culopt = "number"
+
+            -- clear the lsp autocmd that highlights the word under the cursor
+            pcall(vim.api.nvim_clear_autocmds, {
+              group = "kickstart-lsp-highlight",
+              buffer = bufnr,
+            })
+
+            -- turn off gitsigns inline diff
+            ---@diagnostic disable-next-line: param-type-mismatch
+            pcall(vim.cmd, "Gitsigns toggle_linehl false")
+            ---@diagnostic disable-next-line: param-type-mismatch
+            pcall(vim.cmd, "Gitsigns toggle_word_diff false")
+
+            -- clear highlights
+            vim.cmd "nohl"
+
+            -- HACK: turn off inlay hints, but diffview is triggering the lsp
+            -- to renable them even if they were off (re-editing the buffer?)
+            -- add a 100ms delay to make sure they're off. gross.
+            vim.defer_fn(function()
+              local wins = vim.api.nvim_tabpage_list_wins(0)
+              for _, win in ipairs(wins) do
+                local buf = vim.api.nvim_win_get_buf(win)
+                vim.lsp.inlay_hint.enable(false, { bufnr = buf })
+              end
+            end, 500)
           end,
         },
         view = {

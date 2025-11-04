@@ -5,7 +5,15 @@ local H = require "r.settings.highlights"
 ---@class r.utils.windowdim
 local autocmds = {}
 
-local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ",")
+local function tryrange(lower, upper)
+  local result = {}
+  for i = lower, upper do
+    table.insert(result, i)
+  end
+  return result
+end
+
+local focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(80, 256), ",")
 
 -- local winhighlight_bottom_panel = table.concat({
 --   -- -- "IncSearch:ColorColumn",
@@ -90,6 +98,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["lazy"] = true,
   ["mason"] = true,
   ["capture"] = true,
+  ["grug-far"] = true,
   ["command-t"] = true,
   ["git"] = true,
   ["floggraph"] = true,
@@ -224,7 +233,7 @@ local focus_window = function()
     colorcolumn_width = 200 -- 120
     -- colorcolumn_width = 200 -- 120
     -- end
-    focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(colorcolumn_width, 256), ",")
+    focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end
 end

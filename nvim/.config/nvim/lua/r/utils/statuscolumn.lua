@@ -14,12 +14,66 @@ M.meta = {
   needs_setup = true,
 }
 
+---@class snacks.statuscolumn.FoldInfo
+---@field start number Line number where deepest fold starts
+---@field level number Fold level, when zero other fields are N/A
+---@field llevel number Lowest level that starts in v:lnum
+---@field lines number Number of lines from v:lnum to end of closed fold
+
+---@type ffi.namespace*
+local C
+
+local function _ffi()
+  if not C then
+    local ffi = require "ffi"
+    ffi.cdef [[
+      typedef struct {} Error;
+      typedef struct {} win_T;
+      typedef struct {
+        int start;  // line number where deepest fold starts
+        int level;  // fold level, when zero other fields are N/A
+        int llevel; // lowest level that starts in v:lnum
+        int lines;  // number of lines from v:lnum to end of closed fold
+      } foldinfo_T;
+      foldinfo_T fold_info(win_T* wp, int lnum);
+      win_T *find_window_by_handle(int Window, Error *err);
+    ]]
+    C = ffi.C
+  end
+  return C
+end
+
+-- Returns fold info for a given window and line number
+---@param win number
+---@param lnum number
+local function fold_info(win, lnum)
+  pcall(_ffi)
+  if not C then
+    return
+  end
+  local ffi = require "ffi"
+  local err = ffi.new "Error"
+  local wp = C.find_window_by_handle(win, err)
+  if wp == nil then
+    return
+  end
+  return C.fold_info(wp, lnum) ---@type snacks.statuscolumn.FoldInfo
+end
+
+---@alias snacks.statuscolumn.Component "mark"|"sign"|"fold"|"git"
+---@alias snacks.statuscolumn.Components snacks.statuscolumn.Component[]|fun(win:number,buf:number,lnum:number):snacks.statuscolumn.Component[]
+---@alias snacks.statuscolumn.Wanted table<snacks.statuscolumn.Component, boolean>
+
 -- Numbers in Neovim are weird
 -- They show when either number or relativenumber is true
 -- local LINE_NR = "%=%{%(&number || &relativenumber) && v:virtnum == 0 ? ("
 --   .. (vim.fn.has "nvim-0.11" == 1 and '"%l"' or 'v:relnum == 0 ? (&number ? "%l" : "%r") : (&relativenumber ? "%r" : "%l")')
 --   .. ') : ""%} '
 
+---@class snacks.statuscolumn.Config
+---@field left snacks.statuscolumn.Components
+---@field right snacks.statuscolumn.Components
+---@field enabled? boolean
 local config = {
   left = { "mark", "sign" }, -- priority of signs on the left (high to low)
   right = { "fold", "git" }, -- priority of signs on the right (high to low)
@@ -34,7 +88,12 @@ local config = {
   refresh = 50, -- refresh at most every 50ms
 }
 
+---@private
+---@alias snacks.statuscolumn.Sign.type "mark"|"sign"|"fold"|"git"
+---@alias snacks.statuscolumn.Sign {name:string, text:string, texthl:string, priority:number, type:snacks.statuscolumn.Sign.type}
+
 -- Cache for signs per buffer and line
+---@type table<number,table<number,snacks.statuscolumn.Sign[]>>
 local sign_cache = {}
 local cache = {} ---@type table<string,string>
 local icon_cache = {} ---@type table<string,string>
@@ -66,49 +125,60 @@ end
 
 -- Returns a list of regular and extmark signs sorted by priority (low to high)
 ---@private
+---@param wanted snacks.statuscolumn.Wanted
 ---@return table<number, snacks.statuscolumn.Sign[]>
 ---@param buf number
-function M.buf_signs(buf)
+function M.buf_signs(buf, wanted)
   -- Get regular signs
+  ---@type table<number, snacks.statuscolumn.Sign[]>
   local signs = {}
 
-  if vim.fn.has "nvim-0.10" == 0 then
-    -- Only needed for Neovim <0.10
-    -- Newer versions include legacy signs in nvim_buf_get_extmarks
-    for _, sign in ipairs(vim.fn.sign_getplaced(buf, { group = "*" })[1].signs) do
-      local ret = vim.fn.sign_getdefined(sign.name)[1] --[[@as snacks.statuscolumn.Sign]]
-      if ret then
-        ret.priority = sign.priority
-        ret.type = M.is_git_sign(sign.name) and "git" or "sign"
-        signs[sign.lnum] = signs[sign.lnum] or {}
-        table.insert(signs[sign.lnum], ret)
+  if wanted.git or wanted.sign then
+    if vim.fn.has "nvim-0.10" == 0 then
+      -- Only needed for Neovim <0.10
+      -- Newer versions include legacy signs in nvim_buf_get_extmarks
+      for _, sign in ipairs(vim.fn.sign_getplaced(buf, { group = "*" })[1].signs) do
+        local ret = vim.fn.sign_getdefined(sign.name)[1] --[[@as snacks.statuscolumn.Sign]]
+        if ret then
+          ret.priority = sign.priority
+          ret.type = M.is_git_sign(sign.name) and "git" or "sign"
+          signs[sign.lnum] = signs[sign.lnum] or {}
+          if wanted[ret.type] then
+            table.insert(signs[sign.lnum], ret)
+          end
+        end
+      end
+    end
+
+    -- Get extmark signs
+    local extmarks = vim.api.nvim_buf_get_extmarks(buf, -1, 0, -1, { details = true, type = "sign" })
+    for _, extmark in pairs(extmarks) do
+      local lnum = extmark[2] + 1
+      signs[lnum] = signs[lnum] or {}
+      local name = extmark[4].sign_hl_group or extmark[4].sign_name or ""
+      local ret = {
+        name = name,
+        type = M.is_git_sign(name) and "git" or "sign",
+        text = extmark[4].sign_text,
+        texthl = extmark[4].sign_hl_group,
+        priority = extmark[4].priority,
+      }
+      if wanted[ret.type] then
+        table.insert(signs[lnum], ret)
       end
     end
   end
 
-  -- Get extmark signs
-  local extmarks = vim.api.nvim_buf_get_extmarks(buf, -1, 0, -1, { details = true, type = "sign" })
-  for _, extmark in pairs(extmarks) do
-    local lnum = extmark[2] + 1
-    signs[lnum] = signs[lnum] or {}
-    local name = extmark[4].sign_hl_group or extmark[4].sign_name or ""
-    table.insert(signs[lnum], {
-      name = name,
-      type = M.is_git_sign(name) and "git" or "sign",
-      text = extmark[4].sign_text,
-      texthl = extmark[4].sign_hl_group,
-      priority = extmark[4].priority,
-    })
-  end
-
   -- Add marks
-  local marks = vim.fn.getmarklist(buf)
-  vim.list_extend(marks, vim.fn.getmarklist())
-  for _, mark in ipairs(marks) do
-    if mark.pos[1] == buf and mark.mark:match "[a-zA-Z]" then
-      local lnum = mark.pos[2]
-      signs[lnum] = signs[lnum] or {}
-      table.insert(signs[lnum], { text = mark.mark:sub(2), texthl = "Boolean", type = "mark" })
+  if wanted.mark then
+    local marks = vim.fn.getmarklist(buf)
+    vim.list_extend(marks, vim.fn.getmarklist())
+    for _, mark in ipairs(marks) do
+      if mark.pos[1] == buf and mark.mark:match "[a-zA-Z]" then
+        local lnum = mark.pos[2]
+        signs[lnum] = signs[lnum] or {}
+        table.insert(signs[lnum], { text = mark.mark:sub(2), texthl = "Boolean", type = "mark" })
+      end
     end
   end
 
@@ -120,22 +190,27 @@ end
 ---@param win number
 ---@param buf number
 ---@param lnum number
-function M.line_signs(win, buf, lnum)
+---@param wanted snacks.statuscolumn.Wanted
+---@return snacks.statuscolumn.Sign[]
+function M.line_signs(win, buf, lnum, wanted)
   local buf_signs = sign_cache[buf]
   if not buf_signs then
-    buf_signs = M.buf_signs(buf)
+    buf_signs = M.buf_signs(buf, wanted)
     sign_cache[buf] = buf_signs
   end
   local signs = buf_signs[lnum] or {}
 
   -- Get fold signs
-  -- vim.api.nvim_win_call(win, function()
-  --   if vim.fn.foldclosed(lnum) >= 0 then
-  --     signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldedSign", type = "fold" }
-  --   elseif config.folds.open and vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1) then
-  --     signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
-  --   end
-  -- end)
+  if wanted.fold then
+    local info = fold_info(win, lnum)
+    if info and info.level > 0 then
+      if info.lines > 0 then
+        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded", type = "fold" }
+      elseif config.folds.open and info.start == lnum then
+        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
+      end
+    end
+  end
 
   -- Sort by priority
   table.sort(signs, function(a, b)
@@ -145,6 +220,7 @@ function M.line_signs(win, buf, lnum)
 end
 
 ---@private
+---@param sign? snacks.statuscolumn.Sign
 function M.icon(sign)
   if not sign then
     return "  "
@@ -168,6 +244,20 @@ function M._get()
   local nu = vim.wo[win].number
   local rnu = vim.wo[win].relativenumber
   local show_signs = vim.v.virtnum == 0 and vim.wo[win].signcolumn ~= "no"
+  local show_folds = vim.v.virtnum == 0 and vim.wo[win].foldcolumn ~= "0"
+  local buf = vim.api.nvim_win_get_buf(win)
+  local left_c = type(config.left) == "function" and config.left(win, buf, vim.v.lnum) or config.left --[[@as snacks.statuscolumn.Component[] ]]
+  local right_c = type(config.right) == "function" and config.right(win, buf, vim.v.lnum) or config.right --[[@as snacks.statuscolumn.Component[] ]]
+
+  ---@type snacks.statuscolumn.Wanted
+  local wanted = { sign = show_signs }
+  for _, c in ipairs(left_c) do
+    wanted[c] = wanted[c] ~= false
+  end
+  for _, c in ipairs(right_c) do
+    wanted[c] = wanted[c] ~= false
+  end
+
   local components = { "", "", "" } -- left, middle, right
   if not (show_signs or nu or rnu) then
     return ""
@@ -187,10 +277,8 @@ function M._get()
     components[2] = "%=" .. num
   end
 
-  if show_signs then
-    local buf = vim.api.nvim_win_get_buf(win)
-    -- local is_file = vim.bo[buf].buftype == ""
-    local signs = M.line_signs(win, buf, vim.v.lnum)
+  if show_signs or show_folds then
+    local signs = M.line_signs(win, buf, vim.v.lnum, wanted)
 
     if #signs > 0 then
       local signs_by_type = {} ---@type table<snacks.statuscolumn.Sign.type,snacks.statuscolumn.Sign>
@@ -207,8 +295,6 @@ function M._get()
         end
       end
 
-      local left_c = type(config.left) == "function" and config.left(win, buf, vim.v.lnum) or config.left --[[@as snacks.statuscolumn.Component[] ]]
-      local right_c = type(config.right) == "function" and config.right(win, buf, vim.v.lnum) or config.right --[[@as snacks.statuscolumn.Component[] ]]
       local left, right = find(left_c), find(right_c)
 
       if config.folds.git_hl then
