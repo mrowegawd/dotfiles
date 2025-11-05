@@ -764,7 +764,7 @@ function M.change_colors()
   -- Inactive Tab
   local tab_inactive_fg = H.tint(H.get("WinBar", "fg"), -0.23)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.23)
+  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.15)
 
   -- Border Pane
   local __border_tmux_inactive_fg = 0.15
@@ -772,7 +772,8 @@ function M.change_colors()
     __border_tmux_inactive_fg = 0.05
   end
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  local border_inactive = H.tint(H.get("WinSeparator", "fg"), __border_tmux_inactive_fg)
+  -- local border_inactive = H.tint(H.get("WinSeparator", "fg"), __border_tmux_inactive_fg)
+  local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
   local zsh_lines = H.tint(H.get("StatusLine", "fg"), -0.1)
@@ -798,22 +799,17 @@ function M.change_colors()
 
   local defined_cols = {
     fzf = {
+      -- Normal
       fg = H.get("FzfLuaFilePart", "fg"),
       bg = H.get("FzfLuaNormal", "bg"),
-
-      -- selection_fg = H.get("FzfLuaFilePart", "fg"),
-      -- selection_bg = H.get("FzfLuaSel", "bg"),
-      -- match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
-
-      selection_fg = H.get("FzfLuaSel", "fg"),
-      selection_sp = H.get("FzfLuaSel", "sp"),
-      selection_bg = H.get("FzfLuaNormal", "bg"),
-
-      match = H.get("FzfLuaFzfMatch", "fg"),
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
-      gutter = H.get("FzfLuaNormal", "bg"),
+      -- Selection
+      selection_fg = H.get("Normal", "fg"),
+      selection_bg = H.get("FzfLuaSel", "bg"),
+      match = H.get("FzfLuaFzfMatch", "fg"),
 
+      gutter = H.get("FzfLuaNormal", "bg"),
       pointer = H.get("diffDelete", "fg"),
       border = H.get("FzfLuaBorder", "fg"),
       header = H.get("FzfLuaHeaderText", "fg"),

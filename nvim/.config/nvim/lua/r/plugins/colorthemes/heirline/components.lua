@@ -1244,16 +1244,17 @@ M.Filetype = {
     local bufname = get_vars.bufname()
     local filename = get_vars.filename(bufname)
     local extension = get_vars.extension(filename)
+
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 
     local status = rmux_pane()
     self.run_with = status.run_with
-    self.task = status.task
-    self.watch = status.watch
+    self.task = status.task or 0
+    self.watch = status.watch or ""
 
-    local tasks_overseer = require("overseer.task_list").list_tasks { unique = true }
-    local tasks_by_status = require("overseer.util").tbl_group_by(tasks_overseer, "status")
-    self.tasks_overseer = tasks_by_status
+    local overseer = require "overseer"
+    local tasks = overseer.task_list.list_tasks { unique = true }
+    self.tasks_overseer = require("overseer.util").tbl_group_by(tasks, "status")
 
     self.filetype = get_vars.filetype()
   end,
@@ -1266,26 +1267,22 @@ M.Filetype = {
     hl = function(self)
       local fg = colors.statusline_bg
 
-      if self.task > 0 then
-        fg = colors.block_mux_bg
+      local has_task = self.task > 0 or (self.watch and #self.watch > 0)
+      local has_overseer_task = false
+
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks_overseer[i] then
+          has_overseer_task = true
+          break
+        end
       end
 
       if set_conditions.is_terminal_ft() then
         fg = colors.mode_term_statusline_bg
-      end
-
-      for i, _ in pairs(symbols_overseer) do
-        if self.tasks_overseer[i] then
-          fg = colors.block_mux_bg
-        end
-      end
-
-      if self.task > 0 or #self.watch > 0 then
-        fg = colors.block_mux_bg
-      end
-
-      if not set_conditions.hide_in_col_width(120) then
+      elseif not set_conditions.hide_in_col_width(120) then
         fg = colors.statusline_bg
+      elseif has_task or has_overseer_task then
+        fg = colors.block_mux_bg
       end
 
       return { fg = fg, bg = colors.statusline_right_block_bg_darken }
@@ -1303,11 +1300,11 @@ M.Filetype = {
     provider = RUtils.config.icons.misc.separator_down .. " ",
     hl = function(self)
       local fg = colors.statusline_bg
-      if self.filetype and #self.filetype > 0 then
-        fg = colors.statusline_right_block_bg_darken
-      end
       if set_conditions.is_terminal_ft() then
         fg = colors.mode_term_statusline_bg
+      end
+      if self.filetype and #self.filetype > 0 then
+        fg = colors.statusline_right_block_bg_darken
       end
       return { fg = fg, bg = colors.statusline_right_block_bg }
     end,

@@ -27,14 +27,22 @@ unmap -
 
 # zoom-in/out/reset
 
+# zoom: in
 map <C-=>               zoom in
+
+# zoom: out
 map <C-->               zoom out
+
+# zoom: reset
 map <C-0>               zoom reset
 
 map [index] q           quit
+
+# misc: show help
 map <C-g>               feedkeys "?"
 
 map [normal] n          search forward
+
 map [normal] N          search backward
 
 # map <c-f>             search forward
@@ -45,19 +53,20 @@ map [normal] N          search backward
 
 # NOTE: To create 2 coloumn, press d
 
+# toggle: no white or blank background
 map i                   recolor
 
 # ┌──────────────────────────────────────────────────────────┐
 # │ BOOKMARKS                                                │
 # └──────────────────────────────────────────────────────────┘
 
-# check bookmark
+# bookmark: input bmark
 map <C-s>               focus_inputbar ":bmark "
 
-# check blis
+# bookmark: input blist
 map b                   focus_inputbar ":blist "
 
-# delete bookmark
+# bookmark: delete bookmark
 map B                   focus_inputbar ":bdelete "
 
 # ┌──────────────────────────────────────────────────────────┐
@@ -66,26 +75,45 @@ map B                   focus_inputbar ":bdelete "
 
 unmap y
 unmap e
+
+# scroll: down (sama seperti vim)
 map <C-e>               scroll down 2
+
+# scroll: up (sama seperti vim)
 map <C-y>               scroll up
 
-map k                   scroll up
-map j                   scroll down
-map h                   scroll left
-map l                   scroll right
+# scroll: geser window ke atas
+map <A-k>               scroll up
 
+# scroll: geser window ke bawah
+map <A-j>               scroll down
+
+# scroll: geser window ke kiri
+map <A-h>               scroll left
+
+# scroll: geser window ke kanan
+map <A-l>               scroll right
+
+# scroll: half-up
 map K                   scroll half-up
+
+# scroll: half-down
 map J                   scroll half-down
 
+# scroll: full-down
 map <C-n>               scroll full-down
+
+# scroll: full-up
 map <C-p>               scroll full-up
 
 map [fullscreen] f      toggle_fullscreen
 map [fullscreen] =      zoom in
-map [fullscreen] k      scroll up
-map [fullscreen] j      scroll down
-map [fullscreen] h      scroll left
-map [fullscreen] l      scroll right
+
+map [fullscreen] <A-k>  scroll up
+map [fullscreen] <A-j>  scroll down
+map [fullscreen] <A-h>  scroll left
+map [fullscreen] <A-l>  scroll right
+
 map [fullscreen] K      scroll half-up
 map [fullscreen] J      scroll half-down
 

@@ -32,10 +32,20 @@ function M.load_session_from_dashboard(last)
       require("resession").load()
     end
 
-    if #RUtils.qf.get_list_qf() > 0 then
+    local qflist = RUtils.qf.get_list_qf()
+    if #qflist.items > 0 then
       vim.cmd(RUtils.qf.copen)
       vim.cmd [[wincmd p]]
       vim.cmd [[set cmdheight=0]]
+      return
+    end
+
+    local loclist = RUtils.qf.get_list_qf(true)
+    if #loclist.items > 0 then
+      vim.cmd(RUtils.qf.lopen)
+      vim.cmd [[wincmd p]]
+      vim.cmd [[set cmdheight=0]]
+      return
     end
   end
 

@@ -5,6 +5,9 @@ local H = require "r.settings.highlights"
 ---@class r.utils.windowdim
 local autocmds = {}
 
+---@param lower integer
+---@param upper integer
+---@return table
 local function tryrange(lower, upper)
   local result = {}
   for i = lower, upper do

@@ -31,6 +31,8 @@ local base_options = {
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
+    inlay_hints = true, -- Highlight URLs with an underline effect.
+    snacks_jump_scope = false,
     -- lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-seoul256_dark", "base46-zenburn" },
     lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-material-lighter" },
   },
@@ -88,6 +90,7 @@ local defaults = {
     border = {
       rectangle = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
       line = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+      rightsideonly = { "", "", "", "", "", "", "", "│" },
     },
     misc = {
       ai = " ",

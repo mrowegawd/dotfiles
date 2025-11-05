@@ -10,7 +10,7 @@ local base_colors = {
     bg = { from = "CurSearch", attr = "bg", alter = -0.35 },
     bold = false,
   },
-  blink_cmp_label_kind_fg_alter = 0.6,
+  blink_cmp_label_kind_fg_alter = 1.5,
   blink_cmp_label_match_fg_alter = 0.2,
   blink_ghost_text_fg_alter = -0.48,
   bqf_keyword = "Keyword",
@@ -22,6 +22,7 @@ local base_colors = {
   dapstopped_bg_alter = 0.25,
   float_title_bg_alter = -0.1,
   float_title_fg_alter = -0.1,
+  floatboder_fg_alter = 0.55,
   fzflua_border_fg_alter = 0.55,
   fzflua_buf_linenr_bg_alter = 0.5,
   fzflua_file_part_fg = 0.85,
@@ -45,20 +46,24 @@ local base_colors = {
   pmenu_sel_bg_alter = 0.2,
   pmenu_sp_alter = 2.5,
   pmenu_thumb_bg_alter = 0.4,
+  quickfixline_fg = -0.2,
   quickfixline_header_bg_alter = 0.4,
   quickfixline_header_fg_alter = 1.7,
   quickfixline_header_tint_bg_alter = 0,
   quickfixline_header_tint_fg_alter = 0,
   quickfixline_linenr_fg_alter = 0.25,
-  quickfixline_sp_alter = 1,
+  quickfixline_sp_alter = -0.2,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_bg_alter = 0,
-  statusline_fg_alter = 0.8,
+  statusline_fg_alter = 0.7,
+  statusline_left_block_fg = 2,
+  statusline_right_block_bg = 1,
+  statusline_right_block_fg = 1,
   tabline_bg_alter = 0.05,
-  tabline_fg_alter = 0.4,
+  tabline_fg_alter = 1.4,
   trouble_indent_fg_alter = 0.55,
   visual_bg_alter = -0.1,
-  winbar_fg_alter = 1.5,
+  winbar_fg_alter = 0.3,
   winbar_right_block_bg_alter = -0.6,
   winbar_right_block_fg_alter = -0.1,
   winseparator_alter = 0.25,
@@ -628,7 +633,7 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.45,
     render_markdown_code_bg_alter = 0.4,
     snacks_indent_scope_fg_alter = 0.15,
-    winbar_fg_alter = 1.2,
+    -- winbar_fg_alter = 1.2,
     winbar_right_block_bg_alter = -0.55,
     winseparator_alter = 0.5,
   },
@@ -742,33 +747,55 @@ local general_overrides = function()
     {
       StatusLine = {
         fg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_fg_alter },
-        bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
+        -- bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
+        bg = { from = "Normal", attr = "bg" },
         reverse = false,
+      },
+    },
+    { StatusLineNC = { inherit = "StatusLine" } },
+
+    { StatusLineRightBlock = { bg = { from = "StatusLine", attr = "bg", alter = colors.statusline_right_block_bg } } },
+    {
+      StatusLineRightBlock = {
+        fg = { from = "StatusLineRightBlock", attr = "bg", alter = colors.statusline_right_block_fg },
+      },
+    },
+    { StatusLineLeftBlock = { bg = { from = "StatusLine", attr = "bg" } } },
+    {
+      StatusLineLeftBlock = {
+        fg = { from = "StatusLineLeftBlock", attr = "bg", alter = colors.statusline_left_block_fg },
       },
     },
 
     {
       Pmenu = {
         fg = { from = "Normal", attr = "fg", alter = colors.pmenu_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = colors.pmenu_bg_alter },
-        sp = { from = "Normal", attr = "bg", alter = colors.pmenu_sp_alter },
+        bg = { from = "Normal", attr = "bg" },
+        -- sp = { from = "Normal", attr = "bg", alter = colors.pmenu_sp_alter },
         reverse = false,
       },
     },
-    { PmenuSel = { fg = "NONE", bg = "NONE", bold = true, underline = true, reverse = false } },
+    { PmenuSel = { fg = "NONE", underline = false, reverse = false } },
+
     { PmenuFloatBorder = { bg = { from = "Pmenu", attr = "bg" }, fg = { from = "Pmenu", attr = "bg" } } },
-    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = colors.pmenu_thumb_bg_alter } } },
+    {
+      PmenuThumb = {
+        bg = { from = "PmenuSel", attr = "bg", alter = 1 },
+        fg = { from = "PmenuSel", attr = "bg" },
+      },
+    },
+    { PmenuSbar = { bg = { from = "PmenuSel", attr = "bg" } } },
 
     {
       NormalFloat = {
         fg = { from = "Pmenu", attr = "fg", alter = colors.normal_float_fg_alter },
-        bg = { from = "Pmenu", attr = "bg", alter = -0.1 },
+        bg = { from = "Pmenu", attr = "bg" },
         reverse = false,
       },
     },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "NormalFloat", attr = "bg", alter = colors.floatboder_fg_alter },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -819,7 +846,6 @@ local general_overrides = function()
         reverse = false,
       },
     },
-
     {
       TabLine = {
         fg = { from = "TabLine", attr = "bg", alter = colors.tabline_fg_alter },
@@ -1152,7 +1178,8 @@ local general_overrides = function()
     -- WINBAR
     {
       WinBar = {
-        fg = { from = "StatusLine", attr = "bg", alter = colors.winbar_fg_alter },
+        -- fg = { from = "StatusLine", attr = "bg", alter = colors.winbar_fg_alter },
+        fg = { from = "StatusLine", attr = "fg", alter = colors.winbar_fg_alter },
         bg = { from = "StatusLine", attr = "bg" },
         bold = false,
       },
@@ -1185,10 +1212,11 @@ local general_overrides = function()
     {
       CmpDocNormal = {
         fg = { from = "Keyword", attr = "fg", alter = colors.cmpdocnormal_fg_alter },
-        bg = { from = "Pmenu", attr = "bg", alter = 0.15 },
+        bg = { from = "Pmenu", attr = "bg", alter = 0.5 },
       },
     },
     { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
+    { CmpDocSbar = { inherit = "PmenuSbar" } },
 
     --  ───────────────────────────────[ BEACON ]──────────────────────────────
     { BeaconDefault = { bg = colors.cursor_fg } },
@@ -1523,7 +1551,7 @@ local general_overrides = function()
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     {
       FzfLuaBorder = {
-        fg = { from = "FzfLuaNormal", attr = "bg" },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
@@ -1535,22 +1563,20 @@ local general_overrides = function()
       },
     },
 
-    { FzfLuaTitle = { inherit = "FloatTitle" } },
+    { FzfLuaTitle = { inherit = "FloatTitle", reverse = true, bold = true } },
 
     { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
 
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.22 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.25 } } },
 
     { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.3 }, bg = "NONE" } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
     {
       FzfLuaSel = {
-        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.35 },
-        bg = { from = "FzfLuaNormal", attr = "bg" },
-        sp = { from = "FzfLuaFilePart", attr = "fg", alter = colors.fzflua_sel_sp_fg_alter },
-        underline = true,
+        fg = { from = "@property", attr = "fg" },
+        bg = { from = "PmenuSel", attr = "bg" },
         bold = true,
       },
     },
@@ -1566,11 +1592,13 @@ local general_overrides = function()
     },
     {
       FzfLuaPreviewBorder = {
-        fg = { from = "FzfLuaPreviewNormal", attr = "bg" },
-        bg = { from = "FzfLuaPreviewNormal", attr = "bg" },
+        -- fg = { from = "FzfLuaPreviewNormal", attr = "bg" },
+        -- bg = { from = "FzfLuaPreviewNormal", attr = "bg" },
+        inherit = "FzfLuaBorder",
+        bold = true,
       },
     },
-    { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle" } },
+    { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle", reverse = true } },
     { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
 
     { FzfLuaCursorLine = { bg = { from = "FzfLuaBorder", attr = "fg", alter = 0.12 } } },
@@ -2104,9 +2132,9 @@ local function set_panel_highlight()
     -- +----------------------+
     {
       QuickFixLine = {
-        fg = "NONE",
+        fg = { from = "FzfLuaSel", attr = "fg", alter = colors.quickfixline_fg },
         bg = "NONE",
-        sp = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_sp_alter },
+        sp = { from = "Keyword", attr = "fg", alter = colors.quickfixline_sp_alter },
         underline = true,
         bold = true,
         reverse = false,

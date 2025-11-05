@@ -192,11 +192,11 @@ _close_running_process() {
   local process="$2"
 
   case "$process" in
-  yazi)
-    tmux send-keys -t "$pane_id" Escape ":normal! q" C-m
-    ;;
   nvim)
     tmux send-keys -t "$pane_id" Escape ":q!" C-m
+    ;;
+  yazi)
+    tmux send-keys -t "$pane_id" "q" C-m
     ;;
   esac
 
@@ -238,6 +238,8 @@ _get_pane_id_left_or_right() {
     fi
   fi
 }
+
+# ─[ Handle file manager ]──────────────────────────────────────────────
 
 handle_open_filetree() {
   # 1️⃣ Pastikan layout dasar tersedia
@@ -351,8 +353,14 @@ handle_split_term() {
   elif
     [[ "$IS_PANE_AT_TOP" == 0 ]] && [[ "$IS_PANE_AT_BELLOW" == 1 ]]
   then
-    _go_select_pane_with_id "$MAIN_PANE_ID"
-    tmux resize-pane -t "$MAIN_PANE_ID" -y "$FIXED_HEIGHT_MAIN_PANE"
+    if [[ $MAIN_PANE_ID == "$CURRENT_PANE" ]]; then
+      _go_select_pane_with_id "$TOGGLE_TERM_PANE_ID"
+      tmux resize-pane -y "$FIXED_HEIGHT_BELOW_PANE"
+    else
+      _go_select_pane_with_id "$MAIN_PANE_ID"
+      tmux resize-pane -t "$MAIN_PANE_ID" -y "$FIXED_HEIGHT_MAIN_PANE"
+    fi
+
   fi
 }
 

@@ -520,7 +520,7 @@ function M.lsp.wrap_location_method(yield, open_mode)
         local curpos = RUtils.get_curpos_under_cursor()
         if not vim.deep_equal(from, curpos) then
           -- We have moved the cursor since fetching locations, so abort
-          RUtils.warn "Abort it, because your cursor postion has been changed!"
+          RUtils.warn("Request definition abort process,\nyour cursor postion has been changed!", { title = "LSP" })
           return
         end
 
@@ -561,12 +561,21 @@ function M.lsp.wrap_location_method(yield, open_mode)
           end
           -- vim.cmd.lopen()
 
-          vim.fn.setqflist({}, " ", {
-            title = t.title .. ": " .. from.line,
-            items = items,
-            context = t.context,
-          })
-          vim.cmd.copen()
+          RUtils.info(t.context)
+
+          local list_items = { items = items, title = "LSP " .. t.title .. ": " .. from.line, context = t.context }
+          if t.context and type(t.context) == "string" then
+            RUtils.qf.save_to_qf_and_auto_open_qf(list_items, t.context)
+          end
+
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
+
+          -- vim.fn.setqflist({}, " ", {
+          --   title = t.title .. ": " .. from.line,
+          --   items = items,
+          --   context = t.context,
+          -- })
+          -- vim.cmd.copen()
         end
       end,
     }
@@ -611,7 +620,7 @@ function M.lsp.wrap_references_to_send_qf()
     return
   end
 
-  RUtils.info("Call References: `" .. target_strings .. "`")
+  RUtils.info("Request references: `" .. target_strings .. "`", { title = "LSP" })
 
   vim.lsp.buf.references(nil, {
     on_list = function(t)
@@ -619,21 +628,11 @@ function M.lsp.wrap_references_to_send_qf()
 
       -- if all_item_locations_equal(t.items) then
       if not vim.islist(t.items) or type(t.items) ~= "table" or #t.items == 0 then
-        RUtils.warn("No references found for: " .. from.line)
+        RUtils.warn("No results request references for `" .. from.line .. "`", { title = "LSP" })
         return
       end
 
-      local set_jump = false
-
-      if not vim.deep_equal(from, curpos) then
-        if #t.items > 1 then
-          vim.cmd("vsplit " .. vim.api.nvim_buf_get_name(from.buf))
-        end
-        set_jump = true
-      end
-
-      local QfbookmarkUtils = require "qfbookmark.utils"
-      local qf_win = QfbookmarkUtils.windows_is_opened "qf"
+      local qf_win = require("qfbookmark.utils").windows_is_opened "qf"
       if qf_win.found then
         pcall(vim.api.nvim_win_close, qf_win.winnr, true)
       end
@@ -645,12 +644,50 @@ function M.lsp.wrap_references_to_send_qf()
         end
       end
 
-      vim.fn.setqflist({}, " ", {
-        title = "LSP " .. t.title .. ": " .. from.line,
-        items = items,
-        context = t.context,
-      })
-      vim.cmd(RUtils.qf.copen)
+      -- RUtils.info(vim.inspect(t.context))
+      -- Info ----- notify.info RUtils { method: textDocument/references, id: 13 }
+
+      -- How to get
+      -- getqflist({'all': 1})          " dapatkan semua field
+      -- getqflist({'items': 1})        " hanya items
+      -- getqflist({'context': 1})      " hanya context
+      -- getqflist({'id': id, 'items': 1, 'context': 1}) " berdasarkan id tertentu
+      --
+      --
+      -- Kalau kamu mau melihat context quickfix saat ini:
+      -- vim.notify(vim.inspect(vim.fn.getqflist({ context = 1 }).context))
+      --
+      -- Kalau kamu mau melihat semua field (termasuk items, title, context, dll):
+      -- vim.notify(vim.inspect(vim.fn.getqflist({ all = 1 })))
+      --
+      local set_jump = false
+
+      if not vim.deep_equal(from, curpos) then
+        if #t.items > 1 then
+          local bufname = vim.api.nvim_buf_get_name(t.context.bufnr)
+          vim.cmd("topleft vsplit " .. bufname)
+          local win_id = vim.api.nvim_get_current_win()
+
+          local target_width = 80
+
+          -- Check current window width
+          local cur_width = vim.api.nvim_win_get_width(win_id)
+          if cur_width ~= target_width then
+            vim.cmd "wincmd ="
+            vim.api.nvim_win_set_width(win_id, target_width)
+          end
+        end
+        set_jump = true
+      end
+
+      local list_items = { items = items, title = "LSP " .. t.title .. ": " .. from.line }
+      if t.context and type(t.context) == "table" then
+        if t.context.method and t.context.bufnr then
+          list_items["context"] = { name = t.context.method, bufnr = t.context.bufnr }
+        end
+      end
+
+      RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
 
       if vim.bo.filetype == "qf" then
         vim.cmd "wincmd p"

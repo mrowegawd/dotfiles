@@ -227,6 +227,10 @@ super + shift + a
 super + shift + y
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_mpv
 
+# misc: killus, free memory or lagging
+super + shift + Insert
+        $HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/bin/killus
+
 # misc: open poweroff
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff

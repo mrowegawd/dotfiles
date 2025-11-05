@@ -7,14 +7,14 @@ local grepqf = function(opts)
     cmd [[wincmd w]]
   end
 
-  local path = {}
+  local path_tbl = {}
   local _qf = vim.fn.getqflist()
   -- The table 'path' still contains duplicate elements
   for i = 1, #_qf do
-    table.insert(path, vim.fn.bufname(_qf[i].bufnr))
+    table.insert(path_tbl, vim.fn.bufname(_qf[i].bufnr))
   end
 
-  if #path == 0 then
+  if #path_tbl == 0 then
     vim.schedule(function()
       vim.notify "No item on qf"
     end)
@@ -25,7 +25,7 @@ local grepqf = function(opts)
     vimgrep_arguments = RUtils.config.vimgrep_arguments,
     path_display = { "smart" },
     -- theme = "ivy",
-    search_dirs = RUtils.cmd.rm_duplicates_tbl(path), -- much better, unique path
+    search_dirs = RUtils.remove_duplicates_table(path_tbl), -- much better, unique path
     prompt_title = "Live Grep Qf",
 
     attach_mappings = function(_)

@@ -48,6 +48,7 @@ return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
+    enabled = false,
     opts = {
       modes = { char = { keys = { "F", ";" } }, search = { enabled = false } },
       jump = { nohlsearch = true },

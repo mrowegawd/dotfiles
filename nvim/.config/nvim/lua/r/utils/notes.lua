@@ -92,10 +92,7 @@ function M.grep_title(is_live_grep)
       rg_glob = false,
       rg_opts = rg_opts,
       winopts = {
-        title = RUtils.fzflua.format_title(
-          "Orgmode > Grep",
-          RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)
-        ),
+        title = RUtils.fzflua.format_title("Orgmode > Grep", RUtils.strip_whitespaces(RUtils.config.icons.misc.fire)),
       },
     }
   end
@@ -109,7 +106,7 @@ function M.grep_title(is_live_grep)
       fullscreen = false,
       title = RUtils.fzflua.format_title(
         "Orgmode > Jump Global Title",
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.fire)
+        RUtils.strip_whitespaces(RUtils.config.icons.misc.fire)
       ),
     },
   }

@@ -22,7 +22,6 @@ getcolors() {
   TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
   if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
     INACTIVE=$(grep -i TAB_ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-    KEYWORD=$(grep -i TAB_ACTIVE_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   fi
 }
 

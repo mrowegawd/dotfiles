@@ -174,6 +174,7 @@ opt.swapfile = false -- Ask what state to recover when opening a file that was n
 opt.backup = false -- no backup file
 opt.writebackup = false -- do not backup file before write
 opt.undofile = true -- don't create root-owned files
+opt.undolevels = 10000
 opt.wrap = false -- Disable wrapping of lines longer than the width of window.
 opt.mouse = "a" -- Enable mouse support.
 opt.autochdir = false -- Use current file dir as working dir (See project.nvim)

@@ -66,12 +66,13 @@ return {
           },
         },
         menu = {
-          border = RUtils.config.icons.border.line,
+          border = "none",
           winhighlight = "Normal:Pmenu,FloatBorder:PmenuFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
             -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
+            -- columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
+            columns = { { "label", "kind", "kind_icon", gap = 1 } },
             components = {
               kind_icon = {
                 text = function(ctx)
@@ -81,7 +82,7 @@ return {
                   else
                     kind = RUtils.config.icons.kinds[ctx.kind] or ""
                   end
-                  return " " .. RUtils.cmd.strip_whitespace(kind) .. " "
+                  return " " .. RUtils.strip_whitespaces(kind) .. " "
                 end,
                 highlight = function(ctx)
                   if ctx.deprecated then
@@ -151,8 +152,10 @@ return {
           auto_show = true,
           auto_show_delay_ms = 200,
           window = {
-            border = RUtils.config.icons.border.line,
+            border = RUtils.config.icons.border.rightsideonly,
+            -- border = "none",
             winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
+            -- pri
           },
           -- draw = function(opts)
           --   opts.default_implementation()

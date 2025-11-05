@@ -1,11 +1,11 @@
-TAB_ACTIVE_FG="#3B6080"
+TAB_ACTIVE_FG="#cccccc"
 TAB_ACTIVE_BG="#243A4C"
 
 TAB_INACTIVE_FG="#7fa9cc"
 TAB_INACTIVE_BG="#374a59"
 
 STATUSLINE_BG_MESSAGE="#ffff06"
-STATUSLINE_FG="#4d4d4d"
+STATUSLINE_FG="#4b4b4b"
 
 SESSION_BG="#264660"
 SESSION_FG="#4d8cc0"
@@ -16,11 +16,11 @@ TMUX_KEYWORD="#569cd6"
 
 # color untuk bg active pane saat command yazi running (khusus bg file manager)
 # agar sama dengan bg file-manager di nvim
-FM_BG="#2e2e2e"
+FM_BG="#1f1f1f"
 
 BORDER_ACTIVE="#37658b"
-BORDER_INACTIVE="#343434"
-BORDER_INACTIVE_STATUS_FG="#5d5d5d"
+BORDER_INACTIVE="#1f1f1f"
+BORDER_INACTIVE_STATUS_FG="#373737"
 
 RED="#f44747"
 BLUE="#569cd6"
@@ -69,15 +69,15 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
 # Display the border name for debugging purposes:
-# setw -g pane-border-format "\
-# #{?pane_active,#[fg=$RED] ,}\
-# #{?#{==:#{window_panes},1},#[fg=$BORDER_INACTIVE_STATUS_FG]\
-# #{?pane_active,#[fg=$BORDER_INACTIVE_STATUS_FG],} #{pane_index}.#{pane_id},\
-# #[fg=$BORDER_INACTIVE_STATUS_FG]#{?pane_active,#[fg=$BORDER_ACTIVE],} #{pane_index}.#{pane_id}} \
-# #{?pane_active,#{pane_current_command} ,}"
+setw -g pane-border-format "\
+#{?pane_active,#[fg=$RED] ,}\
+#{?#{==:#{window_panes},1},#[fg=$BORDER_INACTIVE_STATUS_FG]\
+#{?pane_active,#[fg=$BORDER_INACTIVE_STATUS_FG],} #{pane_index}.#{pane_id},\
+#[fg=$BORDER_INACTIVE_STATUS_FG]#{?pane_active,#[fg=$BORDER_ACTIVE],} #{pane_index}.#{pane_id}} \
+#{?pane_active,#{pane_current_command} ,}"
 
 # Border display name disabled
-setw -g pane-border-format ""
+# setw -g pane-border-format ""
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                        STATUSLINE                        ╎
@@ -114,7 +114,9 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 set -g status-left-length 20
 set -g status-left "#[bg=$SESSION_BG,fg=$SESSION_FG,bold] ❐ #S \
 #{?#{==:#I,1},\
-#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG],\
+#{?#{==:#{pane_mode},copy-mode},\
+#[fg=$SESSION_BG]#[bg=$RED],\
+#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG]},\
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]\
 }"
 

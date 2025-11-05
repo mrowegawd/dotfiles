@@ -2,6 +2,7 @@ local silent = { silent = true }
 local nosilent = { silent = false }
 
 local fn, cmd, fmt = vim.fn, vim.cmd, string.format
+local fm_manager = vim.env.TERM_FILEMANAGER
 
 local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
@@ -810,7 +811,6 @@ RUtils.map.xnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visua
 
 -- }}}
 -- {{{ Tmux integration
-local fm_manager = vim.env.TERM_FILEMANAGER
 
 RUtils.map.nnoremap("<a-B>", function()
   RUtils.terminal.float_btop()
@@ -909,31 +909,162 @@ RUtils.map.nnoremap("<a-E>", function()
     return
   end
 
-  local main_pane_id = get_current_pane_tmux_id()
-  go_left_tmux()
+  ---@return string | nil
+  local get_current_session = function()
+    local handle = io.popen "tmux display-message -p '#S'"
+    if not handle then
+      return
+    end
 
-  -- Kill all file manager panes
-  if get_current_pane_tmux_cmd "nnn" or get_current_pane_tmux_cmd "yazi" or get_current_pane_tmux_cmd "lf" then
-    vim.system { "tmux", "kill-pane" }
+    local current_session = handle:read "*a"
+    handle:close()
+
+    if #current_session == "" then
+      return
+    end
+
+    return current_session:gsub("%s+$", "")
   end
 
-  if get_current_pane_tmux_cmd "tmux" or get_current_pane_tmux_cmd "zsh" then
-    vim.system { "tmux", "select-pane", "-t", main_pane_id }
+  -- Trim newline/whitespace
+  local current_session = get_current_session()
+  if not current_session then
+    current_session = "None-Session"
+  end
+
+  -- Tentukan path JSON
+  local PATH_PANE_COLLECT_JSON = "/tmp/tmux-toggle-pane-" .. current_session .. ".json"
+  if not RUtils.file.exists(PATH_PANE_COLLECT_JSON) then
+    RUtils.warn "Create base layout first"
+    return
+  end
+
+  ---@param path string
+  ---@param field string
+  ---@return string | nil
+  local function get_json_field(path, field)
+    if not RUtils.file.exists(path) then
+      print("File not found: " .. path)
+      return nil
+    end
+
+    -- Jalankan command jq
+    local handle = io.popen(string.format('jq -r ".[0].%s" "%s"', field, path))
+    if not handle then
+      print "Failed to run jq"
+      return nil
+    end
+
+    local result = handle:read "*a"
+    handle:close()
+
+    -- Trim whitespace
+    result = result:gsub("^%s+", ""):gsub("%s+$", "")
+
+    return result
+  end
+
+  local main_pane_id = get_json_field(PATH_PANE_COLLECT_JSON, "main_pane_id")
+  local file_manager_pane_id = get_json_field(PATH_PANE_COLLECT_JSON, "file_manager_pane_id")
+
+  ---@param cal {command: table, pane_id: string, program: string}
+  local function call_close_process(cal)
+    for _ = 1, 10 do
+      local get_cmd = vim
+        .system({
+          "sh",
+          "-c",
+          [[tmux display -p -t ]] .. cal.pane_id .. [[ '#{pane_current_command}' | tr -d '\n']],
+        }, { text = true })
+        :wait()
+
+      if get_cmd.code ~= 0 or #get_cmd.stdout == 0 then
+        break
+      end
+
+      if get_cmd.stdout == cal.program then
+        break
+      end
+      os.execute "sleep 0.5" -- Linux/macOS
+    end
+  end
+
+  ---@param cmds {command: table, pane_id: string, program: string}[]
+  local function exec_commands(cmds)
+    for _, cal in pairs(cmds) do
+      local get_current_process = vim
+        .system({
+          "sh",
+          "-c",
+          [[tmux display -p -t ]] .. file_manager_pane_id .. [[ '#{pane_current_command}' | tr -d '\n']],
+        }, { text = true })
+        :wait()
+
+      if get_current_process.code ~= 0 or #get_current_process.stdout == 0 then
+        break
+      end
+
+      if get_current_process.stdout == cal.program then
+        vim.system(cal.command)
+      end
+
+      call_close_process(cal)
+    end
   end
 
   local cmd_open_filemanager = {
-    "tmux",
-    "split-window",
-    "-h",
-    "-p",
-    "30",
-    "-l",
-    pane_size,
-    "-c",
-    "'#{pane_current_path}'",
-    fm_manager,
-    dirname,
+    --- Close yazi
+    {
+      command = {
+        "sh",
+        "-c",
+        "tmux send-keys -t " .. file_manager_pane_id .. " 'q' Enter",
+      },
+      pane_id = file_manager_pane_id,
+      program = "zsh",
+    },
+
+    --- Clear screen
+    {
+      command = {
+        "sh",
+        "-c",
+        "tmux send-keys -t " .. file_manager_pane_id .. " 'clear' Enter",
+      },
+      pane_id = file_manager_pane_id,
+      program = "zsh",
+    },
+
+    --- Open yazi with targeted cwd
+    {
+      command = {
+        "sh",
+        "-c",
+        "tmux send-keys -t " .. file_manager_pane_id .. " '" .. fm_manager .. " " .. dirname .. "' Enter",
+      },
+      pane_id = file_manager_pane_id,
+      program = fm_manager,
+    },
+
+    -- {
+    --   command = {
+    --     "sh",
+    --     "-c",
+    --     "tmux select-pane -t " .. file_manager_pane_id,
+    --   },
+    --   pane_id = file_manager_pane_id,
+    --   program = fm_manager,
+    -- },
   }
-  vim.system(cmd_open_filemanager)
+
+  exec_commands(cmd_open_filemanager)
+
+  vim
+    .system({
+      "sh",
+      "-c",
+      [[tmux select-pane -t ]] .. file_manager_pane_id,
+    }, { text = true })
+    :wait()
 end)
 -- }}}

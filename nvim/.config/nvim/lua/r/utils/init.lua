@@ -520,7 +520,7 @@ end
 
 ---@param name string
 ---@param rhs string | function
----@param opts?  vim.api.keyset.user_command
+---@param opts? vim.api.keyset.user_command
 function M.create_command(name, rhs, opts)
   opts = opts or {}
   vim.api.nvim_create_user_command(name, rhs, opts)
@@ -619,8 +619,8 @@ end
 
 --- Executes a command and returns the output
 --- @param command string
---- @return string returns empty string upon error
-M.execute_io_open = function(command)
+--- @return string -- returns empty string upon error
+function M.execute_io_open(command)
   local handle = io.popen(command)
 
   if handle == nil then

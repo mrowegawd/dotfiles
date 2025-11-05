@@ -84,6 +84,16 @@ local function load_item_todos(selected, tbl_cts)
   end
 end
 
+---@param title_prefix "Buffer" | "All"
+---@param items table
+---@param name_ctx? string
+---@return QFBookLists
+local function get_list_items(title_prefix, items, name_ctx)
+  local title = "Todo Comments " .. title_prefix
+  name_ctx = name_ctx or "TodoComments"
+  return { title = title, items = items, context = { name = name_ctx } }
+end
+
 local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
   vim.validate {
     contents = { contents, "function" },
@@ -160,14 +170,12 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
           end
           open_with("vsplit", tbl_cts, selected[1], is_open_folded)
         end,
-
         ["ctrl-s"] = function(selected, _)
           if not selected then
             return
           end
           open_with("split", tbl_cts, selected[1], is_open_folded)
         end,
-
         ["ctrl-t"] = function(selected, _)
           if not selected then
             return
@@ -184,8 +192,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
           if not items then
             return
           end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note", true)
+          RUtils.qf.save_to_qf_and_auto_open_qf(get_list_items("Buffer", items), true)
         end,
         ["alt-V"] = {
           prefix = "toggle-all",
@@ -198,11 +205,9 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
             if not items then
               return
             end
-
-            RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note All", true)
+            RUtils.qf.save_to_qf_and_auto_open_qf(get_list_items("All", items), true)
           end,
         },
-
         ["alt-q"] = function(selected, _)
           if not selected then
             return
@@ -212,8 +217,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
           if not items then
             return
           end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note")
+          RUtils.qf.save_to_qf_and_auto_open_qf(get_list_items("Buffer", items))
         end,
         ["alt-Q"] = {
           prefix = "toggle-all",
@@ -226,8 +230,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
             if not items then
               return
             end
-
-            RUtils.qf.save_to_qf_and_auto_open_qf(items, "TODO Comments Note All")
+            RUtils.qf.save_to_qf_and_auto_open_qf(get_list_items("All", items))
           end,
         },
       },

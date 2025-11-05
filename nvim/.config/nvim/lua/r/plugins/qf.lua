@@ -41,11 +41,10 @@ return {
       },
     },
   },
-  -- QUICKER (disabled)
+  -- QUICKER
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "VeryLazy",
-    -- enabled = false,
     ft = "qf",
     opts = {},
   },
@@ -55,7 +54,67 @@ return {
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     opts = {
-      save_dir = RUtils.config.path.wiki_path .. "/orgmode/qfbookmark",
+      save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
+      keymaps = {
+        integrations = {
+          cmdline_strings = {
+            commands = {
+              -- 🔍 Debug / Inspect
+              {
+                key = "<Leader>qrt",
+                cmd = function(qftbl)
+                  RUtils.info(vim.inspect(qftbl))
+                end,
+                desc = "Output items current quickfix/loclist",
+              },
+
+              -- 🔧 Filter & Update (Quickfix)
+              {
+                key = "<Leader>qrc",
+                cmd = "Cfilter /\\\\v\\|[^\\|]*\\|s\\*/",
+                desc = "Run Cfilter update",
+              },
+              {
+                key = "<Leader>qrl",
+                cmd = "cdo %s/status//gi | update",
+                desc = "Run cdo status update (quickfix)",
+              },
+              {
+                key = "<Leader>qrj",
+                cmd = "cfdo %s/WinNav/Winav/g",
+                desc = "Run cfdo replace",
+              },
+              {
+                key = "<Leader>qrk",
+                cmd = "cfdo %s/WinNav/Winav/g | update",
+                desc = "Run cfdo replace & update",
+              },
+
+              -- 🧩 Filter & Update (Loclist)
+              {
+                key = "<Leader>qrC",
+                cmd = "Lfilter / /",
+                desc = "Run Lfilter update",
+              },
+              {
+                key = "<Leader>qrL",
+                cmd = "ldo %s/status//gi | update",
+                desc = "Run ldo status update (loclist)",
+              },
+              {
+                key = "<Leader>qrJ",
+                cmd = "lfdo %s/WinNav/Winav/g",
+                desc = "Run lfdo replace",
+              },
+              {
+                key = "<Leader>qrK",
+                cmd = "lfdo %s/WinNav/Winav/g | update",
+                desc = "Run lfdo replace & update",
+              },
+            },
+          },
+        },
+      },
     },
   },
   -- QFSILET
