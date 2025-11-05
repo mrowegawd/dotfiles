@@ -481,60 +481,85 @@ capture_fzf() {
 #  +----------------------------------------------------------+
 
 tmux_clock_mode() {
-  GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
-  if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
-    tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
-    tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
-    if command -v tclock &>/dev/null; then
-      CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
-      tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
-    else
-      tmux clock-mode
+  local PATH_PANE_COLLECT_JSON="/tmp/tmux-main-layout-workspaces.json"
+  [[ ! -f $PATH_PANE_COLLECT_JSON ]] && dunstify "Create base layout first" && exit
+
+  __extract_id_from_json() {
+    local session_name="$1"
+    local window_name="$2"
+    local field_name="$3"
+    local json_file="$4"
+
+    jq -r --arg session_name "$session_name" --arg window_name "$window_name" \
+      --arg field_name "$field_name" '.[$session_name].[$window_name].[$field_name]' "$json_file"
+  }
+
+  __get_file_manager_pane_id() {
+    local session_name="$1"
+    local window_name="$2"
+    local json_file="$3"
+
+    __extract_id_from_json "$session_name" "$window_name" "file_manager_pane_id" "$json_file"
+  }
+
+  __get_main_pane_id() {
+    local session_name="$1"
+    local window_name="$2"
+    local json_file="$3"
+
+    __extract_id_from_json "$session_name" "$window_name" "main_pane_id" "$json_file"
+  }
+
+  local current_session window_id file_manager_pane_id
+  current_session=$(tmux display-message -p '#S')
+  window_id=$(tmux display-message -p '#I')
+
+  main_pane_id=$(__get_main_pane_id "$current_session" "$window_id" "$PATH_PANE_COLLECT_JSON")
+  file_manager_pane_id=$(__get_file_manager_pane_id "$current_session" "$window_id" "$PATH_PANE_COLLECT_JSON")
+
+  if [[ $file_manager_pane_id == "" ]]; then
+    dunstify "Pane file manager is empty?"
+    exit
+  fi
+
+  # dunstify $file_manager_pane_id
+  local pane_id_split process
+  pane_id_split=$(tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}' -t "$file_manager_pane_id" -P -F '#{pane_id}')
+  process="zsh"
+
+  tmux select-pane -t "$main_pane_id"
+
+  for _ in {1..5}; do
+    local current_cmd
+    current_cmd=$(tmux display -p -t "$pane_id_split" '#{pane_current_command}' | tr -d '\n')
+    [[ "$current_cmd" != "$process" ]] && break
+    sleep 0.1
+  done
+
+  if command -v tclock &>/dev/null; then
+
+    if [[ "$1" == "clock" ]]; then
+      # tclock_command="'tclock clock -S'"
+      tmux send-keys -t "$pane_id_split" 'tclock clock -S' Enter
     fi
-    _go_up
-    _go_left
+
+    if [[ "$1" == "pomodoro" ]]; then
+      # tclock_command="'tclock -c red timer -d 25m -M'"
+      tmux send-keys -t "$pane_id_split" 'tclock -c red timer -d 25m -M' Enter
+    fi
   else
-    _go_right
-
-    # cs=$(tmux display-message -p "#{pane_current_command}")
-    # dunstify "$cs"
-
-    if _check_pane_is_nvim; then
-      tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
-    fi
-
-    if _check_pane_is_nnn; then
-      _go_right
-      tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
-    fi
-
-    if _check_pane_is_yazi; then
-      tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}'
-
-      if command -v tclock &>/dev/null; then
-        CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
-        tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
-      else
-        tmux clock-mode
-      fi
-
-      _go_left
-      exit
-    fi
-
-    if _check_pane_is_zsh; then
-      tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
-      if command -v tclock &>/dev/null; then
-        CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
-        tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
-      else
-        tmux clock-mode
-      fi
-      _go_up
-      _go_left
-    fi
+    tmux clock-mode
   fi
 }
+
+tmux_pomodoro_mode() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "pomodoro"
+}
+
+tmux_open_clock() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "clock"
+}
+
 tmux_toggle_status() {
   tmux set-option -g status
 
@@ -610,6 +635,7 @@ callme() {
  tmux: toggle status
  tmux: toggle synchronize panes
  tmux: clock mode
+ tmux: pomodoro mode
  tmux: select session
  tmux: capture pane
  tmux: capture pane with files
@@ -638,7 +664,8 @@ EOF
   "btop") open_ps_btop ;;
   "apt: search") show_apt_search ;;
   "apt: service system UI") open_systemctl_ui ;;
-  "tmux: clock mode") tmux_clock_mode ;;
+  "tmux: clock mode") tmux_open_clock ;;
+  "tmux: pomodoro mode") tmux_pomodoro_mode ;;
   "tmux: select session") tmux_select_sess ;;
   "tmux: toggle status") tmux_toggle_status ;;
   "tmux: toggle synchronize panes") tmux_toggle_synchronize_panes ;;

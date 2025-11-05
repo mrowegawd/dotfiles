@@ -26,6 +26,7 @@ WINDOW_ID=""
 MAIN_PANE_ID=""
 FILE_MANAGER_PANE_ID=""
 TOGGLE_TERM_PANE_ID=""
+CLOCK_PANE_ID=""
 
 CURRENT_CWD=""
 
@@ -103,6 +104,7 @@ __init_json_file() {
       "main_pane_id": "$main_pane_id",
       "file_manager_pane_id": "",
       "toggle_term_pane_id": "",
+      "clock_pane_id": "",
       "cwd": "$cwd",
       "file_manager_layout": "$LAYOUT_SIDE"
     }
@@ -237,6 +239,18 @@ __update_pane_toggle_term() {
     __update_field_session_obj "$session_name" "$window_id" "$pane_id" "toggle_term_pane_id"
   fi
 }
+__update_pane_clock_id() {
+  local session_name window_id pane_id
+  session_name="$1"
+  window_id="$2"
+  pane_id="$3"
+
+  if [[ -z "$pane_id" ]]; then
+    dunstify "⚠️  Toggle term pane ID is empty!"
+  else
+    __update_field_session_obj "$session_name" "$window_id" "$pane_id" "clock_pane_id"
+  fi
+}
 
 __is_current_session_exits_from_json() {
   local session_name="$1"
@@ -289,6 +303,13 @@ __get_toggle_term_id() {
   local json_file="$PATH_PANE_COLLECT_JSON"
 
   __extract_id_from_json "$session_name" "$window_name" "toggle_term_pane_id"
+}
+__get_clock_pane_id() {
+  local session_name="$1"
+  local window_name="$2"
+  local json_file="$PATH_PANE_COLLECT_JSON"
+
+  __extract_id_from_json "$session_name" "$window_name" "clock_pane_id"
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
@@ -558,6 +579,59 @@ float_term() {
         -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
     fi
+  fi
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ CLOCK AND POMODORO                                       ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+open_clock_mode() {
+  update_global_pane_ids
+
+  [[ $CURRENT_SESSION == "" ]] && dunstify "Create base layout first" && exit
+
+  CLOCK_PANE_ID=$(__get_clock_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
+  if ! __is_pane_id_exists "$CLOCK_PANE_ID" || [[ $CLOCK_PANE_ID == "" ]]; then
+
+    # Need file manager pane id
+    FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
+    if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
+      dunstify "Create base layout first"
+      exit
+    fi
+
+    CLOCK_PANE_ID=$(tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}' -t "$FILE_MANAGER_PANE_ID" -P -F '#{pane_id}')
+
+    __update_pane_clock_id "$CURRENT_SESSION" "$WINDOW_ID" "$CLOCK_PANE_ID"
+  fi
+
+  tmux select-pane -t "$MAIN_PANE_ID"
+
+  local process
+  process="zsh"
+
+  for _ in {1..10}; do
+    local current_cmd
+    current_cmd=$(tmux display -p -t "$CLOCK_PANE_ID" '#{pane_current_command}' | tr -d '\n')
+    [[ "$current_cmd" == "tclock" ]] && tmux send-keys -t "$CLOCK_PANE_ID" "q" Enter
+    [[ "$current_cmd" != "$process" ]] && break
+    sleep 0.1
+  done
+
+  if command -v tclock &>/dev/null; then
+
+    if [[ "$1" == "clock" ]]; then
+      # tclock_command="'tclock clock -S'"
+      tmux send-keys -t "$CLOCK_PANE_ID" 'tclock clock -S' Enter
+    fi
+
+    if [[ "$1" == "pomodoro" ]]; then
+      # tclock_command="'tclock -c red timer -d 25m -M'"
+      tmux send-keys -t "$CLOCK_PANE_ID" 'tclock -c red timer -d 25m -M' Enter
+    fi
+  else
+    tmux clock-mode
   fi
 }
 
