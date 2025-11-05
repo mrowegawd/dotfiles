@@ -964,10 +964,10 @@ function M.change_colors()
       tab_inactive_fg = H.get("NormalKeyword", "bg"),
       tab_inactive_bg = H.tint(H.get("TabLine", "bg"), 0.66),
 
-      statusline_normal_fg = H.tint(H.get("TabLine", "fg"), 0.4),
-      statusline_normal_bg = H.tint(H.get("TabLine", "bg"), 0.2),
-      statusline_normal_fg_alt = H.get("TabLine", "fg"),
-      statusline_normal_bg_alt = H.get("TabLine", "bg"),
+      statusline_normal_fg = H.tint(H.get("StatusLine", "fg"), 0.3),
+      statusline_normal_bg = H.tint(H.get("StatusLine", "bg"), 0.3),
+      statusline_normal_fg_alt = H.tint(H.get("StatusLine", "fg"), 0.2),
+      statusline_normal_bg_alt = H.tint(H.get("StatusLine", "bg"), 0.2),
 
       statusline_select_fg = H.tint(H.get("Visual", "bg"), 2),
       statusline_select_bg = H.tint(H.get("Visual", "bg"), 0.4),

@@ -555,7 +555,6 @@ tmux_clock_mode() {
 tmux_pomodoro_mode() {
   "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "pomodoro"
 }
-
 tmux_open_clock() {
   "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "clock"
 }
@@ -614,8 +613,12 @@ tmux_kill_others_pane() {
   tmux list-panes -F '#{pane_id} #{pane_active}' | awk '$2==0{print $1}' | xargs -I{} tmux kill-pane -t {}
 }
 
+tmux_reset_workspaces() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" reset_pane_workspaces
+}
+
 tmux_clear_main_id_workspace() {
-  rm /tmp/tmux-toggle-pane-*
+  rm /tmp/tmux-main-*
   dunstify "Cleared tmux main IDs"
 }
 
@@ -641,6 +644,7 @@ callme() {
  tmux: capture pane with files
  tmux: clear main pane id
  tmux: kill other panes
+ tmux: reset workspace pane size
 󰭲 rkill
  multilog
 󰎕 news
@@ -673,6 +677,7 @@ EOF
   "tmux: capture pane with files") capture_pane_and_save_to_file ;;
   "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
   "tmux: kill other panes") tmux_kill_others_pane ;;
+  "tmux: reset workspace pane size") tmux_reset_workspaces ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
 

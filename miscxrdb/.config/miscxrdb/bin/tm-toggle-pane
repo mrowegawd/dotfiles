@@ -7,6 +7,13 @@ FIXED_HEIGHT_MAIN_PANE=50
 FIXED_RESIZE_TMUX_LEFT_OR_RIGHT=40
 FILE_MANAGER="$TERM_FILEMANAGER"
 
+MINUTE_POMODORO="1h"
+COLOR_CLOCK=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
+TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+  COLOR_CLOCK=$(grep -i SESSION_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+fi
+
 # COL_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | head -1 | xargs)
 
 COL_BORDER_FG=$(xrdb -query | grep -i .color16 | cut -d':' -f2 | head -1 | xargs)
@@ -337,6 +344,18 @@ open_split() {
   fi
 }
 
+reset_pane_workspaces() {
+  update_global_pane_ids
+
+  FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
+  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
+    dunstify "Create base layout first"
+    exit
+  fi
+
+  tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x $FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
+}
+
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ SETTINGS MAIN WORKSPACE                                  ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
@@ -591,6 +610,8 @@ open_clock_mode() {
 
   [[ $CURRENT_SESSION == "" ]] && dunstify "Create base layout first" && exit
 
+  _go_select_pane_with_id "$MAIN_PANE_ID"
+
   CLOCK_PANE_ID=$(__get_clock_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$CLOCK_PANE_ID" || [[ $CLOCK_PANE_ID == "" ]]; then
 
@@ -628,7 +649,7 @@ open_clock_mode() {
 
     if [[ "$1" == "pomodoro" ]]; then
       # tclock_command="'tclock -c red timer -d 25m -M'"
-      tmux send-keys -t "$CLOCK_PANE_ID" 'tclock -c red timer -d 25m -M' Enter
+      tmux send-keys -t "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $MINUTE_POMODORO -M" Enter
     fi
   else
     tmux clock-mode
