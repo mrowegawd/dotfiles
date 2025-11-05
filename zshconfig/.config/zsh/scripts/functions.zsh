@@ -39,7 +39,7 @@ build-install() {
 
   if ! command -v rg >/dev/null; then
     echo "Installing: rg"
-    sudo apt install ripgrep -y
+    sudo apt install  pamixer ripgrep -y
   fi
 
   if ! command -v sqlite3 >/dev/null; then
