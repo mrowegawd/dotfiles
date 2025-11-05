@@ -333,7 +333,7 @@ update_global_pane_ids() {
 
   #  Check and update main pane id
   if ! __is_pane_id_exists "$MAIN_PANE_ID" || [[ $MAIN_PANE_ID == "" ]]; then
-    dunstify "Update new main pane id"
+    dunstify -i view-refresh "🔄 Main Pane Updated" "A new main pane (ID) has been successfully updated!"
     MAIN_PANE_ID=$current_pane
     __update_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID" "$MAIN_PANE_ID"
   fi
