@@ -48,7 +48,6 @@ return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
-    enabled = false,
     opts = {
       modes = { char = { keys = { "F", ";" } }, search = { enabled = false } },
       jump = { nohlsearch = true },
@@ -56,11 +55,11 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
-      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter (visual, normal)" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (visual)" },
+      { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump (visual, operator)" },
+      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter (visual , operator)" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (operator)" },
       -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search (visual)" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search (visual, operator)" },
       { "<c-s>",
         function()
           require("flash").treesitter({
@@ -71,7 +70,7 @@ return {
           })
         end,
         mode = { "n", "o", "x" },
-        desc = "Flash: treesitter incremental selection (visual, normal)"
+        desc = "Flash: treesitter incremental selection (visual, oprator)"
       },
     },
   },

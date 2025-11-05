@@ -469,7 +469,7 @@ handle_open_filetree() {
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
 
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
+    # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
 
     FILE_MANAGER_PANE_ID=$(
       tmux list-panes -F "#{pane_id} #{pane_left}" |
@@ -513,7 +513,7 @@ handle_split_term() {
   TOGGLE_TERM_PANE_ID=$(__get_toggle_term_id "$CURRENT_SESSION" "$WINDOW_ID")
 
   if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ $TOGGLE_TERM_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    dunstify -i terminal "🖥️ New Toggle Terminal Created" "A new terminal pane (ID) has been successfully created!"
+    # dunstify -i terminal "🖥️ New Toggle Terminal Created" "A new terminal pane (ID) has been successfully created!"
 
     CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
     _go_select_pane_with_id "$MAIN_PANE_ID"

@@ -339,6 +339,7 @@ return {
   -- RUNMUX
   {
     "mrowegawd/rmux",
+    -- enabled = false,
     -- dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {

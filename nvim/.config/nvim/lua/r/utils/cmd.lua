@@ -764,15 +764,14 @@ function M.change_colors()
   -- Inactive Tab
   local tab_inactive_fg = H.tint(H.get("WinBar", "fg"), -0.23)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.15)
+  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.16)
 
   -- Border Pane
-  local __border_tmux_inactive_fg = 0.15
-  if vim.g.colorscheme == "zenburn" then
-    __border_tmux_inactive_fg = 0.05
-  end
+  -- local __border_tmux_inactive_fg = 0.15
+  -- if vim.g.colorscheme == "zenburn" then
+  --   __border_tmux_inactive_fg = 0.05
+  -- end
   local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
-  -- local border_inactive = H.tint(H.get("WinSeparator", "fg"), __border_tmux_inactive_fg)
   local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────

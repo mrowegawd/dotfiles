@@ -143,6 +143,8 @@ local overseer_tasks_for_status = function(status, colors)
   }
 end
 local rmux_pane = function()
+  -- for debug
+  -- return { run_with = "ok", task = 0, watch = "" }
   return require("rmux.statusline").get()
 end
 local __colors = function()
