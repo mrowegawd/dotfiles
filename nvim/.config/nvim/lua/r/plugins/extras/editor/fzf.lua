@@ -89,8 +89,8 @@ return {
       },
 
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
-      { "<Leader>fC", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
-      { "<Leader>fc", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
+      { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
+      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
       { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
       { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
       { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
@@ -122,9 +122,9 @@ return {
       {
         "<Leader>f<F1>",
         function()
-          local sel = RUtils.cmd.get_visual_selection { strict = true }
+          local sel = RUtils.get_visual_selection { strict = true }
           if sel then
-            local selection = RUtils.cmd.strip_whitespace(sel.selection)
+            local selection = RUtils.strip_whitespaces(sel.selection)
             local _, err = pcall(function()
               vim.cmd("h " .. selection)
             end)
@@ -166,7 +166,7 @@ return {
       {
         "<Leader>bg",
         function()
-          local visual_selection = RUtils.cmd.get_visual_selection { strict = true }
+          local visual_selection = RUtils.get_visual_selection { strict = true }
           RUtils.map.feedkey("<Esc>" )
           vim.schedule(function()
             if not visual_selection or not visual_selection.selection or visual_selection.selection == "" then
@@ -203,7 +203,7 @@ return {
             winopts = {
               title = RUtils.fzflua.format_title(
                 string.format("Grep cword >> %s", fzf_cword),
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
               ),
             },
           }
@@ -218,7 +218,7 @@ return {
             winopts = {
               title = RUtils.fzflua.format_title(
                 string.format("Grep word visual >> %s", fzf_visual),
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
               ),
             },
           }
@@ -257,10 +257,10 @@ return {
       return {
         hls = { cursor = "CurSearch" },
         fzf_colors = {
-          ["fg"] = { "fg", "FzfLuaFilePart" },
+          ["fg"] = { "fg", "FzfLuaNormal" },
           ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-          ["fg+"] = { "fg", "FzfLuaSel", "underline" },
+          ["fg+"] = { "fg", "Normal" },
           ["bg+"] = { "bg", "FzfLuaSel" },
           ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
@@ -302,12 +302,15 @@ return {
 
             ["<c-Up>"] = "preview-up",
             ["<c-Down>"] = "preview-down",
+
+            ["<Tab>"] = "toggle+down",
+            ["<s-Tab>"] = "toggle+up",
           },
           fzf = {
             ["alt-a"] = "toggle-all",
 
-            ["ctrl-d"] = "preview-page-down",
-            ["ctrl-u"] = "preview-page-up",
+            -- ["ctrl-d"] = "preview-page-down",
+            -- ["ctrl-u"] = "preview-page-up",
           },
         },
         defaults = {
@@ -319,7 +322,6 @@ return {
         fzf_opts = {
           ["--no-separator"] = "",
           ["--history"] = vim.fn.stdpath "data" .. "/fzf-lua-history",
-          ["--multi"] = true,
         }, -- remove separator line
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
@@ -525,10 +527,7 @@ return {
           -- formatter = "path.filename_first",
           multiprocess = true,
           winopts = {
-            title = RUtils.fzflua.format_title(
-              "Grep",
-              RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
-            ),
+            title = RUtils.fzflua.format_title("Grep", RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)),
           },
           actions = {
             ["alt-u"] = { fn = actions.toggle_hidden, reuse = true, header = false },
@@ -539,7 +538,7 @@ return {
                 winopts = {
                   title = RUtils.fzflua.format_title(
                     "Select folder for grep",
-                    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                    RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
                   ),
                 },
                 formatter = false, -- disable setting "path first"
@@ -577,7 +576,7 @@ return {
                     opts.winopts = {
                       title = RUtils.fzflua.format_title(
                         "Grep: " .. title_path,
-                        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                        RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
                       ),
                       width = 0.80,
                       height = 0.80,
@@ -621,7 +620,7 @@ return {
                     winopts = {
                       title = RUtils.fzflua.format_title(
                         "Live Grep: RgFlow",
-                        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                        RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
                       ),
                     },
                   }
@@ -998,7 +997,7 @@ return {
             { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
             { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
             {
-              "<Leader>lr",
+              "<Leader>lR",
               function()
                 require("fzf-lua").lsp_references()
               end,

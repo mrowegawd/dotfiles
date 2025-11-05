@@ -5,10 +5,8 @@ local M = {}
 local executable = "maim"
 local file_options = "-s"
 
+---@param input_png string
 local build_dir_img = function(input_png)
-  assert(input_png ~= nil, "output_path must be a provided")
-  assert(type(input_png) == "string", "output_path must be a string")
-
   local image_subdir, filetype_label
   if vim.bo.filetype == "norg" then
     image_subdir = "img"

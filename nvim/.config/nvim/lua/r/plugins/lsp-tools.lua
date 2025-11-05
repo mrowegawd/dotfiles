@@ -67,8 +67,9 @@ return {
         peek_qf = {
           get = function()
             local lnum = vim.api.nvim_win_get_cursor(0)[1]
-            local qflist = RUtils.qf.get_list_qf_or_loc()
-            local item = qflist[lnum]
+            local is_loc = RUtils.qf.is_loclist()
+            local qflist = RUtils.qf.get_list_qf(is_loc)
+            local item = qflist.items[lnum]
 
             local opts = {}
 
@@ -412,9 +413,10 @@ return {
     "framallo/taskwarrior.vim",
     ft = "taskrc",
   },
-  -- GARBAGE-DAY
+  -- GARBAGE-DAY (disabled)
   {
     "zeioth/garbage-day.nvim",
+    enabled = false,
     event = "LspAttach",
     opts = {},
   },

@@ -39,7 +39,7 @@ local set_conditions = {
   end,
   hide_in_col_width = function(size)
     size = size or 120
-    local col = RUtils.cmd.get_option "columns"
+    local col = RUtils.get_option "columns"
     return col > size
   end,
   hide_in_laststatus = function()
@@ -61,6 +61,9 @@ local set_conditions = {
     return next(vim.lsp.get_clients { bufnr = 0 }) ~= nil
   end,
 
+  is_diff = function()
+    return vim.wo.diff
+  end,
   is_readonly = function()
     return not vim.bo.modifiable or vim.bo.readonly
   end,
@@ -98,7 +101,7 @@ local stl_lsp_clients = function()
     end
   end
 
-  if RUtils.cmd.falsy(clients) then
+  if RUtils.falsy(clients) then
     return { { name = "No LSP clients available", priority = 7 } }
   end
 
@@ -146,28 +149,20 @@ local __colors = function()
   local H = require "r.settings.highlights"
 
   local set_col_light = {
-    block_bg = 0.2,
-    block_darken_bg = 0.1,
-    block_darken_fg = 0.15,
-    block_fg = 0.25,
+    statusline_right_block_bg = 0.2,
 
     keyword_fg = -0.05,
 
-    branch_fg = 0.8,
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
     diff_change = H.tint(H.get("GitSignsChange", "fg"), -0.1),
     diff_delete = H.tint(H.get("GitSignsDelete", "fg"), -0.1),
   }
 
   local set_col_normal = {
-    block_bg = 0.6,
-    block_darken_bg = 0.4,
-    block_darken_fg = 0.5,
-    block_fg = 0.85,
+    statusline_right_block_bg = 0.8,
 
     keyword_fg = 0.7,
 
-    branch_fg = 1.5,
     diff_add = H.get("GitSignsAdd", "fg"),
     diff_change = H.get("GitSignsChange", "fg"),
     diff_delete = H.get("GitSignsDelete", "fg"),
@@ -189,15 +184,16 @@ local __colors = function()
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
-    block_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_fg),
-    block_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_bg),
-    block_darken_fg = H.tint(H.get("StatusLine", "fg"), col_opts.block_darken_fg),
-    block_darken_bg = H.tint(H.get("StatusLine", "bg"), col_opts.block_darken_bg),
+    statusline_right_block_fg = H.get("StatusLineRightBlock", "fg"),
+    statusline_right_block_bg = H.get("StatusLineRightBlock", "bg"),
 
-    block_bg_darken_winbar = H.tint(H.get("StatusLine", "bg"), 0.1),
+    statusline_right_block_fg_darken = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
+    statusline_right_block_bg_darken = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
 
-    block_fg_qf = H.tint(H.get("Keyword", "fg"), 0.5),
-    block_bg_qf = H.tint(H.get("Keyword", "fg"), -0.5),
+    qf_indicator_fg = H.tint(H.get("Keyword", "fg"), 0.5),
+    qf_indicator_bg = H.tint(H.get("Keyword", "fg"), -0.5),
+    lf_indicator_fg = H.tint(H.get("String", "fg"), 1),
+    lf_indicator_bg = H.tint(H.get("String", "fg"), -0.3),
 
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
@@ -227,19 +223,16 @@ local __colors = function()
     mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.15),
 
     -- Termasuk filetype: readonly, commit
-    mode_red_fg_active = H.tint(H.get("diffDelete", "fg"), 0.5),
     mode_red_fg = H.tint(H.get("diffDelete", "fg"), 0.2),
     mode_red_bg = H.tint(H.darken(H.get("diffDelete", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
     mode_red_bg_right_block = H.tint(H.get("diffDelete", "bg"), 0.3),
 
     -- Termasuk filetype: git fugtive-relative
-    mode_yellow_fg_active = H.tint(H.get("diffChange", "fg"), 0.6),
     mode_yellow_fg = H.tint(H.get("diffChange", "fg"), -0.08),
     mode_yellow_bg = H.tint(H.darken(H.get("diffChange", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
     mode_yellow_bg_right_block = H.tint(H.get("diffChange", "bg"), 0.1),
 
     -- Termasuk filetype: help,
-    mode_green_fg_active = H.tint(H.get("diffAdd", "fg"), 0.45),
     mode_green_fg = H.tint(H.get("diffAdd", "fg"), 0.2),
     mode_green_bg = H.tint(H.darken(H.get("diffAdd", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
     mode_green_bg_right_block = H.tint(H.get("diffAdd", "bg"), 0.2),
@@ -250,10 +243,8 @@ local __colors = function()
     mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.5, H.get("Normal", "bg")), 0.15),
     mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.15, H.get("Normal", "bg")), 0.1),
 
-    mode_virtualenv_fg = H.increase_saturation(H.tint(H.get("Boolean", "fg"), -0.1), 0.6),
-
-    branch_fg = H.tint(H.get("TabLine", "bg"), col_opts.branch_fg),
-    branch_bg = H.get("StatusLine", "bg"),
+    branch_fg = H.get("StatusLineLeftBlock", "fg"),
+    branch_bg = H.get("StatusLineLeftBlock", "bg"),
 
     diff_add = col_opts.diff_add,
     diff_change = col_opts.diff_change,
@@ -517,17 +508,6 @@ M.FilePath = {
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
   end,
-  -- {
-  --   provider = RUtils.config.icons.misc.separator_up,
-  --   hl = function()
-  --     local fg = colors.block_bg
-  --     if Conditions.is_git_repo() or (#get_branch_name() > 0) then
-  --       fg = tostring(colors.branch_bg)
-  --     end
-  --     -- return { fg = fg, bg = colors.block_bg }
-  --     return { fg = fg }
-  --   end,
-  -- },
   {
     provider = function(self)
       local opts = {
@@ -585,7 +565,7 @@ M.FilePath = {
         end
       end
     end,
-    hl = { fg = colors.block_fg },
+    hl = { fg = colors.statusline_right_block_fg },
   },
   {
     provider = function(self)
@@ -724,11 +704,11 @@ M.QuickfixStatus = {
       end
     end,
     hl = function()
-      local fg = colors.block_fg_qf
-      local bg = colors.block_bg_qf
+      local fg = colors.qf_indicator_fg
+      local bg = colors.qf_indicator_bg
       if RUtils.qf.is_loclist() then
-        fg = colors.winbar_quickfix_fg_loc
-        bg = colors.winbar_quickfix_bg_loc
+        fg = colors.lf_indicator_fg
+        bg = colors.lf_indicator_bg
       end
       return { fg = fg, bg = bg, bold = true }
     end,
@@ -736,9 +716,9 @@ M.QuickfixStatus = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local fg = colors.block_bg_qf
+      local fg = colors.qf_indicator_bg
       if RUtils.qf.is_loclist() then
-        fg = colors.winbar_quickfix_bg_loc
+        fg = colors.lf_indicator_bg
       end
       return { fg = fg, bg = colors.winbar_bg }
     end,
@@ -870,7 +850,7 @@ M.virtualenv = {
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
   condition = function()
-    return Conditions.lsp_attached and set_conditions.hide_in_col_width(120) and vim.bo.filetype ~= "qf"
+    return Conditions.lsp_attached and set_conditions.hide_in_width(60) and vim.bo.filetype ~= "qf"
   end,
 
   init = function(self)
@@ -895,7 +875,7 @@ M.LSPActive = {
       end
       return lsp_clients_str
     end,
-    hl = { fg = colors.statusline_fg_notice, bold = true },
+    -- hl = { fg = colors.statusline_fg_notice, bold = true },
   },
   {
     provider = function(self)
@@ -1047,7 +1027,7 @@ M.Diagnostics = {
 }
 M.LazyStatus = {
   condition = function()
-    return require("lazy.status").has_updates() and set_conditions.hide_in_col_width(150)
+    return require("lazy.status").has_updates() and set_conditions.hide_in_col_width(100)
   end,
   {
     provider = "Updates ",
@@ -1308,7 +1288,7 @@ M.Filetype = {
         fg = colors.statusline_bg
       end
 
-      return { fg = fg, bg = colors.block_darken_bg }
+      return { fg = fg, bg = colors.statusline_right_block_bg_darken }
     end,
   },
   {
@@ -1317,16 +1297,19 @@ M.Filetype = {
         return self.icon and (self.icon .. " " .. self.filetype .. " ")
       end
     end,
-    hl = { fg = colors.block_darken_fg, bg = colors.block_darken_bg },
+    hl = { fg = colors.statusline_right_block_fg_darken, bg = colors.statusline_right_block_bg_darken },
   },
   {
     provider = RUtils.config.icons.misc.separator_down .. " ",
     hl = function(self)
       local fg = colors.statusline_bg
       if self.filetype and #self.filetype > 0 then
-        fg = colors.block_darken_bg
+        fg = colors.statusline_right_block_bg_darken
       end
-      return { fg = fg, bg = colors.block_bg }
+      if set_conditions.is_terminal_ft() then
+        fg = colors.mode_term_statusline_bg
+      end
+      return { fg = fg, bg = colors.statusline_right_block_bg }
     end,
   },
 }
@@ -1351,23 +1334,15 @@ M.Ruler = {
       end
       return rhs
     end,
-    hl = { bg = colors.block_bg },
+    hl = { bg = colors.statusline_right_block_bg },
   },
-  -- {
-  --   provider = function(self)
-  --     -- local rhs = self.rhs
-  --     -- rhs = rhs .. "ℓ: " -- (Literal, \ℓ "SCRIPT SMALL L").
-  --     return self.rhs
-  --   end,
-  --   hl = { fg = colors.statusline_fg, bold = true },
-  -- },
   {
     provider = function(self)
       local rhs = self.rhs
       rhs = rhs .. self.line
       return rhs
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.block_bg, bold = true },
+    hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg, bold = true },
   },
   {
     provider = function(self)
@@ -1377,29 +1352,14 @@ M.Ruler = {
       rhs = rhs .. self.height
       return rhs
     end,
-    hl = { fg = colors.block_fg, bg = colors.block_bg, bold = false },
+    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
   },
-  -- {
-  --   provider = function(self)
-  --     local rhs = self.rhs
-  --     rhs = rhs .. " Col: " -- (Literal, \ℓ "SCRIPT SMALL L").
-  --     return rhs
-  --   end,
-  --   hl = { fg = colors.statusline_fg, bold = true },
-  -- },
   {
     provider = function(self)
-      -- Add padding to stop RHS from changing too much as we move the cursor.
       local rhs = self.rhs
-      -- rhs = rhs .. self.column
-
-      -- Add padding to stop rhs from changing too much as we move the cursor.
-      -- if #tostring(self.column) < 2 then
-      --   rhs = rhs .. " "
-      -- end
       return rhs .. " "
     end,
-    hl = { fg = colors.keyword, bg = colors.block_bg },
+    hl = { fg = colors.keyword, bg = colors.statusline_right_block_bg },
   },
 }
 M.Clock = {
@@ -1615,6 +1575,7 @@ M.WinBarNavic = {
       and not set_conditions.is_path_git_relative()
       and not set_conditions.is_terminal_ft()
       and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
+      and not set_conditions.is_diff()
   end,
   provider = function()
     return string.format(" %s", require("nvim-navic").get_location())

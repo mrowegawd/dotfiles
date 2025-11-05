@@ -76,7 +76,7 @@ local function chunks_to_string(chunks)
   end
   local strings = RUtils.cmd.fold(function(acc, item)
     local text, hl = unpack(item)
-    if not RUtils.cmd.falsy(text) then
+    if not RUtils.falsy(text) then
       if type(text) ~= "string" then
         text = tostring(text)
       end
@@ -84,7 +84,7 @@ local function chunks_to_string(chunks)
         text = truncate_str(text, item.max_size)
       end
       text = text:gsub("%%", "%%%1")
-      table.insert(acc, not RUtils.cmd.falsy(hl) and ("%%#%s#%s%%*"):format(hl, text) or text)
+      table.insert(acc, not RUtils.falsy(hl) and ("%%#%s#%s%%*"):format(hl, text) or text)
     end
     return acc
   end, chunks)
@@ -105,7 +105,7 @@ end
 --- @return StringComponent?
 local function component(opts)
   assert(opts, "component options are required")
-  if opts.cond ~= nil and RUtils.cmd.falsy(opts.cond) then
+  if opts.cond ~= nil and RUtils.falsy(opts.cond) then
     return
   end
 
@@ -183,7 +183,7 @@ function M.display(sections, available_space)
       table.insert(acc, separator())
       return acc
     end
-    RUtils.cmd.foreach(function(args, index)
+    RUtils.foreach(function(args, index)
       if not args then
         return
       end

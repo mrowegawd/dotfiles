@@ -1,34 +1,13 @@
 ---@class r.utils.session
 local M = {}
 
-function M.load_ses()
-  local MS = require "mini.sessions"
-  local branch_name = "temp"
-  local path_cwd = vim.uv.cwd()
-
-  local cwd = ""
-  if type(path_cwd) == "string" then
-    cwd = vim.fn.fnameescape(path_cwd)
-  end
-
-  local session_name = string.format("%s_%s", branch_name, cwd)
-  -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
-  session_name = string.gsub(session_name, "[/\\ .]", "_")
-  local _, err = pcall(MS.read, session_name, {
-    -- do not delete unsaved buffer.
-    force = false,
-    verbose = true,
-  })
-  if err then
-    vim.notify("Load session fail: " .. session_name, vim.log.levels.ERROR)
-  end
-end
-
-function M.load_ses_dashboard(last)
+---@param last? boolean
+function M.load_session_from_dashboard(last)
   last = last or false
+
   local has_persistent = RUtils.has "persistence.nvim"
-  local has_auto_session = RUtils.has "auto-session"
   local has_resession = RUtils.has "resession.nvim"
+  local has_auto_session = RUtils.has "auto-session"
 
   if has_persistent then
     vim.schedule(function()
@@ -52,12 +31,12 @@ function M.load_ses_dashboard(last)
     else
       require("resession").load()
     end
-  end
 
-  if #RUtils.qf.get_list_qf() > 0 then
-    vim.cmd(RUtils.qf.copen)
-    vim.cmd [[wincmd p]]
-    vim.cmd [[set cmdheight=0]]
+    if #RUtils.qf.get_list_qf() > 0 then
+      vim.cmd(RUtils.qf.copen)
+      vim.cmd [[wincmd p]]
+      vim.cmd [[set cmdheight=0]]
+    end
   end
 
   if not has_auto_session and not has_persistent and not has_resession then

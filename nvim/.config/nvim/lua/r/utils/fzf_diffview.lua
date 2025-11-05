@@ -201,12 +201,15 @@ end
 local previous_commit_hash = function(commit_hash)
   local command = "git rev-parse " .. commit_hash .. "~"
 
-  local output = RUtils.cmd.execute_io_open(command)
+  local output = RUtils.execute_io_open(command)
   return string.gsub(output, "\n", "")
 end
 
 function M.git_dir()
-  return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
+  local cwd = vim.uv.cwd()
+  if cwd then
+    return find_first_ancestor_dir_or_file(RUtils.file.sanitize(cwd), ".git")
+  end
 end
 
 local file_exists_on_commit = function(commit_hash, git_relative_file_path)
@@ -217,7 +220,7 @@ local file_exists_on_commit = function(commit_hash, git_relative_file_path)
     .. " -- "
     .. git_relative_file_path
 
-  local output = RUtils.cmd.execute_io_open(command)
+  local output = RUtils.execute_io_open(command)
 
   output = string.gsub(output, "\n", "")
   return output ~= ""
@@ -225,7 +228,7 @@ end
 
 local all_commit_hashes = function()
   local command = "git rev-list HEAD"
-  local output = RUtils.cmd.execute_io_open(command)
+  local output = RUtils.execute_io_open(command)
 
   return M.split_string(output, "\n")
 end
@@ -233,7 +236,7 @@ end
 local all_commit_hashes_touching_file = function(git_relative_file_path)
   local command = "cd " .. M.git_dir() .. " && git log --follow --pretty=format:'%H' -- " .. git_relative_file_path
 
-  local output = RUtils.cmd.execute_io_open(command)
+  local output = RUtils.execute_io_open(command)
   return M.split_string(output, "\n")
 end
 
@@ -295,7 +298,7 @@ local file_name_on_commit = function(commit_hash, git_relative_file_path)
     .. git_relative_file_path
     .. " | tail -1"
 
-  local output = RUtils.cmd.execute_io_open(command)
+  local output = RUtils.execute_io_open(command)
   output = string.gsub(output, "\n", "")
 
   if file_exists_on_commit(commit_hash, output) then
@@ -386,18 +389,14 @@ local is_commit = function(commit_hash)
     return find_first_ancestor_dir_or_file(RUtils.file.sanitize(vim.uv.cwd()), ".git")
   end
   local command = "cd " .. git_dir() .. " && git cat-file -t " .. commit_hash
-
-  local output = RUtils.cmd.execute_io_open(command)
-
+  local output = RUtils.execute_io_open(command)
   output = string.gsub(output, "\n", "")
   return output == "commit"
 end
 
 function M.git_diff_content(first_commit, second_commit, prompt, opts)
   opts = opts or {}
-
   local prev_name, curr_name = filename_commit(opts.bufnr, first_commit, second_commit)
-
   if not is_commit(first_commit) then
     first_commit = empty_tree_commit
   end
@@ -607,6 +606,9 @@ local get_browse_command = function(commit_hash)
   return string.gsub(cmd, commit_pattern, commit_hash)
 end
 
+---@param is_repo string
+---@param title string
+---@param bufnr? integer
 function M.opts_diffview_log(is_repo, title, bufnr)
   vim.validate { is_repo = { is_repo, "string" } }
 
@@ -664,7 +666,8 @@ function M.git_open_to_loc(title)
 
   return function(selected, _)
     local items = parse_selected_git_commits(selected)
-    RUtils.qf.save_to_qf_and_auto_open_qf(items, title, true)
+    local list_items = { items = items, title = title }
+    RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
   end
 end
 
@@ -673,7 +676,8 @@ function M.git_open_to_qf(title)
 
   return function(selected, _)
     local items = parse_selected_git_commits(selected)
-    RUtils.qf.save_to_qf_and_auto_open_qf(items, "Fzf_diffview")
+    local list_items = { items = items, title = "fzf_diffview" }
+    RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
   end
 end
 

@@ -9,6 +9,24 @@ local results = {
   location = {},
 }
 
+local Qfbookmark
+local load = false
+
+local function QfBookmarkUtil()
+  if Qfbookmark and load then
+    return Qfbookmark
+  end
+
+  if not RUtils.has "qfbookmark" then
+    RUtils.error "QFBookLists not install!!!"
+    return
+  end
+
+  Qfbookmark = require "qfbookmark.utils"
+  load = true
+  return Qfbookmark
+end
+
 ---@param is_loc? boolean
 function M.get_total_stack_qf(is_loc)
   is_loc = is_loc or false
@@ -25,7 +43,7 @@ function M.get_total_stack_qf(is_loc)
     return qflists
   end
 
-  -- maksimal stack pada loclist itu 10
+  -- maksimal stack 10
   for i = 1, 10 do
     local loclist = vim.fn.getloclist(0, { all = "", nr = tonumber(i) })
     if not vim.tbl_isempty(loclist.items) then
@@ -59,14 +77,15 @@ end
 
 -- example use; M.is_loclist() and "Location List" or "Quickfix List"
 ---@param buf? integer
+---@return boolean
 function M.is_loclist(buf)
-  buf = buf or 0
-  return vim.fn.getloclist(buf, { filewinid = 1 }).filewinid ~= 0
+  return QfBookmarkUtil().is_loclist(buf)
 end
 
 ---@param winnr integer
+---@return boolean
 function M.is_quickfix_win(winnr)
-  return vim.fn.getwinvar(winnr, "&buftype") == "quickfix"
+  return QfBookmarkUtil().is_quickfix_win(winnr)
 end
 
 ---@param winnr integer
@@ -75,122 +94,45 @@ function M.is_loclist_win(winnr)
   return M.is_quickfix_win(winnr) and wininfo.loclist == 1
 end
 
+---@return integer
 function M.get_qf_cursor_idx()
-  local cur_list = {}
-  local count = vim.v.count
-
-  if count == 0 then
-    count = 1
-  end
-
-  if count > #cur_list then
-    count = #cur_list
-  end
-
-  local item = vim.api.nvim_win_get_cursor(0)[1]
-  for _ = item, item + count - 1 do
-    table.remove(cur_list, item)
-  end
-
-  return vim.fn.getqflist()[item]
+  return QfBookmarkUtil().get_current_qf_idx()
 end
 
 ---@param is_loc? boolean
 function M.get_title_qf(is_loc)
-  is_loc = is_loc or false
-  if not is_loc then
-    return vim.fn.getqflist({ title = 0 }).title
-  end
-
-  return vim.fn.getloclist(0, { title = 0 }).title
+  return QfBookmarkUtil().get_title_qf(is_loc)
 end
 
 ---@param is_loc? boolean
-function M.get_list_qf(is_loc)
-  is_loc = is_loc or false
-  if not is_loc then
-    return vim.fn.getqflist()
-  end
-
-  local winid = vim.api.nvim_get_current_win()
-  return vim.fn.getloclist(winid)
+---@param context_name? string
+---@return table
+function M.get_list_qf(is_loc, context_name)
+  return QfBookmarkUtil().get_list_qf(is_loc, context_name)
 end
 
-function M.get_list_qf_or_loc()
-  if not M.is_loclist() then
-    return vim.fn.getqflist()
-  end
-
-  local winid = vim.api.nvim_get_current_win()
-  return vim.fn.getloclist(winid)
+---@param is_loc? boolean
+---@param context_name? string
+---@return QFBookListResults
+function M.get_data_qf(is_loc, context_name)
+  return QfBookmarkUtil().get_data_qf(is_loc, context_name)
 end
 
-function M.get_data_qf(is_loc)
-  is_loc = is_loc or false
-
-  if not is_loc then
-    local qf_list = M.get_list_qf()
-    if #qf_list > 0 then
-      results.quickfix.items = vim.tbl_map(function(item)
-        return {
-          filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-          module = item.module,
-          lnum = item.lnum,
-          end_lnum = item.end_lnum,
-          col = item.col,
-          end_col = item.end_col,
-          vcol = item.vcol,
-          nr = item.nr,
-          pattern = item.pattern,
-          text = item.text,
-          type = item.type,
-          valid = item.valid,
-        }
-      end, qf_list)
-    end
-
-    return results
-  end
-
-  local loc_list = M.get_list_qf(true)
-  if #loc_list > 0 then
-    results.location.items = vim.tbl_map(function(item)
-      return {
-        filename = item.bufnr and vim.api.nvim_buf_get_name(item.bufnr),
-        module = item.module,
-        lnum = item.lnum,
-        end_lnum = item.end_lnum,
-        col = item.col,
-        end_col = item.end_col,
-        vcol = item.vcol,
-        nr = item.nr,
-        pattern = item.pattern,
-        text = item.text,
-        type = item.type,
-        valid = item.valid,
-      }
-    end, loc_list)
-  end
-
-  return results
+---@param list_items QFBookLists
+---@param is_loc? boolean
+---@param mode? string
+---@param winid? integer
+function M.save_to_qf(list_items, is_loc, mode, winid)
+  QfBookmarkUtil().save_to_qf(list_items, is_loc, mode, winid)
 end
 
-function M.save_to_qf(items, title, is_loc, winid)
+---@param list_items QFBookLists
+---@param is_loc? boolean
+---@param mode? string
+---@param winid? integer
+function M.save_to_qf_and_auto_open_qf(list_items, is_loc, mode, winid)
   is_loc = is_loc or false
-
-  if not is_loc then
-    vim.fn.setqflist({}, " ", { items = items, title = title })
-    return
-  end
-
-  winid = winid or vim.api.nvim_get_current_win()
-  vim.fn.setloclist(winid, {}, " ", { items = items, title = title })
-end
-
-function M.save_to_qf_and_auto_open_qf(items, title, is_loc, winid)
-  is_loc = is_loc or false
-
-  M.save_to_qf(items, title, is_loc, winid)
+  M.save_to_qf(list_items, is_loc, mode, winid)
 
   if not is_loc then
     vim.cmd(M.copen)

@@ -1,5 +1,11 @@
 local M = {}
 
+---@class LazyKeysBase
+
+---@class LazyKeys: LazyKeysBase
+
+---@class LazyKeysSpec: LazyKeysBase
+
 ---@type LazyKeysLspSpec[]|nil
 M._keys = {}
 
@@ -36,6 +42,11 @@ function M.get()
   end)
   return M._keys
 end
+
+---@class snacks.keymap.set.Opts: vim.keymap.set.Opts
+---@field ft? string|string[] Filetype(s) to set the keymap for.
+---@field lsp? vim.lsp.get_clients.Filter Set for buffers with LSP clients matching this filter.
+---@field enabled? boolean|fun(buf?:number): boolean condition to enable the keymap.
 
 ---@param filter vim.lsp.get_clients.Filter
 ---@param spec LazyKeysLspSpec[]

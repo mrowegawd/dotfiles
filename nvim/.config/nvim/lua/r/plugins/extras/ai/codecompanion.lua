@@ -36,7 +36,7 @@ Identify any issues related to:
 local function get_selected_lines(context)
   local code_helper = require "codecompanion.helpers.actions"
   local selected_lines = code_helper.get_code(context.start_line, context.end_line)
-  local visual = RUtils.cmd.get_visual_selection {}
+  local visual = RUtils.get_visual_selection {}
   if visual ~= nil then
     selected_lines = visual.selection
   end
@@ -300,7 +300,7 @@ return {
           end
 
           local function is_get_lines()
-            local line = RUtils.cmd.get_visual_selection()
+            local line = RUtils.get_visual_selection()
             if line and line.selection then
               vim.fn.setreg("+", line.selection)
             end
@@ -324,9 +324,9 @@ return {
                 local display_str = fzf_lua.utils.strip_ansi_coloring(sel)
                 local display_str_split = vim.split(display_str, "-")
 
-                local build_idx_cmd = RUtils.cmd.strip_whitespace(display_str_split[1])
+                local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
                   .. " - "
-                  .. RUtils.cmd.strip_whitespace(display_str_split[2])
+                  .. RUtils.strip_whitespaces(display_str_split[2])
 
                 local prompt = prompt_cmds[build_idx_cmd]
                 if prompt then

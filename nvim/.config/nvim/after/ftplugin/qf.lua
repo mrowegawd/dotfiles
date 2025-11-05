@@ -60,9 +60,10 @@ keymap.set("n", "<Leader>ff", function()
         prefix = "toggle-all",
         fn = actions.file_sel_to_qf,
       },
-      ["ctrl-s"] = actions.git_buf_split,
-      ["ctrl-t"] = actions.git_buf_tabedit,
-      ["ctrl-v"] = actions.git_buf_vsplit,
+
+      ["ctrl-s"] = actions.buf_split,
+      ["ctrl-v"] = actions.buf_vsplit,
+      ["ctrl-t"] = actions.buf_tabedit,
     },
   }
 
@@ -100,7 +101,7 @@ keymap.set("n", "<Leader>fg", function()
     end
   end
 
-  qf_ntbl = RUtils.cmd.rm_duplicates_tbl(qf_ntbl)
+  qf_ntbl = RUtils.remove_duplicates_table(qf_ntbl)
 
   local rg_opts_format = [[--column --line-number -i --hidden --no-heading --color=always --smart-case ]]
     .. table.concat(qf_ntbl, " ")
@@ -111,10 +112,6 @@ keymap.set("n", "<Leader>fg", function()
     winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
     rg_opts = rg_opts_format,
     actions = {
-      -- ["ctrl-s"] = actions.git_buf_split,
-      -- ["ctrl-v"] = actions.git_buf_vsplit,
-      -- ["ctrl-t"] = actions.git_buf_tabedit,
-
       ["ctrl-s"] = actions.buf_split,
       ["ctrl-v"] = actions.buf_vsplit,
       ["ctrl-t"] = actions.buf_tabedit,
@@ -227,13 +224,15 @@ keymap.set("n", "<Leader>fw", function()
             end
           end
         end,
-        ["alt-l"] = function(selected, _)
+        ["alt-v"] = function(selected, _)
           title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
-          RUtils.qf.save_to_qf_and_auto_open_qf(send_data(selected), title, true)
+          local list_items = { items = send_data(selected), title = title }
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
         end,
         ["alt-q"] = function(selected, _)
           title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
-          RUtils.qf.save_to_qf_and_auto_open_qf(send_data(selected), title)
+          local list_items = { items = send_data(selected), title = title }
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
         end,
       },
     }

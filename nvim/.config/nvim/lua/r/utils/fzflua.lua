@@ -364,7 +364,7 @@ function M.open_cmd_bulk_key_only(commands, opts)
           local sel = selected[1]
           local sel_ansi = fzf_lua_.utils.strip_ansi_coloring(sel)
 
-          local build_idx_cmd = RUtils.cmd.strip_whitespace(sel_ansi)
+          local build_idx_cmd = RUtils.strip_whitespaces(sel_ansi)
 
           if commands[build_idx_cmd] then
             commands[build_idx_cmd]()
@@ -397,9 +397,9 @@ function M.open_cmd_bulk(commands, opts)
           local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
           local display_str_split = vim.split(display_str, "-")
 
-          local build_idx_cmd = RUtils.cmd.strip_whitespace(display_str_split[1])
+          local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
             .. " - "
-            .. RUtils.cmd.strip_whitespace(display_str_split[2])
+            .. RUtils.strip_whitespaces(display_str_split[2])
 
           if commands[build_idx_cmd] then
             commands[build_idx_cmd]()
@@ -541,7 +541,7 @@ function M.extend_title_fzf(opts, extend_title)
 
   local title = RUtils.fzflua.format_title(
     string.format("%s%s", extend_title, opts.cwd),
-    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.gear)
+    RUtils.strip_whitespaces(RUtils.config.icons.misc.gear)
   )
 
   return {

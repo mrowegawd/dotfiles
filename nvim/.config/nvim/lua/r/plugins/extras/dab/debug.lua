@@ -101,16 +101,16 @@ return {
       { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
       { "<Leader>dC", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
 
-      { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: run/continue [dd]" },
-      { "<Leader>da", function() require("dap").continue { before = get_args } end, desc = "Debug: run with args" },
+      { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: start/continue" },
+      { "<Leader>da", function() require("dap").continue { before = get_args } end, desc = "Debug: run with arguments" },
 
-      { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
+      { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no exec)" },
       { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
-      { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug: run last" },
+      { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug: run last debug" },
 
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
-      { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
-      { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
+      { "<Leader>ds", function() require("dap").session() end, desc = "Debug: start session" },
+      { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate session" },
 
       -- +----------------------------------------------------------+
       -- Step-in, step-out, step-over | Stack-up Stack-down
@@ -196,7 +196,7 @@ return {
             return require("dap").continue()
           end
         end,
-        desc = "Debug: run/continue [F5]",
+        desc = "Debug: start/continue [F5]",
       },
       -- +----------------------------------------------------------+
       -- Misc commands
@@ -277,11 +277,11 @@ return {
     -- stylua: ignore
     keys = {
       { "<Leader>du", "", desc = "+DebugToggle" },
-      { "<Leader>duu", function() require("dapui").toggle() end, desc = "DebugToggle: toggle UI [dapui]" },
-      { "<Leader>dur", function() return require("dapui").open { reset = true } end, desc = "DebugToggle: reset UI [dapui]" },
+      { "<Leader>duu", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
+      { "<Leader>dur", function() return require("dapui").open { reset = true } end, desc = "Debug: reset layout UI [dapui]" },
 
-      { "<leader>dE", function() require("dapui").eval() end, desc = "Debug: eval", mode = {"n", "x"} },
-      { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover [dapui]" },
+      { "<leader>dE", function() require("dapui").eval() end, desc = "Debug: evaluate expression", mode = {"n", "x"} },
+      { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover (inspect) [dapui]" },
     },
     dependencies = { "nvim-neotest/nvim-nio" },
     opts = {

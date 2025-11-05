@@ -197,7 +197,7 @@ return {
             -- Navigation
             org_agenda_later = "f",
             org_agenda_earlier = "b",
-            org_agenda_goto_today = "t",
+            org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "o" },
             org_agenda_goto_date = "D",
 

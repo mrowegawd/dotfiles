@@ -93,28 +93,93 @@ return {
                 },
               },
             },
-            -- stylua: ignore
             keys = {
               --  +----------------------------------------------------------+
               --  LSP Core
               --  +----------------------------------------------------------+
-              { "<Leader>ld",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition), has = "definition", desc = "LSP: definitions", },
-              { "<Leader>lr", vim.lsp.buf.references, desc = "LSP: references", nowait = true },
-              { "<Leader>lI",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.type_definition, "vsplit"), desc = "LSP: goto definition" },
+              {
+                "<Leader>ld",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition),
+                has = "definition",
+                desc = "LSP: definitions",
+              },
+              { "<Leader>lR", vim.lsp.buf.references, desc = "LSP: references", nowait = true },
+              {
+                "<Leader>lr",
+                RUtils.map.lsp.wrap_references_to_send_qf,
+                desc = "LSP: references but send to quickfix",
+                nowait = true,
+              },
+              {
+                "<Leader>lI",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.type_definition, "vsplit"),
+                desc = "LSP: goto definition",
+              },
               { "<Leader>ly", vim.lsp.buf.type_definition, desc = "LSP: goto type Definition" },
-              { "<Leader>lh", RUtils.map.lsp.toggle_words, desc = "LSP: toggle words references", },
-              { "<Leader>lD",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.implementation), desc = "LSP: goto implementation", },
-              { "<Leader>lv",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"), has = "definition", desc = "LSP: definitions (vsplit)", },
-              { "<Leader>ls",RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"), has = "definition", desc = "LSP: definitions (split)", },
+              {
+                "<Leader>lh",
+                function()
+                  RUtils.map.lsp.toggle_words()
+                  if vim.g.snacks_jump_scope then
+                    vim.g.snacks_jump_scope = false
+                    return
+                  end
+                  vim.g.snacks_jump_scope = true
+                end,
+                desc = "LSP: toggle words references",
+              },
+              {
+                "<Leader>lD",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.implementation),
+                desc = "LSP: goto implementation",
+              },
+              {
+                "<Leader>lv",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"),
+                has = "definition",
+                desc = "LSP: definitions (vsplit)",
+              },
+              {
+                "<Leader>ls",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"),
+                has = "definition",
+                desc = "LSP: definitions (split)",
+              },
 
-              { "<Leader>clf", function() Snacks.picker.lsp_config() end, desc = "LSP: LSP Info" },
+              {
+                "<Leader>clf",
+                function()
+                  Snacks.picker.lsp_config()
+                end,
+                desc = "LSP: LSP Info",
+              },
 
               --  +----------------------------------------------------------+
               --  Hover and SignatureHelp
               --  +----------------------------------------------------------+
-              { "K", function() return vim.lsp.buf.hover() end, desc = "LSP: Hover" },
-              { "gK", function() RUtils.hover_eldoc.hover_in_split() end, desc = "LSP: show hover (split) [hover_eglot]", },
-              { "<c-k>", function() return vim.lsp.buf.signature_help() end, mode = "i", desc = "LSP: signature help (insert)", has = "signatureHelp" },
+              {
+                "K",
+                function()
+                  return vim.lsp.buf.hover()
+                end,
+                desc = "LSP: Hover",
+              },
+              {
+                "gK",
+                function()
+                  RUtils.hover_eldoc.hover_in_split()
+                end,
+                desc = "LSP: show hover (split) [hover_eglot]",
+              },
+              {
+                "<c-k>",
+                function()
+                  return vim.lsp.buf.signature_help()
+                end,
+                mode = "i",
+                desc = "LSP: signature help (insert)",
+                has = "signatureHelp",
+              },
 
               --  +----------------------------------------------------------+
               --  Code Actions
@@ -135,26 +200,68 @@ return {
                 has = "codeAction",
                 desc = "Action: source action",
               },
-              { "<Leader>cc", vim.lsp.codelens.run, desc = "Action: run codelens", mode = { "n", "x" }, has = "codeLens" },
-              { "<Leader>cC", vim.lsp.codelens.refresh, desc = "Action: codelens refresh", mode = { "n" }, has = "codeLens" },
+              {
+                "<Leader>cc",
+                vim.lsp.codelens.run,
+                desc = "Action: run codelens",
+                mode = { "n", "x" },
+                has = "codeLens",
+              },
+              {
+                "<Leader>cC",
+                vim.lsp.codelens.refresh,
+                desc = "Action: codelens refresh",
+                mode = { "n" },
+                has = "codeLens",
+              },
 
               --  +----------------------------------------------------------+
               --  Renaming
               --  +----------------------------------------------------------+
-              { "<Leader>cR", function() Snacks.rename.rename_file() end, desc = "Action: rename file", mode ={"n"}, has = { "workspace/didRenameFiles", "workspace/willRenameFiles" } },
+              {
+                "<Leader>cR",
+                function()
+                  Snacks.rename.rename_file()
+                end,
+                desc = "Action: rename file",
+                mode = { "n" },
+                has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
+              },
               { "<Leader>cr", vim.lsp.buf.rename, desc = "Action: rename", has = "rename" },
 
               --  +----------------------------------------------------------+
               --  Jump to Word References
               --  +----------------------------------------------------------+
-              { "<a-n>", function() Snacks.words.jump(vim.v.count1, true) end, has = "documentHighlight", desc = "LSP: next reference"  },
-              { "<a-p>", function() Snacks.words.jump(-vim.v.count1, true) end, has = "documentHighlight", desc = "LSP: prev reference"  },
+              {
+                "<a-n>",
+                function()
+                  if vim.g.snacks_jump_scope then
+                    Snacks.words.jump(vim.v.count1, true)
+                    return
+                  end
+                  Snacks.scope.jump { bottom = true }
+                end,
+                has = "documentHighlight",
+                desc = "LSP: next reference or jump scope",
+              },
+              {
+                "<a-p>",
+                function()
+                  if vim.g.snacks_jump_scope then
+                    Snacks.words.jump(-vim.v.count1, true)
+                    return
+                  end
+                  Snacks.scope.jump { bottom = false }
+                end,
+                has = "documentHighlight",
+                desc = "LSP: prev reference or jump scope",
+              },
 
               --  +----------------------------------------------------------+
               --  Diagnostics
               --  +----------------------------------------------------------+
-              { "dn", RUtils.map.lsp.diagnostic_goto(true), desc = "Diagnostic: next item" },
-              { "dp", RUtils.map.lsp.diagnostic_goto(false), desc = "Diagnostic: prev item" },
+              { "dn", RUtils.map.lsp.diagnostic_goto(1), desc = "Diagnostic: next item" },
+              { "dp", RUtils.map.lsp.diagnostic_goto(-1), desc = "Diagnostic: prev item" },
               {
                 "<Leader>uD",
                 function()
@@ -248,7 +355,16 @@ return {
             and vim.bo[buffer].buftype == ""
             and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
           then
-            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+            -- vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+
+            -- if vim.g.inlay_hints then
+            -- Initial inlay hint display.
+            -- Idk why but without the delay inlay hints aren't displayed at the very start.
+            vim.defer_fn(function()
+              local mode = vim.api.nvim_get_mode().mode
+              vim.lsp.inlay_hint.enable(mode == "n" or mode == "v", { bufnr = bufnr })
+            end, 500)
+            -- end
           end
         end)
       end

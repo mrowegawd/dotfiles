@@ -183,12 +183,20 @@ return {
     "jghauser/fold-cycle.nvim",
     keys = {
       {
-        "<c-t>",
+        "zi",
         function()
           require("fold-cycle").open()
         end,
         mode = { "n", "x" },
         desc = "Fold: cycle fold [fold-cycle.nvim]",
+      },
+      {
+        "iz",
+        function()
+          require("fold-cycle").open()
+        end,
+        mode = "n",
+        desc = "Fold: cycle fold (alternative) [fold-cycle.nvim]",
       },
     },
     opts = true,

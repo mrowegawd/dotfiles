@@ -54,9 +54,9 @@ return {
         },
         enabled = function()
           local disabled = false
-          disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
-          disabled = disabled or (RUtils.cmd.get_option "buftype" == "terminal")
-          disabled = disabled or (RUtils.cmd.get_option "filetype" == "")
+          disabled = disabled or (RUtils.get_option "buftype" == "prompt")
+          disabled = disabled or (RUtils.get_option "buftype" == "terminal")
+          disabled = disabled or (RUtils.get_option "filetype" == "")
           disabled = disabled or (vim.fn.reg_recording() ~= "")
           disabled = disabled or (vim.fn.reg_executing() ~= "")
           return not disabled

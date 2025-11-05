@@ -106,6 +106,30 @@ return {
         desc = "GrepEnchanted: grug far [grugfar]",
       },
       {
+        "<Localleader>gb",
+        function()
+          local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
+          local grug = require "grug-far"
+          local _str = RUtils.get_visual_selection()
+          if not _str then
+            return
+          end
+          grug.open {
+            prefills = {
+              search = _str.selection,
+              replacement = "",
+              filesFilter = "",
+              paths = path,
+              flags = "--hidden",
+            },
+            -- instanceName = "far",
+            staticTitle = "Find and Replace",
+          }
+        end,
+        mode = "v",
+        desc = "GrepEnchanted: grug far [grugfar]",
+      },
+      {
         "<Localleader>gg",
         function()
           local grug = require "grug-far"

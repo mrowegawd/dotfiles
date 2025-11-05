@@ -432,8 +432,11 @@ local function picker(contents, actions, opts)
         if not selected then
           return
         end
-        local items = extracted_selected_tags(selected, data_tags_table)
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note")
+        local list_items = {
+          items = extracted_selected_tags(selected, data_tags_table),
+          title = "Tags Note",
+        }
+        RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
       end,
 
       -- https://github.com/ibhagwan/fzf-lua/discussions/1211
@@ -443,30 +446,37 @@ local function picker(contents, actions, opts)
           if not selected then
             return
           end
-
-          local items = extracted_selected_tags(selected, data_tags_table)
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All")
+          local list_items = {
+            items = extracted_selected_tags(selected, data_tags_table),
+            title = "Tags Note",
+          }
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
         end,
       },
 
-      ["alt-l"] = function(selected, _)
+      ["alt-v"] = function(selected, _)
         if not selected then
           return
         end
+        local list_items = {
+          items = extracted_selected_tags(selected, data_tags_table),
+          title = "Tags Note",
+        }
 
-        local items = extracted_selected_tags(selected, data_tags_table)
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note", true)
+        RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
       end,
 
-      ["alt-L"] = {
+      ["alt-V"] = {
         prefix = "toggle-all",
         fn = function(selected, _)
           if not selected then
             return
           end
-
-          local items = extracted_selected_tags(selected, data_tags_table)
-          RUtils.qf.save_to_qf_and_auto_open_qf(items, "Tags Note All", true)
+          local list_items = {
+            items = extracted_selected_tags(selected, data_tags_table),
+            title = "Tags Note All",
+          }
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
         end,
       },
 
@@ -851,7 +861,7 @@ function M.find_local_titles(item_paths)
         vim.api.nvim_win_set_cursor(0, { row, 1 })
         vim.cmd "normal! zv"
       end,
-      ["alt-l"] = function(selected, _)
+      ["alt-v"] = function(selected, _)
         local items = {}
         local _text, lnum
         if #selected > 1 then
@@ -908,7 +918,8 @@ function M.find_local_titles(item_paths)
           }
         end
 
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Title local", true)
+        local list_items = { items = items, title = "Title local" }
+        RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
       end,
       ["alt-q"] = function(selected, _)
         local items = {}
@@ -967,7 +978,8 @@ function M.find_local_titles(item_paths)
           }
         end
 
-        RUtils.qf.save_to_qf_and_auto_open_qf(items, "Title local")
+        local list_items = { items = items, title = "Title local" }
+        RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
       end,
 
       ["ctrl-v"] = function(selected, _)
@@ -980,7 +992,6 @@ function M.find_local_titles(item_paths)
           vim.cmd "normal! zv"
         end
       end,
-
       ["ctrl-s"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then

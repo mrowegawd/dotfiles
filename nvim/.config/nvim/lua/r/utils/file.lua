@@ -19,10 +19,14 @@ function M.is_dir(filename)
   return M.exists(filename) == "directory"
 end
 
+---@param filename string
+---@return boolean
 function M.is_file(filename)
   return M.exists(filename) == "file"
 end
 
+---@param path string
+---@return string
 function M.sanitize(path)
   if RUtils.is_win() then
     path = path:sub(1, 1):upper() .. path:sub(2)
@@ -31,6 +35,8 @@ function M.sanitize(path)
   return path
 end
 
+---@param path string
+---@return boolean
 function M.is_fs_root(path)
   if RUtils.is_win() then
     return path:match "^%a:$"
@@ -39,6 +45,9 @@ function M.is_fs_root(path)
   end
 end
 
+---@param path string
+---@param is_windows? boolean
+---@return string | nil
 function M.dirname(path, is_windows)
   is_windows = is_windows or false
 
@@ -58,6 +67,7 @@ function M.dirname(path, is_windows)
   return result
 end
 
+---@param path string
 function M.iterate_parents(path)
   local function it(_, v)
     if v and not M.is_fs_root(v) then
@@ -75,6 +85,7 @@ function M.iterate_parents(path)
   return it, path, path
 end
 
+---@param filename string
 function M.is_absolute(filename)
   if RUtils.is_win() then
     return filename:match "^%a:" or filename:match "^\\\\"
@@ -83,6 +94,7 @@ function M.is_absolute(filename)
   end
 end
 
+---@return string
 function M.absolute_path(bufnr)
   return vim.fn.expand("#" .. bufnr .. ":p")
 end
@@ -94,10 +106,13 @@ function M.create_dir(path)
   end
 end
 
+---@return string
 local separator = function()
   return "/"
 end
 
+---@param path string
+---@return string
 local function remove_trailing(path)
   local p, _ = path:gsub(separator() .. "$", "")
   return p
@@ -115,10 +130,14 @@ end
 -- Traverse the path calling cb along the way.
 function M.traverse_parents(path, cb)
   path = uv.fs_realpath(path)
-  local dir = path
+  if not path then
+    return
+  end
+
+  local dir
   -- Just in case our algo is buggy, don't infinite loop.
   for _ = 1, 100 do
-    dir = RUtils.file.dirname(dir)
+    dir = RUtils.file.dirname(path)
     if not dir then
       return
     end
@@ -144,9 +163,7 @@ function M.is_descendant(root, path)
   local function cb(dir, _)
     return dir == root
   end
-
   local dir, _ = M.traverse_parents(path, cb)
-
   return dir == root
 end
 

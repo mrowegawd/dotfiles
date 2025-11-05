@@ -1,15 +1,41 @@
+local img_from_terminal = true
+local set_number = 0 -- 0 means random; 1–9 are fixed numbers
+
 local function set_img_dashboard()
   local nvim_dashboard_path = vim.fs.joinpath(vim.env.HOME, "/moxconf/development/dotfiles/img/nvim-dashboard")
-  local is_img = RUtils.file.is_dir(nvim_dashboard_path) and true or false
 
-  ---@diagnostic disable-next-line: undefined-field
-  local fn_img = RUtils.logo(is_img)
-  return [[img2art ]]
-    .. nvim_dashboard_path
-    .. "/"
-    .. fn_img
-    .. " "
-    .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]]
+  local is_img = function()
+    if RUtils.file.is_dir(nvim_dashboard_path) and img_from_terminal then
+      return true
+    end
+    return false
+  end
+
+  local is_image = is_img()
+  local fn_img = RUtils.logo.setup(is_image, set_number)
+
+  if is_image then
+    return {
+      section = "terminal",
+      pane = 1,
+      cmd = [[img2art ]]
+        .. nvim_dashboard_path
+        .. "/"
+        .. fn_img
+        .. " "
+        .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]],
+      height = 20, -- 29
+      align = "center",
+    }
+  end
+
+  return {
+    pane = 1,
+    header = fn_img,
+    height = 50, -- 29
+    -- padding = 8,
+    align = "center",
+  }
 end
 
 return {
@@ -148,7 +174,7 @@ return {
               key = "L",
               desc = "Select Session",
               action = function()
-                require("r.utils.sessions").load_ses_dashboard()
+                require("r.utils.sessions").load_session_from_dashboard()
               end,
             },
             {
@@ -156,7 +182,7 @@ return {
               key = "l",
               desc = "Restore Last Session",
               action = function()
-                require("r.utils.sessions").load_ses_dashboard(true)
+                require("r.utils.sessions").load_session_from_dashboard(true)
               end,
             },
             { icon = "󰒲 ", key = "y", desc = "Lazy", action = ":Lazy" },
@@ -207,53 +233,62 @@ return {
           icon = { "" },
         },
         sections = {
+
           {
-            -- {
-            --   -- { section = "header", align = "center" },
-            --   section = "terminal",
-            --   pane = 1,
-            --   cmd = set_img_dashboard(),
-            --   height = 28,
-            --   align = "center",
-            -- },
+            pane = 1,
+            padding = 1,
+            align = "center",
+            {
+              set_img_dashboard(),
+            },
           },
           {
             pane = 2,
+            padding = 5,
+            align = "center",
             {
-              { title = "", padding = 1 },
-              { section = "keys", gap = 0, padding = 2, align = "left" },
-              {
-                icon = " ",
-                title = "RECENT FILES",
-                section = "recent_files",
-                limit = 5,
-                padding = 2,
-                hl = "Normal",
-              },
-              -- {
-              --   section = "terminal",
-              --   icon = " ",
-              --   title = "GIT STATUS",
-              --   enabled = vim.fn.isdirectory ".git" == 1,
-              --   cmd = "hub diff --stat -B -M -C",
-              --   -- cmd = "git status --short --branch --renames",
-              --   height = 8,
-              -- },
+              section = "keys",
+              gap = 0,
+              padding = 1,
+              align = "left",
+            },
+            {
+              icon = " ",
+              title = "RECENT FILES",
+              section = "recent_files",
+              limit = 5,
+              padding = 1,
+              hl = "Normal",
+              align = "left",
+            },
+            {
+              section = "terminal",
+              icon = " ",
+              title = "GIT STATUS",
+              enabled = vim.fn.isdirectory ".git" == 1,
+              cmd = "git status --short --branch --renames",
+              height = 5,
+              padding = 1,
+              indent = 1,
             },
           },
-          { section = "startup", align = "center", indent = 60 },
+          {
+            section = "startup",
+            padding = 1,
+            align = "right",
+            indent = 60,
+            gap = 0,
+          },
         },
       },
     },
     -- stylua: ignore
     keys = {
       -- { "<Localleader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
-      { "<Leader>jd", function() Snacks.scope.jump({bottom= true}) end, desc = "JumpTo: scope above [snacks]" },
-      { "<Leader>ju", function() Snacks.scope.jump({bottom= false}) end, desc = "JumpTo: scope bottom [snacks]" },
       -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
       -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
-      { "gK", function() Snacks.image.hover() end, desc = "Snackspicker: hover image" },
+      { "gL", function() Snacks.image.hover() end, desc = "Snackspicker: hover image" },
 
       -- { "<Localleader>nh", function() Snacks.notifier.show_history() end, desc = "Snackspicker: notification history" },
       -- { "<Localleader>nd", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss" },
