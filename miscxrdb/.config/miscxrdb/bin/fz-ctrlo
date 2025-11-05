@@ -585,6 +585,10 @@ tmux_create_sess() {
   notify-send "create new session and detach --> $ss_name"
 }
 
+tmux_kill_others_pane() {
+  tmux list-panes -F '#{pane_id} #{pane_active}' | awk '$2==0{print $1}' | xargs -I{} tmux kill-pane -t {}
+}
+
 tmux_clear_main_id_workspace() {
   rm /tmp/tmux-toggle-pane-*
   dunstify "Cleared tmux main IDs"
@@ -610,6 +614,7 @@ callme() {
  tmux: capture pane
  tmux: capture pane with files
  tmux: clear main pane id
+ tmux: kill other panes
 󰭲 rkill
  multilog
 󰎕 news
@@ -640,6 +645,7 @@ EOF
   "tmux: capture pane") capture_pane ;;
   "tmux: capture pane with files") capture_pane_and_save_to_file ;;
   "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
+  "tmux: kill other panes") tmux_kill_others_pane ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
 
