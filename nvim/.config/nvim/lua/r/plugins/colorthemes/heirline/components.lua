@@ -211,11 +211,6 @@ local __colors = function()
     winbar_bg_right_block = H.get("WinBarRightBlock", "bg"),
     winbar_fg_right_block = H.get("WinBarRightBlock", "fg"),
 
-    winbar_quickfix_fg = H.get("QuickFixHeader", "fg"),
-    winbar_quickfix_bg = H.get("QuickFixHeader", "bg"),
-    winbar_quickfix_fg_loc = H.tint(H.get("Keyword", "fg"), -0.8),
-    winbar_quickfix_bg_loc = H.tint(H.get("diffDelete", "fg"), 0.35),
-
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
