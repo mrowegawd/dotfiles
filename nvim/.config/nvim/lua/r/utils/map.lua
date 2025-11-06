@@ -490,98 +490,6 @@ function M.on_attach(_, buffer, spec_maps)
   end
 end
 
----@param items {bufnr: integer, filename: string, lnum:integer}
-local function all_item_locations_equal(items)
-  if #items == 0 then
-    return false
-  end
-  for i = 2, #items do
-    local item = items[i]
-    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
-      return false
-    end
-  end
-  return true
-end
-
----@param yield any
----@param open_mode? "vsplit" | "split" | "newtab" | "none"
-function M.lsp.wrap_location_method(yield, open_mode)
-  open_mode = open_mode or "none"
-  return function()
-    local from = RUtils.get_curpos_under_cursor()
-    if not from then
-      return
-    end
-
-    yield {
-      ---@param t vim.lsp.LocationOpts.OnList
-      on_list = function(t)
-        local curpos = RUtils.get_curpos_under_cursor()
-        if not vim.deep_equal(from, curpos) then
-          -- We have moved the cursor since fetching locations, so abort
-          RUtils.warn("Request definition abort process,\nyour cursor postion has been changed!", { title = "LSP" })
-          return
-        end
-
-        if open_mode ~= "none" then
-          vim.cmd(open_mode)
-        end
-
-        if all_item_locations_equal(t.items) then
-          -- Mostly copied from neovim source
-          local item = t.items[1]
-          local b = item.bufnr or vim.fn.bufadd(item.filename)
-
-          -- Save position in jumplist
-          vim.cmd "normal! m'"
-          -- Push a new item into tagstack
-          local tagname = vim.fn.expand "<cword>"
-          local tagstack = { { tagname = tagname, from = from } }
-          local winid = vim.api.nvim_get_current_win()
-          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
-
-          vim.bo[b].buflisted = true
-          vim.api.nvim_win_set_buf(winid, b)
-          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
-          vim._with({ win = winid }, function()
-            -- Open folds under the cursor
-            vim.cmd "normal! zv"
-          end)
-        else
-          RUtils.info(t.title .. ": " .. from.line)
-          -- vim.fn.setloclist(0, {}, " ", {
-          --   title = t.title .. ": " .. word_under_cursor,
-          --   items = t.items,
-          local items = t.items
-          if #t.items == 3 or #t.items == 2 then
-            if not vim.deep_equal(t.items[1], t.items[2]) then
-              items[#items + 1] = t.items[1]
-            end
-          end
-          -- vim.cmd.lopen()
-
-          RUtils.info(t.context)
-
-          local list_items = { items = items, title = "LSP " .. t.title .. ": " .. from.line, context = t.context }
-          if t.context and type(t.context) == "string" then
-            RUtils.qf.save_to_qf_and_auto_open_qf(list_items, t.context)
-          end
-
-          RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
-
-          -- vim.fn.setqflist({}, " ", {
-          --   title = t.title .. ": " .. from.line,
-          --   items = items,
-          --   context = t.context,
-          -- })
-          -- vim.cmd.copen()
-        end
-      end,
-    }
-  end
-end
-
 ---@param curpos { pos: integer, col: integer, line: string, buf: integer }
 ---@return string | nil
 local function get_extracted_strings(curpos)
@@ -609,6 +517,90 @@ local function get_extracted_strings(curpos)
   return word_under_cursor
 end
 
+---@param items {bufnr: integer, filename: string, lnum:integer}
+local function all_item_locations_equal(items)
+  if #items == 0 then
+    return false
+  end
+  for i = 2, #items do
+    local item = items[i]
+    if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
+      return false
+    end
+  end
+  return true
+end
+
+---@param yield any
+---@param open_mode? "vsplit" | "split" | "newtab" | "none"
+function M.lsp.wrap_location_method(yield, open_mode)
+  open_mode = open_mode or "none"
+  return function()
+    local from = RUtils.get_curpos_under_cursor()
+    if not from then
+      return
+    end
+
+    local target_strings = get_extracted_strings(from)
+    if not target_strings then
+      return
+    end
+
+    yield {
+      ---@param t vim.lsp.LocationOpts.OnList
+      on_list = function(t)
+        local curpos = RUtils.get_curpos_under_cursor()
+        if not vim.deep_equal(from, curpos) then
+          -- We have moved the cursor since fetching locations, so abort
+          RUtils.warn("Request definition abort process,\nyour cursor postion has been changed!", { title = "LSP" })
+          return
+        end
+
+        if open_mode ~= "none" then
+          vim.cmd(open_mode)
+        end
+
+        RUtils.info("`" .. target_strings .. "`", { title = t.title })
+
+        if all_item_locations_equal(t.items) then
+          -- Mostly copied from neovim source
+          local item = t.items[1]
+          local b = item.bufnr or vim.fn.bufadd(item.filename)
+
+          -- Save position in jumplist
+          vim.cmd "normal! m'"
+          -- Push a new item into tagstack
+          local tagname = vim.fn.expand "<cword>"
+          local tagstack = { { tagname = tagname, from = from } }
+          local winid = vim.api.nvim_get_current_win()
+          vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
+
+          vim.bo[b].buflisted = true
+          vim.api.nvim_win_set_buf(winid, b)
+          pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
+          vim._with({ win = winid }, function()
+            -- Open folds under the cursor
+            vim.cmd "normal! zv"
+          end)
+        else
+          local items = t.items
+          if #t.items == 3 or #t.items == 2 then
+            if not vim.deep_equal(t.items[1], t.items[2]) then
+              items[#items + 1] = t.items[1]
+            end
+          end
+
+          local list_items = { items = items, title = t.title .. ": " .. target_strings, context = t.context }
+          if t.context and type(t.context) == "string" then
+            list_items["context"] = t.context
+          end
+          RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
+        end
+      end,
+    }
+  end
+end
+
 function M.lsp.wrap_references_to_send_qf()
   local from = RUtils.get_curpos_under_cursor()
   if not from then
@@ -619,8 +611,6 @@ function M.lsp.wrap_references_to_send_qf()
   if not target_strings then
     return
   end
-
-  RUtils.info("Request references: `" .. target_strings .. "`", { title = "LSP" })
 
   vim.lsp.buf.references(nil, {
     on_list = function(t)
@@ -643,6 +633,8 @@ function M.lsp.wrap_references_to_send_qf()
           items[#items + 1] = t.items[1]
         end
       end
+
+      RUtils.info("`" .. target_strings .. "`", { title = "LSP " .. t.title })
 
       -- RUtils.info(vim.inspect(t.context))
       -- Info ----- notify.info RUtils { method: textDocument/references, id: 13 }
@@ -680,7 +672,8 @@ function M.lsp.wrap_references_to_send_qf()
         set_jump = true
       end
 
-      local list_items = { items = items, title = "LSP " .. t.title .. ": " .. from.line }
+      local list_items =
+        { items = items, title = "LSP " .. t.title .. ": " .. RUtils.lstrip_whitespace(target_strings) }
       if t.context and type(t.context) == "table" then
         if t.context.method and t.context.bufnr then
           list_items["context"] = { name = t.context.method, bufnr = t.context.bufnr }
