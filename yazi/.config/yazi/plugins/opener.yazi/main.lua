@@ -1,10 +1,14 @@
+---@diagnostic disable-next-line: undefined-global
 local WIN = ya.target_family() == "windows"
 
+---@diagnostic disable-next-line: undefined-global
 local state = ya.sync(function()
+  ---@diagnostic disable-next-line: undefined-global
   return cx.active.current.cwd
 end)
 
 local function fail(s, ...)
+  ---@diagnostic disable-next-line: undefined-global
   ya.notify { title = "Opener", content = string.format(s, ...), timeout = 5, level = "error" }
 end
 
@@ -60,6 +64,7 @@ local function open_with_tmux(action, cwd)
   end
 
   local child, err =
+    ---@diagnostic disable-next-line: undefined-global
     Command("tmux"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
   if not child then
@@ -90,6 +95,7 @@ local function open_with_wezterm(action, cwd)
   end
 
   local child, err =
+    ---@diagnostic disable-next-line: undefined-global
     Command("wezterm"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
   if not child then

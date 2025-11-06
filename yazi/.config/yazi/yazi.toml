@@ -15,7 +15,7 @@ edit = [
 
 [plugin]
 fetchers = [
-	# plugins - git.yazi
-	{ id = "git", name = "*", run = "git"},
-	{ id = "git", name = "*/", run = "git"},
+  # plugins - git.yazi
+  { id = "git", name = "*", run = "git" },
+  { id = "git", name = "*/", run = "git" },
 ]

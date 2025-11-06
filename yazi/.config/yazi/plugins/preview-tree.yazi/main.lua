@@ -2,13 +2,10 @@ local M = {}
 
 ---@alias FileExt "mp3" |"mp4" | "pdf"| "jpg" | nil
 
----@class CliArgs
----@field cmd string
----@field args string[]
-
-local function fail(s, ...)
+---@param msg string
+local function fail(msg)
   ---@diagnostic disable-next-line: undefined-global
-  ya.notify { title = "Preview tree", content = string.format(s, ...), timeout = 5, level = "error" }
+  ya.notify { title = "Preview tree", content = msg, timeout = 5, level = "error" }
 end
 
 ---@param filename string
@@ -107,23 +104,25 @@ local function send_text_cmds(cmd, args)
     Command(cmd):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
   if not child then
-    return fail("Spawn `cmd` failed with error code", err_cmd)
+    return fail("Spawn `cmd` failed with error code " .. err_cmd)
   end
 
   local output, err = child:wait_with_output()
   if not output then
-    return fail("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(args, " "), err)
+    return fail(string.format("No output! Command: %s, Args: %s, Error: %s", cmd, table.concat(args, " "), err))
   elseif not output.status.success and output.status.code ~= 130 then
     return fail(
-      "Command failed! Command: `%s`, Args: `%s`, Exit status code: %s",
-      cmd,
-      table.concat(args, " "),
-      output.status.code
+      string.format(
+        "Command failed! Command: `%s`, Args: `%s`, Exit status code: %s",
+        cmd,
+        table.concat(args, " "),
+        output.status.code
+      )
     )
   end
 end
 
----@param pane_id number
+---@param pane_id string
 ---@param cmds string
 local exec_os_cmd = function(pane_id, cmds)
   local term_cmd
@@ -187,7 +186,7 @@ local function play_with_mpv_nohup(fpath, is_only_sound)
   os.execute(play_cmd)
 end
 
----@param pane_id number
+---@param pane_id string
 ---@param fpath_ext FileExt
 ---@param fpath string
 ---@param back_to_pane_id? number
@@ -206,7 +205,7 @@ local gen_cmd_ext = function(pane_id, fpath_ext, fpath, back_to_pane_id)
   end
 
   if fpath_ext == "jpg" then
-    if not pane_id or (pane_id == 0) then
+    if not pane_id or (pane_id == "") then
       error "must define `pane_id`"
       return
     end
@@ -231,43 +230,158 @@ end
 ---@return string | nil
 local function get_output_string_cmd(cmd, args)
   ---@diagnostic disable-next-line: undefined-global
-  local child, _ = Command(cmd):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
+  local child, err =
+    ---@diagnostic disable-next-line: undefined-global
+    Command(cmd):arg(args):stdout(Command.PIPED):stderr(Command.INHERIT):output()
 
-  if not child then
-    fail "OPEN_WITH_WEZTERM: Get pane_id went wrong"
+  if err then
+    fail("Failed to run, error: " .. err)
     return
   end
 
-  return child.stdout:gsub("\n$", "")
+  -- Ambil hasil dari stdout
+  local result = child.stdout and child.stdout or ""
+
+  ---@diagnostic disable-next-line: redundant-return-value
+  return result:gsub("[\r\n]+$", "")
+end
+
+---@param pane_id string
+---@return boolean
+local function is_pane_exists(pane_id)
+  ---@diagnostic disable-next-line: undefined-global
+  local child, err = Command("tmux")
+    :arg("list-panes")
+    :arg("-a")
+    :arg("-F")
+    :arg("#{pane_id}")
+    ---@diagnostic disable-next-line: undefined-global
+    :stdout(Command.PIPED)
+    ---@diagnostic disable-next-line: undefined-global
+    :stderr(Command.PIPED)
+    :output()
+
+  if err then
+    fail("Command error: " .. tostring(err))
+    return false
+  end
+
+  local output = child.stdout
+
+  if child.stdout == nil or output == "" then
+    return false
+  end
+
+  -- Cek apakah pane_id ada di output
+  local is_found = false
+
+  for line in output:gmatch "[^\r\n]+" do
+    if line == pane_id then
+      is_found = true
+      break
+    end
+  end
+
+  if is_found then
+    return is_found
+  end
+
+  return false
 end
 
 ---@param fpath_ext string
 ---@param fpath string
 local function open_with_tmux(fpath_ext, fpath)
-  if fpath_ext == "jpg" and os.getenv "TERMINAL" == "st" then
-    gen_cmd_ext(3, fpath_ext, fpath)
-    return
-  end
-
   if fpath_ext ~= "jpg" then
-    gen_cmd_ext(_, fpath_ext, fpath)
+    gen_cmd_ext("", fpath_ext, fpath)
     return
   end
 
+  local target_preview_pane_id
   local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
 
-  if tonumber(list_panes) < 3 or (tonumber(list_panes) == 2) then
-    send_text_cmds("tmux", { "split-window", "-vl", "40", "-c", "#{pane_current_path}" })
-    send_text_cmds("tmux", { "split-window", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
-    send_text_cmds("tmux", { "resize-pane", "-U", "2" })
-    send_text_cmds("tmux", { "last-pane" })
+  if tonumber(list_panes) < 6 or (tonumber(list_panes) == 2) then
+    -- send_text_cmds("tmux", { "split-window", "-vl", "40", "-c", "#{pane_current_path}" })
+    -- send_text_cmds("tmux", { "split-window", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
+    -- send_text_cmds("tmux", { "resize-pane", "-U", "2" })
+    -- send_text_cmds("tmux", { "last-pane" })
+
+    local json_file = "/tmp/tmux-main-layout-workspaces.json"
+    local toggle_term_field_json = "toggle_term_pane_id"
+
+    local session_id = get_output_string_cmd("sh", { "-c", "tmux display-message -p '#S'" })
+    local window_id = get_output_string_cmd("sh", { "-c", "tmux display-message -p '#I'" })
+
+    target_preview_pane_id = get_output_string_cmd("jq", {
+      "-r",
+      "--arg",
+      "session_name",
+      session_id,
+      "--arg",
+      "window_name",
+      window_id,
+      "--arg",
+      "field_name",
+      toggle_term_field_json,
+      ".[$session_name][$window_name][$field_name]",
+      json_file,
+    })
+
+    if #target_preview_pane_id == 0 or target_preview_pane_id == "" then
+      fail(
+        "Failed to get toggle terminal pane ID.\n"
+          .. "The field `toggle_term_pane_id` is empty.\n"
+          .. "You need to create the toggle terminal pane first."
+      )
+      return
+    end
+    if not target_preview_pane_id then
+      return
+    end
+
+    -- Check target pane id if exists
+    if not is_pane_exists(target_preview_pane_id) then
+      fail(string.format("Pane with id `%s` does not exist,\nplease create it again.", target_preview_pane_id))
+      return
+    end
+
+    local cmd_height_pane = "tmux display -p -t "
+      .. target_preview_pane_id
+      .. " '#{pane_width} #{pane_height}' | cut -d' ' -f2"
+    local height_target_pane_id = get_output_string_cmd("sh", { "-c", cmd_height_pane })
+
+    local cmd_height_window = "tmux display -p '#{window_height}' | cut -d' ' -f2"
+    local height_window_id = get_output_string_cmd("sh", { "-c", cmd_height_window })
+
+    if height_target_pane_id and height_window_id then
+      local pane_height = tonumber(height_target_pane_id)
+      local window_height = tonumber(height_window_id)
+
+      local target_center = window_height / 2
+      local diff = target_center - pane_height
+
+      -- debug
+      -- fail(string.format("pane=%d, win=%d, diff=%.2f", pane_height, window_height, diff))
+
+      if math.abs(diff) > 2 then
+        if diff > 0 then
+          -- Go up
+          send_text_cmds("tmux", { "resize-pane", "-t", target_preview_pane_id, "-U", math.floor(diff / 2) })
+        else
+          -- Go down
+          send_text_cmds("tmux", { "resize-pane", "-t", target_preview_pane_id, "-D", math.floor(-diff / 2) })
+        end
+      end
+    end
   end
 
-  gen_cmd_ext(3, fpath_ext, fpath)
+  if target_preview_pane_id then
+    local pane_id = tostring(target_preview_pane_id)
+    gen_cmd_ext(pane_id, fpath_ext, fpath)
+  end
 end
 
 ---@param pane_id string
----@param cmds? CliArgs
 ---@param direction "Down"| "Left" | "Up" | "Right" | "None"
 ---@return string | nil | "none"
 local function get_extract_output_string_cmd_wezterm(pane_id, direction, cmds)
@@ -309,7 +423,7 @@ local function open_with_wezterm(fpath_ext, fpath)
   local pane_id_target
 
   if fpath_ext ~= "jpg" then
-    gen_cmd_ext(0, fpath_ext, fpath)
+    gen_cmd_ext("0", fpath_ext, fpath)
     return
   end
 
@@ -334,7 +448,7 @@ local function open_with_wezterm(fpath_ext, fpath)
       local pane_id = tonumber(pane_id_target)
       local back_to_pane_id = tonumber(current_pane_id)
       if pane_id then
-        gen_cmd_ext(pane_id, fpath_ext, fpath, back_to_pane_id)
+        gen_cmd_ext(tostring(pane_id), fpath_ext, fpath, back_to_pane_id)
       end
       return
     end
@@ -387,7 +501,7 @@ local function open_with_wezterm(fpath_ext, fpath)
   local pane_id = tonumber(pane_id_target)
   local back_to_pane_id = tonumber(current_pane_id)
   if pane_id then
-    gen_cmd_ext(pane_id, fpath_ext, fpath, back_to_pane_id)
+    gen_cmd_ext(tostring(pane_id), fpath_ext, fpath, back_to_pane_id)
   end
 end
 
