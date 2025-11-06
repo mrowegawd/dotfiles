@@ -257,7 +257,7 @@ return {
       return {
         hls = { cursor = "CurSearch" },
         fzf_colors = {
-          ["fg"] = { "fg", "FzfLuaNormal" },
+          ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
           ["fg+"] = { "fg", "Normal" },
@@ -326,7 +326,7 @@ return {
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^o:peek  a-u:hidden  a-i:ignore]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^o:peek  ^x:selectcwd  a-u:hidden  a-i:ignore]] },
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
@@ -357,6 +357,63 @@ return {
             ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
             ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+
+            ["ctrl-x"] = function()
+              require("fzf-lua").files {
+                fd_opts = [[--color=never --type d --type l --exclude .git]],
+                winopts = {
+                  title = RUtils.fzflua.format_title(
+                    "Select folder for files",
+                    RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
+                  ),
+                },
+                formatter = false, -- disable setting "path first"
+                actions = {
+                  ["default"] = function(selected)
+                    local paths = {}
+                    local path_str = ""
+                    if #selected > 1 then
+                      for _, sel in pairs(selected) do
+                        if #sel > 0 then
+                          local slice_num_str = sel:match ".*\xe2\x80\x82()"
+                          local path = sel:sub(slice_num_str)
+                          table.insert(paths, path)
+                        end
+                      end
+                    else
+                      local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
+                      path_str = selected[1]:sub(slice_num_str)
+                    end
+
+                    local opts = {}
+
+                    local title_path
+                    if #paths > 1 then
+                      title_path = "[ " .. table.concat(paths, ", ") .. " ]"
+                      opts.rg_opts = "--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
+                        .. table.concat(paths, " ")
+                        .. " -e "
+                      print(opts.rg_opts)
+                    else
+                      opts.cwd = path_str
+                      title_path = path_str
+                    end
+
+                    opts.winopts = {
+                      title = RUtils.fzflua.format_title(
+                        "Path: " .. title_path,
+                        RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
+                      ),
+                    }
+
+                    opts.rg_glob = false
+                    opts.no_esc = true
+
+                    return require("fzf-lua").files(opts)
+                  end,
+                },
+              }
+            end,
 
             ["ctrl-o"] = function(...)
               local P = require "overlook.peek"
@@ -671,7 +728,14 @@ return {
           include_current_session = false, -- include bufs from current session
           actions = {
             ["alt-u"] = function()
-              require("fzf-lua").oldfiles { cwd_only = false }
+              local opts = {
+                cwd_only = false,
+                winopts = {
+                  title = RUtils.fzflua.format_title("Global Recente Files", "󰈙"),
+                  preview = { hidden = false },
+                },
+              }
+              require("fzf-lua").oldfiles(opts)
             end,
             ["alt-i"] = function()
               require("fzf-lua").oldfiles { cwd_only = true }
