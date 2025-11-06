@@ -5,24 +5,19 @@ LAYOUT_SIDE="left"
 FIXED_HEIGHT_BELOW_PANE=15
 FIXED_HEIGHT_MAIN_PANE=50
 FIXED_RESIZE_TMUX_LEFT_OR_RIGHT=40
+
 FILE_MANAGER="$TERM_FILEMANAGER"
 
 MINUTE_POMODORO="1h"
+
+# ─[ SETTINGS COLOR ]───────────────────────────────────────────────────
 COLOR_CLOCK=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
-TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
-if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  COLOR_CLOCK=$(grep -i SESSION_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-fi
-
-# COL_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | head -1 | xargs)
-
 COL_BORDER_FG=$(xrdb -query | grep -i .color16 | cut -d':' -f2 | head -1 | xargs)
 COL_BORDER_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
-
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   COL_BORDER_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  # COL_RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COLOR_CLOCK=$(grep -i SESSION_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
@@ -350,6 +345,7 @@ reset_pane_workspaces() {
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
     dunstify "Create base layout first"
+    tmux select-layout -E
     exit
   fi
 
