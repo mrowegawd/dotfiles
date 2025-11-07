@@ -183,20 +183,12 @@ return {
     "jghauser/fold-cycle.nvim",
     keys = {
       {
-        "zi",
+        "zj",
         function()
           require("fold-cycle").open()
         end,
         mode = { "n", "x" },
-        desc = "Fold: cycle fold [fold-cycle.nvim]",
-      },
-      {
-        "iz",
-        function()
-          require("fold-cycle").open()
-        end,
-        mode = "n",
-        desc = "Fold: cycle fold (alternative) [fold-cycle.nvim]",
+        desc = "Fold: cycle fold level [fold-cycle.nvim]",
       },
     },
     opts = true,
@@ -209,7 +201,7 @@ return {
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = {},
   },
-  -- BLOCK.NVIM
+  -- BLOCK.NVIM (disabled)
   {
     "HampusHauffman/block.nvim",
     enabled = false,

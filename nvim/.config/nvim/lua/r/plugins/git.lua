@@ -452,12 +452,12 @@ return {
         end, "Git: preview (visual) [gitsigns]")
 
         -- Toggle
-        map("n", "<Leader>gub", function()
+        map("n", "<Leader>gtb", function()
           vim.cmd "G blame"
         end, "Git: open blame [gitsigns]")
-        map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
-        map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
-        map("n", "<Leader>gul", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
+        map("n", "<Leader>gtd", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
+        map("n", "<Leader>gtw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
+        map("n", "<Leader>gtl", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -870,7 +870,7 @@ return {
             { "n", "cc", "<Cmd>Git commit <bar> wincmd J<CR>", { desc = "Git: commit staged changes with fugitive [diffview-panel]" }, },
             { "n", "ca", "<Cmd>Git commit --amend <bar> wincmd J<CR>", { desc = "Git: amend the last commit with fugitive [diffview-panel]" }, },
 
-            { "n", "L", actions.open_commit_log, { desc = "Git: open the commit log panel [diffview-panel]" } },
+            { "n", "P", actions.open_commit_log, { desc = "Git: preview commit detail [diffview-panel]" } },
 
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview-panel]" } },
             { "n", "zO", actions.open_all_folds, { desc = "Git: expand all folds [diffview-panel]" } },
@@ -935,7 +935,9 @@ return {
             { "n", "g!", actions.options, { desc = "Git: open the option panel [diffview-history]" } },
             { "n", "<C-A-d>", actions.open_in_diffview, { desc = "Git: open the entry under the cursor in a diffview [diffview-history]" }, },
             { "n", "y", actions.copy_hash, { desc = "Git: copy the commit hash of the entry under the cursor [diffview-history]" }, },
-            { "n", "L", actions.open_commit_log, { desc = "Git: show commit details [diffview-history]" } },
+            -- { "n", "L", actions.open_commit_log, { desc = "Git: show commit details [diffview-history]" } },
+            { "n", "P", actions.open_commit_log, { desc = "Git: prevew commit details [diffview-history]" } },
+
             { "n", "X", actions.restore_entry, { desc = "Git: restore file to the state from the selected entry [diffview-history]" }, },
 
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview-history]" } },

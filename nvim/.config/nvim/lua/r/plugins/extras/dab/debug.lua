@@ -276,9 +276,9 @@ return {
     "rcarriga/nvim-dap-ui",
     -- stylua: ignore
     keys = {
-      { "<Leader>du", "", desc = "+DebugToggle" },
-      { "<Leader>duu", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
-      { "<Leader>dur", function() return require("dapui").open { reset = true } end, desc = "Debug: reset layout UI [dapui]" },
+      { "<Leader>dt", "", desc = "+DebugToggle" },
+      { "<Leader>dtu", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
+      { "<Leader>dtr", function() return require("dapui").open { reset = true } end, desc = "Debug: reset layout UI [dapui]" },
 
       { "<leader>dE", function() require("dapui").eval() end, desc = "Debug: evaluate expression", mode = {"n", "x"} },
       { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover (inspect) [dapui]" },

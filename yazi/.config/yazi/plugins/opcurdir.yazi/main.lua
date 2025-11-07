@@ -1,6 +1,12 @@
+---@class ProcesCmd
+---@field get_process_cmd table<string>
+---@field post_cmd string
+---@field pre_cmd string
+---@field is_cwd boolean
+
 local function fail(s, ...)
   ---@diagnostic disable-next-line: undefined-global
-  ya.notify { title = "Opcurdir", content = string.format(s, ...), timeout = 5, level = "error" }
+  ya.notify { title = "Opcurdir", content = string.format(s, ...), timeout = 5, level = "info" }
 end
 
 ---@return string
@@ -85,25 +91,96 @@ local function send_command(cmd, args)
   return output.stdout:gsub("\n$", "")
 end
 
----@param cwd string
-local function open_with_tmux(cwd)
-  os.execute [[tmux select-pane -R]]
+---@param process? string
+---@param cmds? table<string>
+---@return string | nil
+local function check_process_cmd(process, cmds)
+  cmds = cmds or { "display-message", "-p", "'#{pane_current_command}'" }
+  process = process or ""
 
-  local output = send_command("tmux", { "display-message", "-p", "'#{pane_current_command}'" })
+  local output = send_command("tmux", cmds)
   if not output then
-    fail("OPEN_WITH_TMUX", "something went wrong, check your command")
+    if #process > 0 then
+      fail("Something went wrong, check your command " .. process)
+    end
+    fail "something went wrong, check your command "
     return
   end
 
   local get_process_name = tostring(output:gsub("'", ""))
   get_process_name = get_process_name:gsub("\n$", "")
+  return get_process_name
+end
 
-  if get_process_name == "nvim" then
-    local commandquit = [[tmux send-keys ":qa!" Enter]]
-    os.execute(commandquit)
+---@param mode ProcesCmd[]
+local function force_close_process_name(mode)
+  local get_process_name = check_process_cmd()
+  if not get_process_name then
+    return
   end
 
-  os.execute "sleep 0.3"
+  for idx, cmd in pairs(mode) do
+    if get_process_name == idx then
+      os.execute(cmd.post_cmd)
+
+      for _ = 1, 10 do
+        local process_name = check_process_cmd(cmd.pre_cmd)
+        if not process_name then
+          break
+        end
+
+        if process_name == cmd.pre_cmd then
+          break
+        end
+
+        os.execute "sleep 0.5"
+      end
+    end
+
+    -- if cmd.is_cwd then
+    --   if get_process_name == "zsh" then
+    --     os.execute(cmd.post_cmd)
+    --
+    --     for _ = 1, 10 do
+    --       local process_name = check_process_cmd(cmd.pre_cmd, cmd.get_process_cmd)
+    --       if not process_name then
+    --         break
+    --       end
+    --
+    --       if string.find(process_name, cmd.pre_cmd) then
+    --         -- fail(process_name)
+    --         -- fail(cmd.pre_cmd)
+    --         break
+    --       end
+    --
+    --       os.execute "sleep 0.5"
+    --     end
+    --   end
+    -- end
+  end
+end
+
+---@param cwd string
+local function open_with_tmux(cwd)
+  os.execute [[tmux select-pane -R]]
+
+  ---@type ProcesCmd[]
+  local process_command_to_close = {
+    ["nvim"] = {
+      get_process_cmd = { "display-message", "-p", "'#{pane_current_command}'" },
+      post_cmd = [[tmux send-keys Escape ":qa!" Enter]],
+      pre_cmd = "zsh",
+      is_cwd = false,
+    },
+    -- ["zsh"] = {
+    --   get_process_cmd = { "display-message", "-p", "'#{pane_current_path}'" },
+    --   post_cmd = [[tmux send-keys "cd ]] .. cwd .. [[" Enter]],
+    --   pre_cmd = cwd,
+    --   is_cwd = true,
+    -- },
+  }
+
+  force_close_process_name(process_command_to_close)
 
   local command = [[tmux send-keys "cd ]] .. cwd .. [[" Enter]]
   os.execute(command)

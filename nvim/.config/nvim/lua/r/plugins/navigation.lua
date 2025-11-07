@@ -28,7 +28,7 @@ return {
         function()
           vim.cmd "Neotree focus reveal right"
         end,
-        desc = "Toggle: open file explore [neotree]",
+        desc = "Toggle: open file focus path explore [neotree]",
       },
     },
 

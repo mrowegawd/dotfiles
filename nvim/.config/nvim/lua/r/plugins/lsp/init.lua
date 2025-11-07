@@ -103,6 +103,23 @@ return {
                 has = "definition",
                 desc = "LSP: definitions",
               },
+              {
+                "<Leader>lv",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"),
+                has = "definition",
+                desc = "LSP: definitions in vsplit",
+              },
+              {
+                "<Leader>ls",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"),
+                has = "definition",
+                desc = "LSP: definitions in split",
+              },
+              {
+                "<Leader>lD",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.declaration),
+                desc = "LSP: goto declaration",
+              },
               { "<Leader>lR", vim.lsp.buf.references, desc = "LSP: references", nowait = true },
               {
                 "<Leader>lr",
@@ -111,11 +128,10 @@ return {
                 nowait = true,
               },
               {
-                "<Leader>lI",
+                "<Leader>ly",
                 RUtils.map.lsp.wrap_location_method(vim.lsp.buf.type_definition, "vsplit"),
-                desc = "LSP: goto definition",
+                desc = "LSP: goto type Definition",
               },
-              { "<Leader>ly", vim.lsp.buf.type_definition, desc = "LSP: goto type Definition" },
               {
                 "<Leader>lh",
                 function()
@@ -126,32 +142,14 @@ return {
                   end
                   vim.g.snacks_jump_scope = true
                 end,
-                desc = "LSP: toggle words references",
+                desc = "LSP: toggle enabled words references",
               },
               {
-                "<Leader>lD",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.implementation),
-                desc = "LSP: goto implementation",
-              },
-              {
-                "<Leader>lv",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"),
-                has = "definition",
-                desc = "LSP: definitions (vsplit)",
-              },
-              {
-                "<Leader>ls",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"),
-                has = "definition",
-                desc = "LSP: definitions (split)",
-              },
-
-              {
-                "<Leader>clf",
+                "<Leader>lcC",
                 function()
                   Snacks.picker.lsp_config()
                 end,
-                desc = "LSP: LSP Info",
+                desc = "LSP: show LSP configs",
               },
 
               --  +----------------------------------------------------------+
@@ -235,7 +233,7 @@ return {
               { "dn", RUtils.map.lsp.diagnostic_goto(1), desc = "Diagnostic: next item" },
               { "dp", RUtils.map.lsp.diagnostic_goto(-1), desc = "Diagnostic: prev item" },
               {
-                "<Leader>uD",
+                "<Leader>ltv",
                 function()
                   local new_value = not vim.diagnostic.config().virtual_lines
                   ---@diagnostic disable-next-line: undefined-field

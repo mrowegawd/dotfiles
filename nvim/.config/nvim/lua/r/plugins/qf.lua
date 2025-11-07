@@ -117,7 +117,7 @@ return {
       },
     },
   },
-  -- QFSILET
+  -- QFSILET (disabled)
   {
     "mrowegawd/qfsilet",
     enabled = false,

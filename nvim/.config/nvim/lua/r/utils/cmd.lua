@@ -257,8 +257,15 @@ local function open_mpv_sxiv_or_git(line_str)
   }
 
   if vim.bo.filetype == "git" then
-    sel_open_with = { DiffviewOpen = { cmd = { "DiffviewOpen" } } }
+    sel_open_with = {
+      DiffviewOpen = { cmd = { "DiffviewOpen" } },
+      ["Compare this diff with selected commit"] = { cmd = { "DiffviewOpen" } },
+      ["Explore the log"] = { cmd = { "DiffviewOpen" } },
+      ["Collect files and send to QF"] = { cmd = { "DiffviewOpen" } },
+    }
   end
+
+  sel_open_with["Open PR with Octo"] = { cmd = { "Octo pr edit " } }
 
   ---@return table
   local sel_fzf = function()
@@ -300,6 +307,9 @@ local function open_mpv_sxiv_or_git(line_str)
           end
 
           if vim.bo.filetype == "git" then
+            if sel == "Open PR with Octo" then
+              vim.cmd "tabnew e"
+            end
             vim.cmd(table.concat(cmds, " "))
             return
           end
@@ -484,7 +494,11 @@ function M.open_with(context_mode)
   local mode = vim.fn.mode()
 
   if mode == "v" or mode == "V" then
-    local line_str = RUtils.get_visual_selection()
+    is_exit_visual_mode = false
+    if context_mode == "mpv or svix" then
+      is_exit_visual_mode = true
+    end
+    local line_str = RUtils.get_visual_selection(is_exit_visual_mode)
     if line_str then
       url = line_str.selection
     end
@@ -492,7 +506,7 @@ function M.open_with(context_mode)
     url = RUtils.get_lines_under_cusor()
   end
 
-  if not url then
+  if not url or url == "" then
     RUtils.warn "Failed to extract string under cursor, abort."
     return
   end
@@ -949,6 +963,9 @@ function M.change_colors()
 
       selected = H.tint(H.get("diffDelete", "fg"), 0.3),
       count_selected_bg = H.tint(H.get("diffDelete", "fg"), -0.5),
+
+      find_keyword_fg = H.get("CurSearch", "fg"),
+      find_keyword_bg = H.get("CurSearch", "bg"),
 
       copied = H.tint(H.get("diffChange", "fg"), 0.3),
       count_copied_bg = H.tint(H.get("diffChange", "fg"), -0.5),

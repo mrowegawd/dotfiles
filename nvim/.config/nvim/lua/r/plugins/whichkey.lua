@@ -34,13 +34,13 @@ return {
           { "<Leader>f", group = "fzflua" },
 
           { "<Leader>j", group = "jumpTo" },
-          { "<Leader>k", group = "peek" },
+          { "<Leader>p", group = "peek" },
 
           { "<Leader>l", group = "LSP" },
 
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
-          { "<Leader>gu", group = "toggle" },
+          { "<Leader>gt", group = "toggle" },
           { "<Leader>go", group = "open" },
 
           { "<Leader>o", group = "open/linking" },

@@ -469,14 +469,20 @@ set_yazi() {
   fi
 
   TARGET_YAZI_THEME="$YAZI_FLAVORS_THEMES_PATH/flavor.toml"
-
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
+
+  YAZI_CWD=$(grep -i yazi_cwd: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_cwd%%/$YAZI_CWD/g" "$TARGET_YAZI_THEME"
 
   YAZI_HOVERED=$(grep -i yazi_hovered: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/%%col_hovered%%/$YAZI_HOVERED/g" "$TARGET_YAZI_THEME"
 
-  YAZI_CWD=$(grep -i yazi_cwd: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/%%col_cwd%%/$YAZI_CWD/g" "$TARGET_YAZI_THEME"
+  # Search (just like CurSearch)
+  YAZI_FIND_KEYWORD_FG=$(grep -i yazi_find_keyword_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_find_keyword_fg%%/$YAZI_FIND_KEYWORD_FG/g" "$TARGET_YAZI_THEME"
+
+  YAZI_FIND_KEYWORD_BG=$(grep -i yazi_find_keyword_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  sed -i -e "s/%%col_find_keyword_bg%%/$YAZI_FIND_KEYWORD_BG/g" "$TARGET_YAZI_THEME"
 
   # Cut, Copied, Selected
   YAZI_SELECTED=$(grep -i yazi_selected: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)

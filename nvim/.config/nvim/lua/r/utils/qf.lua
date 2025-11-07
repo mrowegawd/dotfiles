@@ -4,11 +4,6 @@ local M = {
   lopen = "belowright lopen", -- :botright :topleft :aboveleft :belowright :leftabove :rightbelow
 }
 
-local results = {
-  quickfix = {},
-  location = {},
-}
-
 local Qfbookmark
 local load = false
 

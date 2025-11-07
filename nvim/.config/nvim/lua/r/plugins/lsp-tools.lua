@@ -125,56 +125,56 @@ return {
         desc = "Peek: peek on qf item (alternatif) [overlook]",
       },
       {
-        "<Leader>kd",
+        "<Leader>pd",
         function()
           require("overlook.api").peek_definition()
         end,
         desc = "Peek: peek definition [overlook]",
       },
       {
-        "<Leader>kc",
+        "<Leader>pc",
         function()
           require("overlook.api").close_all()
         end,
         desc = "Peek: close all popup [overlook]",
       },
       {
-        "<Leader>kr",
+        "<Leader>pr",
         function()
           require("overlook.api").restore_popup()
         end,
         desc = "Peek: restore popup [overlook]",
       },
       {
-        "<Leader>kR",
+        "<Leader>pR",
         function()
           require("overlook.api").restore_all_popups()
         end,
         desc = "Peek: restore all popup [overlook]",
       },
       {
-        "<Leader>kv",
+        "<Leader>pv",
         function()
           require("overlook.api").open_in_vsplit()
         end,
-        desc = "Peek: open in  vsplit [overlook]",
+        desc = "Peek: open in vsplit [overlook]",
       },
       {
-        "<Leader>ks",
+        "<Leader>ps",
         function()
           require("overlook.api").open_in_split()
         end,
         desc = "Peek: open in split [overlook]",
       },
       {
-        "<Leader>kt",
+        "<Leader>pt",
         function()
           require("overlook.api").open_in_tab()
         end,
         desc = "Peek: open in tab [overlook]",
       },
       {
-        "<Leader>kw",
+        "<Leader>pw",
         function()
           require("overlook.api").switch_focus()
         end,
@@ -427,28 +427,28 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
-        "<Leader>lt",
+        "<Leader>lcs",
         function()
           require("meow.yarn").open_tree("type_hierarchy", "supertypes")
         end,
         desc = "LSP: type hierarchy (super) [meow.yarn]",
       },
       {
-        "<Leader>lT",
+        "<Leader>lct",
         function()
           require("meow.yarn").open_tree("type_hierarchy", "subtypes")
         end,
         desc = "LSP: type hierarchy (subtypes) [meow.yarn]",
       },
       {
-        "<Leader>lc",
+        "<Leader>lci",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callers")
         end,
         desc = "LSP: call hierarchy (callers) [meow.yarn]",
       },
       {
-        "<Leader>lC",
+        "<Leader>lco",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callees")
         end,

@@ -213,7 +213,7 @@ return {
             org_agenda_clock_goto = "cg",
             org_agenda_clock_cancel = "cc",
 
-            org_agenda_clockreport_mode = "<prefix>cP", -- tidak dipakai?
+            org_agenda_clockreport_mode = "cP", -- buat report clock
 
             -- Priority
             org_agenda_priority = "P",
@@ -298,7 +298,7 @@ return {
             org_move_subtree_down = "<a-n>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "g",
+            org_set_tags_command = "it",
             org_refile = "r",
 
             -- Links
@@ -320,11 +320,18 @@ return {
             org_export = "ue",
             org_babel_tangle = "bt",
 
-            org_toggle_checkbox = "<C-c>",
-            org_open_at_point = { "<Leader>oo", "<Leader>ld" },
-            org_edit_special = "<prefix>'",
+            -- Gunanya buat edit contents dalam block code di beda buffer,
+            -- cara: masuk ke block code (begin_src), lalu combine mapping ini,
+            -- jika selesi :wq
+            org_edit_special = "<prefix>E",
+
+            -- set current node to archived
             org_archive_subtree = "<F9>",
             org_toggle_archive_tag = "<Leader><F9>",
+
+            org_toggle_checkbox = "<C-c>",
+            org_open_at_point = { "<Leader>oo", "<Leader>ld" },
+
             org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
 

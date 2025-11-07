@@ -71,30 +71,30 @@ return {
 
       { "tf", function() require("fzf-lua").tabs() end, desc = "Tab: select tabs [fzflua]" },
 
-      {
-      	"<c-g>",
-      	function()
-      		require("fzf-lua").complete_path()
-      	end,
-      	desc = "Insert: complete path [fzflua]",
-      	mode = "i",
-      },
-      { -- WARN: ini ga work
-      	"<c-v>",
-      	function()
-      		require("fzf-lua").complete_file()
-      	end,
-      	desc = "Insert: complete line buffers [fzflua]",
-      	mode = "i",
-      },
+      -- {
+      --  "<c-g>",
+      --  function()
+      --     require("fzf-lua").complete_path()
+      --  end,
+      --  desc = "Insert: complete path [fzflua]",
+      --  mode = "i",
+      -- },
+      -- { -- WARN: ini ga work
+      --  "<c-v>",
+      --  function()
+      --     require("fzf-lua").complete_file()
+      --  end,
+      --  desc = "Insert: complete line buffers [fzflua]",
+      --  mode = "i",
+      -- },
 
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
-      { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
-      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
-      { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
-      { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
-      { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
-      { "<Leader>fL", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
+      { "<Leader>fh", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
+      { "<Leader>fc", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
+      { "<Leader>f:", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
+      { "<Leader>fA", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
+      { "<Leader>fr", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
+      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Picker: man pages [fzflua]" },
       { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Picker: keymaps [fzflua]" },
       {
@@ -160,9 +160,9 @@ return {
       },
 
       -- Buffers
-      { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep on buffers [fzflua]", mode = { "n", "x" } },
+      { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep across buffers [fzflua]", mode = { "n", "x" } },
       { "<Leader>bf", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
-      { "<Leader>bg", function() require("fzf-lua").blines() end, desc = "Buffer: live grep on curbuf [fzflua]" },
+      { "<Leader>bg", function() require("fzf-lua").blines() end, desc = "Buffer: live grep current buffer [fzflua]" },
       {
         "<Leader>bg",
         function()
@@ -184,8 +184,8 @@ return {
       },
 
       -- Jump To
-      { "<Leader>jm", function() require("fzf-lua").marks() end, desc = "JumpTo: marks [fzflua]" },
-      { "<Leader>jJ", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
+      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "JumpTo: marks [fzflua]" },
+      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- Diagnostics
@@ -731,7 +731,7 @@ return {
               local opts = {
                 cwd_only = false,
                 winopts = {
-                  title = RUtils.fzflua.format_title("Global Recente Files", "󰈙"),
+                  title = RUtils.fzflua.format_title("Global Recent Files", "󰈙"),
                   preview = { hidden = false },
                 },
               }

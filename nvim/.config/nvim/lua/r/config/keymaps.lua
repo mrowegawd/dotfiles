@@ -16,6 +16,11 @@ RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
 
+RUtils.map.inoremap("<a-l>", "<Right>", silent)
+RUtils.map.inoremap("<a-h>", "<Left>", silent)
+RUtils.map.inoremap("<a-j>", "<Down>", silent)
+RUtils.map.inoremap("<a-k>", "<Up>", silent)
+
 -- RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
@@ -33,33 +38,23 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 
 -- }}}
 -- {{{ Folds
-RUtils.map.nnoremap("zm", function()
-  RUtils.map.wrap_fold_cmd "normal! zM"
-end, { desc = "Fold: close all" })
 RUtils.map.nnoremap("<C-a>", function()
   RUtils.map.wrap_fold_cmd "normal! zMzv"
 end, { desc = "Fold: focus current" })
+RUtils.map.nnoremap("zf", function()
+  RUtils.map.wrap_fold_cmd "normal! zMzv"
+end, { desc = "Fold: focus current (alternativ)" })
+RUtils.map.nnoremap("zc", function()
+  RUtils.map.wrap_fold_cmd "normal! zM"
+end, { desc = "Fold: close all" })
+RUtils.map.nnoremap("zb", function()
+  RUtils.fold.cycle_fold_level()
+end, { desc = "Fold: cycle fold level (util)" })
 RUtils.map.nnoremap("zo", function()
-  RUtils.map.wrap_fold_cmd "normal! zMzv"
-end, { desc = "Fold: focus current (alternative-back" })
-RUtils.map.nnoremap("oz", function()
-  RUtils.map.wrap_fold_cmd "normal! zMzv"
-end, { desc = "Fold: focus current (alternative)" })
-RUtils.map.nnoremap("zp", function()
-  RUtils.map.wrap_fold_cmd "normal! zMzv"
-end, { desc = "Fold: focus current (alternative-back)" })
-RUtils.map.nnoremap("zn", function()
-  RUtils.fold.cycle_fold_level()
-end, { desc = "Fold: cycle level" })
-RUtils.map.nnoremap("nz", function()
-  RUtils.fold.cycle_fold_level()
-end, { desc = "Fold: cycle level (alternative)" })
-RUtils.map.nnoremap("zO", function()
-  RUtils.map.wrap_fold_cmd "normal! zOzz"
+  RUtils.map.wrap_fold_cmd "normal! zRzz"
 end, { desc = "Fold: open all" })
-RUtils.map.nnoremap("Oz", function()
-  RUtils.map.wrap_fold_cmd "normal! zOzz"
-end, { desc = "Fold: open all (alternative)" })
+
+-- Navigate magic fold
 RUtils.map.nnoremap("<c-n>", function()
   RUtils.map.magic_jump()
 end, { desc = "View: magic jump" })
@@ -236,13 +231,13 @@ RUtils.map.nnoremap(
 )
 -- }}}
 -- {{{ Buffers
-RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: to tab", silent = true })
+RUtils.map.nnoremap("<Leader>bt", "<C-w><S-t>", { desc = "Buffer: move to new tab", silent = true })
 RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size", silent = true })
 RUtils.map.nnoremap("<Leader>bc", "<CMD>q!<CR>", { desc = "Buffer: close", silent = true })
-RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close (force)", silent = true })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })
-RUtils.map.nnoremap("<Leader>bO", function()
+RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close (force)", silent = true })
+RUtils.map.nnoremap("<Leader>bo", function()
   Snacks.bufdelete.other()
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
@@ -415,11 +410,24 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap(
-  "<Leader>n",
-  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-  { desc = "Misc: redraw / clear hlsearch / diff update" }
-)
+RUtils.map.nnoremap("<Leader>n", function()
+  -- "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  -- convert into lua:
+  vim.cmd "nohlsearch"
+  vim.cmd "diffupdate"
+  vim.cmd "normal! <C-L>"
+
+  -- clean up vim-highlighter
+  --
+  local ok, _ = pcall(vim.fn.HiList)
+  if ok then
+    local Hilist = vim.fn.HiList()
+    if Hilist and #Hilist > 0 then
+      RUtils.info("Clear", { title = "Vim-Highlighter" })
+      vim.cmd "Hi -"
+    end
+  end
+end, { desc = "Misc: redraw / clear hlsearch / diff update" })
 RUtils.map.xnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
 RUtils.map.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
@@ -470,18 +478,18 @@ RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: lazy log"
 -- Open with browser
 RUtils.map.nnoremap("<Leader>ob", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Open: browser/link" })
-RUtils.map.xnoremap("<Leader>ob", function()
+end, { desc = "Open: magic browser" })
+RUtils.map.vnoremap("<Leader>ob", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Open: browser/link (visual)" })
+end, { desc = "Open: magic browse (visual" })
 
 -- Open with mpv or svix
 RUtils.map.nnoremap("<Leader>oB", function()
   RUtils.cmd.open_with "mpv or svix"
-end, { desc = "Open: mpv/svix" })
+end, { desc = "Open: magic media" })
 RUtils.map.vnoremap("<Leader>oB", function()
   RUtils.cmd.open_with "mpv or svix"
-end, { desc = "Open: mpv/svix (visual)" })
+end, { desc = "Open: magic media (visual)" })
 
 -- Open file under cursor
 RUtils.map.nnoremap("<Leader>oo", function()
@@ -577,8 +585,8 @@ Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 -- Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
 Snacks.toggle.zoom():map "<a-m>"
 Snacks.toggle.zen():map "<Leader>uz"
-Snacks.toggle.diagnostics():map "<Leader>ud"
-Snacks.toggle.treesitter():map "<Leader>uT"
+Snacks.toggle.diagnostics():map "<Leader>ltd"
+Snacks.toggle.treesitter():map "<Leader>us"
 -- Snacks.toggle.scroll():map "<Leader>uS"
 -- Snacks.toggle.animate():map "<Leader>ua"
 -- Snacks.toggle.line_number():map "<leader>ul"
@@ -586,7 +594,7 @@ Snacks.toggle.treesitter():map "<Leader>uT"
 -- Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 
 -- if vim.lsp.inlay_hint then
-Snacks.toggle.inlay_hints():map "<Leader>uh"
+Snacks.toggle.inlay_hints():map "<Leader>uH"
 --   if not vim.g.inlay_hints then
 --     RUtils.info "Inlay hint On"
 --     vim.g.inlay_hints = true
@@ -596,7 +604,7 @@ Snacks.toggle.inlay_hints():map "<Leader>uh"
 --   end
 -- end
 
-RUtils.map.nnoremap("<Leader>uC", function()
+RUtils.map.nnoremap("<Leader>ul", function()
   local msg_notify
   local quickfix_cursorline_active = vim.g.is_quickfix_cursorline_active
   if quickfix_cursorline_active then

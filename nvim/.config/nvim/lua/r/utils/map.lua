@@ -420,6 +420,7 @@ function M.magic_jump(is_jump_prev)
     return RUtils.markdown.go_to_heading(nil)
   end
 
+  -- Execute next/prev fold
   go_next_or_prev_folded_line(is_jump_prev, false)
 end
 

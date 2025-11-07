@@ -8,7 +8,7 @@ hovered = { bg = "%%col_hovered%%" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#1b1b1b", bg = "#3ddbd9", italic = true }
+find_keyword = { fg = "%%col_find_keyword_fg%%", bg = "%%col_find_keyword_bg%%", italic = true, bold = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker

@@ -304,7 +304,7 @@ end
 for _, level in ipairs { "info", "warn", "error" } do
   M[level] = function(msg, opts)
     opts = opts or {}
-    opts.title = opts.title or "RUtils"
+    opts.title = opts.title or "Nvim Notify"
     return LazyUtil[level](msg, opts)
   end
 end
@@ -527,8 +527,10 @@ function M.create_command(name, rhs, opts)
 end
 
 ---@param opts? { strict: boolean }
+---@param exit_from_visual? boolean
 ---@return { line: string, selection: string, csrow: integer, cscol: integer, cerow:integer, cecol: integer } | nil
-function M.get_visual_selection(opts)
+function M.get_visual_selection(exit_from_visual, opts)
+  exit_from_visual = exit_from_visual or false
   -- vim.cmd 'noau normal! "vy"'
   -- local text = vim.fn.getreg "v"
   -- vim.fn.setreg("v", {})
@@ -559,7 +561,9 @@ function M.get_visual_selection(opts)
       cscol, cecol = 0, 999
     end
     -- exit visual mode
-    RUtils.map.feedkey "<Esc>"
+    if not exit_from_visual then
+      RUtils.map.feedkey "<Esc>"
+    end
   else
     -- otherwise, use the last known visual position
     _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
