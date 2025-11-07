@@ -443,7 +443,10 @@ local function replace_keymap(confirmation, visual)
   local key = [[:%s/]]
   local search_string = ""
   if visual then
-    search_string = RUtils.get_visual_selection()
+    local selection_str = RUtils.get_visual_selection()
+    if selection_str then
+      search_string = selection_str.selection
+    end
   else
     key = key .. [[\<]]
     search_string = vim.fn.expand "<cword>"
@@ -485,10 +488,10 @@ end, { desc = "Open: magic browse (visual" })
 
 -- Open with mpv or svix
 RUtils.map.nnoremap("<Leader>oB", function()
-  RUtils.cmd.open_with "mpv or svix"
+  RUtils.cmd.open_with("mpv or svix", true)
 end, { desc = "Open: magic media" })
 RUtils.map.vnoremap("<Leader>oB", function()
-  RUtils.cmd.open_with "mpv or svix"
+  RUtils.cmd.open_with("mpv or svix", true)
 end, { desc = "Open: magic media (visual)" })
 
 -- Open file under cursor

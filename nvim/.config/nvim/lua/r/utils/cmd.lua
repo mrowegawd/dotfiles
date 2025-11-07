@@ -481,7 +481,10 @@ local function follow_link_markdown()
 end
 
 ---@param context_mode "mpv or svix" | "browser" | "go to file"
-function M.open_with(context_mode)
+---@param is_exit_visual_mode? boolean
+function M.open_with(context_mode, is_exit_visual_mode)
+  is_exit_visual_mode = is_exit_visual_mode or false
+
   local debug_context_mode = { "mpv or svix", "browser", "go to file" }
   if not vim.tbl_contains(debug_context_mode, context_mode) then
     ---@diagnostic disable-next-line: undefined-field

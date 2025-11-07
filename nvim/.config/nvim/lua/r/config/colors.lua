@@ -55,7 +55,7 @@ local base_colors = {
   statusline_right_block_fg = 1,
   tabline_bg_alter = -0.2,
   trouble_indent_fg_alter = 0.55,
-  visual_bg_alter = -0.1,
+  visual_bg_alter = 0.5,
   winbar_fg_alter = 0.2,
   winbar_right_block_bg_alter = -0.6,
   winbar_right_block_fg_alter = -0.1,
@@ -355,6 +355,7 @@ local update_col_colorscheme = {
     blink_cmp_label_kind_fg_alter = 0.8,
     comment_fg_alter = 0.55,
     floatboder_fg_alter = 0.3,
+    pmenu_sel_bg_alter = -0.48,
     pmenu_bg_alter = 0.4,
     render_markdown_code_bg_alter = 0.25,
     statusline_fg_alter = 0.75,
@@ -397,9 +398,9 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 1,
     render_markdown_code_inline_bg_alter = 0.15,
     render_markdown_code_inline_fg_alter = 0.05,
-    statusline_fg_alter = 1.1,
+    statusline_fg_alter = 1.3,
     trouble_indent_fg_alter = 0.7,
-    winbar_right_block_fg_alter = -0.2,
+    winbar_right_block_fg_alter = -0.1,
     winseparator_alter = 1,
   },
   ["lackluster"] = {
@@ -467,8 +468,8 @@ local update_col_colorscheme = {
     nontext_fg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.4,
     statusline_fg_alter = 0.85,
-    winbar_right_block_bg_alter = -0.6,
-    winbar_right_block_fg_alter = -0.2,
+    winbar_right_block_bg_alter = -0.55,
+    winbar_right_block_fg_alter = -0.05,
     winseparator_alter = 0.45,
   },
   ["neogotham"] = {
@@ -709,7 +710,8 @@ local general_overrides = function()
     {
       Visual = {
         bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), colors.visual_bg_alter),
-        fg = "NONE",
+        fg = { from = "Normal", attr = "bg" },
+        bold = true,
       },
     },
 
