@@ -117,16 +117,21 @@ return {
         },
       },
     },
-    --stylua: ignore
     keys = {
       -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
-      { "<Localleader>ss", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
+      {
+        "<Localleader>ss",
+        function()
+          Snacks.picker.smart()
+        end,
+        desc = "Snackspicker: smart",
+      },
       -- { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
       {
         "<Localleader>sN",
         function()
-          Snacks.win({
+          Snacks.win {
             file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
             width = 0.6,
             height = 0.6,
@@ -137,16 +142,34 @@ return {
               statuscolumn = " ",
               conceallevel = 3,
             },
-          })
+          }
         end,
         desc = "Snackspicker: neovim news [snackspicker]",
       },
 
       -- Buffers
-      { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Buffer: buffer lines [snackspicker]", },
-      { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Buffer: grep open buffers [snackspicker]", },
-      { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Buffer: buffers [snackspicker]", },
-      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
+      {
+        "<Leader>bg",
+        function()
+          Snacks.picker.lines()
+        end,
+        desc = "Buffer: live grep current buffer [snackspicker]",
+      },
+      {
+        "<Leader>bG",
+        function()
+          Snacks.picker.grep_buffers()
+        end,
+        desc = "Buffer: live grep across buffers [snackspicker]",
+      },
+      {
+        "<Leader>bf",
+        function()
+          Snacks.picker.buffers { layout = "select" }
+        end,
+        desc = "Buffer: show buffers [snackspicker]",
+      },
+      -- { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
       -- { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       -- { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
       -- { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Picker: projects [snackspicker]", },
@@ -158,8 +181,18 @@ return {
       -- { "<Leader>fg", function() Snacks.picker.grep { hidden = true, layout = "ivy" } end, desc = "Snackspicker: grep open buffers", },
       { "<Localleader>sg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
       -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
-      { "<Localleader>sw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
-      { "<Localleader>sW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd) [snackspicker]", mode = { "n", "x" }, },
+      {
+        "<Localleader>sw",
+        RUtils.pick "grep_word",
+        desc = "Snackspicker: visual selection or word (root dir)",
+        mode = { "n", "x" },
+      },
+      {
+        "<Localleader>sW",
+        RUtils.pick("grep_word", { root = false }),
+        desc = "Snackspicker: visual selection or word (cwd) [snackspicker]",
+        mode = { "n", "x" },
+      },
       -- Search
       -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
       -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
@@ -170,7 +203,13 @@ return {
       -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
       -- { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
       -- -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
-      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
+      {
+        "<Leader>fi",
+        function()
+          Snacks.picker.icons()
+        end,
+        desc = "Picker: icons [snackspicker]",
+      },
       -- { "<Leader>sj", function() Snacks.picker.jumps() end, desc = "Snackspicker: jumps", },
       -- {
       --   "<Leader>fk",
@@ -197,15 +236,70 @@ return {
       --   end,
       --   desc = "Snackspicker: keymaps",
       -- },
-      -- { "<Leader>sl", function() Snacks.picker.loclist() end, desc = "Snackspicker: location list", },
       -- { "<Leader>sM", function() Snacks.picker.man() end, desc = "Snackspicker: man pages", },
       -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },
-      { "<Localleader>sL", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
+      {
+        "<Localleader>sl",
+        function()
+          Snacks.picker.resume()
+        end,
+        desc = "Snackspicker: resume",
+      },
       -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: quickfix (qf) ", },
       -- { "<Leader>fu", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree [snackspicker]", },
       -- ui
-      { "<Localleader>sc", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes [snackspicker]", },
+      {
+        "<Localleader>sc",
+        function()
+          Snacks.picker.colorschemes()
+        end,
+        desc = "Snackspicker: colorschemes [snackspicker]",
+      },
 
+      -- LSP
+      --  +----------------------------------------------------------+
+      --  Jump to Word References
+      --  +----------------------------------------------------------+
+      {
+        "<a-n>",
+        function()
+          local ok, _ = pcall(vim.fn.HiList)
+          if ok then
+            local hilist = vim.fn.HiList()
+            if hilist and #hilist > 0 then
+              RUtils.info("Go next", { title = "Vim-Highlighter" })
+              return vim.cmd "Hi}"
+            end
+          end
+
+          if vim.g.snacks_jump_scope then
+            Snacks.words.jump(vim.v.count1, true)
+            return
+          end
+          Snacks.scope.jump { bottom = true }
+        end,
+        desc = "LSP: next reference or jump scope",
+      },
+      {
+        "<a-p>",
+        function()
+          local ok, _ = pcall(vim.fn.HiList)
+          if ok then
+            local hilist = vim.fn.HiList()
+            if hilist and #hilist > 0 then
+              RUtils.info("Go prev", { title = "Vim-Highlighter" })
+              return vim.cmd "Hi{"
+            end
+          end
+
+          if vim.g.snacks_jump_scope then
+            Snacks.words.jump(-vim.v.count1, true)
+            return
+          end
+          Snacks.scope.jump { bottom = false }
+        end,
+        desc = "LSP: prev reference or jump scope",
+      },
     },
   },
 

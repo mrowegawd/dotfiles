@@ -1,9 +1,39 @@
 return {
-  -- CRONEX
+  -- VIM-HIGHLIGHTER
+  {
+    "azabiong/vim-highlighter",
+    -- https://github.com/t9md/vim-quickhl (alternatif??)
+    -- event = "BufReadPost", -- no need it
+    keys = {
+      {
+        "<leader>uh",
+        function()
+          local mode = vim.api.nvim_get_mode().mode
+          if mode == "v" or mode == "V" then
+            local word = RUtils.get_visual_selection()
+            if word then
+              vim.cmd(":Hi + " .. word.selection)
+            end
+            return
+          end
+          vim.cmd ":Hi + "
+        end,
+        desc = "Misc: highlight on cursor [vim-highlighter]",
+        mode = { "n", "v" },
+      },
+      {
+        "<Leader>un",
+        "<CMD>Hi clear<CR>",
+        desc = "Misc: clear highlight [vim-highlighter",
+      },
+    },
+  },
+  -- CRONEX (disabled, gunakan saat diperlukan saja)
   {
     -- ex: (gunakan tanda kurung ya!) -> "* * * * *" bukan * * * * *
-    -- dan juga format cronex adalah lewat diagnostic, check lewat trouble
+    -- dan juga format cronex adalah lewat diagnostic (or check via trouble)
     "fabridamicelli/cronex.nvim",
+    enabled = false,
     ft = { "yaml", "yml", "tf", "cfg", "config", "conf", "crontab" },
     config = function()
       require("cronex").setup {
@@ -35,37 +65,6 @@ return {
   {
     "LudoPinelli/comment-box.nvim",
     event = "InsertEnter",
-  },
-  -- VIM-HIGHLIGHTER
-  {
-    -- https://github.com/t9md/vim-quickhl (alternative)
-    "azabiong/vim-highlighter",
-    keys = {
-      {
-        "<c-Down>",
-        "<CMD> Hi} <CR>",
-        desc = "Misc: next highlighter [vim-highlighter]",
-      },
-      {
-        "<c-Up>",
-        "<CMD> Hi{ <CR>",
-        desc = "Misc: prev highlighter [vim-highlighter]",
-      },
-      {
-        "t<CR>",
-        ":Hi + <CR>",
-        desc = "Misc: highlight on cursor [vim-highlighter]",
-      },
-      {
-        "t<BS>",
-        ":Hi - <CR>",
-        desc = "Misc: remove hi undercursor [vim-highlighter]",
-      },
-      -- "t<CR>",
-      -- "t<BS>",
-      -- "S<CR>",
-      -- "t<Tab>",
-    },
   },
   -- NREDIR
   {

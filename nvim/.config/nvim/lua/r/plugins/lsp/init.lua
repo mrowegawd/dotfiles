@@ -230,34 +230,6 @@ return {
               { "<Leader>cr", vim.lsp.buf.rename, desc = "Action: rename", has = "rename" },
 
               --  +----------------------------------------------------------+
-              --  Jump to Word References
-              --  +----------------------------------------------------------+
-              {
-                "<a-n>",
-                function()
-                  if vim.g.snacks_jump_scope then
-                    Snacks.words.jump(vim.v.count1, true)
-                    return
-                  end
-                  Snacks.scope.jump { bottom = true }
-                end,
-                has = "documentHighlight",
-                desc = "LSP: next reference or jump scope",
-              },
-              {
-                "<a-p>",
-                function()
-                  if vim.g.snacks_jump_scope then
-                    Snacks.words.jump(-vim.v.count1, true)
-                    return
-                  end
-                  Snacks.scope.jump { bottom = false }
-                end,
-                has = "documentHighlight",
-                desc = "LSP: prev reference or jump scope",
-              },
-
-              --  +----------------------------------------------------------+
               --  Diagnostics
               --  +----------------------------------------------------------+
               { "dn", RUtils.map.lsp.diagnostic_goto(1), desc = "Diagnostic: next item" },
