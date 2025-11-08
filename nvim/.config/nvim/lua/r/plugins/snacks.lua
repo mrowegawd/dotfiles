@@ -1,5 +1,5 @@
 local img_from_terminal = true
-local set_number = 0 -- 0 means random; 1–9 are fixed numbers
+local set_number = 0 -- 0 means random number; 1–9 are fixed numbers
 
 local function set_img_dashboard()
   local nvim_dashboard_path = vim.fs.joinpath(vim.env.HOME, "/moxconf/development/dotfiles/img/nvim-dashboard")
@@ -14,27 +14,42 @@ local function set_img_dashboard()
   local is_image = is_img()
   local fn_img = RUtils.logo.setup(is_image, set_number)
 
+  local align = vim.fn.winwidth(0) > 150 and "right" or "center"
+  local height = align == "center" and 20 or 23
+
   if is_image then
     return {
-      section = "terminal",
       pane = 1,
+      section = "terminal",
+      height = height, -- 29
       cmd = [[img2art ]]
         .. nvim_dashboard_path
         .. "/"
         .. fn_img
         .. " "
         .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]],
-      height = 20, -- 29
-      align = "center",
+      align = align,
+      padding = 8,
     }
   end
 
   return {
     pane = 1,
     header = fn_img,
-    height = 50, -- 29
-    -- padding = 8,
+    height = 100,
+    padding = 10,
+    align = align,
+  }
+end
+
+local function section_footer()
+  local indent = vim.fn.winwidth(0) > 150 and 60 or 0
+  return {
+    pane = 3,
+    section = "startup",
     align = "center",
+    gap = 0,
+    indent = indent,
   }
 end
 
@@ -163,7 +178,7 @@ return {
             { icon = " ", hidden = true, key = "n", desc = "New File", action = ":ene | startinsert" },
             {
               icon = " ",
-              key = "o",
+              key = "r",
               desc = "Recent Files",
               action = function()
                 require("fzf-lua").oldfiles()
@@ -171,7 +186,7 @@ return {
             },
             {
               icon = " ",
-              key = "L",
+              key = "s",
               desc = "Select Session",
               action = function()
                 require("r.utils.sessions").load_session_from_dashboard()
@@ -211,7 +226,6 @@ return {
           --     { item.file:sub(2):match "^(.*[/])", hl = "NonText" },
           --     { item.file:match "([^/]+)$", hl = "Normal" },
           --   }
-          --
           -- end,
 
           file = function(item, ctx)
@@ -233,51 +247,55 @@ return {
           icon = { "" },
         },
         sections = {
-
           {
-            pane = 1,
-            padding = 1,
-            align = "center",
+            enabled = function()
+              return (vim.fn.winheight(0) < 25)
+            end,
+            { section = "header" },
+          },
+          {
+            enabled = function()
+              return (vim.fn.winheight(0) >= 25)
+            end,
             {
+              pane = 1,
+              padding = 1,
               set_img_dashboard(),
             },
-          },
-          {
-            pane = 2,
-            padding = 5,
-            align = "center",
             {
-              section = "keys",
-              gap = 0,
-              padding = 1,
-              align = "left",
+              pane = 2,
+              align = "center",
+              { title = "", padding = 1.5 },
+              {
+                section = "keys",
+                padding = 1,
+                align = "left",
+              },
+              {
+                title = " RECENT FILES",
+                section = "recent_files",
+                limit = 5,
+                padding = 1,
+                hl = "Normal",
+                align = "left",
+              },
+              {
+                enabled = function()
+                  return (vim.fn.winwidth(0) > 150)
+                end,
+                {
+                  section = "terminal",
+                  icon = " ",
+                  title = "GIT STATUS",
+                  enabled = vim.fn.isdirectory ".git" == 1,
+                  cmd = "git status --short --branch --renames",
+                  height = 6,
+                  padding = 1,
+                  indent = 1,
+                },
+              },
             },
-            {
-              icon = " ",
-              title = "RECENT FILES",
-              section = "recent_files",
-              limit = 5,
-              padding = 1,
-              hl = "Normal",
-              align = "left",
-            },
-            {
-              section = "terminal",
-              icon = " ",
-              title = "GIT STATUS",
-              enabled = vim.fn.isdirectory ".git" == 1,
-              cmd = "git status --short --branch --renames",
-              height = 5,
-              padding = 1,
-              indent = 1,
-            },
-          },
-          {
-            section = "startup",
-            padding = 1,
-            align = "right",
-            indent = 60,
-            gap = 0,
+            section_footer(),
           },
         },
       },
