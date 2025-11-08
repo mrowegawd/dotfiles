@@ -11,55 +11,148 @@ ICON_LEARNING_PATH="$HOME/.config/miscxrdb/icons/knowledge.png"
 GREEN="$(xrdb -query | grep 'color3:' | awk '{print $NF}' | head -1)"
 RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
 
-TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
-if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  GREEN=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-  RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
-fi
+run_with_notify=0 # 1 is false, 0 is true
 
-TASK="$(/usr/bin/rg -i "\*\sPROGRES" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
-LEARNING="$(/usr/bin/rg -i "\*\sLEARNING" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
+play_with_notification() {
+  [[ ! -f "/usr/local/bin/dunstify" ]] && notify-send "dunstify not installed?" && exit 1
 
-if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
-  /usr/local/bin/dunstify -i "$ICON_PATH" "TODO/LEARNING" "<b><span foreground=\"$GREEN\">What are you doing, bodoh!?\nNo todo or no task??</span></b>"
-  sound_man="$HOME/.config/miscxrdb/mp3-wav/wrong-answer-129254.mp3"
-  exit 1
-fi
+  is_run_with_notify=$1
 
-if [[ -n $TASK ]]; then
-  IFS=$'\n' read -r -d '' -a array <<<"$TASK"
+  local icon=$2
+  local title=$3
+  local messages=$4
 
-  # Array baru untuk menyimpan elemen yang dimodifikasi
-  new_array=()
-  for element in "${array[@]}"; do
-    new_array+=("<span foreground=\"$RED\"></span> <b><span foreground=\"$GREEN\">$element</span></b>")
-  done
+  local sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
+  local timeout=10000
 
-  concatenated_string=$(
+  if [[ $is_run_with_notify == 1 ]]; then
+    if [[ -n $1 ]]; then
+      messages="Nothing?"
+    fi
+
+    if [[ -n $2 ]]; then
+      icon="$HOME/.config/miscxrdb/icons/checklist.png"
+    fi
+
+    /usr/local/bin/dunstify -t "$timeout" -i "$icon" "$title" "$messages"
+
+    if [[ -f "$sound_man" ]]; then
+      /usr/bin/play "$sound_man" 2>/dev/null
+    fi
+  else
+    # Warna ANSI
+    BOLD="\033[1m"
+    RESET="\033[0m"
+    GREEN="\033[32m"
+    RED="\033[31m"
+    BLUE="\033[34m"
+    YELLOW="\033[33m"
+    CYAN="\033[36m"
+    GRAY="\033[90m"
+
+    # Panjang garis dipersingkat (±30 karakter)
+    # LINE_SHORT="${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+
+    # Header cantik & lebih pendek
+    # printf "\n${CYAN}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET}\n"
+    # if [[ -n "$title" ]]; then
+    #   printf "${CYAN}┃${RESET}  ${BOLD}${YELLOW}🔸 $title${RESET}\n"
+    # else
+    #   printf "${CYAN}┃${RESET}  ${BOLD}${YELLOW}🔸 TASK LIST${RESET}\n"
+    # fi
+    # printf "${CYAN}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET}\n\n"
+
+    # Judul kategori
+    if [[ "$title" =~ "LEARNING" ]]; then
+      printf "${BLUE}📚 Learning Goals:${RESET}\n"
+    elif [[ "$title" =~ "TODO" ]]; then
+      printf "${GREEN}✅ Tasks to Do Now:${RESET}\n"
+    else
+      printf "${RED}⚠️  Message:${RESET}\n"
+    fi
+
+    # Isi daftar
     IFS=$'\n'
-    echo "${new_array[*]}"
-  )
-  /usr/local/bin/dunstify -t 10000 -i "$ICON_PATH" "TaskDoitNow: TODO" "$concatenated_string"
-fi
+    n=1
+    for line in $messages; do
+      if [[ "$line" =~ "bodoh" ]]; then
+        printf "  ${RED}✖ ${line}${RESET}\n"
+      else
+        printf "  ${GREEN}$n.${RESET} ${BOLD}${line}${RESET}\n"
+      fi
+      ((n++))
+    done
 
-if [[ -n $LEARNING ]]; then
-  IFS=$'\n' read -r -d '' -a array <<<"$LEARNING"
+    # Garis footer
+    # printf "\n${GRAY}${LINE_SHORT}${RESET}\n"
 
-  # Array baru untuk menyimpan elemen yang dimodifikasi
-  new_array=()
-  for element in "${array[@]}"; do
-    new_array+=(" <b><span foreground=\"$GREEN\">$element</span></b>")
-  done
+  fi
 
-  concatenated_string=$(
-    IFS=$'\n'
-    echo "${new_array[*]}"
-  )
-  /usr/local/bin/dunstify -t 10000 -i "$ICON_LEARNING_PATH" "TaskDoitNow: LEARNING" "$concatenated_string"
-fi
+}
 
-sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
+run() {
+  TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+  if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+    GREEN=$(grep -i GREEN <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+    RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  fi
 
-if [ -f "$sound_man" ]; then
-  /usr/bin/play "$sound_man" 2>/dev/null
-fi
+  TASK="$(/usr/bin/rg -i "\*\sPROGRES" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
+  LEARNING="$(/usr/bin/rg -i "\*\sLEARNING" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
+
+  if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
+    local messages
+    if [[ $run_with_notify == 1 ]]; then
+      messages="<b><span foreground=\"$GREEN\">What are you doing, bodoh!?\nNo todo or no task??</span></b>"
+    else
+      messages="What are you doing, bodoh!? No todo or no task??"
+    fi
+    sound_man="$HOME/.config/miscxrdb/mp3-wav/wrong-answer-129254.mp3"
+    play_with_notification "$run_with_notify" "$ICON_PATH" "" "$messages"
+    exit 1
+  fi
+
+  if [[ -n $TASK ]]; then
+    IFS=$'\n' read -r -d '' -a array <<<"$TASK"
+
+    # Array baru untuk menyimpan elemen yang dimodifikasi
+    new_array=()
+    for element in "${array[@]}"; do
+      if [[ $run_with_notify == 1 ]]; then
+        new_array+=("<span foreground=\"$RED\"></span> <b><span foreground=\"$GREEN\">$element</span></b>")
+      else
+        new_array+=("$element")
+      fi
+    done
+
+    concatenated_string=$(
+      IFS=$'\n'
+      echo "${new_array[*]}"
+    )
+    play_with_notification "$run_with_notify" "$ICON_PATH" "Task Do it Now: TODO" "$concatenated_string"
+  fi
+
+  if [[ -n $LEARNING ]]; then
+    IFS=$'\n' read -r -d '' -a array <<<"$LEARNING"
+
+    # Array baru untuk menyimpan elemen yang dimodifikasi
+    new_array=()
+    for element in "${array[@]}"; do
+      if [[ $run_with_notify == 1 ]]; then
+        new_array+=(" <b><span foreground=\"$GREEN\">$element</span></b>")
+      else
+        new_array+=("$element")
+      fi
+    done
+
+    concatenated_string=$(
+      IFS=$'\n'
+      echo "${new_array[*]}"
+    )
+
+    play_with_notification "$run_with_notify" "$ICON_LEARNING_PATH" "Task Do it Now: LEARNING" "$concatenated_string"
+  fi
+
+}
+
+"$@"
