@@ -140,6 +140,7 @@ return {
             require("smart-splits").move_cursor_left()
           end,
           desc = "Window: move cursor left [smart-splits]",
+          mode = { "n", "x" },
         },
         {
           "<c-j>",
@@ -161,6 +162,7 @@ return {
             require("smart-splits").move_cursor_right()
           end,
           desc = "Window: move cursor right [smart-splits]",
+          mode = { "n", "x" },
         },
 
         -- ALT

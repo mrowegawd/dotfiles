@@ -15,13 +15,18 @@ local function set_img_dashboard()
   local fn_img = RUtils.logo.setup(is_image, set_number)
 
   local align = vim.fn.winwidth(0) > 150 and "right" or "center"
-  local height = align == "center" and 20 or 23
+
+  local height = align == "center" and 20 or 25
+
+  -- RUtils.info(align)
+  -- RUtils.info(height)
 
   if is_image then
     return {
       pane = 1,
       section = "terminal",
       height = height, -- 29
+      -- height = 20, -- 29
       cmd = [[img2art ]]
         .. nvim_dashboard_path
         .. "/"
@@ -29,7 +34,7 @@ local function set_img_dashboard()
         .. " "
         .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]],
       align = align,
-      padding = 8,
+      -- padding = 8,
     }
   end
 
@@ -43,12 +48,23 @@ local function set_img_dashboard()
 end
 
 local function section_footer()
-  local indent = vim.fn.winwidth(0) > 150 and 60 or 0
+  local _indent = function()
+    local win_width = vim.fn.winwidth(0)
+    -- RUtils.info(win_width)
+    if win_width >= 160 then
+      return 60
+    elseif win_width <= 140 then
+      return 20
+    end
+    return 0
+  end
+
+  local indent = _indent()
+  -- RUtils.info(indent)
+
   return {
-    pane = 3,
     section = "startup",
-    align = "center",
-    gap = 0,
+    -- align = "center",
     indent = indent,
   }
 end
@@ -265,7 +281,10 @@ return {
             {
               pane = 2,
               align = "center",
-              { title = "", padding = 1.5 },
+              {
+                title = "",
+                padding = (vim.fn.isdirectory ".git" ~= 1 and (vim.fn.winwidth(0) > 150)) and 5 or 1,
+              },
               {
                 section = "keys",
                 padding = 1,
@@ -280,10 +299,9 @@ return {
                 align = "left",
               },
               {
-                enabled = function()
-                  return (vim.fn.winwidth(0) > 150)
-                end,
+                enabled = (vim.fn.winwidth(0) > 150),
                 {
+
                   section = "terminal",
                   icon = " ",
                   title = "GIT STATUS",
@@ -295,7 +313,19 @@ return {
                 },
               },
             },
-            section_footer(),
+
+            {
+              pane = 3,
+              enabled = (vim.fn.winwidth(0) > 150),
+              {
+
+                {
+                  title = "",
+                  padding = 1,
+                },
+                section_footer(),
+              },
+            },
           },
         },
       },

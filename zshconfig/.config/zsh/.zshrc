@@ -61,8 +61,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#3e3e3e"
-colorsuggest="fg=#434343"
+colorline="#434343"
+colorsuggest="fg=#5e5e5e"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏

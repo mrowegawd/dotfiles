@@ -1,70 +1,50 @@
-TAB_ACTIVE_FG="#ffffff"
-TAB_ACTIVE_BG="#243B4D"
+TAB_ACTIVE_FG="#e8e8d3"
+TAB_ACTIVE_BG="#2F393F"
 
 TAB_INACTIVE_FG="#7fa9cc"
 TAB_INACTIVE_BG="#374a59"
 
-STATUSLINE_BG_MESSAGE="#ffff06"
-STATUSLINE_FG="#555555"
+STATUSLINE_BG_MESSAGE="#ffe797"
+STATUSLINE_FG="#606060"
 
-SESSION_BG="#264660"
-SESSION_FG="#5194cb"
+SESSION_BG="#3a4851"
+SESSION_FG="#80abc6"
 
-TMUX_BG="#202020"
-TMUX_FG="#ffffff"
-TMUX_KEYWORD="#569cd6"
+TMUX_BG="#151515"
+TMUX_FG="#b9b9a8"
+TMUX_KEYWORD="#8fbfdc"
 
 # color untuk bg active pane saat command yazi running (khusus bg file manager)
 # agar sama dengan bg file-manager di nvim
-FM_BG="#202020"
+FM_BG="#151515"
 
-BORDER_ACTIVE="#37658b"
-BORDER_INACTIVE="#202020"
-BORDER_INACTIVE_STATUS_FG="#393939"
+BORDER_ACTIVE="#5c7c8f"
+BORDER_INACTIVE="#151515"
+BORDER_INACTIVE_STATUS_FG="#252525"
 
-RED="#d75f5f"
-BLUE="#5f87ff"
-WHITE="#d9d7c5"
-GREEN="#87af5f"
-
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏                         PLUGINS                          ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
-# ┌╌╌╌╌╌╌╌╌╌┐
-# ╎ FINGERS ╎
-# └╌╌╌╌╌╌╌╌╌┘
-
-set -g @fingers-hint-style 'fg=black,bold,bg=yellow'
-set -g @fingers-highlight-style 'fg=red'
-set -g @fingers-selected-hint-style 'bg=blue'
-
-
-# ┌╌╌╌╌╌╌╌╌┐
-# ╎ THUMBS ╎
-# └╌╌╌╌╌╌╌╌┘
-
-set -g @thumbs-hint-bg-color $RED
-set -g @thumbs-hint-fg-color $TMUX_BG
-
-set -g @thumbs-bg-color yellow
-set -g @thumbs-fg-color black
-set -g @thumbs-select-fg-color red
+RED="#cc4d4d"
+BLUE="#8197bf"
+WHITE="#e8e8d3"
+GREEN="#99ad6a"
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                      PANE & WINDOWS                      ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
-setw -g window-style bg=$TMUX_BG
-setw -g window-active-style bg=$TMUX_BG
+# setw -g window-style "bg=$TMUX_BG,fg=$TMUX_FG"
+# setw -g window-active-style bg=$TMUX_BG
 
-setw -g pane-active-border-style bg=$TMUX_BG,fg=$BORDER_ACTIVE
-setw -g pane-border-style bg=$TMUX_BG,fg=$BORDER_INACTIVE
+setw -g pane-active-border-style fg=$BORDER_ACTIVE
+setw -g pane-border-style fg=$BORDER_INACTIVE
+
+TN_COLOR_ORANGE_1=#ff966c
+TN_COLOR_BLUE_1=#82aaff
+
+set -g display-panes-active-colour $TN_COLOR_ORANGE_1
+set -g display-panes-colour $TN_COLOR_BLUE_1
 
 setw -g pane-border-status top # bottom, top
-
 set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
-set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 
 set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
@@ -160,5 +140,18 @@ set-option -g window-status-format "\
 #{?window_zoomed_flag,#[fg=$STATUSLINE_FG]#[bold] 󰁌 , }\
 #[fg=$TAB_ACTIVE_FG,bg=$TAB_ACTIVE_BG,noreverse,bold]#{?pane_in_mode,[C],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
 #[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
+
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                         PLUGINS                          ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# ┌╌╌╌╌╌╌╌╌╌┐
+# ╎ FINGERS ╎
+# └╌╌╌╌╌╌╌╌╌┘
+
+# overlay fingers / highlight handled by tmux-fingers
+set -g @fingers-hint-style 'fg=black,bg=yellow,bold'
+set -g @fingers-highlight-style 'fg=black,bg=green,bold'
+set -g @fingers-selected-hint-style 'fg=white,bg=blue,bold'
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

@@ -482,7 +482,6 @@ handle_open_filetree() {
   update_global_pane_ids
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
     # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
 
@@ -523,10 +522,8 @@ handle_split_term() {
     setup_layout_workspace "$LAYOUT_SIDE"
   fi
   update_global_pane_ids
-  # _go_select_pane_with_id "$MAIN_PANE_ID"
 
   TOGGLE_TERM_PANE_ID=$(__get_toggle_term_id "$CURRENT_SESSION" "$WINDOW_ID")
-
   if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ $TOGGLE_TERM_PANE_ID == "$MAIN_PANE_ID" ]]; then
     # dunstify -i terminal "🖥️ New Toggle Terminal Created" "A new terminal pane (ID) has been successfully created!"
 
@@ -687,6 +684,77 @@ last_session() {
 
   # Berpindah ke sesi terakhir yang valid
   tmux switch-client -l
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ TMUX PLUGIN HELPER                                       ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_send_message() {
+  dunstify "Open In Nvim" "$1"
+}
+
+_open_in_nvim() {
+  update_global_pane_ids
+
+  local path=$1
+  local line=""
+
+  local pane_id="$MAIN_PANE_ID"
+
+  if [ -n "$path" ]; then
+    _go_select_pane_with_id "$pane_id"
+
+    tmux send-keys -t "$pane_id" ":vsplit $path" Enter
+
+    if [ -n "$2" ]; then
+      line=$2
+      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line, 1 })" Enter
+      line="line: $line"
+    fi
+
+    _send_message "$path\n$line"
+  fi
+}
+
+jump_to_main_pane() {
+  file_path=$(cat)
+
+  # TODO: seharusnya di filter lagi, ketika sending file_path ke nvim:
+  # ambil pattern dari wezterm
+  # - [x] file_path:number?                   cth: ./lib/jpegli/decode_scan.cc:535
+  # - [x] file_path dengan prefix             cth: file://lib/jpegli/decode_scan.cc
+  # - [ ] apakah berupa hash commit?          cth#d9c36f57
+  # - [ ] apakah file_path yg terpotong?      cth: ../path/../folder/file.txt
+  # - [x] ketika cursor jump ke nvim, last position cursor pada last pane ikut pindah juga??
+
+  case "$file_path" in
+  file://*)
+    file_name="${file_path/file:\/\//}"
+    file_name="$(echo "$file_name" | cut -d":" -f1)"
+
+    _open_in_nvim "$file_name"
+    ;;
+
+  *:[0-9]*)
+    file_name=$(echo "$file_path" | cut -d':' -f1)
+    line_number=$(echo "$file_path" | cut -d':' -f2)
+
+    _open_in_nvim "$file_name" "$line_number"
+    ;;
+
+  *\",[[:space:]]line*) # for python
+    file_name=$(echo "$file_path" | cut -d'"' -f1)
+    # https://stackoverflow.com/questions/22727107/how-to-find-the-last-field-using-cut
+    line_number=$(echo "$file_path" | rev | cut -d' ' -f1 | rev)
+
+    _open_in_nvim "$file_name" "$line_number"
+    ;;
+
+  *)
+    _send_message "No selection. No pattern. Abort it"
+    ;;
+  esac
 }
 
 "$@"

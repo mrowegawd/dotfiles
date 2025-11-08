@@ -792,7 +792,7 @@ function M.change_colors()
   local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
-  local zsh_lines = H.tint(H.get("StatusLine", "fg"), -0.25)
+  local zsh_lines = H.tint(H.get("StatusLine", "fg"), -0.3)
   local zsh_sugest = H.tint(H.get("StatusLine", "fg"), -0.02)
 
   -- ─< YAZI >───────────────────────────────────────────────────────────
@@ -831,7 +831,7 @@ function M.change_colors()
       header = H.get("FzfLuaHeaderText", "fg"),
     },
     tmux = {
-      fg = H.get("Normal", "fg"),
+      fg = H.tint(H.get("Normal", "fg"), -0.2),
       bg = H.get("Normal", "bg"),
 
       fm_bg = H.get("PanelSideBackground", "bg"),
@@ -849,7 +849,7 @@ function M.change_colors()
       session_fg = tab_session_fg,
       session_bg = tab_session_bg,
 
-      message_bg = H.tint(H.get("diffChange", "fg"), 0.6),
+      message_bg = H.tint(H.darken(H.get("Function", "fg"), 0.6, H.get("Normal", "bg")), 0.7),
 
       border_active = border_active,
       border_inactive = border_inactive,
@@ -984,10 +984,10 @@ function M.change_colors()
       tab_inactive_fg = H.get("NormalKeyword", "bg"),
       tab_inactive_bg = H.tint(H.get("TabLine", "bg"), 0.66),
 
-      statusline_normal_fg = H.tint(H.get("StatusLine", "fg"), 0.3),
-      statusline_normal_bg = H.tint(H.get("StatusLine", "bg"), 0.3),
-      statusline_normal_fg_alt = H.tint(H.get("StatusLine", "fg"), 0.2),
-      statusline_normal_bg_alt = H.tint(H.get("StatusLine", "bg"), 0.2),
+      statusline_normal_fg = H.get("StatusLineRightBlock", "fg"),
+      statusline_normal_bg = H.get("StatusLineRightBlock", "bg"),
+      statusline_normal_fg_alt = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
+      statusline_normal_bg_alt = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
 
       statusline_select_fg = H.tint(H.get("Visual", "bg"), 2),
       statusline_select_bg = H.tint(H.get("Visual", "bg"), 0.4),
@@ -999,7 +999,7 @@ function M.change_colors()
       statusline_unset_fg_alt = H.tint(H.get("Function", "fg"), -0.8),
       statusline_unset_bg_alt = H.get("Function", "fg"),
 
-      directory = H.get("Directory", "fg"),
+      directory = H.get("FzfLuaFilePart", "fg"),
 
       menu_bg = H.get("Pmenu", "bg"),
       menu_fg = H.get("Pmenu", "fg"),
