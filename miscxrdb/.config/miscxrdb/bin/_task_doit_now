@@ -66,7 +66,7 @@ play_with_notification() {
     if [[ "$title" =~ "LEARNING" ]]; then
       printf "${BLUE}📚 Learning Goals:${RESET}\n"
     elif [[ "$title" =~ "TODO" ]]; then
-      printf "${GREEN}✅ Tasks to Do Now:${RESET}\n"
+      printf "${GREEN}✅ Tasks to-Do Now:${RESET}\n"
     else
       printf "${RED}⚠️  Message:${RESET}\n"
     fi

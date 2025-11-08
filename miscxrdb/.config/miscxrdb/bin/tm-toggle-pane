@@ -64,6 +64,12 @@ _check_pane_is_yazi() { _check_pane_is "yazi"; }
 _check_pane_is_zsh() { _check_pane_is "zsh"; }
 _check_pane_is_tclock() { _check_pane_is "tclock"; }
 
+_send_keys_command_to_target_pane() {
+  local pane=$1
+  local cmd=$2
+  tmux send-keys -t "$pane" "$cmd" Enter
+}
+
 # Check if a pane ID exists across all sessions
 __is_pane_id_exists() {
   local pane_id="$1"
@@ -431,6 +437,9 @@ _close_running_process() {
   yazi)
     tmux send-keys -t "$pane_id" "q" C-m
     ;;
+  watch)
+    tmux send-keys -t "$pane_id" "c-c" C-m
+    ;;
   esac
 
   # Wait until closed
@@ -502,7 +511,7 @@ handle_open_filetree() {
   fi
 
   # 6️⃣ Tutup proses tertentu bila masih aktif
-  if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" ]]; then
+  if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" || "$COMMAND_PROCESS" == "watch" ]]; then
     _close_running_process "$FILE_MANAGER_PANE_ID" "$COMMAND_PROCESS"
     _go_select_pane_with_id "$MAIN_PANE_ID"
     return
@@ -568,6 +577,38 @@ handle_split_term() {
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ SHOW NOTES                                               ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+handle_show_notes() {
+  if [[ "$GET_TOTAL_ACTIVE_PANES" == 1 ]]; then
+    setup_layout_workspace "$LAYOUT_SIDE"
+  fi
+
+  update_global_pane_ids
+
+  FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
+  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
+    # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
+
+    FILE_MANAGER_PANE_ID=$(
+      tmux list-panes -F "#{pane_id} #{pane_left}" |
+        sort -nk2 | head -n1 | awk '{print $1}'
+    )
+    __update_pane_file_manager_id "$CURRENT_SESSION" "$WINDOW_ID" "$FILE_MANAGER_PANE_ID"
+  fi
+
+  COMMAND_PROCESS=$(tmux display -p -t "$FILE_MANAGER_PANE_ID" '#{pane_current_command}' | tr -d '\n')
+
+  if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" || "$COMMAND_PROCESS" == "watch" ]]; then
+    _close_running_process "$FILE_MANAGER_PANE_ID" "$COMMAND_PROCESS"
+  fi
+
+  _send_keys_command_to_target_pane "$FILE_MANAGER_PANE_ID" "watch -t -n 1 $HOME/.config/miscxrdb/bin/_task_doit_now run"
+
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ FLOAT TERMINAL                                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
@@ -628,7 +669,7 @@ open_clock_mode() {
   for _ in {1..10}; do
     local current_cmd
     current_cmd=$(tmux display -p -t "$CLOCK_PANE_ID" '#{pane_current_command}' | tr -d '\n')
-    [[ "$current_cmd" == "tclock" ]] && tmux send-keys -t "$CLOCK_PANE_ID" "q" Enter
+    [[ "$current_cmd" == "tclock" ]] && _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "q"
     [[ "$current_cmd" != "$process" ]] && break
     sleep 0.1
   done
@@ -637,12 +678,12 @@ open_clock_mode() {
 
     if [[ "$1" == "clock" ]]; then
       # tclock_command="'tclock clock -S'"
-      tmux send-keys -t "$CLOCK_PANE_ID" 'tclock clock -S' Enter
+      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" 'tclock clock -S'
     fi
 
     if [[ "$1" == "pomodoro" ]]; then
       # tclock_command="'tclock -c red timer -d 25m -M'"
-      tmux send-keys -t "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $MINUTE_POMODORO -M" Enter
+      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $MINUTE_POMODORO -M"
     fi
   else
     tmux clock-mode
@@ -705,11 +746,11 @@ _open_in_nvim() {
   if [ -n "$path" ]; then
     _go_select_pane_with_id "$pane_id"
 
-    tmux send-keys -t "$pane_id" ":vsplit $path" Enter
+    _send_keys_command_to_target_pane "$pane_id" ":vsplit $path"
 
     if [ -n "$2" ]; then
       line=$2
-      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line, 1 })" Enter
+      _send_keys_command_to_target_pane "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line, 1 })"
       line="line: $line"
     fi
 
