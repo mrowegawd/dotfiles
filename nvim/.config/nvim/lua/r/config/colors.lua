@@ -50,14 +50,14 @@ local base_colors = {
   quickfixline_sp_alter = -0.2,
   snacks_indent_scope_fg_alter = 0.2,
   statusline_fg_alter = 0.5,
-  statusline_left_block_fg = 2,
-  statusline_right_block_bg = 1,
+  statusline_left_block_fg = 0.5,
+  statusline_right_block_bg = 0.3,
   statusline_right_block_fg = 1,
   tabline_bg_alter = -0.2,
   trouble_indent_fg_alter = 0.55,
-  visual_bg_alter = 0.5,
+  visual_bg_alter = 0.3,
   winbar_fg_alter = 0.2,
-  winbar_right_block_bg_alter = -0.6,
+  winbar_right_block_bg_alter = 0.3,
   winbar_right_block_fg_alter = -0.1,
   winseparator_alter = 0.25,
 
@@ -358,9 +358,8 @@ local update_col_colorscheme = {
     pmenu_sel_bg_alter = -0.48,
     pmenu_bg_alter = 0.4,
     render_markdown_code_bg_alter = 0.25,
+    visual_bg_alter = 0.2,
     statusline_fg_alter = 0.75,
-    winbar_right_block_bg_alter = -0.7,
-    winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.2,
   },
   ["night-owl"] = {
@@ -400,7 +399,6 @@ local update_col_colorscheme = {
     render_markdown_code_inline_fg_alter = 0.05,
     statusline_fg_alter = 1.3,
     trouble_indent_fg_alter = 0.7,
-    winbar_right_block_fg_alter = -0.1,
     winseparator_alter = 1,
   },
   ["lackluster"] = {
@@ -468,8 +466,8 @@ local update_col_colorscheme = {
     nontext_fg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.4,
     statusline_fg_alter = 0.85,
-    winbar_right_block_bg_alter = -0.55,
-    winbar_right_block_fg_alter = -0.05,
+    winbar_right_block_bg_alter = 0.35,
+    winbar_right_block_fg_alter = -0.15,
     winseparator_alter = 0.45,
   },
   ["neogotham"] = {
@@ -510,7 +508,7 @@ local update_col_colorscheme = {
   },
   ["rose-pine"] = {
     blink_cmp_label_kind_fg_alter = 1.8,
-    comment_fg_alter = 0.6,
+    comment_fg_alter = 0.7,
     fold_fg = 0.25,
     fzflua_file_part_fg = 1.2,
     hovered_cursorline_bg_alter = 0.6,
@@ -522,12 +520,12 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.65,
     render_markdown_code_bg_alter = 0.5,
     statusline_fg_alter = 1,
-    winbar_right_block_bg_alter = -0.4,
+    winbar_right_block_bg_alter = 0.45,
     winbar_right_block_fg_alter = 0.12,
     winseparator_alter = 0.7,
   },
   ["rose-pine-moon"] = {
-    comment_fg_alter = 0.7,
+    comment_fg_alter = 0.8,
     floatboder_fg_alter = 0.4,
     fold_fg = 0.25,
     hovered_cursorline_bg_alter = 0.6,
@@ -537,13 +535,13 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.35,
     render_markdown_code_bg_alter = 0.5,
     statusline_fg_alter = 0.85,
-    winbar_right_block_bg_alter = -0.5,
-    winbar_right_block_fg_alter = -0.05,
+    winbar_right_block_bg_alter = 0.4,
+    winbar_right_block_fg_alter = 0.12,
     winseparator_alter = 0.3,
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.5,
-    comment_fg_alter = 0.6,
+    comment_fg_alter = 0.65,
     cursor_fg = "#ece1d7",
     cursorline_alter = 0.05,
     dapstopped_bg_alter = 0.15,
@@ -558,10 +556,9 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.5,
     render_markdown_code_bg_alter = 0.65,
     snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 1,
+    statusline_fg_alter = 0.9,
     trouble_indent_fg_alter = 0.6,
-    winbar_right_block_bg_alter = -0.68,
-    winbar_right_block_fg_alter = -0.3,
+    winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.7,
   },
   ["tokyonight-storm"] = {
@@ -573,7 +570,8 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.2,
     render_markdown_code_bg_alter = 0.23,
     statusline_fg_alter = 0.75,
-    winbar_right_block_fg_alter = -0.15,
+    winbar_right_block_bg_alter = 0.2,
+    winbar_right_block_fg_alter = -0.2,
   },
   ["vscode_modern"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
@@ -591,10 +589,11 @@ local update_col_colorscheme = {
     noice_cmdline_fg_alter = 0.6,
     nontext_fg_alter = -0.4,
     pmenu_bg_alter = 0.72,
+    statusline_fg_alter = 0.75,
     quickfixline_linenr_fg_alter = 0.45,
     render_markdown_code_bg_alter = 0.4,
     snacks_indent_scope_fg_alter = 0.15,
-    winbar_right_block_bg_alter = -0.55,
+    winbar_right_block_bg_alter = 0.35,
     winseparator_alter = 0.5,
 
     lsp_code_lens_fg_alter = 0.9,
@@ -612,8 +611,6 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.45,
     statusline_fg_alter = 0.8,
     visual_bg_alter = -0.32,
-    winbar_right_block_bg_alter = -0.65,
-    winbar_right_block_fg_alter = -0.35,
     winseparator_alter = 0.57,
   },
   ["y9nika"] = {
@@ -629,7 +626,7 @@ local update_col_colorscheme = {
     winseparator_alter = 1.1,
   },
   ["zenburn"] = {
-    comment_fg_alter = 0.5,
+    comment_fg_alter = 0.4,
     floatboder_fg_alter = 0.13,
     fold_fg = 0.15,
     fzflua_file_part_fg = 0.7,
@@ -646,10 +643,12 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.08,
     render_markdown_code_inline_bg_alter = 0.05,
     render_markdown_code_inline_fg_alter = -0.05,
-    statusline_fg_alter = 0.45,
-    statusline_right_block_bg = 0.2,
+    statusline_fg_alter = 0.5,
     statusline_right_block_fg = 0.8,
-    winbar_right_block_fg_alter = -0.35,
+    statusline_right_block_bg = 0.2,
+    visual_bg_alter = 0.3,
+    winbar_right_block_bg_alter = 0.17,
+    winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.1,
   },
 }
@@ -709,8 +708,8 @@ local general_overrides = function()
     },
     {
       Visual = {
-        bg = H.tint(H.darken(H.get("String", "fg"), 0.3, H.get("Normal", "bg")), colors.visual_bg_alter),
-        fg = { from = "Normal", attr = "bg" },
+        bg = H.darken(H.get("Function", "fg"), colors.visual_bg_alter, H.get("Normal", "bg")),
+        fg = { from = "Normal", attr = "fg" },
         bold = true,
       },
     },
@@ -724,16 +723,21 @@ local general_overrides = function()
     },
     { StatusLineNC = { inherit = "StatusLine" } },
 
-    { StatusLineRightBlock = { bg = { from = "StatusLine", attr = "bg", alter = colors.statusline_right_block_bg } } },
+    {
+      StatusLineRightBlock = {
+        bg = H.darken(H.get("Keyword", "fg"), colors.statusline_right_block_bg, H.get("Normal", "bg")),
+      },
+    },
     {
       StatusLineRightBlock = {
         fg = { from = "StatusLineRightBlock", attr = "bg", alter = colors.statusline_right_block_fg },
       },
     },
-    { StatusLineLeftBlock = { bg = { from = "StatusLine", attr = "bg" } } },
+    { StatusLineLeftBlock = { bg = { from = "StatusLineRightBlock", attr = "bg" } } },
     {
       StatusLineLeftBlock = {
-        fg = { from = "StatusLineLeftBlock", attr = "bg", alter = colors.statusline_left_block_fg },
+        fg = { from = "StatusLineRightBlock", attr = "fg", alter = colors.statusline_left_block_fg },
+        bold = true,
       },
     },
 
@@ -1171,8 +1175,7 @@ local general_overrides = function()
     {
       WinBarRightBlock = {
         fg = { from = "Keyword", attr = "fg", alter = colors.winbar_right_block_fg_alter },
-        -- bg = H.tint(H.darken(H.get("Keyword", "fg"), 0.1, H.get("Normal", "bg")), colors.winbar_right_block_bg_alter),
-        bg = { from = "Keyword", attr = "fg", alter = colors.winbar_right_block_bg_alter },
+        bg = H.darken(H.get("Keyword", "fg"), colors.winbar_right_block_bg_alter, H.get("Normal", "bg")),
         bold = true,
       },
     },
@@ -1541,6 +1544,7 @@ local general_overrides = function()
     },
 
     { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
+    -- { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 } } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.3 } } },
@@ -1651,9 +1655,10 @@ local general_overrides = function()
     -- ╰──────────────────╯
     { SnacksDashboardTitle = { fg = { from = "Keyword", attr = "fg" }, bg = "NONE", bold = true } },
     { SnacksDashboardDesc = { fg = { from = "Keyword", attr = "fg" }, bg = "NONE", bold = true } },
+    { SnacksDashboardDir = { fg = { from = "Keyword", attr = "fg", alter = -0.3 }, bg = "NONE" } },
 
-    { SnacksDashboardTerminal = { fg = { from = "NonText", attr = "fg" }, bg = "NONE", bold = false } },
-    { SnacksDashboardFooter = { fg = { from = "NonText", attr = "fg" }, bg = "NONE", bold = true } },
+    { SnacksDashboardTerminal = { fg = { from = "Keyword", attr = "fg" }, bg = "NONE", bold = false } },
+    { SnacksDashboardFooter = { fg = { from = "Keyword", attr = "fg", alter = -0.3 }, bg = "NONE", bold = true } },
 
     -- ╭───────────────╮
     -- │ SNACKS INDENT │

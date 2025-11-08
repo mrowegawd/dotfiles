@@ -847,7 +847,7 @@ M.virtualenv = {
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
   condition = function()
-    return Conditions.lsp_attached and set_conditions.hide_in_width(60) and vim.bo.filetype ~= "qf"
+    return Conditions.lsp_attached and vim.bo.filetype ~= "qf"
   end,
 
   init = function(self)

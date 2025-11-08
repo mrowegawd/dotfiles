@@ -60,6 +60,11 @@ return {
       end
       return false
     end,
+    opts = {
+      commentStyle = { italic = true },
+      functionStyle = { italic = false },
+      keywordStyle = { italic = false, bold = true },
+    },
   },
   -- ZENBURN
   {
@@ -170,7 +175,9 @@ return {
       end
       return false
     end,
-    opts = {},
+    opts = {
+      italics = false,
+    },
   },
   -- NVIM-BASE46
   {
@@ -233,6 +240,13 @@ return {
       end
       return false
     end,
+    opts = {
+      styles = {
+        bold = true,
+        italic = false,
+        transparency = false,
+      },
+    },
   },
   -- LACKLUSTER
   {
