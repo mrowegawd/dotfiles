@@ -108,7 +108,7 @@ end
 
 ---@param is_loc? boolean
 ---@param context_name? string
----@return QFBookLists
+---@return QFBookListResults
 function M.get_data_qf(is_loc, context_name)
   return QfBookmarkUtil().get_data_qf(is_loc, context_name)
 end

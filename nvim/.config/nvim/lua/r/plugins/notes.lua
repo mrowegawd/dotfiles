@@ -229,8 +229,8 @@ return {
 
             org_agenda_toggle_archive_tag = "<prefix><F9>",
 
-            org_agenda_deadline = "<prefix>d",
-            org_agenda_schedule = "<prefix>s",
+            org_agenda_deadline = "id",
+            org_agenda_schedule = "is",
 
             -- Misc
             org_agenda_filter = "/",

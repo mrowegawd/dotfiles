@@ -73,21 +73,25 @@ return {
                 key = "<Leader>qrc",
                 cmd = "Cfilter /\\\\v\\|[^\\|]*\\|s\\*/",
                 desc = "Run Cfilter update",
+                buffer = true,
               },
               {
                 key = "<Leader>qrl",
                 cmd = "cdo %s/status//gi | update",
                 desc = "Run cdo status update (quickfix)",
+                buffer = true,
               },
               {
                 key = "<Leader>qrj",
                 cmd = "cfdo %s/WinNav/Winav/g",
                 desc = "Run cfdo replace",
+                buffer = true,
               },
               {
                 key = "<Leader>qrk",
                 cmd = "cfdo %s/WinNav/Winav/g | update",
                 desc = "Run cfdo replace & update",
+                buffer = true,
               },
 
               -- 🧩 Filter & Update (Loclist)
@@ -95,21 +99,25 @@ return {
                 key = "<Leader>qrC",
                 cmd = "Lfilter / /",
                 desc = "Run Lfilter update",
+                buffer = true,
               },
               {
                 key = "<Leader>qrL",
                 cmd = "ldo %s/status//gi | update",
                 desc = "Run ldo status update (loclist)",
+                buffer = true,
               },
               {
                 key = "<Leader>qrJ",
                 cmd = "lfdo %s/WinNav/Winav/g",
                 desc = "Run lfdo replace",
+                buffer = true,
               },
               {
                 key = "<Leader>qrK",
                 cmd = "lfdo %s/WinNav/Winav/g | update",
                 desc = "Run lfdo replace & update",
+                buffer = true,
               },
             },
           },
