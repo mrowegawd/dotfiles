@@ -732,7 +732,14 @@ last_session() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 _send_message() {
-  dunstify "Open In Nvim" "$1"
+  messages="$1"
+  title="$2"
+
+  if [[ -z "$2" ]]; then
+    title="Open In Nvim"
+  fi
+
+  dunstify "$title" "$messages"
 }
 
 _open_in_nvim() {
@@ -792,8 +799,13 @@ jump_to_main_pane() {
     _open_in_nvim "$file_name" "$line_number"
     ;;
 
+  https://*)
+    open "$file_path"
+
+    _send_message "Open $file_path" "Open In Browser"
+    ;;
   *)
-    _send_message "No selection. No pattern. Abort it"
+    _send_message "No selection. No pattern. Abort it" "Tm_Toggle_Pane"
     ;;
   esac
 }
