@@ -46,9 +46,9 @@ play_with_notification() {
     GREEN="\033[32m"
     RED="\033[31m"
     BLUE="\033[34m"
-    YELLOW="\033[33m"
-    CYAN="\033[36m"
-    GRAY="\033[90m"
+    # YELLOW="\033[33m"
+    # CYAN="\033[36m"
+    # GRAY="\033[90m"
 
     # Panjang garis dipersingkat (±30 karakter)
     # LINE_SHORT="${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -87,7 +87,6 @@ play_with_notification() {
     # printf "\n${GRAY}${LINE_SHORT}${RESET}\n"
 
   fi
-
 }
 
 run() {
@@ -97,8 +96,15 @@ run() {
     RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   fi
 
-  TASK="$(/usr/bin/rg -i "\*\sPROGRES" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
-  LEARNING="$(/usr/bin/rg -i "\*\sLEARNING" "$ORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
+  TASK="$(/usr/bin/rg --no-heading --line-number --sort path -i "\*\sPROGRESS" "$ORG_PATH" |
+    sort -t: -k1,1n |
+    awk -F ':' '{print $3}' |
+    awk -F "* PROGRESS " '{print $2}')"
+
+  LEARNING="$(/usr/bin/rg --no-heading --line-number --sort path -i "\*\sLEARNING" "$ORG_PATH" |
+    sort -t: -k1,1n |
+    awk -F ':' '{print $3}' |
+    awk -F "* LEARNING " '{print $2}')"
 
   if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
     local messages
@@ -113,7 +119,7 @@ run() {
   fi
 
   if [[ -n $TASK ]]; then
-    IFS=$'\n' read -r -d '' -a array <<<"$TASK"
+    mapfile -t array <<<"$TASK"
 
     # Array baru untuk menyimpan elemen yang dimodifikasi
     new_array=()
@@ -125,15 +131,12 @@ run() {
       fi
     done
 
-    concatenated_string=$(
-      IFS=$'\n'
-      echo "${new_array[*]}"
-    )
+    concatenated_string=$(printf "%s\n" "${new_array[@]}")
     play_with_notification "$run_with_notify" "$ICON_PATH" "Task Do it Now: TODO" "$concatenated_string"
   fi
 
   if [[ -n $LEARNING ]]; then
-    IFS=$'\n' read -r -d '' -a array <<<"$LEARNING"
+    mapfile -t array <<<"$LEARNING"
 
     # Array baru untuk menyimpan elemen yang dimodifikasi
     new_array=()
@@ -145,11 +148,7 @@ run() {
       fi
     done
 
-    concatenated_string=$(
-      IFS=$'\n'
-      echo "${new_array[*]}"
-    )
-
+    concatenated_string=$(printf "%s\n" "${new_array[@]}")
     play_with_notification "$run_with_notify" "$ICON_LEARNING_PATH" "Task Do it Now: LEARNING" "$concatenated_string"
   fi
 
