@@ -502,7 +502,7 @@ function M.open_with(context_mode, is_exit_visual_mode)
     if context_mode == "mpv or svix" then
       is_exit_visual_mode = true
     end
-    local line_str = RUtils.get_visual_selection(is_exit_visual_mode)
+    local line_str = RUtils.get_visual_selection { exit_from_visual = is_exit_visual_mode }
     if line_str then
       url = line_str.selection
     end
