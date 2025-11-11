@@ -1333,6 +1333,14 @@ M.Ruler = {
   {
     provider = function(self)
       local rhs = self.rhs
+      rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
+      return rhs
+    end,
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_right_block_bg, bold = true },
+  },
+  {
+    provider = function(self)
+      local rhs = self.rhs
       rhs = rhs .. self.line
       return rhs
     end,
@@ -1351,9 +1359,24 @@ M.Ruler = {
   {
     provider = function(self)
       local rhs = self.rhs
+      rhs = rhs .. " 𝚌 " -- (Literal, \ℓ "SCRIPT SMALL L").
+      return rhs
+    end,
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_right_block_bg, bold = true },
+  },
+  {
+    provider = function(self)
+      local rhs = self.rhs
+      rhs = rhs .. self.column
+      -- Add padding to stop rhs from changing too much as we move the cursor.
+      if #tostring(self.column) < 2 then
+        rhs = rhs .. " "
+      end
+      -- rhs = rhs .. "/"
+      -- rhs = rhs .. self.width
       return rhs .. " "
     end,
-    hl = { fg = colors.keyword, bg = colors.statusline_right_block_bg },
+    hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg },
   },
 }
 M.Clock = {
