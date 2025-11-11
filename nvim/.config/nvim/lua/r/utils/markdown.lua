@@ -1409,6 +1409,14 @@ function M.go_to_heading(anchor_text, reverse)
       end
     end
   end
+
+  -- open fold
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = pos[1]
+  local fold_start = vim.fn.foldclosed(line)
+  if fold_start ~= -1 then
+    vim.cmd "silent! foldopen!"
+  end
 end
 
 return M
