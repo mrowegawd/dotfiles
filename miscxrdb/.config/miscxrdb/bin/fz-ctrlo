@@ -552,11 +552,8 @@ tmux_clock_mode() {
   fi
 }
 
-tmux_pomodoro_mode() {
-  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "pomodoro"
-}
 tmux_open_clock() {
-  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" open_clock_mode "clock"
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" clock_mode
 }
 
 tmux_toggle_status() {
@@ -622,6 +619,35 @@ tmux_clear_main_id_workspace() {
   dunstify "Cleared tmux main IDs"
 }
 
+# +----------------------------------------------------------+
+# |                         POMODORO                         |
+# +----------------------------------------------------------+
+
+pomodoro_1hour_mode() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" pomodoro_1hour
+}
+
+pomodoro_30minute_mode() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" pomdoro_30minute
+}
+
+pomodoro_25minute_mode() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" pomdoro_25minute
+}
+
+pomodoro_5minute_mode() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" pomdoro_5minute
+}
+
+# +----------------------------------------------------------+
+# |                          NOTES                           |
+# +----------------------------------------------------------+
+
+note_set_dummy() {
+  local pomodoro_icon="$HOME/.config/miscxrdb/icons/pomodoro.png"
+  dunstify -i "$pomodoro_icon" "To Do Now" "PRIORITY and PROGRESS tracking disabled!"
+}
+
 #  +----------------------------------------------------------+
 #  |                         MENULIST                         |
 #  +----------------------------------------------------------+
@@ -638,13 +664,19 @@ callme() {
  tmux: toggle status
  tmux: toggle synchronize panes
  tmux: clock mode
- tmux: pomodoro mode
  tmux: select session
  tmux: capture pane
  tmux: capture pane with files
  tmux: clear main pane id
- tmux: kill other panes
+ tmux: kill/clear other panes
  tmux: reset workspace pane size
+ Note: set DUMMY and CLEAR project todo
+ Note: set PRIORITAS todo
+ Note: set PROGRESS todo
+ pomodoro: 1 hour
+ pomodoro: 30 minute
+ pomodoro: 25 minute
+ pomodoro: 5 minute
 󰭲 rkill
  multilog
 󰎕 news
@@ -669,15 +701,19 @@ EOF
   "apt: search") show_apt_search ;;
   "apt: service system UI") open_systemctl_ui ;;
   "tmux: clock mode") tmux_open_clock ;;
-  "tmux: pomodoro mode") tmux_pomodoro_mode ;;
   "tmux: select session") tmux_select_sess ;;
   "tmux: toggle status") tmux_toggle_status ;;
   "tmux: toggle synchronize panes") tmux_toggle_synchronize_panes ;;
   "tmux: capture pane") capture_pane ;;
   "tmux: capture pane with files") capture_pane_and_save_to_file ;;
   "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
-  "tmux: kill other panes") tmux_kill_others_pane ;;
+  "tmux: kill/clear other panes") tmux_kill_others_pane ;;
   "tmux: reset workspace pane size") tmux_reset_workspaces ;;
+  "Note: set DUMMY and CLEAR project todo") note_set_dummy ;;
+  "pomodoro: 1 hour") pomodoro_1hour_mode ;;
+  "pomodoro: 30 minute") pomodoro_25minute_mode ;;
+  "pomodoro: 25 minute") pomodoro_25minute_mode ;;
+  "pomodoro: 5 minute") pomodoro_5minute_mode ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
 

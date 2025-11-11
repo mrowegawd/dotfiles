@@ -276,9 +276,19 @@ return {
             Snacks.words.jump(vim.v.count1, true)
             return
           end
+
+          local okqf, _ = pcall(require, "qfbookmark")
+          if okqf then
+            local qf = require "qfbookmark.qf"
+            if qf.status_mark() then
+              qf.next_mark()
+              return
+            end
+          end
+
           Snacks.scope.jump { bottom = true }
         end,
-        desc = "LSP: next reference or jump scope",
+        desc = "LSP: next snack scope, mark, word highlighter",
       },
       {
         "<a-p>",
@@ -296,9 +306,19 @@ return {
             Snacks.words.jump(-vim.v.count1, true)
             return
           end
+
+          local okqf, _ = pcall(require, "qfbookmark")
+          if okqf then
+            local qf = require "qfbookmark.qf"
+            if qf.status_mark() then
+              qf.prev_mark()
+              return
+            end
+          end
+
           Snacks.scope.jump { bottom = false }
         end,
-        desc = "LSP: prev reference or jump scope",
+        desc = "LSP: prev snack scope, mark, word highlighter",
       },
     },
   },

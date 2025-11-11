@@ -4,7 +4,7 @@
 !
 *.foreground:  #dcdccc
 *.background:  #3f3f3f
-*.cursorColor: #C8ADA0
+*.cursorColor: #A0E6A0
 !
 ! Black
 *.color0:      #4d4d4d

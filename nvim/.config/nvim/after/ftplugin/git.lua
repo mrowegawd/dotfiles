@@ -5,7 +5,7 @@ opt.foldmethod = "syntax"
 
 -- opt.number = false
 -- opt.relativenumber = false
-opt.signcolumn = "no"
+-- opt.signcolumn = "no"
 
 keymap.set("n", "<Tab>", function()
   vim.schedule(function()

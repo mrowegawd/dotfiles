@@ -8,8 +8,6 @@ FIXED_RESIZE_TMUX_LEFT_OR_RIGHT=40
 
 FILE_MANAGER="$TERM_FILEMANAGER"
 
-MINUTE_POMODORO="1h"
-
 # ─[ SETTINGS COLOR ]───────────────────────────────────────────────────
 COLOR_CLOCK=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
 COL_BORDER_FG=$(xrdb -query | grep -i .color16 | cut -d':' -f2 | head -1 | xargs)
@@ -640,6 +638,9 @@ float_term() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 open_clock_mode() {
+  local clock_mode="$1"
+  local pomodoro_time="$2"
+
   update_global_pane_ids
 
   [[ $CURRENT_SESSION == "" ]] && dunstify "Create base layout first" && exit
@@ -676,18 +677,38 @@ open_clock_mode() {
 
   if command -v tclock &>/dev/null; then
 
-    if [[ "$1" == "clock" ]]; then
+    if [[ "$clock_mode" == "clock" ]]; then
       # tclock_command="'tclock clock -S'"
-      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" 'tclock clock -S'
+      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' clock -S"
     fi
 
-    if [[ "$1" == "pomodoro" ]]; then
+    if [[ "$clock_mode" == "pomodoro" ]]; then
       # tclock_command="'tclock -c red timer -d 25m -M'"
-      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $MINUTE_POMODORO -M"
+      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $pomodoro_time -M"
     fi
   else
     tmux clock-mode
   fi
+}
+
+clock_mode() {
+  open_clock_mode "clock" ""
+}
+
+pomodoro_1hour() {
+  open_clock_mode "pomodoro" "1h"
+}
+
+pomdoro_30minute() {
+  open_clock_mode "pomodoro" "30m"
+}
+
+pomdoro_25minute() {
+  open_clock_mode "pomodoro" "25m"
+}
+
+pomdoro_5minute() {
+  open_clock_mode "pomodoro" "5m"
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐

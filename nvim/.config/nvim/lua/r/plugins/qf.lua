@@ -56,6 +56,9 @@ return {
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
       keymaps = {
+        open_item = {
+          default = { keys = { "o", "<CR>" }, auto_close = false },
+        },
         integrations = {
           cmdline_strings = {
             commands = {

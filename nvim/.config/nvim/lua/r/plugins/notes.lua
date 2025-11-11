@@ -273,8 +273,8 @@ return {
             org_insert_todo_heading_respect_content = "<C-t>",
 
             -- Fold / Cycle
-            org_cycle = { "<TAB>", "zo", "oz" },
-            org_global_cycle = { "<S-TAB>", "zn", "nz", "zi" },
+            org_cycle = { "<TAB>", "fc", "oz" },
+            org_global_cycle = { "<S-TAB>", "zb" },
 
             -- Clock
             org_clock_in = "ci",
