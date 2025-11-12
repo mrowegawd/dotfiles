@@ -747,6 +747,7 @@ function M.git_open_with_compare_hash()
     local commit_hash = extract_git_hash_single(selected)
     if commit_hash then
       local gitsigns = require "gitsigns"
+      vim.cmd "tabnew %"
       gitsigns.diffthis(commit_hash)
 
       -- With vim-fugitive
