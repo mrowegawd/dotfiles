@@ -265,7 +265,7 @@ open_rkill() {
   # pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$COL_TAB_ACTIVE_FG" | awk '{print $2}')
   pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
 
-  if [ "x$pid" != "x" ]; then
+  if [ "$pid" != "" ]; then
     echo "$pid" | xargs kill -9
   fi
 }
@@ -433,8 +433,10 @@ open_notes() {
     tmux display-popup -d '#{pane_current_path}' -w '85%' -h '90%' \
       -E -d "$HOME/Dropbox/neorg" \
       -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
-      -b rounded \
-      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session nvim;'"
+      -E "tmux new -A -s $session 'tmux set -w detach-on-destroy on; TMUX_SESSION=$session nvim;'"
+
+    # I'm not sure why this line causes nvim to behave unexpectedly
+    # -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session nvim;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
