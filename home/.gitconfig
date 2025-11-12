@@ -249,6 +249,7 @@
   log-of-week-of-year-and-count     = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
   log-of-count-and-week-of-year     = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
 
+  whoami = "!bash ~/.config/miscxrdb/bin/gitwhoami"
 
   #### XCDCX ####
 

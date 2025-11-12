@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# File: ~/.git-whoami.sh
+# Show git repo info: project name, created date, account, access type, fork status
+
+# Pastikan dijalankan dalam repo Git
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "🚫 Bukan di dalam repository git!"
+  exit 1
+fi
+
+# Nama folder project
+PROJECT_NAME=$(basename "$(git rev-parse --show-toplevel)")
+
+# Tanggal dibuat (commit pertama)
+CREATED_AT=$(git log --reverse --format=%ci | head -n 1)
+
+# User info (config lokal)
+USER_NAME=$(git config user.name)
+USER_EMAIL=$(git config user.email)
+
+# Remote URL dan tipe akses
+REMOTE_URL=$(git remote get-url origin 2>/dev/null)
+if [[ "$REMOTE_URL" == git@* ]]; then
+  ACCESS_TYPE="ssh"
+elif [[ "$REMOTE_URL" == https:* ]]; then
+  ACCESS_TYPE="https"
+else
+  ACCESS_TYPE="(unknown)"
+fi
+
+# Jika remote GitHub, ambil username
+if [[ "$REMOTE_URL" == *github.com* ]]; then
+  GITHUB_ACCOUNT=$(echo "$REMOTE_URL" | sed -E 's#.*github\.com[:/](.+)/.*#\1#')
+else
+  GITHUB_ACCOUNT="(bukan GitHub repo)"
+fi
+
+# Cek apakah fork (ada remote upstream atau bukan)
+UPSTREAM_URL=$(git remote get-url upstream 2>/dev/null)
+if [[ -n "$UPSTREAM_URL" ]]; then
+  if [[ "$UPSTREAM_URL" != "$REMOTE_URL" ]]; then
+    FORK_STATUS="✅ forked (upstream: $UPSTREAM_URL)"
+  else
+    FORK_STATUS="⚠️ same as origin (upstream found but identical)"
+  fi
+else
+  FORK_STATUS="❌ not a fork (no upstream)"
+fi
+
+# Branch aktif
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# Output informasi
+echo "───────────────────────────────"
+echo "📂 project cwd : $PROJECT_NAME"
+echo "🌿 branch       : ${BRANCH:-detached}"
+echo "📅 created      : ${CREATED_AT:-unknown}"
+echo "👤 account git  : ${USER_NAME:-unknown} <${USER_EMAIL:-unknown}>"
+echo "🌐 github user  : ${GITHUB_ACCOUNT}"
+echo "🔑 access       : ${ACCESS_TYPE}"
+echo "🔀 fork status  : ${FORK_STATUS}"
+echo "───────────────────────────────"
