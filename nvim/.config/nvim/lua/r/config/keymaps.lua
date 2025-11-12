@@ -341,33 +341,33 @@ end, {
 })
 
 RUtils.map.xnoremap(
-  "<Leader>gv",
+  "<Leader>gvv",
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
-if vim.fn.executable "lazygit" == 1 then
-  RUtils.map.nnoremap("<a-G>", function()
-    ---@diagnostic disable-next-line: missing-fields
-    Snacks.lazygit { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit (root dir) [snacks]" })
-
-  RUtils.map.nnoremap("<Leader>gg", function()
-    ---@diagnostic disable-next-line: missing-fields
-    Snacks.lazygit { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit (root dir) [snacks]" })
-  RUtils.map.nnoremap("<Leader>gG", function()
-    Snacks.lazygit()
-  end, { desc = "Git: lazygit (cwd) [snacks]" })
-  -- RUtils.map.nnoremap("<Leader>glc", function()
-  --   Snacks.lazygit.log_file()
-  -- end, { desc = "Git: lazygit current file history" })
-  -- RUtils.map.nnoremap("<Leader>glC", function()
-  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
-  -- end, { desc = "Git: lazygit log" })
-  -- RUtils.map.nnoremap("<Leader>glg", function()
-  --   Snacks.lazygit.log()
-  -- end, { desc = "Git: lazygit log (cwd)" })
-end
+-- if vim.fn.executable "lazygit" == 1 then
+--   RUtils.map.nnoremap("<a-G>", function()
+--     ---@diagnostic disable-next-line: missing-fields
+--     Snacks.lazygit { cwd = RUtils.root.git() }
+--   end, { desc = "Git: lazygit (root dir) [snacks]" })
+--
+--   RUtils.map.nnoremap("<Leader>gg", function()
+--     ---@diagnostic disable-next-line: missing-fields
+--     Snacks.lazygit { cwd = RUtils.root.git() }
+--   end, { desc = "Git: lazygit (root dir) [snacks]" })
+--   RUtils.map.nnoremap("<Leader>gG", function()
+--     Snacks.lazygit()
+--   end, { desc = "Git: lazygit (cwd) [snacks]" })
+--   -- RUtils.map.nnoremap("<Leader>glc", function()
+--   --   Snacks.lazygit.log_file()
+--   -- end, { desc = "Git: lazygit current file history" })
+--   -- RUtils.map.nnoremap("<Leader>glC", function()
+--   --   Snacks.lazygit.log { cwd = RUtils.root.git() }
+--   -- end, { desc = "Git: lazygit log" })
+--   -- RUtils.map.nnoremap("<Leader>glg", function()
+--   --   Snacks.lazygit.log()
+--   -- end, { desc = "Git: lazygit log (cwd)" })
+-- end
 -- }}}
 -- {{{ Misc
 -- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })

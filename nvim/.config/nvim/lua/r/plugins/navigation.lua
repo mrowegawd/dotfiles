@@ -711,7 +711,7 @@ return {
           winhl = "NormalFloat:NormalFloat",
         },
         providers = {
-          priority = { "lsp", "markdown", "norg" },
+          priority = { "markdown", "lsp", "norg" },
         },
         picker = "fzf-lua", -- fzf-lua, telescope
         -- These keymaps can be a string or a table for multiple keys.
@@ -728,12 +728,13 @@ return {
           rename_symbol = {},
           code_actions = {},
           fold = "h",
-          fold_toggle = { "<Tab>", "za", "zk", "<c-r>", "<c-a>" },
-          fold_toggle_all = "<S-Tab>",
           unfold = "l",
-          fold_all = { "zm", "zM" },
+          fold_toggle = { "<Tab>", "<c-a>", "zf", "zb", "za" },
+          fold_toggle_all = "<S-Tab>",
+          fold_all = { "zm", "zM", "zc" },
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
+
           down_and_jump = { "<a-n>", "<c-n>" },
           up_and_jump = { "<a-p>", "<c-p>" },
 

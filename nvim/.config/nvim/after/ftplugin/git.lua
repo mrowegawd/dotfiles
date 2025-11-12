@@ -20,3 +20,9 @@ keymap.set("n", "<Tab>", function()
     end
   end)
 end, { buffer = api.nvim_get_current_buf() })
+
+keymap.set("n", "<Leader>bs", "o", { buffer = api.nvim_get_current_buf(), remap = true })
+keymap.set("n", "<Leader>be", "o", { buffer = api.nvim_get_current_buf(), remap = true })
+
+keymap.set("n", "<Leader>bt", "O", { buffer = api.nvim_get_current_buf(), remap = true })
+keymap.set("n", "<Leader>bv", "gO", { buffer = api.nvim_get_current_buf(), remap = true })

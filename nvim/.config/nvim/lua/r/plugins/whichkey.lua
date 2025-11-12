@@ -42,6 +42,7 @@ return {
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gt", group = "toggle" },
           { "<Leader>go", group = "open" },
+          { "<Leader>gv", group = "view" },
 
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },

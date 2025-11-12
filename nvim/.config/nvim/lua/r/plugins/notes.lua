@@ -481,6 +481,8 @@ return {
       },
     },
     dependencies = { "nvim-lua/plenary.nvim" },
+    ---@module 'obsidian'
+    ---@type obsidian.config
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
       workspaces = {
