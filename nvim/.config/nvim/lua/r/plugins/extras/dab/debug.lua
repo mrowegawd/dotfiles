@@ -290,7 +290,7 @@ return {
         expand = { "<CR>", "<2-LeftMouse>", "<TAB>" },
         open = "o",
         remove = "d",
-        edit = "e",
+        edit = "<Leader>be",
         repl = "r",
         toggle = "t",
       },
@@ -322,7 +322,7 @@ return {
         border = "single", -- Border style. Can be "single", "double" or "rounded"
         mappings = {
           close = { "q", "<Esc>" },
-          edit = "e",
+          edit = "<Leader>be",
           expand = { "<CR>", "<2-LeftMouse>", "<TAB>" },
           open = "o",
           remove = "d",

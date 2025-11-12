@@ -439,7 +439,6 @@ local function picker(contents, actions, opts)
         RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
       end,
 
-      -- https://github.com/ibhagwan/fzf-lua/discussions/1211
       ["alt-Q"] = {
         prefix = "toggle-all",
         fn = function(selected, _)
@@ -495,7 +494,8 @@ local function picker(contents, actions, opts)
         M.find_local_titles(path_items)
       end,
 
-      ["alt-i"] = function(selected, _)
+      ["ctrl-q"] = function(selected, _)
+        -- add tag
         local sel = selected[1]
         sel = vim.split(sel, " ")
 
@@ -503,11 +503,11 @@ local function picker(contents, actions, opts)
         insert_tags = RUtils.remove_duplicates_table(insert_tags)
 
         ---@diagnostic disable-next-line: undefined-field
-        RUtils.info("Add tag: " .. vim.inspect(insert_tags), { title = "Markdown" })
+        -- RUtils.info("Add tag: " .. vim.inspect(insert_tags), { title = "Markdown" })
         require("fzf-lua").actions.resume()
       end,
 
-      ["alt-h"] = function()
+      ["ctrl-x"] = function()
         if #insert_tags == 0 then
           ---@diagnostic disable-next-line: undefined-field
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
@@ -560,7 +560,7 @@ local function picker(contents, actions, opts)
       previewer = Tagpreviewer,
       prompt = RUtils.fzflua.padding_prompt(),
       winopts = { title = format_prompt_strings "Search By Tag" },
-      fzf_opts = { ["--header"] = [[^r:reload  ^g:grep  ^f:greptitle  a-i:filtertag  a-h:addtag]] },
+      fzf_opts = { ["--header"] = [[^r:reload  ^g:grep  ^f:greptitle  ^x:filtertag  ^q:addtag]] },
       actions = actions,
     }
   )
@@ -695,7 +695,7 @@ function M.find_note_by_tag(data, is_set, is_for_tags)
   if vim.tbl_isempty(tags) then
     -- Check for visual selection.
     local viz = RUtils.get_visual_selection { strict = true }
-    if viz and #viz.lines == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
+    if viz and #viz.line == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
       local tag = viz.selection
 
       if vim.startswith(tag, "#") then

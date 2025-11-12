@@ -267,7 +267,6 @@ return {
           if ok then
             local hilist = vim.fn.HiList()
             if hilist and #hilist > 0 then
-              RUtils.info("Go next", { title = "Vim-Highlighter" })
               return vim.cmd "Hi}"
             end
           end
@@ -297,7 +296,6 @@ return {
           if ok then
             local hilist = vim.fn.HiList()
             if hilist and #hilist > 0 then
-              RUtils.info("Go prev", { title = "Vim-Highlighter" })
               return vim.cmd "Hi{"
             end
           end

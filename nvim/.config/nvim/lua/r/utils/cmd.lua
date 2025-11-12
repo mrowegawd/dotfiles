@@ -2,6 +2,7 @@
 ---@class r.utils.cmd
 local M = {}
 
+---@return table
 function M.get_total_wins()
   local tbl_winsplits = {}
 
@@ -243,36 +244,69 @@ end
 local function open_mpv_sxiv_or_git(line_str)
   local sel_open_with = {
     mpv = {
-      cmd = { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60" },
+      prefix_cmd = {
+        "tsp",
+        "mpv",
+        "--ontop",
+        "--no-border",
+        "--force-window",
+        "--autofit=1000x500",
+        "--geometry=-20-60",
+      },
     },
 
     -- Kendala dengan sxiv ini, tidak bisa open image dengan line_str
-    ["image local"] = { cmd = { "tsp", "sxiv", "--ontop" } },
+    ["image local"] = { prefix_cmd = { "tsp", "sxiv", "--ontop" } },
 
     -- Kalau dengan feh ini, bisa membuka image line_str, tapi ga bisa di zoom
-    ["image with feh"] = { cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
+    ["image with feh"] = { prefix_cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
 
     -- Kalau cara ini kita download, check function open_image_with_sxiv
-    ["image with DL"] = { cmd = {} },
+    ["image with DL"] = { prefix_cmd = {} },
   }
 
   if vim.bo.filetype == "git" then
     sel_open_with = {
-      DiffviewOpen = { cmd = { "DiffviewOpen" } },
-      GdiffSplit = { cmd = { "DiffviewOpen" } },
-      ["Compare this diff with selected commit"] = { cmd = { "DiffviewOpen" } },
-      ["Explore the log"] = { cmd = { "DiffviewOpen" } },
-      ["Collect files and send to QF"] = { cmd = { "DiffviewOpen" } },
+      ["Diffview - Open specific commit"] = {
+        prefix_cmd = { "DiffviewOpen" },
+        end_cmd = { "^!" },
+      },
+      ["Diffview - Open working diff against specific commit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Fugitive - Gdsplit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Fugitive - Compare this commit with selected commit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Fugitive - Explore this log commit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Fugitive - Drop this commit and compare"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Git - Checkout this commit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Git - Collect files and send to QF"] = { prefix_cmd = { "DiffviewOpen" } },
     }
   end
 
-  sel_open_with["Open PR with Octo"] = { cmd = { "Octo pr edit " } }
+  sel_open_with["Octo - Open this PR"] = { prefix_cmd = { "Octo pr edit " } }
+  sel_open_with["Octo - Open this Issue"] = { prefix_cmd = { "Octo issue edit " } }
+
+  local width_all_text = 30
+  local sel_opens = {}
 
   ---@return table
   local sel_fzf = function()
-    local newtbl = {}
+    local width_prefix_text = 1
     for i, _ in pairs(sel_open_with) do
-      newtbl[#newtbl + 1] = i
+      local str_split = vim.split(i, "-")[1]
+      if width_prefix_text < #str_split then
+        width_prefix_text = #str_split
+      end
+
+      if width_all_text < #i then
+        width_all_text = #i
+      end
+    end
+
+    local newtbl = {}
+    for i, val in pairs(sel_open_with) do
+      local str_split = vim.split(i, "-")
+      local title = string.format("%-" .. width_prefix_text .. "s - %s", str_split[1], str_split[2])
+      newtbl[#newtbl + 1] = title
+      sel_opens[title] = val
     end
     table.sort(newtbl)
     return newtbl
@@ -280,10 +314,16 @@ local function open_mpv_sxiv_or_git(line_str)
 
   local contents = sel_fzf()
 
+  local width = tonumber("0." .. width_all_text)
+  if not width then
+    return
+  end
+
   local opts = RUtils.fzflua.open_lsp_code_action {
     winopts = {
       title = RUtils.fzflua.format_title("Select To Open With", RUtils.config.icons.documents.openfolder),
       height = #contents + 3,
+      width = width,
     },
     actions = {
       ["default"] = function(selected)
@@ -299,11 +339,18 @@ local function open_mpv_sxiv_or_git(line_str)
           notif_msg = "DL and Sxiv: " .. line_str
         else
           local cmds
-          for cmd_name, cmd_args in pairs(sel_open_with) do
-            if cmd_name == sel then
-              cmd_args.cmd[#cmd_args.cmd + 1] = line_str
-              cmds = cmd_args.cmd
-              notif_msg = cmd_name .. ": " .. line_str
+          for key_open, open in pairs(sel_opens) do
+            if key_open == sel then
+              if open.end_cmd then
+                if type(open.end_cmd) == "table" then
+                  line_str = line_str .. open.end_cmd[1]
+                end
+              end
+
+              open.prefix_cmd[#open.prefix_cmd + 1] = line_str
+              cmds = open.prefix_cmd
+
+              notif_msg = key_open .. ": " .. line_str
             end
           end
 

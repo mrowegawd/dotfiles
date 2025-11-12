@@ -43,6 +43,7 @@ return {
           { "<Leader>gt", group = "toggle" },
           { "<Leader>go", group = "open" },
           { "<Leader>gv", group = "view" },
+          { "<Leader>gb", group = "buffer" },
 
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },

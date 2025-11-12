@@ -175,7 +175,7 @@ function M.open_center_big(opts)
 end
 
 function M.open_center_height_small_but_wide(opts)
-  local fzf_tbl = {
+  return dropdown(vim.tbl_deep_extend("force", {
     ---@type fzf-lua.config.Winopts
     winopts = {
       width = 0.80,
@@ -189,9 +189,7 @@ function M.open_center_height_small_but_wide(opts)
         horizontal = "up:45%",
       },
     },
-  }
-
-  return dropdown(vim.tbl_deep_extend("force", fzf_tbl, opts))
+  }, opts))
 end
 
 function M.open_center_big_diagnostics(opts)
@@ -261,7 +259,7 @@ function M.open_fullscreen_vertical(opts)
 end
 
 function M.git_open_fullscreen_vertical(opts)
-  local fullscree_vertical_opts = {
+  return vim.tbl_deep_extend("force", {
     fzf_opts = { ["--multi"] = true },
     ---@type fzf-lua.config.Winopts
     winopts = {
@@ -273,8 +271,7 @@ function M.git_open_fullscreen_vertical(opts)
         horizontal = "up:25%",
       },
     },
-  }
-  return vim.tbl_deep_extend("force", fullscree_vertical_opts, opts)
+  }, opts)
 end
 
 function M.open_lsp_references(opts)
@@ -300,7 +297,7 @@ function M.open_lsp_references(opts)
 end
 
 function M.open_lsp_code_action(opts)
-  return dropdown(vim.tbl_deep_extend("force", opts, {
+  return dropdown(vim.tbl_deep_extend("force", {
     ---@type fzf-lua.config.Winopts
     winopts = {
       relative = "cursor",

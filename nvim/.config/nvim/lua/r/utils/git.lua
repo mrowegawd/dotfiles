@@ -282,15 +282,17 @@ function M.trace_file_event()
     fzf_contents,
     RUtils.fzflua.open_dock_bottom {
       winopts = { title = RUtils.fzflua.format_title("Track Commit for Renamed or Deleted File", "") },
-      fzf_opts = { ["--header"] = [[^s/v/t:diffviewopen  ^y:copyhash  a-d:diffviewopen  a-i:fugitive]] },
+      fzf_opts = { ["--header"] = [[^y:copyhash  ^o:diffviewopen  ^m:fugitive]] },
       actions = {
         ["default"] = open_deleted_files("edit", deleted_files),
         ["ctrl-s"] = open_deleted_files("split", deleted_files),
         ["ctrl-v"] = open_deleted_files("vsplit", deleted_files),
         ["ctrl-t"] = open_deleted_files("tabnew", deleted_files),
+
         ["ctrl-y"] = copy_hash(deleted_files),
-        ["alt-d"] = default_select_deleted(deleted_files),
-        ["alt-i"] = default_select_deleted(deleted_files, true),
+
+        ["ctrl-o"] = default_select_deleted(deleted_files),
+        ["ctrl-m"] = default_select_deleted(deleted_files, true),
       },
     }
   )

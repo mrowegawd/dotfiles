@@ -6,7 +6,8 @@ local last_query = ""
 local status_cmd_git = {
   ["open commit only"] = function(commit_hash)
     --   -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
-    return "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
+    -- return "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
+    return "DiffviewOpen " .. commit_hash .. "^!"
   end,
   ["open commit only with fugitive"] = function(commit_hash)
     return "Gedit " .. commit_hash
@@ -463,6 +464,13 @@ end
 -- │                      MAPPING UTILS                      │
 -- ╰─────────────────────────────────────────────────────────╯
 
+local function vsplit_layout()
+  local total_wins = RUtils.cmd.get_total_wins()
+  if #total_wins == 1 then
+    vim.cmd "vsplit"
+  end
+end
+
 local function convert_path_hash_commit(short_hash)
   local handle = io.popen("git rev-parse " .. short_hash)
   if not handle then
@@ -555,7 +563,8 @@ function M.open_diff_view(commit, file_name, diff_plugin)
 
   if file_name ~= nil and file_name ~= "" then
     if diff_plugin == "diffview" then
-      cmds = "DiffviewOpen -uno " .. commit .. " -- " .. file_name
+      -- cmds = "DiffviewOpen -uno " .. commit .. " -- " .. file_name
+      cmds = "DiffviewOpen " .. commit .. "^!"
     elseif diff_plugin == "fugitive" then
       cmds = "Gvdiffsplit " .. commit .. ":" .. file_name
     end
@@ -584,6 +593,7 @@ function M.open_commit(commit_hash, state_cmd)
   if cmds then
     ---@diagnostic disable-next-line: undefined-field
     RUtils.info(cmds)
+    vsplit_layout()
     vim.cmd(cmds)
   end
 end
@@ -638,7 +648,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[^y:copyhash  m-i:diffview  ^b:browser]],
+      ["--header"] = [[^y:copyhash  ^b:browser  ^o:diffview]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     actions = {
@@ -651,7 +661,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
       ["ctrl-t"] = M.git_open "tabe",
       ["default"] = M.git_open_default(bufnr),
       ["ctrl-b"] = M.git_open_with_browser(),
-      ["alt-i"] = M.git_open_with_diffview(),
+      ["ctrl-o"] = M.git_open_with_diffview(),
       ["ctrl-y"] = M.git_copy_to_clipboard_or_yank(),
     },
   }
