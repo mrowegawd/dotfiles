@@ -711,7 +711,7 @@ return {
           winhl = "NormalFloat:NormalFloat",
         },
         providers = {
-          priority = { "markdown", "lsp", "norg" },
+          priority = { "lsp", "markdown", "norg" },
         },
         picker = "fzf-lua", -- fzf-lua, telescope
         -- These keymaps can be a string or a table for multiple keys.
