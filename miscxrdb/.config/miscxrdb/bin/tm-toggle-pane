@@ -374,8 +374,12 @@ update_global_pane_ids() {
   #  Check and update main pane id
   if ! __is_pane_id_exists "$MAIN_PANE_ID" || [[ $MAIN_PANE_ID == "" ]]; then
     dunstify -i view-refresh "🔄 Main Pane Updated" "A new main pane (ID) has been successfully updated!"
+
     MAIN_PANE_ID=$current_pane
     __update_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID" "$MAIN_PANE_ID"
+
+    cwd=$(pwd)
+    __update_session_obj "$CURRENT_SESSION" "$MAIN_PANE_ID" "$WINDOW_ID" "$cwd"
   fi
 
   #  Check and update session name
@@ -397,7 +401,9 @@ setup_layout_workspace() {
   local json_file=$PATH_PANE_COLLECT_JSON
   local size_tmux_left_or_right=$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
 
-  if [[ "$1" == "left" ]]; then
+  local layout=$1
+
+  if [[ "$layout" == "left" ]]; then
     open_vsplit
 
     # set pane to the most left
@@ -408,7 +414,19 @@ setup_layout_workspace() {
     # get most left and resize the pane with fiexed size
     pane_id_most_left=$(tmux list-panes -F "#{pane_id} #{pane_left}" | sort -nk2 | head -n1 | awk '{print $1}')
     tmux resize-pane -t "$pane_id_most_left" -x $size_tmux_left_or_right
+  fi
 
+  if [[ "$layout" == "right" ]]; then
+    open_vsplit
+
+    # set pane to the most right
+    tmux splitw -fh \; swapp -t ! \; killp -t !
+
+    _go_right
+
+    # get most left and resize the pane with fiexed size
+    pane_id_most_right=$(tmux list-panes -F "#{pane_id} #{pane_right}" | sort -nk2 | tail -n1 | awk '{print $1}')
+    tmux resize-pane -t "$pane_id_most_right" -x $size_tmux_left_or_right
   fi
 
   CURRENT_SESSION=$(tmux display-message -p '#S')
@@ -492,10 +510,20 @@ handle_open_filetree() {
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
     # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
 
-    FILE_MANAGER_PANE_ID=$(
-      tmux list-panes -F "#{pane_id} #{pane_left}" |
-        sort -nk2 | head -n1 | awk '{print $1}'
-    )
+    if [[ $LAYOUT_SIDE == "left" ]]; then
+      FILE_MANAGER_PANE_ID=$(
+        tmux list-panes -F "#{pane_id} #{pane_left}" |
+          sort -nk2 | head -n1 | awk '{print $1}'
+      )
+    fi
+
+    if [[ $LAYOUT_SIDE == "right" ]]; then
+      FILE_MANAGER_PANE_ID=$(
+        tmux list-panes -F "#{pane_id} #{pane_right}" |
+          sort -nk2 | tail -n1 | awk '{print $1}'
+      )
+    fi
+
     __update_pane_file_manager_id "$CURRENT_SESSION" "$WINDOW_ID" "$FILE_MANAGER_PANE_ID"
   fi
 

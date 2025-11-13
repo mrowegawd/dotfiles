@@ -52,7 +52,7 @@ return {
   {
     dir = "~/.local/src/nvim_plugins/qfbookmark",
     event = "LazyFile",
-    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
       keymaps = {

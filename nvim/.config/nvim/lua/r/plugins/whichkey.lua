@@ -52,8 +52,6 @@ return {
           { "<Leader>tc", group = "coverage" },
 
           { "<Leader>m", group = "marker" },
-          { "<Leader>mf", group = "picker" },
-          { "<Leader>mg", group = "groups" },
 
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "session" },

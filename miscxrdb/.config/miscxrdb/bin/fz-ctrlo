@@ -617,8 +617,10 @@ tmux_reset_workspaces() {
 }
 
 tmux_clear_main_id_workspace() {
-  rm /tmp/tmux-main-*
-  dunstify "Cleared tmux main IDs"
+  rm /tmp/tmux-main-layout-*
+  tmux_kill_others_pane
+
+  dunstify "Cleared tmux main IDs and panes"
 }
 
 # +----------------------------------------------------------+
