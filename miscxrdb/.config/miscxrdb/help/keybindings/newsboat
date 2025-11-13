@@ -30,7 +30,7 @@ bind ,v
 # misc: edit/open urllist with vim
 bind <c-v>
 
-# misc: set flag (isikan "s" saja)
+# misc: set flag or mark (isikan "s" saja)
 bind <c-f>
 
 # misc: open list tags

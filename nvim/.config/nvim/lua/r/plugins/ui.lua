@@ -125,6 +125,7 @@ return {
               { find = "%d+ line" },
               { find = "%d+ lines, %d+ bytes" },
               { find = "%d+ more line" },
+              { find = "Outline updated for current buffer" },
               -- { find = "%d+L, %d+B" },
               { find = "; after #%d+" },
               { find = "; before #%d+" },
@@ -151,6 +152,7 @@ return {
             any = {
               { event = "msg_show", find = "written" },
               { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+              { event = "msg_show", find = "No response from provider when requesting symbols" },
               { event = "msg_show", kind = "search_count" },
               { event = "msg_show", find = "%d+L, %d+B" },
               { event = "msg_show", find = "^Hunk %d+ of %d" },

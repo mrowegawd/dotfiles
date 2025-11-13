@@ -45,12 +45,21 @@ dialogs-title-format        "Dialogs"
 # COLORTHEME ------------------------------------------------------------------
 
 # color background          white     black
-color listnormal            color4    default
-color listfocus             color18   color5    bold
-color listnormal_unread     color5    default   bold
-color listfocus_unread      color18   color5    bold
-color info                  color241  default   bold
-color article               color3    default
+# color listnormal            color4    default
+# color listfocus             color16   color5    bold
+# color listnormal_unread     color4    default   bold
+# color listfocus_unread      color16   color5    bold
+# color info                  color241  default   bold
+# color article               color3    default
+
+color background            default   default
+color listnormal            white     default
+color listnormal_unread     cyan      default   bold
+color listfocus             black     yellow    bold
+color listfocus_unread      black     yellow    bold
+color info                  yellow    default   bold
+color article               white     default
+color title                 yellow    default   bold
 
 # FEEDLIST --------------------------------------------------------------------
 

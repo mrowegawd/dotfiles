@@ -33,6 +33,7 @@ local set_conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
   end,
+  ---@param size number
   hide_in_width = function(size)
     size = size or 120
     return vim.fn.winwidth(0) > size
@@ -142,10 +143,27 @@ local overseer_tasks_for_status = function(status, colors)
     end,
   }
 end
-local rmux_pane = function()
-  -- for debug
-  -- return { run_with = "ok", task = 0, watch = "" }
-  return require("rmux.statusline").get()
+
+local rmux_pane
+
+---@return {run_with: string, task: integer, watch: string}
+local get_rmux = function()
+  if not rmux_pane then
+    return require("rmux.statusline").get()
+  end
+  return rmux_pane
+end
+
+local navic_mod
+
+local get_navic = function()
+  if not navic_mod then
+    local ok, navic = pcall(require, "nvim-navic")
+    if ok then
+      navic_mod = navic
+    end
+  end
+  return navic_mod
 end
 local __colors = function()
   local H = require "r.settings.highlights"
@@ -1179,7 +1197,7 @@ M.Tasks = {
 }
 M.RmuxTargetPane = {
   init = function(self)
-    local status = rmux_pane()
+    local status = get_rmux()
 
     self.run_with = status.run_with
     self.task = status.task
@@ -1240,7 +1258,7 @@ M.Filetype = {
 
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 
-    local status = rmux_pane()
+    local status = get_rmux()
     self.run_with = status.run_with
     self.task = status.task or 0
     self.watch = status.watch or ""
@@ -1332,7 +1350,7 @@ M.Ruler = {
       rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.statusline_fg, bg = colors.statusline_right_block_bg, bold = true },
+    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
   },
   {
     provider = function(self)
@@ -1358,7 +1376,7 @@ M.Ruler = {
       rhs = rhs .. " 𝚌 " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.statusline_fg, bg = colors.statusline_right_block_bg, bold = true },
+    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
   },
   {
     provider = function(self)
@@ -1582,18 +1600,61 @@ M.WinbarFilePath = {
   },
 }
 M.WinBarNavic = {
+  init = function(self)
+    self.req_navic = get_navic()
+  end,
   condition = function()
-    return set_conditions.is_lsp_attached()
-      and require("nvim-navic").is_available()
-      and not set_conditions.is_path_git_relative()
-      and not set_conditions.is_terminal_ft()
-      and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
-      and not set_conditions.is_diff()
+    return get_navic() ~= nil
   end,
-  provider = function()
-    return string.format(" %s", require("nvim-navic").get_location())
-  end,
-  hl = { fg = colors.mode_yellow_fg, bg = colors.statusline_bg },
+  {
+    condition = function(self)
+      return set_conditions.is_lsp_attached()
+        and self.req_navic.is_available()
+        and not set_conditions.is_path_git_relative()
+        and not set_conditions.is_terminal_ft()
+        and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
+        and not set_conditions.is_diff()
+    end,
+    provider = function(self)
+      local buf = vim.api.nvim_get_current_buf()
+      self._navic_cache = {
+        buf = buf,
+        location = self.req_navic.get_location(),
+        data = self.req_navic.get_data(buf),
+      }
+
+      local status_navic = string.format(" %s", self._navic_cache.location)
+
+      if not set_conditions.hide_in_width(100) then
+        local data_navic = self._navic_cache.data
+        local parts_navic = vim.split(status_navic, "  ")
+
+        if not data_navic or #data_navic == 0 then
+          return
+        end
+
+        local first_part = parts_navic[1]
+        local second_part = parts_navic[#parts_navic - 1]
+        local last_part = parts_navic[#parts_navic]
+
+        if set_conditions.hide_in_width(80) then
+          if second_part and (first_part ~= second_part) then
+            return parts_navic[1] .. "  … " .. second_part .. "  " .. last_part
+          end
+        end
+
+        if data_navic and #data_navic > 0 then
+          if first_part ~= last_part then
+            return parts_navic[1] .. "  … " .. last_part
+          end
+          return parts_navic[1]
+        end
+      end
+
+      return status_navic
+    end,
+  },
+  hl = { fg = colors.winbar_fg, bg = colors.statusline_bg },
 }
 
 M.status_winbar_active_left = {

@@ -355,9 +355,11 @@ local update_col_colorscheme = {
     winseparator_alter = 1.3,
   },
   ["gruvbox-material"] = {
-    blink_cmp_label_kind_fg_alter = 0.8,
+    blink_cmp_label_kind_fg_alter = 1,
     comment_fg_alter = 0.55,
     floatboder_fg_alter = 0.3,
+    lsp_code_lens_bg_alter = -0.03,
+    lsp_code_lens_fg_alter = 0.5,
     pmenu_bg_alter = 0.4,
     pmenu_sel_bg_alter = -0.48,
     render_markdown_code_bg_alter = 0.25,
