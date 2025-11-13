@@ -151,8 +151,6 @@ local __colors = function()
   local H = require "r.settings.highlights"
 
   local set_col_light = {
-    statusline_right_block_bg = 0.2,
-
     keyword_fg = -0.05,
 
     diff_add = H.tint(H.get("GitSignsAdd", "fg"), -0.07),
@@ -161,8 +159,6 @@ local __colors = function()
   }
 
   local set_col_normal = {
-    statusline_right_block_bg = 0.8,
-
     keyword_fg = 0.7,
 
     diff_add = H.get("GitSignsAdd", "fg"),
@@ -189,8 +185,8 @@ local __colors = function()
     statusline_right_block_fg = H.get("StatusLineRightBlock", "fg"),
     statusline_right_block_bg = H.get("StatusLineRightBlock", "bg"),
 
-    statusline_right_block_fg_darken = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
-    statusline_right_block_bg_darken = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
+    statusline_right_block_fg_darken = H.get("StatusLineRightBlockDarken", "fg"),
+    statusline_right_block_bg_darken = H.get("StatusLineRightBlockDarken", "bg"),
 
     qf_indicator_fg = H.tint(H.get("Keyword", "fg"), 0.5),
     qf_indicator_bg = H.tint(H.get("Keyword", "fg"), -0.5),

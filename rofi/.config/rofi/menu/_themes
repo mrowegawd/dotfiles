@@ -317,12 +317,13 @@ set_delta() {
     send_notify "set_delta: $_DELTA_PATH does not exists!" && exit 1
   fi
 
-  DELTA_FILE_BG=$(grep -i delta_file_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  DELTA_FILE_FG=$(grep -i delta_file_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^file-style.*/file-style = \"$DELTA_FILE_FG\" bold \"$DELTA_FILE_BG\"/g" "$_DELTA_PATH"
+  # DELTA_FILE_BG=$(grep -i delta_file_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # DELTA_FILE_FG=$(grep -i delta_file_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # sed -i -e "s/^file-style.*/file-style = \"$DELTA_FILE_FG\" bold \"$DELTA_FILE_BG\"/g" "$_DELTA_PATH"
 
+  DELTA_HUNK_HEADER_FG=$(grep -i delta_hunk_header_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   DELTA_HUNK_HEADER_BG=$(grep -i delta_hunk_header_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  sed -i -e "s/^hunk-header-style.*/hunk-header-style = syntax bold \"$DELTA_HUNK_HEADER_BG\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^hunk-header-style.*/hunk-header-style = \"$DELTA_HUNK_HEADER_FG\" bold \"$DELTA_HUNK_HEADER_BG\"/g" "$_DELTA_PATH"
 
   DELTA_LINE_NUMBER_FG=$(grep -i delta_line_number_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   sed -i -e "s/^line-numbers-zero-style.*/line-numbers-zero-style = \"$DELTA_LINE_NUMBER_FG\"/g" "$_DELTA_PATH"

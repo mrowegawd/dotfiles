@@ -23,7 +23,6 @@ local base_colors = {
   float_title_bg_alter = -0.1,
   float_title_fg_alter = -0.1,
   floatboder_fg_alter = 0.55,
-  fzflua_buf_linenr_bg_alter = 0.5,
   fzflua_file_part_fg = 0.85,
   fzflua_normal_bg_alter = 0.5,
   hovered_cursorline_bg_alter = 0.4,
@@ -38,7 +37,6 @@ local base_colors = {
   noice_cmdline_fg_alter = 0.8,
   nontext_fg_alter = -0.5,
   normal_float_fg_alter = -0.01,
-  outline_indent_fg_alter = 0.3,
   panel_sidebar_bg_alter = 0.25,
   panel_sidebar_fg_alter = 0.3,
   pmenu_bg_alter = 0.7,
@@ -95,8 +93,11 @@ local base_colors = {
   diffdelete_fg_alter = -0.1,
   diffdelete_bg_alter = 0.18,
 
-  difffile_fg_alter = -0.15,
-  difffile_bg_alter = -0.68,
+  -- difffile_fg_alter = -0.2,
+  -- difffile_bg_alter = -0.68,
+
+  diffline_fg_alter = 0.85,
+  diffline_bg_alter = 0.2,
 
   difftext_fg_alter = 0.4,
   difftext_bg_alter = 0.5,
@@ -104,8 +105,11 @@ local base_colors = {
   delta_plus_fg_alter = 0.9,
   delta_plus_bg_alter = -0.4,
 
-  delta_minus_fg_alter = 1,
-  delta_minus_bg_alter = -0.4,
+  delta_change_fg_alter = 1,
+  delta_change_bg_alter = -0.4,
+
+  delta_minus_fg_alter = 0.9,
+  delta_minus_bg_alter = 0.6,
 }
 
 local update_col_colorscheme = {
@@ -281,7 +285,6 @@ local update_col_colorscheme = {
     noice_cmdline_fg_alter = 0.4,
     nontext_fg_alter = 0.8,
     normal_keyword_alter = 0.12,
-    outline_indent_fg_alter = 0.15,
     pmenu_bg_alter = 0.2,
     pmenu_sel_bg_alter = 0.13,
 
@@ -355,11 +358,12 @@ local update_col_colorscheme = {
     blink_cmp_label_kind_fg_alter = 0.8,
     comment_fg_alter = 0.55,
     floatboder_fg_alter = 0.3,
-    pmenu_sel_bg_alter = -0.48,
     pmenu_bg_alter = 0.4,
+    pmenu_sel_bg_alter = -0.48,
     render_markdown_code_bg_alter = 0.25,
-    visual_bg_alter = 0.2,
     statusline_fg_alter = 0.75,
+    trouble_indent_fg_alter = 0.35,
+    visual_bg_alter = 0.2,
     winseparator_alter = 0.2,
   },
   ["night-owl"] = {
@@ -399,7 +403,7 @@ local update_col_colorscheme = {
     render_markdown_code_inline_bg_alter = 0.15,
     render_markdown_code_inline_fg_alter = 0.05,
     statusline_fg_alter = 1.2,
-    trouble_indent_fg_alter = 0.7,
+    trouble_indent_fg_alter = 1.3,
     winseparator_alter = 1,
   },
   ["lackluster"] = {
@@ -419,7 +423,6 @@ local update_col_colorscheme = {
     my_code_usage_fg_alter = -0.1,
     noice_cmdline_fg_alter = 0.6,
     normal_keyword_alter = 0.4,
-    outline_indent_fg_alter = 0.15,
     pmenu_bg_alter = 2.2,
 
     quickfixline_sp_alter = 0.45,
@@ -467,6 +470,7 @@ local update_col_colorscheme = {
     nontext_fg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.4,
     statusline_fg_alter = 0.85,
+    trouble_indent_fg_alter = 0.65,
     winbar_right_block_bg_alter = 0.35,
     winbar_right_block_fg_alter = -0.15,
     winseparator_alter = 0.45,
@@ -504,20 +508,23 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 1,
     render_markdown_code_inline_bg_alter = 0.16,
     statusline_fg_alter = 1.5,
-    trouble_indent_fg_alter = 1.65,
+    trouble_indent_fg_alter = 1.4,
     winseparator_alter = 0.9,
   },
   ["rose-pine"] = {
     blink_cmp_label_kind_fg_alter = 1.8,
     comment_fg_alter = 0.7,
+    trouble_indent_fg_alter = 1.2,
+    floatboder_fg_alter = 1,
     fold_fg = 0.25,
     fzflua_file_part_fg = 1.2,
     hovered_cursorline_bg_alter = 0.6,
     linenr_fg_alter = 0.1,
+    lsp_code_lens_bg_alter = 0.05,
+    lsp_code_lens_fg_alter = 0.65,
     nontext_fg_alter = -0.2,
     pmenu_bg_alter = 1,
     pmenu_sel_bg_alter = -0.3,
-    floatboder_fg_alter = 1,
     quickfixline_linenr_fg_alter = 0.65,
     render_markdown_code_bg_alter = 0.5,
     statusline_fg_alter = 1.05,
@@ -534,7 +541,7 @@ local update_col_colorscheme = {
     pmenu_bg_alter = 0.5,
     pmenu_sel_bg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.35,
-    render_markdown_code_bg_alter = 0.5,
+    render_markdown_code_bg_alter = 0.4,
     statusline_fg_alter = 0.9,
     winbar_right_block_bg_alter = 0.4,
     winbar_right_block_fg_alter = 0.12,
@@ -558,7 +565,7 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.65,
     snacks_indent_scope_fg_alter = 0.13,
     statusline_fg_alter = 1,
-    trouble_indent_fg_alter = 0.6,
+    trouble_indent_fg_alter = 0.9,
     winbar_right_block_bg_alter = 0.25,
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.7,
@@ -574,6 +581,7 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.2,
     render_markdown_code_bg_alter = 0.23,
     statusline_fg_alter = 0.75,
+    trouble_indent_fg_alter = 0.35,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.2,
   },
@@ -597,6 +605,7 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.4,
     snacks_indent_scope_fg_alter = 0.15,
     statusline_fg_alter = 0.85,
+    trouble_indent_fg_alter = 0.65,
     winbar_right_block_bg_alter = 0.35,
     winseparator_alter = 0.5,
 
@@ -616,6 +625,7 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.15,
     render_markdown_code_bg_alter = 0.45,
     statusline_fg_alter = 0.9,
+    trouble_indent_fg_alter = 0.6,
     visual_bg_alter = -0.32,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.22,
@@ -654,6 +664,7 @@ local update_col_colorscheme = {
     statusline_fg_alter = 0.6,
     statusline_right_block_bg = 0.2,
     statusline_right_block_fg = 0.8,
+    trouble_indent_fg_alter = 0.15,
     visual_bg_alter = 0.15,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.2,
@@ -739,6 +750,12 @@ local general_overrides = function()
     {
       StatusLineRightBlock = {
         fg = { from = "StatusLineRightBlock", attr = "bg", alter = colors.statusline_right_block_fg },
+      },
+    },
+    {
+      StatusLineRightBlockDarken = {
+        fg = { from = "StatusLineRightBlock", attr = "fg", alter = -0.1 },
+        bg = { from = "StatusLineRightBlock", attr = "bg", alter = -0.12 },
       },
     },
     { StatusLineLeftBlock = { bg = { from = "StatusLineRightBlock", attr = "bg" } } },
@@ -873,10 +890,24 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIFF COLOR                        ║
     -- ╚═════════════════════════════════════════════════════════╝
+    -- {
+    --   diffFile = {
+    --     fg = { from = "Directory", attr = "fg", alter = colors.difffile_fg_alter },
+    --     bg = { from = "Directory", attr = "fg", alter = colors.difffile_bg_alter },
+    --     bold = true,
+    --   },
+    -- },
+
     {
-      diffFile = {
-        fg = { from = "Directory", attr = "fg", alter = colors.difffile_bg_alter },
-        bg = { from = "Directory", attr = "fg", alter = colors.difffile_fg_alter },
+      diffLine = {
+        fg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), colors.diffline_fg_alter),
+        bg = H.tint(H.darken(H.get("Function", "fg"), 0.2, H.get("Normal", "bg")), colors.diffline_bg_alter),
+        bold = true,
+      },
+    },
+    {
+      diffSubname = {
+        bg = { from = "diffLine", attr = "bg" },
         bold = true,
       },
     },
@@ -913,15 +944,22 @@ local general_overrides = function()
     },
 
     {
-      deltaPlus = {
+      GitSignsAddInline = {
         fg = H.tint(H.darken(dark_green, colors.delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
         bg = H.tint(H.darken(dark_green, colors.delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
         bold = true,
       },
     },
     {
-      deltaMinus = {
-        fg = H.tint(H.darken(dark_red, colors.delta_minus_fg_alter, H.get("Normal", "bg")), -0.1),
+      GitSignsChangeInline = {
+        fg = H.tint(H.darken(dark_yellow, colors.delta_change_fg_alter, H.get("Normal", "bg")), -0.1),
+        bg = H.tint(H.darken(dark_yellow, colors.delta_change_bg_alter, H.get("Normal", "bg")), -0.1),
+        bold = true,
+      },
+    },
+    {
+      GitSignsDeleteInline = {
+        fg = H.tint(H.darken(dark_red, colors.delta_minus_fg_alter, H.get("Normal", "bg")), 0.2),
         bg = H.tint(H.darken(dark_red, colors.delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
         bold = true,
       },
@@ -938,8 +976,18 @@ local general_overrides = function()
     { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
 
-    { GitSignsAddInline = { inherit = "deltaPlus" } },
-    { GitSignsDeleteInline = { inherit = "deltaMinus" } },
+    {
+      deltaPlus = {
+        fg = { from = "GitSignsAddInline", attr = "fg" },
+        bg = { from = "GitSignsAddInline", attr = "bg" },
+      },
+    },
+    {
+      deltaMinus = {
+        fg = { from = "GitSignsDeleteInline", attr = "fg" },
+        bg = { from = "GitSignsDeleteInline", attr = "bg" },
+      },
+    },
 
     { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
     { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
@@ -1533,21 +1581,14 @@ local general_overrides = function()
     },
 
     --  ──────────────────────────────[ FZFLUA ]───────────────────────────
-    -- ╭─────────╮
-    -- │ PRPOMPT │
-    -- ╰─────────╯
+    -- ╭────────╮
+    -- │ PROMPT │
+    -- ╰────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     {
       FzfLuaBorder = {
         fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "FzfLuaNormal", attr = "bg" },
-      },
-    },
-
-    {
-      FzfLuaBufLineNr = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = colors.fzflua_buf_linenr_bg_alter },
-        bg = "NONE",
       },
     },
 
@@ -2152,7 +2193,7 @@ local function set_panel_highlight()
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.5 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
@@ -2198,24 +2239,27 @@ local function set_panel_highlight()
     --  ──────────────────────────────[ OUTLINE ]──────────────────────────────
     {
       OutlineGuides = {
-        fg = { from = "PanelSideNormal", attr = "bg", alter = colors.outline_indent_fg_alter },
+        fg = { from = "TroubleIndent", attr = "fg" },
         bg = "NONE",
       },
     },
     {
       OutlineCurrent = {
-        fg = { from = "diffDelete", attr = "fg", alter = 0.3 },
+        bg = { from = "diffDelete", attr = "fg", alter = 0.3 },
+        fg = { from = "Normal", attr = "bg" },
         bold = true,
         reverse = false,
       },
     },
+    { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
+
     { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.1 }, bg = "NONE", italic = true } },
     { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
     { OutlineLineno = { bg = "NONE" } },
-    { OutlineFoldMarker = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.48 }, bg = "NONE" } },
 
     --  ──────────────────────────────[ AERIALS ]──────────────────────────────
-    { AerialGuide = { inherit = "OutlineGuides" } },
+    { AerialGuide = { link = "OutlineGuides" } },
+    { AerialLine = { link = "OutlineCurrent" } },
 
     { AerialBoolean = { link = "LspKindBoolean" } },
     { AerialBooleanIcon = { link = "LspKindBoolean" } },
@@ -2228,8 +2272,6 @@ local function set_panel_highlight()
 
     { AerialKey = { link = "LspKindKey" } },
     { AerialKeyIcon = { link = "LspKindKey" } },
-
-    { AerialLine = { link = "LspInlayHint" } },
 
     { AerialMethod = { link = "LspKindMethod" } },
     { AerialMethodIcon = { link = "LspKindMethod" } },

@@ -272,7 +272,7 @@ local function open_mpv_sxiv_or_git(line_str)
         end_cmd = { "^!" },
       },
       ["Diffview - Open working diff against specific commit"] = { prefix_cmd = { "DiffviewOpen" } },
-      ["Fugitive - Gdsplit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Fugitive - Open specific commit with gedit"] = { prefix_cmd = { "Gedit" } },
       ["Fugitive - Compare this commit with selected commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Fugitive - Explore this log commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Fugitive - Drop this commit and compare"] = { prefix_cmd = { "DiffviewOpen" } },
@@ -967,10 +967,11 @@ function M.change_colors()
       darken_bg = H.tint(H.get("Normal", "bg"), -0.5),
     },
     delta = {
-      file_fg = H.get("diffFile", "fg"),
-      file_bg = H.get("diffFile", "bg"),
+      -- file_fg = H.get("diffFile", "fg"),
+      -- file_bg = H.get("diffFile", "bg"),
 
-      hunk_header_bg = H.tint(H.get("FzfLuaNormal", "bg"), 0.2),
+      hunk_header_fg = H.get("diffLine", "fg"),
+      hunk_header_bg = H.get("diffLine", "bg"),
 
       line_number_fg = H.tint(H.get("Comment", "fg"), -0.05),
 

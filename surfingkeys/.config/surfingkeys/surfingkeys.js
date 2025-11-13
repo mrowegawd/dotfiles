@@ -72,18 +72,18 @@ mapkey("j", "#2Scroll down of line", () => {
   scrollBySmooth(window.innerHeight / 10, 2);
 });
 
-mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
-  scrollBySmooth(window.innerHeight * 10, 3);
-});
-mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
-  scrollBySmooth(window.innerHeight * 10, -3);
-});
+// mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
+//   scrollBySmooth(window.innerHeight * 10, 3);
+// });
+// mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
+//   scrollBySmooth(window.innerHeight * 10, -3);
+// });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ EDITING                                                 │
 // ╰─────────────────────────────────────────────────────────╯
-unmap("/");
-map("<Ctrl-g>", "/");
+unmap("<Ctrl-g>");
+map("<Ctrl-g>", "<Ctrl-f>");
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │

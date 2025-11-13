@@ -22,9 +22,9 @@ return {
         mode = { "n", "v" },
       },
       {
-        "<Leader>un",
+        "<Leader>uH",
         "<CMD>Hi clear<CR>",
-        desc = "Misc: clear highlight [vim-highlighter",
+        desc = "Misc: clear highlight [vim-highlighter]",
       },
     },
   },

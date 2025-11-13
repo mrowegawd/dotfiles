@@ -423,7 +423,6 @@ RUtils.map.nnoremap("<Leader>n", function()
   if ok then
     local Hilist = vim.fn.HiList()
     if Hilist and #Hilist > 0 then
-      RUtils.info("Clear", { title = "Vim-Highlighter" })
       vim.cmd "Hi -"
     end
   end
@@ -597,7 +596,7 @@ Snacks.toggle.treesitter():map "<Leader>us"
 -- Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 
 -- if vim.lsp.inlay_hint then
-Snacks.toggle.inlay_hints():map "<Leader>uH"
+Snacks.toggle.inlay_hints():map "<Leader>un"
 --   if not vim.g.inlay_hints then
 --     RUtils.info "Inlay hint On"
 --     vim.g.inlay_hints = true

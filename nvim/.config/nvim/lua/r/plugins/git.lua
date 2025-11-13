@@ -14,6 +14,7 @@ local normal_themes = {
   "lackluster",
   "neogotham",
   "rose-pine",
+  "rose-pine-moon",
   "vscode_modern",
   "y9nika",
   "darcubox",
@@ -622,8 +623,8 @@ return {
           -- Mappings
           vim.keymap.set("n", "<c-n>", "]m", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<c-p>", "[m", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<a-n>", "]m=zt", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<a-p>", "[m=zt", { buffer = e.buf, remap = true })
+          -- vim.keymap.set("n", "<a-n>", "]m=zt", { buffer = e.buf, remap = true })
+          -- vim.keymap.set("n", "<a-p>", "[m=zt", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<tab>", "=zt", { buffer = e.buf, remap = true })
 
           vim.keymap.set("n", "<Leader>bs", "o", { buffer = e.buf, remap = true })
@@ -913,6 +914,7 @@ return {
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview-panel]" } },
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview-panel]" } },
+            { "n", "i", actions.listing_style, { desc = "Git: toggle between 'list' and 'tree' views [diffview-panel]" }, },
           },
           --stylua: ignore
           file_history_panel = {
@@ -969,9 +971,6 @@ return {
             { "n", "g?", actions.help "file_history_panel", { desc = "Git: open the help panel [diffview-history]" } },
             { "n", "g!", actions.options, { desc = "Git: open the option panel [diffview-history]" } },
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview-history]" } },
-
-            { "n", "<Leader>ul", actions.listing_style, { desc = "Git: toggle between 'list' and 'tree' views [diffview-panel]" }, },
-            { "n", "<Leader>uL", actions.toggle_flatten_dirs, { desc = "Git: flatten empty subdirectories in tree listing style [diffview-panel]" }, },
           },
         },
       }
