@@ -51,9 +51,9 @@ set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 # Display the border name for debugging purposes:
 # setw -g pane-border-format "\
 # #{?pane_active,#[fg=$RED] ,}\
-# #{?#{==:#{window_panes},1},#[fg=$BORDER_INACTIVE_STATUS_FG]\
-# #{?pane_active,#[fg=$BORDER_INACTIVE_STATUS_FG],} #{pane_index}.#{pane_id},\
-# #[fg=$BORDER_INACTIVE_STATUS_FG]#{?pane_active,#[fg=$BORDER_ACTIVE],} #{pane_index}.#{pane_id}} \
+# #{?#{==:#{window_panes},1},#[fg=$STATUSLINE_FG]\
+# #{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id},\
+# #[fg=$STATUSLINE_FG]#{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id}} \
 # #{?pane_active,#{pane_current_command} ,}"
 
 # Border display name disabled
@@ -91,13 +91,14 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 
 # '' '' '' '' '' '' 
 
-set -g status-left-length 20
-set -g status-left "#[bg=$SESSION_BG,fg=$SESSION_FG,bold] ❐ #S \
+set -g status-left-length 100
+set -g status-left "#{?#{>=:#{window_width},80},#[bg=$SESSION_BG]#[fg=$SESSION_FG] ❐ #S, \
+                                         ❐ #S }\
 #{?#{==:#I,1},\
 #{?#{==:#{pane_mode},copy-mode},\
-#[fg=$SESSION_BG]#[bg=$RED],\
-#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG]},\
-#[fg=$SESSION_BG]#[bg=$TMUX_BG]\
+#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$RED],#[fg=$TMUX_BG]#[bg=$RED]},\
+#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]}},\
+#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
 }"
 
 set-option -g window-status-current-format "\

@@ -297,7 +297,12 @@ function M.go_prev_or_next_buffer(is_next)
     cmd_msg = "bprev"
   end
 
-  vim.cmd(cmd_msg)
+  local is_buf_winfixbuf = vim.api.nvim_get_option_value("winfixbuf", { scope = "local" })
+  if not is_buf_winfixbuf then
+    vim.cmd(cmd_msg)
+  else
+    RUtils.warn("Cannot use " .. cmd_msg .. ", `winfixbuf` is enabled")
+  end
 end
 
 ---@param winid number

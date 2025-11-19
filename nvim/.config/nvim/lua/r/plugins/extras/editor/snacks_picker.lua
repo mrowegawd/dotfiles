@@ -17,6 +17,18 @@ if not RUtils.pick.register(picker) then
   return {}
 end
 
+local qfbookmark
+
+local get_qfbookmark = function()
+  if not qfbookmark then
+    local ok, qfbook = pcall(require, "qfbookmark.qf")
+    if ok then
+      qfbookmark = qfbook
+    end
+  end
+  return qfbookmark
+end
+
 return {
   {
     "folke/snacks.nvim",
@@ -276,13 +288,10 @@ return {
             return
           end
 
-          local okqf, _ = pcall(require, "qfbookmark")
-          if okqf then
-            local qf = require "qfbookmark.qf"
-            if qf.status_mark() then
-              qf.next_mark()
-              return
-            end
+          local qfbook = get_qfbookmark()
+          if qfbook and qfbook.status_mark() then
+            qfbook.next_mark()
+            return
           end
 
           Snacks.scope.jump { bottom = true }
@@ -305,13 +314,10 @@ return {
             return
           end
 
-          local okqf, _ = pcall(require, "qfbookmark")
-          if okqf then
-            local qf = require "qfbookmark.qf"
-            if qf.status_mark() then
-              qf.prev_mark()
-              return
-            end
+          local qfbook = get_qfbookmark()
+          if qfbook and qfbook.status_mark() then
+            qfbook.prev_mark()
+            return
           end
 
           Snacks.scope.jump { bottom = false }

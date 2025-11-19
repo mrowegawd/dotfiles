@@ -144,7 +144,7 @@ local overseer_tasks_for_status = function(status, colors)
   }
 end
 
-local rmux_pane
+local rmux_pane, navic_mod, qfbookmark, pinnedbuffer, session_buf
 
 ---@return {run_with: string, task: integer, watch: string}
 local get_rmux = function()
@@ -153,9 +153,6 @@ local get_rmux = function()
   end
   return rmux_pane
 end
-
-local navic_mod
-
 local get_navic = function()
   if not navic_mod then
     local ok, navic = pcall(require, "nvim-navic")
@@ -165,6 +162,34 @@ local get_navic = function()
   end
   return navic_mod
 end
+local get_pinnedBuf = function()
+  if not pinnedbuffer then
+    local ok, pinned = pcall(require, "stickybuf")
+    if ok then
+      pinnedbuffer = pinned
+    end
+  end
+  return pinnedbuffer
+end
+local get_qfbookmark = function()
+  if not qfbookmark then
+    local ok, qfbook = pcall(require, "qfbookmark.qf")
+    if ok then
+      qfbookmark = qfbook
+    end
+  end
+  return qfbookmark
+end
+local get_session = function()
+  if not session_buf then
+    local ok, session = pcall(require, "resession")
+    if ok then
+      session_buf = session
+    end
+  end
+  return session_buf
+end
+
 local __colors = function()
   local H = require "r.settings.highlights"
 
@@ -750,7 +775,7 @@ M.QuickfixStatus = {
       )
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block, bold = true },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
@@ -770,7 +795,7 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block, bold = true },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
@@ -1056,77 +1081,45 @@ M.LazyStatus = {
 }
 M.Sessions = {
   condition = function()
-    return set_conditions.hide_in_col_width(120)
-  end,
-  init = function(self)
-    local sess_status
-
-    if RUtils.has "persistence.nvim" then
-      local ok, ses_persistent = pcall(require, "persistence")
-      if ok then
-        local get_current_ses = ses_persistent.current()
-        local sess = vim.fn.filereadable(get_current_ses) == 1
-        if sess ~= nil then
-          sess_status = "On"
-        end
-      end
-    elseif RUtils.has "resession.nvim" then
-      local ok, res_resession = pcall(require, "resession")
-      if ok then
-        local get_current_ses = res_resession.get_current()
-        if get_current_ses ~= nil then
-          sess_status = get_current_ses
-        end
-      end
-    elseif RUtils.has "auto-session" then
-      local ok, _ = pcall(require, "auto-session")
-      if ok then
-        local get_current_ses = require("auto-session.lib").current_session_name(true)
-        if #get_current_ses > 0 then
-          sess_status = get_current_ses
-        end
-      end
+    local ses = get_session()
+    if ses and ses.get_current() then
+      return true
     end
-
-    self.ses_status = sess_status
+    return false
   end,
   {
-    provider = function(self)
-      local ses_status = self.ses_status
-      if self.ses_status == nil then
-        return
-      end
-
+    provider = function()
+      local ses_status = get_session().get_current()
       return RUtils.config.icons.misc.session .. ses_status .. "  "
     end,
   },
 }
 M.PinnedBuffer = {
+  condition = function()
+    local pinned = get_pinnedBuf()
+    if pinned and pinned.is_pinned() then
+      return true
+    end
+    return false
+  end,
   {
     provider = function()
-      if RUtils.has "stickybuf.nvim" then
-        local is_pinned = require("stickybuf").is_pinned()
-        if is_pinned then
-          return RUtils.config.icons.misc.dashboard .. "  "
-        end
-      end
+      return RUtils.config.icons.misc.dashboard .. "  "
     end,
     hl = { fg = colors.diagnostic_err },
   },
 }
-M.Marks = {
+M.QFbookmark = {
   condition = function()
-    return set_conditions.hide_in_col_width(120)
+    local qfbook = get_qfbookmark()
+    if qfbook and qfbook.status_mark() then
+      return true
+    end
+    return false
   end,
   {
     provider = function()
-      local ok, _ = pcall(require, "qfsilet")
-      if ok then
-        local cur_mark = require("qfsilet.marks").get_current_status_buf()
-        if cur_mark > 0 then
-          return RUtils.config.icons.misc.marks .. "  "
-        end
-      end
+      return RUtils.config.icons.misc.flags .. "  "
     end,
     hl = { fg = colors.diagnostic_err },
   },
@@ -1156,7 +1149,7 @@ M.Tasks = {
     return package.loaded.overseer and set_conditions.hide_in_col_width(120)
   end,
   init = function(self)
-    local tasks = require("overseer.task_list").list_tasks { unique = true }
+    local tasks = require("overseer").list_tasks { unique = true }
     local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
     self.tasks = tasks_by_status
   end,
@@ -1264,7 +1257,7 @@ M.Filetype = {
     self.watch = status.watch or ""
 
     local overseer = require "overseer"
-    local tasks = overseer.task_list.list_tasks { unique = true }
+    local tasks = overseer.list_tasks { unique = true }
     self.tasks_overseer = require("overseer.util").tbl_group_by(tasks, "status")
 
     self.filetype = get_vars.filetype()
@@ -1488,8 +1481,8 @@ M.status_active_left = {
   -- M.SnacksProfile,
   -- M.SearchCount, -- this func make nvim slow!
   M.PinnedBuffer,
-  M.Marks,
   M.Sessions,
+  M.QFbookmark,
   M.BufferCwd,
   M.Tasks,
   M.RmuxTargetPane,

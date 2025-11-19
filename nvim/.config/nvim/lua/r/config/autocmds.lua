@@ -21,7 +21,7 @@ RUtils.map.augroup("LSPUserBehaviour", {
   event = "LspAttach", -- remove copilot client (and document_color), so fuck it!
   command = function(event)
     local client = vim.lsp.get_client_by_id(event.data.client_id)
-    if client and client.name == "copilot" then
+    if client and vim.tbl_contains({ "copilot", "obsidian-ls" }, client.name) then
       -- vim.notify("Copilot has been detached", vim.log.levels.WARN)
       client:stop()
     end

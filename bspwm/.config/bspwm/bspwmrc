@@ -126,6 +126,8 @@ run_once xsettingsd
 setxkbmap -option caps:backspace # switch capslock to backspace
 # export _JAVA_AWT_WM_NONREPARENTING=1
 
+~/.config/miscxrdb/bin/fix-broken-monitor &
+
 # Launch picom // If you have old hardware or encounter problems
 # uncomment the picom "--legacy-backends" line and comment the current one.
 # pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }

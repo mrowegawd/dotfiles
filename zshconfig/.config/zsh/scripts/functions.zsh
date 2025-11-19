@@ -376,8 +376,12 @@ run-mark() {
     fi
   fi
 
+  # ensure accept-line is called when ZLE is active
+  # if [[ -n "$ZLE" ]]; then
   zle accept-line
+  # fi
 }
+
 zle -N run-mark
 bindkey '^o' run-mark
 
@@ -481,41 +485,41 @@ show_alias() {
       return
     fi
 
+  # USE fzf-tab-completions.zsh
   # for nvim, vim
-  elif [[ $myargs[-1] == "v" ]]; then
-    local select="**"
-    if [[ -n $select ]]; then
-      LBUFFER="${LBUFFER}$select"
-      zle reset-prompt
-      return
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
-    fi
-
-  elif [[ $myargs[-1] == "nvim" ]]; then
-    local select="**"
-    if [[ -n $select ]]; then
-      LBUFFER="${LBUFFER}$select"
-      zle reset-prompt
-      return
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
-    fi
-  elif [[ $myargs[-1] == "vim" ]]; then
-    local select="**"
-    if [[ -n $select ]]; then
-      LBUFFER="${LBUFFER}$select"
-      zle reset-prompt
-      return
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
-    fi
+  # elif [[ $myargs[-1] == "v" ]]; then
+  #   local select="**"
+  #   if [[ -n $select ]]; then
+  #     LBUFFER="${LBUFFER}$select"
+  #     zle reset-prompt
+  #     return
+  #   else
+  #     LBUFFER="${LBUFFER}"
+  #     zle reset-prompt
+  #     return
+  #   fi
+  # elif [[ $myargs[-1] == "nvim" ]]; then
+  #   local select="**"
+  #   if [[ -n $select ]]; then
+  #     LBUFFER="${LBUFFER}$select"
+  #     zle reset-prompt
+  #     return
+  #   else
+  #     LBUFFER="${LBUFFER}"
+  #     zle reset-prompt
+  #     return
+  #   fi
+  # elif [[ $myargs[-1] == "vim" ]]; then
+  #   local select="**"
+  #   if [[ -n $select ]]; then
+  #     LBUFFER="${LBUFFER}$select"
+  #     zle reset-prompt
+  #     return
+  #   else
+  #     LBUFFER="${LBUFFER}"
+  #     zle reset-prompt
+  #     return
+  #   fi
 
   elif echo "${myargs[-1]}" | grep -q "^doc_con_[a-zA-Z0-9_]\+\S" ; then
     #
@@ -558,6 +562,7 @@ show_alias() {
     )
 
     if [[ -n $alias_selected ]]; then
+      local select
       select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
       if [[ -n $select ]]; then
         LBUFFER="${LBUFFER}$select "

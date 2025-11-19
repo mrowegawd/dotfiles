@@ -313,7 +313,9 @@ return {
       -- setup keymaps
       for server, server_opts in pairs(opts.servers) do
         if type(server_opts) == "table" and server_opts.keys then
-          require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
+          if server ~= "obsidian-ls" then
+            require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
+          end
         end
       end
 
