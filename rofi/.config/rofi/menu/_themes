@@ -6,7 +6,7 @@ DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
 MISCXRDB_PATH="$HOME/.config/miscxrdb"
 
 NEW_FONTS="JetBrains Mono"
-NEW_FONTS_SIZE=16
+NEW_FONTS_SIZE=12
 
 GET_FG=$(xrdb -query | grep -i foreground | cut -d':' -f2 | xargs)
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)

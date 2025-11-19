@@ -277,6 +277,7 @@ local function open_mpv_sxiv_or_git(line_str)
       ["Fugitive - Explore this log commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Fugitive - Drop this commit and compare"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Git - Checkout this commit"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Git - Cherry pick this commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Git - Collect files and send to QF"] = { prefix_cmd = { "DiffviewOpen" } },
     }
   end
@@ -836,7 +837,7 @@ function M.change_colors()
   -- if vim.g.colorscheme == "zenburn" then
   --   __border_tmux_inactive_fg = 0.05
   -- end
-  local border_active = H.tint(H.get("Keyword", "fg"), -0.35)
+  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.15)
   local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
