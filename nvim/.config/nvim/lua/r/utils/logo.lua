@@ -174,7 +174,7 @@ local logos = {
   },
 }
 
-local images = { "batman-mad.png", "batman-face.png", "women-horn2.png", "joker1.png", "batman-side.png" }
+local images = { "joker1.jpg", "joker-white-face.jpg", "batman-face.png" }
 
 ---@param is_img boolean
 ---@param number? integer

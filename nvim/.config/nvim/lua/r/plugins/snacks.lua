@@ -18,22 +18,19 @@ local function set_img_dashboard()
 
   local height = align == "center" and 20 or 25
 
-  -- RUtils.info(align)
-  -- RUtils.info(height)
-
   if is_image then
     return {
       pane = 1,
       section = "terminal",
       height = height, -- 29
-      -- height = 20, -- 29
       cmd = [[img2art ]]
-        .. nvim_dashboard_path
+        .. nvim_dashboard_path -- use image with size 500x500
         .. "/"
         .. fn_img
         .. " "
-        .. [[--threshold 80 --scale 0.20 --with-color --alpha --with-color]],
-      align = align,
+        .. [[--threshold 80 --scale 0.20 --with-color --alpha]],
+      -- align = align,
+      align = "center",
       -- padding = 8,
     }
   end
@@ -43,31 +40,32 @@ local function set_img_dashboard()
     header = fn_img,
     height = 100,
     padding = 10,
+    indent = 30,
     align = align,
   }
 end
 
-local function section_footer()
-  local _indent = function()
-    local win_width = vim.fn.winwidth(0)
-    -- RUtils.info(win_width)
-    if win_width >= 160 then
-      return 60
-    elseif win_width <= 140 then
-      return 20
-    end
-    return 0
-  end
-
-  local indent = _indent()
-  -- RUtils.info(indent)
-
-  return {
-    section = "startup",
-    -- align = "center",
-    indent = indent,
-  }
-end
+-- local function section_footer()
+--   -- local _indent = function()
+--   --   local win_width = vim.fn.winwidth(0)
+--   --   -- RUtils.info(win_width)
+--   --   if win_width >= 160 then
+--   --     return 60
+--   --   elseif win_width <= 140 then
+--   --     return 20
+--   --   end
+--   --   return 0
+--   -- end
+--   --
+--   -- local indent = _indent()
+--   -- RUtils.info(indent)
+--
+--   return {
+--     section = "startup",
+--     align = "left",
+--     -- indent = indent,
+--   }
+-- end
 
 return {
   -- SNACKS
@@ -275,12 +273,10 @@ return {
             end,
             {
               pane = 1,
-              padding = 1,
-              set_img_dashboard(),
-            },
-            {
-              pane = 2,
-              align = "center",
+              align = "right",
+              {
+                set_img_dashboard(),
+              },
               {
                 title = "",
                 padding = (vim.fn.isdirectory ".git" ~= 1 and (vim.fn.winwidth(0) > 150)) and 5 or 1,
@@ -312,18 +308,13 @@ return {
                   indent = 1,
                 },
               },
-            },
-
-            {
-              pane = 3,
-              enabled = (vim.fn.winwidth(0) > 150),
               {
 
+                enabled = (vim.fn.winwidth(0) > 130),
                 {
-                  title = "",
-                  padding = 1,
+                  section = "startup",
+                  align = "left",
                 },
-                section_footer(),
               },
             },
           },
