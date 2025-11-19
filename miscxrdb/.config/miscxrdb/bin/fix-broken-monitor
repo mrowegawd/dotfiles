@@ -1,0 +1,25 @@
+#!/bin/bash
+# Script untuk menggeser tampilan monitor agar bagian bawah normal terlihat
+
+OUTPUT="HDMI-1"
+PERCENT_TOP_DAMAGED=0.31 # 31%
+
+# Ambil resolusi
+RESOLUTION=$(xrandr | grep "^$OUTPUT connected" | awk '{print $3}' | cut -d'+' -f1)
+WIDTH=$(echo $RESOLUTION | cut -dx -f1)
+HEIGHT=$(echo $RESOLUTION | cut -dx -f2)
+
+# Hitung transformasi
+SCALE_Y=$(echo "1 / (0.99 - $PERCENT_TOP_DAMAGED)" | bc -l)
+OFFSET_Y=$(echo "-($HEIGHT * $PERCENT_TOP_DAMAGED / (1 - $PERCENT_TOP_DAMAGED))" | bc -l)
+
+# echo $OFFSET_Y
+# echo $SCALE_Y
+
+# xrandr --output $OUTPUT --transform 1,0,0,0,$SCALE_Y,$OFFSET_Y,0,0,1
+# xrandr --output $OUTPUT --transform 1,0,0,0,$SCALE_Y,$OFFSET_Y,0,0,1
+xrandr --output $OUTPUT --transform 1,0,0,0,$SCALE_Y,$OFFSET_Y,0,0,1
+# xrandr --output $OUTPUT --transform 1,0,0,0,1,$OFFSET_Y,0,0,1
+
+# Untuk kembali normal
+# xrandr --output HDMI-1 --transform none

@@ -1,7 +1,7 @@
 # Nightingale‑inspired theme for Ghostty
 
-background =1f1e1c
-foreground =d9d7c5
+background =202020
+foreground =ffffff
 cursor-color =d9d7c5
 selection-background =595652
 selection-foreground =d9d7c5

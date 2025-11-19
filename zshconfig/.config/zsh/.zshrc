@@ -61,8 +61,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#434343"
-colorsuggest="fg=#5e5e5e"
+colorline="#373737"
+colorsuggest="fg=#535353"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -161,12 +161,24 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
 
   # Guide for adding size popup window (only works inside tmux):
   # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#ftb-tmux-popup
-  # if [[ $TMUX ]]; then
-  # 	zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-  #   zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
-  #   zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
-  #   zstyle ':fzf-tab:*' popup-fit-preview yes
-  # fi
+  if [[ $TMUX ]]; then
+    zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+    # zstyle ':fzf-tab:*' fzf-flags --color=border:1,fg+:2
+    zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
+    zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
+    zstyle ':fzf-tab:*' popup-fit-preview yes
+  fi
+
+  # zstyle ':completion:*:*:nvim:*' fzf-preview 'bat --style=numbers --color=always --line-range :500 {}'
+  # zstyle ':completion:*:*:nvim:*' fzf-flags --preview-window "right:nohidden:50%" --border
+
+  # zstyle ':completion:*:*:v:*' fzf-preview 'bat --style=numbers --color=always --line-range :500 {}'
+  # zstyle ':completion:*:*:v:*' fzf-flags --preview-window "right:nohidden:50%" --border
+
+  # zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'bat --style=numbers --color=always "{}"'
+  # zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'bat --style=numbers --color=always --line-range :500 "{}"'
+  # zstyle ':fzf-tab:complete:v:*' fzf-preview 'bat --style=numbers --color=always --line-range :500 "{}"'
+  # zstyle ':fzf-tab:complete:nvim:*' fzf-flags --preview-window "right:nohidden:50%" --border
 
   # ─< KEYBINDING >───────────────────────────────────────────────────────
   # Guide for adding continuous-trigger

@@ -285,35 +285,47 @@ __extract_id_from_json() {
   local field_name="$3"
   local json_file="$PATH_PANE_COLLECT_JSON"
 
-  jq -r --arg session_name "$session_name" --arg window_name "$window_name" \
-    --arg field_name "$field_name" '.[$session_name].[$window_name].[$field_name]' "$json_file"
+  # Trim whitespaces
+  session_name=$(printf "%s" "$session_name")
+  window_name=$(printf "%s" "$window_name")
+  field_name=$(printf "%s" "$field_name")
+
+  if [[ ! -f "$json_file" ]]; then
+    echo "ERROR: JSON file not found: $json_file" >&2
+    return 1
+  fi
+
+  # dunstify "DEBUG QUERY: session='$session_name' window='$window_name' field='$field_name'" >&2
+
+  jq -r \
+    --arg session_name "$session_name" \
+    --arg window_name "$window_name" \
+    --arg field_name "$field_name" \
+    '.[$session_name][$window_name][$field_name] // empty' \
+    "$json_file"
 }
 
 __get_main_pane_id() {
   local session_name="$1"
   local window_name="$2"
-  local json_file="$PATH_PANE_COLLECT_JSON"
 
   __extract_id_from_json "$session_name" "$window_name" "main_pane_id"
 }
 __get_file_manager_pane_id() {
   local session_name="$1"
   local window_name="$2"
-  local json_file="$PATH_PANE_COLLECT_JSON"
 
   __extract_id_from_json "$session_name" "$window_name" "file_manager_pane_id"
 }
 __get_toggle_term_id() {
   local session_name="$1"
   local window_name="$2"
-  local json_file="$PATH_PANE_COLLECT_JSON"
 
   __extract_id_from_json "$session_name" "$window_name" "toggle_term_pane_id"
 }
 __get_clock_pane_id() {
   local session_name="$1"
   local window_name="$2"
-  local json_file="$PATH_PANE_COLLECT_JSON"
 
   __extract_id_from_json "$session_name" "$window_name" "clock_pane_id"
 }
@@ -340,6 +352,17 @@ open_split() {
     tmux split-window -v -l 20 -c '#{pane_current_path}'
   else
     tmux split-window -v -l 20 -c '#{pane_current_path}'
+  fi
+}
+
+auto_resize_pane() {
+  local current_session window_id
+  current_session=$(tmux display-message -p '#S')
+  window_id=$(tmux display-message -p '#I')
+
+  FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$current_session" "$window_id")
+  if __is_pane_id_exists "$FILE_MANAGER_PANE_ID"; then
+    tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x $FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
   fi
 }
 
@@ -372,14 +395,10 @@ update_global_pane_ids() {
   MAIN_PANE_ID=$(__get_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
 
   #  Check and update main pane id
-  if ! __is_pane_id_exists "$MAIN_PANE_ID" || [[ $MAIN_PANE_ID == "" ]]; then
+  if ! __is_pane_id_exists "$MAIN_PANE_ID"; then
     dunstify -i view-refresh "🔄 Main Pane Updated" "A new main pane (ID) has been successfully updated!"
-
     MAIN_PANE_ID=$current_pane
     __update_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID" "$MAIN_PANE_ID"
-
-    cwd=$(pwd)
-    __update_session_obj "$CURRENT_SESSION" "$MAIN_PANE_ID" "$WINDOW_ID" "$cwd"
   fi
 
   #  Check and update session name
@@ -394,7 +413,6 @@ update_global_pane_ids() {
     __update_window_obj "$CURRENT_SESSION" "$MAIN_PANE_ID" "$WINDOW_ID" "$cwd"
   fi
 
-  MAIN_PANE_ID=$(__get_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
 }
 
 setup_layout_workspace() {
