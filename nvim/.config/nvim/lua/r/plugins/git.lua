@@ -77,7 +77,8 @@ return {
   },
   -- GITLINKER
   {
-    "ruifm/gitlinker.nvim", -- generate shareable file permalinks
+    "linrongbin16/gitlinker.nvim", -- generate shareable file permalinks
+    cmd = "GitLink",
     keys = {
       {
         "<Leader>gob",

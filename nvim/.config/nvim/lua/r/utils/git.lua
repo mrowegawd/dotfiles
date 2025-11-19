@@ -282,14 +282,14 @@ function M.trace_file_event()
     fzf_contents,
     RUtils.fzflua.open_dock_bottom {
       winopts = { title = RUtils.fzflua.format_title("Track Commit for Renamed or Deleted File", "") },
-      fzf_opts = { ["--header"] = [[^y:copyhash  ^o:diffviewopen  ^z:fugitive]] },
+      fzf_opts = { ["--header"] = [[a-c:copyhash  ^o:diffviewopen  ^z:fugitive]] },
       actions = {
         ["default"] = open_deleted_files("edit", deleted_files),
         ["ctrl-s"] = open_deleted_files("split", deleted_files),
         ["ctrl-v"] = open_deleted_files("vsplit", deleted_files),
         ["ctrl-t"] = open_deleted_files("tabnew", deleted_files),
 
-        ["ctrl-y"] = copy_hash(deleted_files),
+        ["alt-c"] = copy_hash(deleted_files),
 
         ["ctrl-o"] = default_select_deleted(deleted_files),
         ["ctrl-z"] = default_select_deleted(deleted_files, true),
@@ -305,10 +305,10 @@ function M.select_file_different_branch()
     RUtils.fzflua.open_dock_bottom {
       prompt = RUtils.fzflua.padding_prompt(),
       winopts = { title = RUtils.fzflua.format_title "Select Branch" },
-      fzf_opts = { ["--header"] = [[^y:copybranch  ^o:open_file_from_branch]] },
+      fzf_opts = { ["--header"] = [[a-c:copybranch  ^o:open_file_from_branch]] },
       actions = {
         ["default"] = default_select_file_branch(),
-        ["ctrl-y"] = copy_branch(),
+        ["alt-c"] = copy_branch(),
         ["ctrl-o"] = open_file_under_specific_branch "vsplit",
       },
     }

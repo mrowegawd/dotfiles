@@ -247,7 +247,7 @@ return {
       }
     end,
   },
-  -- NEOSCROLL
+  -- NEOSCROLL (disabled)
   {
     "karb94/neoscroll.nvim",
     enabled = false,

@@ -134,32 +134,32 @@ return {
     },
     keys = {
       {
-        "<Leader>ac",
+        "<Leader>ic",
         ":CodeCompanion ",
         desc = "Codecompanion: run :CodeCompanion command in normal or visual mode",
         mode = { "n", "x" },
       },
       {
-        "<Leader>aa",
+        "<Leader>ii",
         function()
           focus_or_toggle_chat()
         end,
         desc = "Codecompanion: toggle open",
       },
       {
-        "<Leader>aC",
+        "<Leader>iC",
         "<CMD>CodeCompanionActions<CR>",
         desc = "Codecompanion: select actions",
       },
       {
-        "<Leader>aF",
+        "<Leader>iF",
         function()
           local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
           return require("fzf-lua").files {
             prompt = RUtils.fzflua.padding_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
             cwd = codecompanion_cwd,
-            fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  ^y:yank  ^q:ignore  ^z:hidden]] },
+            fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  a-c:yank  ^q:ignore  ^z:hidden]] },
             actions = {
               ["ctrl-g"] = function()
                 require("fzf-lua").live_grep_glob {
@@ -199,7 +199,7 @@ return {
         desc = "Codecompanion: find and grep previous chats",
       },
       {
-        "<Leader>af",
+        "<Leader>if",
         function()
           local fzf_lua = require "fzf-lua"
           local git_ft_stuff = { "fugitive" }

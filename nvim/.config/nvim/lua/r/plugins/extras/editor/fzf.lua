@@ -327,7 +327,7 @@ return {
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^y:copypath  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
+          fzf_opts = { ["--header"] = [[^r:rgflow  a-c:copypath  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
@@ -438,7 +438,7 @@ return {
                 end,
               })
             end,
-            ["ctrl-y"] = function(selected, _)
+            ["alt-c"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
               vim.fn.setreg([[+]], pth)
@@ -488,7 +488,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
+              ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
               ["--multi"] = true,
             },
             actions = {
@@ -510,7 +510,8 @@ return {
 
               ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-              ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
+
+              ["alt-c"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
           bcommits = RUtils.fzflua.git_open_fullscreen_vertical {
@@ -522,7 +523,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  ^y:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
+              ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
               ["--multi"] = true,
             },
             actions = {
@@ -542,7 +543,8 @@ return {
 
               ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-              ["ctrl-y"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
+
+              ["alt-c"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
           branches = RUtils.fzflua.open_center_small_wide {

@@ -23,7 +23,7 @@ return {
       spec = {
         {
           mode = { "n", "x" },
-          { "<Leader>a", group = "ai" },
+          { "<Leader>a", group = "mark" },
 
           { "<Leader>q", group = "quickfix" },
 
@@ -33,10 +33,13 @@ return {
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
+          { "<Leader>i", group = "ai" },
           { "<Leader>j", group = "jumpTo" },
           { "<Leader>p", group = "peek" },
 
           { "<Leader>l", group = "LSP" },
+          { "<Leader>lu", group = "toggle" },
+          { "<Leader>lc", group = "hierarchy" },
 
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },

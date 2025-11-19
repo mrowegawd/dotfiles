@@ -319,6 +319,7 @@ return {
           ["<c-n>"] = "next",
           ["<c-p>"] = "prev",
           ["<TAB>"] = "fold_toggle",
+          zc = "fold_close_all",
         },
       }
     end,

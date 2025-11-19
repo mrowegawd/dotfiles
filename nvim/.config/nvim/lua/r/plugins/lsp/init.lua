@@ -233,7 +233,7 @@ return {
               { "dn", RUtils.map.lsp.diagnostic_goto(1), desc = "Diagnostic: next item" },
               { "dp", RUtils.map.lsp.diagnostic_goto(-1), desc = "Diagnostic: prev item" },
               {
-                "<Leader>ltv",
+                "<Leader>luv",
                 function()
                   local new_value = not vim.diagnostic.config().virtual_lines
                   ---@diagnostic disable-next-line: undefined-field

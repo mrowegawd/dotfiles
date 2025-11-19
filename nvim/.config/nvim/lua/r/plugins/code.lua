@@ -87,7 +87,6 @@ return {
   {
     -- how to use it: `ysiw`, `yc<brackets>`, `yd<brackets>`
     "kylechui/nvim-surround",
-    event = "VeryLazy",
     version = "*",
     keys = {
       { "ys", mode = "n", desc = "Surround: motion [nvim-surround]" },
@@ -246,27 +245,30 @@ return {
         },
       },
       task_list = {
-        default_detail = 1,
         direction = "bottom",
         min_height = 10,
         max_height = 15,
-        bindings = {
-          ["<PageUp>"] = "ScrollOutputUp",
-          ["<PageDown>"] = "ScrollOutputDown",
+        keymaps = {
+          ["<PageUp>"] = "keymap.scroll_output_up",
+          ["<PageDown>"] = "keymap.scroll_output_down",
 
-          ["<c-u>"] = "ScrollOutputUp",
-          ["<c-d>"] = "ScrollOutputDown",
+          ["<c-u>"] = "keymap.scroll_output_up",
+          ["<c-d>"] = "keymap.scroll_output_down",
 
-          ["P"] = "TogglePreview",
-          ["<A-p>"] = "PrevTask",
-          ["<A-n>"] = "NextTask",
-          ["dd"] = "Dispose",
+          ["P"] = "keymap.toggle_preview",
+          ["<A-p>"] = "keymap.prev_task",
+          ["<A-n>"] = "keymap.next_task",
+
+          ["<C-k>"] = false,
+          ["<C-j>"] = false,
+
+          ["<C-p>"] = "keymap.prev_task",
+          ["<C-n>"] = "keymap.next_task",
+
+          ["dd"] = { "keymap.run_action", opts = { action = "dispose" }, desc = "Task: dispose task [overseer]" },
 
           ["<C-h>"] = false, -- disabled because conflict with move_cursor window
           ["<C-l>"] = false,
-
-          ["<C-p>"] = "PrevTask",
-          ["<C-n>"] = "NextTask",
 
           ["q"] = function()
             vim.cmd "OverseerClose"
@@ -336,11 +338,11 @@ return {
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
-  -- RUNMUX
+  -- RUNMUX (disabled) ! new break changes
   {
-    "mrowegawd/rmux",
+    --"mrowegawd/rmux",
     -- enabled = false,
-    -- dir = "~/.local/src/nvim_plugins/rmux",
+    dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
@@ -362,22 +364,9 @@ return {
       { "r?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config [Rmux]" },
     },
     opts = {
-      base = {
-        file_rc = ".rmuxrc.json",
-        setnotif = true,
-        auto_run_tasks = true,
-        tbl_opened_panes = {},
-        rmuxpath = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
-        run_with = "auto", -- `mux, tt, wez, toggleterm`
-        quickfix = {
-          copen = RUtils.qf.copen,
-          lopen = RUtils.qf.lopen,
-        },
-      },
+      rmuxdirrc = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
+      setnotif = false,
     },
-    config = function(_, opts)
-      require("rmux").setup(opts)
-    end,
   },
   -- REFACTORING
   {

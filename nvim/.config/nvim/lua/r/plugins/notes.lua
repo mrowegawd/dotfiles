@@ -256,8 +256,8 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "t",
-            org_todo_prev = "T",
+            org_todo = "<Leader>t",
+            org_todo_prev = "<Leader>T",
             org_toggle_heading = "*",
 
             -- Navigation
