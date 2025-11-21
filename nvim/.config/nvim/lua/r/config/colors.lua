@@ -93,9 +93,6 @@ local base_colors = {
   diffdelete_fg_alter = -0.1,
   diffdelete_bg_alter = 0.18,
 
-  -- difffile_fg_alter = -0.2,
-  -- difffile_bg_alter = -0.68,
-
   diffline_fg_alter = 0.85,
   diffline_bg_alter = 0.2,
 
@@ -300,9 +297,6 @@ local update_col_colorscheme = {
     winseparator_alter = 0.08,
     winbar_fg_alter = 1.1,
 
-    difffile_fg_alter = 0.05,
-    difffile_bg_alter = -0.5,
-
     difftext_fg_alter = 0.2,
     difftext_bg_alter = 0.3,
 
@@ -335,9 +329,6 @@ local update_col_colorscheme = {
     winbar_right_block_bg_alter = 0.15,
     winseparator_alter = 0.12,
     -- winbar_fg_alter = 1.1,
-
-    difffile_bg_alter = -0.55,
-    difffile_fg_alter = -0.1,
 
     difftext_fg_alter = 0.6,
     difftext_bg_alter = 0.4,
@@ -409,6 +400,19 @@ local update_col_colorscheme = {
     statusline_fg_alter = 1.2,
     trouble_indent_fg_alter = 1.3,
     winseparator_alter = 1,
+  },
+  ["lemons"] = {
+    blink_cmp_label_kind_fg_alter = 10,
+    comment_fg_alter = 1.5,
+    floatboder_fg_alter = 3.5,
+    fold_fg = 2,
+    linenr_fg_alter = 0.25,
+    statusline_fg_alter = 4,
+    statusline_right_block_bg = 0.2,
+    statusline_right_block_fg = 2,
+    winbar_right_block_bg_alter = 0.2,
+    winbar_right_block_fg_alter = -0.2,
+    winseparator_alter = 2.5,
   },
   ["lackluster"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
@@ -502,7 +506,7 @@ local update_col_colorscheme = {
     cursorline_fg_alter = "WinSeparator",
     dapstopped_bg_alter = 0.2,
     floatboder_fg_alter = 1.2,
-    fold_fg = 0.25,
+    fold_fg = 0.22,
     fzflua_file_part_fg = 0.7,
     hovered_cursorline_bg_alter = 0.6,
     noice_cmdline_fg_alter = 0.7,
@@ -518,23 +522,24 @@ local update_col_colorscheme = {
   ["rose-pine"] = {
     blink_cmp_label_kind_fg_alter = 1.8,
     comment_fg_alter = 0.7,
-    trouble_indent_fg_alter = 1.2,
-    floatboder_fg_alter = 1,
-    fold_fg = 0.25,
+    floatboder_fg_alter = 0.8,
+    fold_fg = 0.2,
     fzflua_file_part_fg = 1.2,
     hovered_cursorline_bg_alter = 0.6,
     linenr_fg_alter = 0.1,
-    lsp_code_lens_bg_alter = 0.05,
-    lsp_code_lens_fg_alter = 0.65,
+    lsp_code_lens_bg_alter = 0.3,
+    lsp_code_lens_fg_alter = 1.2,
     nontext_fg_alter = -0.2,
     pmenu_bg_alter = 1,
     pmenu_sel_bg_alter = -0.3,
     quickfixline_linenr_fg_alter = 0.65,
     render_markdown_code_bg_alter = 0.5,
     statusline_fg_alter = 1.05,
-    winbar_right_block_bg_alter = 0.45,
+    statusline_right_block_bg = 0.3,
+    trouble_indent_fg_alter = 1.2,
+    winbar_right_block_bg_alter = 0.35,
     winbar_right_block_fg_alter = 0.12,
-    winseparator_alter = 0.7,
+    winseparator_alter = 0.4,
   },
   ["rose-pine-moon"] = {
     comment_fg_alter = 0.7,
@@ -561,6 +566,7 @@ local update_col_colorscheme = {
     fold_fg = 0.2,
     fzflua_file_part_fg = 0.6,
     linenr_fg_alter = 0.05,
+    lsp_code_lens_fg_alter = 1.2,
     noice_cmdline_fg_alter = 0.8,
     normal_keyword_alter = 0.1,
     pmenu_bg_alter = 0.9,
@@ -572,21 +578,22 @@ local update_col_colorscheme = {
     trouble_indent_fg_alter = 0.9,
     winbar_right_block_bg_alter = 0.25,
     winbar_right_block_fg_alter = -0.2,
-    winseparator_alter = 0.7,
+    winseparator_alter = 0.4,
   },
   ["tokyonight-storm"] = {
     blink_ghost_text_fg_alter = -0.55,
     comment_fg_alter = 0.6,
     floatboder_fg_alter = 0.4,
     fzflua_file_part_fg = 0.6,
-    lsp_code_lens_bg_alter = 0.02,
-    lsp_code_lens_fg_alter = 0.6,
+    lsp_code_lens_bg_alter = 0.1,
+    lsp_code_lens_fg_alter = 0.8,
     pmenu_bg_alter = 0.4,
     quickfixline_linenr_fg_alter = 0.2,
     render_markdown_code_bg_alter = 0.23,
-    statusline_fg_alter = 0.75,
+    statusline_fg_alter = 0.85,
+    statusline_right_block_bg = 0.15,
     trouble_indent_fg_alter = 0.35,
-    winbar_right_block_bg_alter = 0.2,
+    winbar_right_block_bg_alter = 0.15,
     winbar_right_block_fg_alter = -0.2,
   },
   ["vscode_modern"] = {
@@ -598,7 +605,7 @@ local update_col_colorscheme = {
     dapstopped_bg_alter = 0.2,
     fold_bg = 0,
     hovered_cursorline_bg_alter = 0.35,
-    linenr_fg_alter = -0.02,
+    linenr_fg_alter = 0.02,
     lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
     lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
     lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
@@ -610,30 +617,34 @@ local update_col_colorscheme = {
     snacks_indent_scope_fg_alter = 0.15,
     statusline_fg_alter = 0.85,
     trouble_indent_fg_alter = 0.65,
-    winbar_right_block_bg_alter = 0.35,
-    winseparator_alter = 0.5,
+    winbar_right_block_bg_alter = 0.2,
+    winseparator_alter = 0.3,
 
-    lsp_code_lens_fg_alter = 0.9,
+    lsp_code_lens_fg_alter = 1.1,
     lsp_code_lens_bg_alter = 0.15,
   },
   ["xenos"] = {
+    blink_cmp_label_kind_fg_alter = 2,
     comment_fg_alter = 0.75,
     floatboder_fg_alter = 0.7,
     fold_fg = 0.35,
     fzflua_file_part_fg = 0.5,
-    linenr_fg_alter = -0.02,
-    lsp_code_lens_bg_alter = 0.05,
-    lsp_code_lens_fg_alter = 0.7,
+    linenr_fg_alter = 0.05,
+    lsp_code_lens_bg_alter = 0.2,
+    lsp_code_lens_fg_alter = 1,
     pmenu_fg_alter = -0.05,
     pmenu_sel_bg_alter = -0.63,
     quickfixline_linenr_fg_alter = 0.15,
     render_markdown_code_bg_alter = 0.45,
-    statusline_fg_alter = 0.9,
+    statusline_fg_alter = 0.8,
+    statusline_right_block_bg = 0.1,
+    statusline_right_block_fg = 1.5,
     trouble_indent_fg_alter = 0.6,
     visual_bg_alter = -0.32,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = -0.22,
-    winseparator_alter = 0.57,
+    winbar_fg_alter = 0.15,
+    winbar_right_block_bg_alter = 0.1,
+    winbar_right_block_fg_alter = -0.3,
+    winseparator_alter = 0.4,
   },
   ["y9nika"] = {
     comment_fg_alter = 0.85,
@@ -648,14 +659,14 @@ local update_col_colorscheme = {
     winseparator_alter = 1.1,
   },
   ["zenburn"] = {
-    comment_fg_alter = 0.4,
+    comment_fg_alter = 0.5,
     floatboder_fg_alter = 0.13,
     fold_fg = 0.15,
     fzflua_file_part_fg = 0.7,
     hovered_cursorline_bg_alter = 0.1,
-    linenr_fg_alter = 0.02,
-    lsp_code_lens_bg_alter = -0.03,
-    lsp_code_lens_fg_alter = 0.2,
+    linenr_fg_alter = 0.15,
+    lsp_code_lens_bg_alter = 0.1,
+    lsp_code_lens_fg_alter = 0.55,
     noice_cmdline_fg_alter = 0.65,
     pmenu_bg_alter = 0.25,
     pmenu_sel_bg_alter = -0.6,
@@ -732,7 +743,11 @@ local general_overrides = function()
     {
       Visual = {
         bg = H.darken(H.get("Function", "fg"), colors.visual_bg_alter, H.get("Normal", "bg")),
-        fg = { from = "Normal", attr = "fg" },
+      },
+    },
+    {
+      Visual = {
+        fg = { from = "Visual", attr = "bg", alter = 2 },
         bold = true,
       },
     },
@@ -894,14 +909,6 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIFF COLOR                        ║
     -- ╚═════════════════════════════════════════════════════════╝
-    -- {
-    --   diffFile = {
-    --     fg = { from = "Directory", attr = "fg", alter = colors.difffile_fg_alter },
-    --     bg = { from = "Directory", attr = "fg", alter = colors.difffile_bg_alter },
-    --     bold = true,
-    --   },
-    -- },
-
     {
       diffLine = {
         fg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), colors.diffline_fg_alter),
@@ -1994,14 +2001,15 @@ local general_overrides = function()
     },
     {
       GrugFarResultsLineNr = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+        fg = { from = "LineNr", attr = "fg", alter = 1 },
         bg = { from = "LineNr", attr = "fg", alter = 0.1 },
       },
     },
     {
       GrugFarResultsMatch = {
-        fg = { from = "CurSearch", attr = "bg", alter = 0.3 },
-        bg = { from = "CurSearch", attr = "bg", alter = -0.65 },
+        fg = { from = "Function", attr = "fg", alter = 0.3 },
+        bg = { from = "Function", attr = "fg", alter = -0.4 },
+        -- reverse = true,
         bold = true,
       },
     },
@@ -2172,9 +2180,9 @@ local function set_panel_highlight()
       },
     },
     { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_linenr_fg_alter } } },
-    { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = -0.1 } } },
+    { qfSeparator1 = { fg = { from = "QuickFixLineNr", attr = "fg", alter = 0.1 } } },
     { qfSeparator2 = { link = "qfSeparator1" } },
-    { Delimiter = { link = "qfSeparator1" } },
+    -- { Delimiter = { link = "qfSeparator1" } },
     { qfFileName = { bg = "NONE" } },
 
     --  ──────────────────────────────[ TROUBLE ]──────────────────────────────

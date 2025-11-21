@@ -364,7 +364,7 @@ return {
   -- TINY-INLINE-DIAGNOSTIC
   {
     "rachartier/tiny-inline-diagnostic.nvim",
-    event = "VeryLazy",
+    event = "LazyFile",
     config = true,
   },
   -- TINY-CODE-ACTION

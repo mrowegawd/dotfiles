@@ -1,7 +1,7 @@
 # Ghostty config snippet — skema xenos‑inspired
 
-background = 1a1a1a
-foreground = dcdfe4
+background = 1d1d1d
+foreground = a5a5a5
 cursor-color = 7aa2f7
 selection-background = 2e3440
 selection-foreground = dcdfe4

@@ -37,6 +37,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field uisec r.utils.uisec
 ---@field windowdim r.utils.windowdim
 ---@field hover_eldoc r.utils.hover_eldoc
+---@field winui r.utils.winui
 ---@field logo r.utils.logo
 local M = {}
 M.deprecated = require "r.utils.depcreated"

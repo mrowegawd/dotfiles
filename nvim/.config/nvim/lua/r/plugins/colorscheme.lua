@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  {
+    "Kaikacy/Lemons.nvim",
+    version = "*", -- for stable release
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local lemon_themes = { "lemons" }
+      if vim.tbl_contains(lemon_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- Y9NIKA
   {
     "y9san9/y9nika.nvim", -- sangat-sangat minimal color highlight nya!

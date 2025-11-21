@@ -204,8 +204,8 @@ return {
             org_agenda_switch_to = "<TAB>", -- tidak dipakai?
 
             -- Todo Effort
-            org_agenda_todo = "t",
-            org_agenda_set_effort = "e",
+            org_agenda_todo = "<Leader>t",
+            org_agenda_set_effort = "<Leader>e",
 
             -- Clock
             org_agenda_clock_in = "ci",
@@ -313,7 +313,7 @@ return {
             -- Insert Deadline or Schedule
             org_deadline = "id",
             org_schedule = "is",
-            org_set_effort = "e",
+            org_set_effort = "<Leader>e",
             org_add_note = "in",
 
             -- Export / Babel

@@ -1,0 +1,28 @@
+
+# Ghostty config snippet — skema xenos‑inspired
+
+background = 040404
+foreground = f0f0f0
+cursor-color = f0f0f0
+selection-background = 2e3440
+selection-foreground = dcdfe4
+
+# Standard colors
+palette = 0=#040404
+palette = 1=#ed505e
+palette = 2=#2ed563
+palette = 3=#f0be42
+palette = 4=#5088ed
+palette = 5=#f45ab4
+palette = 6=#37c3b5
+palette = 7=#cacaca
+
+# Bright colors
+palette = 8=#161616
+palette = 9=#ed505e
+palette = 10=#2ed592
+palette = 11=#fa8a49
+palette = 12=#5088ed
+palette = 13=#f45ab4
+palette = 14=#6ad8ed
+palette = 15=#f0f0f0

@@ -372,6 +372,10 @@ RUtils.map.xnoremap(
 -- {{{ Misc
 -- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
 -- RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
+--
+RUtils.map.nnoremap("<Localleader>as", function()
+  RUtils.winui.open_float_preview()
+end, { desc = "Misc: test window" })
 
 RUtils.map.nnoremap("<Esc>", function()
   vim.cmd "noh"
