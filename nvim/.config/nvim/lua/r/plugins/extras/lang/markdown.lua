@@ -107,27 +107,72 @@ return {
       vim.cmd [[hi RenderMarkdownH1Bg guibg=NONE]] -- disable the background color for H1bg
       local H = require "r.settings.highlights"
       H.plugin("RenderMarkdownHi", {
-        { RenderMarkdownH1Bg = { fg = "NONE", bg = "NONE", reverse = false } },
-        { RenderMarkdownH2Bg = { fg = "NONE", bg = "NONE", reverse = false } },
-        { RenderMarkdownH3Bg = { fg = "NONE", bg = "NONE", reverse = false } },
-        { RenderMarkdownH4Bg = { fg = "NONE", bg = "NONE", reverse = false } },
-        { RenderMarkdownH5Bg = { fg = "NONE", bg = "NONE", reverse = false } },
-        { RenderMarkdownH6Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        {
+          RenderMarkdownH1Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.1.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
+        {
+          RenderMarkdownH2Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.2.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
+        {
+          RenderMarkdownH3Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.3.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
+        {
+          RenderMarkdownH4Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.4.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
+        {
+          RenderMarkdownH5Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.5.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
+        {
+          RenderMarkdownH6Bg = {
+            fg = { from = "Normal", attr = "bg" },
+            bg = { from = "@markup.heading.6.markdown", attr = "fg" },
+            reverse = false,
+            bold = true,
+          },
+        },
       })
       return {
         bullet = { icons = { "", "•", "", "-", "-" } },
         code = {
           sign = false,
-          width = "block",
+          border = "thin",
           position = "right",
-          inline_left = "",
-          inline_right = "",
-          inline_pad = 1,
-          right_pad = 1,
+          width = "block",
+          above = "▁",
+          below = "▔",
+          language_left = "█",
+          language_right = "█",
+          language_border = "▁",
           left_pad = 1,
+          right_pad = 1,
         },
-        -- render_modes = { "n", "c", "t", "i" },
-        render_modes = true,
+        render_modes = { "n", "no", "c", "t", "i", "ic" },
+        -- render_modes = true,
         anti_conceal = {
           ignore = {
             bullet = { "n" },
@@ -145,8 +190,20 @@ return {
         heading = {
           enabled = true,
           sign = true,
+          width = "block",
+          left_pad = 1,
+          right_pad = 0,
+          position = "right",
           -- icons = {},
-          icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+          -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+          icons = {
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+          },
           -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
         },
         quote = { icon = "▐" },

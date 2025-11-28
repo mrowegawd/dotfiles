@@ -178,8 +178,10 @@ RUtils.map.augroup("AutoFoldOnBufferEvents", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",
   command = function(event)
-    if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
-      vim.cmd [[normal! zMzvzz]]
+    if vim.api.nvim_buf_is_valid(event.buf) then
+      if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
+        vim.cmd [[normal! zMzvzz]]
+      end
     end
   end,
 })
@@ -188,45 +190,30 @@ RUtils.map.augroup("WindowDim", {
   event = { "BufRead" },
   pattern = { "*" },
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
-      return
-    end
     RUtils.windowdim.buf_enter()
   end,
 }, {
   event = { "BufEnter" },
   pattern = { "*" },
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
-      return
-    end
     RUtils.windowdim.buf_enter()
   end,
 }, {
   event = { "VimEnter", "FocusGained", "WinEnter" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
-      return
-    end
     RUtils.windowdim.focus_gained()
   end,
 }, {
   event = { "FocusLost" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
-      return
-    end
     RUtils.windowdim.focus_lost()
   end,
 }, {
   event = { "WinLeave" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
-      return
-    end
     RUtils.windowdim.win_leave()
   end,
 }, {

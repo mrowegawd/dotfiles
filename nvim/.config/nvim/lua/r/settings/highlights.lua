@@ -362,6 +362,35 @@ function M.set_winhl(name, win_id, hls)
   vim.api.nvim_win_set_hl_ns(win_id, namespace)
 end
 
+---@param hl_group string
+function M.get_git_fg_or_bg(hl_group)
+  local is_blend_diffchange = true
+  local blend_color = "#be5046"
+  if hl_group == "DiffChange" then
+    blend_color = "#FAB005"
+    is_blend_diffchange = true
+  end
+  if hl_group == "DiffAdd" then
+    blend_color = "#10B981"
+    is_blend_diffchange = true
+  end
+
+  local hl = vim.api.nvim_get_hl(0, { name = hl_group, link = false })
+  if hl.fg then
+    local col_fg = ("#%06x"):format(hl.fg)
+    if is_blend_diffchange then
+      return M.blend(col_fg, blend_color, 0.5)
+    end
+    return col_fg
+  end
+
+  local col_bg = ("#%06x"):format(hl.bg)
+  if is_blend_diffchange then
+    return M.blend(col_bg, blend_color, 0.7)
+  end
+  return M.tint(col_bg, 0.8)
+end
+
 -------------------------------------------------------------------------------
 -- Plugin highlights
 -------------------------------------------------------------------------------

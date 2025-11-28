@@ -870,12 +870,12 @@ function M.change_colors()
       match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
 
       -- Selection
-      selection_fg = H.get("Normal", "fg"),
+      selection_fg = H.get("FzfLuaSel", "fg"),
       selection_bg = H.get("FzfLuaSel", "bg"),
       match = H.get("FzfLuaFzfMatch", "fg"),
 
       gutter = H.get("FzfLuaNormal", "bg"),
-      pointer = H.get("diffDelete", "fg"),
+      pointer = H.get("Keyword", "fg"),
       border = H.get("FzfLuaBorder", "fg"),
       header = H.get("FzfLuaHeaderText", "fg"),
     },
@@ -900,6 +900,8 @@ function M.change_colors()
 
       message_bg = H.tint(H.darken(H.get("Function", "fg"), 0.6, H.get("Normal", "bg")), 0.7),
 
+      visual_bg = H.get("CurSearch", "bg"),
+
       border_active = border_active,
       border_inactive = border_inactive,
       border_inactive_status_fg = H.tint(border_inactive, 0.8),
@@ -917,7 +919,7 @@ function M.change_colors()
       border_inactive = border_inactive,
     },
     lazygit = {
-      active_border = tab_active_fg,
+      active_border = H.get("Keyword", "fg"),
       inactive_border = lazygit_inactive_border,
 
       selected_bg = H.get("LazygitselectedLineBgColor", "bg"),
@@ -1049,7 +1051,7 @@ function M.change_colors()
       statusline_unset_fg_alt = H.tint(H.get("Function", "fg"), -0.8),
       statusline_unset_bg_alt = H.get("Function", "fg"),
 
-      directory = H.get("FzfLuaFilePart", "fg"),
+      directory = H.get("Directory", "fg"),
 
       menu_bg = H.get("Pmenu", "bg"),
       menu_fg = H.get("Pmenu", "fg"),

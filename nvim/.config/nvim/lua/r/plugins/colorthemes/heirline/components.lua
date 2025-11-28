@@ -239,8 +239,8 @@ local __colors = function()
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
-    block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")), -0.5),
-    block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.1),
+    block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")), 0.8),
+    block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.2),
 
     winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
@@ -864,9 +864,9 @@ M.virtualenv = {
     local is_poetry_venv = venv_name:find "%.venv" ~= nil
 
     if is_poetry_venv then
-      self.venv = string.format("%s Poetry %s", python_logo, RUtils.config.icons.misc.check_big)
+      self.venv = string.format("%s UV ", python_logo)
     elseif venv_name ~= "" then
-      self.venv = string.format("%s venv: %s", python_logo, venv_name)
+      self.venv = string.format("%s venv ", python_logo)
     else
       self.venv = ""
     end
@@ -1119,7 +1119,7 @@ M.QFbookmark = {
   end,
   {
     provider = function()
-      return RUtils.config.icons.misc.flags .. "  "
+      return RUtils.config.icons.misc.flags .. " "
     end,
     hl = { fg = colors.diagnostic_err },
   },
@@ -1217,7 +1217,7 @@ M.RmuxTargetPane = {
   {
     provider = function(self)
       if self.task > 0 then
-        return "  " .. self.task
+        return "  " .. self.task
       end
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
@@ -1225,7 +1225,7 @@ M.RmuxTargetPane = {
   {
     provider = function(self)
       if #self.watch > 0 then
-        return "  " .. self.watch
+        return "  " .. self.watch
       end
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },

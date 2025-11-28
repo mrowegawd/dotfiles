@@ -51,12 +51,19 @@ return {
     event = "BufReadPre",
     opts = {},
   },
-  -- CCCPICK (disabled)
+  -- CCCPICK
   {
     "uga-rosa/ccc.nvim",
-    enabled = false,
     cmd = { "CccPick", "CccHighlighterToggle" },
-    ft = { "html", "css", "sass", "less", "javascript", "typescript", "javascriptreact", "typescriptreact", "lua" },
-    opts = {},
+    -- ft = { "html", "css", "sass", "less", "javascript", "typescript", "javascriptreact", "typescriptreact", "lua" },
+    keys = {
+      { "<Leader>uC", "<cmd>CccPick<cr>" },
+    },
+    opts = {
+      highlighter = {
+        auto_enable = false,
+        lsp = false,
+      },
+    },
   },
 }

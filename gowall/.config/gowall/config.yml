@@ -390,6 +390,13 @@ themes:
       # - "#700089"
       - "#8fbfdc"
       - "#f0f0f0"
+  - name: "lemons"
+    colors:
+      - "#040404"
+      - "#ed505e"
+      - "#fa8a49"
+      - "#5088ed"
+      - "#f0f0f0"
   - name: "minimal"
     colors:
       - "#272932"

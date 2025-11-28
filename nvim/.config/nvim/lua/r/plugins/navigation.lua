@@ -184,7 +184,7 @@ return {
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
               -- ["<C-x>"] = "clear_filter",
-              --["/"] = "filter_as_you_type", -- this was the default until v1.28
+              -- ["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",
             },
@@ -219,14 +219,12 @@ return {
             local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
             if cat_fzmark.output ~= nil then
               local res = vim.split(cat_fzmark.output, "\n")
-              -- print(vim.inspect(#res - 1))
               for index = 2, #res - 1 do
                 if #res[index] > 1 then
                   reverse[#reverse + 1] = res[index]
                 end
               end
             end
-            -- end
 
             return require("fzf-lua").fzf_exec(reverse, {
               prompt = RUtils.fzflua.padding_prompt(),
@@ -250,8 +248,6 @@ return {
                 require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
               end
             else -- if not a directory just open it
-              -- print(vim.inspect(node:get_id()))
-              -- local filepath = node:get_id()
               local filename = node.name
               local modify = vim.fn.fnamemodify
 
@@ -295,7 +291,6 @@ return {
                 state.use_image_nvim = false
               end
             end
-            -- toggle_state = false
             local node = state.tree:get_node()
 
             if not toggle_state then
@@ -372,9 +367,6 @@ return {
                         -- itu: vidio, pdf, image, dan sebagainya
                         if filepath then
                           local fullname = vim.fn.fnamemodify(filepath .. "/" .. filename, ":.")
-
-                          -- print(filename)
-
                           vim.cmd("e  " .. fullname)
                           vim.cmd.cd(res[2])
                         end
@@ -578,11 +570,9 @@ return {
     },
     opts = function()
       RUtils.map.disable_ctrl_i_and_o("NoAerial", { "aerial" })
-      -- require("telescope").load_extension "aerial"
 
       local vim_width = vim.o.columns
       vim_width = math.floor(vim_width / 2 - 45)
-      -- RUtils.info(vim.inspect(vim_width))
 
       return {
         layout = { min_width = vim_width, max_width = { 40, 0.2 } },

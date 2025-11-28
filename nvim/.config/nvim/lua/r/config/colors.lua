@@ -11,7 +11,7 @@ local base_colors = {
     bold = false,
   },
   blink_cmp_label_kind_fg_alter = 1.5,
-  blink_cmp_label_match_fg_alter = 0.2,
+  blink_cmp_label_match_fg_alter = 0.3,
   blink_ghost_text_fg_alter = -0.48,
   bqf_keyword = "Keyword",
   cmpdocnormal_fg_alter = 0.3,
@@ -25,7 +25,7 @@ local base_colors = {
   floatboder_fg_alter = 0.55,
   fzflua_file_part_fg = 0.85,
   fzflua_normal_bg_alter = 0.5,
-  hovered_cursorline_bg_alter = 0.4,
+  hovered_cursorline_bg_alter = 0.3,
   linenr_fg_alter = 0.08,
   lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
   lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
@@ -347,17 +347,20 @@ local update_col_colorscheme = {
   },
   ["gruvbox-material"] = {
     blink_cmp_label_kind_fg_alter = 1,
-    comment_fg_alter = 0.55,
+    comment_fg_alter = 0.7,
     floatboder_fg_alter = 0.3,
     fold_fg = 0.3,
+    linenr_fg_alter = 0.1,
     lsp_code_lens_bg_alter = -0.03,
     lsp_code_lens_fg_alter = 0.5,
+    normal_keyword_alter = 0.2,
     pmenu_bg_alter = 0.4,
     pmenu_sel_bg_alter = -0.48,
     render_markdown_code_bg_alter = 0.25,
-    statusline_fg_alter = 0.75,
+    statusline_fg_alter = 0.8,
     trouble_indent_fg_alter = 0.35,
     visual_bg_alter = 0.5,
+    winbar_right_block_bg_alter = 0.2,
     winseparator_alter = 0.2,
   },
   ["night-owl"] = {
@@ -379,6 +382,7 @@ local update_col_colorscheme = {
     winseparator_alter = 0.58,
   },
   ["jellybeans"] = {
+    Directory = { fg = "#8fbfdc", bg = "NONE" },
     blink_cmp_label_kind_fg_alter = 2,
     comment_fg_alter = 0.75,
     cursor_fg = "#ffa560",
@@ -386,7 +390,7 @@ local update_col_colorscheme = {
     cursorline_fg_alter = "WinSeparator",
     dapstopped_bg_alter = 0.2,
     floatboder_fg_alter = 1.2,
-    fold_fg = 0.18,
+    fold_fg = 0.8,
     fzflua_file_part_fg = 0.65,
     linenr_fg_alter = -0.08,
     noice_cmdline_fg_alter = 0.65,
@@ -399,14 +403,16 @@ local update_col_colorscheme = {
     render_markdown_code_inline_fg_alter = 0.05,
     statusline_fg_alter = 1.2,
     trouble_indent_fg_alter = 1.3,
-    winseparator_alter = 1,
+    winbar_right_block_bg_alter = 0.2,
+    winseparator_alter = 0.5,
   },
   ["lemons"] = {
     blink_cmp_label_kind_fg_alter = 10,
-    comment_fg_alter = 1.5,
+    comment_fg_alter = 2,
     floatboder_fg_alter = 3.5,
     fold_fg = 2,
     linenr_fg_alter = 0.25,
+    trouble_indent_fg_alter = 6,
     statusline_fg_alter = 4,
     statusline_right_block_bg = 0.2,
     statusline_right_block_fg = 2,
@@ -530,6 +536,7 @@ local update_col_colorscheme = {
     lsp_code_lens_bg_alter = 0.3,
     lsp_code_lens_fg_alter = 1.2,
     nontext_fg_alter = -0.2,
+    normal_keyword_alter = 0.3,
     pmenu_bg_alter = 1,
     pmenu_sel_bg_alter = -0.3,
     quickfixline_linenr_fg_alter = 0.65,
@@ -537,8 +544,8 @@ local update_col_colorscheme = {
     statusline_fg_alter = 1.05,
     statusline_right_block_bg = 0.3,
     trouble_indent_fg_alter = 1.2,
-    winbar_right_block_bg_alter = 0.35,
-    winbar_right_block_fg_alter = 0.12,
+    winbar_right_block_bg_alter = 0.2,
+    winbar_right_block_fg_alter = 0.2,
     winseparator_alter = 0.4,
   },
   ["rose-pine-moon"] = {
@@ -547,18 +554,19 @@ local update_col_colorscheme = {
     fold_fg = 0.25,
     hovered_cursorline_bg_alter = 0.6,
     linenr_fg_alter = 0.05,
+    normal_keyword_alter = 0.25,
     pmenu_bg_alter = 0.5,
     pmenu_sel_bg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.35,
     render_markdown_code_bg_alter = 0.4,
     statusline_fg_alter = 0.9,
-    winbar_right_block_bg_alter = 0.4,
+    winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = 0.12,
     winseparator_alter = 0.3,
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.5,
-    comment_fg_alter = 0.65,
+    comment_fg_alter = 0.75,
     cursor_fg = "#ece1d7",
     cursorline_alter = 0.05,
     dapstopped_bg_alter = 0.15,
@@ -566,7 +574,7 @@ local update_col_colorscheme = {
     fold_fg = 0.2,
     fzflua_file_part_fg = 0.6,
     linenr_fg_alter = 0.05,
-    lsp_code_lens_fg_alter = 1.2,
+    lsp_code_lens_fg_alter = 1.4,
     noice_cmdline_fg_alter = 0.8,
     normal_keyword_alter = 0.1,
     pmenu_bg_alter = 0.9,
@@ -576,8 +584,8 @@ local update_col_colorscheme = {
     snacks_indent_scope_fg_alter = 0.13,
     statusline_fg_alter = 1,
     trouble_indent_fg_alter = 0.9,
-    winbar_right_block_bg_alter = 0.25,
-    winbar_right_block_fg_alter = -0.2,
+    winbar_right_block_bg_alter = 0.2,
+    winbar_right_block_fg_alter = -0.15,
     winseparator_alter = 0.4,
   },
   ["tokyonight-storm"] = {
@@ -668,6 +676,7 @@ local update_col_colorscheme = {
     lsp_code_lens_bg_alter = 0.1,
     lsp_code_lens_fg_alter = 0.55,
     noice_cmdline_fg_alter = 0.65,
+    normal_keyword_alter = 0.35,
     pmenu_bg_alter = 0.25,
     pmenu_sel_bg_alter = -0.6,
     quickfixline_fg = 0.5,
@@ -701,6 +710,10 @@ local general_overrides = function()
   local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
 
   local colors = update_base_colors(RUtils.config.colorscheme)
+
+  local git_diff_add = H.get_git_fg_or_bg "DiffAdd"
+  local git_diff_change = H.get_git_fg_or_bg "DiffChange"
+  local git_diff_delete = H.get_git_fg_or_bg "DiffDelete"
 
   H.all {
     -- ╔═════════════════════════════════════════════════════════╗
@@ -909,11 +922,12 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIFF COLOR                        ║
     -- ╚═════════════════════════════════════════════════════════╝
+
     {
       diffLine = {
         fg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), colors.diffline_fg_alter),
         bg = H.tint(H.darken(H.get("Function", "fg"), 0.2, H.get("Normal", "bg")), colors.diffline_bg_alter),
-        bold = true,
+        -- bold = true,
       },
     },
     {
@@ -922,70 +936,68 @@ local general_overrides = function()
         bold = true,
       },
     },
+    { diffNewFile = { bg = "NONE" } },
+    { diffOldFile = { bg = "NONE" } },
 
-    -- Setting darken: gunakan paramater (setting_color, ukuran, base_color)
     {
-      -- "ukuran" -> semakin tinggi semakin terang, sebaliknya semakin kecil semakin gelap
-      diffAdd = {
-        fg = H.tint(dark_green, colors.diffadd_fg_alter),
-        bg = H.tint(H.darken(dark_green, colors.diffadd_bg_alter, H.get("Normal", "bg")), -0.1),
+      DiffAdd = {
+        fg = H.tint(git_diff_add, 0.4),
+        bg = H.darken(git_diff_add, 0.2, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
-      diffChange = {
-        fg = H.tint(dark_yellow, colors.diffchange_fg_alter),
-        bg = H.tint(H.darken(dark_yellow, colors.diffchange_bg_alter, H.get("Normal", "bg")), -0.1),
+      DiffChange = {
+        fg = H.tint(git_diff_change, 0.4),
+        bg = H.darken(git_diff_change, 0.2, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
-      diffDelete = {
-        fg = H.tint(dark_red, colors.diffdelete_fg_alter),
-        bg = H.tint(H.darken(dark_red, colors.diffdelete_bg_alter, H.get("Normal", "bg")), -0.1),
+      DiffDelete = {
+        fg = H.tint(git_diff_delete, 0.4),
+        bg = H.darken(git_diff_delete, 0.2, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
-      diffText = {
-        fg = { from = "diffChange", attr = "fg", alter = colors.difftext_fg_alter },
-        bg = { from = "diffChange", attr = "bg", alter = colors.difftext_bg_alter },
+      DiffText = {
+        fg = { from = "DiffChange", attr = "fg", alter = 0.4 },
+        bg = { from = "DiffChange", attr = "bg", alter = 0.4 },
+        bold = true,
         reverse = false,
       },
     },
 
     {
       GitSignsAddInline = {
-        fg = H.tint(H.darken(dark_green, colors.delta_plus_fg_alter, H.get("Normal", "bg")), -0.1),
-        bg = H.tint(H.darken(dark_green, colors.delta_plus_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = { from = "DiffAdd", attr = "fg" },
+        bg = { from = "DiffAdd", attr = "bg" },
         bold = true,
       },
     },
     {
       GitSignsChangeInline = {
-        fg = H.tint(H.darken(dark_yellow, colors.delta_change_fg_alter, H.get("Normal", "bg")), -0.1),
-        bg = H.tint(H.darken(dark_yellow, colors.delta_change_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = { from = "DiffChange", attr = "fg" },
+        bg = { from = "DiffChange", attr = "bg" },
         bold = true,
       },
     },
     {
       GitSignsDeleteInline = {
-        fg = H.tint(H.darken(dark_red, colors.delta_minus_fg_alter, H.get("Normal", "bg")), 0.2),
-        bg = H.tint(H.darken(dark_red, colors.delta_minus_bg_alter, H.get("Normal", "bg")), -0.1),
+        fg = { from = "DiffDelete", attr = "fg" },
+        bg = { from = "DiffDelete", attr = "bg" },
         bold = true,
       },
     },
 
-    { DiffAdded = { inherit = "diffAdd" } },
-    { DiffChange = { inherit = "diffChange" } },
-    { DiffDelete = { inherit = "diffDelete" } },
+    { diffAdded = { inherit = "DiffAdd" } },
+    { diffChanged = { inherit = "DiffChange" } },
+    { diffRemoved = { inherit = "DiffDelete" } },
 
-    { diffChanged = { inherit = "diffChange" } },
-    { diffRemoved = { inherit = "diffDelete" } },
-
-    { GitSignsAdd = { bg = "NONE", fg = dark_green } },
-    { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
-    { GitSignsDelete = { bg = "NONE", fg = dark_red } },
+    { GitSignsAdd = { bg = "NONE", fg = { from = "DiffAdded", attr = "fg" } } },
+    { GitSignsChange = { bg = "NONE", fg = { from = "DiffChange", attr = "fg" } } },
+    { GitSignsDelete = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg" } } },
 
     {
       deltaPlus = {
@@ -1000,23 +1012,23 @@ local general_overrides = function()
       },
     },
 
-    { MiniDiffSignAdd = { bg = "NONE", fg = dark_green } },
-    { MiniDiffSignChange = { bg = "NONE", fg = dark_yellow } },
-    { MiniDiffSignDelete = { bg = "NONE", fg = dark_red } },
+    { MiniDiffSignAdd = { inherit = "GitSignsAdd" } },
+    { MiniDiffSignChange = { inherit = "GitSignsChange" } },
+    { MiniDiffSignDelete = { inherit = "GitSignsDelete" } },
 
-    { NeogitDiffAdd = { link = "diffAdd" } },
-    { NeogitDiffAddHighlight = { link = "diffAdd" } },
+    { NeogitDiffAdd = { link = "diffAdded" } },
+    { NeogitDiffAddHighlight = { link = "diffAdded" } },
     { NeogitDiffDelete = { link = "diffDelete" } },
     { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
 
-    { DiffText = { link = "diffText" } },
+    { diffText = { link = "DiffText" } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       ERROR COLOR                       ║
     -- ╚═════════════════════════════════════════════════════════╝
 
-    { ErrorMsg = { bg = "NONE", fg = { from = "diffDelete", attr = "fg", alter = 0.5 } } },
-    { Error = { bg = "NONE", fg = { from = "diffDelete", attr = "fg", alter = 0.3 } } },
+    { ErrorMsg = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg", alter = 0.5 } } },
+    { Error = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg", alter = 0.3 } } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIAGNOSTIC                        ║
@@ -1254,12 +1266,12 @@ local general_overrides = function()
     -- ╭────────╮
     -- │ CMPDOC │
     -- ╰────────╯
-    -- Ditaruh disini untuk sementara waktu, karena blink mengadopsi color
-    -- `CmpDocFloatBorder` ini
+    -- Ditaruh disini untuk sementara waktu,
+    -- karena blink mengadopsi color `CmpDocFloatBorder` ini
     {
       CmpDocNormal = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = 0.3 },
+        bg = { from = "Normal", attr = "bg", alter = 0.7 },
       },
     },
     { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
@@ -1301,7 +1313,7 @@ local general_overrides = function()
       },
     },
     {
-      BlinkCmpLabelMatch = { fg = { from = "diffDelete", attr = "fg", alter = colors.blink_cmp_label_match_fg_alter } },
+      BlinkCmpLabelMatch = { fg = { from = "String", attr = "fg", alter = colors.blink_cmp_label_match_fg_alter } },
     },
     { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = colors.blink_cmp_label_kind_fg_alter } } },
 
@@ -1604,17 +1616,22 @@ local general_overrides = function()
     },
 
     { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
-    -- { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 } } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
 
     { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.3 } } },
 
-    { FzfLuaFzfMatch = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-    { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+    { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
+    {
+      FzfLuaFzfMatch = {
+        fg = { from = "FzfLuaFzfMatchFuzzy", attr = "fg", alter = 0.2 },
+        bg = "NONE",
+        bold = true,
+      },
+    },
 
     {
       FzfLuaSel = {
-        fg = { from = "@property", attr = "fg" },
+        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.5 },
         bg = { from = "PmenuSel", attr = "bg" },
         bold = true,
       },
@@ -1863,7 +1880,7 @@ local general_overrides = function()
 
     --  ─────────────────────────────[ DIFFIVIEW ]─────────────────────────────
     { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
-    { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.1 } } },
+    { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.8 } } },
     { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 } } },
     { DiffviewStatusAdded = { link = "DiffAddedChar" } },
     { DiffviewStatusModified = { link = "DiffChangedChar" } },
@@ -1881,7 +1898,13 @@ local general_overrides = function()
     { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
     { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
     { DiffviewFilePanelPath = { fg = { from = "DiffviewFilePanelCounter", attr = "fg", alter = 0.3 } } },
-    { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
+    {
+      DiffviewFilePanelSelected = {
+        fg = { from = "DiffChangedChar", attr = "fg", alter = -0.1 },
+        bg = { from = "DiffChangedChar", attr = "fg", alter = -0.8 },
+        bold = true,
+      },
+    },
     { DiffviewFilePanelFileName = { fg = { from = "DiffviewHash", attr = "fg", alter = 0.5 } } },
 
     --  ──────────────────────────────[ LAZYGIT ]──────────────────────────────
@@ -1982,6 +2005,11 @@ local general_overrides = function()
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = colors.render_markdown_code_inline_fg_alter },
         bg = H.darken(H.get("Keyword", "fg"), colors.render_markdown_code_inline_bg_alter, H.get("Normal", "bg")),
+      },
+    },
+    {
+      RenderMarkdownCodeBorder = {
+        bg = { from = "RenderMarkdownCodeInline", attr = "bg", alter = 0.3 },
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -2116,8 +2144,8 @@ local function set_panel_highlight()
     {
       PanelSideNormal = {
         fg = { from = "Normal", attr = "fg", alter = -0.05 },
-        -- bg = { from = "NormalKeyword", attr = "bg", alter = -0.1 },
-        bg = { from = "WinBar", attr = "bg" },
+        bg = { from = "NormalKeyword", attr = "bg", alter = -0.4 },
+        -- bg = { from = "WinBar", attr = "bg" },
       },
     },
     { PanelSideBackground = { link = "PanelSideNormal", fg = "NONE" } },

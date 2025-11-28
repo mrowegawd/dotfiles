@@ -12,10 +12,14 @@ FILE_MANAGER="$TERM_FILEMANAGER"
 COLOR_CLOCK=$(xrdb -query | grep 'color16:' | awk '{print $NF}')
 COL_BORDER_FG=$(xrdb -query | grep -i .color16 | cut -d':' -f2 | head -1 | xargs)
 COL_BORDER_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+FM_BG="#3a3a3a"
+TMUX_BG="#1f1f1f"
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   COL_BORDER_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COLOR_CLOCK=$(grep -i SESSION_FG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  FM_BG=$(grep -i FM_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
@@ -550,6 +554,7 @@ handle_open_filetree() {
 
   # 5️⃣ Jika pane target tidak ditemukan → kembali ke pane utama
   if [[ -z "$FILE_MANAGER_PANE_ID" ]]; then
+    tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$FM_BG"
     _go_select_pane_with_id "$MAIN_PANE_ID"
     return
   fi
@@ -557,6 +562,7 @@ handle_open_filetree() {
   # 6️⃣ Tutup proses tertentu bila masih aktif
   if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" || "$COMMAND_PROCESS" == "watch" ]]; then
     _close_running_process "$FILE_MANAGER_PANE_ID" "$COMMAND_PROCESS"
+    tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$TMUX_BG"
     _go_select_pane_with_id "$MAIN_PANE_ID"
     return
   fi
@@ -564,6 +570,7 @@ handle_open_filetree() {
   # 7️⃣ Jika tidak ada proses aktif → fokus ke pane file manager dan buka file manager
   _go_select_pane_with_id "$FILE_MANAGER_PANE_ID"
   _open_file_manager_window_under_pane "$FILE_MANAGER_PANE_ID"
+  tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$FM_BG"
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐

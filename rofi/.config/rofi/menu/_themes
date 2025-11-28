@@ -267,6 +267,9 @@ set_tmux() {
     TMUX_MESSAGE_BG=$(grep -i tmux_message_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
     sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$TMUX_MESSAGE_BG\"/g" "$_PATH_TMUX_THEMES"
 
+    TMUX_VISUAL_BG=$(grep -i tmux_visual_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^TMUX_VISUAL_BG=.*$/TMUX_VISUAL_BG=\"$TMUX_VISUAL_BG\"/g" "$_PATH_TMUX_THEMES"
+
     sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^WHITE=.*$/WHITE=\"$GET_WHITE\"/g" "$_PATH_TMUX_THEMES"
