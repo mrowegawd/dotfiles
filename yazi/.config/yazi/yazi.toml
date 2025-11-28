@@ -5,7 +5,6 @@ ratio = [0, 3, 0]     # set 0 - remove view panel
 sort_dir_first = true
 sort_by = "natural"
 
-play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
 
 [opener]
 edit = [
@@ -13,11 +12,13 @@ edit = [
   { run = 'code "%*"', orphan = true, for = "windows" },
 ]
 
+play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
+
 [plugin]
 prepend_fetchers = [
   # plugins - git.yazi
-  { id = "git", name = "*", run = "git" },
-  { id = "git", name = "*/", run = "git" },
+  { id = "git", url = "*", run = "git" },
+  { id = "git", url = "*/", run = "git" },
 ]
 
 # [[plugin.prepend_fetchers]]
