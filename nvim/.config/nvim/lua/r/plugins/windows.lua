@@ -282,7 +282,7 @@ return {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },
       ignored_buftypes = { "NvimTree" },
       default_amount = 5,
-      at_edge = "wrap",
+      -- at_edge = "wrap",
       move_cursor_same_row = false,
       cursor_follows_swapped_bufs = false,
       disable_multiplexer_nav_when_zoomed = true,

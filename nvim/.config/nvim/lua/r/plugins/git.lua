@@ -11,13 +11,14 @@ local git_sign = {
 local normal_themes = {
   "base46-kanagawa",
   "base46-material-darker",
+  "darcubox",
   "lackluster",
   "neogotham",
   "rose-pine",
   "rose-pine-moon",
+  "tokyonight-storm",
   "vscode_modern",
   "y9nika",
-  "darcubox",
 }
 
 if vim.tbl_contains(normal_themes, vim.g.colorscheme) then
@@ -75,25 +76,27 @@ return {
       require("litee.gh").setup(opts)
     end,
   },
-  -- GITLINKER
+  -- GIT-LINK.NVIM
   {
-    "linrongbin16/gitlinker.nvim", -- generate shareable file permalinks
-    cmd = "GitLink",
+    "juacker/git-link.nvim",
     keys = {
       {
-        "<Leader>gob",
-        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        "<leader>gob",
+        function()
+          require("git-link.main").copy_line_url()
+        end,
+        desc = "Git: copy code link to clipboard [git-link]",
         mode = { "n", "x" },
-        desc = "Git: open range hash on browser (normal or visual) [gitlinker]",
       },
       {
-        "<Leader>goB",
-        "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Git: open repo on browser [gitlinker]",
+        "<leader>goB",
+        function()
+          require("git-link.main").open_line_url()
+        end,
+        desc = "Git: open code link in browser [git-link]",
+        mode = { "n", "x" },
       },
-      { "<Leader>gY", desc = "Git: copy hash link [gitlinker]" },
     },
-    opts = { mappings = "<Leader>gY" },
   },
   -- OCTO
   {
@@ -447,9 +450,9 @@ return {
         map("n", "<Leader>gog", function()
           vim.cmd "G blame"
         end, "Git: open blame [gitsigns]")
-        map("n", "<Leader>gtd", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
-        map("n", "<Leader>gtw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
-        map("n", "<Leader>gtl", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
+        map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
+        map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
+        map("n", "<Leader>gul", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -976,6 +979,38 @@ return {
         },
       }
     end,
+  },
+  -- VSCODE-DIFF
+  {
+    "esmuellert/vscode-diff.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    keys = {
+      {
+        "<Leader>goc",
+        function()
+          vim.cmd "CodeDiff"
+        end,
+        desc = "Git: open CodeDiff [vscode-diff]",
+        mode = { "n", "x" },
+      },
+    },
+    opts = {
+      keymaps = {
+        view = {
+          quit = "q", -- Close diff tab
+          toggle_explorer = "<Leader>ue", -- Toggle explorer
+          next_hunk = "<C-n>",
+          prev_hunk = "<C-p>",
+          next_file = "<A-n>",
+          prev_file = "<A-p>",
+        },
+        explorer = {
+          select = "<CR>",
+          hover = "K",
+          refresh = "R",
+        },
+      },
+    },
   },
   -- NEOGIT (disabled)
   {

@@ -55,7 +55,9 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
+      picker = "fzf-lua",
       keymaps = {
+        disable_all = false,
         open_item = {
           default = { keys = { "o", "<CR>" }, auto_close = false },
         },

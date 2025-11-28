@@ -43,7 +43,7 @@ return {
 
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
-          { "<Leader>gt", group = "toggle" },
+          { "<Leader>gu", group = "toggle" },
           { "<Leader>go", group = "open" },
           { "<Leader>gv", group = "view" },
           { "<Leader>gb", group = "buffer" },

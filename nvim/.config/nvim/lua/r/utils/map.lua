@@ -249,7 +249,10 @@ function M.feedkey(key, mode)
   if mode == "" then
     mode = "n"
   end
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+
+  -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+  local tc = vim.api.nvim_replace_termcodes(key, true, false, true)
+  vim.api.nvim_feedkeys(tc, mode, false)
 end
 
 ---@param key string
@@ -392,16 +395,16 @@ function M.magic_jump(is_jump_prev)
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
     if is_jump_prev then
-      return RUtils.map.feedkey "<c-p>"
+      return M.feedkey "<c-p>"
     end
-    return RUtils.map.feedkey "<c-n>"
+    return M.feedkey "<c-n>"
   end
 
   if vim.wo.diff then
     if is_jump_prev then
-      return RUtils.map.feedkey "[c"
+      return M.feedkey "[c"
     else
-      return RUtils.map.feedkey "]c"
+      return M.feedkey "]c"
     end
   end
 
@@ -451,6 +454,35 @@ function M.has(buffer, method)
     end
   end
   return false
+end
+
+local function remove_duplicates_lsp(lsp_items)
+  if (lsp_items.lsp_items and #lsp_items.items == 0) or not lsp_items.items then
+    return lsp_items
+  end
+
+  local look_up = {}
+
+  local function check_tbl_element(new_tbl, element_1, element_2, element_3, element_4)
+    for _, x in pairs(new_tbl) do
+      if x.text == element_1 and x.lnum == element_2 and x.col == element_3 and x.filename == element_4 then
+        return true
+      end
+    end
+    return false
+  end
+
+  for _, x in pairs(lsp_items.items) do
+    if not check_tbl_element(look_up, x.text, x.lnum, x.col, x.filename) then
+      table.insert(look_up, x)
+    end
+  end
+
+  if #look_up > 0 then
+    lsp_items.items = vim.deepcopy(look_up)
+  end
+
+  return lsp_items
 end
 
 ---@return LazyKeysLsp[]
@@ -600,6 +632,7 @@ function M.lsp.wrap_location_method(yield, open_mode)
           if t.context and type(t.context) == "string" then
             list_items["context"] = t.context
           end
+          list_items = remove_duplicates_lsp(list_items)
           RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
         end
       end,
@@ -686,6 +719,7 @@ function M.lsp.wrap_references_to_send_qf()
         end
       end
 
+      list_items = remove_duplicates_lsp(list_items)
       RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
 
       if vim.bo.filetype == "qf" then

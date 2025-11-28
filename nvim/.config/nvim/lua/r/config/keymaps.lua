@@ -1,3 +1,4 @@
+-- vim: foldmethod=marker foldlevel=0
 local silent = { silent = true }
 local nosilent = { silent = false }
 
@@ -574,7 +575,9 @@ RUtils.create_command("CheckMappings", function()
   end
 end, { desc = "Misc: edit snippet file" })
 
-RUtils.map.nnoremap("<F1>", "<CMD>CheckMappings<CR>")
+-- RUtils.map.nnoremap("<F1>", function()
+--   local qf = require "trouble"
+-- end)
 
 -- Visual
 -- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })

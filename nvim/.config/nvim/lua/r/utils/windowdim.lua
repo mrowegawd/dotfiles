@@ -148,6 +148,8 @@ autocmds.side_panel = {
   ["Outline"] = true,
   ["aerial"] = true,
   ["dbui"] = true,
+  ["org"] = true,
+  ["orgagenda"] = true,
 
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
@@ -417,6 +419,7 @@ end
 
 autocmds.focus_gained = function()
   set_cursorline(true)
+  blurred_window()
 end
 
 autocmds.focus_lost = function()
@@ -425,6 +428,7 @@ autocmds.focus_lost = function()
 end
 
 autocmds.win_enter = function()
+  -- blurred_window()
   -- set_cursorline(true)
 end
 

@@ -613,9 +613,10 @@ return {
       })
     end,
   },
-  -- SUPER-KANBAN
+  -- SUPER-KANBAN (disabled)
   {
     "hasansujon786/super-kanban.nvim",
+    enabled = false,
     cmd = "SuperKanban",
     keys = {
       {

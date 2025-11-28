@@ -14,8 +14,18 @@ edit = [
 ]
 
 [plugin]
-fetchers = [
+prepend_fetchers = [
   # plugins - git.yazi
   { id = "git", name = "*", run = "git" },
   { id = "git", name = "*/", run = "git" },
 ]
+
+# [[plugin.prepend_fetchers]]
+# id = "git"
+# name = "*"
+# run = "git"
+#
+# [[plugin.prepend_fetchers]]
+# id = "git"
+# name = "*/"
+# run = "git"

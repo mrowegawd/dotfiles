@@ -263,7 +263,8 @@ function M.git_open_fullscreen_vertical(opts)
     fzf_opts = { ["--multi"] = true },
     ---@type fzf-lua.config.Winopts
     winopts = {
-      fullscreen = true,
+      -- fullscreen = true,
+      backdrop = 100,
       preview = {
         hidden = false,
         layout = "vertical",
@@ -410,12 +411,9 @@ function M.open_cmd_bulk(commands, opts)
   )
 end
 
+---@param opts? {title: string, actions: table}
 function M.open_cmd_filter_kind_lsp(opts)
   opts = opts or {}
-  vim.validate {
-    tilte = { opts.title, "string" },
-    actions = { opts.actions, "table" },
-  }
 
   local selected_lsp = select_lsp()
 
@@ -423,7 +421,7 @@ function M.open_cmd_filter_kind_lsp(opts)
     selected_lsp,
     layout_center(vim.tbl_deep_extend("force", {
       no_esc = true,
-      fzf_opts = { ["--layout"] = "reverse" },
+      fzf_opts = { ["--layout"] = "reverse", ["--multi"] = true },
       winopts = { title = M.format_title(string.format("%s Filter", opts.title), "󰈙") },
       actions = opts.actions,
     }, opts))

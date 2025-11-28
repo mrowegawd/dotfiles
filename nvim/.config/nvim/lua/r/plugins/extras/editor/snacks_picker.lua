@@ -19,7 +19,7 @@ end
 
 local qfbookmark
 
-local get_qfbookmark = function()
+local function get_qfbookmark()
   if not qfbookmark then
     local ok, qfbook = pcall(require, "qfbookmark.qf")
     if ok then

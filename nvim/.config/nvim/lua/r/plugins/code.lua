@@ -345,23 +345,23 @@ return {
     dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
-      { "rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
+      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
 
-      { "rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [Rmux]" },
-      { "rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [Rmux]", mode = { "x" } },
-      { "ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [Rmux]" },
-      { "rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [Rmux]" },
+      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [Rmux]" },
+      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [Rmux]", mode = { "x" } },
+      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [Rmux]" },
+      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [Rmux]" },
 
-      { "rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors [Rmux]" },
+      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors [Rmux]" },
 
-      { "rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [Rmux]" },
-      { "rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane [Rmux]" },
+      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [Rmux]" },
+      { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane [Rmux]" },
 
       { "<a-R>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: open single find err [Rmux]" },
 
-      { "re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config [Rmux]" },
-      { "rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc [Rmux]" },
-      { "r?", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config [Rmux]" },
+      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config [Rmux]" },
+      { "<Leader>rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc [Rmux]" },
+      { "<Leader>rP", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config [Rmux]" },
     },
     opts = {
       rmuxdirrc = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",

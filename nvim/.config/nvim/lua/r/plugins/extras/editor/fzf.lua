@@ -261,7 +261,7 @@ return {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-          ["fg+"] = { "fg", "Normal" },
+          ["fg+"] = { "fg", "FzfLuaSel" },
           ["bg+"] = { "bg", "FzfLuaSel" },
           ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
@@ -304,8 +304,8 @@ return {
             ["<c-Up>"] = "preview-up",
             ["<c-Down>"] = "preview-down",
 
-            ["<Tab>"] = "toggle+down",
-            ["<s-Tab>"] = "toggle+up",
+            -- ["<Tab>"] = "toggle+down",
+            -- ["<s-Tab>"] = "toggle+up",
           },
           fzf = {
             ["alt-a"] = "toggle-all",
@@ -482,14 +482,14 @@ return {
           },
           commits = RUtils.fzflua.git_open_fullscreen_vertical {
             no_header = true, -- disable default header
-            preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
-            cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
-              .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
-            preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            -- preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
+            -- cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
+            --   .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
+            -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
               ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
-              ["--multi"] = true,
+              ["--no-multi"] = false,
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -517,14 +517,14 @@ return {
           bcommits = RUtils.fzflua.git_open_fullscreen_vertical {
             -- debug = true,
             no_header = true, -- disable default header
-            preview = "git diff --color {1}~1 {1} -- <file>",
-            preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
-              .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
+            -- preview = "git diff --color {1}~1 {1} -- <file>",
+            -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            -- cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
+            --   .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
               ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
-              ["--multi"] = true,
+              ["--no-multi"] = false,
             },
             actions = {
               ["default"] = actions.git_buf_edit,

@@ -1,3 +1,4 @@
+-- vim: foldmethod=marker foldlevel=0
 local opt, fn, g, env, loop = vim.opt, vim.fn, vim.g, vim.env, vim.uv
 
 g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
@@ -191,8 +192,17 @@ opt.emoji = false
 -- }}}
 -- {{{ Diff
 -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
-opt.diffopt = "filler,internal,closeoff,algorithm:histogram,context:5,linematch:60"
--- opt.diffopt = "internal,filler,closeoff,inline:simple,linematch:40"
+-- opt.diffopt = "filler,internal,closeoff,algorithm:histogram,context:5,linematch:60"
+opt.diffopt = {
+  "internal",
+  "filler",
+  "closeoff",
+  "vertical",
+  "algorithm:histogram",
+  "indent-heuristic",
+  "linematch:60",
+  -- "inline:char",
+}
 -- }}}
 -- {{{ Sessions
 -- NOTE: remove "folds" dari sessionoptions tampak nya menghilangkan error "no fold found error"

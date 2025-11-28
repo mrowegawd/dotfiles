@@ -4,7 +4,7 @@
 cwd = { fg = "%%col_cwd%%" }
 
 # Hovered
-hovered = { bg = "%%col_hovered%%" }
+hovered = { bg = "%%col_hovered%%", bold = true }
 preview_hovered = { underline = true }
 
 # Find
