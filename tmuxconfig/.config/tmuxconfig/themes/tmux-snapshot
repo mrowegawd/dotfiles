@@ -48,6 +48,12 @@ set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 
 set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
+# Color untuk scrollbar
+set -g pane-scrollbars-style "fg=$TMUX_KEYWORD,bg=$SESSION_BG"
+
+# Color untuk mode visual tmux
+set -g mode-style "fg=$TMUX_BG,bg=$TMUX_VISUAL_BG"
+
 # Display the border name for debugging purposes:
 # setw -g pane-border-format "\
 # #{?pane_active,#[fg=$RED] ,}\
@@ -71,6 +77,7 @@ set -g status-position top
 set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
 
+##[fg=$STATUSLINE_FG]#[bold]  #(LC_TIME=id_ID.UTF-8 date +\"%A %d-%b-%y\")  #[fg=$RED] #(date +"%H:%M") \
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ STATUS RIGHT ╎
@@ -81,9 +88,17 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
 #[fg=$GREEN]#{pomodoro_status}\
 #[fg=$RED]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
-#[fg=$STATUSLINE_FG]#[bold]  #(date +\"%A, %d-%b-%y\")  #[fg=$RED] #(date +\"%H:%M\")  \
-#[fg=$STATUSLINE_FG,bg=$TMUX_BG]#{?client_prefix,#[fg=$TMUX_KEYWORD]#[bold]#{prefix},#{prefix}}\
-#[fg=$STATUSLINE_FG,bg=$TMUX_BG]#[bold]  👨 #(whoami) }"
+#[fg=$STATUSLINE_FG]#[bold]  #(date +\"%A %d-%b-%y\" | sed \
+-e 's/Monday/Senin/' \
+-e 's/Tuesday/Selasa/' \
+-e 's/Wednesday/Rabu/' \
+-e 's/Thursday/Kamis/' \
+-e 's/Friday/Jumat/' \
+-e 's/Saturday/Sabtu/' \
+-e 's/Sunday/Minggu/') \
+ #[fg=$RED] #(date +\"%H:%M\") \
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG] #{?client_prefix,#[fg=$TMUX_KEYWORD]#[bold]#{prefix},#{prefix}}\
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold]  👨 #(whoami) }"
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ STATUS LEFT ╎
@@ -112,14 +127,14 @@ set-option -g window-status-current-format "\
 #[fg=$TAB_ACTIVE_BG]#[bg=$TAB_ACTIVE_BG],\
 #[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]#[fg=$TAB_ACTIVE_BG]#[bg=$TAB_ACTIVE_BG]\
 }\
-#[fg=$TAB_ACTIVE_FG,bg=$TAB_ACTIVE_BG,bold]\
+#[fg=$TAB_ACTIVE_FG]#[bg=$TAB_ACTIVE_BG]#[bold]\
 }\
 #I:#{=30:#{b:pane_current_path}}\
 #{?window_zoomed_flag,\
 #{?pane_in_mode,\
 #[fg=$TMUX_BG] 󰁌 ,\
 #[fg=$TAB_ACTIVE_FG] 󰁌 }, }\
-#[fg=$TAB_ACTIVE_FG,bg=$TAB_ACTIVE_BG,noreverse,bold]\
+#[fg=$TAB_ACTIVE_FG]#[bg=$TAB_ACTIVE_BG]\
 #{?#{==:#{pane_mode},copy-mode},\
 #{?#{e|>:#{search_count},0},\
 #[bg=$TAB_ACTIVE_FG]#[fg=$RED]\
@@ -128,7 +143,7 @@ set-option -g window-status-current-format "\
 }\
 #[bg=$STATUSLINE_BG_MESSAGE]#[fg=$TMUX_BG] ℓ #{e|-|:#{history_size},#{scroll_position}}/#{history_size} \
 #[fg=$STATUSLINE_BG_MESSAGE]#[bg=$TMUX_BG],\
-#[fg=$TAB_ACTIVE_BG,bg=$TMUX_BG,nobold]\
+#[fg=$TAB_ACTIVE_BG]#[bg=$TMUX_BG]\
 }"
 
 set-option -g window-status-format "\
@@ -140,7 +155,7 @@ set-option -g window-status-format "\
 #[fg=$STATUSLINE_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}\
 #{?window_zoomed_flag,#[fg=$STATUSLINE_FG]#[bold] 󰁌 , }\
 #[fg=$TAB_ACTIVE_FG,bg=$TAB_ACTIVE_BG,noreverse,bold]#{?pane_in_mode,[C],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
-#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
+#[fg=$TMUX_BG,bg=$TMUX_BG]"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏                         PLUGINS                          ╏
