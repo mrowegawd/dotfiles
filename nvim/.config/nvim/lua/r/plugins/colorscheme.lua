@@ -7,6 +7,7 @@
 -- https://base2t.one
 
 return {
+  -- LEMONS
   {
     "Kaikacy/Lemons.nvim",
     version = "*", -- for stable release

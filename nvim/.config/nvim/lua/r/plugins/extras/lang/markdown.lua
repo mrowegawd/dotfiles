@@ -84,7 +84,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "norg", "rmd", "org", "codecompanion", "octo" },
+    ft = { "markdown", "rmd", "codecompanion", "octo" },
     keys = {
       {
         "<Leader>uR",
@@ -195,7 +195,6 @@ return {
           right_pad = 0,
           position = "right",
           -- icons = {},
-          -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
           icons = {
             "",
             "",
@@ -205,6 +204,7 @@ return {
             "",
           },
           -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+          -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
         },
         quote = { icon = "▐" },
         pipe_table = { cell = "raw" },

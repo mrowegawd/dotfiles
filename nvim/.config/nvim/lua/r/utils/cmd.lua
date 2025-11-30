@@ -823,14 +823,13 @@ function M.change_colors()
   local tab_session_fg = H.get("WinBarRightBlock", "fg")
   local tab_session_bg = H.get("WinBarRightBlock", "bg")
 
-  -- local tab_active_fg = H.darken(H.get("WinBarRightBlock", "fg"), 0.6, H.get("Normal", "bg"))
-  local tab_active_fg = H.get("Normal", "fg")
+  local tab_active_fg = H.tint(H.get("WinBarRightBlock", "bg"), 0.95)
   local tab_active_bg = H.darken(H.get("WinBarRightBlock", "bg"), 0.7, H.get("Normal", "bg"))
 
   -- Inactive Tab
-  local tab_inactive_fg = H.tint(H.get("WinBar", "fg"), -0.23)
+  local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("WinBar", "fg"), -0.16)
+  local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.2)
 
   -- Border Pane
   -- local __border_tmux_inactive_fg = 0.15
@@ -841,8 +840,8 @@ function M.change_colors()
   local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
-  local zsh_lines = H.tint(H.get("StatusLine", "fg"), -0.35)
-  local zsh_sugest = H.tint(H.get("StatusLine", "fg"), -0.02)
+  local zsh_lines = H.tint(H.get("Comment", "fg"), -0.1)
+  local zsh_sugest = H.tint(H.get("Comment", "fg"), 0.15)
 
   -- ─< YAZI >───────────────────────────────────────────────────────────
   local yazi_hovered_fg = 0

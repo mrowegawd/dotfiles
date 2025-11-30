@@ -116,7 +116,7 @@ return {
       -- Step-in, step-out, step-over | Stack-up Stack-down
       -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
-      { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
+      { "<S-Down>", function() require("dap").down() end, desc = "Debug: step down" },
       { "<S-Up>", function() require("dap").up() end, desc = "Debug: setup up" },
 
       {

@@ -379,14 +379,14 @@ function M.get_git_fg_or_bg(hl_group)
   if hl.fg then
     local col_fg = ("#%06x"):format(hl.fg)
     if is_blend_diffchange then
-      return M.blend(col_fg, blend_color, 0.5)
+      return M.blend(col_fg, blend_color, 0.4)
     end
     return col_fg
   end
 
   local col_bg = ("#%06x"):format(hl.bg)
   if is_blend_diffchange then
-    return M.blend(col_bg, blend_color, 0.7)
+    return M.blend(col_bg, blend_color, 0.4)
   end
   return M.tint(col_bg, 0.8)
 end
