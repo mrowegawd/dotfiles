@@ -338,7 +338,7 @@ return {
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
-  -- RUNMUX (disabled) ! new break changes
+  -- RUNMUX
   {
     --"mrowegawd/rmux",
     -- enabled = false,

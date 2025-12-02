@@ -126,9 +126,10 @@ return {
     cmd = "KeyAnalyzer",
     opts = {},
   },
-  -- FEED
+  -- FEED (disabled)
   {
     "neo451/feed.nvim",
+    enabled = false,
     cmd = "Feed",
     keys = {
       {

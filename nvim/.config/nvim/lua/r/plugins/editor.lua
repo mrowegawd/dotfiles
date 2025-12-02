@@ -314,6 +314,7 @@ return {
           q = "close",
           o = "jump",
           zh = "fold_toggle",
+          ["<C-a>"] = "fold_toggle",
           ["<a-n>"] = "next",
           ["<a-p>"] = "prev",
           ["<c-n>"] = "next",
@@ -392,7 +393,7 @@ return {
       },
     },
   },
-  -- ATONE.NVIM -> UNDOTREE
+  -- ATONE.NVIM -> alternative undotree
   {
     "XXiaoA/atone.nvim",
     cmd = "Atone",

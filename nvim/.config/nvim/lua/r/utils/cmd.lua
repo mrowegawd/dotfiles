@@ -840,8 +840,8 @@ function M.change_colors()
   local border_inactive = H.get("Normal", "bg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
-  local zsh_lines = H.tint(H.get("Comment", "fg"), -0.1)
-  local zsh_sugest = H.tint(H.get("Comment", "fg"), 0.15)
+  local zsh_lines = H.get("Zshlines", "fg")
+  local zsh_sugest = H.get("Zshlines", "bg")
 
   -- ─< YAZI >───────────────────────────────────────────────────────────
   local yazi_hovered_fg = 0

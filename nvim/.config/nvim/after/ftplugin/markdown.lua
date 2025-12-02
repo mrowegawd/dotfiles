@@ -4,6 +4,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
 
 opt.wrap = false
+opt.list = false
 
 local listchars = vim.deepcopy(vim.opt.listchars:get())
 listchars.tab = "  "

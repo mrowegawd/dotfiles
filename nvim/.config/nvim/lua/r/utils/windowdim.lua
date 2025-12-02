@@ -18,42 +18,22 @@ end
 
 local focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(80, 256), ",")
 
--- local winhighlight_bottom_panel = table.concat({
---   -- -- "IncSearch:ColorColumn",
---   "CursorLineNr:LineNr",
---   "SignColumn:ColorColumn",
---   "EndOfBuffer:ColorColumn",
---   -- "LineNr:ColorColumn",
---   "CursorLineNr:CursorLineNr",
---   "IncSearch:ColorColumn",
---   "Normal:ColorColumn",
---   "NormalNC:Normal",
---   "Search:ColorColumn",
---   "SignColumn:ColorColumn",
--- }, ",")
-
 local winhighlight_bottom_panel = table.concat({
-  -- -- "IncSearch:ColorColumn",
+  "Normal:PanelBottomNormal",
   "CursorLineNr:LineNr",
   "SignColumn:PanelBottomNormal",
   "LineNr:PanelBottomNormal",
-  -- "IncSearch:NormalBoxComment",
-  "Normal:PanelBottomNormal",
   "NormalNC:PanelBottomNormal",
   "WinSeparator:PanelBottomWinSeparator",
-  -- "Search:NormalBoxComment",
   "EndOfBuffer:PanelBottomNormal",
 }, ",")
 
 local winhighlight_sidebar_panel = table.concat({
   "CursorLineNr:LineNr",
-  -- "SignColumn:ColorColumn",
-  -- "LineNr:ColorColumn",
   "Normal:PanelSideNormal",
   "NormalNC:PanelSideNormal",
   "EndOfBuffer:PanelSideNormal",
   "IncSearch:NormalBoxComment",
-  -- "Search:NormalBoxComment",
 }, ",")
 
 local winhighlight_custom_folded = table.concat({

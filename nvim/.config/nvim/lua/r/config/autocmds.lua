@@ -172,19 +172,19 @@ RUtils.map.augroup("WindowBehaviour", {
   end,
 })
 
-local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
+-- local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
 
-RUtils.map.augroup("AutoFoldOnBufferEvents", {
-  event = { "BufEnter", "BufRead" },
-  pattern = "*",
-  command = function(event)
-    if vim.api.nvim_buf_is_valid(event.buf) then
-      if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
-        vim.cmd [[normal! zMzvzz]]
-      end
-    end
-  end,
-})
+-- RUtils.map.augroup("AutoFoldOnBufferEvents", {
+--   event = { "BufEnter", "BufRead" },
+--   pattern = "*",
+--   command = function(event)
+--     if vim.api.nvim_buf_is_valid(event.buf) then
+--       if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
+--         vim.cmd [[normal! zMzvzz]]
+--       end
+--     end
+--   end,
+-- })
 
 RUtils.map.augroup("WindowDim", {
   event = { "BufRead" },

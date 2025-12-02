@@ -6,9 +6,9 @@ local base_colors = {
     bold = true,
   },
   Search = {
-    fg = { from = "CurSearch", attr = "fg", alter = -0.15 },
-    bg = { from = "CurSearch", attr = "bg", alter = -0.35 },
-    bold = false,
+    fg = { from = "Dark_orange", attr = "fg", alter = 1 },
+    bg = { from = "Dark_orange", attr = "fg", alter = -0.35 },
+    bold = true,
   },
   blink_cmp_label_kind_fg_alter = 1.5,
   blink_cmp_label_match_fg_alter = 0.3,
@@ -52,7 +52,7 @@ local base_colors = {
   statusline_left_block_fg = 0.5,
   statusline_right_block_bg = 0.3,
   statusline_right_block_fg = 1,
-  tabline_bg_alter = -0.2,
+  tabline_bg_alter = -0.1,
   trouble_indent_fg_alter = 0.55,
   visual_bg_alter = 0.3,
   winbar_fg_alter = 0.1,
@@ -108,6 +108,9 @@ local base_colors = {
 
   delta_minus_fg_alter = 0.9,
   delta_minus_bg_alter = 0.6,
+
+  zshlines_fg_alter = 0.7,
+  zshlines_bg_alter = 1.5,
 }
 
 local update_col_colorscheme = {
@@ -127,16 +130,19 @@ local update_col_colorscheme = {
   ["darcubox"] = {
     comment_fg_alter = 1,
     floatborder_fg_alter = 1,
-    fold_fg = 0.25,
+    fold_fg = 0.4,
     hovered_cursorline_bg_alter = 0.8,
-    linenr_fg_alter = 0.1,
+    linenr_fg_alter = 0.2,
     nontext_fg_alter = 3,
     pmenu_bg_alter = 2,
     render_markdown_code_bg_alter = 0.5,
-    statusline_fg_alter = -0.25,
+    statusline_bg_alter = 0.4,
+    statusline_fg_alter = -0.4,
+    statusline_right_block_bg = 0.2,
+    statusline_right_block_fg = 1.5,
     visual_bg_alter = 0.2,
-    winbar_right_block_bg_alter = 0.3,
-    winseparator_alter = 0.6,
+    winbar_right_block_bg_alter = 0.15,
+    winseparator_alter = 0.3,
   },
   ["base46-kanagawa"] = {
     cmpdocnormal_fg_alter = 0.1,
@@ -147,8 +153,7 @@ local update_col_colorscheme = {
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 0.6,
     fold_fg = 0.3,
-    linenr_fg_alter = 0.05,
-    noice_cmdline_fsg_alter = 0.4,
+    linenr_fg_alter = 0.15,
     nontext_fg_alter = 1.8,
     normal_keyword_alter = 0.16,
     pmenu_bg_alter = 0.8,
@@ -157,9 +162,8 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.25,
     render_markdown_code_inline_bg_alter = 0.2,
     snacks_indent_scope_fg_alter = 0.22,
-    statusline_fg_alter = 1,
     winbar_right_block_bg_alter = 0.16,
-    winseparator_alter = 0.3,
+    winseparator_alter = 0.2,
   },
   ["base46-palenight"] = {
     comment_fg_alter = 0.5,
@@ -396,7 +400,7 @@ local update_col_colorscheme = {
     cursorline_fg_alter = "WinSeparator",
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 1.2,
-    fold_fg = 0.8,
+    fold_fg = 0.35,
     fzflua_file_part_fg = 0.65,
     linenr_fg_alter = -0.08,
     noice_cmdline_fg_alter = 0.65,
@@ -407,10 +411,13 @@ local update_col_colorscheme = {
     render_markdown_code_bg_alter = 0.45,
     render_markdown_code_inline_bg_alter = 0.15,
     render_markdown_code_inline_fg_alter = 0.05,
-    statusline_fg_alter = -0.3,
+    statusline_fg_alter = -0.5,
     trouble_indent_fg_alter = 1.3,
     winbar_right_block_bg_alter = 0.2,
     winseparator_alter = 0.5,
+
+    zshlines_fg_alter = 0.7,
+    zshlines_bg_alter = 2,
   },
   ["lemons"] = {
     blink_cmp_label_kind_fg_alter = 10,
@@ -418,15 +425,19 @@ local update_col_colorscheme = {
     floatborder_fg_alter = 3.5,
     fold_fg = 2,
     linenr_fg_alter = 0.25,
+    noice_cmdline_fg_alter = -0.25,
     render_markdown_code_bg_alter = 2.2,
-    statusline_bg_alter = 3,
-    statusline_fg_alter = -0.35,
+    statusline_bg_alter = 2.5,
+    statusline_fg_alter = -0.6,
     statusline_right_block_bg = 0.2,
     statusline_right_block_fg = 2,
     trouble_indent_fg_alter = 6,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 2.5,
+
+    zshlines_fg_alter = 3.5,
+    zshlines_bg_alter = 9,
   },
   ["lackluster"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
@@ -493,11 +504,12 @@ local update_col_colorscheme = {
     nontext_fg_alter = -0.4,
     normal_keyword_alter = 0.1,
     quickfixline_linenr_fg_alter = 0.4,
-    statusline_fg_alter = -0.3,
+    statusline_fg_alter = -0.4,
     trouble_indent_fg_alter = 0.65,
     winbar_right_block_bg_alter = 0.3,
     winbar_right_block_fg_alter = 0.1,
     winseparator_alter = 0.2,
+    zshlines_bg_alter = 1.2,
   },
   ["neogotham"] = {
     comment_fg_alter = 0.8,
@@ -531,10 +543,13 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.35,
     render_markdown_code_bg_alter = 0.3,
     render_markdown_code_inline_bg_alter = 0.16,
-    statusline_fg_alter = -0.2,
+    statusline_fg_alter = -0.4,
     trouble_indent_fg_alter = 1.4,
     winbar_right_block_bg_alter = 0.2,
-    winseparator_alter = 0.5,
+    winseparator_alter = 0.4,
+
+    zshlines_fg_alter = 0.6,
+    zshlines_bg_alter = 1.5,
   },
   ["rose-pine"] = {
     blink_cmp_label_kind_fg_alter = 1.8,
@@ -570,10 +585,13 @@ local update_col_colorscheme = {
     pmenu_sel_bg_alter = -0.4,
     quickfixline_linenr_fg_alter = 0.35,
     render_markdown_code_bg_alter = 0.3,
-    statusline_fg_alter = -0.2,
+    statusline_fg_alter = -0.3,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = 0.12,
     winseparator_alter = 0.3,
+
+    zshlines_fg_alter = 0.5,
+    zshlines_bg_alter = 1.5,
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.5,
@@ -581,18 +599,18 @@ local update_col_colorscheme = {
     cursor_fg = "#ece1d7",
     cursorline_alter = 0.05,
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.85,
+    floatborder_fg_alter = 0.6,
     fold_fg = 0.2,
     fzflua_file_part_fg = 0.6,
     linenr_fg_alter = 0.1,
     lsp_code_lens_fg_alter = 1.4,
-    noice_cmdline_fg_alter = 0.3,
     normal_keyword_alter = 0.1,
     pmenu_bg_alter = 0.9,
     pmenu_sel_bg_alter = -0.6,
     quickfixline_linenr_fg_alter = 0.5,
     render_markdown_code_bg_alter = 0.4,
     snacks_indent_scope_fg_alter = 0.13,
+    statusline_fg_alter = -0.35,
     trouble_indent_fg_alter = 0.9,
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.15,
@@ -612,6 +630,9 @@ local update_col_colorscheme = {
     trouble_indent_fg_alter = 0.35,
     winbar_right_block_bg_alter = 0.15,
     winbar_right_block_fg_alter = -0.2,
+
+    zshlines_fg_alter = 0.45,
+    zshlines_bg_alter = 1.2,
   },
   ["vscode_modern"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
@@ -639,6 +660,8 @@ local update_col_colorscheme = {
 
     lsp_code_lens_fg_alter = 1.1,
     lsp_code_lens_bg_alter = 0.15,
+
+    zshlines_fg_alter = 0.55,
   },
   ["xenos"] = {
     blink_cmp_label_kind_fg_alter = 2,
@@ -662,6 +685,8 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = -0.3,
     winseparator_alter = 0.2,
     statusline_bg_alter = 0.35,
+
+    zshlines_fg_alter = 0.5,
   },
   ["y9nika"] = {
     comment_fg_alter = 0.85,
@@ -702,6 +727,9 @@ local update_col_colorscheme = {
     winbar_right_block_bg_alter = 0.2,
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.1,
+
+    zshlines_fg_alter = 0.4,
+    zshlines_bg_alter = 1.2,
   },
 }
 
@@ -717,6 +745,7 @@ local general_overrides = function()
   local dark_green = H.tint(UIPallette.palette.green, 0.3)
   local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
   local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
+  local dark_orange = H.tint(UIPallette.palette.light_red, 0.3)
 
   local colors = update_base_colors(RUtils.config.colorscheme)
 
@@ -888,14 +917,15 @@ local general_overrides = function()
 
     {
       TabLine = {
-        fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
-        bg = { from = "StatusLine", attr = "fg", alter = colors.tabline_bg_alter },
+        fg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+        bg = { from = "StatusLine", attr = "bg" },
         reverse = false,
       },
     },
 
     { Dark_red = { fg = dark_red } },
     { Dark_yellow = { fg = dark_yellow } },
+    { Dark_orange = { fg = dark_orange } },
 
     { CurSearch = colors.CurSearch },
     { Search = colors.Search },
@@ -921,6 +951,13 @@ local general_overrides = function()
     -- Check `windowdim.lua` for details.
     { FoldedMarkdown = { fg = { from = "Normal", attr = "bg" }, bg = "NONE" } },
     { FoldedSign = { inherit = "Folded", bg = "NONE" } },
+
+    {
+      Zshlines = {
+        fg = { from = "Normal", attr = "bg", alter = colors.zshlines_fg_alter },
+        bg = { from = "Normal", attr = "bg", alter = colors.zshlines_bg_alter },
+      },
+    },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                          SPELL                          ║
@@ -1247,7 +1284,6 @@ local general_overrides = function()
     -- WINBAR
     {
       WinBar = {
-        -- fg = { from = "StatusLine", attr = "bg", alter = colors.winbar_fg_alter },
         fg = { from = "StatusLine", attr = "fg", alter = colors.winbar_fg_alter },
         bg = { from = "StatusLine", attr = "bg" },
         bold = false,
@@ -2188,8 +2224,8 @@ local function set_panel_highlight()
     {
       PanelBottomNormal = {
         fg = { from = "NormalKeyword", attr = "fg", alter = colors.panel_bottom_normal_fg_alter },
-        -- bg = { from = "NormalKeyword", attr = "bg", alter = colors.panel_bottom_normal_bg_alter },
-        bg = { from = "WinBar", attr = "bg" },
+        bg = { from = "PanelSideNormal", attr = "bg" },
+        -- bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
       },
     },
     { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },

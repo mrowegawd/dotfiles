@@ -213,10 +213,11 @@ return {
     event = "LazyFile",
     opts = {},
   },
-  -- NVIM-TREESITTER-CONTEXT (disabled)
+  -- NVIM-TREESITTER-CONTEXT
   {
-    "mrowegawd/nvim-treesitter-context",
-    enabled = false,
+    -- "mrowegawd/nvim-treesitter-context",
+    "nvim-treesitter/nvim-treesitter-context",
+    -- enabled = false,
     event = "BufReadPost",
     keys = {
       {
@@ -274,8 +275,16 @@ return {
               },
             },
             {
+              TreesitterContextBottom = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+                sp = "NONE",
+              },
+            },
+
+            {
               TreesitterContextLineNumber = {
-                fg = { from = "TabLine", attr = "bg", alter = 0.55 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -430,8 +439,9 @@ return {
         },
       })
       return {
-        multiline_threshold = 5,
-        separator = "▁", -- alternatives: ▁ ─ ▄
+        multiline_threshold = 3,
+        -- separator = "▁", -- alternatives: ▁ ─ ▄
+        -- separator = " ", -- alternatives: ▁ ─ ▄
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(bufnr)
@@ -454,7 +464,7 @@ return {
 
           -- Skip certain filetypes
           local ft = vim.bo[bufnr].filetype
-          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt" }
+          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt", "markdown" }
           if vim.tbl_contains(excluded_fts, ft) then
             return false
           end

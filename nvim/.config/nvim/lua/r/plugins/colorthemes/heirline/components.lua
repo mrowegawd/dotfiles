@@ -245,6 +245,7 @@ local __colors = function()
     winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
+    winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
     winbarNC_fg = H.get("WinBarNC", "bg"),
     winbarNC_bg = H.get("WinBarNC", "bg"),
     winbar_bg_right_block = H.get("WinBarRightBlock", "bg"),
@@ -338,6 +339,10 @@ local set_hl = function(is_base)
       hl_opts.fg = colors.mode_green_fg
       hl_opts.bg = colors.mode_green_bg
     end
+  end
+
+  if vim.bo.filetype == "qf" then
+    hl_opts.bg = colors.winbar_bg_bottom
   end
 
   return hl_opts
@@ -756,12 +761,12 @@ M.QuickfixStatus = {
       if RUtils.qf.is_loclist() then
         fg = colors.lf_indicator_bg
       end
-      return { fg = fg, bg = colors.winbar_bg }
+      return { fg = fg, bg = colors.winbar_bg_bottom }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_bg_bottom, bg = colors.winbar_bg_right_block },
   },
   {
     provider = function(self)
@@ -779,11 +784,11 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg },
+    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg_bottom },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_bg_bottom, bg = colors.winbar_bg_right_block },
   },
   {
     provider = function(self)
@@ -799,7 +804,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg },
+    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg_bottom },
   },
 }
 M.FileFlags = {
