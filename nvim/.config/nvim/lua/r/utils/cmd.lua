@@ -829,15 +829,16 @@ function M.change_colors()
   -- Inactive Tab
   local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
   local tab_inactive_bg = H.get("Normal", "bg")
-  local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.2)
+  local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.1)
 
   -- Border Pane
   -- local __border_tmux_inactive_fg = 0.15
   -- if vim.g.colorscheme == "zenburn" then
   --   __border_tmux_inactive_fg = 0.05
   -- end
-  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.15)
-  local border_inactive = H.get("Normal", "bg")
+  -- local border_active = H.tint(H.get("FloatBorder", "fg"), 0.05)
+  local border_active = H.get("LineNr", "fg")
+  local border_inactive = H.get("WinSeparator", "fg")
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
   local zsh_lines = H.get("Zshlines", "fg")
@@ -852,7 +853,7 @@ function M.change_colors()
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
 
   -- ─< EWW >────────────────────────────────────────────────────────────
-  local __eww_icon_fg = 0.6
+  local __eww_icon_fg = 1
   if vim.g.colorscheme == "base46-jellybeans" then
     __eww_icon_fg = 0.5
   end

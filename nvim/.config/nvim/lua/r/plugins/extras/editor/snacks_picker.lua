@@ -139,7 +139,7 @@ return {
         end,
         desc = "Snackspicker: smart",
       },
-      -- { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
+      { "<Localleader>sf", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
       {
         "<Localleader>sN",
         function()

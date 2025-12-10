@@ -142,7 +142,7 @@ function M.open_dock_bottom(opts)
       fullscreen = false,
       width = 1,
       height = 0.55,
-      row = 1,
+      row = 0.98,
       col = 0.50,
       preview = {
         hidden = false,

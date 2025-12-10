@@ -127,7 +127,7 @@ local overseer_tasks_for_status = function(status, colors)
       return self.tasks[status]
     end,
     provider = function(self)
-      return string.format("%s%d", symbols_overseer[status], #self.tasks[status])
+      return string.format("%s%d ", symbols_overseer[status], #self.tasks[status])
     end,
     hl = function()
       local fg
@@ -244,7 +244,7 @@ local __colors = function()
 
     winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
-    winbar_bg = H.get("WinBar", "bg"),
+    winbar_bg = H.get("Normal", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
     winbarNC_fg = H.get("WinBarNC", "bg"),
     winbarNC_bg = H.get("WinBarNC", "bg"),
@@ -277,8 +277,8 @@ local __colors = function()
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
     mode_term_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.8, H.get("Normal", "bg")), 0.1),
-    mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.5, H.get("Normal", "bg")), 0.15),
-    mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.15, H.get("Normal", "bg")), 0.1),
+    mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.5, H.get("Normal", "bg")), 0.2),
+    mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.1, H.get("Normal", "bg")), 0.1),
 
     branch_fg = H.get("StatusLineLeftBlock", "fg"),
     branch_bg = H.get("StatusLineLeftBlock", "bg"),
@@ -305,7 +305,7 @@ local set_hl = function(is_base)
 
   if is_base then
     hl_opts.fg = colors.statusline_fg
-    hl_opts.bg = colors.statusline_bg
+    hl_opts.bg = colors.winbar_bg
   end
 
   if set_conditions.is_path_git_relative() then
@@ -350,7 +350,7 @@ end
 local set_hl_separator = function()
   local hl_opts = {
     fg = colors.winbar_bg_right_block,
-    bg = colors.statusline_bg,
+    bg = colors.winbar_bg,
   }
 
   if set_conditions.is_path_git_relative() then
@@ -1200,6 +1200,18 @@ M.RmuxTargetPane = {
     self.run_with = status.run_with
     self.task = status.task
     self.watch = status.watch
+
+    local overseer = require "overseer"
+    local tasks = overseer.list_tasks { unique = true }
+    self.tasks_overseer = require("overseer.util").tbl_group_by(tasks, "status")
+
+    self.has_overseer_task = false
+    for i, _ in pairs(symbols_overseer) do
+      if self.tasks_overseer[i] then
+        self.has_overseer_task = true
+        break
+      end
+    end
   end,
   condition = function()
     return package.loaded.rmux and set_conditions.hide_in_col_width(120)
@@ -1247,6 +1259,31 @@ M.RmuxTargetPane = {
     end,
     hl = { fg = colors.block_mux_bg, bg = colors.block_mux_bg },
   },
+  {
+    provider = function(self)
+      local has_task = self.task > 0 or (self.watch and #self.watch > 0)
+
+      if has_task or set_conditions.is_terminal_ft() or self.has_overseer_task then
+        return RUtils.config.icons.misc.separator_down .. " "
+      end
+    end,
+    hl = function(self)
+      local fg = colors.statusline_bg
+
+      local has_task = self.task > 0 or (self.watch and #self.watch > 0)
+
+      if set_conditions.is_terminal_ft() then
+        fg = colors.mode_term_statusline_bg
+      elseif not set_conditions.hide_in_col_width(120) then
+        fg = colors.statusline_bg
+      elseif has_task or self.has_overseer_task then
+        fg = colors.block_mux_bg
+      end
+
+      -- return { fg = fg, bg = colors.statusline_right_block_bg_darken }
+      return { fg = fg, bg = colors.statusline_bg }
+    end,
+  },
 }
 M.Filetype = {
   init = function(self)
@@ -1267,57 +1304,61 @@ M.Filetype = {
 
     self.filetype = get_vars.filetype()
   end,
-  {
-    provider = function(self)
-      if self.filetype and #self.filetype > 0 then
-        return RUtils.config.icons.misc.separator_down .. " "
-      end
-    end,
-    hl = function(self)
-      local fg = colors.statusline_bg
-
-      local has_task = self.task > 0 or (self.watch and #self.watch > 0)
-      local has_overseer_task = false
-
-      for i, _ in pairs(symbols_overseer) do
-        if self.tasks_overseer[i] then
-          has_overseer_task = true
-          break
-        end
-      end
-
-      if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_statusline_bg
-      elseif not set_conditions.hide_in_col_width(120) then
-        fg = colors.statusline_bg
-      elseif has_task or has_overseer_task then
-        fg = colors.block_mux_bg
-      end
-
-      return { fg = fg, bg = colors.statusline_right_block_bg_darken }
-    end,
-  },
+  -- {
+  --   provider = function(self)
+  --     if self.filetype and #self.filetype > 0 then
+  --       return RUtils.config.icons.misc.separator_down .. " "
+  --     end
+  --   end,
+  --   hl = function(self)
+  --     local fg = colors.statusline_bg
+  --
+  --     local has_task = self.task > 0 or (self.watch and #self.watch > 0)
+  --     local has_overseer_task = false
+  --
+  --     for i, _ in pairs(symbols_overseer) do
+  --       if self.tasks_overseer[i] then
+  --         has_overseer_task = true
+  --         break
+  --       end
+  --     end
+  --
+  --     if set_conditions.is_terminal_ft() then
+  --       fg = colors.mode_term_statusline_bg
+  --     elseif not set_conditions.hide_in_col_width(120) then
+  --       fg = colors.statusline_bg
+  --     elseif has_task or has_overseer_task then
+  --       fg = colors.block_mux_bg
+  --     end
+  --
+  --     -- return { fg = fg, bg = colors.statusline_right_block_bg_darken }
+  --     return { fg = fg, bg = colors.statusline_bg }
+  --   end,
+  -- },
   {
     provider = function(self)
       if self.filetype and #self.filetype > 0 then
         return self.icon and (self.icon .. " " .. self.filetype .. " ")
       end
     end,
-    hl = { fg = colors.statusline_right_block_fg_darken, bg = colors.statusline_right_block_bg_darken },
+    -- hl = { fg = colors.statusline_right_block_fg_darken, bg = colors.statusline_right_block_bg_darken },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg },
   },
-  {
-    provider = RUtils.config.icons.misc.separator_down .. " ",
-    hl = function(self)
-      local fg = colors.statusline_bg
-      if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_statusline_bg
-      end
-      if self.filetype and #self.filetype > 0 then
-        fg = colors.statusline_right_block_bg_darken
-      end
-      return { fg = fg, bg = colors.statusline_right_block_bg }
-    end,
-  },
+  -- {
+  --   provider = RUtils.config.icons.misc.separator_down .. " ",
+  --   hl = function(self)
+  --     local fg = colors.statusline_bg
+  --     -- if set_conditions.is_terminal_ft() then
+  --     --   fg = colors.mode_term_statusline_bg
+  --     -- end
+  --     -- if self.filetype and #self.filetype > 0 then
+  --     --   fg = colors.statusline_right_block_bg_darken
+  --     --   fg = colors.statusline_right_block_bg_darken
+  --     -- end
+  --     -- return { fg = fg, bg = colors.statusline_right_block_bg }
+  --     return { fg = fg, bg = colors.statusline_bg }
+  --   end,
+  -- },
 }
 M.Ruler = {
   init = function(self)
@@ -1340,7 +1381,8 @@ M.Ruler = {
       end
       return rhs
     end,
-    hl = { bg = colors.statusline_right_block_bg },
+    -- hl = { bg = colors.statusline_right_block_bg },
+    hl = { bg = colors.statusline_bg },
   },
   {
     provider = function(self)
@@ -1348,7 +1390,8 @@ M.Ruler = {
       rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    -- hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg, bold = false },
   },
   {
     provider = function(self)
@@ -1356,7 +1399,8 @@ M.Ruler = {
       rhs = rhs .. self.line
       return rhs
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg, bold = true },
+    -- hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg, bold = true },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg, bold = true },
   },
   {
     provider = function(self)
@@ -1366,7 +1410,8 @@ M.Ruler = {
       rhs = rhs .. self.height
       return rhs
     end,
-    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    -- hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg, bold = false },
   },
   {
     provider = function(self)
@@ -1374,7 +1419,8 @@ M.Ruler = {
       rhs = rhs .. " 𝚌 " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    -- hl = { fg = colors.statusline_right_block_fg, bg = colors.statusline_right_block_bg, bold = false },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg, bold = false },
   },
   {
     provider = function(self)
@@ -1388,7 +1434,8 @@ M.Ruler = {
       -- rhs = rhs .. self.width
       return rhs .. " "
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg },
+    -- hl = { fg = colors.winbar_keyword, bg = colors.statusline_right_block_bg },
+    hl = { fg = colors.statusline_fg, bg = colors.statusline_bg, bold = true },
   },
 }
 M.Clock = {
@@ -1652,7 +1699,7 @@ M.WinBarNavic = {
       return status_navic
     end,
   },
-  hl = { fg = colors.winbar_fg, bg = colors.statusline_bg },
+  hl = { fg = colors.winbar_fg, bg = colors.winbar_bg },
 }
 
 M.status_winbar_active_left = {

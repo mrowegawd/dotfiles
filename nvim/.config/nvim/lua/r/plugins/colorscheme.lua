@@ -7,6 +7,32 @@
 -- https://base2t.one
 
 return {
+  --HUBBAMAX
+  {
+    "alexpasmantier/hubbamax.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local hubbamax_themes = { "hubbamax" }
+      if vim.tbl_contains(hubbamax_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- CURSOR-LIGHT
+  {
+    "vpoltora/cursor-light.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local cursorlight_themes = { "cursor-light" }
+      if vim.tbl_contains(cursorlight_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- LEMONS
   {
     "Kaikacy/Lemons.nvim",
@@ -93,25 +119,6 @@ return {
       return false
     end,
   },
-  -- XENO
-  {
-    "kyza0d/xeno.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local xeno_themes = { "xenos" }
-      if vim.tbl_contains(xeno_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("xeno").new_theme("xenos", {
-        base = "#1a1a1a",
-        accent = "#7aa2f7",
-      })
-    end,
-  },
   -- MINIMAL
   {
     "Yazeed1s/minimal.nvim",
@@ -159,19 +166,6 @@ return {
     enabled = function()
       local techbase_themes = { "techbase" }
       if vim.tbl_contains(techbase_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- KANSO.NVIM
-  {
-    "webhooked/kanso.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local kanso_themes = { "kanso-ink", "kanso-zen", "kanso-pearl" }
-      if vim.tbl_contains(kanso_themes, vim.g.colorscheme) then
         return true
       end
       return false

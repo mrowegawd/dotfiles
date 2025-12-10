@@ -275,6 +275,7 @@ local saved_cursorline_hl = nil
 local color_cursorline_bright = ""
 
 local hi_cursorline = "highlight CursorLine"
+local hi_cursorlinenr = "highlight CursorLineNr"
 
 local function save_cursorline_hl()
   if not saved_cursorline_hl then
@@ -320,6 +321,7 @@ end
 
 local function set_bright_cursorline()
   vim.cmd(hi_cursorline .. " guibg=" .. color_cursorline_bright)
+  vim.cmd(hi_cursorlinenr .. " guibg=" .. color_cursorline_bright)
 end
 
 local function restore_cursorline()
@@ -344,7 +346,8 @@ end
 vim.g.is_quickfix_cursorline_active = false
 vim.g.should_update_all_cursorlines = false
 
-local set_cursorline = function(active)
+---@param active boolean
+local set_auto_cursorline = function(active)
   local filetype, buftype = RUtils.buf.get_bo_buft()
   local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
@@ -372,6 +375,40 @@ local set_cursorline = function(active)
     end
   else
     vim.wo.cursorline = false
+  end
+end
+
+local set_always_cursorline = function()
+  local filetype, buftype = RUtils.buf.get_bo_buft()
+  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+
+  if is_float or filetype == "" then
+    wo.cursorline = false
+    return
+  end
+
+  if buftype == "quickfix" and filetype == "qf" then
+    vim.g.is_quickfix_cursorline_active = true
+    save_cursorline_hl()
+    set_bright_cursorline()
+    return
+  end
+
+  if vim.g.is_quickfix_cursorline_active then
+    restore_cursorline()
+  else
+    vim.wo.cursorline = true
+  end
+end
+
+local is_always_set_cursorline = false
+
+---@param active boolean
+local set_cursorline = function(active)
+  if is_always_set_cursorline then
+    set_auto_cursorline(active)
+  else
+    set_always_cursorline()
   end
 end
 

@@ -224,7 +224,7 @@ opt.sessionoptions = {
 }
 -- }}}
 -- {{{ Providers
--- Disable providers we do not care a about
+-- Disable providers that are not needed
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0

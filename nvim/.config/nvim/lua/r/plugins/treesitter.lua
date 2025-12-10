@@ -297,6 +297,29 @@ return {
               },
             },
           },
+          ["ashen"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 1.4 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "Keyword", attr = "fg" },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["base46-jellybeans"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {
@@ -439,9 +462,7 @@ return {
         },
       })
       return {
-        multiline_threshold = 3,
         -- separator = "▁", -- alternatives: ▁ ─ ▄
-        -- separator = " ", -- alternatives: ▁ ─ ▄
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(bufnr)
