@@ -22,7 +22,6 @@ RUtils.map.augroup("LSPUserBehaviour", {
   command = function(event)
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and vim.tbl_contains({ "copilot", "obsidian-ls" }, client.name) then
-      -- vim.notify("Copilot has been detached", vim.log.levels.WARN)
       client:stop()
     end
   end,
@@ -48,6 +47,7 @@ RUtils.map.augroup("SmartClose", {
     "DressingSelect",
     "PlenaryTestPopup",
     "checkhealth",
+    "dbout",
     "filetree",
     "fugitive",
     "fugitiveblame",

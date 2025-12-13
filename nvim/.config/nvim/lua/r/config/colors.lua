@@ -587,7 +587,7 @@ local update_col_colorscheme = {
     winseparator_alter = 2,
   },
   ["oxocarbon"] = {
-    blink_cmp_label_kind_fg_alter = 0.75,
+    blink_cmp_label_kind_fg_alter = 2.5,
     comment_fg_alter = 0.8,
     cursor_fg = "#ffffff",
     cursorline_alter = 0.5,
@@ -603,7 +603,7 @@ local update_col_colorscheme = {
     pmenu_bg_alter = 1.3,
     quickfixline_linenr_fg_alter = 0.35,
     quickfixline_sp_alter = 1.5,
-    render_markdown_code_bg_alter = 0.3,
+    render_markdown_code_bg_alter = -0.15,
     render_markdown_code_inline_bg_alter = 0.16,
     statusline_bg_alter = -0.15,
     statusline_fg_alter = 1.8,
@@ -674,7 +674,7 @@ local update_col_colorscheme = {
     pmenu_bg_alter = 0.9,
     pmenu_sel_bg_alter = -0.6,
     quickfixline_linenr_fg_alter = 0.5,
-    render_markdown_code_bg_alter = 0.4,
+    render_markdown_code_bg_alter = -0.15,
     snacks_indent_scope_fg_alter = 0.13,
     trouble_indent_fg_alter = 0.9,
     winbar_fg_alter = 3.5,
@@ -692,7 +692,7 @@ local update_col_colorscheme = {
     noice_cmdline_fg_alter = 0.7,
     pmenu_bg_alter = 0.4,
     quickfixline_linenr_fg_alter = 0.2,
-    render_markdown_code_bg_alter = 0.23,
+    render_markdown_code_bg_alter = -0.15,
     statusline_right_block_bg = 0.15,
     trouble_indent_fg_alter = 0.35,
     winbar_right_block_bg_alter = 0.15,
@@ -2139,6 +2139,7 @@ local general_overrides = function()
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = colors.render_markdown_code_inline_fg_alter },
         bg = H.darken(H.get("Keyword", "fg"), colors.render_markdown_code_inline_bg_alter, H.get("Normal", "bg")),
+        bold = true,
       },
     },
     {
@@ -2232,11 +2233,11 @@ local general_overrides = function()
     },
 
     --  ─────────────────────────────[ COVERAGE ]──────────────────────────
-    { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-    { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
-    { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+    { CoverageCovered = { bg = dark_green } },
+    { CoveragePartial = { bg = dark_yellow } },
+    { CoverageUncovered = { bg = dark_red } },
 
-    { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
+    { CoverageSummaryFail = { bg = dark_red } },
 
     --  ─────────────────────────────[ OVERSEER ]──────────────────────────
     { OverseerTaskBorder = { fg = { from = "WinSeparator", attr = "fg" }, bg = "NONE" } },

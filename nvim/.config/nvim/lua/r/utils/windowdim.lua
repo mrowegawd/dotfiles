@@ -131,6 +131,8 @@ autocmds.side_panel = {
   ["org"] = true,
   ["orgagenda"] = true,
 
+  ["neotest-summary"] = true,
+
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
   ["dapui_scopes"] = true,

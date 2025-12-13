@@ -607,8 +607,10 @@ return {
       RUtils.map.augroup("ManageNoteMappingMarkdown", {
         event = { "FileType" },
         pattern = { "markdown" },
-        command = function()
-          require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
+        command = function(ctx)
+          vim.defer_fn(function()
+            require("r.keymaps.note").neorg_mappings_ft(ctx.buf)
+          end, 500)
         end,
       })
     end,

@@ -167,30 +167,17 @@ return {
   -- NVIM-COVERAGE
   {
     "andythigpen/nvim-coverage", -- Display test coverage information
-    dependencies = "nvim-lua/plenary.nvim",
-    cmd = {
-      "Coverage",
-      "CoverageSummary",
-      "CoverageLoad",
-      "CoverageShow",
-      "CoverageHide",
-      "CoverageToggle",
-      "CoverageClear",
-    },
+    version = "*",
     -- stylua: ignore
     keys = {
-      { "<Leader>tcr", "<CMD>Coverage<CR>", desc = "Coverage: run" },
+      { "<Leader>tcc", "<CMD>Coverage<CR>", desc = "Coverage: run toggle" },
       { "<Leader>tcC", "<CMD>CoverageClear<CR>", desc = "Coverage: clear" },
-      { "<Leader>tcc", "<CMD>CoverageToggle<CR>", desc = "Coverage: toggle" },
       { "<Leader>tcl", "<CMD>CoverageLoad<CR>", desc = "Coverage: load" },
-      { "<Leader>tcs", "<CMD>CoverageSummary<CR>", desc = "Coverage: summary" },
+      { "<Leader>tcP", "<CMD>CoverageSummary<CR>", desc = "Coverage: summary" },
     },
     config = function()
       require("coverage").setup {
-        highlights = {
-          covered = { fg = "green" },
-          uncovered = { fg = "red" },
-        },
+        auto_reload = true,
       }
     end,
   },

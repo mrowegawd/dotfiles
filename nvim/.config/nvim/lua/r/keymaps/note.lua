@@ -1,5 +1,6 @@
 local M = {}
 
+---@param bufnr integer
 function M.neorg_mappings_ft(bufnr)
   RUtils.create_command("NotePrintOutTags", function()
     RUtils.markdown.find_note_by_tag({}, true, true)
@@ -97,14 +98,14 @@ function M.neorg_mappings_ft(bufnr)
   }
 
   -- local resuffle = {}
-  for i, x in pairs(mappings) do
-    if i == "i" then
-      for g, gg in pairs(x) do
-        vim.keymap.set(i, g, gg[1], { desc = gg[2], buffer = bufnr })
+  for mode, x in pairs(mappings) do
+    if mode == "i" then
+      for key, key_func in pairs(x) do
+        vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
       end
     else
-      for j, jj in pairs(x) do
-        vim.keymap.set(i, j, jj[1], { desc = jj[2], buffer = bufnr })
+      for key, key_func in pairs(x) do
+        vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
       end
     end
   end

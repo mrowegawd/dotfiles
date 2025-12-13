@@ -430,7 +430,7 @@ open_notes() {
 
   if ! _is_session_exists "$session"; then
     set -gF '@last_session_name' '#S'
-    tmux display-popup -d '#{pane_current_path}' -w '85%' -h '90%' \
+    tmux display-popup -d '#{pane_current_path}' -w '85%' -h '90%' -x '80%' -y '80%' \
       -E -d "$HOME/Dropbox/neorg" \
       -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
       -E "tmux new -A -s $session 'tmux set -w detach-on-destroy on; TMUX_SESSION=$session nvim;'"
@@ -441,7 +441,7 @@ open_notes() {
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
     else
-      tmux display-popup -d '#{pane_current_path}' -w '85%' -h '90%' \
+      tmux display-popup -d '#{pane_current_path}' -w '85%' -h '90%' -x '80%' -y '80%' \
         -E -d "$HOME/Dropbox/neorg" \
         -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
         -b rounded \
