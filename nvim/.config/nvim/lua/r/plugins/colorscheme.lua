@@ -7,6 +7,26 @@
 -- https://base2t.one
 
 return {
+  -- KANAGAWA
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local kanagawa_themes = { "kanagawa" }
+      if vim.tbl_contains(kanagawa_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      theme = "dragon", -- Load "wave" theme
+      background = { -- map the value of 'background' option to a theme
+        dark = "wave", -- try "dragon" !
+        light = "lotus",
+      },
+    },
+  },
   --HUBBAMAX
   {
     "alexpasmantier/hubbamax.nvim",
@@ -79,32 +99,27 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local gruvbox_themes = { "gruvbox-material" }
+      local gruvbox_material_themes = { "gruvbox-material" }
       -- TODO: gruvbox_material_background ini harus dibuat segeneric mungkin?
       vim.g.gruvbox_material_background = "medium"
-      if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
+      if vim.tbl_contains(gruvbox_material_themes, vim.g.colorscheme) then
         return true
       end
       return false
     end,
   },
-  -- NIGHTINGALE
+  -- GRUVBOX
   {
-    "xeind/nightingale.nvim",
-    lazy = false,
+    "ellisonleao/gruvbox.nvim",
     priority = 1000,
+    config = true,
     enabled = function()
-      local nightingale_themes = { "nightingale" }
-      if vim.tbl_contains(nightingale_themes, vim.g.colorscheme) then
+      local gruvbox_themes = { "gruvbox" }
+      if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
         return true
       end
       return false
     end,
-    opts = {
-      commentStyle = { italic = true },
-      functionStyle = { italic = false },
-      keywordStyle = { italic = false, bold = true },
-    },
   },
   -- ZENBURN
   {
@@ -204,7 +219,6 @@ return {
         "base46-jabuti",
         "base46-palenight",
         -- "base46-jellybeans",
-        "base46-kanagawa",
         "base46-material-darker",
         "base46-material-lighter",
         "base46-melange",
@@ -214,7 +228,6 @@ return {
         "base46-solarized_dark",
         "base46-vscode_dark",
         "base46-wombat",
-        "base46-zenburn",
       }
       if vim.tbl_contains(base46_themes, vim.g.colorscheme) then
         return true
