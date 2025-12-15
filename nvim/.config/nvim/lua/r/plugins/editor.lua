@@ -147,7 +147,6 @@ return {
       },
     },
     opts = {
-      smartInputHandling = false,
       keymaps = {
         replace = { n = "<c-c>" },
         qflist = { n = "<c-q>" },

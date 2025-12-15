@@ -2134,7 +2134,7 @@ local general_overrides = function()
     { RgFlowInputFlags = { bg = "NONE" } },
 
     --  ────────────────────────────[ VIM.MATCHUP ]────────────────────────────
-    { MatchParen = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = "white", bold = false } },
+    -- { MatchParen = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = "white", bold = false } },
 
     --  ──────────────────────────────[ LAZYVIM ]──────────────────────────────
     { LazyNormal = { inherit = "NormalFloat" } },
