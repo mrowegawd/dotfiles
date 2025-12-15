@@ -849,8 +849,8 @@ function M.change_colors()
   local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
 
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
-  local lazygit_inactive_border_fg = 0.3
-  local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), lazygit_inactive_border_fg)
+  local lazygit_inactive_border_fg = 1.2
+  local lazygit_inactive_border = H.tint(H.get("Normal", "bg"), lazygit_inactive_border_fg)
 
   -- ─< EWW >────────────────────────────────────────────────────────────
   local __eww_icon_fg = 1
@@ -924,7 +924,7 @@ function M.change_colors()
 
       selected_bg = H.get("LazygitselectedLineBgColor", "bg"),
 
-      option_txt = H.tint(H.get("WinSeparator", "fg"), 0.8),
+      option_txt = H.tint(lazygit_inactive_border, 0.5),
 
       default_fg = H.tint(H.get("Normal", "fg"), 5),
     },

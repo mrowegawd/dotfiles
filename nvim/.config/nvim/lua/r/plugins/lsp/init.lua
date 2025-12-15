@@ -313,9 +313,7 @@ return {
       -- setup keymaps
       for server, server_opts in pairs(opts.servers) do
         if type(server_opts) == "table" and server_opts.keys then
-          if server ~= "obsidian-ls" then
-            require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
-          end
+          require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
         end
       end
 
@@ -329,14 +327,11 @@ return {
           then
             -- vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
 
-            -- if vim.g.inlay_hints then
-            -- Initial inlay hint display.
-            -- Idk why but without the delay inlay hints aren't displayed at the very start.
+            -- Without the delay inlay hints aren't displayed at the very start, Idk why
             vim.defer_fn(function()
               local mode = vim.api.nvim_get_mode().mode
-              vim.lsp.inlay_hint.enable(mode == "n" or mode == "v", { bufnr = bufnr })
+              vim.lsp.inlay_hint.enable(mode == "n" or mode == "v", { bufnr = buffer })
             end, 500)
-            -- end
           end
         end)
       end

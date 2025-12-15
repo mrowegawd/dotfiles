@@ -113,24 +113,17 @@ local function focus_or_toggle_chat()
 
   local codecompanion = require "codecompanion"
   codecompanion.toggle()
-  vim.defer_fn(function()
-    vim.cmd "startinsert"
-  end, 1)
 end
 
 return {
   -- CODECOMPANION
   {
     "olimorris/codecompanion.nvim",
-    -- enabled = false,
     cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionCmd", "CodeCompanionActions" },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "j-hui/fidget.nvim",
-      -- "jellydn/spinner.nvim", -- Show loading spinner when request is started
       "nvim-treesitter/nvim-treesitter",
       { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
-      { "franco-ruggeri/codecompanion-spinner.nvim", opts = {} },
     },
     keys = {
       {
@@ -154,47 +147,52 @@ return {
       {
         "<Leader>iF",
         function()
-          local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
-          return require("fzf-lua").files {
-            prompt = RUtils.fzflua.padding_prompt(),
-            winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
-            cwd = codecompanion_cwd,
-            fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  a-c:yank  ^q:ignore  ^z:hidden]] },
-            actions = {
-              ["ctrl-g"] = function()
-                require("fzf-lua").live_grep_glob {
-                  winopts = { title = RUtils.fzflua.format_title("Grep: Codecompanion Saved", "󰈙") },
-                  cwd = codecompanion_cwd,
-                }
-              end,
-              ["ctrl-x"] = function(selected, _)
-                local del_tbl = {}
-                if #selected > 1 then
-                  del_tbl = selected
-                else
-                  del_tbl[#del_tbl + 1] = selected[1]
-                end
+          local function codecompanion_picker()
+            local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
+            return require("fzf-lua").files {
+              prompt = RUtils.fzflua.padding_prompt(),
+              winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
+              cwd = codecompanion_cwd,
+              fzf_opts = { ["--header"] = [[^r:rgflow  ^g:grep  ^x:delete  a-c:yank  ^q:ignore  ^z:hidden]] },
+              actions = {
+                ["ctrl-g"] = function()
+                  require("fzf-lua").live_grep_glob {
+                    winopts = { title = RUtils.fzflua.format_title("Grep: Codecompanion Saved", "󰈙") },
+                    cwd = codecompanion_cwd,
+                  }
+                end,
+                ["ctrl-x"] = function(selected, _)
+                  local del_tbl = {}
+                  if #selected > 1 then
+                    del_tbl = selected
+                  else
+                    del_tbl[#del_tbl + 1] = selected[1]
+                  end
 
-                if #del_tbl > 0 then
-                  for _, dir in pairs(del_tbl) do
-                    local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(dir)
-                    if vim.fn.filereadable(file_path) == 1 then
-                      local ok, err = os.remove(file_path)
-                      if ok then
-                        ---@diagnostic disable-next-line: undefined-field
-                        RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
-                      else
-                        ---@diagnostic disable-next-line: undefined-field
-                        RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
+                  if #del_tbl > 0 then
+                    for _, dir in pairs(del_tbl) do
+                      local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(dir)
+                      if vim.fn.filereadable(file_path) == 1 then
+                        local ok, err = os.remove(file_path)
+                        if ok then
+                          ---@diagnostic disable-next-line: undefined-field
+                          RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
+                        else
+                          ---@diagnostic disable-next-line: undefined-field
+                          RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
+                        end
                       end
                     end
                   end
-                end
 
-                require("fzf-lua").actions.resume()
-              end,
-            },
-          }
+                  -- idk how to reload or open the picker, but it works
+                  vim.schedule(codecompanion_picker)
+                end,
+              },
+            }
+          end
+
+          codecompanion_picker()
         end,
         desc = "Codecompanion: find and grep previous chats",
       },
@@ -234,13 +232,6 @@ return {
             ["Refactor - Avoid side effect from code"] = { cmd = "CodeCompanion /refactor_side_effect", ft = {} },
             ["Refactor - Rewrite naming variable"] = { cmd = "CodeCompanion /naming", ft = {} },
             ["Refactor - Seggest better naming variable"] = { cmd = "CodeCompanion /better_naming", ft = {} },
-
-            -- exract_func = { cmd = "CodeCompanion /commit", ft = {} },
-            -- exract_variable = { cmd = "CodeCompanion /commit", ft = {} },
-            -- generate_boilerplate_test_code = { cmd = "CodeCompanion /commit", ft = {} },
-            -- generate_docs = { cmd = "CodeCompanion /commit", ft = {} },
-            -- sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = {} },
-            -- generate_some_funcs = { cmd = "CodeCompanion /commit", ft = {} },
           }
 
           local function is_tables_are_equal(t1, t2)
@@ -260,7 +251,7 @@ return {
               return false
             end
 
-            -- Bandingkan setiap elemen
+            -- Bandingkan tiap elemen
             for key, value in pairs(t1) do
               if not is_tables_are_equal(value, t2[key]) then
                 return false
@@ -335,6 +326,7 @@ return {
                   return
                 end
 
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.info "Selection doesn't match!"
               end,
             },
@@ -474,7 +466,7 @@ return {
               pinned_buffer = " ",
               watched_buffer = " ",
             },
-            -- window = { -- Atm, using a floating window may cause conflicts when using 'translate' for the browser
+            -- window = { -- atm, using a floating window may cause conflicts with the translation plugin
             --   layout = "float",
             --   border = "rounded",
             --   height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
@@ -482,7 +474,7 @@ return {
             --   relative = "editor",
             --   col = vim.o.columns, -- right position
             --   row = 1,
-            --   opts = {},
+            --   opts = { winfixbuf = true },
             -- },
             debug_window = {
               width = math.floor(vim.o.columns * 0.535),
@@ -500,45 +492,40 @@ return {
         },
         prompt_library = {
           ["Ask ai chat"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Ask the AI via chat",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "ai_chat",
               is_slash_cmd = true,
-              short_name = "ai_chat",
-              auto_submit = false,
-              display = { chat = { window = { layout = "buffer" } } },
+              ignore_system_prompt = true,
             },
             prompts = {
               {
                 role = constants.USER_ROLE,
                 content = function(context)
-                  return get_selected_lines(context) .. newline
+                  return "```" .. newline .. get_selected_lines(context) .. newline .. "```"
                 end,
               },
             },
           },
 
           ["Explain to me"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Explains the code, how it works, and its process",
             opts = {
-              index = 6,
-              is_default = true,
-              is_slash_cmd = false,
               modes = { "v" },
-              short_name = "explain_to_me",
-              auto_submit = true,
-              user_prompt = false,
+              is_slash_cmd = true,
+              alias = "explain_to_me",
               stop_context_insertion = true,
+              auto_submit = true,
             },
             prompts = {
               {
                 role = constants.USER_ROLE,
                 content = function(context)
-                  local header =
-                    "Jelaskan secara singkat dan jelas bagaimana kode berikut bekerja. Sebutkan apa inputnya, proses utamanya, dan outputnya. Jika memungkinkan, berikan contoh sederhana agar lebih mudah dipahami:"
+                  local header = "Jelaskan secara singkat dan jelas bagaimana kode ini bekerja. "
+                    .. "Sebutkan apa inputnya, proses utamanya, dan outputnya."
+                    .. "Jika memungkinkan, berikan contoh sederhana agar lebih mudah dipahami:"
                   local body = code_block_delimiter
                     .. context.filetype
                     .. "\n"
@@ -555,53 +542,14 @@ return {
             },
           },
 
-          --           ["Write Commit Message"] = {
-          --             strategy = "inline",
-          --             description = "Writes commit message on gitcommit buffer",
-          --             opts = {
-          --               index = 10,
-          --               is_default = false,
-          --               is_slash_cmd = false,
-          --               short_name = "write_commit",
-          --               auto_submit = false,
-          --             },
-          --             prompts = {
-          --               {
-          --                 role = "user",
-          --                 content = function()
-          --                   return string.format(
-          --                     [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please @editor generate a commit message for me inside of the current #buffer:
-          --
-          -- ```diff
-          -- %s
-          -- ```
-          --
-          -- And the previous 10 commits, just in case they're related to the current changes:
-          -- ```gitcommit
-          -- %s
-          -- ```]],
-          --                     vim.fn.system "git diff --no-ext-diff --staged",
-          --                     vim.fn.system "git log -n 10"
-          --                   )
-          --                 end,
-          --                 opts = {
-          --                   contains_code = false,
-          --                 },
-          --               },
-          --             },
-          --           },
-
           -- Fix, correct, improve the sentence, ToDo, or Wiki entry in either English or Indonesian.
           ["Fix this sentence in properly English"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Fix the English sentence properly",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "correct_sentence_en",
               is_slash_cmd = true,
-              short_name = "correct_sentence_en",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -618,22 +566,16 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
           ["Fix this wiki sentence"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Fix this string notes",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "correct_wiki_sentence",
               is_slash_cmd = true,
-              short_name = "correct_wiki_sentence",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -656,22 +598,16 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
           ["Fix this todo sentence"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Fix this todo string",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "correct_todo_sentence",
               is_slash_cmd = true,
-              short_name = "correct_todo_sentence",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -688,24 +624,18 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
 
           -- Translate
           ["Translate into indo xclip"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Translate these text into bahasa indonesia with xclip",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "translate_in_bahasa_xclip",
               is_slash_cmd = true,
-              short_name = "translate_in_bahasa_xclip",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -729,22 +659,16 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
           ["Translate into indo"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Translate these text into bahasa indonesia",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "translate_in_bahasa",
               is_slash_cmd = true,
-              short_name = "translate_in_bahasa",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -761,22 +685,16 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
           ["Translate into english"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Translate this from xclip",
             opts = {
-              index = 10,
-              is_default = true,
+              alias = "translate_in_en",
               is_slash_cmd = true,
-              short_name = "translate_in_en",
               auto_submit = true,
-              display = { chat = { window = { layout = "buffer" } } },
             },
             prompts = {
               {
@@ -793,20 +711,17 @@ return {
 
                   return header .. newline .. body .. newline
                 end,
-                opts = {
-                  contains_code = true,
-                },
               },
             },
           },
 
           -- Write a documentation comment
           ["Inline Document"] = {
-            strategy = "inline",
+            interaction = "inline",
             description = "Add documentation for code",
             opts = {
               modes = { "v" },
-              short_name = "inline_doc",
+              alias = "inline_doc",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -833,11 +748,11 @@ return {
             },
           },
           ["Document"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Write documentation for code.",
             opts = {
               modes = { "v" },
-              short_name = "doc",
+              alias = "doc",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -866,11 +781,11 @@ return {
 
           -- Programming stuff
           ["Review"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Review the provided code snippet.",
             opts = {
               modes = { "v" },
-              short_name = "review",
+              alias = "review",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -904,10 +819,10 @@ return {
             },
           },
           ["Review Code"] = {
-            strategy = "chat",
+            interaction = "chat",
             description = "Review code and provide suggestions for improvement.",
             opts = {
-              short_name = "review_code",
+              alias = "review_code",
               auto_submit = false,
               is_slash_cmd = true,
             },
@@ -926,11 +841,11 @@ return {
             },
           },
           ["Refactor"] = {
-            strategy = "inline",
+            interaction = "inline",
             description = "Refactor the provided code snippet.",
             opts = {
               modes = { "v" },
-              short_name = "refactor",
+              alias = "refactor",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -964,11 +879,11 @@ return {
             },
           },
           ["Refactor side effect"] = {
-            strategy = "chat",
+            interaction = "inline",
             description = "Refactor the provided code snippe, and better side effect",
             opts = {
               modes = { "v" },
-              short_name = "refactor_side_effect",
+              alias = "refactor_side_effect",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -1008,11 +923,11 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
             },
           },
           ["Naming"] = {
-            strategy = "inline",
+            interaction = "inline",
             description = "Give betting naming for the provided code snippet",
             opts = {
               modes = { "v" },
-              short_name = "naming",
+              alias = "naming",
               auto_submit = true,
               user_prompt = false,
               stop_context_insertion = true,
@@ -1038,15 +953,13 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
             },
           },
           ["Better Naming"] = {
-            strategy = "chat",
+            interaction = "inline",
             description = "Give betting naming for the provided code snippet",
             opts = {
               modes = { "v" },
-              short_name = "better_naming",
+              alias = "better_naming",
               auto_submit = true,
               is_slash_cmd = true,
-              user_prompt = false,
-              stop_context_insertion = true,
             },
             prompts = {
               {
@@ -1074,7 +987,67 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
     end,
     config = function(_, opts)
       require("codecompanion").setup(opts)
-      -- RUtils.codecompanion_fidget:init()
+
+      -- Spinner
+      local ns_id = vim.api.nvim_create_namespace "codecompanion_spinner"
+      local spinner_states = { "", "", "" }
+      local spinner_bufnr, spinner_line, spinner_timer, spinner_index = nil, nil, nil, 1
+
+      local function clear_spinner()
+        if spinner_bufnr and vim.api.nvim_buf_is_valid(spinner_bufnr) then
+          vim.api.nvim_buf_clear_namespace(spinner_bufnr, ns_id, 0, -1)
+        end
+        spinner_bufnr, spinner_line, spinner_index = nil, nil, 1
+        if spinner_timer then
+          spinner_timer:stop()
+          spinner_timer:close()
+          spinner_timer = nil
+        end
+      end
+
+      local function update_spinner()
+        if spinner_bufnr and spinner_line and vim.api.nvim_buf_is_valid(spinner_bufnr) then
+          vim.api.nvim_buf_clear_namespace(spinner_bufnr, ns_id, spinner_line, spinner_line + 1)
+          vim.api.nvim_buf_set_extmark(spinner_bufnr, ns_id, spinner_line, -1, {
+            virt_text = {
+              { " Working " .. spinner_states[spinner_index], "Comment" },
+            },
+
+            hl_mode = "combine",
+          })
+          spinner_index = spinner_index % #spinner_states + 1
+        end
+      end
+
+      RUtils.map.augroup("SpinnerCodeCompanions", {
+        event = "User",
+        pattern = "CodeCompanionRequestStarted",
+        command = function()
+          if vim.bo.filetype == "codecompanion" then
+            vim.cmd.stopinsert()
+          end
+          clear_spinner()
+          spinner_bufnr = vim.api.nvim_get_current_buf()
+          spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+          spinner_timer = vim.uv.new_timer()
+          if spinner_timer then
+            spinner_timer:start(0, 250, vim.schedule_wrap(update_spinner))
+          end
+        end,
+        desc = "Start CodeCompanion spinner on request start",
+      }, {
+        event = "User",
+        pattern = "CodeCompanionRequestFinished",
+        command = function()
+          vim.defer_fn(function()
+            clear_spinner()
+            if vim.bo.filetype == "codecompanion" then
+              vim.cmd.startinsert()
+            end
+          end, 50)
+        end,
+        desc = "Clear spinner and start insert on request finish",
+      })
     end,
   },
   -- RENDER-MARKDOWN
@@ -1083,5 +1056,16 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
     optional = true,
     ft = { "markdown", "codecompanion" },
     opts = { file_types = { "markdown", "codecompanion" } },
+  },
+  -- NVIM-TREESITTER
+  { -- disable fold for codecompanion
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      fold = {
+        disable = {
+          "codecompanion",
+        },
+      },
+    },
   },
 }
