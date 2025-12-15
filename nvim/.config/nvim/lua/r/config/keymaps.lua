@@ -624,13 +624,6 @@ RUtils.map.nnoremap("<Leader>ul", function()
     msg_notify = "Turn On"
   end
 
-  local should_update_all_cursorlines = vim.g.should_update_all_cursorlines
-  if should_update_all_cursorlines then
-    vim.g.should_update_all_cursorlines = false
-  else
-    vim.g.should_update_all_cursorlines = true
-  end
-
   RUtils.warn("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
 end, { desc = "Toggle: cursorline" })
 

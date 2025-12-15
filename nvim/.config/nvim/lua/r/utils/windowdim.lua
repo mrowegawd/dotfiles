@@ -289,9 +289,9 @@ local function save_cursorline_hl()
       more_bright = 0.1
     end
 
-    -- if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
-    --   more_bright = 0.3
-    -- end
+    if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
+      more_bright = 1
+    end
 
     if vim.g.colorscheme == "zenburn" then
       more_bright = 0.15
@@ -311,6 +311,10 @@ local function save_cursorline_hl()
 
     if vim.g.colorscheme == "darcubox" then
       more_bright = 1.8
+    end
+
+    if vim.g.colorscheme == "jellybeans" then
+      more_bright = 2
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)
@@ -345,11 +349,10 @@ local function restore_cursorline()
   end
 end
 
-vim.g.is_quickfix_cursorline_active = false
-vim.g.should_update_all_cursorlines = false
+vim.g.is_quickfix_cursorline_active = true
 
 ---@param active boolean
-local set_auto_cursorline = function(active)
+local set_cursorline = function(active)
   local filetype, buftype = RUtils.buf.get_bo_buft()
   local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
@@ -359,17 +362,16 @@ local set_auto_cursorline = function(active)
   end
 
   if buftype == "quickfix" and filetype == "qf" then
-    vim.g.is_quickfix_cursorline_active = true
     save_cursorline_hl()
     set_bright_cursorline()
     return
   end
 
   if not autocmds.cursorline_blacklist[filetype] then
-    if vim.g.is_quickfix_cursorline_active then
-      vim.wo.cursorline = active
-    else
+    if not vim.g.is_quickfix_cursorline_active then
       vim.wo.cursorline = false
+    else
+      vim.wo.cursorline = active
     end
 
     if saved_cursorline_hl then
@@ -377,56 +379,6 @@ local set_auto_cursorline = function(active)
     end
   else
     vim.wo.cursorline = false
-  end
-end
-
-local set_always_cursorline = function()
-  local filetype, buftype = RUtils.buf.get_bo_buft()
-  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-
-  if is_float or filetype == "" then
-    wo.cursorline = false
-    return
-  end
-
-  if buftype == "quickfix" and filetype == "qf" then
-    vim.g.is_quickfix_cursorline_active = true
-    save_cursorline_hl()
-    set_bright_cursorline()
-    return
-  end
-
-  if vim.g.is_quickfix_cursorline_active then
-    restore_cursorline()
-  else
-    vim.wo.cursorline = true
-  end
-end
-
-local is_always_set_cursorline = false
-
----@param active boolean
-local set_cursorline = function(active)
-  if is_always_set_cursorline then
-    set_auto_cursorline(active)
-  else
-    set_always_cursorline()
-  end
-end
-
-autocmds.update_cursorline_for_all_windows = function()
-  if not vim.g.should_update_all_cursorlines then
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local filetype = vim.bo[buf].filetype
-      local buftype = vim.bo[buf].buftype
-
-      if buftype == "quickfix" and filetype == "qf" then
-        vim.g.is_quickfix_cursorline_active = true
-      else
-        vim.g.is_quickfix_cursorline_active = false
-      end
-    end
   end
 end
 
