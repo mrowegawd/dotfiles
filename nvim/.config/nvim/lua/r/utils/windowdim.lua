@@ -20,11 +20,12 @@ local focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(80, 256
 
 local winhighlight_bottom_panel = table.concat({
   "Normal:PanelBottomNormal",
+  "NormalNC:PanelBottomNormal",
   "CursorLineNr:LineNr",
   "SignColumn:PanelBottomNormal",
-  "LineNr:PanelBottomNormal",
-  "NormalNC:PanelBottomNormal",
-  "WinSeparator:PanelBottomWinSeparator",
+  "LineNr:QuickFixLineNr",
+  "WinSeparator:QuickFixWinSeparator",
+  "Delimiter:QuickFixWinDelimiter",
   "EndOfBuffer:PanelBottomNormal",
 }, ",")
 
@@ -305,8 +306,12 @@ local function save_cursorline_hl()
       more_bright = 1
     end
 
-    if vim.tbl_contains({ "ashen", "rose-pine", "neogotham" }, vim.g.colorscheme) then
+    if vim.tbl_contains({ "rose-pine", "neogotham" }, vim.g.colorscheme) then
       more_bright = 1.3
+    end
+
+    if vim.g.colorscheme == "ashen" then
+      more_bright = 0.8
     end
 
     if vim.g.colorscheme == "darcubox" then
@@ -315,6 +320,10 @@ local function save_cursorline_hl()
 
     if vim.g.colorscheme == "jellybeans" then
       more_bright = 2
+    end
+
+    if vim.g.colorscheme == "lemons" then
+      more_bright = 4
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)

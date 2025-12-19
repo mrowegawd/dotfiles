@@ -1003,11 +1003,14 @@ return {
           prev_hunk = "<C-p>",
           next_file = "<A-n>",
           prev_file = "<A-p>",
+          diff_get = "do", -- Get change from other buffer (like vimdiff)
+          diff_put = "dp", -- Put change to other buffer (like vimdiff)
         },
         explorer = {
           select = "<CR>",
           hover = "K",
           refresh = "R",
+          toggle_view_mode = "i", -- Toggle between 'list' and 'tree' views
         },
       },
     },

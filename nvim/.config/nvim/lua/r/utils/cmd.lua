@@ -832,13 +832,8 @@ function M.change_colors()
   local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.1)
 
   -- Border Pane
-  -- local __border_tmux_inactive_fg = 0.15
-  -- if vim.g.colorscheme == "zenburn" then
-  --   __border_tmux_inactive_fg = 0.05
-  -- end
-  -- local border_active = H.tint(H.get("FloatBorder", "fg"), 0.05)
-  local border_active = H.get("LineNr", "fg")
-  local border_inactive = H.get("WinSeparator", "fg")
+  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.4)
+  local border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.05)
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
   local zsh_lines = H.get("Zshlines", "fg")
@@ -886,9 +881,6 @@ function M.change_colors()
       fm_bg = H.get("PanelSideBackground", "bg"),
 
       keyword = H.get("Keyword", "fg"),
-
-      -- tab_active_fg = H.get("Normal", "bg"),
-      -- tab_active_bg = H.tint(H.get("WinSeparator", "fg"), 5),
 
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,

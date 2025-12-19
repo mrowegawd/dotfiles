@@ -33,7 +33,6 @@ vim.g.work_dir = g.projects_dir .. "/work"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
--- vim.g.health = { style = "float" } -- make :checkhealth float window
 
 -- {{{ Generals
 -- opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
@@ -148,16 +147,19 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -- }}}
 -- {{{ Folds
 opt.fillchars = {
-  eob = " ", -- suppress ~ at endofbuffer
   diff = "░", -- alternatives = ⣿ ░ ╱
-  -- msgsep = " ", -- alternatives: ‾ ─
-  -- fold = "▶",
-  vert = "│", -- "¦", "┃", "┃", "\\", "▕", "│"
-  -- horiz = "-",
-  -- horiz = "▁",
-  foldopen = "", -- '▼'
+  eob = " ", -- suppress ~ at endofbuffer
   foldclose = "", -- '▶'
+  foldopen = "", -- '▼'
   foldsep = " ",
+
+  horiz = "─",
+  horizdown = "┬",
+  horizup = "┴",
+  vert = "│",
+  verthoriz = "┼",
+  vertleft = "┤",
+  vertright = "├",
 }
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value

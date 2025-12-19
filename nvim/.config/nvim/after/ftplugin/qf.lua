@@ -5,11 +5,13 @@ local QFPreviewer = builtin.buffer_or_file:extend()
 
 opt.winfixheight = true
 opt.scrolloff = 2
-opt.number = false
-opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.listchars:append "trail: "
 opt.buflisted = false
 opt.list = false
+
+-- Let Quicker.nvim plugin handle this number stuff
+-- opt.number = false
+-- opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 
 -- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
@@ -177,7 +179,6 @@ keymap.set("n", "<Leader>fw", function()
     _tbl,
     RUtils.fzflua.open_dock_bottom {
       previewer = QFPreviewer,
-      -- prompt = RUtils.fzflua.padding_prompt(),
       winopts = {
         title = RUtils.fzflua.format_title(
           string.format("Grep%s Word >> %s", __get_vars.title_list(), title),

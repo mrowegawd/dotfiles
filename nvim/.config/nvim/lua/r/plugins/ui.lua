@@ -2,7 +2,7 @@ return {
   -- HELPVIEW.NVIM
   {
     "OXY2DEV/helpview.nvim",
-    event = { "BufReadPost" },
+    lazy = false,
   },
   -- VIM-MATCHUP (disabled)
   {
@@ -142,7 +142,6 @@ return {
           filter = {
             any = {
               { event = "msg_show", find = "^E486:" },
-              -- { event = "notify", max_height = 1 }, -- comment this!
             },
           }, -- minimise pattern not found messages
         },

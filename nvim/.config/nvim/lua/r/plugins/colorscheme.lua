@@ -27,32 +27,6 @@ return {
       },
     },
   },
-  --HUBBAMAX
-  {
-    "alexpasmantier/hubbamax.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local hubbamax_themes = { "hubbamax" }
-      if vim.tbl_contains(hubbamax_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- CURSOR-LIGHT
-  {
-    "vpoltora/cursor-light.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local cursorlight_themes = { "cursor-light" }
-      if vim.tbl_contains(cursorlight_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- LEMONS
   {
     "Kaikacy/Lemons.nvim",

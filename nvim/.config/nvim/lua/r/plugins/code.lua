@@ -20,9 +20,25 @@ return {
       RUtils.mini.pairs(opts)
     end,
   },
-  -- BLINK.PAIRS - AUTO CLOSE AND COLOR BRACKETS
+  -- NVIM-AUTOPAIRS - AUTO CLOSE BRACKETS
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {
+      enable_check_bracket_line = false,
+    },
+    init = function()
+      local npairs = require "nvim-autopairs"
+      local rule = require "nvim-autopairs.rule"
+      local cond = require "nvim-autopairs.conds"
+
+      npairs.add_rules { rule("|", "|", { "rust", "go", "lua" }):with_move(cond.after_regex "|") }
+    end,
+  },
+  -- BLINK.PAIRS - AUTO CLOSE AND COLOR BRACKETS (disabled)
   {
     "saghen/blink.pairs",
+    enabled = false,
     version = "*", -- (recommended) only required with prebuilt binaries
     dependencies = "saghen/blink.download",
     --- @module 'blink.pairs'

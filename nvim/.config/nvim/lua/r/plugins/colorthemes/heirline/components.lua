@@ -300,7 +300,7 @@ local set_hl = function(is_base)
 
   local hl_opts = {
     fg = colors.winbar_keyword,
-    bg = colors.winbar_bg_right_block,
+    bg = colors.winbar_bg,
   }
 
   if is_base then
@@ -349,7 +349,7 @@ local set_hl = function(is_base)
 end
 local set_hl_separator = function()
   local hl_opts = {
-    fg = colors.winbar_bg_right_block,
+    fg = colors.winbar_bg,
     bg = colors.winbar_bg,
   }
 

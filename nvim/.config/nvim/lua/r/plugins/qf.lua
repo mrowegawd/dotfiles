@@ -46,7 +46,26 @@ return {
     "stevearc/quicker.nvim",
     event = "VeryLazy",
     ft = "qf",
-    opts = {},
+    opts = {
+      opts = {
+        number = true,
+        signcolumn = "yes",
+      },
+
+      borders = {
+        vert = "│",
+
+        -- Strong headers (antar file)
+        strong_header = "─",
+        strong_cross = "┼",
+        strong_end = "┤",
+
+        -- Soft headers (dalam file)
+        soft_header = "┄", -- dashed light
+        soft_cross = "┼",
+        soft_end = "┤",
+      },
+    },
   },
   -- QFBOOKMARK
   {

@@ -5,6 +5,7 @@ opt_local.relativenumber = false
 opt_local.signcolumn = "no"
 opt_local.buflisted = false
 opt_local.conceallevel = 2
+opt_local.list = false
 
 -- open help buffers in new tabs by default
 -- vim.cmd.wincmd "L"

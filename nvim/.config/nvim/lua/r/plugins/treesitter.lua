@@ -284,8 +284,9 @@ return {
 
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.7 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.75 },
                 bg = { from = "TreesitterContext" },
+                bold = true,
               },
             },
             {
@@ -307,8 +308,33 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 1.4 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.8 },
                 bg = { from = "TreesitterContext" },
+                bold = true,
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "Keyword", attr = "fg" },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["lemons"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 1.5 },
+                bg = { from = "TreesitterContext" },
+                bold = true,
               },
             },
             {
