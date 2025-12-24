@@ -17,8 +17,10 @@ local normal_themes = {
   "rose-pine",
   "rose-pine-moon",
   "tokyonight-storm",
-  "vscode_modern",
+  -- "vscode_modern",
   "y9nika",
+  "kanagawa",
+  -- "vscode",
 }
 
 if vim.tbl_contains(normal_themes, vim.g.colorscheme) then
@@ -983,6 +985,7 @@ return {
   -- VSCODE-DIFF
   {
     "esmuellert/vscode-diff.nvim",
+    cmd = "CodeDiff",
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {

@@ -2,7 +2,7 @@
 
 ! Ashen Theme for Xresources
 
-*.background:       #121212
+*.background:       #040404
 *.foreground:       #f5f5f5
 *.cursorColor:      #b4b4b4
 

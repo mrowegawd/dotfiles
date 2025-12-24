@@ -10,7 +10,6 @@ function M.neorg_mappings_ft(bufnr)
     ["n"] = {
       ["<Leader>fl"] = {
         function()
-          RUtils.info("Find links current buffer", { title = "Notes" })
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
         end,

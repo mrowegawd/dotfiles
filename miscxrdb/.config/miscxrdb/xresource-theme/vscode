@@ -1,15 +1,16 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! VSCODE colors for Xresources
 ! vscode dark .Xresources
 
-*.foreground: #cccccc
-*.background: #1f1f1f
-*.cursorColor: #fa1919
+*.foreground: #d4d4d4
+*.background: #050505
+*.cursorColor: #d4d4d4
 
-*.color0: #1e1e1e
+*.color0: #1f1f1f
 *.color1: #f44747
 *.color2: #608b4e
 *.color3: #dcdcaa
-*.color4: #4e89bb
+*.color4: #569cd6
 *.color5: #c678dd
 *.color6: #56b6c2
 *.color7: #d4d4d4
@@ -22,5 +23,7 @@
 *.color14: #56b6c2
 *.color15: #d4d4d4
 
-! Keyword color
-*.color16:#569cd6
+*.color16: #c586c0
+
+Nsxiv.window.foreground: #608b4e
+Nsxiv.mark.foreground: #f44747

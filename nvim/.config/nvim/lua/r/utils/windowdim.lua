@@ -291,11 +291,15 @@ local function save_cursorline_hl()
     end
 
     if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
-      more_bright = 1
+      more_bright = 4
     end
 
     if vim.g.colorscheme == "zenburn" then
       more_bright = 0.15
+    end
+
+    if vim.g.colorscheme == "vscode" then
+      more_bright = 5
     end
 
     if vim.tbl_contains({ "tokyonight-night", "nightingale", "minimal" }, vim.g.colorscheme) then

@@ -1,5 +1,3 @@
--- local term_count = 1
-
 local base_term = nil
 
 return {
@@ -14,9 +12,8 @@ return {
       { "<a-N>" },
     },
     opts = {
-      picker = {
-        picker = "fzf-lua",
-      },
+      picker = { picker = "fzf-lua" },
+      terminal_defaults = { float_winblend = 0 },
     },
     config = function(_, opts)
       require("ergoterm").setup(opts)

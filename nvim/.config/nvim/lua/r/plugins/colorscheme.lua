@@ -25,6 +25,11 @@ return {
         dark = "wave", -- try "dragon" !
         light = "lotus",
       },
+      overrides = function()
+        return {
+          Normal = { bg = "#0B0B0B" },
+        }
+      end,
     },
   },
   -- LEMONS
@@ -94,6 +99,11 @@ return {
       end
       return false
     end,
+    opts = {
+      overrides = {
+        Normal = { bg = "#101010" },
+      },
+    },
   },
   -- ZENBURN
   {
@@ -221,6 +231,13 @@ return {
       end
       return false
     end,
+    opts = {
+      hl = {
+        force_override = {
+          Normal = { "#FFFFFF", "#040404" },
+        },
+      },
+    },
   },
   -- ROSE PINE
   {
@@ -241,6 +258,9 @@ return {
         italic = false,
         transparency = false,
       },
+      highlight_groups = {
+        Normal = { bg = "#0A0A0A" },
+      },
     },
   },
   -- LACKLUSTER
@@ -255,6 +275,41 @@ return {
       end
       return false
     end,
+    opts = {
+      tweak_background = {
+        normal = "#050505", -- main background
+        -- normal = 'none',    -- transparent
+        -- normal = '#a1b2c3',    -- hexcode
+        -- normal = color.green,    -- lackluster color
+        -- telescope = "default", -- telescope
+        -- menu = "default", -- nvim_cmp, wildmenu ... (bad idea to transparent)
+        -- popup = "default", -- lazy, mason, whichkey ... (bad idea to transparent)
+      },
+    },
+  },
+  -- VSCODE.NVIM
+  {
+    "Mofiqul/vscode.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local vscode_themes = { "vscode" }
+      if vim.tbl_contains(vscode_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      highlights = {
+        background = { bg = "#050505" },
+      },
+      color_overrides = {
+        Normal = "#FFFFFF",
+      },
+      group_overrides = {
+        Normal = { bg = "#050505", fg = "#d4d4d4" },
+      },
+    },
   },
   -- VSCODE-MODERN-THEME
   {
@@ -297,7 +352,14 @@ return {
       dim_inactive = false, -- dims inactive windows
       transparent = false, -- true
       on_colors = function() end,
-      on_highlights = function() end,
+      on_highlights = function(hl, _)
+        if vim.g.colorscheme == "tokyonight-night" then
+          hl.Normal = {
+            bg = "#0A0A0A",
+            fg = "#c0caf5",
+          }
+        end
+      end,
     },
     config = function(_, opts)
       local tokyonight = require "tokyonight"

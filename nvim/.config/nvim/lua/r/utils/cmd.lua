@@ -1067,4 +1067,16 @@ function M.change_colors()
   M.send_contents_to_file(defined_cols, "/tmp/master-colors-themes", true)
 end
 
+---@param bufnr? integer
+function M.force_foldopen(bufnr)
+  bufnr = bufnr or 0
+
+  local pos = vim.api.nvim_win_get_cursor(bufnr)
+  local line = pos[1]
+  local fold_start = vim.fn.foldclosed(line)
+  if fold_start ~= -1 then
+    vim.cmd "silent! foldopen!"
+  end
+end
+
 return M

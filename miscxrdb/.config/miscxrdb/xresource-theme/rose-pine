@@ -4,7 +4,7 @@
 ! Rose Pine
 !
 *.foreground:  #e0def4
-*.background:  #191724
+*.background:  #0a0a0a
 *.cursorColor: #f0efff
 !
 ! Black

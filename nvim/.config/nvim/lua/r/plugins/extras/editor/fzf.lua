@@ -234,6 +234,9 @@ return {
       { "<Leader>gbC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
       { "<Leader>gbd", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
       { "<Leader>gbb", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
+
+      { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
+      { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
@@ -1064,8 +1067,6 @@ return {
       servers = {
         ["*"] = {
           keys = {
-            { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
-            { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
             {
               "<Leader>lR",
               function()

@@ -57,7 +57,7 @@ return {
     cmd = { "CccPick", "CccHighlighterToggle" },
     -- ft = { "html", "css", "sass", "less", "javascript", "typescript", "javascriptreact", "typescriptreact", "lua" },
     keys = {
-      { "<Leader>uC", "<cmd>CccPick<cr>" },
+      { "<Leader>uC", "<cmd>CccPick<cr>", desc = "toggle: open color picker [CCCPICK]" },
     },
     opts = {
       highlighter = {

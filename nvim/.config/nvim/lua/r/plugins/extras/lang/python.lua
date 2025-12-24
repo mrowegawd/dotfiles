@@ -157,4 +157,19 @@ return {
       },
     },
   },
+  -- QUENCH.NVIM (disabled)
+  -- How to use it? https://github.com/ryan-ressmeyer/quench.nvim?tab=readme-ov-file#-quick-start
+  {
+    "ryan-ressmeyer/quench.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    -- cmd = "QuenchOpen",
+    build = ":UpdateRemotePlugins",
+    config = function()
+      -- Optional configuration
+      vim.g.quench_nvim_web_server_host = "127.0.0.1"
+      vim.g.quench_nvim_web_server_port = 8765
+      vim.g.quench_nvim_autostart_server = false
+    end,
+  },
 }
