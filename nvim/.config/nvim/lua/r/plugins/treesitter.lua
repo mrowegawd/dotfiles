@@ -245,26 +245,8 @@ return {
       },
     },
     opts = function()
-      local Highlight = require "r.settings.highlights"
-
-      local rose_pine = {
-        ["rose-pine-dawn"] = {
-          { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
-          {
-            TreesitterContextSeparator = {
-              fg = { from = "TreesitterContext", attr = "bg" },
-              bg = { from = "TreesitterContext" },
-            },
-          },
-          {
-            TreesitterContextLineNumber = {
-              fg = { from = "TreesitterContext", attr = "bg", alter = -0.2 },
-              bg = { from = "TreesitterContext" },
-            },
-          },
-        },
-      }
-      Highlight.plugin("treesitter-context", {
+      local H = require "r.settings.highlights"
+      H.plugin("treesitter-context", {
         theme = {
           ["*"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
@@ -284,7 +266,7 @@ return {
 
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TreesitterContext", attr = "bg", alter = 0.8 },
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.9 },
                 bg = { from = "TreesitterContext" },
                 bold = true,
               },
@@ -516,7 +498,6 @@ return {
               },
             },
           },
-          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
         },
       })
       return {

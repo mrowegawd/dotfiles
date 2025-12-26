@@ -7,6 +7,26 @@
 -- https://base2t.one
 
 return {
+  -- NIGHTFOX
+  {
+    "EdenEast/nightfox.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local nightfox_themes = { "nightfox", "nordfox" }
+      if vim.tbl_contains(nightfox_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      groups = {
+        nightfox = {
+          Normal = { bg = "#0C1219" },
+        },
+      },
+    },
+  },
   -- KANAGAWA
   {
     "rebelot/kanagawa.nvim",

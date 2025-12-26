@@ -61,6 +61,7 @@ autocmds.winhighlight_filetype_blacklist = {
   -- ["git"] = true,
   -- ["floggraph"] = true,
   ["octo"] = true,
+  ["grug-far"] = true,
   ["fugitiveblame"] = true,
   ["packer"] = true,
   ["sagahover"] = true,
@@ -82,7 +83,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["lazy"] = true,
   ["mason"] = true,
   ["capture"] = true,
-  ["grug-far"] = true,
+  -- ["grug-far"] = true,
   ["command-t"] = true,
   ["git"] = true,
   ["floggraph"] = true,
@@ -302,7 +303,7 @@ local function save_cursorline_hl()
       more_bright = 5
     end
 
-    if vim.tbl_contains({ "tokyonight-night", "nightingale", "minimal" }, vim.g.colorscheme) then
+    if vim.tbl_contains({ "nightingale", "minimal" }, vim.g.colorscheme) then
       more_bright = 0.8
     end
 
@@ -310,7 +311,11 @@ local function save_cursorline_hl()
       more_bright = 1
     end
 
-    if vim.tbl_contains({ "rose-pine", "neogotham" }, vim.g.colorscheme) then
+    if vim.g.colorscheme == "tokyonight-night" then
+      more_bright = 1
+    end
+
+    if vim.tbl_contains({ "rose-pine", "neogotham", "nightfox" }, vim.g.colorscheme) then
       more_bright = 1.3
     end
 
@@ -323,7 +328,7 @@ local function save_cursorline_hl()
     end
 
     if vim.g.colorscheme == "jellybeans" then
-      more_bright = 2
+      more_bright = 1.2
     end
 
     if vim.g.colorscheme == "lemons" then
