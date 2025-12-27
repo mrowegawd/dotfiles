@@ -29,6 +29,24 @@ local winhighlight_bottom_panel = table.concat({
   "EndOfBuffer:PanelBottomNormal",
 }, ",")
 
+local winhighlight_note_panel = table.concat({
+  "Normal:NormalNote",
+  "NormalNC:NormalNote",
+  "EndOfBuffer:NormalNote",
+  "CursorLine:CursorLineNote",
+  "CursorLineNr:CursorLineNrNote",
+  "SignColumn:PanelBottomNormal",
+  "Folded:FoldedNote",
+  "Comment:ErrorMsg",
+  "@Comment:CommentNote",
+  "Pmenu:PmenuNote",
+  "Visual:VisualNote",
+  "NonText:NonTextNote",
+  "LineNr:LineNrNote",
+  "WinSeparator:QuickFixWinSeparator",
+  "Delimiter:QuickFixWinDelimiter",
+}, ",")
+
 local winhighlight_sidebar_panel = table.concat({
   "CursorLineNr:LineNr",
   "Normal:PanelSideNormal",
@@ -126,12 +144,15 @@ autocmds.bottom_panel = {
   ["qf"] = true,
 }
 
+autocmds.notes = {
+  ["org"] = true,
+  -- ["orgagenda"] = true,
+}
+
 autocmds.side_panel = {
   ["Outline"] = true,
   ["aerial"] = true,
   ["dbui"] = true,
-  ["org"] = true,
-  ["orgagenda"] = true,
 
   ["neotest-summary"] = true,
 
@@ -217,11 +238,7 @@ local focus_window = function()
       return
     end
   else
-    -- local ft = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
-    -- if ft == "markdown" or ft == "org" then
     colorcolumn_width = 200 -- 120
-    -- colorcolumn_width = 200 -- 120
-    -- end
     focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end
@@ -240,6 +257,10 @@ local blurred_window = function()
 
   if autocmds.bottom_panel[filetype] then
     wo.winhighlight = winhighlight_bottom_panel
+  end
+
+  if autocmds.notes[filetype] then
+    wo.winhighlight = winhighlight_note_panel
   end
 
   if autocmds.side_panel[filetype] then

@@ -76,6 +76,10 @@ local set_conditions = {
     local dap_ft = { "help" }
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
+  is_note_ft = function()
+    local note_ft = { "org" }
+    return vim.tbl_contains(note_ft, vim.bo.filetype)
+  end,
 }
 
 local stl_lsp_clients = function()
@@ -236,6 +240,9 @@ local __colors = function()
     lf_indicator_fg = H.tint(H.get("String", "fg"), 1),
     lf_indicator_bg = H.tint(H.get("String", "fg"), -0.3),
 
+    qf_keyword_fg = H.get("QuickFixWinbar", "fg"),
+    qf_keyword_bg = H.get("QuickFixWinbar", "bg"),
+
     block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
@@ -258,6 +265,11 @@ local __colors = function()
     mode_gray_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
     mode_gray_fg = H.tint(H.get("PanelSideBackground", "bg"), 2),
     mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.15),
+
+    -- Termasuk filetype: note
+    mode_note_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
+    mode_note_fg = H.get("WinBarNote", "fg"),
+    mode_note_bg = H.get("WinBarNote", "bg"),
 
     -- Termasuk filetype: readonly, commit
     mode_red_fg = H.tint(H.get("diffDelete", "fg"), 0.2),
@@ -332,6 +344,11 @@ local set_hl = function(is_base)
     hl_opts.bg = colors.mode_gray_bg
   end
 
+  if set_conditions.is_note_ft() then
+    hl_opts.fg = colors.mode_note_fg
+    hl_opts.bg = colors.mode_note_bg
+  end
+
   if set_conditions.is_green_ft() then
     hl_opts.fg = colors.mode_green_fg
     hl_opts.bg = colors.mode_green_bg_right_block
@@ -366,6 +383,11 @@ local set_hl_separator = function()
   if set_conditions.is_gray_ft() then
     hl_opts.fg = colors.mode_gray_bg
     hl_opts.bg = colors.mode_gray_bg
+  end
+
+  if set_conditions.is_note_ft() then
+    hl_opts.fg = colors.mode_note_bg
+    hl_opts.bg = colors.mode_note_bg
   end
 
   if set_conditions.is_green_ft() then
@@ -766,7 +788,7 @@ M.QuickfixStatus = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_bottom, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_bg_bottom, bg = colors.qf_keyword_bg },
   },
   {
     provider = function(self)
@@ -780,15 +802,15 @@ M.QuickfixStatus = {
       )
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block, bold = true },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg_bottom },
+    hl = { fg = colors.qf_keyword_bg, bg = colors.winbar_bg_bottom },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_bottom, bg = colors.winbar_bg_right_block },
+    hl = { fg = colors.winbar_bg_bottom, bg = colors.qf_keyword_bg },
   },
   {
     provider = function(self)
@@ -800,11 +822,11 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.winbar_keyword, bg = colors.winbar_bg_right_block, bold = true },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_right_block, bg = colors.winbar_bg_bottom },
+    hl = { fg = colors.qf_keyword_bg, bg = colors.winbar_bg_bottom },
   },
 }
 M.FileFlags = {

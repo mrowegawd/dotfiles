@@ -23,6 +23,14 @@ return {
         "rcarriga/nvim-notify",
         opts = {
           timeout = 2000,
+          top_down = false,
+          icons = {
+            DEBUG = RUtils.config.icons.dap.Debug,
+            TRACE = RUtils.config.icons.dap.Trace,
+            ERROR = RUtils.config.icons.diagnostics.Error,
+            INFO = RUtils.config.icons.diagnostics.Info,
+            WARN = RUtils.config.icons.diagnostics.Warn,
+          },
         },
       },
     },
@@ -75,6 +83,7 @@ return {
             { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
             { "{data.progress.client} ", hl_group = "NoiceLspProgressClient" },
           },
+          view = "mini",
         },
       },
       format = {
@@ -93,7 +102,8 @@ return {
           win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
         },
         mini = {
-          position = { row = "98%", col = "100%" },
+          -- position = { row = "98%", col = "100%" },
+          position = { row = "2%", col = "100%" },
           size = { height = "5%" },
         },
         popupmenu = {
