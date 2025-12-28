@@ -77,7 +77,7 @@ local set_conditions = {
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
   is_note_ft = function()
-    local note_ft = { "org" }
+    local note_ft = { "org", "markdown" }
     return vim.tbl_contains(note_ft, vim.bo.filetype)
   end,
 }
@@ -1721,7 +1721,17 @@ M.WinBarNavic = {
       return status_navic
     end,
   },
-  hl = { fg = colors.winbar_fg, bg = colors.winbar_bg },
+  hl = function()
+    local fg = colors.winbar_fg
+    local bg = colors.winbar_bg
+
+    if set_conditions.is_note_ft() then
+      fg = colors.mode_note_fg
+      bg = colors.mode_note_bg
+    end
+
+    return { fg = fg, bg = bg }
+  end,
 }
 
 M.status_winbar_active_left = {

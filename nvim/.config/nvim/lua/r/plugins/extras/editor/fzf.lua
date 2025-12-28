@@ -259,7 +259,9 @@ return {
       ---@diagnostic disable: missing-fields
       ---@type fzf-lua.config.Defaults
       return {
-        hls = { cursor = "CurSearch" },
+        __HLS = {
+          cursor = "CurSearch",
+        },
         fzf_colors = {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
@@ -322,6 +324,9 @@ return {
           no_header_i = true, -- hide interactive header?
           copen = RUtils.qf.copen,
           lopen = RUtils.qf.lopen,
+        },
+        winopts = {
+          backdrop = 100,
         },
         fzf_opts = {
           ["--no-separator"] = "",
@@ -925,7 +930,7 @@ return {
             exec_empty_query = true,
             winopts = { title = extend_title.title },
             fzf_opts = {
-              ["--header"] = [[^o:peek  ^x:filter  ^m:workspace-symbols]],
+              ["--header"] = [[^o:peek  ^x:filter  ^e:workspace-symbols]],
               ["--reverse"] = false,
             },
             actions = {
@@ -960,13 +965,18 @@ return {
                 }
                 RUtils.fzflua.open_cmd_filter_kind_lsp(opts)
               end,
-              ["ctrl-m"] = function()
+              ["ctrl-e"] = function()
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 
                 require("fzf-lua").lsp_workspace_symbols {
                   cwd = cwd,
                   winopts = { title = extend_title_cs.title, fullscreen = false },
+                  actions = {
+                    ["ctrl-e"] = function(...)
+                      require("fzf-lua").lsp_document_symbols(...)
+                    end,
+                  },
                 }
               end,
               ["ctrl-o"] = function(...)
@@ -1122,11 +1132,17 @@ return {
                 end
 
                 local lsp_cmds = vim.tbl_deep_extend("force", {
-                  ["Lazy - Show format info"] = function()
+                  ["LazyFormatInfo - Show format info"] = function()
                     vim.cmd [[LazyFormatInfo]]
                   end,
-                  ["LSP - Show info log"] = function()
+                  ["LSPInfo - Show LSP Info"] = function()
                     vim.cmd [[LspInfo]]
+                  end,
+                  ["LSPLog - Show LSP Log"] = function()
+                    vim.cmd [[LspLog]]
+                  end,
+                  ["LSPDisabled - Disable LSP Client"] = function()
+                    vim.cmd [[lsp stop]]
                   end,
                   ["Diagnostics - Toggle virtual_lines"] = function()
                     local new_value = not vim.diagnostic.config().virtual_lines

@@ -54,6 +54,9 @@ end, { desc = "Fold: cycle fold level (util)" })
 RUtils.map.nnoremap("zo", function()
   RUtils.map.wrap_fold_cmd "normal! zRzz"
 end, { desc = "Fold: open all" })
+RUtils.map.nnoremap("zO", function()
+  RUtils.map.wrap_fold_cmd "normal! zRzz"
+end, { desc = "Fold: open all (alternativ)" })
 
 -- Navigate magic fold
 RUtils.map.nnoremap("<c-n>", function()
@@ -374,9 +377,9 @@ RUtils.map.xnoremap(
 -- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
 -- RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
 --
-RUtils.map.nnoremap("<Localleader>as", function()
-  RUtils.winui.open_float_preview()
-end, { desc = "Misc: test window" })
+-- RUtils.map.nnoremap("<Localleader>as", function()
+--   RUtils.winui.open_float_preview()
+-- end, { desc = "Misc: test window" })
 
 RUtils.map.nnoremap("<Esc>", function()
   vim.cmd "noh"
@@ -649,6 +652,16 @@ RUtils.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo opti
 RUtils.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
+
+vim.api.nvim_create_user_command("LspLog", function()
+  vim.cmd(string.format("tabnew %s", vim.lsp.log.get_filename()))
+end, {
+  desc = "Show LSP client log",
+})
+
+vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", {
+  desc = "Show LSP info",
+})
 
 -- vim.api.nvim_create_user_command("Cfilter", function(opts)
 --   vim.cmd.packadd "cfilter"

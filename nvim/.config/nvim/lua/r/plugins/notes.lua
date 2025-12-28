@@ -1,8 +1,9 @@
 return {
-  -- ORGMODE
+  -- ORGMODE (disabled)
   {
     "nvim-orgmode/orgmode",
     event = "LazyFile",
+    enabled = false,
     -- ft = { "org" },
     -- event = "VeryLazy",
     -- lazy = false,
@@ -365,6 +366,165 @@ return {
       })
     end,
   },
+  -- org blink source
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
+    opts = {
+      sources = {
+        per_filetype = {
+          org = { "buffer", "path", "orgmode", "snippets" },
+        },
+        providers = {
+          orgmode = {
+            name = "Orgmode",
+            module = "orgmode.org.autocompletion.blink",
+            fallbacks = { "buffer" },
+          },
+        },
+      },
+    },
+  },
+  -- MD-AGENDA (disabled)
+  {
+    "zenarvus/md-agenda.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    keys = {
+      {
+        "<Localleader>aa",
+        ":AgendaDashboard<CR>",
+        desc = "Note: check task [md-agenda]",
+      },
+      {
+        "<Localleader>aC",
+        ":CheckTask<CR>",
+        desc = "Note: check task [md-agenda]",
+      },
+
+      {
+        "is",
+        ":TaskScheduled<CR>",
+        desc = "Note: insert scheduled date [md-agenda]",
+        ft = "markdown",
+      },
+      {
+        "id",
+        ":TaskDeadline<CR>",
+        desc = "Note: insert deadline date [md-agenda]",
+        ft = "markdown",
+      },
+    },
+    opts = {
+      --- REQUIRED ---
+      agendaFiles = {
+        "~/notes/agenda.md",
+        "~/notes/habits.md", -- Single Files
+        "~/notes/agendafiles/", -- Folders
+      },
+
+      --- OPTIONAL ---
+      -- Number of days to display on one agenda view page.
+      -- Default: 10
+      agendaViewPageItems = 10,
+      -- Number of days before the deadline to show a reminder for the task in the agenda view.
+      -- Default: 30
+      remindDeadlineInDays = 30,
+      -- Number of days before the scheduled time to show a reminder for the task in the agenda view.
+      -- Default: 10
+      remindScheduledInDays = 10,
+      -- "vertical" or "horizontal"
+      -- Default: "horizontal"
+      agendaViewSplitOrientation = "horizontal",
+
+      -----
+
+      -- Number of past days to show in the habit view.
+      -- Default: 24
+      habitViewPastItems = 24,
+      -- Number of future days to show in the habit view.
+      -- Default: 3
+      habitViewFutureItems = 3,
+      -- "vertical" or "horizontal"
+      -- Default: "horizontal"
+      habitViewSplitOrientation = "horizontal",
+
+      -- Custom types that you can use instead of TODO.
+      -- Default: {}
+      -- The plugin will give an error if you use RGB colors (e.g. #ffffff)
+      customTodoTypes = { SOMEDAY = "magenta" }, -- A map of item type and its color
+
+      -- "vertical" or "horizontal"
+      -- Default: "horizontal"
+      dashboardSplitOrientation = "horizontal",
+      -- Set the dashboard view.
+      dashboard = {
+        {
+          "All TODO Items", -- Group name
+          {
+            -- Item types, e.g., {"TODO", "INFO"}.
+            -- Gets the items that match one of the given types. Ignored if empty.
+            type = { "TODO" },
+
+            -- List of tags to filter. Use AND/OR conditions.
+            -- e.g., {AND = {"tag1", "tag2"}, OR = {"tag1", "tag2"}}. Ignored if empty.
+            tags = {},
+
+            -- Both, deadline and scheduled filters can take the same parameters.
+            -- "none", "today", "past", "nearFuture", "before-yyyy-mm-dd", "after-yyyy-mm-dd".
+            -- Ignored if empty.
+            deadline = "",
+            scheduled = "",
+          },
+          -- {...}, Additional filter maps can be added in the same group.
+        },
+        -- {"Other Group", {...}, ...}
+        -- ...
+      },
+
+      -- Optional: Change agenda colors.
+      tagColor = "blue",
+      titleColor = "yellow",
+
+      todoTypeColor = "cyan",
+      habitTypeColor = "cyan",
+      infoTypeColor = "lightgreen",
+      dueTypeColor = "red",
+      doneTypeColor = "green",
+      cancelledTypeColor = "red",
+
+      completionColor = "lightgreen",
+      scheduledTimeColor = "cyan",
+      deadlineTimeColor = "red",
+
+      habitScheduledColor = "yellow",
+      habitDoneColor = "green",
+      habitProgressColor = "lightgreen",
+      habitPastScheduledColor = "darkyellow",
+      habitFreeTimeColor = "blue",
+      habitNotDoneColor = "red",
+      habitDeadlineColor = "gray",
+    },
+
+    -- Optional: Set keymaps for commands
+    -- vim.keymap.set("n", "<Localleader>aC", ":CheckTask<CR>")
+    -- vim.keymap.set("n", "<A-c>", ":CancelTask<CR>")
+    --
+    -- vim.keymap.set("n", "<A-h>", ":HabitView<CR>")
+    -- vim.keymap.set("n", "<A-o>", ":AgendaDashboard<CR>")
+    -- vim.keymap.set("n", "<A-a>", ":AgendaView<CR>")
+
+    -- Optional: Set a foldmethod to use when folding the logbook entries.
+    -- The plugin tries to respect to the user default.
+    -- vim.o.foldmethod = "marker" -- "marker", "syntax" or "expr"
+    -- Note: When navigating to the buffers with Telescope, "syntax" and "expr" options may not work properly.
+
+    -- Optional: Create a custom agenda view command to only show the tasks with specific tags
+    -- vim.api.nvim_create_user_command("WorkAgenda", function()
+    --   vim.cmd "AgendaViewWTF work companyA" -- Run the agenda view with tag filters
+    -- end, {})
+  },
   -- OBSIDIAN.NVIM
   {
     "obsidian-nvim/obsidian.nvim",
@@ -441,16 +601,16 @@ return {
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
       },
-      {
-        "<Localleader>an",
-        ":ObsidianToday<CR>",
-        desc = "Note: add note today [obsidian]",
-      },
-      {
-        "<Localleader>ad",
-        "<CMD>ObsidianDailies<CR>",
-        desc = "Note: open and select daily note [obsidian]",
-      },
+      -- {
+      --   "<Localleader>an",
+      --   ":ObsidianToday<CR>",
+      --   desc = "Note: add note today [obsidian]",
+      -- },
+      -- {
+      --   "<Localleader>ad",
+      --   "<CMD>ObsidianDailies<CR>",
+      --   desc = "Note: open and select daily note [obsidian]",
+      -- },
       {
         "<Localleader>al",
         function()
@@ -533,9 +693,9 @@ return {
       preferred_link_style = "markdown",
       note_frontmatter_func = function(note)
         -- Add the title of the note as an alias.
-        if note.title then
-          note:add_alias(note.title)
-        end
+        -- if note and note.title then
+        --   note:add_alias(note.title)
+        -- end
 
         local out = {
           id = note.id,
@@ -543,37 +703,18 @@ return {
           tags = note.tags,
         }
 
-        -- add date only on init
         local getDate = function(metadata)
-          local date = os.date "%Y-%m-%d %H:%M"
-          if metadata == nil then
-            return date
+          if metadata.create_at then
+            return metadata.create_at
           end
 
-          return metadata.create_at
+          local date = os.date "%Y-%m-%d %H:%M"
+          return date
         end
-
-        -- local getHubs = function(metadata)
-        --   local hubs = "[[]]"
-        --   if metadata == nil then
-        --     return hubs
-        --   end
-        --   return metadata.hubs
-        -- end
-        --
-        -- local getRefs = function(metadata)
-        --   local refs = "[[]]"
-        --   if metadata == nil then
-        --     return refs
-        --   end
-        --   return metadata.refs
-        -- end
 
         note.metadata = {
           create_at = getDate(note.metadata),
           last_edited = os.date "%Y-%m-%d %H:%M",
-          -- hubs = getHubs(note.metadata),
-          -- refs = getRefs(note.metadata),
         }
         if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
           for k, v in pairs(note.metadata) do
@@ -615,6 +756,58 @@ return {
       })
     end,
   },
+  -- KANBAN.NVIM
+  {
+    "viniciusteixeiradias/kanban.nvim",
+    event = "LazyFile",
+    cmd = "Kanban",
+    keys = {
+      {
+        "<Localleader>ac",
+        function()
+          local kanban = require "kanban"
+          kanban.toggle()
+        end,
+        desc = "Note: toggle kanban [kanban.nvim]",
+      },
+      {
+        "<Localleader>aC",
+        function()
+          local buffer = vim.api.nvim_get_current_buf()
+          local filetype = vim.bo[buffer].filetype
+          if filetype ~= "markdown" then
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.warn("Invalid filetype! (" .. filetype .. ")")
+            return
+          end
+
+          local filename = vim.api.nvim_buf_get_name(buffer)
+          vim.cmd("Kanban " .. filename)
+        end,
+        desc = "Note: open kanban under current file [kanban.nvim]",
+      },
+    },
+    opts = function()
+      local H = require "r.settings.highlights"
+      return {
+        file = {
+          path = "~/notes/todo.md",
+          name = "agenda.md",
+          create_if_missing = true,
+        },
+
+        -- Highlight colors
+        highlights = {
+          column_header = { bold = true, fg = H.get("Function", "fg") },
+          column_header_active = { bold = true, fg = H.get("Normal", "bg"), bg = H.get("Boolean", "fg") },
+          task = { default = true },
+          task_active = { fg = H.get("Normal", "bg"), bg = H.get("CurSearch", "bg"), bold = true },
+          task_done = { strikethrough = true, fg = H.tint(H.get("Comment", "fg"), 0.5) },
+          separator = { fg = H.tint(H.get("FloatBorder", "fg"), 0.15) },
+        },
+      }
+    end,
+  },
   -- SUPER-KANBAN (disabled)
   {
     "hasansujon786/super-kanban.nvim",
@@ -623,7 +816,7 @@ return {
     keys = {
       {
         "<Leader>oc",
-        "<CMD>SuperKanban todo.md<CR>",
+        "<CMD>SuperKanban open todo.md<CR>",
         desc = "Open: todo kanban [super-kanban.nvim]",
       },
     },
@@ -636,12 +829,61 @@ return {
           "## Todo\n",
           "## Work in progress\n",
           "## Completed\n",
+          "**Complete**",
         },
       },
+
       mappings = {
-        ["<cr>"] = "open_note",
+        -- Close board window
+        ["q"] = "close",
+        -- Show keymap help window
+        ["g?"] = "help",
+
+        -- Create card at various positions
+        ["gN"] = "create_card_before",
+        ["gn"] = "create_card_after",
+        ["gK"] = "create_card_top",
+        ["gJ"] = "create_card_bottom",
+
+        -- Delete or archive Toggle card checkbox
         ["gD"] = "delete_card",
+        ["g<C-t>"] = "archive_card",
         ["<C-t>"] = "toggle_complete",
+
+        -- Sort cards
+        ["g."] = "sort_by_due_descending",
+        ["g,"] = "sort_by_due_ascending",
+
+        -- Search cards
+        ["/"] = "search_card",
+        -- Open date picker
+        ["zi"] = "pick_date",
+        -- Open card note
+        ["<cr>"] = "open_note",
+
+        -- List management
+        ["zN"] = "create_list_at_begin",
+        ["zn"] = "create_list_at_end",
+        ["zD"] = "delete_list",
+        ["zr"] = "rename_list",
+
+        -- Navigation between cards/lists
+        ["<C-k>"] = "jump_up",
+        ["<C-j>"] = "jump_down",
+        ["<C-h>"] = "jump_left",
+        ["<C-l>"] = "jump_right",
+        ["gg"] = "jump_top",
+        ["G"] = "jump_bottom",
+        ["z0"] = "jump_list_begin",
+        ["z$"] = "jump_list_end",
+
+        -- Move cards/lists
+        ["<A-k>"] = "move_up",
+        ["<A-j>"] = "move_down",
+        ["<A-h>"] = "move_left",
+        ["<A-l>"] = "move_right",
+        ["zh"] = "move_list_left",
+        ["zl"] = "move_list_right",
       },
     },
   },
@@ -662,26 +904,6 @@ return {
         "<Plug>SnipClose",
         ft = { "markdown", "neorg", "org" },
         desc = "Misc: close [sniprun]",
-      },
-    },
-  },
-  -- org blink source
-  {
-    "saghen/blink.cmp",
-    optional = true,
-    dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
-    opts = {
-      sources = {
-        per_filetype = {
-          org = { "buffer", "path", "orgmode", "snippets" },
-        },
-        providers = {
-          orgmode = {
-            name = "Orgmode",
-            module = "orgmode.org.autocompletion.blink",
-            fallbacks = { "buffer" },
-          },
-        },
       },
     },
   },

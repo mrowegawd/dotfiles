@@ -1,11 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
 git:
-  paging:
-    colorArg: "always"
-    # colorArg: never
-    useConfig: false
+  pagers:
     # pager: delta --dark --color-only --side-by-side
-    pager: delta --dark --paging=never
+    - pager: delta --dark --paging=never
   commit:
     signOff: false
   merging:

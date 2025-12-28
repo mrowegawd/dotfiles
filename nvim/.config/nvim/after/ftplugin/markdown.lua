@@ -1,7 +1,7 @@
 local keymap, opt = vim.keymap, vim.opt_local
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
-opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
+-- opt.foldlevel = 0 -- gets annoying when set to 0
 
 opt.wrap = false
 opt.list = false

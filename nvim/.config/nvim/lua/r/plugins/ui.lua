@@ -2,7 +2,7 @@ return {
   -- HELPVIEW.NVIM
   {
     "OXY2DEV/helpview.nvim",
-    lazy = false,
+    lazy = false, -- Using ft = "help" will not start it on the first time
   },
   -- VIM-MATCHUP (disabled)
   {

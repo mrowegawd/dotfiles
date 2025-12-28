@@ -32,10 +32,11 @@ local winhighlight_bottom_panel = table.concat({
 local winhighlight_note_panel = table.concat({
   "Normal:NormalNote",
   "NormalNC:NormalNote",
+  "ColorColumn:NormalNote",
   "EndOfBuffer:NormalNote",
+  "SignColumn:NormalNote",
   "CursorLine:CursorLineNote",
   "CursorLineNr:CursorLineNrNote",
-  "SignColumn:PanelBottomNormal",
   "Folded:FoldedNote",
   "Comment:ErrorMsg",
   "@Comment:CommentNote",
@@ -43,8 +44,8 @@ local winhighlight_note_panel = table.concat({
   "Visual:VisualNote",
   "NonText:NonTextNote",
   "LineNr:LineNrNote",
-  "WinSeparator:QuickFixWinSeparator",
-  "Delimiter:QuickFixWinDelimiter",
+  "WinSeparator:WinSeparatorNote",
+  "Delimiter:DelimiterNote",
 }, ",")
 
 local winhighlight_sidebar_panel = table.concat({
@@ -147,6 +148,7 @@ autocmds.bottom_panel = {
 autocmds.notes = {
   ["org"] = true,
   -- ["orgagenda"] = true,
+  ["markdown"] = true,
 }
 
 autocmds.side_panel = {
@@ -164,8 +166,8 @@ autocmds.side_panel = {
 }
 
 autocmds.blacklist_hl_folded = {
-  ["markdown"] = true,
-  ["md"] = true,
+  -- ["markdown"] = true,
+  -- ["md"] = true,
   ["orgagenda"] = true,
   ["org"] = true,
   ["git"] = true,
@@ -248,24 +250,35 @@ local blurred_window = function()
   local filetype, _ = RUtils.buf.get_bo_buft()
 
   if filetype == "" and api.nvim_win_get_config(0).relative == "win" then
+    wo.winhighlight = ""
     return
   end
 
   if autocmds.blacklist_hl_folded[filetype] then
     wo.winhighlight = winhighlight_custom_folded
+    return
   end
 
   if autocmds.bottom_panel[filetype] then
     wo.winhighlight = winhighlight_bottom_panel
+    return
   end
 
   if autocmds.notes[filetype] then
     wo.winhighlight = winhighlight_note_panel
+    return
   end
 
   if autocmds.side_panel[filetype] then
     wo.winhighlight = winhighlight_sidebar_panel
+    return
   end
+
+  if autocmds.winhighlight_filetype_blacklist[filetype] then
+    return
+  end
+
+  wo.winhighlight = ""
 end
 
 -- http://vim.wikia.com/wiki/Make_views_automatic

@@ -194,6 +194,8 @@ local defaults = {
       Step_back = " ",
       Run_last = " ",
       Terminate = " ",
+      Debug = " ",
+      Trace = "✎ ",
     },
     diagnostics = {
       Error = " ",

@@ -138,19 +138,6 @@ return {
       return false
     end,
   },
-  -- MINIMAL
-  {
-    "Yazeed1s/minimal.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local minimal_themes = { "minimal" }
-      if vim.tbl_contains(minimal_themes, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- OXOCARBON
   {
     "nyoom-engineering/oxocarbon.nvim",

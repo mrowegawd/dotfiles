@@ -4,17 +4,19 @@ local base_colors = {
     fg = { from = "Dark_yellow", attr = "fg", alter = -1 },
     bg = { from = "Dark_yellow", attr = "fg", alter = 0.15 },
     bold = true,
+    reverse = false,
   },
   Search = {
     fg = { from = "Dark_orange", attr = "fg", alter = 1 },
     bg = { from = "Dark_orange", attr = "fg", alter = -0.35 },
     bold = true,
+    reverse = false,
   },
   blink_cmp_label_kind_fg_alter = 0.4,
   blink_cmp_label_match_fg_alter = 0.3,
   blink_ghost_text_fg_alter = -0.65,
   bqf_keyword = "Keyword",
-  cmpdocnormal_bg_alter = 0.7,
+  cmpdocnormal_bg_alter = 4.8,
   comment_fg_alter = 0.65,
   cursor_fg = "#c7063c",
   cursorline_fg_alter = 0.1,
@@ -24,8 +26,9 @@ local base_colors = {
   floatborder_fg_alter = 0.5,
   fzflua_file_part_fg = 0.85,
   fzflua_normal_bg_alter = 0.5,
-  grugfar_bg_alter = -0.35,
-  grugfar_fg_alter = 0.2,
+  grugfar_result_linenr_bg_alter = -0.35,
+  grugfar_result_linenr_fg_alter = 0.65,
+  grugfar_result_number_fg_alter = 0.6,
   hovered_cursorline_bg_alter = 0.3,
   linenr_fg_alter = 0.08,
   lsp_code_lens_bg_alter = 0.15,
@@ -65,17 +68,19 @@ local base_colors = {
   code_block_note_bg_alter = 0.3, -- for Org file (better to leave it as is)
   comment_note_fg_alter = 1.2,
   cursorline_note_bg_alter = 0.1,
-  cursorlinenr_note_fg_alter = 0.6,
   cursorlinenr_note_bg_alter = 0.25,
-  urllink_note_fg_alter = 0.2,
-  urllink_note_bg_alter = 0.6,
+  delimeter_note_fg_alter = 1,
   fold_note_fg_alter = 0.1,
+  linenr_note_fg_alter = 0.4,
   nontext_note_fg_alter = 0.35,
   normal_note_bg_alter = 5,
   normal_note_fg_alter = 0.45,
+  urllink_note_bg_alter = 0.6,
+  urllink_note_fg_alter = 0.2,
   visual_note_bg_alter = 0.8,
-  winbar_note_bg_alter = 0.15,
+  winbar_note_bg_alter = 0.2,
   winbar_note_fg_alter = 0.55,
+  winseparator_note_fg_alter = 0.08,
 
   normal_keyword_alter = 0.14,
 
@@ -88,6 +93,7 @@ local base_colors = {
   fold_bg = 0.05,
 
   render_markdown_code_bg_alter = 0.4,
+  render_markdown_code_border_fg_alter = -0.1,
   render_markdown_code_inline_bg_alter = 0.12,
   render_markdown_code_inline_fg_alter = 0.1,
 
@@ -133,11 +139,15 @@ local base_colors = {
 local update_col_colorscheme = {
   ["ashen"] = {
     blink_ghost_text_fg_alter = -0.65,
-    comment_fg_alter = 0.7,
+    cmpdocnormal_bg_alter = 6,
+    comment_fg_alter = 0.8,
     cursorline_fg_alter = 0.08,
-    floatborder_fg_alter = 0.4,
+    floatborder_fg_alter = 0.55,
     fzflua_file_part_fg = 0.5,
-    linenr_fg_alter = 1.3,
+    grugfar_result_linenr_bg_alter = -0.3,
+    grugfar_result_linenr_fg_alter = 0.65,
+    grugfar_result_number_fg_alter = 0.65,
+    linenr_fg_alter = 1.15,
     lsp_code_lens_bg_alter = 3,
     lsp_code_lens_fg_alter = 13,
     noice_cmdline_fg_alter = 2,
@@ -148,11 +158,11 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 1.2,
     quickfixwinbar_bg_alter = 1,
     quickfixwinbar_fg_alter = 5.5,
-    render_markdown_code_bg_alter = 0.3,
+    render_markdown_code_bg_alter = -0.2,
     statusline_bg_alter = 0.1,
     statusline_fg_alter = 12,
     trouble_indent_fg_alter = 2,
-    winbar_fg_alter = 24,
+    winbar_fg_alter = 20,
     winbar_right_block_bg_alter = 0.15,
     winbar_right_block_fg_alter = -0.25,
     winseparator_alter = 2.4,
@@ -160,11 +170,12 @@ local update_col_colorscheme = {
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.7,
     fold_note_fg_alter = 0.05,
+    linenr_note_fg_alter = 0.5,
     nontext_note_fg_alter = 0.8,
     normal_note_bg_alter = 15,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = -0.1,
-    winbar_note_bg_alter = 0.2,
+    winbar_note_bg_alter = 0.25,
     winbar_note_fg_alter = -0.1,
 
     zshlines_fg_alter = 3.2,
@@ -319,6 +330,7 @@ local update_col_colorscheme = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
     blink_cmp_label_kind_fg_alter = 2,
     blink_ghost_text_fg_alter = -0.65,
+    cmpdocnormal_bg_alter = 1.5,
     comment_fg_alter = 0.2,
     cursor_fg = "#ffa560",
     dapstopped_bg_alter = 0.2,
@@ -332,7 +344,7 @@ local update_col_colorscheme = {
     pmenu_bg_alter = 1.3,
     pmenu_sel_bg_alter = -0.6,
     quickfixline_linenr_fg_alter = 0.8,
-    render_markdown_code_bg_alter = -0.25,
+    render_markdown_code_bg_alter = -0.2,
     render_markdown_code_inline_bg_alter = 0.15,
     render_markdown_code_inline_fg_alter = 0.05,
     statusline_bg_alter = 0.05,
@@ -344,8 +356,8 @@ local update_col_colorscheme = {
 
     code_block_note_bg_alter = -0.1,
     comment_note_fg_alter = 0.6,
-    cursorlinenr_note_fg_alter = 0.4,
-    normal_note_bg_alter = 3.5,
+    linenr_note_fg_alter = 0.45,
+    normal_note_bg_alter = 3,
     normal_note_fg_alter = 0.6,
     winbar_note_bg_alter = 0.15,
     winbar_note_fg_alter = 0.3,
@@ -354,15 +366,19 @@ local update_col_colorscheme = {
     zshlines_bg_alter = 2.2,
   },
   ["kanagawa"] = {
-    comment_fg_alter = 0.5,
+    blink_ghost_text_fg_alter = -0.45,
+    cmpdocnormal_bg_alter = 2,
+    comment_fg_alter = 0.7,
     cursor_fg = "#b3276f",
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 0.25,
-    linenr_fg_alter = 0.9,
-    lsp_code_lens_bg_alter = 0.5,
-    lsp_code_lens_fg_alter = 3,
+    grugfar_result_linenr_fg_alter = 0.55,
+    grugfar_result_number_fg_alter = 0.55,
+    linenr_fg_alter = 1,
+    lsp_code_lens_bg_alter = 1,
+    lsp_code_lens_fg_alter = 4,
     noice_cmdline_fg_alter = 0.8,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.6 },
+    nontext_col = { from = "Keyword", attr = "fg", alter = -0.5 },
     normal_keyword_alter = 0.08,
     pmenu_bg_alter = 0.8,
     quickfixline_linenr_fg_alter = 0.8,
@@ -371,13 +387,15 @@ local update_col_colorscheme = {
     render_markdown_code_inline_bg_alter = 0.2,
     snacks_indent_scope_fg_alter = 0.22,
     statusline_bg_alter = 0.15,
-    statusline_fg_alter = 3.5,
+    statusline_fg_alter = 4,
     trouble_indent_fg_alter = 1.3,
     winbar_fg_alter = 6.5,
     winbar_right_block_bg_alter = 0.16,
     winseparator_alter = 0.5,
 
     code_block_note_bg_alter = -0.15,
+    linenr_note_fg_alter = 0.55,
+    winbar_note_fg_alter = 0.5,
 
     zshlines_fg_alter = 1.2,
     zshlines_bg_alter = 2.5,
@@ -385,11 +403,12 @@ local update_col_colorscheme = {
   ["gruvbox"] = {
     CurSearch = {
       fg = { from = "Dark_yellow", attr = "fg", alter = -0.8 },
-      bg = { from = "Dark_yellow", attr = "fg", alter = 1 },
+      bg = { from = "Dark_yellow", attr = "fg", alter = 15 },
       bold = true,
+      reverse = false,
     },
     blink_ghost_text_fg_alter = -0.6,
-    cmpdocnormal_bg_alter = -0.15,
+    cmpdocnormal_bg_alter = 1.8,
     comment_fg_alter = 0.45,
     cursor_fg = "#b3276f",
     dapstopped_bg_alter = 0.2,
@@ -403,10 +422,11 @@ local update_col_colorscheme = {
     normal_keyword_alter = 0.05,
     pmenu_bg_alter = 0.8,
     quickfixline_linenr_fg_alter = 0.95,
-    quickfixline_sp_alter = 1.2,
+    quickfixline_sp_alter = 2,
     quickfixwinbar_bg_alter = 0.3,
     quickfixwinbar_fg_alter = 3.8,
     render_markdown_code_bg_alter = -0.15,
+    render_markdown_code_border_fg_alter = 0.5,
     render_markdown_code_inline_bg_alter = 0.2,
     snacks_indent_scope_fg_alter = 0.22,
     statusline_bg_alter = 0.08,
@@ -418,9 +438,11 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = -0.05,
     winseparator_alter = 0.25,
 
+    delimeter_note_fg_alter = 1.5,
+    linenr_note_fg_alter = 0.6,
     normal_note_bg_alter = 2.5,
     normal_note_fg_alter = 0.4,
-    urllink_note_bg_alter = 0.6,
+    urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.3,
     winbar_note_bg_alter = 0.15,
     winbar_note_fg_alter = 0.8,
@@ -430,7 +452,7 @@ local update_col_colorscheme = {
   },
   ["lemons"] = {
     blink_cmp_label_kind_fg_alter = 0.5,
-    cmpdocnormal_bg_alter = 1.5,
+    cmpdocnormal_bg_alter = 6,
     comment_fg_alter = 0.1,
     linenr_fg_alter = 1.8,
     lsp_code_lens_bg_alter = 3.5,
@@ -440,7 +462,7 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 1.2,
     quickfixwinbar_bg_alter = 0.5,
     quickfixwinbar_fg_alter = 5,
-    render_markdown_code_bg_alter = 2.5,
+    render_markdown_code_bg_alter = -0.15,
     statusline_bg_alter = 0.25,
     statusline_fg_alter = 15,
     statusline_right_block_bg = 0.2,
@@ -452,12 +474,13 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 2.5,
 
-    cursorlinenr_note_fg_alter = 0.7,
+    linenr_note_fg_alter = 1,
     nontext_note_fg_alter = 0.45,
     normal_note_bg_alter = 6.5,
     normal_note_fg_alter = 0.4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.05,
+    winbar_note_fg_alter = 0.45,
 
     zshlines_fg_alter = 4,
     zshlines_bg_alter = 10,
@@ -466,6 +489,7 @@ local update_col_colorscheme = {
     Directory = { fg = "#7788aa", bg = "NONE" },
     blink_ghost_text_fg_alter = -0.5,
     bqf_keyword = "String",
+    cmpdocnormal_bg_alter = 4.5,
     comment_fg_alter = 0.6,
     cursor_fg = "#deeeed",
     cursorline_fg_alter = 0.2,
@@ -481,13 +505,13 @@ local update_col_colorscheme = {
     my_code_usage_fg_alter = -0.1,
     noice_cmdline_fg_alter = 1.5,
     nontext_col = { from = "Keyword", attr = "fg", alter = -0.65 },
-    normal_keyword_alter = 0.1,
+    normal_keyword_alter = 0.15,
     pmenu_bg_alter = 2.2,
     quickfixline_linenr_fg_alter = 1.5,
-    quickfixline_sp_alter = 0.45,
+    quickfixline_sp_alter = 0.8,
     quickfixwinbar_bg_alter = 0.3,
-    quickfixwinbar_fg_alter = 3.5,
-    render_markdown_code_bg_alter = 1.2,
+    quickfixwinbar_fg_alter = 3,
+    render_markdown_code_bg_alter = -0.2,
     render_markdown_code_inline_bg_alter = 0.3,
     render_markdown_code_inline_fg_alter = 0.4,
     snacks_notifier_info_fg = 1.6,
@@ -501,8 +525,8 @@ local update_col_colorscheme = {
     winseparator_alter = 1.6,
 
     cursorlinenr_note_bg_alter = 0.3,
-    cursorlinenr_note_fg_alter = 0.6,
-    normal_note_bg_alter = 7,
+    linenr_note_fg_alter = 0.7,
+    normal_note_bg_alter = 10,
     normal_note_fg_alter = 0.2,
 
     zshlines_fg_alter = 2.3,
@@ -553,29 +577,15 @@ local update_col_colorscheme = {
     diffdelete_fg_alter = -0.3,
     diffdelete_bg_alter = 0.2,
   },
-  ["minimal"] = {
-    blink_ghost_text_fg_alter = -0.4,
-    cursor_fg = "#ece1d7",
-    dapstopped_bg_alter = 0.15,
-    fold_fg = 0.3,
-    fzflua_file_part_fg = 0.7,
-    linenr_fg_alter = 0.6,
-    noice_cmdline_fg_alter = 0.8,
-    normal_keyword_alter = 0.1,
-    pmenu_bg_alter = 1,
-    render_markdown_code_bg_alter = 0.23,
-    snacks_indent_scope_fg_alter = 0.13,
-    trouble_indent_fg_alter = 0.6,
-    winbar_fg_alter = 3.5,
-    winbar_right_block_bg_alter = 0.2,
-  },
   ["neogotham"] = {
     blink_ghost_text_fg_alter = -0.6,
+    cmpdocnormal_bg_alter = 2,
     comment_fg_alter = 0.25,
     cursor_fg = "#98d1ce",
     dapstopped_bg_alter = 0.15,
     floatborder_fg_alter = 0.25,
-    fold_fg = 0.05,
+    fold_fg = 0.1,
+    grugfar_result_number_fg_alter = 0.5,
     linenr_fg_alter = 0.85,
     lsp_code_lens_bg_alter = 0.45,
     lsp_code_lens_fg_alter = 3,
@@ -598,7 +608,8 @@ local update_col_colorscheme = {
     winbar_note_fg_alter = 0.35,
   },
   ["oxocarbon"] = {
-    blink_ghost_text_fg_alter = -0.75,
+    blink_ghost_text_fg_alter = -0.6,
+    cmpdocnormal_bg_alter = 2,
     comment_fg_alter = 0.15,
     cursor_fg = "#ffffff",
     dapstopped_bg_alter = 0.2,
@@ -621,15 +632,16 @@ local update_col_colorscheme = {
     statusline_fg_alter = 2.5,
     tabline_bg_alter = 0.15,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 3.8,
+    winbar_fg_alter = 3.5,
     winbar_right_block_bg_alter = 0.2,
     winseparator_alter = 0.25,
 
+    code_block_note_bg_alter = -0.15,
+    comment_note_fg_alter = 0.95,
+    linenr_note_fg_alter = 0.6,
+    nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 2,
     normal_note_fg_alter = 0.3,
-    nontext_note_fg_alter = 0.5,
-    comment_note_fg_alter = 0.95,
-    code_block_note_bg_alter = -0.15,
     urllink_note_bg_alter = 0.35,
     urllink_note_fg_alter = -0.15,
 
@@ -638,23 +650,26 @@ local update_col_colorscheme = {
   },
   ["rose-pine"] = {
     blink_ghost_text_fg_alter = -0.6,
+    cmpdocnormal_bg_alter = 3.5,
     comment_fg_alter = 0.8,
     floatborder_fg_alter = 0.3,
     fold_fg = 0.08,
     fzflua_file_part_fg = 1.1,
+    grugfar_result_linenr_fg_alter = 0.75,
+    grugfar_result_number_fg_alter = 0.5,
     hovered_cursorline_bg_alter = 0.6,
     linenr_fg_alter = 1.1,
     lsp_code_lens_bg_alter = 0.7,
     lsp_code_lens_fg_alter = 5,
     noice_cmdline_fg_alter = 2,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.62 },
+    nontext_col = { from = "Keyword", attr = "fg", alter = -0.6 },
     normal_keyword_alter = 0.12,
     pmenu_bg_alter = 1,
     pmenu_sel_bg_alter = -0.3,
     quickfixline_linenr_fg_alter = 0.85,
     quickfixline_sp_alter = 1.8,
     quickfixwinbar_fg_alter = 3.5,
-    render_markdown_code_bg_alter = 0.4,
+    render_markdown_code_bg_alter = -0.18,
     statusline_bg_alter = 0.05,
     statusline_fg_alter = 5,
     statusline_right_block_bg = 0.3,
@@ -667,6 +682,7 @@ local update_col_colorscheme = {
     winseparator_alter = 0.5,
 
     comment_note_fg_alter = 0.8,
+    linenr_note_fg_alter = 0.6,
 
     zshlines_fg_alter = 1.6,
     zshlines_bg_alter = 4.5,
@@ -698,6 +714,7 @@ local update_col_colorscheme = {
     floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
     fzflua_file_part_fg = 0.6,
+    grugfar_result_linenr_fg_alter = 0.7,
     linenr_fg_alter = 1,
     lsp_code_lens_bg_alter = 0.8,
     lsp_code_lens_fg_alter = 5,
@@ -718,15 +735,21 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = -0.3,
     winseparator_alter = 0.6,
 
+    linenr_note_fg_alter = 0.6,
+
     zshlines_fg_alter = 1,
     zshlines_bg_alter = 3.5,
   },
   ["tokyonight-storm"] = {
     blink_ghost_text_fg_alter = -0.55,
-    comment_fg_alter = 0.2,
+    cmpdocnormal_bg_alter = 0.8,
+    comment_fg_alter = 0.25,
     floatborder_fg_alter = 0.2,
     fold_fg = 0.05,
-    fzflua_file_part_fg = 0.6,
+    fzflua_file_part_fg = 0.7,
+    grugfar_result_linenr_bg_alter = -0.25,
+    grugfar_result_linenr_fg_alter = 0.4,
+    grugfar_result_number_fg_alter = 0.8,
     linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.25,
     lsp_code_lens_fg_alter = 1.8,
@@ -735,12 +758,12 @@ local update_col_colorscheme = {
     quickfixline_linenr_fg_alter = 0.2,
     quickfixwinbar_bg_alter = 0.05,
     quickfixwinbar_fg_alter = 1.5,
-    render_markdown_code_bg_alter = -0.15,
+    render_markdown_code_bg_alter = -0.25,
     statusline_fg_alter = 1.8,
     statusline_right_block_bg = 0.15,
+    tabline_bg_alter = 0.1,
     trouble_indent_fg_alter = 0.75,
     winbar_fg_alter = 2.5,
-    winbar_note_fg_alter = 0.4,
     winbar_right_block_bg_alter = 0.15,
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.15,
@@ -748,23 +771,27 @@ local update_col_colorscheme = {
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.65,
     fold_note_fg_alter = 0.05,
+    linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.45,
     normal_note_bg_alter = 1,
     normal_note_fg_alter = 0.3,
-    urllink_note_bg_alter = 0.7,
-    urllink_note_fg_alter = 0.2,
+    urllink_note_bg_alter = 0.4,
+    urllink_note_fg_alter = 0.1,
+    winbar_note_fg_alter = 0.05,
 
     zshlines_fg_alter = 0.45,
     zshlines_bg_alter = 1.2,
   },
   ["nightfox"] = {
     blink_ghost_text_fg_alter = -0.65,
+    cmpdocnormal_bg_alter = 2.5,
     comment_fg_alter = 0.5,
     cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
     floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
     fzflua_file_part_fg = 0.6,
+    grugfar_result_linenr_fg_alter = 0.55,
     linenr_fg_alter = 0.8,
     lsp_code_lens_bg_alter = 0.6,
     lsp_code_lens_fg_alter = 3.5,
@@ -786,6 +813,7 @@ local update_col_colorscheme = {
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.7,
     fold_note_fg_alter = -0.1,
+    linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 3,
     normal_note_fg_alter = 0.2,
@@ -795,12 +823,16 @@ local update_col_colorscheme = {
   },
   ["nordfox"] = {
     blink_ghost_text_fg_alter = -0.4,
+    cmpdocnormal_bg_alter = 0.7,
     comment_fg_alter = 0.15,
     cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
     floatborder_fg_alter = 0.15,
     fold_fg = 0.08,
     fzflua_file_part_fg = 1,
+    grugfar_result_linenr_bg_alter = -0.15,
+    grugfar_result_linenr_fg_alter = 0.55,
+    grugfar_result_number_fg_alter = 0.75,
     hovered_cursorline_bg_alter = -0.12,
     linenr_fg_alter = 0.4,
     lsp_code_lens_bg_alter = 0.18,
@@ -826,7 +858,7 @@ local update_col_colorscheme = {
 
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.7,
-    cursorlinenr_note_fg_alter = 0.5,
+    linenr_note_fg_alter = 0.5,
     fold_note_fg_alter = -0.1,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 0.5,
@@ -838,13 +870,15 @@ local update_col_colorscheme = {
   },
   ["vscode"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
-    cmpdocnormal_bg_alter = 5,
+    cmpdocnormal_bg_alter = 5.5,
     comment_fg_alter = 0.55,
     cursor_fg = "#fa1919",
     cursorline_fg_alter = 0.1,
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 0.45,
+    fold_fg = 0.15,
     fzflua_file_part_fg = 0.85,
+    grugfar_result_linenr_fg_alter = 0.7,
     linenr_fg_alter = 1.6,
     lsp_code_lens_bg_alter = 1.8,
     lsp_code_lens_fg_alter = 9.5,
@@ -860,7 +894,7 @@ local update_col_colorscheme = {
     quickfixline_sp_alter = 1.5,
     quickfixwinbar_bg_alter = 0.8,
     quickfixwinbar_fg_alter = 5,
-    render_markdown_code_bg_alter = 2,
+    render_markdown_code_bg_alter = -0.15,
     snacks_indent_scope_fg_alter = 0.15,
     statusline_fg_alter = 8.5,
     tabline_bg_alter = 0.5,
@@ -871,7 +905,7 @@ local update_col_colorscheme = {
 
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.55,
-    cursorlinenr_note_fg_alter = 0.4,
+    linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 15,
     normal_note_fg_alter = 0.3,
@@ -942,10 +976,14 @@ local update_col_colorscheme = {
   },
   ["zenburn"] = {
     blink_ghost_text_fg_alter = -0.45,
+    cmpdocnormal_bg_alter = 0.6,
     comment_fg_alter = 0.08,
     floatborder_fg_alter = 0.2,
     fold_fg = 0.15,
     fzflua_file_part_fg = 0.7,
+    grugfar_result_linenr_bg_alter = -0.2,
+    grugfar_result_linenr_fg_alter = 0.5,
+    grugfar_result_number_fg_alter = 0.65,
     hovered_cursorline_bg_alter = 0.1,
     linenr_fg_alter = 0.55,
     lsp_code_lens_bg_alter = 0.2,
@@ -975,10 +1013,12 @@ local update_col_colorscheme = {
 
     code_block_note_bg_alter = -0.15,
     comment_note_fg_alter = 0.35,
-    cursorlinenr_note_fg_alter = 0.4,
+    linenr_note_fg_alter = 0.4,
+    fold_note_fg_alter = 0.05,
     nontext_note_fg_alter = 0.4,
     normal_note_bg_alter = 0.8,
-    urllink_note_fg_alter = 0.1,
+    urllink_note_bg_alter = 0.4,
+    urllink_note_fg_alter = -0.1,
     winbar_note_fg_alter = 0.25,
 
     zshlines_fg_alter = 0.4,
@@ -1190,8 +1230,13 @@ local general_overrides = function()
     },
     {
       LineNrNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.cursorlinenr_note_fg_alter },
+        fg = { from = "NormalNote", attr = "bg", alter = colors.linenr_note_fg_alter },
         bg = { from = "NormalNote", attr = "bg" },
+      },
+    },
+    {
+      DelimiterNote = {
+        fg = { from = "NormalNote", attr = "bg", alter = colors.delimeter_note_fg_alter },
       },
     },
     {
@@ -1221,6 +1266,12 @@ local general_overrides = function()
     { CodeBlock = { bg = { from = "NormalNote", attr = "bg", alter = colors.code_block_note_bg_alter } } },
     { VisualNote = { bg = { from = "Visual", attr = "bg", alter = colors.visual_note_bg_alter } } },
     { PmenuNote = { bg = { from = "NormalNote", attr = "bg" } } },
+    {
+      WinSeparatorNote = {
+        fg = { from = "NormalNote", attr = "bg", alter = colors.winseparator_note_fg_alter },
+        bg = { from = "NormalNote", attr = "bg" },
+      },
+    },
 
     {
       TabLine = {
@@ -1569,6 +1620,25 @@ local general_overrides = function()
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                   CREATED HIGHLIGHTS                    ║
     -- ╚═════════════════════════════════════════════════════════╝
+
+    { heading1 = { fg = "#4d85c3" } },
+    { heading1 = { fg = { from = "heading1", attr = "fg", alter = 1 } } },
+
+    { heading2 = { fg = "#389674" } },
+    { heading2 = { fg = { from = "heading2", attr = "fg", alter = 0.4 } } },
+
+    { heading3 = { fg = "#b0be1e" } },
+    { heading3 = { fg = { from = "heading3", attr = "fg", alter = 0.5 } } },
+
+    { heading4 = { fg = "#8594c8" } },
+    { heading4 = { fg = { from = "heading4", attr = "fg", alter = 0.5 } } },
+
+    { heading5 = { fg = "#f76328" } },
+    { heading5 = { fg = { from = "heading5", attr = "fg", alter = 0.8 } } },
+
+    { heading6 = { fg = "#fccf3e" } },
+    { heading6 = { fg = { from = "heading6", attr = "fg", alter = 0.8 } } },
+
     {
       HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = colors.hovered_cursorline_bg_alter } },
     },
@@ -1974,7 +2044,7 @@ local general_overrides = function()
     { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
 
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.3 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.25 } } },
 
     { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
     {
@@ -2208,42 +2278,42 @@ local general_overrides = function()
 
     {
       ["@org.headline.level1.org"] = {
-        fg = H.tint("#4d85c3", 0.3),
+        fg = { from = "heading1", attr = "fg" },
         bold = true,
         italic = true,
       },
     },
     {
       ["@org.headline.level2.org"] = {
-        fg = H.tint("#389674", 0.3),
+        fg = { from = "heading2", attr = "fg" },
         bold = true,
         italic = true,
       },
     },
     {
       ["@org.headline.level3.org"] = {
-        fg = H.tint("#b0be1e", 0.3),
+        fg = { from = "heading3", attr = "fg" },
         bold = true,
         italic = true,
       },
     },
     {
       ["@org.headline.level4.org"] = {
-        fg = H.tint("#8594c8", 0.3),
+        fg = { from = "heading4", attr = "fg" },
         bold = true,
         italic = true,
       },
     },
     {
       ["@org.headline.level5.org"] = {
-        fg = H.tint("#f76328", 0.3),
+        fg = { from = "heading5", attr = "fg" },
         bold = true,
         italic = true,
       },
     },
     {
       ["@org.headline.level6.org"] = {
-        fg = H.tint("#fccf3e", 0.3),
+        fg = { from = "heading6", attr = "fg" },
         bold = true,
         italic = true,
       },
@@ -2266,7 +2336,7 @@ local general_overrides = function()
     {
       ["@org.hyperlink.url.org"] = {
         fg = { from = "Keyword", attr = "fg", alter = colors.urllink_note_fg_alter },
-        bg = H.darken(H.get("Keyword", "fg"), colors.urllink_note_bg_alter, H.get("NormalNote", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), colors.urllink_note_bg_alter, H.get("Normal", "bg")),
         bold = true,
       },
     },
@@ -2363,12 +2433,108 @@ local general_overrides = function()
     { GlancePreviewCursorLine = { bg = "#1b1c4b" } },
 
     --  ─────────────────────────────[ MARKDOWN ]──────────────────────────
-    { ["@markup.heading.1.markdown"] = { fg = "#4d85c3", bold = true, italic = true, bg = "NONE" } },
-    { ["@markup.heading.2.markdown"] = { fg = "#389674", bold = true, italic = true, bg = "NONE" } },
-    { ["@markup.heading.3.markdown"] = { fg = "#b0be1e", bold = true, italic = true, bg = "NONE" } },
-    { ["@markup.heading.4.markdown"] = { fg = "#8594c8", bold = true, italic = true, bg = "NONE" } },
-    { ["@markup.heading.5.markdown"] = { fg = "#f76328", bold = true, italic = true, bg = "NONE" } },
-    { ["@markup.heading.6.markdown"] = { fg = "#fccf3e", bold = true, italic = true, bg = "NONE" } },
+    {
+      ["@markup.heading.1.markdown"] = {
+        fg = { from = "heading1", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH1 = {
+        fg = { from = "heading1", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.2.markdown"] = {
+        fg = { from = "heading2", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH2 = {
+        fg = { from = "heading2", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.3.markdown"] = {
+        fg = { from = "heading3", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH3 = {
+        fg = { from = "heading3", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.4.markdown"] = {
+        fg = { from = "heading4", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH4 = {
+        fg = { from = "heading4", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.5.markdown"] = {
+        fg = { from = "heading5", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH5 = {
+        fg = { from = "heading5", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.6.markdown"] = {
+        fg = { from = "heading6", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      RenderMarkdownH6 = {
+        fg = { from = "heading6", attr = "fg" },
+        bg = { from = "NormalNote", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+
     { ["@markup.raw.block.markdown"] = { bg = "NONE" } },
     { ["@markup.list.markdown"] = { bg = "NONE" } },
 
@@ -2421,7 +2587,11 @@ local general_overrides = function()
       },
     },
 
-    { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = colors.render_markdown_code_bg_alter } } },
+    {
+      RenderMarkdownCode = {
+        bg = { from = "NormalNote", attr = "bg", alter = colors.render_markdown_code_bg_alter },
+      },
+    },
     {
       RenderMarkdownCodeInline = {
         fg = { from = "Keyword", attr = "fg", alter = colors.render_markdown_code_inline_fg_alter },
@@ -2431,7 +2601,7 @@ local general_overrides = function()
     },
     {
       RenderMarkdownCodeBorder = {
-        bg = { from = "RenderMarkdownCodeInline", attr = "bg", alter = 0.3 },
+        bg = { from = "RenderMarkdownCodeInline", attr = "bg", alter = colors.render_markdown_code_border_fg_alter },
       },
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
@@ -2451,6 +2621,13 @@ local general_overrides = function()
     { GrugFarInputPlaceholder = { inherit = "GrugFarHelpHeader" } },
 
     {
+      GrugFarResultsMatch = {
+        fg = { from = "Function", attr = "fg", alter = 0.3 },
+        bg = { from = "Function", attr = "fg", alter = -0.5 },
+        bold = true,
+      },
+    },
+    {
       GrugFarResultsPath = {
         fg = { from = "Directory", attr = "fg", alter = -0.3 },
         bold = true,
@@ -2459,20 +2636,13 @@ local general_overrides = function()
     },
     {
       GrugFarResultsLineNr = {
-        fg = { from = "LineNr", attr = "fg", alter = colors.grugfar_fg_alter },
-        bg = { from = "LineNr", attr = "fg", alter = colors.grugfar_bg_alter },
-      },
-    },
-    {
-      GrugFarResultsMatch = {
-        fg = { from = "Function", attr = "fg", alter = 0.3 },
-        bg = { from = "Function", attr = "fg", alter = -0.5 },
-        bold = true,
+        fg = { from = "LineNr", attr = "fg", alter = colors.grugfar_result_linenr_fg_alter },
+        bg = { from = "LineNr", attr = "fg", alter = colors.grugfar_result_linenr_bg_alter },
       },
     },
     {
       GrugFarResultsNumberLabel = {
-        fg = H.darken(H.get("DiagnosticError", "fg"), 0.3, H.get("Normal", "bg")),
+        fg = H.darken(H.get("DiagnosticError", "fg"), colors.grugfar_result_number_fg_alter, H.get("Normal", "bg")),
         bold = false,
       },
     },

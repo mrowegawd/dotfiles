@@ -844,8 +844,39 @@ function M.change_colors()
   local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
 
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
-  local lazygit_inactive_border_fg = 1.2
+  local lazygit_inactive_border_fg = 3.5
+  local lazygit_inactive_text_fg = 1
+  local lazygit_default_text_fg = 0.5
+  if vim.g.colorscheme == "lackluster" then
+    lazygit_default_text_fg = 3
+  end
+  if vim.g.colorscheme == "lemons" then
+    lazygit_inactive_border_fg = 5
+    lazygit_default_text_fg = 5
+  end
+  if vim.g.colorscheme == "neogotham" then
+    lazygit_inactive_border_fg = 1.5
+    lazygit_default_text_fg = 1.5
+  end
+  if vim.g.colorscheme == "oxocarbon" then
+    lazygit_inactive_border_fg = 1
+    lazygit_default_text_fg = 2
+  end
+  if vim.tbl_contains({ "nordfox", "tokyonight-storm" }, vim.g.colorscheme) then
+    lazygit_inactive_border_fg = 0.5
+    lazygit_default_text_fg = 0.8
+  end
+  if vim.g.colorscheme == "vscode" then
+    lazygit_inactive_border_fg = 4
+    lazygit_default_text_fg = 3
+  end
+  if vim.g.colorscheme == "zenburn" then
+    lazygit_inactive_border_fg = 0.5
+    lazygit_default_text_fg = 0.7
+  end
   local lazygit_inactive_border = H.tint(H.get("Normal", "bg"), lazygit_inactive_border_fg)
+  local lazygit_inactive_text = H.tint(H.get("Normal", "fg"), lazygit_inactive_text_fg)
+  local lazygit_option_text = H.tint(lazygit_inactive_border, lazygit_default_text_fg)
 
   -- ─< EWW >────────────────────────────────────────────────────────────
   local __eww_icon_fg = 1
@@ -912,13 +943,13 @@ function M.change_colors()
     },
     lazygit = {
       active_border = H.get("Keyword", "fg"),
+
       inactive_border = lazygit_inactive_border,
+      default_fg = lazygit_inactive_text,
 
       selected_bg = H.get("LazygitselectedLineBgColor", "bg"),
 
-      option_txt = H.tint(lazygit_inactive_border, 0.5),
-
-      default_fg = H.tint(H.get("Normal", "fg"), 5),
+      option_txt = lazygit_option_text,
     },
     dunst = {
       low_fg = H.tint(H.get("WinSeparator", "fg"), 2),

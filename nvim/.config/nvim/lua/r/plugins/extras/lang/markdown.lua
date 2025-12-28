@@ -106,56 +106,67 @@ return {
     opts = function()
       vim.cmd [[hi RenderMarkdownH1Bg guibg=NONE]] -- disable the background color for H1bg
       local H = require "r.settings.highlights"
-      H.plugin("RenderMarkdownHi", {
-        {
-          RenderMarkdownH1Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.1.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+      vim.schedule(function()
+        H.plugin("RenderMarkdownHi", {
+          {
+            RenderMarkdownH1Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.1.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-        {
-          RenderMarkdownH2Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.2.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+          {
+            RenderMarkdownH2Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.2.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-        {
-          RenderMarkdownH3Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.3.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+          {
+            RenderMarkdownH3Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.3.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-        {
-          RenderMarkdownH4Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.4.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+          {
+            RenderMarkdownH4Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.4.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-        {
-          RenderMarkdownH5Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.5.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+          {
+            RenderMarkdownH5Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.5.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-        {
-          RenderMarkdownH6Bg = {
-            fg = { from = "Normal", attr = "bg" },
-            bg = { from = "@markup.heading.6.markdown", attr = "fg" },
-            reverse = false,
-            bold = true,
+          {
+            RenderMarkdownH6Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.6.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
           },
-        },
-      })
+
+          {
+            RenderMarkdownH6Bg = {
+              fg = { from = "NormalNote", attr = "bg" },
+              bg = { from = "@markup.heading.6.markdown", attr = "fg" },
+              reverse = false,
+              bold = true,
+            },
+          },
+        })
+      end)
       return {
         bullet = { icons = { "", "•", "", "-", "-" } },
         code = {

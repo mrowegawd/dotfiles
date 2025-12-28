@@ -61,8 +61,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#373737"
-colorsuggest="fg=#535353"
+colorline="#181818"
+colorsuggest="fg=#262626"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -417,8 +417,8 @@ function __prompt_eval() {
     virtualenv_prompt=""
   fi
 
-  local dots_prompt_icon="%F{$colorline}╰─%f %F{$colorline} %f "
-  local dots_prompt_failure_icon="%F{$colorline}╰─%f %F{red}✘ %f "
+  local dots_prompt_icon="%F{$colorline}╰─%f "
+  local dots_prompt_failure_icon="%F{$colorline}╰─%f%F{red}✘%f "
   local top="%F{$colorline}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-}%F{$colorline}]%f %(1j.%F{cyan}job:%j✦%f .) %F{cyan}${virtualenv_prompt}"
   local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")

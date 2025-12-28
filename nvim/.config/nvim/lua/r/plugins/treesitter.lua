@@ -218,7 +218,7 @@ return {
     -- "mrowegawd/nvim-treesitter-context",
     "nvim-treesitter/nvim-treesitter-context",
     -- enabled = false,
-    event = "BufReadPost",
+    event = "LspAttach",
     keys = {
       {
         "<leader>ut",
@@ -487,6 +487,38 @@ return {
               TreesitterContextLineNumber = {
                 fg = { from = "TreesitterContext", attr = "bg", alter = 1.5 },
                 bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "Keyword", attr = "fg" },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["tokyonight-storm"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+              },
+            },
+            {
+              TreesitterContextBottom = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext", attr = "bg" },
+                sp = "NONE",
+              },
+            },
+
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.65 },
+                bg = { from = "TreesitterContext" },
+                bold = true,
               },
             },
             {
