@@ -297,6 +297,84 @@ c_ii() {
   echo -e "$XDG_SESSION_DESKTOP\n" # use `X11` or `Wayland`
 }
 
+# check: system info
+c_sysinfo() {
+  local RED='\e[1;31m'
+  local GREEN='\e[1;32m'
+  local YELLOW='\e[1;33m'
+  local BLUE='\e[1;34m'
+  -- CYAN='\e[1;36m'
+  local NC='\e[0m' # No Color
+
+  clear
+
+  echo -e "${BLUE}========================================${NC}"
+  echo -e "${GREEN}   LINUX SYSTEM STATUS INFORMATION${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  echo
+
+  # OS Info
+  echo -e "${YELLOW}=== OS INFORMATION ===${NC}"
+  hostnamectl
+  echo
+
+  # Kernel Info
+  echo -e "${YELLOW}=== KERNEL ===${NC}"
+  uname -a
+  echo
+
+  # CPU Info
+  echo -e "${YELLOW}=== CPU ===${NC}"
+  lscpu | grep -E "Model name|Socket|Thread|Core|Architecture"
+  echo
+
+  # Memory Info
+  echo -e "${YELLOW}=== MEMORY (RAM) ===${NC}"
+  free -h
+  echo
+
+  # Disk Info
+  echo -e "${YELLOW}=== STORAGE ===${NC}"
+  lsblk
+  echo
+
+  # VGA / GPU Info
+  echo -e "${YELLOW}=== VGA / GPU ===${NC}"
+  lspci -k | grep -A 3 -i "vga\|3d\|display"
+  echo
+
+  # OpenGL Info
+  if command -v glxinfo >/dev/null 2>&1; then
+    echo -e "${YELLOW}=== OPENGL RENDERER ===${NC}"
+    glxinfo | grep "OpenGL renderer"
+    echo
+  else
+    echo -e "${RED}glxinfo not installed (mesa-utils)${NC}"
+    echo
+  fi
+
+  # NVIDIA Info
+  if command -v nvidia-smi >/dev/null 2>&1; then
+    echo -e "${YELLOW}=== NVIDIA STATUS ===${NC}"
+    nvidia-smi
+    echo
+  fi
+
+  # Network Info
+  echo -e "${YELLOW}=== NETWORK ===${NC}"
+  ip a | grep -E "inet |state UP"
+  echo
+
+  # Uptime
+  echo -e "${YELLOW}=== SYSTEM UPTIME ===${NC}"
+  uptime
+  echo
+
+  echo -e "${BLUE}========================================${NC}"
+  echo -e "${GREEN}         END OF SYSTEM REPORT${NC}"
+  echo -e "${BLUE}========================================${NC}"
+
+}
 mylan() {
   if command -v ifconfig >/dev/null; then
     echo "---------------------------------------------------"
