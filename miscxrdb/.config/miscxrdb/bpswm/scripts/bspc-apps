@@ -75,7 +75,10 @@ remember_me_snippet() {
 
   SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet"
   is_file_exists "$SNIPPET_PATH"
-  bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
+  # bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
+
+  # broken monitor
+  bspc rule -a \* -o state=floating rectangle=800x400+$(($(xwininfo -root | awk '/Width/ {print $2}') / 2 - 400))+200 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
 
   # test
   # SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet_test"

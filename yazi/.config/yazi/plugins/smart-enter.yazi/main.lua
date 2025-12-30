@@ -262,7 +262,8 @@ return {
 
       if fpath_ext == "mp4" then
         os.execute(
-          'nohup mpv --profile=pseudo-gui --really-quiet --autofit=1000x900 --geometry=-15-60 "'
+          -- 'nohup mpv --profile=pseudo-gui --really-quiet --autofit=500x500 --geometry=-15-60 "'
+          'nohup mpv --profile=pseudo-gui --really-quiet --autofit=500x500 --geometry=95%:40% "' -- broken monitor
             .. fpath
             .. '" >/dev/null 2>&1 &'
         )

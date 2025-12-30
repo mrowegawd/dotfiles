@@ -132,9 +132,9 @@ libreoffice() {
 
 zathura() {
   state=floating
-  rectangle=850x700+1030+350 # --- sudut window
+  # rectangle=850x700+1030+350
+  rectangle=400x600+950+150 # --- broken-monitor
   focus=off
-  # desktop=$desktop_doc
 }
 
 videos() {
@@ -176,6 +176,7 @@ svix() {
   state=floating
   layer=above
   focus=off
+  rectangle=400x600+950+150 # --- broken-monitor
 }
 
 file_manager() {

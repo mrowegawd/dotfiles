@@ -1,6 +1,9 @@
 
 configuration {
-    font:                           "JetBrains Mono 16";
+    // font:                           "JetBrains Mono 16";
+
+    // broken monitor
+    font:                           "JetBrains Mono 12";
 }
 
 @import "nightly.rasi"

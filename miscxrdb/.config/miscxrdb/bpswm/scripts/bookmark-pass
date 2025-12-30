@@ -48,7 +48,12 @@ open_bookmark() {
 edit_bookmark() {
   case $WM_WINDOW in
   "bspwm")
-    bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+    # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+    #   $TERMINAL -e bash -c "nvim $FILE_BOOKMARKED"
+    # ;;
+
+    # broken monitor
+    bspc rule -a \* -o state=floating rectangle=700x600+350+80 &&
       $TERMINAL -e bash -c "nvim $FILE_BOOKMARKED"
     ;;
   *)
