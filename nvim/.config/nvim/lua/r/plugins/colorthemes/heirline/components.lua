@@ -77,7 +77,7 @@ local set_conditions = {
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
   is_note_ft = function()
-    local note_ft = { "org", "markdown" }
+    local note_ft = { "org", "markdown", "octo", "codecompanion" }
     return vim.tbl_contains(note_ft, vim.bo.filetype)
   end,
 }

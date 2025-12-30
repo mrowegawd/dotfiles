@@ -115,6 +115,18 @@ local function focus_or_toggle_chat()
   codecompanion.toggle()
 end
 
+local last_online_check, online_status
+local online_cache_timeout = 30
+local function is_online()
+  local now = os.time()
+  if last_online_check and (now - last_online_check < online_cache_timeout) then
+    return online_status
+  end
+  online_status = vim.system({ "ping", "-c", "1", "8.8.8.8" }, { timeout = 1000 }):wait().code == 0
+  last_online_check = now
+  return online_status
+end
+
 return {
   -- CODECOMPANION
   {
@@ -122,10 +134,16 @@ return {
     cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionCmd", "CodeCompanionActions" },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      "ravitemer/codecompanion-history.nvim",
       { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
     },
     keys = {
+      {
+        "<Leader>ia",
+        "<cmd>CodeCompanionChat Add<CR>",
+        desc = "Codecompanion: Add code to a chat buffer",
+        mode = { "v" },
+      },
       {
         "<Leader>ic",
         ":CodeCompanion ",
@@ -297,7 +315,7 @@ return {
             end
           end
 
-          local opts = RUtils.fzflua.open_lsp_code_action {
+          local opts = RUtils.fzflua.open_center_small_wide {
             winopts = {
               title = RUtils.fzflua.format_title(
                 "Select Custom Prompt Ai [CodeCompanion]",
@@ -502,8 +520,9 @@ return {
             prompts = {
               {
                 role = constants.USER_ROLE,
-                content = function(context)
-                  return "```" .. newline .. get_selected_lines(context) .. newline .. "```"
+                content = function()
+                  -- return "```" .. newline .. get_selected_lines(context) .. newline .. "```"
+                  return newline
                 end,
               },
             },
@@ -980,6 +999,23 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
                   contains_code = true,
                 },
               },
+            },
+          },
+        },
+
+        extensions = {
+          history = {
+            enabled = true,
+            opts = {
+              auto_generate_title = is_online(),
+              keymap = "<Leader>fr",
+              auto_save = true,
+              expiration_days = 50,
+              picker_keymaps = {
+                rename = { n = "r", i = "<c-r>" },
+                delete = { n = "d", i = "<c-x>" },
+              },
+              save_chat_keymap = { n = "<nop>", i = "<nop>" },
             },
           },
         },
