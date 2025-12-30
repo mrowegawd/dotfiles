@@ -266,6 +266,12 @@ build-install() {
     asdf reshim golang
   # fi
 
+  # if ! command -v tock >/dev/null; then
+    echo "Installing: tock - Tock is a powerful time tracking tool for the command line."
+    go install github.com/kriuchkov/tock/cmd/tock@latest
+    asdf reshim golang
+  # fi
+
   # if ! command -v lazydocker >/dev/null; then
     echo "Installing: lazydocker - Docker TUI"
     go install github.com/jesseduffield/lazydocker@latest
