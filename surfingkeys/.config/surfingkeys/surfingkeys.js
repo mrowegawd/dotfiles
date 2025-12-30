@@ -1,8 +1,5 @@
 // check default keys:
 // https://github.com/brookhong/Surfingkeys/blob/master/src/content_scripts/common/default.js#L485-L491
-//
-// Awesome stuff
-// https://github.com/b0o/surfingkeys-conf
 
 const {
   Clipboard,
@@ -16,15 +13,19 @@ const {
   iunmap,
   map,
   mapkey,
+  unmapAllExcept,
   tabOpenLink,
   unmap,
   vmap,
 } = api;
 
-unmap("H");
 unmap("<<");
 unmap(">>");
+
+unmap("H");
 unmap("L");
+unmap("<Ctrl-j>");
+unmap("<Ctrl-k>");
 
 // general settings
 settings.historyMUOrder = false;
@@ -50,6 +51,24 @@ function scrollToSmooth(position) {
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ GENERAL                                                 │
+// ╰─────────────────────────────────────────────────────────╯
+
+mapkey("]", "#Increase speed video", () => {
+  const video = document.querySelector("video");
+  if (!video) return;
+  video.playbackRate = video.playbackRate + 0.1;
+  api.Front.showBanner(`${video.playbackRate.toFixed(1)}x`);
+});
+
+mapkey("[", "#Decrement speed video", () => {
+  const video = document.querySelector("video");
+  if (!video) return;
+  video.playbackRate = video.playbackRate - 0.1;
+  api.Front.showBanner(`${video.playbackRate.toFixed(1)}x`);
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ SCROLL                                                  │
 // ╰─────────────────────────────────────────────────────────╯
 mapkey("<Ctrl-d>", "#2Scroll down of half", () => {
   scrollBySmooth(window.innerHeight / 2, 2);
@@ -88,11 +107,19 @@ map("<Ctrl-g>", "<Ctrl-f>");
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
-unmap("F");
-map("F", "gf");
 map("C", ";u");
+map("<Alt-v>", "cf", 0, "#1Open multiple links in a new tab (alternative)");
 
-mapkey("<Alt-f>", "Open Links With simulates Zen's Glance", () => {
+unmap("F");
+mapkey("F", "#1Open link in new tab", () => {
+  Hints.create("", Hints.dispatchMouseClick, {
+    tabbed: true,
+    active: true,
+  });
+});
+
+// WARN: Currently, Idk why this map doesn't work anymore
+mapkey("<Alt-f>", "#1Open link and simulates Zen's Glance", () => {
   Hints.create("*[href]", (element) => {
     const event = new MouseEvent("click", {
       altKey: true,
@@ -108,10 +135,8 @@ mapkey(
   "Q",
   "#1Click on an Image or a button in background, multiple",
   function () {
-    Hints.create("img, button", Hints.dispatchMouseClick, {
-      multipleHits: true,
-      tabbed: true,
-      active: false,
+    Hints.create("img, button", (i) => {
+      tabOpenLink(i.src)();
     });
   },
 );
@@ -177,48 +202,43 @@ mapkey("<Alt-ArrowLeft>", "#3Move current tab to left", function () {
 mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
   RUNTIME("moveTab", { step: 1 });
 });
-mapkey("<Alt-ArrowUp>", "#3Move current tab to up", function () {
-  RUNTIME("moveTab", { step: -1 });
-});
-mapkey("<Alt-ArrowDown>", "#3Move current tab to down", function () {
-  RUNTIME("moveTab", { step: 1 });
-});
-mapkey("<Space>bO", "#3Close all tabs except current one", function () {
+// mapkey("<Alt-ArrowUp>", "#Move current tab to up", function () {
+//   RUNTIME("moveTab", { step: -1 });
+// });
+// mapkey("<Alt-ArrowDown>", "#Move current tab to down", function () {
+//   RUNTIME("moveTab", { step: 1 });
+// });
+mapkey("<Space>bo", "#3Close all tabs except current one", function () {
   RUNTIME("tabOnly");
 });
-mapkey("<Alt-b>", "#3Close alternate the tabs", function () {
+mapkey("<Alt-b>", "#3Alternate the tabs", function () {
   RUNTIME("goToLastTab");
 });
-mapkey("M", "Mute/unmute current tab", function () {
+mapkey("M", "#3Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
 map("<Space>ff", "T");
 map("<Space>fF", "t"); // include bookmark search
-map("<Ctrl-l>", "R");
-map("<Ctrl-h>", "E");
-// map("<Alt-h>", "R");
-// map("<Alt-l>", "E");
+map("<Alt-h>", "R");
+map("<Alt-l>", "E");
 
-// map("<Alt-j>", "R");
-// map("<Alt-k>", "E");
-
-mapkey("gxk", "#3Close tab on up", function () {
-  RUNTIME("closeTabLeft");
-});
-mapkey("gxj", "#3Close tab on down", function () {
-  RUNTIME("closeTabRight");
-});
-mapkey("gxK", "#3Close all tabs on up", function () {
-  RUNTIME("closeTabsToLeft");
-});
-mapkey("gxJ", "#3Close all tabs on down", function () {
-  RUNTIME("closeTabsToRight");
-});
+// mapkey("gxk", "#3Close tab on up", function () {
+//   RUNTIME("closeTabLeft");
+// });
+// mapkey("gxj", "#3Close tab on down", function () {
+//   RUNTIME("closeTabRight");
+// });
+// mapkey("gxK", "#3Close all tabs on up", function () {
+//   RUNTIME("closeTabsToLeft");
+// });
+// mapkey("gxJ", "#3Close all tabs on down", function () {
+//   RUNTIME("closeTabsToRight");
+// });
 
 mapkey(
   "<Ctrl-l>",
-  "Go one tab right",
+  "#Go one tab right",
   function () {
     RUNTIME("nextTab");
   },
@@ -226,7 +246,7 @@ mapkey(
 );
 mapkey(
   "<Ctrl-j>",
-  "Go one tab right",
+  "#3Go one tab right",
   function () {
     RUNTIME("nextTab");
   },
@@ -234,7 +254,7 @@ mapkey(
 );
 mapkey(
   "<Ctrl-h>",
-  "Go one tab left",
+  "#3Go one tab left",
   function () {
     RUNTIME("previousTab");
   },
@@ -242,7 +262,7 @@ mapkey(
 );
 mapkey(
   "<Ctrl-k>",
-  "Go one tab left",
+  "#3Go one tab left",
   function () {
     RUNTIME("previousTab");
   },
@@ -250,7 +270,7 @@ mapkey(
 );
 mapkey(
   "<Ctrl-n>",
-  "Go one tab right",
+  "#3Go one tab right",
   function () {
     RUNTIME("nextTab");
   },
@@ -258,7 +278,7 @@ mapkey(
 );
 mapkey(
   "<Ctrl-p>",
-  "Go one tab left",
+  "#3Go one tab left",
   function () {
     RUNTIME("previousTab");
   },
@@ -269,46 +289,38 @@ map("gH", ":feedkeys 99E", 0, "#3Go to the first tab");
 map("gL", ":feedkeys 99R", 0, "#3Go to the last tab");
 map("gK", ":feedkeys 99E", 0, "#3Go to the first tab");
 map("gJ", ":feedkeys 99R", 0, "#3Go to the last tab");
-map("<Space>R", ":feedkeys 99r", 0, "#3Reload all tab");
+map("<Space>R", ":feedkeys 99r", 0, "#3Reload all tabs");
 
-// mapkey("<Ctrl-o>", "backward", function () {
-//   history.go(-1);
-// });
-// mapkey("<Ctrl-i>", "forward", function () {
-//   history.go(1);
-// });
-
-map("<Ctrl-o>", "S");
-map("<Ctrl-i>", "D");
+map("<Ctrl-o>", "S"); // backward link history
+map("<Ctrl-i>", "D"); // forward link history
 
 mapkey("q", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
+
 mapkey("<Space><Tab>", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
 
-// open current history tab
-mapkey("<Space>fo", "#8Open Recently Closed", () => {
+mapkey("<Space>fo", "#3Open recently closed", () => {
   Front.openOmnibar({ type: "RecentlyClosed" });
 });
-// open global history tab
-mapkey("<Space>fO", "#8Open History", () => {
+
+mapkey("<Space>fh", "#3Open history tabs", () => {
   Front.openOmnibar({ type: "History" });
 });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ BOOKMARKS                                               │
 // ╰─────────────────────────────────────────────────────────╯
-// Open bookmark
-mapkey("<Alt-B>", "#8Open a bookmark", function () {
+mapkey("<Space>fb", "#Open bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
 });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ ZOOM                                                    │
 // ╰─────────────────────────────────────────────────────────╯
-mapkey("<Ctrl-0>", "#3zoom reset", function () {
+mapkey("<Ctrl-0>", "#3Zoom reset", function () {
   RUNTIME("setZoom", {
     zoomFactor: 0,
   });
