@@ -234,6 +234,19 @@ local btop = Terminal:new {
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
 }
 
+local resterm = Terminal:new {
+  cmd = "resterm",
+  hidden = true,
+  display_name = ("resterm"):upper(),
+  direction = "float",
+  start_in_insert = true,
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+}
+
 local lazydocker = Terminal:new {
   cmd = "lazydocker",
   hidden = true,
@@ -295,6 +308,10 @@ end
 
 function M.float_btop()
   return btop:toggle()
+end
+
+function M.float_resterm()
+  return resterm:toggle()
 end
 
 function M.float_rkill()

@@ -9,8 +9,8 @@ build-nvim() {
   # git pull upstream master
   git fetch --tags -f
   git pull --rebase --prune
-  # git checkout nightly
-  git checkout stable
+  git checkout nightly
+  # git checkout stable
   [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
   rm -rf $HOME/neovim/*
   make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
@@ -135,6 +135,24 @@ build-install() {
     echo "Installing: hub - An extensions to cmdline git"
     sudo apt install hub -y
   fi
+
+  if ! command -v resterm >/dev/null; then
+    echo "Installing: resterm - Terminal client for HTTP/GraphQL/gRPC with support for SSH tunnels, WebSockets, SSE, workflows, profiling, OpenAPI and response diffs"
+
+    sudo apt install hub -y
+
+    # Detect latest tag
+    LATEST_TAG=$(curl -fsSL https://api.github.com/repos/unkn0wn-root/resterm/releases/latest | jq -r .tag_name)
+
+    # Download the matching binary (Darwin/Linux + amd64/arm64)
+    curl -fL -o resterm "https://github.com/unkn0wn-root/resterm/releases/download/${LATEST_TAG}/resterm_$(uname -s)_$(uname -m)"
+
+    # Make it executable and move it onto your PATH
+    chmod +x resterm
+    sudo install -m 0755 resterm /usr/local/bin/resterm
+  fi
+
+
 
   # ──────────────────────────────────────────────────────────────────────
   # RUST, cargo
