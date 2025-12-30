@@ -1,9 +1,9 @@
 return {
-  -- ORGMODE (disabled)
+  -- ORGMODE
   {
     "nvim-orgmode/orgmode",
     event = "LazyFile",
-    enabled = false,
+    -- enabled = false,
     -- ft = { "org" },
     -- event = "VeryLazy",
     -- lazy = false,
@@ -206,7 +206,7 @@ return {
 
             -- Todo Effort
             org_agenda_todo = "<Leader>t",
-            org_agenda_set_effort = "<Leader>e",
+            org_agenda_set_effort = "ie",
 
             -- Clock
             org_agenda_clock_in = "ci",
@@ -224,7 +224,7 @@ return {
             org_agenda_archive = "<F9>", -- tidak terpakai?
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "g",
+            org_agenda_set_tags = "ig",
             org_agenda_refile = "r",
             org_agenda_add_note = "in",
 
@@ -299,7 +299,7 @@ return {
             org_move_subtree_down = "<a-n>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "it",
+            org_set_tags_command = "ig",
             org_refile = "r",
 
             -- Links
@@ -314,11 +314,11 @@ return {
             -- Insert Deadline or Schedule
             org_deadline = "id",
             org_schedule = "is",
-            org_set_effort = "<Leader>e",
+            org_set_effort = "ie",
             org_add_note = "in",
 
             -- Export / Babel
-            org_export = "ue",
+            org_export = "<Leader>fe",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
@@ -756,9 +756,10 @@ return {
       })
     end,
   },
-  -- KANBAN.NVIM
+  -- KANBAN.NVIM (disabled)
   {
     "viniciusteixeiradias/kanban.nvim",
+    enabled = false,
     event = "LazyFile",
     cmd = "Kanban",
     keys = {

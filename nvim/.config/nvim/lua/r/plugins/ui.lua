@@ -14,7 +14,7 @@ return {
   },
   -- NOICE
   {
-    "MadKuntilanak/noice.nvim",
+    "MadKuntilanak/noice.nvim", -- folke/noice.nvim
     branch = "feat/update-actions-fzflua",
     event = "VeryLazy",
     dependencies = {
@@ -128,6 +128,7 @@ return {
       },
       routes = {
         {
+          view = "mini",
           filter = {
             event = "msg_show",
             any = {
@@ -141,19 +142,11 @@ return {
               { find = "; before #%d+" },
               { find = "^Hunk %d+ of %d" },
               { find = "written" },
+              { find = "^E486:" },
               { kind = "line %d+ of %d+" },
               { kind = "search_count" },
             },
           },
-          view = "mini",
-        },
-        {
-          view = "mini",
-          filter = {
-            any = {
-              { event = "msg_show", find = "^E486:" },
-            },
-          }, -- minimise pattern not found messages
         },
         {
           opts = { skip = true },
