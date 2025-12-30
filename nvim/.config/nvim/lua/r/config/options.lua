@@ -147,7 +147,9 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -- }}}
 -- {{{ Folds
 opt.fillchars = {
-  diff = "░", -- alternatives = ⣿ ░ ╱
+  -- diff = "░", -- alternatives = ⣿ ░ ╱
+  -- diff = " ", -- alternatives = ⣿ ░ ╱
+  diff = "╱",
   eob = " ", -- suppress ~ at endofbuffer
   foldclose = "", -- '▶'
   foldopen = "", -- '▼'

@@ -11,14 +11,24 @@ return {
       {
         "<a-e>",
         function()
-          vim.cmd "Neotree toggle right"
+          local tmux = os.getenv "TMUX"
+          if not tmux then
+            vim.cmd "Neotree toggle left"
+          else
+            vim.cmd "Neotree toggle right"
+          end
         end,
         desc = "Misc: open file explore [neotree]",
       },
       {
         "<Leader>ue",
         function()
-          vim.cmd "Neotree toggle right"
+          local tmux = os.getenv "TMUX"
+          if not tmux then
+            vim.cmd "Neotree toggle left"
+          else
+            vim.cmd "Neotree toggle right"
+          end
         end,
         desc = "Toggle: open file explore [neotree]",
       },
@@ -26,7 +36,12 @@ return {
       {
         "<Leader>uE",
         function()
-          vim.cmd "Neotree focus reveal right"
+          local tmux = os.getenv "TMUX"
+          if not tmux then
+            vim.cmd "Neotree focus reveal left"
+          else
+            vim.cmd "Neotree focus reveal right"
+          end
         end,
         desc = "Toggle: open file focus path explore [neotree]",
       },
@@ -733,7 +748,7 @@ return {
           -- open_in_tab = "<C-t>",
           -- open_in_float = "O",
 
-          filter_symbols = "<localleader>f",
+          filter_symbols = "<Leader>ff",
         },
       }
     end,

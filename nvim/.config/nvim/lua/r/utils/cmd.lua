@@ -226,43 +226,57 @@ function M.reqcall(require_path)
 end
 
 ---@param line_str string
+---@return boolean
 local function open_image_with_sxiv(line_str)
   local filename = line_str:match "^.+/(.+)$" or "image.jpg"
   local download_path = vim.fn.expand("/tmp/" .. filename)
+  local is_success = false
 
   -- Download file ke ~/Downloads/
   vim.system({ "wget", "-q", line_str, "-O", download_path }, {}, function(dl)
     if dl.code == 0 then
       vim.system({ "sxiv", download_path }, { detach = true })
-    else
-      RUtils.info(string.format("Downlaod failed: %s", dl.stderr))
+      is_success = true
     end
   end)
+
+  return is_success
 end
 
 ---@param line_str string
 local function open_mpv_sxiv_or_git(line_str)
   local sel_open_with = {
-    mpv = {
-      prefix_cmd = {
+    ["Open MPV - Download/Open local/http video"] = {
+      -- prefix_cmd = {
+      --   "tsp",
+      --   "mpv",
+      --   "--ontop",
+      --   "--no-border",
+      --   "--force-window",
+      --   "--autofit=1000x500",
+      --   "--geometry=-20-60",
+      -- },
+      prefix_cmd = { -- broken monitor
         "tsp",
         "mpv",
         "--ontop",
         "--no-border",
         "--force-window",
-        "--autofit=1000x500",
-        "--geometry=-20-60",
+        "--autofit=600x500",
+        "--geometry=95%:40%",
       },
     },
 
     -- Kendala dengan sxiv ini, tidak bisa open image dengan line_str
-    ["image local"] = { prefix_cmd = { "tsp", "sxiv", "--ontop" } },
+    ["Open Local Sxiv - Open local image with sxiv"] = { prefix_cmd = { "tsp", "sxiv", "--ontop" } },
 
     -- Kalau dengan feh ini, bisa membuka image line_str, tapi ga bisa di zoom
-    ["image with feh"] = { prefix_cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" } },
+    ["Open Feh - Open/Download image with Feh"] = {
+      prefix_cmd = { "tsp", "feh", "-.", "-x", "-B", "black", "-g", "900x600-15+60" },
+    },
 
     -- Kalau cara ini kita download, check function open_image_with_sxiv
-    ["image with DL"] = { prefix_cmd = {} },
+    ["DL IMG Open Sxiv - Open/Download image with Sxiv"] = { prefix_cmd = {} },
   }
 
   if vim.bo.filetype == "git" then
@@ -282,8 +296,10 @@ local function open_mpv_sxiv_or_git(line_str)
     }
   end
 
-  sel_open_with["Octo - Open this PR"] = { prefix_cmd = { "Octo pr edit " } }
-  sel_open_with["Octo - Open this Issue"] = { prefix_cmd = { "Octo issue edit " } }
+  if vim.bo.filetype == "octo" then
+    sel_open_with["Octo - Open this PR"] = { prefix_cmd = { "Octo pr edit " } }
+    sel_open_with["Octo - Open this Issue"] = { prefix_cmd = { "Octo issue edit " } }
+  end
 
   local width_all_text = 30
   local sel_opens = {}
@@ -333,11 +349,17 @@ local function open_mpv_sxiv_or_git(line_str)
         end
 
         local sel = selected[1]
-        local notif_msg
+        local notif_msg, warn_msg
 
-        if sel == "image with DL" then
-          open_image_with_sxiv(line_str)
-          notif_msg = "DL and Sxiv: " .. line_str
+        local sel_split = vim.split(sel, " - ")
+
+        if sel_split[1] == "DL IMG Open Sxiv" then
+          local is_success = open_image_with_sxiv(line_str)
+          if is_success then
+            notif_msg = "Download and Open Image: " .. line_str
+          else
+            warn_msg = string.format("Failed download image HTTP: %s", line_str)
+          end
         else
           local cmds
           for key_open, open in pairs(sel_opens) do
@@ -351,7 +373,10 @@ local function open_mpv_sxiv_or_git(line_str)
               open.prefix_cmd[#open.prefix_cmd + 1] = line_str
               cmds = open.prefix_cmd
 
-              notif_msg = key_open .. ": " .. line_str
+              key_open = vim.split(key_open, "-")
+
+              local msg = RUtils.strip_whitespaces(key_open[1])
+              notif_msg = msg .. ": " .. line_str
             end
           end
 
@@ -371,8 +396,15 @@ local function open_mpv_sxiv_or_git(line_str)
           end
         end
 
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info(notif_msg, { title = "Open With" })
+        if notif_msg then
+          ---@diagnostic disable-next-line: undefined-field
+          RUtils.info(notif_msg, { title = "Open With" })
+        end
+
+        if warn_msg then
+          ---@diagnostic disable-next-line: undefined-field
+          RUtils.warn(warn_msg, { title = "Open With" })
+        end
       end,
     },
   }

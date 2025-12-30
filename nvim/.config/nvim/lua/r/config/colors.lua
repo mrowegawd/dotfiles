@@ -107,33 +107,12 @@ local base_colors = {
   snacks_notifier_error_bg = 0.3,
   snacks_notifier_border_error_fg = -0.4,
 
-  -- diff
-  diffadd_fg_alter = -0.2,
-  diffadd_bg_alter = 0.2,
-
-  diffchange_fg_alter = -0.2,
-  diffchange_bg_alter = 0.2,
-
-  diffdelete_fg_alter = -0.1,
-  diffdelete_bg_alter = 0.18,
-
-  diffline_fg_alter = 0.85,
-  diffline_bg_alter = 0.2,
-
-  difftext_fg_alter = 0.4,
-  difftext_bg_alter = 0.5,
-
-  delta_plus_fg_alter = 0.9,
-  delta_plus_bg_alter = -0.4,
-
-  delta_change_fg_alter = 1,
-  delta_change_bg_alter = -0.4,
-
-  delta_minus_fg_alter = 0.9,
-  delta_minus_bg_alter = 0.6,
-
   zshlines_fg_alter = 0.9,
   zshlines_bg_alter = 2,
+
+  -- diff
+  diffline_fg_alter = 0.85,
+  diffline_bg_alter = 0.2,
 }
 
 local update_col_colorscheme = {
@@ -531,15 +510,6 @@ local update_col_colorscheme = {
 
     zshlines_fg_alter = 2.3,
     zshlines_bg_alter = 6.5,
-
-    diffadd_fg_alter = -0.2,
-    diffadd_bg_alter = 0.18,
-
-    diffchange_fg_alter = -0.3,
-    diffchange_bg_alter = 0.18,
-
-    diffdelete_fg_alter = -0.3,
-    diffdelete_bg_alter = 0.2,
   },
   ["lackluster-mint"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
@@ -567,15 +537,6 @@ local update_col_colorscheme = {
     visual_bg_alter = 0.05,
     winbar_fg_alter = 4.5,
     winbar_right_block_fg_alter = 0.1,
-
-    diffadd_fg_alter = -0.2,
-    diffadd_bg_alter = 0.18,
-
-    diffchange_fg_alter = -0.3,
-    diffchange_bg_alter = 0.18,
-
-    diffdelete_fg_alter = -0.3,
-    diffdelete_bg_alter = 0.2,
   },
   ["neogotham"] = {
     blink_ghost_text_fg_alter = -0.6,
@@ -752,10 +713,11 @@ local update_col_colorscheme = {
     grugfar_result_number_fg_alter = 0.8,
     linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.25,
-    lsp_code_lens_fg_alter = 1.8,
+    lsp_code_lens_fg_alter = 1.5,
     noice_cmdline_fg_alter = 0.7,
+    normal_keyword_alter = 0.2,
     pmenu_bg_alter = 0.4,
-    quickfixline_linenr_fg_alter = 0.2,
+    quickfixline_linenr_fg_alter = 0.4,
     quickfixwinbar_bg_alter = 0.05,
     quickfixwinbar_fg_alter = 1.5,
     render_markdown_code_bg_alter = -0.25,
@@ -768,12 +730,12 @@ local update_col_colorscheme = {
     winbar_right_block_fg_alter = -0.2,
     winseparator_alter = 0.15,
 
-    code_block_note_bg_alter = -0.15,
+    code_block_note_bg_alter = -0.25,
     comment_note_fg_alter = 0.65,
     fold_note_fg_alter = 0.05,
     linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.45,
-    normal_note_bg_alter = 1,
+    normal_note_bg_alter = 0.8,
     normal_note_fg_alter = 0.3,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.1,
@@ -1263,7 +1225,12 @@ local general_overrides = function()
       },
     },
     -- code block for org file
-    { CodeBlock = { bg = { from = "NormalNote", attr = "bg", alter = colors.code_block_note_bg_alter } } },
+    {
+      CodeBlock = {
+        bg = { from = "NormalNote", attr = "bg", alter = colors.code_block_note_bg_alter },
+        reverse = false,
+      },
+    },
     { VisualNote = { bg = { from = "Visual", attr = "bg", alter = colors.visual_note_bg_alter } } },
     { PmenuNote = { bg = { from = "NormalNote", attr = "bg" } } },
     {
@@ -1343,29 +1310,29 @@ local general_overrides = function()
 
     {
       DiffAdd = {
-        fg = H.tint(git_diff_add, 0.4),
+        fg = "NONE",
         bg = H.darken(git_diff_add, 0.2, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
       DiffChange = {
-        fg = H.tint(git_diff_change, 0.4),
-        bg = H.darken(git_diff_change, 0.2, H.get("Normal", "bg")),
+        fg = "NONE",
+        bg = H.darken(git_diff_change, 0.3, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
       DiffDelete = {
-        fg = H.tint(git_diff_delete, 0.4),
-        bg = H.darken(git_diff_delete, 0.2, H.get("Normal", "bg")),
+        fg = H.tint(H.darken(git_diff_delete, 0.4, H.get("Normal", "bg")), 0.2),
+        bg = H.darken(git_diff_delete, 0.4, H.get("Normal", "bg")),
         reverse = false,
       },
     },
     {
       DiffText = {
-        fg = { from = "DiffChange", attr = "fg", alter = 0.4 },
-        bg = { from = "DiffChange", attr = "bg", alter = 0.4 },
+        fg = { from = "DiffChange", attr = "bg", alter = 2.8 },
+        bg = { from = "DiffChange", attr = "bg", alter = 0.8 },
         bold = true,
         reverse = false,
       },
@@ -1373,43 +1340,41 @@ local general_overrides = function()
 
     {
       GitSignsAddInline = {
-        fg = { from = "DiffAdd", attr = "fg" },
+        fg = "NONE",
         bg = { from = "DiffAdd", attr = "bg" },
         bold = true,
       },
     },
     {
       GitSignsChangeInline = {
-        fg = { from = "DiffChange", attr = "fg" },
+        fg = "NONE",
         bg = { from = "DiffChange", attr = "bg" },
         bold = true,
       },
     },
     {
       GitSignsDeleteInline = {
-        fg = { from = "DiffDelete", attr = "fg" },
+        fg = "NONE",
         bg = { from = "DiffDelete", attr = "bg" },
         bold = true,
       },
     },
 
-    { diffAdded = { inherit = "DiffAdd" } },
-    { diffChanged = { inherit = "DiffChange" } },
-    { diffRemoved = { inherit = "DiffDelete" } },
+    { GitSignsAdd = { bg = "NONE", fg = H.tint(git_diff_add, 0.4) } },
+    { GitSignsChange = { bg = "NONE", fg = H.tint(git_diff_change, 0.4) } },
+    { GitSignsDelete = { bg = "NONE", fg = H.tint(git_diff_delete, 0.4) } },
 
-    { GitSignsAdd = { bg = "NONE", fg = { from = "DiffAdded", attr = "fg" } } },
-    { GitSignsChange = { bg = "NONE", fg = { from = "DiffChange", attr = "fg" } } },
-    { GitSignsDelete = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg" } } },
+    { diffAdded = { inherit = "DiffAdd", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.05 } } },
+    { diffChanged = { inherit = "DiffChange", fg = { from = "GitSignsChange", attr = "fg", alter = 0.05 } } },
+    { diffRemoved = { inherit = "DiffDelete", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.05 } } },
 
     {
       deltaPlus = {
-        fg = { from = "GitSignsAddInline", attr = "fg" },
         bg = { from = "GitSignsAddInline", attr = "bg" },
       },
     },
     {
       deltaMinus = {
-        fg = { from = "GitSignsDeleteInline", attr = "fg" },
         bg = { from = "GitSignsDeleteInline", attr = "bg" },
       },
     },
@@ -1429,8 +1394,8 @@ local general_overrides = function()
     -- ║                       ERROR COLOR                       ║
     -- ╚═════════════════════════════════════════════════════════╝
 
-    { ErrorMsg = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg", alter = 0.5 } } },
-    { Error = { bg = "NONE", fg = { from = "DiffDelete", attr = "fg", alter = 0.3 } } },
+    { ErrorMsg = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
+    { Error = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIAGNOSTIC                        ║
@@ -2223,7 +2188,7 @@ local general_overrides = function()
     -- ERROR
     {
       SnacksNotifierError = {
-        fg = { from = "diffDelete", attr = "fg", alter = colors.snacks_notifier_error_fg },
+        fg = { from = "GitSignsDelete", attr = "fg", alter = colors.snacks_notifier_error_fg },
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -2606,6 +2571,16 @@ local general_overrides = function()
     },
     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
 
+    --  ──────────────────────────[ CODECOMPANION ]────────────────────────────
+
+    {
+      CodeCompanionInputHeader = {
+        fg = { from = "DiffDelete", attr = "bg", alter = 2 },
+        bg = { from = "DiffDelete", attr = "bg", alter = 0.2 },
+        bold = true,
+      },
+    },
+
     --  ───────────────────────────────[ FLASH ]───────────────────────────────
     { FlashMatch = { fg = "white", bg = "red", bold = true } },
     { FlashLabel = { fg = "white", bg = "blue", bold = true, strikethrough = false } },
@@ -2894,13 +2869,13 @@ local function set_panel_highlight()
     --  ──────────────────────────────[ OUTLINE ]──────────────────────────────
     {
       OutlineGuides = {
-        fg = { from = "TroubleIndent", attr = "fg" },
+        fg = { from = "TroubleIndent", attr = "fg", alter = -0.1 },
         bg = "NONE",
       },
     },
     {
       OutlineCurrent = {
-        bg = { from = "diffDelete", attr = "fg", alter = 0.3 },
+        bg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 },
         fg = { from = "Normal", attr = "bg" },
         bold = true,
         reverse = false,

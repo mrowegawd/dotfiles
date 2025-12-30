@@ -96,15 +96,18 @@ function M.neorg_mappings_ft(bufnr)
     },
   }
 
-  -- local resuffle = {}
   for mode, x in pairs(mappings) do
     if mode == "i" then
       for key, key_func in pairs(x) do
-        vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+        end
       end
     else
       for key, key_func in pairs(x) do
-        vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+        end
       end
     end
   end

@@ -35,6 +35,7 @@ local winhighlight_note_panel = table.concat({
   "ColorColumn:NormalNote",
   "EndOfBuffer:NormalNote",
   "SignColumn:NormalNote",
+  "NormalFloat:NormalNote",
   "CursorLine:CursorLineNote",
   "CursorLineNr:CursorLineNrNote",
   "Folded:FoldedNote",
@@ -66,7 +67,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["CommandTPrompt"] = true,
   ["CommandTTitle"] = true,
   ["noice"] = true,
-  -- ["Outline"] = true,
+  ["neo-tree"] = true,
   ["alpha"] = true,
   ["lazy"] = true,
   ["mason"] = true,
@@ -147,7 +148,8 @@ autocmds.bottom_panel = {
 
 autocmds.notes = {
   ["org"] = true,
-  -- ["orgagenda"] = true,
+  ["octo"] = true,
+  ["codecompanion"] = true,
   ["markdown"] = true,
 }
 
@@ -166,9 +168,6 @@ autocmds.side_panel = {
 }
 
 autocmds.blacklist_hl_folded = {
-  -- ["markdown"] = true,
-  -- ["md"] = true,
-  ["orgagenda"] = true,
   ["org"] = true,
   ["git"] = true,
   ["codecompanion"] = true,
@@ -191,13 +190,12 @@ autocmds.cursorline_blacklist = {
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
   ["help"] = true,
-  -- ["markdown"] = true,
   ["mason"] = true,
   ["noice"] = true,
-  -- ["org"] = true,
+  ["diff"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
-  ["qf"] = true,
+  -- ["qf"] = true,
   ["rgflow"] = true,
   ["snacks_notif_history"] = true,
   ["trouble"] = true,
@@ -254,23 +252,29 @@ local blurred_window = function()
     return
   end
 
+  local is_winhighlight_disabled = false
+
   if autocmds.blacklist_hl_folded[filetype] then
     wo.winhighlight = winhighlight_custom_folded
-    return
+    is_winhighlight_disabled = true
   end
 
   if autocmds.bottom_panel[filetype] then
     wo.winhighlight = winhighlight_bottom_panel
-    return
+    is_winhighlight_disabled = true
   end
 
   if autocmds.notes[filetype] then
     wo.winhighlight = winhighlight_note_panel
-    return
+    is_winhighlight_disabled = true
   end
 
   if autocmds.side_panel[filetype] then
     wo.winhighlight = winhighlight_sidebar_panel
+    is_winhighlight_disabled = true
+  end
+
+  if is_winhighlight_disabled then
     return
   end
 
@@ -408,7 +412,7 @@ local set_cursorline = function(active)
   local filetype, buftype = RUtils.buf.get_bo_buft()
   local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
-  if is_float or filetype == "" then
+  if is_float or filetype == "" or vim.wo.diff then
     wo.cursorline = false
     return
   end

@@ -556,7 +556,7 @@ return {
 
           -- Skip certain filetypes
           local ft = vim.bo[bufnr].filetype
-          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt", "markdown" }
+          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt", "markdown", "octo" }
           if vim.tbl_contains(excluded_fts, ft) then
             return false
           end

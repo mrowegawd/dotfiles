@@ -243,11 +243,11 @@ local __colors = function()
     qf_keyword_fg = H.get("QuickFixWinbar", "fg"),
     qf_keyword_bg = H.get("QuickFixWinbar", "bg"),
 
-    block_notice = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
-    block_notice_keyword = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
+    block_notice = H.tint(H.darken(H.get("Error", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
+    block_notice_keyword = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
-    block_mux_fg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")), 0.8),
-    block_mux_bg = H.tint(H.darken(H.get("GitSignsDelete", "fg"), 0.6, H.get("Normal", "bg")), -0.2),
+    block_mux_fg = H.tint(H.darken(H.get("Error", "fg"), 0.8, H.get("Normal", "bg")), 0.8),
+    block_mux_bg = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), -0.2),
 
     winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
@@ -272,19 +272,19 @@ local __colors = function()
     mode_note_bg = H.get("WinBarNote", "bg"),
 
     -- Termasuk filetype: readonly, commit
-    mode_red_fg = H.tint(H.get("diffDelete", "fg"), 0.2),
-    mode_red_bg = H.tint(H.darken(H.get("diffDelete", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
-    mode_red_bg_right_block = H.tint(H.get("diffDelete", "bg"), 0.3),
+    mode_red_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.3),
+    mode_red_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")),
+    mode_red_bg_right_block = H.tint(H.get("GitSignsDelete", "fg"), -0.4),
 
     -- Termasuk filetype: git fugtive-relative
-    mode_yellow_fg = H.tint(H.get("diffChange", "fg"), -0.08),
-    mode_yellow_bg = H.tint(H.darken(H.get("diffChange", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
-    mode_yellow_bg_right_block = H.tint(H.get("diffChange", "bg"), 0.1),
+    mode_yellow_fg = H.tint(H.get("GitSignsChange", "fg"), 0.3),
+    mode_yellow_bg = H.darken(H.get("GitSignsChange", "fg"), 0.15, H.get("Normal", "bg")),
+    mode_yellow_bg_right_block = H.tint(H.get("GitSignsChange", "fg"), -0.45),
 
     -- Termasuk filetype: help,
-    mode_green_fg = H.tint(H.get("diffAdd", "fg"), 0.2),
-    mode_green_bg = H.tint(H.darken(H.get("diffAdd", "bg"), 0.5, H.get("Normal", "bg")), 0.15),
-    mode_green_bg_right_block = H.tint(H.get("diffAdd", "bg"), 0.2),
+    mode_green_fg = H.tint(H.get("GitSignsAdd", "fg"), 0.3),
+    mode_green_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.2, H.get("Normal", "bg")),
+    mode_green_bg_right_block = H.tint(H.get("GitSignsAdd", "fg"), -0.4),
 
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
