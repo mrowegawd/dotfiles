@@ -335,9 +335,10 @@ return {
       -- },
     },
   },
-  -- KULALA
+  -- KULALA (disabled)
   {
     "mistweaverco/kulala.nvim",
+    enabled = false,
     ft = "http",
     --stylua: ignore
     keys = {
