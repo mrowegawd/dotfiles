@@ -735,6 +735,7 @@ callme() {
  Rust benc
  Grav term
  Log Meta
+ Tock
 EOF
   )
 
@@ -768,6 +769,7 @@ EOF
   "multilog") open_mutlilog ;;
 
   "news") open_newsboat ;;
+  "Tock") open_tock ;;
   *) exit ;;
   esac
 }

@@ -72,7 +72,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["lazy"] = true,
   ["mason"] = true,
   ["dashboard"] = true,
-  ["diff"] = true,
+  -- ["diff"] = true,
   ["Glance"] = true,
   ["qf"] = true,
   ["Outline"] = true,
@@ -371,6 +371,10 @@ local function save_cursorline_hl()
 
     if vim.g.colorscheme == "lemons" then
       more_bright = 4
+    end
+
+    if vim.g.colorscheme == "gruvbox" then
+      more_bright = 1.5
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)

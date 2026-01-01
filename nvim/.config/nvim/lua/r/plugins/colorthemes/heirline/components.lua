@@ -273,18 +273,18 @@ local __colors = function()
 
     -- Termasuk filetype: readonly, commit
     mode_red_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.3),
-    mode_red_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.2, H.get("Normal", "bg")),
-    mode_red_bg_right_block = H.tint(H.get("GitSignsDelete", "fg"), -0.4),
+    mode_red_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.1, H.get("Normal", "bg")),
+    mode_red_bg_right_block = H.tint(H.get("GitSignsDelete", "fg"), -0.5),
 
     -- Termasuk filetype: git fugtive-relative
     mode_yellow_fg = H.tint(H.get("GitSignsChange", "fg"), 0.3),
     mode_yellow_bg = H.darken(H.get("GitSignsChange", "fg"), 0.15, H.get("Normal", "bg")),
-    mode_yellow_bg_right_block = H.tint(H.get("GitSignsChange", "fg"), -0.45),
+    mode_yellow_bg_right_block = H.tint(H.get("GitSignsChange", "fg"), -0.5),
 
     -- Termasuk filetype: help,
     mode_green_fg = H.tint(H.get("GitSignsAdd", "fg"), 0.3),
-    mode_green_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.2, H.get("Normal", "bg")),
-    mode_green_bg_right_block = H.tint(H.get("GitSignsAdd", "fg"), -0.4),
+    mode_green_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.1, H.get("Normal", "bg")),
+    mode_green_bg_right_block = H.tint(H.get("GitSignsAdd", "fg"), -0.5),
 
     mode_visual_bg = H.get("Visual", "bg"),
     mode_term_fg = H.get("Boolean", "fg"),
@@ -1619,6 +1619,10 @@ M.WinbarFilePath = {
 
       local sep = package.config:sub(1, 1)
       local parts = vim.split(path, "[\\/]")
+
+      if vim.bo.filetype == "octo" then
+        return path
+      end
 
       if opts.length == 0 then
         parts = parts

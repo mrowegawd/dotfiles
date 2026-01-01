@@ -33,15 +33,15 @@ return {
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
       picker = "fzf-lua",
-      window = {
-        note = {
-          -- open_cmd = "botright vsplit",
-          -- size_split = 12,
-          -- size_vsplit = 50,
-          filetype = "markdown", -- Ex: "orgmode" "norg", "markdown", "text"
-          file_ext = "md", -- Ex: "org" "norg" "md" "txt"
-        },
-      },
+      -- window = {
+      --   note = {
+      --     -- open_cmd = "botright vsplit",
+      --     -- size_split = 12,
+      --     -- size_vsplit = 50,
+      --     filetype = "markdown", -- Ex: "orgmode" "norg", "markdown", "text"
+      --     file_ext = "md", -- Ex: "org" "norg" "md" "txt"
+      --   },
+      -- },
       keymaps = {
         disable_all = false,
         open_item = {

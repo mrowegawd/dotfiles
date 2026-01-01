@@ -762,8 +762,6 @@ function M.edit_snippet()
   if #entry_snippets == 0 then
     ---@diagnostic disable-next-line: undefined-field
     RUtils.warn("Filetype untuk `" .. ft .. "`, belum dibuat?", { title = "Snippets" })
-    --   RUtils.warn("file: `" .. snippet_path_file_json .. "`, not found?", { title = "Snippets" })
-    --   RUtils.warn("directory: `" .. snippet_path_dir .. "`, not found?", { title = "Snippets" })
     return
   end
 
@@ -878,7 +876,7 @@ function M.change_colors()
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
   local lazygit_inactive_border_fg = 3.5
   local lazygit_inactive_text_fg = 1
-  local lazygit_default_text_fg = 0.5
+  local lazygit_default_text_fg = 1
   if vim.g.colorscheme == "lackluster" then
     lazygit_default_text_fg = 3
   end
@@ -905,6 +903,14 @@ function M.change_colors()
   if vim.g.colorscheme == "zenburn" then
     lazygit_inactive_border_fg = 0.5
     lazygit_default_text_fg = 0.7
+  end
+  if vim.g.colorscheme == "rose-pine" then
+    lazygit_inactive_border_fg = 1.5
+    lazygit_default_text_fg = 3
+  end
+  if vim.g.colorscheme == "nightfox" then
+    lazygit_inactive_border_fg = 1.5
+    lazygit_default_text_fg = 1.5
   end
   local lazygit_inactive_border = H.tint(H.get("Normal", "bg"), lazygit_inactive_border_fg)
   local lazygit_inactive_text = H.tint(H.get("Normal", "fg"), lazygit_inactive_text_fg)
@@ -994,9 +1000,9 @@ function M.change_colors()
       normal_bg = H.tint(H.get("Keyword", "fg"), -0.45),
       normal_frame = H.tint(H.get("Keyword", "fg"), -0.45),
 
-      critical_fg = H.tint(H.get("diffDelete", "fg"), 0.4),
-      critical_bg = H.tint(H.get("diffDelete", "fg"), -0.25),
-      critical_frame = H.tint(H.get("diffDelete", "fg"), -0.2),
+      critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4),
+      critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25),
+      critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2),
 
       bg = H.tint(H.get("Normal", "bg"), 0.25),
       fg = H.tint(H.get("Normal", "bg"), 0.25),
@@ -1010,8 +1016,8 @@ function M.change_colors()
       fg = H.tint(H.get("Normal", "fg"), -0.2),
       bg = H.get("Normal", "bg"),
 
-      yellow_alt = H.tint(H.get("diffChange", "fg"), -0.45),
-      highlight_key = H.tint(H.get("diffDelete", "fg"), 0.1),
+      yellow_alt = H.tint(H.get("diffChanged", "fg"), -0.45),
+      highlight_key = H.tint(H.get("diffRemoved", "fg"), 0.1),
 
       cursorline_fg = H.tint(H.get("Keyword", "fg"), 1),
       cursorline_bg = H.tint(H.get("Keyword", "fg"), -0.5),
@@ -1025,9 +1031,6 @@ function M.change_colors()
       darken_bg = H.tint(H.get("Normal", "bg"), -0.5),
     },
     delta = {
-      -- file_fg = H.get("diffFile", "fg"),
-      -- file_bg = H.get("diffFile", "bg"),
-
       hunk_header_fg = H.get("diffLine", "fg"),
       hunk_header_bg = H.get("diffLine", "bg"),
 
@@ -1036,49 +1039,43 @@ function M.change_colors()
       line_number_plus = H.get("deltaPlus", "fg"),
       line_number_minus = H.get("deltaMinus", "fg"),
 
-      hunk_plus_fg = H.get("diffAdd", "fg"),
-      hunk_plus_bg = H.get("diffAdd", "bg"),
-      hunk_emp_plus_fg = H.get("deltaPlus", "fg"),
-      hunk_emp_plus_bg = H.get("deltaPlus", "bg"),
+      hunk_plus_fg = H.tint(H.get("GitSignsAdd", "fg"), -0.15),
+      hunk_plus_bg = H.get("deltaPlus", "bg"),
+      hunk_emp_plus_fg = H.tint(H.get("GitSignsAdd", "fg"), 0.4),
+      hunk_emp_plus_bg = H.tint(H.get("deltaPlus", "fg"), 0.5),
 
-      hunk_minus_fg = H.get("diffDelete", "fg"),
-      hunk_minus_bg = H.get("diffDelete", "bg"),
-      hunk_emp_minus_fg = H.get("deltaMinus", "fg"),
-      hunk_emp_minus_bg = H.get("deltaMinus", "bg"),
+      hunk_minus_fg = H.tint(H.get("GitSignsDelete", "fg"), -0.15),
+      hunk_minus_bg = H.get("deltaMinus", "bg"),
+      hunk_emp_minus_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.8),
+      hunk_emp_minus_bg = H.tint(H.get("deltaMinus", "fg"), 0.5),
     },
     eww = {
       bg = H.get("Normal", "bg"),
 
       fg = H.tint(H.get("Normal", "fg"), -0.5),
-      fg2 = H.tint(H.get("diffChange", "fg"), -0.3),
+      fg2 = H.tint(H.get("diffChanged", "fg"), -0.3),
 
       bg_darken = H.tint(H.get("Normal", "fg"), -0.3),
       bg_alt = H.tint(H.get("Normal", "fg"), 0.3),
 
-      red = H.tint(H.get("diffDelete", "fg"), 0.5),
+      red = H.tint(H.get("diffRemoved", "fg"), 0.5),
 
       icon_fg = eww_icon_fg,
 
       keyword = H.get("Keyword", "fg"),
-
-      -- add_fg = diff_add_fg,
-      -- add_line_number = diff_add_line_number,
-      -- change_bg = diff_change_bg,
-      -- change_fg = diff_change_fg,
-      -- change_line_number = diff_change_line_number,
     },
     yazi = {
       cwd = H.get("PanelSideRootName", "fg"),
       hovered = yazi_hovered,
 
-      selected = H.tint(H.get("diffDelete", "fg"), 0.3),
-      count_selected_bg = H.tint(H.get("diffDelete", "fg"), -0.5),
+      selected = H.tint(H.get("diffRemoved", "fg"), 0.3),
+      count_selected_bg = H.tint(H.get("diffRemoved", "fg"), -0.5),
 
       find_keyword_fg = H.get("CurSearch", "fg"),
       find_keyword_bg = H.get("CurSearch", "bg"),
 
-      copied = H.tint(H.get("diffChange", "fg"), 0.3),
-      count_copied_bg = H.tint(H.get("diffChange", "fg"), -0.5),
+      copied = H.tint(H.get("diffChanged", "fg"), 0.3),
+      count_copied_bg = H.tint(H.get("diffChanged", "fg"), -0.5),
 
       cut = H.tint(H.get("String", "fg"), 0.3),
       count_cut_bg = H.tint(H.get("String", "fg"), -0.5),
@@ -1122,8 +1119,8 @@ function M.change_colors()
 
       keyword = H.get("Keyword", "fg"),
 
-      red = H.tint(H.get("diffDelete", "fg"), -0.3),
-      green = H.tint(H.get("diffAdd", "fg"), -0.3),
+      red = H.tint(H.get("diffRemoved", "fg"), -0.3),
+      green = H.tint(H.get("diffAdded", "bg"), -0.3),
     },
   }
 
