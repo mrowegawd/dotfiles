@@ -36,6 +36,8 @@ local winhighlight_note_panel = table.concat({
   "EndOfBuffer:NormalNote",
   "SignColumn:NormalNote",
   "NormalFloat:NormalNote",
+  "FloatBorder:FloatBorderNote",
+  "FloatTitle:TitleFloatNote",
   "CursorLine:CursorLineNote",
   "CursorLineNr:CursorLineNrNote",
   "Folded:FoldedNote",

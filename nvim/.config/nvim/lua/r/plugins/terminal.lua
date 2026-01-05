@@ -6,10 +6,18 @@ return {
     "waiting-for-dev/ergoterm.nvim",
     cmd = "TermNew",
     keys = {
-      { "<Localleader>t", mode = { "n", "t", "x" } },
+      -- { "<Localleader>t", mode = { "n", "t", "x" } },
       { "<a-f>", mode = { "n", "t", "x" } },
-      { "<a-T>", mode = { "n", "t", "x", desc = "Terminal: open" } },
+      { "<a-T>", mode = { "n", "t", "x" }, desc = "Terminal: open" },
       { "<a-N>" },
+      {
+        "<Leader>ot",
+        function()
+          vim.cmd "TermNew layout=right"
+          -- code
+        end,
+        desc = "Open: terminal on the right [ergoterm.nvim]",
+      },
     },
     opts = {
       picker = { picker = "fzf-lua" },
@@ -108,10 +116,10 @@ return {
         end
       end, { desc = "Terminal: terminal tab [ergoterm" })
 
-      RUtils.map.tnoremap("<Localleader>T", function()
-        RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
-        vim.cmd [[TermSelect]]
-      end, { desc = "Terminal: select term (terminal) [ergoterm]" })
+      -- RUtils.map.tnoremap("<Localleader>T", function()
+      --   RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
+      --   vim.cmd [[TermSelect]]
+      -- end, { desc = "Terminal: select term (terminal) [ergoterm]" })
       RUtils.map.nnoremap("<Localleader>T", function()
         vim.cmd [[TermSelect]]
       end, { desc = "Terminal: select term [ergoterm]" })

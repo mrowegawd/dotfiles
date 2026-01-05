@@ -72,6 +72,8 @@ local base_colors = {
   fold_note_fg_alter = 0.1,
   linenr_note_fg_alter = 0.4,
   nontext_note_fg_alter = 0.35,
+  floatborder_note_fg_alter = 0.4,
+  floattitle_note_fg_alter = 0.2,
   normal_note_bg_alter = 5,
   normal_note_fg_alter = 0.45,
   urllink_note_bg_alter = 0.6,
@@ -1176,6 +1178,20 @@ local general_overrides = function()
       },
     },
     {
+      FloatBorderNote = {
+        fg = { from = "NormalNote", attr = "bg", alter = colors.floatborder_note_fg_alter },
+        bg = { from = "NormalNote", attr = "bg" },
+      },
+    },
+    {
+      TitleFloatNote = {
+        fg = { from = "FloatTitle", attr = "fg", alter = colors.floattitle_note_fg_alter },
+        bg = { from = "NormalNote", attr = "bg" },
+        bold = true,
+      },
+    },
+
+    {
       WinBarNote = {
         fg = { from = "Keyword", attr = "fg", alter = colors.winbar_note_fg_alter },
         bg = { from = "NormalNote", attr = "bg", alter = colors.winbar_note_bg_alter },
@@ -1199,7 +1215,7 @@ local general_overrides = function()
 
     {
       TabLine = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.15 },
+        fg = { from = "LineNr", attr = "fg", alter = 0.2 },
         bg = { from = "StatusLine", attr = "bg", alter = colors.tabline_bg_alter },
         reverse = false,
       },

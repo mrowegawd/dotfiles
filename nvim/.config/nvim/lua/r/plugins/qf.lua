@@ -52,34 +52,35 @@ return {
             commands = {
               -- 🔍 Debug / Inspect
               {
-                key = "<Leader>qrt",
+                key = "<Leader>mO",
                 cmd = function(qftbl)
                   RUtils.info(vim.inspect(qftbl))
                 end,
                 desc = "Output items current quickfix/loclist",
+                buffer = true,
               },
 
               -- 🔧 Filter & Update (Quickfix)
               {
-                key = "<Leader>qrc",
+                key = "<Leader>mQ",
                 cmd = "Cfilter /\\\\v\\|[^\\|]*\\|s\\*/",
                 desc = "Run Cfilter update",
                 buffer = true,
               },
               {
-                key = "<Leader>qrl",
+                key = "<Leader>mqd",
                 cmd = "cdo %s/status//gi | update",
                 desc = "Run cdo status update (quickfix)",
                 buffer = true,
               },
               {
-                key = "<Leader>qrj",
+                key = "<Leader>mqD",
                 cmd = "cfdo %s/WinNav/Winav/g",
                 desc = "Run cfdo replace",
                 buffer = true,
               },
               {
-                key = "<Leader>qrk",
+                key = "<Leader>mql",
                 cmd = "cfdo %s/WinNav/Winav/g | update",
                 desc = "Run cfdo replace & update",
                 buffer = true,
@@ -87,25 +88,25 @@ return {
 
               -- 🧩 Filter & Update (Loclist)
               {
-                key = "<Leader>qrC",
+                key = "<Leader>mL",
                 cmd = "Lfilter / /",
                 desc = "Run Lfilter update",
                 buffer = true,
               },
               {
-                key = "<Leader>qrL",
+                key = "<Leader>mld",
                 cmd = "ldo %s/status//gi | update",
                 desc = "Run ldo status update (loclist)",
                 buffer = true,
               },
               {
-                key = "<Leader>qrJ",
+                key = "<Leader>mlD",
                 cmd = "lfdo %s/WinNav/Winav/g",
                 desc = "Run lfdo replace",
                 buffer = true,
               },
               {
-                key = "<Leader>qrK",
+                key = "<Leader>mlR",
                 cmd = "lfdo %s/WinNav/Winav/g | update",
                 desc = "Run lfdo replace & update",
                 buffer = true,

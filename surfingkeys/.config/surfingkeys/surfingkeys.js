@@ -208,10 +208,10 @@ mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
 // mapkey("<Alt-ArrowDown>", "#Move current tab to down", function () {
 //   RUNTIME("moveTab", { step: 1 });
 // });
-mapkey("<Space>bo", "#3Close all tabs except current one", function () {
+mapkey("<Space>bK", "#3Close all tabs except current one", function () {
   RUNTIME("tabOnly");
 });
-mapkey("<Alt-b>", "#3Alternate the tabs", function () {
+mapkey("<Space>bl", "#3Alternate the tabs", function () {
   RUNTIME("goToLastTab");
 });
 mapkey("M", "#3Mute/unmute current tab", function () {
@@ -298,7 +298,7 @@ mapkey("q", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
 
-mapkey("<Space><Tab>", "#3Close current tab", () => {
+mapkey("<Space>bk", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
 

@@ -13,7 +13,7 @@ return {
       },
     },
     opts = {
-      preset = "helix",
+      --= preset = "helix",
       defaults = {},
       plugins = { registers = false }, -- registers disabled
       keys = {
@@ -25,17 +25,19 @@ return {
           mode = { "n", "x" },
           { "<Leader>a", group = "mark" },
 
-          { "<Leader>q", group = "quickfix" },
+          { "<Leader>q", group = "quit/session" },
+          -- { "<Leader>q", group = "quickfix" },
 
           { "<Leader>A", group = "projectionist" },
 
           { "<Leader>c", group = "code/action" },
+          { "<Leader>cp", group = "peek" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
-          { "<Leader>i", group = "ai" },
+          { "<Leader>i", group = "insert" },
           { "<Leader>j", group = "jumpTo" },
-          { "<Leader>p", group = "peek" },
+          { "<Leader>p", group = "projects" },
 
           { "<Leader>l", group = "LSP" },
           { "<Leader>lu", group = "toggle" },
@@ -48,16 +50,22 @@ return {
           { "<Leader>gv", group = "view" },
           { "<Leader>gb", group = "buffer" },
 
+          { "<Leader>h", group = "help" },
+          { "<Leader>n", group = "note" },
+
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
 
           { "<Leader>t", group = "testing" },
           { "<Leader>tc", group = "coverage" },
 
-          { "<Leader>m", group = "marker" },
+          -- { "<Leader>m", group = "marker" },
 
           { "<Leader>u", group = "toggle" },
-          { "<Leader>s", group = "session" },
+          { "<Leader>s", group = "search" },
+
+          -- { "<Leader>s", group = "session" },
+
           -- { "<Leader>z", group = "fold" },
           { "<Leader>x", group = "exec:diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
@@ -77,10 +85,9 @@ return {
             end,
           },
 
-          { "<Localleader>a", group = "note" },
-          { "<Localleader>g", group = "+GrepEnchanted" },
-          { "<Localleader>af", group = "find" },
-          { "<Localleader>afg", group = "orgmode/obsidian" },
+          { "<Localleader>g", group = "grug-far" },
+
+          { "<Localleader>a", group = "ai" },
 
           { "<Localleader>d", group = "database" },
           { "<Localleader>f", group = "telescope" },

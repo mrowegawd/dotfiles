@@ -29,6 +29,32 @@ local function get_qfbookmark()
   return qfbookmark
 end
 
+local function jump_scope(scope, opts)
+  local buf = vim.api.nvim_get_current_buf()
+  local max_line = vim.api.nvim_buf_line_count(buf)
+
+  while scope do
+    local line = opts.bottom and scope.to or scope.from
+
+    if line >= 1 and line <= max_line then
+      local line_text = vim.api.nvim_buf_get_lines(buf, line - 1, line, false)[1] or ""
+      local indent = vim.fn.indent(line)
+
+      local col = math.min(indent, #line_text)
+
+      local current = vim.api.nvim_win_get_cursor(0)
+      local target = { line, col }
+
+      if not vim.deep_equal(current, target) then
+        vim.api.nvim_win_set_cursor(0, target)
+        return
+      end
+    end
+
+    scope = scope:parent()
+  end
+end
+
 return {
   {
     "folke/snacks.nvim",
@@ -160,22 +186,22 @@ return {
       },
 
       -- Buffers
+      -- {
+      --   "<Leader>sb",
+      --   function()
+      --     Snacks.picker.lines()
+      --   end,
+      --   desc = "Buffer: live grep current buffer [snackspicker]",
+      -- },
+      -- {
+      --   "<Leader>sB",
+      --   function()
+      --     Snacks.picker.grep_buffers()
+      --   end,
+      --   desc = "Buffer: live grep across buffers [snackspicker]",
+      -- },
       {
-        "<Leader>bg",
-        function()
-          Snacks.picker.lines()
-        end,
-        desc = "Buffer: live grep current buffer [snackspicker]",
-      },
-      {
-        "<Leader>bG",
-        function()
-          Snacks.picker.grep_buffers()
-        end,
-        desc = "Buffer: live grep across buffers [snackspicker]",
-      },
-      {
-        "<Leader>bf",
+        "<Leader>bb",
         function()
           Snacks.picker.buffers { layout = "select" }
         end,
@@ -216,7 +242,7 @@ return {
       -- { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
       -- -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
       {
-        "<Leader>fi",
+        "<Leader>ii",
         function()
           Snacks.picker.icons()
         end,
@@ -273,7 +299,7 @@ return {
       --  Jump to Word References
       --  +----------------------------------------------------------+
       {
-        "<a-n>",
+        "<c-n>",
         function()
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
@@ -294,12 +320,18 @@ return {
             return
           end
 
-          Snacks.scope.jump { bottom = true }
+          local opts = { bottom = true }
+          Snacks.scope.get(function(scope)
+            if not scope then
+              return
+            end
+            jump_scope(scope, opts)
+          end, opts)
         end,
         desc = "LSP: next snack scope, mark, word highlighter",
       },
       {
-        "<a-p>",
+        "<c-p>",
         function()
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
@@ -320,7 +352,13 @@ return {
             return
           end
 
-          Snacks.scope.jump { bottom = false }
+          local opts = { bottom = false }
+          Snacks.scope.get(function(scope)
+            if not scope then
+              return
+            end
+            jump_scope(scope, opts)
+          end, opts)
         end,
         desc = "LSP: prev snack scope, mark, word highlighter",
       },

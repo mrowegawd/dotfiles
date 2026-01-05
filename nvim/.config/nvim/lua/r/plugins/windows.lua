@@ -25,7 +25,7 @@ return {
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
     keys = {
       {
-        "<Leader>bp",
+        "<Leader>bP",
         function()
           local pinbuf = require "stickybuf"
           if pinbuf.is_pinned() then
@@ -34,7 +34,7 @@ return {
             vim.cmd "PinBuffer"
           end
         end,
-        desc = "Buffer: pin buffer [stickybuf]",
+        desc = "Buffer: pin buffer [stickybuf.nvim]",
       },
     },
     config = function()
@@ -132,36 +132,36 @@ return {
     keys = function()
       return {
         --- CTRL
-        {
-          "<c-h>",
-          function()
-            require("smart-splits").move_cursor_left()
-          end,
-          desc = "Window: move cursor left [smart-splits]",
-          mode = { "n", "x" },
-        },
-        {
-          "<c-j>",
-          function()
-            require("smart-splits").move_cursor_down()
-          end,
-          desc = "Window: move cursor down [smart-splits]",
-        },
-        {
-          "<c-k>",
-          function()
-            require("smart-splits").move_cursor_up()
-          end,
-          desc = "Window: move cursor up [smart-splits]",
-        },
-        {
-          "<c-l>",
-          function()
-            require("smart-splits").move_cursor_right()
-          end,
-          desc = "Window: move cursor right [smart-splits]",
-          mode = { "n", "x" },
-        },
+        -- {
+        --   "<c-h>",
+        --   function()
+        --     require("smart-splits").move_cursor_left()
+        --   end,
+        --   desc = "Window: move cursor left [smart-splits]",
+        --   mode = { "n", "x" },
+        -- },
+        -- {
+        --   "<c-j>",
+        --   function()
+        --     require("smart-splits").move_cursor_down()
+        --   end,
+        --   desc = "Window: move cursor down [smart-splits]",
+        -- },
+        -- {
+        --   "<c-k>",
+        --   function()
+        --     require("smart-splits").move_cursor_up()
+        --   end,
+        --   desc = "Window: move cursor up [smart-splits]",
+        -- },
+        -- {
+        --   "<c-l>",
+        --   function()
+        --     require("smart-splits").move_cursor_right()
+        --   end,
+        --   desc = "Window: move cursor right [smart-splits]",
+        --   mode = { "n", "x" },
+        -- },
 
         -- ALT
         {
@@ -194,34 +194,34 @@ return {
         },
 
         --- ARROW
-        {
-          "<c-Left>",
-          function()
-            require("smart-splits").move_cursor_left()
-          end,
-          desc = "Window: move cursor left [smart-splits]",
-        },
-        {
-          "<c-Down>",
-          function()
-            require("smart-splits").move_cursor_down()
-          end,
-          desc = "Window: move cursor down [smart-splits]",
-        },
-        {
-          "<c-Up>",
-          function()
-            require("smart-splits").move_cursor_up()
-          end,
-          desc = "Window: move cursor up [smart-splits]",
-        },
-        {
-          "<c-Right>",
-          function()
-            require("smart-splits").move_cursor_right()
-          end,
-          desc = "Window: move cursor right [smart-splits]",
-        },
+        -- {
+        --   "<c-Left>",
+        --   function()
+        --     require("smart-splits").move_cursor_left()
+        --   end,
+        --   desc = "Window: move cursor left [smart-splits]",
+        -- },
+        -- {
+        --   "<c-Down>",
+        --   function()
+        --     require("smart-splits").move_cursor_down()
+        --   end,
+        --   desc = "Window: move cursor down [smart-splits]",
+        -- },
+        -- {
+        --   "<c-Up>",
+        --   function()
+        --     require("smart-splits").move_cursor_up()
+        --   end,
+        --   desc = "Window: move cursor up [smart-splits]",
+        -- },
+        -- {
+        --   "<c-Right>",
+        --   function()
+        --     require("smart-splits").move_cursor_right()
+        --   end,
+        --   desc = "Window: move cursor right [smart-splits]",
+        -- },
 
         -- RESIZE WINDOW
         {

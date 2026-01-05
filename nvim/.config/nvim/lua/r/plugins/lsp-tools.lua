@@ -125,56 +125,56 @@ return {
         desc = "Peek: peek on qf item (alternatif) [overlook]",
       },
       {
-        "<Leader>pd",
+        "<Leader>cpp",
         function()
           require("overlook.api").peek_definition()
         end,
         desc = "Peek: peek definition [overlook]",
       },
       {
-        "<Leader>pc",
+        "<Leader>cpC",
         function()
           require("overlook.api").close_all()
         end,
         desc = "Peek: close all popup [overlook]",
       },
       {
-        "<Leader>pr",
+        "<Leader>cpr",
         function()
           require("overlook.api").restore_popup()
         end,
         desc = "Peek: restore popup [overlook]",
       },
       {
-        "<Leader>pR",
+        "<Leader>cpR",
         function()
           require("overlook.api").restore_all_popups()
         end,
         desc = "Peek: restore all popup [overlook]",
       },
       {
-        "<Leader>pv",
+        "<Leader>cpv",
         function()
           require("overlook.api").open_in_vsplit()
         end,
         desc = "Peek: open in vsplit [overlook]",
       },
       {
-        "<Leader>ps",
+        "<Leader>cps",
         function()
           require("overlook.api").open_in_split()
         end,
         desc = "Peek: open in split [overlook]",
       },
       {
-        "<Leader>pt",
+        "<Leader>cpt",
         function()
           require("overlook.api").open_in_tab()
         end,
         desc = "Peek: open in tab [overlook]",
       },
       {
-        "<Leader>pw",
+        "<Leader>cpw",
         function()
           require("overlook.api").switch_focus()
         end,

@@ -54,15 +54,12 @@ end, { desc = "Fold: cycle fold level (util)" })
 RUtils.map.nnoremap("zo", function()
   RUtils.map.wrap_fold_cmd "normal! zRzz"
 end, { desc = "Fold: open all" })
-RUtils.map.nnoremap("zO", function()
-  RUtils.map.wrap_fold_cmd "normal! zRzz"
-end, { desc = "Fold: open all (alternativ)" })
 
 -- Navigate magic fold
-RUtils.map.nnoremap("<c-n>", function()
+RUtils.map.nnoremap("<a-n>", function()
   RUtils.map.magic_jump()
 end, { desc = "View: magic jump" })
-RUtils.map.nnoremap("<c-p>", function()
+RUtils.map.nnoremap("<a-p>", function()
   RUtils.map.magic_jump(true)
 end, { desc = "View: magic jump" })
 -- }}}
@@ -207,10 +204,10 @@ RUtils.map.nnoremap(
 )
 
 -- Scroll step sideways
--- RUtils.map.nnoremap("zl", "z4l")
--- RUtils.map.nnoremap("zh", "z4h") -- zh use for fold
-RUtils.map.nnoremap("zL", "z20l")
-RUtils.map.nnoremap("zH", "z20h")
+RUtils.map.nnoremap("zl", "z20l")
+RUtils.map.nnoremap("zh", "z20h") -- zh use for fold
+RUtils.map.nnoremap("zL", "z50l")
+RUtils.map.nnoremap("zH", "z50h")
 
 -- Scroll Up/Down
 RUtils.map.nnoremap(
@@ -236,31 +233,30 @@ RUtils.map.nnoremap(
 -- }}}
 -- {{{ Buffers
 RUtils.map.nnoremap("<Leader>bt", "<C-w><S-t>", { desc = "Buffer: move to new tab", silent = true })
-RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate", silent = true })
+RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: alternate/last buffer", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size", silent = true })
-RUtils.map.nnoremap("<Leader>bc", "<CMD>q!<CR>", { desc = "Buffer: close", silent = true })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })
 RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close (force)", silent = true })
-RUtils.map.nnoremap("<Leader>bo", function()
+RUtils.map.nnoremap("<Leader>bK", function()
   Snacks.bufdelete.other()
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
 end, { desc = "Buffer: delete all other buffers" })
-RUtils.map.nnoremap("gl", function()
+RUtils.map.nnoremap("<Leader>bn", function()
   RUtils.map.go_prev_or_next_buffer(true)
-end, { desc = "Buffer: go next" })
-RUtils.map.nnoremap("gh", function()
+end, { desc = "Buffer: next buffer" })
+RUtils.map.nnoremap("<Leader>bp", function()
   RUtils.map.go_prev_or_next_buffer()
-end, { desc = "Buffer: go prev" })
-RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
+end, { desc = "Buffer: prev buffer" })
+RUtils.map.nnoremap("<Leader>bk", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 -- RUtils.map.nnoremap("<Leader>R", function()
 --   vim.cmd [[wall!]]
 --   vim.cmd [[restart]]
 -- end, { desc = "Buffer: restart nvim" })
 RUtils.map.xnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
-RUtils.map.nnoremap("<Leader>bk", RUtils.map.show_help_buf_keymap, {
-  desc = "Buffer: show keymaps curbuf",
+RUtils.map.nnoremap("<Leader>hb", RUtils.map.show_help_buf_keymap, {
+  desc = "Help: show keymaps curbuf",
   silent = true,
 })
 -- }}}
@@ -376,16 +372,28 @@ RUtils.map.xnoremap(
 -- {{{ Misc
 -- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
 -- RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
---
--- RUtils.map.nnoremap("<Localleader>as", function()
---   RUtils.winui.open_float_preview()
--- end, { desc = "Misc: test window" })
 
-RUtils.map.nnoremap("<Esc>", function()
-  vim.cmd "noh"
-  RUtils.cmp.actions.snippet_stop()
-  return "<Esc>"
-end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+RUtils.map.nnoremap("<Leader>qq", function()
+  vim.cmd "qal!"
+end, { desc = "Quit: from nvim without save" })
+RUtils.map.nnoremap("<Leader>qQ", function()
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local ft_buf = vim.api.nvim_get_option_value("modified", { buf = buf })
+      if ft_buf then
+        vim.api.nvim_set_current_buf(buf)
+
+        RUtils.warn "Quit abort!"
+        return
+      end
+    end
+  end
+
+  vim.cmd "wqa!"
+end, { desc = "Quit: and save, but check first if any buffers are modified" })
+
 RUtils.map.nnoremap("*", function()
   -- Don't jump to first match with *
   local word = vim.fn.expand "<cword>"
@@ -413,12 +421,12 @@ RUtils.map.nnoremap("<Leader>cd", function()
   vim.cmd(fmt("cd %s", filepath))
   vim.notify(fmt("ROOT CHANGED: %s", filepath))
 end, { desc = "Action: change pwd to dir file" })
-RUtils.map.nnoremap("<Leader>Y", function()
+RUtils.map.nnoremap("<Leader>fy", function()
   local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
   vim.fn.setreg("+", path)
-  vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
-end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap("<Leader>n", function()
+  vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" })
+end, { silent = true, desc = "Files: yank current path" })
+RUtils.map.nnoremap("<Esc>", function()
   -- "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
   -- convert into lua:
   vim.cmd "nohlsearch"
@@ -479,27 +487,27 @@ local function replace_keymap(confirmation, visual)
   end
 end
 -- Search & replace
-RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: replace under cursor" })
+RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Search: replace under cursor" })
 RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: replace under cursor (visual)" })
 
 -- Lazy log
-RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: lazy log" })
+-- RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: lazy log" })
 
 -- Open with browser
-RUtils.map.nnoremap("<Leader>ob", function()
+RUtils.map.nnoremap("<Leader>so", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Open: magic browser" })
-RUtils.map.vnoremap("<Leader>ob", function()
+end, { desc = "Search: look up online/browser" })
+RUtils.map.vnoremap("<Leader>so", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Open: magic browse (visual" })
+end, { desc = "Search: look up online/browser (visual" })
 
 -- Open with mpv or svix
-RUtils.map.nnoremap("<Leader>oB", function()
+RUtils.map.nnoremap("<Leader>oO", function()
   RUtils.cmd.open_with("mpv or svix", true)
-end, { desc = "Open: magic media" })
-RUtils.map.vnoremap("<Leader>oB", function()
+end, { desc = "Open: media" })
+RUtils.map.vnoremap("<Leader>oO", function()
   RUtils.cmd.open_with("mpv or svix", true)
-end, { desc = "Open: magic media (visual)" })
+end, { desc = "Open: media (visual)" })
 
 -- Open file under cursor
 RUtils.map.nnoremap("<Leader>oo", function()
@@ -510,12 +518,12 @@ RUtils.map.xnoremap("<Leader>oo", function()
 end, { desc = "Open: file under cursor (visual)" })
 
 -- Browse error messages
-RUtils.map.nnoremap("<Leader>rb", function()
+RUtils.map.nnoremap("<Leader>sE", function()
   RUtils.cmd.browse_this_error(true)
-end, { desc = "Open: browse errors" })
-RUtils.map.xnoremap("<Leader>rb", function()
+end, { desc = "Search: look up errors in browser" })
+RUtils.map.xnoremap("<Leader>sE", function()
   RUtils.cmd.browse_this_error(true)
-end, { desc = "Open: browse errors (visual)" })
+end, { desc = "Search: look up errors in browser (visual)" })
 
 -- Open notes
 RUtils.map.nnoremap("<a-W>", function()
@@ -652,6 +660,10 @@ RUtils.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo opti
 RUtils.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
+
+RUtils.map.nnoremap("<Leader>bN", function()
+  vim.cmd "E"
+end, { desc = "Buffer: open empty buffer" })
 
 vim.api.nvim_create_user_command("LspLog", function()
   vim.cmd(string.format("tabnew %s", vim.lsp.log.get_filename()))
@@ -829,9 +841,9 @@ local bulk_cmd_git = function()
   }, { winopts = { title = RUtils.config.icons.git.branch .. "Git " } })
 end
 
-RUtils.map.nnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
-RUtils.map.tnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds" })
-RUtils.map.xnoremap("<Leader>gof", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
+RUtils.map.nnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds" })
+RUtils.map.tnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds" })
+RUtils.map.xnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
 
 -- }}}
 -- {{{ Tmux integration

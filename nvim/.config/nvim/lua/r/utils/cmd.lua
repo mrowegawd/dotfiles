@@ -858,7 +858,7 @@ function M.change_colors()
 
   -- Inactive Tab
   local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
-  local tab_inactive_bg = H.get("Normal", "bg")
+  local tab_inactive_bg = H.get("NormalNote", "bg")
   local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.1)
 
   -- Border Pane

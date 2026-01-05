@@ -42,36 +42,41 @@ return {
     keys = {
       { "<Leader>G", "", desc = "+Github" },
       { "<Leader>Gc", "", desc = "+Commits" },
-      { "<Leader>Gcc", "<cmd>GHCloseCommit<cr>", desc = "Close" },
-      { "<Leader>Gce", "<cmd>GHExpandCommit<cr>", desc = "Expand" },
-      { "<Leader>Gco", "<cmd>GHOpenToCommit<cr>", desc = "Open To" },
-      { "<Leader>Gcp", "<cmd>GHPopOutCommit<cr>", desc = "Pop Out" },
-      { "<Leader>Gcz", "<cmd>GHCollapseCommit<cr>", desc = "Collapse" },
+      { "<Leader>Gcc", "<CMD>GHCloseCommit<CR>", desc = "Close" },
+      { "<Leader>Gce", "<CMD>GHExpandCommit<CR>", desc = "Expand" },
+      { "<Leader>Gco", "<CMD>GHOpenToCommit<CR>", desc = "Open To" },
+      { "<Leader>Gcp", "<CMD>GHPopOutCommit<CR>", desc = "Pop Out" },
+      { "<Leader>Gcz", "<CMD>GHCollapseCommit<CR>", desc = "Collapse" },
+
       { "<Leader>Gi", "", desc = "+Issues" },
-      { "<Leader>Gip", "<cmd>GHPreviewIssue<cr>", desc = "Preview" },
-      { "<Leader>Gio", "<cmd>GHOpenIssue<cr>", desc = "Open" },
+      { "<Leader>Gip", "<CMD>GHPreviewIssue<CR>", desc = "Preview" },
+      { "<Leader>Gio", "<CMD>GHOpenIssue<CR>", desc = "Open" },
+
       { "<Leader>Gl", "", desc = "+Litee" },
-      { "<Leader>Glt", "<cmd>LTPanel<cr>", desc = "Toggle Panel" },
+      { "<Leader>Glt", "<CMD>LTPanel<CR>", desc = "Toggle Panel" },
+
       { "<Leader>Gp", "", desc = "+Pull Request" },
-      { "<Leader>Gpc", "<cmd>GHClosePR<cr>", desc = "Close" },
-      { "<Leader>Gpd", "<cmd>GHPRDetails<cr>", desc = "Details" },
-      { "<Leader>Gpe", "<cmd>GHExpandPR<cr>", desc = "Expand" },
-      { "<Leader>Gpo", "<cmd>GHOpenPR<cr>", desc = "Open" },
-      { "<Leader>Gpp", "<cmd>GHPopOutPR<cr>", desc = "PopOut" },
-      { "<Leader>Gpr", "<cmd>GHRefreshPR<cr>", desc = "Refresh" },
-      { "<Leader>Gpt", "<cmd>GHOpenToPR<cr>", desc = "Open To" },
-      { "<Leader>Gpz", "<cmd>GHCollapsePR<cr>", desc = "Collapse" },
+      { "<Leader>Gpc", "<CMD>GHClosePR<CR>", desc = "Close" },
+      { "<Leader>Gpd", "<CMD>GHPRDetails<CR>", desc = "Details" },
+      { "<Leader>Gpe", "<CMD>GHExpandPR<CR>", desc = "Expand" },
+      { "<Leader>Gpo", "<CMD>GHOpenPR<CR>", desc = "Open" },
+      { "<Leader>Gpp", "<CMD>GHPopOutPR<CR>", desc = "PopOut" },
+      { "<Leader>Gpr", "<CMD>GHRefreshPR<CR>", desc = "Refresh" },
+      { "<Leader>Gpt", "<CMD>GHOpenToPR<CR>", desc = "Open To" },
+      { "<Leader>Gpz", "<CMD>GHCollapsePR<CR>", desc = "Collapse" },
+
       { "<Leader>Gr", "", desc = "+Review" },
-      { "<Leader>Grb", "<cmd>GHStartReview<cr>", desc = "Begin" },
-      { "<Leader>Grc", "<cmd>GHCloseReview<cr>", desc = "Close" },
-      { "<Leader>Grd", "<cmd>GHDeleteReview<cr>", desc = "Delete" },
-      { "<Leader>Gre", "<cmd>GHExpandReview<cr>", desc = "Expand" },
-      { "<Leader>Grs", "<cmd>GHSubmitReview<cr>", desc = "Submit" },
-      { "<Leader>Grz", "<cmd>GHCollapseReview<cr>", desc = "Collapse" },
+      { "<Leader>Grb", "<CMD>GHStartReview<CR>", desc = "Begin" },
+      { "<Leader>Grc", "<CMD>GHCloseReview<CR>", desc = "Close" },
+      { "<Leader>Grd", "<CMD>GHDeleteReview<CR>", desc = "Delete" },
+      { "<Leader>Gre", "<CMD>GHExpandReview<CR>", desc = "Expand" },
+      { "<Leader>Grs", "<CMD>GHSubmitReview<CR>", desc = "Submit" },
+      { "<Leader>Grz", "<CMD>GHCollapseReview<CR>", desc = "Collapse" },
+
       { "<Leader>Gt", "", desc = "+Threads" },
-      { "<Leader>Gtc", "<cmd>GHCreateThread<cr>", desc = "Create" },
-      { "<Leader>Gtn", "<cmd>GHNextThread<cr>", desc = "Next" },
-      { "<Leader>Gtt", "<cmd>GHToggleThread<cr>", desc = "Toggle" },
+      { "<Leader>Gtc", "<CMD>GHCreateThread<CR>", desc = "Create" },
+      { "<Leader>Gtn", "<CMD>GHNextThread<CR>", desc = "Next" },
+      { "<Leader>Gtt", "<CMD>GHToggleThread<CR>", desc = "Toggle" },
     },
     config = function(_, opts)
       require("litee.lib").setup()
@@ -83,19 +88,19 @@ return {
     "juacker/git-link.nvim",
     keys = {
       {
-        "<leader>gob",
+        "<leader>gy",
         function()
           require("git-link.main").copy_line_url()
         end,
-        desc = "Git: copy code link to clipboard [git-link]",
+        desc = "Git: yank line [git-link.nvim]",
         mode = { "n", "x" },
       },
       {
-        "<leader>goB",
+        "<leader>gY",
         function()
           require("git-link.main").open_line_url()
         end,
-        desc = "Git: open code link in browser [git-link]",
+        desc = "Git: open line git in browser [git-link.nvim]",
         mode = { "n", "x" },
       },
     },
@@ -109,15 +114,15 @@ return {
     branch = "feat/big-updates",
     cmd = "Octo",
     keys = {
-      { "<Leader>gr", "", desc = "reactions", ft = "octo" },
-      { "<Leader>gp", "", desc = "check pr", ft = "octo" },
-      { "<Leader>gi", "", desc = "issue", ft = "octo" },
-      { "<Leader>ga", "", desc = "assignee", ft = "octo" },
-      { "<Leader>gc", "", desc = "comments", ft = "octo" },
-      { "<Leader>gl", "", desc = "label", ft = "octo" },
-      { "<Leader>gf", "", desc = "files", ft = "octo" },
-      { "<Leader>gm", "", desc = "merge", ft = "octo" },
-      { "<Leader>gR", "", desc = "reviewer", ft = "octo" },
+      { "<Leader>ma", "", desc = "add", ft = "octo" },
+      { "<Leader>mar", "", desc = "reactions", ft = "octo" },
+      { "<Leader>mr", "", desc = "delete/remove", ft = "octo" },
+      { "<Leader>mc", "", desc = "create/checkout/merge", ft = "octo" },
+      { "<Leader>mv", "", desc = "view/diff", ft = "octo" },
+
+      { "<Leader>mR", "", desc = "reviewer", ft = "octo" },
+      { "<Leader>mt", "", desc = "thread", ft = "octo" },
+      { "<Leader>mn", "", desc = "notifications", ft = "octo" },
     },
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = {
@@ -153,120 +158,142 @@ return {
       },
       mappings = {
         discussion = {
-          open_in_browser = { lhs = "<Leader>goo", desc = "open issue in browser [discussion]" },
-          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [discussion]" },
-          add_comment = { lhs = "<Leader>gca", desc = "add comment [discussion]" },
-          add_reply = { lhs = "<Leader>gcr", desc = "add reply [discussion]" },
-          delete_comment = { lhs = "<Leader>gcd", desc = "delete comment [discussion]" },
-          add_label = { lhs = "<Leader>gla", desc = "add label [discussion]" },
-          remove_label = { lhs = "<Leader>glc", desc = "remove label [discussion]" },
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [discussion]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [discussion]" },
-          react_hooray = { lhs = "<Leader>grp", desc = "add/remove 🎉 reaction [discussion]" },
-          react_heart = { lhs = "<Leader>grh", desc = "add/remove ❤️ reaction [discussion]" },
-          react_eyes = { lhs = "<Leader>gre", desc = "add/remove 👀 reaction [discussion]" },
-          react_thumbs_up = { lhs = "<Leader>gr+", desc = "add/remove 👍 reaction [discussion]" },
-          react_thumbs_down = { lhs = "<Leader>gr-", desc = "add/remove 👎 reaction [discussion]" },
-          react_rocket = { lhs = "<Leader>grr", desc = "add/remove 🚀 reaction [discussion]" },
-          react_laugh = { lhs = "<Leader>grl", desc = "add/remove 😄 reaction [discussion]" },
-          react_confused = { lhs = "<Leader>grc", desc = "add/remove 😕 reaction [discussion]" },
+          open_in_browser = { lhs = "<Leader>mY", desc = "open issue in browser [discussion]" },
+          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [discussion]" },
+          add_comment = { lhs = "<Leader>mac", desc = "add comment [discussion]" },
+          add_reply = { lhs = "<Leader>may", desc = "add reply [discussion]" },
+          add_label = { lhs = "<Leader>mal", desc = "add label [discussion]" },
+
+          delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [discussion]" },
+          remove_label = { lhs = "<Leader>mrl", desc = "remove label [discussion]" },
+
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [discussion]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [discussion]" },
+
+          react_hooray = { lhs = "<Leader>marp", desc = "add/remove 🎉 reaction [discussion]" },
+          react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [discussion]" },
+          react_eyes = { lhs = "<Leader>mare", desc = "add/remove 👀 reaction [discussion]" },
+          react_thumbs_up = { lhs = "<Leader>marn", desc = "add/remove 👍 reaction [discussion]" },
+          react_thumbs_down = { lhs = "<Leader>marp", desc = "add/remove 👎 reaction [discussion]" },
+          react_rocket = { lhs = "<Leader>marr", desc = "add/remove 🚀 reaction [discussion]" },
+          react_laugh = { lhs = "<Leader>marl", desc = "add/remove 😄 reaction [discussion]" },
+          react_confused = { lhs = "<Leader>marc", desc = "add/remove 😕 reaction [discussion]" },
         },
         runs = {
           expand_step = { lhs = "o", desc = "expand workflow step [runs]" },
-          open_in_browser = { lhs = "<Leader>goo", desc = "open workflow run in browser [runs]" },
+          open_in_browser = { lhs = "<Leader>mY", desc = "open workflow run in browser [runs]" },
           refresh = { lhs = "<C-r>", desc = "refresh workflow [runs]" },
           rerun = { lhs = "<C-o>", desc = "rerun workflow [runs]" },
           rerun_failed = { lhs = "<C-f>", desc = "rerun failed workflow [runs]" },
           cancel = { lhs = "<C-x>", desc = "cancel workflow [runs]" },
-          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [runs]" },
+          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [runs]" },
         },
         issue = {
-          close_issue = { lhs = "<Leader>gic", desc = "close issue [issue]" },
-          reopen_issue = { lhs = "<Leader>gio", desc = "reopen issue [issue]" },
-          list_issues = { lhs = "<Leader>gil", desc = "list open issues on same repo [octo [issue]" },
-          reload = { lhs = "<C-r>", desc = "reload issue [issue]" },
-          open_in_browser = { lhs = "<Leader>goo", desc = "open issue in browser [issue]" },
-          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [issue]" },
-          add_assignee = { lhs = "<Leader>gaa", desc = "add assignee [issue]" },
-          remove_assignee = { lhs = "<Leader>gad", desc = "remove assignee [issue]" },
-          create_label = { lhs = "<Leader>glc", desc = "create label [issue]" },
-          add_label = { lhs = "<Leader>gla", desc = "add label [issue]" },
-          remove_label = { lhs = "<Leader>glc", desc = "remove label [issue]" },
-          goto_issue = { lhs = "<Leader>gii", desc = "go to issue/pr/discussion under cursor [issue]" },
-          add_comment = { lhs = "<Leader>gca", desc = "add comment [issue]" },
-          add_reply = { lhs = "<Leader>gcr", desc = "add reply [issue]" },
-          delete_comment = { lhs = "<Leader>gcd", desc = "delete comment [issue]" },
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [issue]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [issue]" },
-          react_hooray = { lhs = "<Leader>grp", desc = "add/remove 🎉 reaction [issue]" },
-          react_heart = { lhs = "<Leader>grh", desc = "add/remove ❤️ reaction [issue]" },
-          react_eyes = { lhs = "<Leader>gre", desc = "add/remove 👀 reaction [issue]" },
-          react_thumbs_up = { lhs = "<Leader>gr+", desc = "add/remove 👍 reaction [issue]" },
-          react_thumbs_down = { lhs = "<Leader>gr-", desc = "add/remove 👎 reaction [issue]" },
-          react_rocket = { lhs = "<Leader>grr", desc = "add/remove 🚀 reaction [issue]" },
-          react_laugh = { lhs = "<Leader>grl", desc = "add/remove 😄 reaction [issue]" },
-          react_confused = { lhs = "<Leader>grc", desc = "add/remove 😕 reaction [issue]" },
+          close_issue = { lhs = "<Leader>mC", desc = "close issue [issue]" },
+          reopen_issue = { lhs = "<Leader>maI", desc = "reopen issue [issue]" },
+          list_issues = { lhs = "<Leader>mf", desc = "list open issues on same repo [octo [issue]" },
+          reload = { lhs = "R", desc = "reload issue [issue]" },
+
+          open_in_browser = { lhs = "<Leader>mY", desc = "open issue in browser [issue]" },
+          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [issue]" },
+
+          add_assignee = { lhs = "<Leader>mA", desc = "add assignee [issue]" },
+
+          create_label = { lhs = "<Leader>mcl", desc = "create label [issue]" },
+          add_label = { lhs = "<Leader>mal", desc = "add label [issue]" },
+
+          remove_label = { lhs = "<Leader>mrl", desc = "remove label [issue]" },
+          remove_assignee = { lhs = "<Leader>mrA", desc = "remove assignee [issue]" },
+
+          goto_issue = { lhs = "<Leader>mo", desc = "go to issue/pr/discussion under cursor [issue]" },
+
+          add_comment = { lhs = "<Leader>mac", desc = "add comment [issue]" },
+          add_reply = { lhs = "<Leader>may", desc = "add reply [issue]" },
+          delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [issue]" },
+
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [issue]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [issue]" },
+
+          react_hooray = { lhs = "<Leader>maro", desc = "add/remove 🎉 reaction [issue]" },
+          react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [issue]" },
+          react_eyes = { lhs = "<Leader>mare", desc = "add/remove 👀 reaction [issue]" },
+          react_thumbs_up = { lhs = "<Leader>marn", desc = "add/remove 👍 reaction [issue]" },
+          react_thumbs_down = { lhs = "<Leader>marp", desc = "add/remove 👎 reaction [issue]" },
+          react_rocket = { lhs = "<Leader>marr", desc = "add/remove 🚀 reaction [issue]" },
+          react_laugh = { lhs = "<Leader>marl", desc = "add/remove 😄 reaction [issue]" },
+          react_confused = { lhs = "<Leader>marc", desc = "add/remove 😕 reaction [issue]" },
         },
         pull_request = {
-          checkout_pr = { lhs = "<Leader>gpo", desc = "checkout PR [pull request]" },
-          merge_pr = { lhs = "<Leader>gmm", desc = "merge commit PR [pull request]" },
-          squash_and_merge_pr = { lhs = "<Leader>gms", desc = "squash and merge PR [pull request]" },
-          rebase_and_merge_pr = { lhs = "<Leader>gmr", desc = "rebase and merge PR [pull request]" },
+          checkout_pr = { lhs = "<Leader>mco", desc = "checkout PR [pull request]" },
+          merge_pr = { lhs = "<Leader>mcm", desc = "merge commit PR [pull request]" },
+
+          squash_and_merge_pr = { lhs = "<Leader>mcs", desc = "squash and merge PR [pull request]" },
+          rebase_and_merge_pr = { lhs = "<Leader>mcr", desc = "rebase and merge PR [pull request]" },
+
           merge_pr_queue = {
-            lhs = "<Leader>gmP",
+            lhs = "<Leader>mcP",
             desc = "merge commit PR and add to merge queue (Merge queue must be enabled in the repo) [pull request]",
           },
           squash_and_merge_queue = {
-            lhs = "<Leader>gmS",
+            lhs = "<Leader>mcS",
             desc = "squash and add to merge queue (Merge queue must be enabled in the repo) [pull request]",
           },
           rebase_and_merge_queue = {
-            lhs = "<Leader>gmR",
+            lhs = "<Leader>mcR",
             desc = "rebase and add to merge queue (Merge queue must be enabled in the repo) [pull request]",
           },
-          list_commits = { lhs = "<Leader>gpc", desc = "list PR commits [pull request]" },
-          list_changed_files = { lhs = "<Leader>gff", desc = "list PR changed files [pull request]" },
-          show_pr_diff = { lhs = "<Leader>gvd", desc = "show PR diff [pull request]" },
-          add_reviewer = { lhs = "<Leader>gRa", desc = "add reviewer [pull request]" },
-          remove_reviewer = { lhs = "<Leader>gRd", desc = "remove reviewer request [pull request]" },
-          close_issue = { lhs = "<Leader>gic", desc = "close PR [pull request]" },
-          reopen_issue = { lhs = "<Leader>gio", desc = "reopen PR [pull request]" },
-          list_issues = { lhs = "<Leader>gil", desc = "list open issues on same repo [pull request]" },
+          list_commits = { lhs = "<Leader>mvf", desc = "list PR commits [pull request]" },
+          list_changed_files = { lhs = "<Leader>mvF", desc = "list PR changed files [pull request]" },
+          show_pr_diff = { lhs = "<Leader>mvd", desc = "show PR diff [pull request]" },
+
+          close_issue = { lhs = "<Leader>mC", desc = "close PR [pull request]" },
+          reopen_issue = { lhs = "<Leader>maI", desc = "reopen PR [pull request]" },
+          list_issues = { lhs = "<Leader>mf", desc = "list open issues on same repo [pull request]" },
           reload = { lhs = "R", desc = "reload PR [pull request]" },
-          open_in_browser = { lhs = "<Leader>goo", desc = "open PR in browser [pull request]" },
-          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [pull request]" },
-          goto_file = { lhs = "<Leader>be", desc = "go to file [pull request]" },
-          add_assignee = { lhs = "<Leader>gaa", desc = "add assignee [pull request]" },
-          remove_assignee = { lhs = "<Leader>gad", desc = "remove assignee [pull request]" },
-          create_label = { lhs = "<Leader>glc", desc = "create label [pull request]" },
-          add_label = { lhs = "<Leader>gla", desc = "add label [pull request]" },
+          open_in_browser = { lhs = "<Leader>mY", desc = "open PR in browser [pull request]" },
+          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [pull request]" },
+          goto_file = { lhs = "gf", desc = "go to file [pull request]" },
+
+          add_assignee = { lhs = "<Leader>mA", desc = "add assignee [pull request]" },
+          remove_assignee = { lhs = "<Leader>mrA", desc = "remove assignee [pull request]" },
+
+          create_label = { lhs = "<Leader>mcl", desc = "create label [pull request]" },
+          add_label = { lhs = "<Leader>mal", desc = "add label [pull request]" },
+
           copy_sha = { lhs = "<Leader>gY", desc = "copy commit SHA to system clipboard [pull request]" },
-          remove_label = { lhs = "<Leader>gld", desc = "remove label [pull request]" },
-          goto_issue = { lhs = "<Leader>gii", desc = "go to issue/pr/discussion under cursor [pull request]" },
-          add_comment = { lhs = "<Leader>gca", desc = "add comment [pull request]" },
-          add_reply = { lhs = "<Leader>gcr", desc = "add reply [pull request]" },
-          delete_comment = { lhs = "<Leader>gcd", desc = "delete comment [pull request]" },
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [pull request]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [pull request]" },
-          react_hooray = { lhs = "<Leader>grp", desc = "add/remove 🎉 reaction [pull request]" },
-          react_heart = { lhs = "<Leader>grh", desc = "add/remove ❤️ reaction [pull request]" },
-          react_eyes = { lhs = "<Leader>gre", desc = "add/remove 👀 reaction [pull request]" },
-          react_thumbs_up = { lhs = "<Leader>gr+", desc = "add/remove 👍 reaction [pull request]" },
-          react_thumbs_down = { lhs = "<Leader>gr-", desc = "add/remove 👎 reaction [pull request]" },
-          react_rocket = { lhs = "<Leader>grr", desc = "add/remove 🚀 reaction [pull request]" },
-          react_laugh = { lhs = "<Leader>grl", desc = "add/remove 😄 reaction [pull request]" },
-          react_confused = { lhs = "<Leader>grc", desc = "add/remove 😕 reaction [pull request]" },
-          review_start = { lhs = "<Leader>gRs", desc = "start a review for the current PR [pull request]" },
-          review_resume = { lhs = "<Leader>gRr", desc = "resume a pending review for the current PR [pull request]" },
-          resolve_thread = { lhs = "<Leader>gRt", desc = "resolve PR thread [pull request]" },
-          unresolve_thread = { lhs = "<Leader>gRT", desc = "unresolve PR thread [pull request]" },
+          remove_label = { lhs = "<Leader>mrl", desc = "remove label [pull request]" },
+          goto_issue = { lhs = "<Leader>mo", desc = "go to issue/pr/discussion under cursor [pull request]" },
+
+          add_comment = { lhs = "<Leader>mac", desc = "add comment [pull request]" },
+          add_reply = { lhs = "<Leader>may", desc = "add reply [pull request]" },
+          delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [pull request]" },
+
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [pull request]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [pull request]" },
+
+          add_reviewer = { lhs = "<Leader>mRa", desc = "add reviewer [pull request]" },
+          remove_reviewer = { lhs = "<Leader>mRd", desc = "remove reviewer request [pull request]" },
+          review_start = { lhs = "<Leader>mRs", desc = "start a review for the current PR [pull request]" },
+          review_resume = { lhs = "<Leader>mRr", desc = "resume a pending review for the current PR [pull request]" },
+
+          react_hooray = { lhs = "<Leader>maro", desc = "add/remove 🎉 reaction [pull request]" },
+          react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [pull request]" },
+          react_eyes = { lhs = "<Leader>mare", desc = "add/remove 👀 reaction [pull request]" },
+          react_thumbs_up = { lhs = "<Leader>marn", desc = "add/remove 👍 reaction [pull request]" },
+          react_thumbs_down = { lhs = "<Leader>marp", desc = "add/remove 👎 reaction [pull request]" },
+          react_rocket = { lhs = "<Leader>marr", desc = "add/remove 🚀 reaction [pull request]" },
+          react_laugh = { lhs = "<Leader>marl", desc = "add/remove 😄 reaction [pull request]" },
+          react_confused = { lhs = "<Leader>marc", desc = "add/remove 😕 reaction [pull request]" },
+
+          resolve_thread = { lhs = "<Leader>mtt", desc = "resolve PR thread [pull request]" },
+          unresolve_thread = { lhs = "<Leader>mtU", desc = "unresolve PR thread [pull request]" },
         },
         review_thread = {
-          goto_issue = { lhs = "<Leader>gii", desc = "go to issue/pr/discussion under cursor [review thread]" },
-          add_comment = { lhs = "<Leader>gca", desc = "add comment [review thread]" },
-          add_reply = { lhs = "<Leader>gcr", desc = "add reply [review thread]" },
-          add_suggestion = { lhs = "<Leader>gsa", desc = "add suggestion [review thread]" },
-          delete_comment = { lhs = "<Leader>gcd", desc = "delete comment [review thread]" },
+          goto_issue = { lhs = "<Leader>mo", desc = "go to issue/pr/discussion under cursor [review thread]" },
+          add_comment = { lhs = "<Leader>mac", desc = "add comment [review thread]" },
+          add_reply = { lhs = "<Leader>may", desc = "add reply [review thread]" },
+          add_suggestion = { lhs = "<Leader>mas", desc = "add suggestion [review thread]" },
+          delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [review thread]" },
           next_comment = { lhs = "<c-n>", desc = "go to next comment [review thread]" },
           prev_comment = { lhs = "<c-p>", desc = "go to previous comment [review thread]" },
           select_next_entry = { lhs = "]q", desc = "move to next changed file [review thread]" },
@@ -276,16 +303,18 @@ return {
           select_next_unviewed_entry = { lhs = "]u", desc = "move to next unviewed file" },
           select_prev_unviewed_entry = { lhs = "[u", desc = "move to previous unviewed file" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [review thread]" },
-          react_hooray = { lhs = "<Leader>grp", desc = "add/remove 🎉 reaction [review thread]" },
-          react_heart = { lhs = "<Leader>grh", desc = "add/remove ❤️ reaction [review thread]" },
-          react_eyes = { lhs = "<Leader>gre", desc = "add/remove 👀 reaction [review thread]" },
-          react_thumbs_up = { lhs = "<Leader>gr+", desc = "add/remove 👍 reaction [review thread]" },
-          react_thumbs_down = { lhs = "<Leader>gr-", desc = "add/remove 👎 reaction [review thread]" },
-          react_rocket = { lhs = "<Leader>grr", desc = "add/remove 🚀 reaction [review thread]" },
-          react_laugh = { lhs = "<Leader>grl", desc = "add/remove 😄 reaction [review thread]" },
-          react_confused = { lhs = "<Leader>grc", desc = "add/remove 😕 reaction [review thread]" },
-          resolve_thread = { lhs = "<Leader>grt", desc = "resolve PR thread [review thread]" },
-          unresolve_thread = { lhs = "<Leader>grT", desc = "unresolve PR thread [review thread]" },
+
+          react_hooray = { lhs = "<Leader>maro", desc = "add/remove 🎉 reaction [review thread]" },
+          react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [review thread]" },
+          react_eyes = { lhs = "<Leader>mare", desc = "add/remove 👀 reaction [review thread]" },
+          react_thumbs_up = { lhs = "<Leader>marn", desc = "add/remove 👍 reaction [review thread]" },
+          react_thumbs_down = { lhs = "<Leader>marp", desc = "add/remove 👎 reaction [review thread]" },
+          react_rocket = { lhs = "<Leader>marr", desc = "add/remove 🚀 reaction [review thread]" },
+          react_laugh = { lhs = "<Leader>marl", desc = "add/remove 😄 reaction [review thread]" },
+          react_confused = { lhs = "<Leader>marc", desc = "add/remove 😕 reaction [review thread]" },
+
+          resolve_thread = { lhs = "<Leader>mtt", desc = "resolve PR thread [review thread]" },
+          unresolve_thread = { lhs = "<Leader>mtU", desc = "unresolve PR thread [review thread]" },
         },
         submit_win = {
           approve_review = { lhs = "<C-a>", desc = "approve review [submit win]" },
@@ -294,29 +323,31 @@ return {
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [submit win]" },
         },
         review_diff = {
-          submit_review = { lhs = "<Leader>gRs", desc = "submit review [review diff]" },
-          discard_review = { lhs = "<Leader>gRd", desc = "discard review [review diff]" },
-          add_review_comment = { lhs = "<Leader>gRc", desc = "add a new review comment [review diff]" },
-          add_review_suggestion = { lhs = "<Leader>Rs", desc = "add a new review suggestion [review diff]" },
+          submit_review = { lhs = "<Leader>mRS", desc = "submit review [review diff]" },
+          discard_review = { lhs = "<Leader>mRd", desc = "discard review [review diff]" },
+          add_review_comment = { lhs = "<Leader>mac", desc = "add a new review comment [review diff]" },
+          add_review_suggestion = { lhs = "<Leader>maS", desc = "add a new review suggestion [review diff]" },
           focus_files = { lhs = "<Leader>uE", desc = "move focus to changed file panel [review diff]" },
           toggle_files = { lhs = "<Leader>ue", desc = "hide/show changed files panel [review diff]" },
-          next_thread = { lhs = "]t", desc = "move to next thread [review diff]" },
-          prev_thread = { lhs = "[t", desc = "move to previous thread [review diff]" },
+          next_thread = { lhs = "<C-n>", desc = "move to next thread [review diff]" },
+          prev_thread = { lhs = "<C-p>", desc = "move to previous thread [review diff]" },
           select_next_entry = { lhs = "]q", desc = "move to next changed file [review diff]" },
           select_prev_entry = { lhs = "[q", desc = "move to previous changed file [review diff]" },
           select_first_entry = { lhs = "[Q", desc = "move to first changed file [review diff]" },
           select_last_entry = { lhs = "]Q", desc = "move to last changed file [review diff]" },
           select_next_unviewed_entry = { lhs = "]u", desc = "move to next unviewed file" },
           select_prev_unviewed_entry = { lhs = "[u", desc = "move to previous unviewed file" },
+
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [review diff]" },
           toggle_viewed = { lhs = "<space><space>", desc = "toggle viewer viewed state [review diff]" },
-          goto_file = { lhs = "<Leader>be", desc = "go to file [review diff]" },
+
+          goto_file = { lhs = "<Leader>bv", desc = "go to file [review diff]" },
           copy_sha = { lhs = "<Leader>gY", desc = "copy commit SHA to system clipboard [review diff]" },
-          review_commits = { lhs = "<space>Rc", desc = "review PR commits [review diff]" },
+          review_commits = { lhs = "<space>mC", desc = "review PR commits [review diff]" },
         },
         file_panel = {
-          submit_review = { lhs = "<Leader>gRs", desc = "submit review [file panel]" },
-          discard_review = { lhs = "<Leader>gRd", desc = "discard review [file panel]" },
+          submit_review = { lhs = "<Leader>mRS", desc = "submit review [file panel]" },
+          discard_review = { lhs = "<Leader>mRd", desc = "discard review [file panel]" },
           next_entry = { lhs = "j", desc = "move to next changed file [file panel]" },
           prev_entry = { lhs = "k", desc = "move to previous changed file [file panel]" },
           select_entry = { lhs = "<cr>", desc = "show selected changed file diffs [file panel]" },
@@ -331,21 +362,21 @@ return {
           select_last_entry = { lhs = "]Q", desc = "move to last changed file [file panel]" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab [file panel]" },
           toggle_viewed = { lhs = "<space><space>", desc = "toggle viewer viewed state [file panel]" },
-          review_commits = { lhs = "<space>Rc", desc = "review PR commits [file panel]" },
+          review_commits = { lhs = "<space>mC", desc = "review PR commits [file panel]" },
         },
         notification = {
-          read = { lhs = "<Leader>gnr", desc = "mark notification as read [notification]" },
-          done = { lhs = "<Leader>gnd", desc = "mark notification as done [notification]" },
-          unsubscribe = { lhs = "<Leader>gnu", desc = "unsubscribe from notifications [notification]" },
+          read = { lhs = "<Leader>mnr", desc = "mark notification as read [notification]" },
+          done = { lhs = "<Leader>mnd", desc = "mark notification as done [notification]" },
+          unsubscribe = { lhs = "<Leader>mnu", desc = "unsubscribe from notifications [notification]" },
         },
         repo = {
-          create_issue = { lhs = "<Leader>gcI", desc = "create issue [repo]" },
-          create_discussion = { lhs = "<Leader>gcD", desc = "create discussion [repo]" },
-          contributing_guidelines = { lhs = "<Leader>gcg", desc = "view contributing guidelines [repo]" },
-          open_in_browser = { lhs = "<Leader>goo", desc = "open repo in browser [repo]" },
+          create_issue = { lhs = "<Leader>mci", desc = "create issue [repo]" },
+          create_discussion = { lhs = "<Leader>mcd", desc = "create discussion [repo]" },
+          contributing_guidelines = { lhs = "<Leader>mcG", desc = "view contributing guidelines [repo]" },
+          open_in_browser = { lhs = "<Leader>mY", desc = "open repo in browser [repo]" },
         },
         release = {
-          open_in_browser = { lhs = "<Leader>goo", desc = "open release in browser [release]" },
+          open_in_browser = { lhs = "<Leader>mY", desc = "open release in browser [release]" },
         },
       },
     },
@@ -424,32 +455,32 @@ return {
         -- end
 
         -- Hunk
-        map("n", "<Leader>ghs", gs.stage_hunk, "Git: stage [gitsigns]")
-        map("x", "<Leader>ghs", function()
+        map("n", "<Leader>gs", gs.stage_hunk, "Git: stage [gitsigns]")
+        map("x", "<Leader>gs", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
           end
           gs.stage_hunk { from, to }
         end, "Git: stage (visual) [gitsigns]")
-        map("n", "<Leader>ghr", gs.reset_hunk, "Git: reset [gitsigns]")
-        map("x", "<Leader>ghr", function()
+        map("n", "<Leader>gr", gs.reset_hunk, "Git: reset [gitsigns]")
+        map("x", "<Leader>gr", function()
           local from, to = vim.fn.line ".", vim.fn.line "v"
           if from > to then
             from, to = to, from
           end
           gs.reset_hunk { from, to }
         end, "Git: reset (visual) [gitsigns]")
-        map("n", "<Leader>ghu", gs.undo_stage_hunk, "Git: undo [gitsigns]")
-        map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
-        map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
+        map("n", "<Leader>gu", gs.undo_stage_hunk, "Git: undo [gitsigns]")
+        map("n", "<Leader>gS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
+        map("n", "<Leader>gR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
 
         -- Hunk preview
-        map("n", "<Leader>gvp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
-        map("n", "<Leader>gvP", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
+        map("n", "<Leader>gvl", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
+        map("n", "<Leader>gvL", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
 
         -- Toggle
-        map("n", "<Leader>gog", function()
+        map("n", "<Leader>gB", function()
           vim.cmd "G blame"
         end, "Git: open blame [gitsigns]")
         map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
@@ -526,7 +557,7 @@ return {
     },
     keys = {
       {
-        "<Leader>gN",
+        "<Leader>gg",
         "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
         mode = { "n", "x" },
@@ -546,16 +577,16 @@ return {
       --   end,
       --   desc = "Git: open Gdiffsplit [fugitive]",
       -- },
-      {
-        "<Leader>gvl",
-        function()
-          vim.cmd "0,3Git blame"
-          vim.cmd "wincmd j"
-          vim.cmd "normal! 5j"
-          vim.cmd "25 wincmd _"
-        end,
-        desc = "Buffer: open git blame for curbuf [fugitive]",
-      },
+      -- {
+      --   "<Leader>gvl",
+      --   function()
+      --     vim.cmd "0,3Git blame"
+      --     vim.cmd "wincmd j"
+      --     vim.cmd "normal! 5j"
+      --     vim.cmd "25 wincmd _"
+      --   end,
+      --   desc = "Buffer: open git blame for curbuf [fugitive]",
+      -- },
     },
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
@@ -705,6 +736,7 @@ return {
     "sindrets/diffview.nvim",
     event = "LazyFile",
     keys = {
+      { "<Leader>mc", "", desc = "conflict", ft = { "DiffviewFiles", "DiffviewFileHistory" } },
       {
         "<Leader>goo",
         "<CMD>DiffviewOpen<CR>",
@@ -813,8 +845,8 @@ return {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
           view = {
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-view]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-view]" } },
@@ -830,21 +862,21 @@ return {
             { "n", "<Leader>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>gp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-view]" } },
-            { "n", "<Leader>gn", actions.next_conflict, { desc = "Git: next git conflict [diffview-view]" } },
+            { "n", "<Leader>mn", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
+            { "n", "<Leader>mp", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
-            { "n", "<Leader>gko", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview-view]" } },
-            { "n", "<Leader>gkt", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview-view]" }, },
-            { "n", "<Leader>gkb", actions.conflict_choose "base", { desc = "Git: choose the BASE version of a conflict [diffview-view]" } },
-            { "n", "<Leader>gka", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview-view]" } },
+            { "n", "<Leader>mco", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview-view]" } },
+            { "n", "<Leader>mct", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview-view]" }, },
+            { "n", "<Leader>mcb", actions.conflict_choose "base", { desc = "Git: choose the BASE version of a conflict [diffview-view]" } },
+            { "n", "<Leader>mca", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview-view]" } },
 
-            { "n", "<Leader>gkn", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview-view]" } },
-            { "n", "<Leader>gkN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcn", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview-view]" } },
+            { "n", "<Leader>mcN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-view]" }, },
 
-            { "n", "<Leader>gkO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>gkT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>gkB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>gkA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-view]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview-view]" } },
@@ -858,7 +890,7 @@ return {
             { "n", "<up>", actions.prev_entry, { desc = "Git: cursor up (alternative) [diffview-panel]" }, },
 
             { "n", "o", actions.select_entry, { desc = "Git: open entry [diffview-panel]" }, },
-            { "n", "<cr>", actions.select_entry, { desc = "Git: open entry (alternative) [diffview-panel]" }, },
+            { "n", "<CR>", actions.select_entry, { desc = "Git: open entry (alternative) [diffview-panel]" }, },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open entry (alternative-back) [diffview-panel]" }, },
 
             { "n", "h", false },
@@ -875,8 +907,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-panel]" } },
 
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},
@@ -907,15 +939,15 @@ return {
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>gp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
-            { "n", "<Leader>gn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<Leader>mn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<Leader>mp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
-            { "n", "<Leader>gkO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>gkT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>gkB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>gkA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-panel]" }, },
 
-            { "n", "<Leader>gkN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-panel]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview-panel]" } },
@@ -932,12 +964,12 @@ return {
 
             { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview-history]" }, },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview-history]" }, },
-            { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview-history]" }, },
+            { "n", "<CR>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview-history]" }, },
 
             { "n", "h", false },
 
             { "n", "<Leader>goo", actions.open_in_diffview, { desc = "Git: open the entry under the cursor in a diffview [diffview-history]" }, },
-            { "n", "<Leader>gY", actions.copy_hash, { desc = "Git: copy the commit hash of the entry under the cursor [diffview-history]" }, },
+            { "n", "<Leader>my", actions.copy_hash, { desc = "Git: copy the commit hash of the entry under the cursor [diffview-history]" }, },
             { "n", "P", actions.open_commit_log, { desc = "Git: show or preview commit details [diffview-history]" } },
 
             { "n", "X", actions.restore_entry, { desc = "Git: restore file to the state from the selected entry [diffview-history]" }, },
@@ -958,8 +990,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-history]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-history]" } },
 
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},

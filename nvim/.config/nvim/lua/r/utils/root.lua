@@ -66,7 +66,9 @@ function M.detectors.pattern(buf, patterns)
   return pattern and { vim.fs.dirname(pattern) } or {}
 end
 
+---@param buf integer?
 function M.bufpath(buf)
+  buf = buf or 0
   return M.realpath(vim.api.nvim_buf_get_name(assert(buf)))
 end
 

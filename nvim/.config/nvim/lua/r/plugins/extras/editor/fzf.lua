@@ -89,14 +89,16 @@ return {
       -- },
 
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
+      { "<Leader><Leader>", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
       { "<Leader>fh", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
       { "<Leader>fc", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
       { "<Leader>f:", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
       { "<Leader>fA", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
       { "<Leader>fr", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
-      { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Picker: man pages [fzflua]" },
-      { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Picker: keymaps [fzflua]" },
+
+      { "<Leader>hm", function() require("fzf-lua").man_pages() end, desc = "Help: man pages [fzflua]" },
+      { "<Leader>hB", function() require("fzf-lua").keymaps() end, desc = "Help: show global keymaps [fzflua]" },
       {
         "<Leader>fz",
         function()
@@ -118,9 +120,9 @@ return {
         desc = "Picker: select themes [fzflua]",
       },
 
-      { "<Leader>f<F1>", function() require("fzf-lua").help_tags() end, desc = "Picker: help [fzflua]" },
+      { "<Leader>hh", function() require("fzf-lua").help_tags() end, desc = "Help: nvim [fzflua]" },
       {
-        "<Leader>f<F1>",
+        "<Leader>hh",
         function()
           local sel = RUtils.get_visual_selection { strict = true }
           if sel then
@@ -136,7 +138,7 @@ return {
           end
         end,
         mode = { "x" },
-        desc = "Picker: help (visual) [fzflua]",
+        desc = "Help: nvim (visual) [fzflua]",
       },
       {
         "<Leader>fo",
@@ -159,12 +161,12 @@ return {
         desc = "Picker: plugin files [fzflua]",
       },
 
-      -- Buffers
-      { "<Leader>bG", function() require("fzf-lua").lines() end, desc = "Buffer: live grep across buffers [fzflua]", mode = { "n", "x" } },
-      { "<Leader>bf", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
-      { "<Leader>bg", function() require("fzf-lua").blines() end, desc = "Buffer: live grep current buffer [fzflua]" },
+      -- Search
+      { "<Leader>sB", function() require("fzf-lua").lines() end, desc = "Search: all buffers [fzflua]", mode = { "n", "x" } },
+      { "<Leader>sb", function() require("fzf-lua").blines() end, desc = "Search: buffers [fzflua]" },
+      { "<Leader>ss", function() require("fzf-lua").blines() end, desc = "Search: buffers [fzflua]" },
       {
-        "<Leader>bg",
+        "<Leader>sb",
         function()
           local visual_selection = RUtils.get_visual_selection { strict = true }
           RUtils.map.feedkey("<Esc>" )
@@ -179,13 +181,16 @@ return {
             }
           end)
         end,
-        desc = "Buffer: live grep on curbuf (visual) [fzflua]",
+        desc = "Search: buffers (visual) [fzflua]",
         mode = { "x" },
       },
 
-      -- Jump To
-      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "JumpTo: marks [fzflua]" },
-      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "JumpTo: jumps [fzflua]" },
+      -- Buffers
+      { "<Leader>bb", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
+
+      { "<Leader>sm", function() require("fzf-lua").marks() end, desc = "Search: marks [fzflua]" },
+      { "<Leader>sj", function() require("fzf-lua").jumps() end, desc = "Search: jumps [fzflua]" },
+
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- Diagnostics
@@ -228,15 +233,15 @@ return {
       },
 
       -- Git
-      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" }, { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
+      { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<c-c>gl", function() require("fzf-lua").git_bcommits() end, desc = "Git: commit buffer [fzflua]" },
+      { "<c-c>gL", function() require("fzf-lua").git_commits() end, desc = "Git: commit repo [fzflua]" },
+      { "<c-c>gf", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
+      { "<c-c>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
 
-      { "<Leader>gbc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
-      { "<Leader>gbC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
-      { "<Leader>gbd", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
-      { "<Leader>gbb", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
-
-      { "<Leader>lw", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
-      { "<Leader>lW", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
+      { "<Leader>si", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Search: symbols [fzflua]" },
+      { "<Leader>sI", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Search: workspaces symbols [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"

@@ -58,7 +58,7 @@ return {
       local resession = require "resession"
       resession.setup(opts)
 
-      vim.keymap.set("n", "<Leader>sS", function()
+      vim.keymap.set("n", "<Leader>qS", function()
         vim.ui.input({ prompt = "Session name" }, function(selected)
           if selected then
             resession.save(selected, {})
@@ -67,15 +67,13 @@ return {
       end, { desc = "Session: save with session name [resession.nvim]" })
 
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>ss", function() resession.save() end, { desc = "Session: save session with current name [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>qs", function() resession.save() end, { desc = "Session: save session with current name [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Session: save session tab [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>qL", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sL", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>ql", function() resession.load "last" end, { desc = "Session: load last [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Session: load last [resession.nvim]" })
-      --stylua: ignore
-      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Session: delete [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>qD", resession.delete, { desc = "Session: delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()
         resession.detach()
@@ -115,29 +113,48 @@ return {
   --  ╰──────────────────────────────────────────────────────────╯
   -- PROJECTS.NVIM
   {
-    "ahmedkhalf/project.nvim",
-    event = "LazyFile",
-    cond = vim.g.neovide ~= nil or not vim.env.TMUX,
-    opts = {
-      manual_mode = true,
-      detection_methods = { "pattern" },
-      datapath = "~/Dropbox",
-      silent_chdir = false,
-      exclude_dirs = {
-        "~/",
-      },
+    "DrKJeff16/project.nvim",
+    cmd = {
+      "Project",
+      "ProjectAdd",
+      "ProjectConfig",
+      "ProjectDelete",
+      "ProjectExportJSON",
+      "ProjectImportJSON",
+      "ProjectHealth",
+      "ProjectHistory",
+      "ProjectRecents",
+      "ProjectRoot",
+      "ProjectSession",
     },
-    config = function(_, opts)
-      require("project_nvim").setup(opts)
-      local history = require "project_nvim.utils.history"
-      history.delete_project = function(project)
-        for k, v in pairs(history.recent_projects) do
-          if v == project.value then
-            history.recent_projects[k] = nil
-            return
+    keys = {
+      { "<Leader>pF", "<CMD>ProjectFzf<CR>", desc = "Project: find files in projects [project.nvim]" },
+      { "<Leader>pf", "<CMD>FzfLua files<CR>", desc = "Project: find files current project [project.nvim]" },
+      { "<Leader>pp", "<CMD>ProjectRecents<CR>", desc = "Project: switch project [project.nvim]" },
+      { "<Leader>ph", "<CMD>ProjectConfig<CR>", desc = "Project: show configs [project.nvim]" },
+      {
+        "<Leader>ps",
+        function()
+          vim.cmd "ProjectRoot"
+
+          local cwd = vim.uv.cwd()
+          if cwd then
+            local dir_cwd = vim.fn.fnamemodify(cwd, ":t")
+            ---@diagnostic disable-next-line: undefined-field
+            RUtils.info(string.format("`%s` project saved", dir_cwd), { title = "Projects.nvim" })
           end
-        end
-      end
-    end,
+        end,
+        desc = "Project: save [project.nvim]",
+      },
+      { "<Leader>pd", "<CMD>ProjectDelete<CR>", desc = "Project: delete [project.nvim]" },
+    },
+    opts = {
+      show_hidden = true,
+      fzf_lua = { enabled = true },
+
+      -- Path where project.nvim will store the project history
+      -- datapath = vim.fn.stdpath "data" <-- the default
+      datapath = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path),
+    },
   },
 }

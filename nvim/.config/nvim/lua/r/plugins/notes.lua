@@ -9,6 +9,7 @@ return {
     -- lazy = false,
     dependencies = {
       "akinsho/org-bullets.nvim",
+      "danilshvalov/org-modern.nvim",
       {
         "lukas-reineke/headlines.nvim",
         ft = { "org" },
@@ -36,40 +37,53 @@ return {
       },
     },
     keys = {
+      -- { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
+      { "<Leader>md", "", desc = "date/schedule", ft = { "orgagenda", "org" } },
+      { "<Leader>mc", "", desc = "clock", ft = { "orgagenda", "org" } },
+      { "<Leader>mp", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<Leader>ma", "", desc = "add", ft = { "orgagenda", "org" } },
+      { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
+
+      { "<Leader>nf", "", desc = "find/grep" },
+
       {
-        "<Localleader>aA",
+        "<Leader>nfF",
         function()
           return RUtils.notes.open_agenda_file_lists()
         end,
-        desc = "Note: open agenda file list [orgmode]",
+        desc = "Note: list file todo/refile/habit [orgmode]",
       },
       {
-        "<Localleader>ac",
+        "<Leader>nc",
         function()
           require("orgmode").action "capture.prompt"
         end,
         desc = "Note: capture note [orgmode]",
       },
       {
-        "<Localleader>aa",
+        "<Leader>na",
         function()
           require("orgmode").action "agenda.prompt"
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
       {
-        "<Localleader>afgO",
+        "<Leader>nft",
         function()
-          RUtils.notes.grep_title()
+          RUtils.markdown.find_local_titles()
+          vim.cmd "normal! zRzz"
         end,
-        desc = "Note: jump global title [orgmode]",
+        desc = "Note: jump local title [orgmode]",
+        ft = "org",
       },
       {
-        "<Localleader>afgo",
+        "<Leader>nfT",
         function()
-          RUtils.notes.grep_title(true)
+          RUtils.markdown.find_global_titles()
+          vim.cmd "normal! zRzz"
         end,
-        desc = "Note: grep [orgmode]",
+        desc = "Note: jump global title [orgmode]",
+        ft = "org",
       },
     },
     opts = function()
@@ -77,33 +91,52 @@ return {
       -- local done_hi = Highlight.get("Comment", "fg")
       -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
       -- local todo_fg = Highlight.get("KeywordMatch", "fg")
+      local Menu = require "org-modern.menu"
       return {
+        -- ui = {
+        --   input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
+        --   agenda = { preview_window = { border = RUtils.config.icons.border.line }, focusable = false },
+        --   menu = {
+        --     handler = function(data)
+        --       local items = vim
+        --         .iter(data.items)
+        --         :map(function(i)
+        --           return (i.key and not i.label:lower():match "quit") and i or nil
+        --         end)
+        --         :totable()
+        --
+        --       vim.ui.select(items, {
+        --         prompt = string.format(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
+        --         kind = "pojokan",
+        --         format_item = function(item)
+        --           return string.format("%s → %s", item.key, item.label)
+        --         end,
+        --       }, function(choice)
+        --         if not choice then
+        --           return
+        --         end
+        --         if choice.action then
+        --           choice.action()
+        --         end
+        --       end)
+        --     end,
+        --   },
+        -- },
         ui = {
-          input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
-          agenda = { preview_window = { border = RUtils.config.icons.border.line }, focusable = false },
           menu = {
             handler = function(data)
-              local items = vim
-                .iter(data.items)
-                :map(function(i)
-                  return (i.key and not i.label:lower():match "quit") and i or nil
-                end)
-                :totable()
-
-              vim.ui.select(items, {
-                prompt = string.format(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
-                kind = "pojokan",
-                format_item = function(item)
-                  return string.format("%s → %s", item.key, item.label)
-                end,
-              }, function(choice)
-                if not choice then
-                  return
-                end
-                if choice.action then
-                  choice.action()
-                end
-              end)
+              Menu:new({
+                window = {
+                  margin = { 1, 0, 1, 0 },
+                  padding = { 0, 1, 0, 1 },
+                  title_pos = "center",
+                  border = "single",
+                  zindex = 1000,
+                },
+                icons = {
+                  separator = "➜",
+                },
+              }):open(data)
             end,
           },
         },
@@ -127,19 +160,19 @@ return {
           "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
           "PROGRESS(p)", -- task yang sedang dikerjakan
-          "NEXT(n)", -- task yang akan dialankan setelah 'progress' task selesai
-          "CHECK(c)", -- task yang boleh dikerjakan saat free-time
+          "WAITING(n)", -- task yang akan dialankan setelah 'progress' task selesai
+          -- "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
-          "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
+          -- "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
           "|",
           "DONE(d)",
         },
         org_todo_keyword_faces = {
-          CHECK = ":foreground blue :background royalblue :weight bold :slant normal",
+          -- CHECK = ":foreground blue :background royalblue :weight bold :slant normal",
           NEXT = ":foreground brightmagenta :background darkmagenta :weight bold :slant normal",
           TODO = ":foreground red :weight bold :slant normal",
           HBD = ":foreground black :background pink :weight bold :slant normal",
-          STATUS = ":foreground black :background darkcyan :weight bold :slant normal",
+          -- STATUS = ":foreground black :background darkcyan :weight bold :slant normal",
           DONE = ":foreground gray :weight bold :slant normal",
 
           PROGRESS = ":foreground white :background red :weight bold :slant italic",
@@ -155,12 +188,12 @@ return {
           },
           i = {
             description = "Inbox",
-            template = "* CHECK %? \n  SCHEDULED: %t\n\n\tDescribe:\n",
+            template = "* TODO %? \n  SCHEDULED: %t\n\n\tDescribe:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           l = {
             description = "Link",
-            template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
+            template = "* TODO %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           u = {
@@ -185,53 +218,55 @@ return {
           disable_all = false,
           prefix = "<Leader>c",
           global = {
-            org_capture = "<Localleader>ac",
-            org_agenda = "<Localleader>aa",
+            org_capture = "<Leader>nc",
+            org_agenda = "<Leader>na",
           },
           agenda = {
             -- Views
-            org_agenda_day_view = "vd",
-            org_agenda_week_view = "vw",
-            org_agenda_month_view = "vm",
-            org_agenda_year_view = "vy",
+            org_agenda_day_view = "<Leader>mvd",
+            org_agenda_week_view = "<Leader>mvw",
+            org_agenda_month_view = "<Leader>mvm",
+            org_agenda_year_view = "<Leader>mvy",
 
             -- Navigation
             org_agenda_later = "f",
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "o" },
-            org_agenda_goto_date = "D",
+            org_agenda_goto_date = "gd",
 
             org_agenda_switch_to = "<TAB>", -- tidak dipakai?
 
             -- Todo Effort
-            org_agenda_todo = "<Leader>t",
-            org_agenda_set_effort = "ie",
+            org_agenda_todo = "<Leader>mt",
+            org_agenda_set_effort = "<Leader>mae",
 
             -- Clock
-            org_agenda_clock_in = "ci",
-            org_agenda_clock_out = "co",
-            org_agenda_clock_goto = "cg",
-            org_agenda_clock_cancel = "cc",
+            org_agenda_clock_in = "<Leader>mci",
+            org_agenda_clock_out = "<Leader>mco",
+            org_agenda_clock_goto = "<Leader>mcg",
+            org_agenda_clock_cancel = "<Leader>mcc",
 
-            org_agenda_clockreport_mode = "cP", -- buat report clock
+            org_agenda_clockreport_mode = "<Leader>mcr", -- buat report clock
 
             -- Priority
-            org_agenda_priority = "P",
-            org_agenda_priority_up = "<S-up>",
-            org_agenda_priority_down = "<S-down>",
+            org_agenda_priority = "<Leader>mpp",
+            org_agenda_priority_up = "<c-k>",
+            org_agenda_priority_down = "<c-j>",
 
-            org_agenda_archive = "<F9>", -- tidak terpakai?
+            org_agenda_archive = "<Leader>mA", -- tidak terpakai?
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "ig",
-            org_agenda_refile = "r",
-            org_agenda_add_note = "in",
+            org_agenda_set_tags = "<Leader>mat",
+            org_agenda_refile = "<Leader>mr",
+            org_agenda_add_note = "<Leader>man",
 
-            org_agenda_toggle_archive_tag = "<prefix><F9>",
+            org_agenda_toggle_archive_tag = "<Leader>maA",
 
-            org_agenda_deadline = "id",
-            org_agenda_schedule = "is",
+            org_agenda_deadline = "<Leader>mdd",
+            org_agenda_schedule = "<Leader>mds",
+
+            org_agenda_preview = "K",
 
             -- Misc
             org_agenda_filter = "/",
@@ -241,7 +276,7 @@ return {
           },
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
-            org_capture_refile = "<Leader>or",
+            org_capture_refile = "<Leader>mr",
             org_capture_kill = { "<Leader><TAB>", "q", "<C-q>" },
             org_capture_show_help = "?",
           },
@@ -257,13 +292,13 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "<Leader>t",
-            org_todo_prev = "<Leader>T",
+            org_todo = "<Leader>mt",
+            org_todo_prev = "<Leader>maT",
             org_toggle_heading = "*",
 
             -- Navigation
-            org_next_visible_heading = "<c-n>",
-            org_previous_visible_heading = "<c-p>",
+            org_next_visible_heading = "<a-n>",
+            org_previous_visible_heading = "<a-p>",
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
             outline_up_heading = "g{",
@@ -278,47 +313,47 @@ return {
             org_global_cycle = { "<S-TAB>", "zb" },
 
             -- Clock
-            org_clock_in = "ci",
-            org_clock_out = "co",
-            org_clock_cancel = "cc",
-            org_clock_goto = "cg",
+            org_clock_in = "<Leader>mci",
+            org_clock_out = "<Leader>mco",
+            org_clock_cancel = "<Leader>mcc",
+            org_clock_goto = "<Leader>mcg",
 
             -- Priority
-            org_priority = "P",
-            org_priority_up = "<S-Up>",
-            org_priority_down = "<S-Down>",
+            org_priority = "<Leader>mpp",
+            org_priority_up = "<Leader>mpu",
+            org_priority_down = "<Leader>mpd",
 
             -- Promote / Demote
-            org_do_promote = "<",
-            org_do_demote = ">",
-            org_promote_subtree = "<a-<>",
-            org_demote_subtree = "<a->>",
+            org_do_promote = "<c-h>",
+            org_do_demote = "<c-l>",
+            org_promote_subtree = "<S-Left>",
+            org_demote_subtree = "<S-Right>",
 
             -- Move subtree
-            org_move_subtree_up = "<a-p>",
-            org_move_subtree_down = "<a-n>",
+            org_move_subtree_up = "<c-k>",
+            org_move_subtree_down = "<c-j>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "ig",
-            org_refile = "r",
+            org_set_tags_command = "<Leader>mat",
+            org_refile = "<Leader>mr",
 
             -- Links
-            org_insert_link = "il",
-            org_store_link = "iL",
+            org_insert_link = "<Leader>il",
+            org_store_link = "<Leader>iL",
 
             -- Timestamp Insert
-            org_time_stamp = "it",
-            org_time_stamp_inactive = "ii",
-            org_toggle_timestamp_type = "iT",
+            org_time_stamp = "<Leader>it",
+            org_time_stamp_inactive = "<Leader>id",
+            org_toggle_timestamp_type = "<Leader>iT",
 
             -- Insert Deadline or Schedule
-            org_deadline = "id",
-            org_schedule = "is",
-            org_set_effort = "ie",
-            org_add_note = "in",
+            org_deadline = "<Leader>mdd",
+            org_schedule = "<Leader>mds",
+            org_set_effort = "<Leader>mae",
+            org_add_note = "<Leader>man",
 
             -- Export / Babel
-            org_export = "<Leader>fe",
+            org_export = "<Leader>mE",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
@@ -327,8 +362,8 @@ return {
             org_edit_special = "<prefix>E",
 
             -- set current node to archived
-            org_archive_subtree = "<F9>",
-            org_toggle_archive_tag = "<Leader><F9>",
+            org_archive_subtree = "<Leader>mA",
+            org_toggle_archive_tag = "<Leader>maA",
 
             org_toggle_checkbox = "<C-c>",
             org_open_at_point = { "<Leader>oo", "<Leader>ld" },
@@ -386,144 +421,338 @@ return {
       },
     },
   },
-  -- MD-AGENDA (disabled)
+  -- ORG-ROAM
   {
-    "zenarvus/md-agenda.nvim",
-    enabled = false,
-    event = "VeryLazy",
+    "chipsenkbeil/org-roam.nvim",
+    event = "LazyFile",
     keys = {
-      {
-        "<Localleader>aa",
-        ":AgendaDashboard<CR>",
-        desc = "Note: check task [md-agenda]",
-      },
-      {
-        "<Localleader>aC",
-        ":CheckTask<CR>",
-        desc = "Note: check task [md-agenda]",
+      { "<Leader>nd", "", desc = "date/capture" },
+    },
+    opts = {
+      directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
+      -- org_files = {
+      --   "~/another_org_dir",
+      --   "~/some/folder/*.org",
+      --   "~/a/single/org_file.org",
+      -- },
+
+      bindings = {
+        ---Adjusts the prefix for every keybinding. Can be used in keybindings with <prefix>.
+        prefix = "<Leader>n",
+
+        ---Adds an alias to the node under cursor.
+        add_alias = "<prefix>aa",
+
+        ---Adds an origin to the node under cursor.
+        add_origin = "<prefix>oa",
+
+        ---Opens org-roam capture window.
+        capture = "<prefix>N",
+
+        ---Completes the node under cursor.
+        complete_at_point = "<prefix>.",
+
+        ---Finds node and moves to it.
+        find_node = "<prefix>ff",
+
+        ---Goes to the next node sequentially based on origin of the node under cursor.
+        ---
+        ---If more than one node has the node under cursor as its origin, a selection
+        ---dialog is displayed to choose the node.
+        goto_next_node = "<prefix>n",
+
+        ---Goes to the previous node sequentially based on origin of the node under cursor.
+        goto_prev_node = "<prefix>p",
+
+        ---Inserts node at cursor position.
+        insert_node = "<Leader>ii",
+
+        ---Inserts node at cursor position without opening capture buffer.
+        insert_node_immediate = "<prefix>I",
+
+        ---Opens the quickfix menu for backlinks to the current node under cursor.
+        quickfix_backlinks = "<prefix>q",
+
+        ---Removes an alias from the node under cursor.
+        remove_alias = "<prefix>S",
+
+        ---Removes the origin from the node under cursor.
+        remove_origin = "<prefix>or",
+
+        ---Toggles the org-roam node-view buffer for the node under cursor.
+        toggle_roam_buffer = "<prefix>l",
+
+        ---Toggles a fixed org-roam node-view buffer for a selected node.
+        toggle_roam_buffer_fixed = "<prefix>b",
       },
 
-      {
-        "is",
-        ":TaskScheduled<CR>",
-        desc = "Note: insert scheduled date [md-agenda]",
-        ft = "markdown",
+      extensions = {
+        ---Settings tied to the dailies extension.
+        ---@class org-roam.config.extensions.Dailies
+        dailies = {
+          ---Path to the directory within the org-roam directory where
+          ---daily entries will be stored.
+          ---@type string
+          directory = "daily",
+
+          ---Bindings associated with org-roam dailies functionality.
+          ---@class org-roam.config.extensions.dailies.Bindings
+          bindings = {
+            ---Capture note by today/tomorrow/yesterday
+            capture_date = "<prefix>dD",
+            capture_today = "<prefix>dN",
+            capture_tomorrow = "<prefix>dT",
+            capture_yesterday = "<prefix>dY",
+
+            ---Navigate to dailies note directory.
+            find_directory = "<prefix>d.",
+
+            ---Navigate to specific date's note.
+            goto_date = "<prefix>dd",
+
+            ---Navigate to the next/prev by date's note
+            goto_next_date = "<prefix>>",
+            goto_prev_date = "<prefix><",
+
+            ---Navigate to today/tomorrow/yesterday
+            goto_today = "<prefix>dn",
+            goto_tomorrow = "<prefix>dt",
+            goto_yesterday = "<prefix>dy",
+          },
+
+          templates = {
+            d = {
+              description = "default",
+              template = "%?",
+              target = "%<%Y-%m-%d>.org",
+            },
+          },
+
+          ---Settings tied to org-roam dailies user interface.
+          ---@class org-roam.config.extensions.dailies.UserInterface
+          ui = {
+            ---Settings tied to org-roam dailies calendar user interface.
+            ---@class org-roam.config.extensions.dailies.ui.Calendar
+            calendar = {
+              ---Highlight group to apply to a date that already has a note.
+              ---@type string
+              hl_date_exists = "WarningMsg",
+            },
+          },
+        },
       },
+    },
+  },
+  -- ORG-SUPER-AGENDA
+  {
+    "hamidi-dev/org-super-agenda.nvim",
+    event = "LazyFile",
+    keys = {
       {
-        "id",
-        ":TaskDeadline<CR>",
-        desc = "Note: insert deadline date [md-agenda]",
-        ft = "markdown",
+        "<Leader>nA",
+        "<CMD>OrgSuperAgenda<CR>",
+        desc = "Note: open agenda orgmode [org-super-agenda]",
       },
     },
     opts = {
-      --- REQUIRED ---
-      agendaFiles = {
-        "~/notes/agenda.md",
-        "~/notes/habits.md", -- Single Files
-        "~/notes/agendafiles/", -- Folders
+      org_files = {
+        string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+        string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
+        string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
+        string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
+        string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
       },
+      org_directories = {
+        string.format("%s/orgmode", RUtils.config.path.wiki_path),
+      },
+      exclude_files = {},
+      exclude_directories = {},
 
-      --- OPTIONAL ---
-      -- Number of days to display on one agenda view page.
-      -- Default: 10
-      agendaViewPageItems = 10,
-      -- Number of days before the deadline to show a reminder for the task in the agenda view.
-      -- Default: 30
-      remindDeadlineInDays = 30,
-      -- Number of days before the scheduled time to show a reminder for the task in the agenda view.
-      -- Default: 10
-      remindScheduledInDays = 10,
-      -- "vertical" or "horizontal"
-      -- Default: "horizontal"
-      agendaViewSplitOrientation = "horizontal",
-
-      -----
-
-      -- Number of past days to show in the habit view.
-      -- Default: 24
-      habitViewPastItems = 24,
-      -- Number of future days to show in the habit view.
-      -- Default: 3
-      habitViewFutureItems = 3,
-      -- "vertical" or "horizontal"
-      -- Default: "horizontal"
-      habitViewSplitOrientation = "horizontal",
-
-      -- Custom types that you can use instead of TODO.
-      -- Default: {}
-      -- The plugin will give an error if you use RGB colors (e.g. #ffffff)
-      customTodoTypes = { SOMEDAY = "magenta" }, -- A map of item type and its color
-
-      -- "vertical" or "horizontal"
-      -- Default: "horizontal"
-      dashboardSplitOrientation = "horizontal",
-      -- Set the dashboard view.
-      dashboard = {
+      -- TODO states + their quick filter keymaps and highlighting
+      -- Optional: add `shortcut` field to override the default key (first letter)
+      todo_states = {
         {
-          "All TODO Items", -- Group name
-          {
-            -- Item types, e.g., {"TODO", "INFO"}.
-            -- Gets the items that match one of the given types. Ignored if empty.
-            type = { "TODO" },
-
-            -- List of tags to filter. Use AND/OR conditions.
-            -- e.g., {AND = {"tag1", "tag2"}, OR = {"tag1", "tag2"}}. Ignored if empty.
-            tags = {},
-
-            -- Both, deadline and scheduled filters can take the same parameters.
-            -- "none", "today", "past", "nearFuture", "before-yyyy-mm-dd", "after-yyyy-mm-dd".
-            -- Ignored if empty.
-            deadline = "",
-            scheduled = "",
-          },
-          -- {...}, Additional filter maps can be added in the same group.
+          name = "TODO",
+          keymap = "ot",
+          color = "#FF5555",
+          strike_through = false,
+          fields = { "filename", "todo", "headline", "priority", "date", "tags" },
         },
-        -- {"Other Group", {...}, ...}
-        -- ...
+        {
+          name = "PROGRESS",
+          keymap = "op",
+          color = "#FFAA00",
+          strike_through = false,
+          fields = { "filename", "todo", "headline", "priority", "date", "tags" },
+        },
+        {
+          name = "WAITING",
+          keymap = "ow",
+          color = "#BD93F9",
+          strike_through = false,
+          fields = { "filename", "todo", "headline", "priority", "date", "tags" },
+        },
+        {
+          name = "LEARNING",
+          keymap = "ol",
+          color = "#278dc8",
+          strike_through = false,
+          fields = { "filename", "todo", "headline", "priority", "date", "tags" },
+        },
+        {
+
+          name = "DONE",
+          keymap = "od",
+          color = "#50FA7B",
+          strike_through = true,
+          fields = { "filename", "todo", "headline", "priority", "date", "tags" },
+        },
       },
 
-      -- Optional: Change agenda colors.
-      tagColor = "blue",
-      titleColor = "yellow",
+      -- Agenda keymaps (inline comments explain each)
+      keymaps = {
+        filter_reset = "<Leader>sR", -- reset all filters
+        toggle_other = "<Leader>mvo", -- toggle catch-all "Other" section
+        filter = "of", -- live filter (exact text)
+        filter_fuzzy = "<Leader>sf", -- live filter (fuzzy)
+        filter_query = "<Leader>sF", -- advanced query input
+        undo = "u", -- undo last change
+        reschedule = "<Leader>mds", -- set/change SCHEDULED
+        set_deadline = "<Leader>mdd", -- set/change DEADLINE
+        cycle_todo = "t", -- cycle TODO state
+        set_state = "<Leader>mt", -- set state directly (st, sd, etc.) or show menu
+        reload = "R", -- refresh agenda
+        refile = "<Leader>mr", -- refile via Telescope/org-telescope
+        hide_item = "x", -- hide current item
+        preview = "K", -- preview headline content
+        reset_hidden = "X", -- clear hidden list
+        toggle_duplicates = "D", -- duplicate items may appear in multiple groups
+        cycle_view = "<Leader>mvv", -- switch view (classic/compact)
+      },
 
-      todoTypeColor = "cyan",
-      habitTypeColor = "cyan",
-      infoTypeColor = "lightgreen",
-      dueTypeColor = "red",
-      doneTypeColor = "green",
-      cancelledTypeColor = "red",
+      -- Window/appearance
+      window = {
+        width = 0.8,
+        height = 0.7,
+        border = "rounded",
+        title = "Org Super Agenda",
+        title_pos = "center",
+        margin_left = 0,
+        margin_right = 0,
+        fullscreen_border = "none", -- border style when using fullscreen
+      },
 
-      completionColor = "lightgreen",
-      scheduledTimeColor = "cyan",
-      deadlineTimeColor = "red",
+      -- Group definitions (order matters; first match wins unless allow_duplicates=true)
+      groups = {
+        {
+          name = "📅 Today",
+          matcher = function(i)
+            return i.scheduled and i.scheduled:is_today() and not i:has_tag "personal" and i.todo_state ~= "DONE"
+          end,
+          sort = { by = "priority", order = "desc" },
+        },
+        {
+          name = "☠️ Deadlines",
+          matcher = function(i)
+            return i.deadline and i.todo_state ~= "DONE" and not i:has_tag "personal"
+          end,
+          sort = { by = "deadline", order = "asc" },
+        },
+        {
+          name = "⭐ Important",
+          matcher = function(i)
+            return i.priority == "A" and (i.deadline or i.scheduled) and i.todo_state ~= "DONE"
+          end,
+          sort = { by = "date_nearest", order = "asc" },
+        },
+        {
+          name = "🕒 Tomorrow",
+          matcher = function(i)
+            return i.scheduled and i.scheduled:days_from_today() == 1 and not i:has_tag "personal"
+          end,
+        },
+        {
+          name = "⏳ Overdue",
+          matcher = function(i)
+            return i.todo_state ~= "DONE"
+              and ((i.deadline and i.deadline:is_past()) or (i.scheduled and i.scheduled:is_past()))
+              and not i:has_tag "personal"
+          end,
+          sort = { by = "date_nearest", order = "asc" },
+        },
+        {
+          name = "🏠 Habit & Workout Today",
+          matcher = function(i)
+            return i.scheduled and i.scheduled:is_today() and i:has_tag "personal"
+          end,
+          sort = { by = "priority", order = "desc" },
+        },
+        {
+          name = "⏳ Overdue Habit & Workout",
+          matcher = function(i)
+            return i.todo_state ~= "DONE"
+              and ((i.deadline and i.deadline:is_past()) or (i.scheduled and i.scheduled:is_past()))
+              and i:has_tag "personal"
+          end,
+          sort = { by = "date_nearest", order = "asc" },
+        },
+        {
+          name = "💼 Work",
+          matcher = function(i)
+            return i:has_tag "work"
+          end,
+        },
+        {
+          name = "🔧 Fix",
+          matcher = function(i)
+            return i:has_tag "error"
+          end,
+        },
+        {
+          name = "📆 Upcoming",
+          matcher = function(i)
+            local days = require("org-super-agenda.config").get().upcoming_days or 10
+            local d1 = i.deadline and i.deadline:days_from_today()
+            local d2 = i.scheduled and i.scheduled:days_from_today()
+            return (d1 and d1 >= 0 and d1 <= days)
+              or (d2 and d2 >= 0 and d2 <= days) and not i:has_tag "personal" and i.todo_state ~= "DONE"
+          end,
+          sort = { by = "date_nearest", order = "asc" },
+        },
+      },
 
-      habitScheduledColor = "yellow",
-      habitDoneColor = "green",
-      habitProgressColor = "lightgreen",
-      habitPastScheduledColor = "darkyellow",
-      habitFreeTimeColor = "blue",
-      habitNotDoneColor = "red",
-      habitDeadlineColor = "gray",
+      -- Defaults & behavior
+      upcoming_days = 10,
+      hide_empty_groups = true, -- drop blank sections
+      keep_order = false, -- keep original org order (rarely useful)
+      allow_duplicates = false, -- if true, an item can live in multiple groups
+      group_format = "* %s", -- group header format
+      other_group_name = "Other",
+      show_other_group = false, -- show catch-all section
+      show_tags = true, -- draw tags on the right
+      show_filename = true, -- include [filename]
+      heading_max_length = 70,
+      persist_hidden = false, -- keep hidden items across reopen
+      view_mode = "classic", -- 'classic' | 'compact'
+
+      classic = {
+        heading_order = { "filename", "todo", "priority", "headline" },
+        short_date_labels = false,
+        inline_dates = true,
+      },
+      compact = { filename_min_width = 10, label_min_width = 12 },
+
+      -- Global fallback sort for groups that omit `sort`
+      group_sort = { by = "date_nearest", order = "asc" },
+
+      -- Popup mode: run in a persistent tmux session for instant access
+      popup_mode = {
+        enabled = false,
+        hide_command = nil, -- e.g., "tmux detach-client"
+      },
+
+      debug = false,
     },
-
-    -- Optional: Set keymaps for commands
-    -- vim.keymap.set("n", "<Localleader>aC", ":CheckTask<CR>")
-    -- vim.keymap.set("n", "<A-c>", ":CancelTask<CR>")
-    --
-    -- vim.keymap.set("n", "<A-h>", ":HabitView<CR>")
-    -- vim.keymap.set("n", "<A-o>", ":AgendaDashboard<CR>")
-    -- vim.keymap.set("n", "<A-a>", ":AgendaView<CR>")
-
-    -- Optional: Set a foldmethod to use when folding the logbook entries.
-    -- The plugin tries to respect to the user default.
-    -- vim.o.foldmethod = "marker" -- "marker", "syntax" or "expr"
-    -- Note: When navigating to the buffers with Telescope, "syntax" and "expr" options may not work properly.
-
-    -- Optional: Create a custom agenda view command to only show the tasks with specific tags
-    -- vim.api.nvim_create_user_command("WorkAgenda", function()
-    --   vim.cmd "AgendaViewWTF work companyA" -- Run the agenda view with tag filters
-    -- end, {})
   },
   -- OBSIDIAN.NVIM
   {
@@ -532,117 +761,112 @@ return {
     cmd = "Obsidian",
     ft = "markdown",
     keys = {
-      {
-        "<Localleader>afgg",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          return fzf_lua.live_grep_glob {
-            prompt = RUtils.fzflua.padding_prompt(),
-            cwd = RUtils.config.path.wiki_path,
-            rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
-            winopts = {
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Grep",
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-              ),
-            },
-          }
-        end,
-        desc = "Note: grep [obsidian]",
-      },
-      {
-        "<Localleader>afgg",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          local viz = RUtils.get_visual_selection { strict = true }
-          if viz then
-            return fzf_lua.grep {
-              prompt = RUtils.fzflua.padding_prompt(),
-              query = string.format("%s", viz.selection),
-              -- no_esc = true,
-              rg_glob = true,
-              cwd = RUtils.config.path.wiki_path,
-              rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
-              winopts = {
-                title = RUtils.fzflua.format_title(
-                  "Obsidian > Grep",
-                  RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-                ),
-              },
-            }
-          end
-        end,
-        desc = "Note: grep (visual) [obsidian]",
-        mode = "x",
-      },
-      {
-        "<Localleader>aff",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          return fzf_lua.files {
-            prompt = RUtils.fzflua.padding_prompt(),
-            cwd = RUtils.config.path.wiki_path,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
-            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
-
-            winopts = {
-              -- fullscreen = true,
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Note files",
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
-              ),
-            },
-          }
-        end,
-        desc = "Note: find note files [obsidian]",
-      },
-      {
-        "<Localleader>aN",
-        ":ObsidianNew ",
-        desc = "Note: create new note [obsidian]",
-      },
       -- {
-      --   "<Localleader>an",
+      --   "<Leader>nfg",
+      --   function()
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     return fzf_lua.live_grep_glob {
+      --       prompt = RUtils.fzflua.padding_prompt(),
+      --       cwd = RUtils.config.path.wiki_path,
+      --       rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
+      --       winopts = {
+      --         title = RUtils.fzflua.format_title(
+      --           "Obsidian > Grep",
+      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
+      --         ),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note: grep [obsidian]",
+      -- },
+      -- {
+      --   "<Leader>nfg",
+      --   function()
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     local viz = RUtils.get_visual_selection { strict = true }
+      --     if viz then
+      --       return fzf_lua.grep {
+      --         prompt = RUtils.fzflua.padding_prompt(),
+      --         query = string.format("%s", viz.selection),
+      --         -- no_esc = true,
+      --         rg_glob = true,
+      --         cwd = RUtils.config.path.wiki_path,
+      --         rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
+      --         winopts = {
+      --           title = RUtils.fzflua.format_title(
+      --             "Obsidian > Grep",
+      --             RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
+      --           ),
+      --         },
+      --       }
+      --     end
+      --   end,
+      --   desc = "Note: grep (visual) [obsidian]",
+      --   mode = "x",
+      -- },
+      -- {
+      --   "<Leader>nff",
+      --   function()
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     return fzf_lua.files {
+      --       prompt = RUtils.fzflua.padding_prompt(),
+      --       cwd = RUtils.config.path.wiki_path,
+      --       file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
+      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
+      --
+      --       winopts = {
+      --         -- fullscreen = true,
+      --         title = RUtils.fzflua.format_title(
+      --           "Obsidian > Note files",
+      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
+      --         ),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note: find note files [obsidian]",
+      -- },
+      -- {
+      --   "<Leader>nN",
+      --   ":ObsidianNew ",
+      --   desc = "Note: create new note [obsidian]",
+      -- },
+      -- {
+      --   "<Leader>nn",
       --   ":ObsidianToday<CR>",
       --   desc = "Note: add note today [obsidian]",
       -- },
       -- {
-      --   "<Localleader>ad",
+      --   "<Leader>nd",
       --   "<CMD>ObsidianDailies<CR>",
       --   desc = "Note: open and select daily note [obsidian]",
       -- },
       {
-        "<Localleader>al",
+        "<Leader>nt",
         function()
           RUtils.markdown.find_note_by_tag()
         end,
-        desc = "Note: find note by tags [obsidian]",
+        desc = "Note: search by tags [obsidian]",
       },
       {
-        "<Localleader>afgt",
+        "<Leader>nft",
         function()
-          if vim.bo.filetype ~= "markdown" then
-            ---@diagnostic disable-next-line: undefined-field
-            RUtils.warn("Cannot continue..\nThis not wiki or markdown file!", { title = "Obsidian" })
-            return
-          end
           RUtils.markdown.find_local_titles()
           vim.cmd "normal! zRzz"
         end,
         desc = "Note: jump local title [obsidian]",
+        ft = "markdown",
       },
       {
-        "<Localleader>afgT",
+        "<Leader>nfT",
         function()
           RUtils.markdown.find_global_titles()
           vim.cmd "normal! zRzz"
         end,
         desc = "Note: jump global title [obsidian]",
+        ft = "markdown",
       },
     },
     dependencies = { "nvim-lua/plenary.nvim" },
-    ---@module 'obsidian'
-    ---@type obsidian.config
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
       workspaces = {
@@ -666,6 +890,13 @@ return {
         -- alias_format = "%B %-d, %Y",
       },
       notes_subdir = "journal",
+      attachments = {
+        img_text_func = function(path)
+          local name = vim.fs.basename(tostring(path))
+          local encoded_name = require("obsidian.util").urlencode(name)
+          return string.format("![%s](%s)", name, encoded_name)
+        end,
+      },
       note_id_func = function(title)
         -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
         -- In this case a note with the title 'My new note' will be given an ID that looks

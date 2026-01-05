@@ -245,14 +245,14 @@ return {
     },
     keys = {
       {
-        "<Leader>oS",
+        "<Leader>bS",
         "<CMD>Scratch<CR>",
-        desc = "Open: select list scratch ft [scratch]",
+        desc = "Buffer: select list scratch buffer ft [scratch.nvim]",
       },
       {
-        "<Leader>os",
+        "<Leader>bx",
         "<CMD>ScratchOpen<CR>",
-        desc = "Open: scratch buffer [scratch]",
+        desc = "Buffer: scratch [scratch.nvim]",
       },
     },
   },
