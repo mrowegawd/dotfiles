@@ -42,7 +42,7 @@ return {
         "luap",
         "markdown",
         "markdown_inline",
-        "norg",
+        -- "norg",
         "printf",
         "python",
         "query",

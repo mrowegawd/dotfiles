@@ -358,19 +358,31 @@ return {
 
         ["<C-n>"] = {
           function(cmp)
+            if vim.bo.filetype == "org-roam-select" then
+              cmp.hide {}
+              return
+            end
+
             if not cmp.is_visible() then
               cmp.show {}
             else
               cmp.select_next()
             end
           end,
+          "fallback",
         },
         ["<C-p>"] = {
           function(cmp)
+            if vim.bo.filetype == "org-roam-select" then
+              cmp.hide {}
+              return
+            end
+
             if cmp.is_visible() then
               cmp.select_prev()
             end
           end,
+          "fallback",
         },
 
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },

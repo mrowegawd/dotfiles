@@ -43,8 +43,11 @@ return {
       { "<Leader>mp", "", desc = "priority", ft = { "orgagenda", "org" } },
       { "<Leader>ma", "", desc = "add", ft = { "orgagenda", "org" } },
       { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
+      { "<Leader>me", "", desc = "edit", ft = { "orgagenda", "org" } },
+      { "<Leader>mr", "", desc = "remove", ft = { "orgagenda", "org" } },
 
       { "<Leader>nf", "", desc = "find/grep" },
+      { "<Leader>nc", "", desc = "create/capture" },
 
       {
         "<Leader>nfF",
@@ -53,13 +56,13 @@ return {
         end,
         desc = "Note: list file todo/refile/habit [orgmode]",
       },
-      {
-        "<Leader>nc",
-        function()
-          require("orgmode").action "capture.prompt"
-        end,
-        desc = "Note: capture note [orgmode]",
-      },
+      -- {
+      --   "<Leader>ncc",
+      --   function()
+      --     require("orgmode").action "capture.prompt"
+      --   end,
+      --   desc = "Note: capture note [orgmode]",
+      -- },
       {
         "<Leader>na",
         function()
@@ -142,8 +145,8 @@ return {
         },
         org_agenda_files = {
           -- Mobilephone
-          -- fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
-          -- fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
 
           -- Notes
           -- string.format("%s/**/*", RUtils.config.path.wiki_path),
@@ -218,7 +221,7 @@ return {
           disable_all = false,
           prefix = "<Leader>c",
           global = {
-            org_capture = "<Leader>nc",
+            org_capture = "<Leader>ncc",
             org_agenda = "<Leader>na",
           },
           agenda = {
@@ -233,9 +236,10 @@ return {
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "o" },
-            org_agenda_goto_date = "gd",
+            org_agenda_goto_date = "<Leader>ndd",
+            org_agenda_open_at_point = "<Leader>mo",
 
-            org_agenda_switch_to = "<TAB>", -- tidak dipakai?
+            org_agenda_switch_to = "<TAB>",
 
             -- Todo Effort
             org_agenda_todo = "<Leader>mt",
@@ -254,11 +258,11 @@ return {
             org_agenda_priority_up = "<c-k>",
             org_agenda_priority_down = "<c-j>",
 
-            org_agenda_archive = "<Leader>mA", -- tidak terpakai?
+            org_agenda_archive = "<Leader>mA",
 
             --- Tags, Refile / Notes
             org_agenda_set_tags = "<Leader>mat",
-            org_agenda_refile = "<Leader>mr",
+            org_agenda_refile = "<Leader>mR",
             org_agenda_add_note = "<Leader>man",
 
             org_agenda_toggle_archive_tag = "<Leader>maA",
@@ -269,20 +273,20 @@ return {
             org_agenda_preview = "K",
 
             -- Misc
-            org_agenda_filter = "/",
-            org_agenda_redo = "R",
+            org_agenda_filter = "<Leader>sf",
+            org_agenda_redo = "r",
             org_agenda_quit = "q",
             org_agenda_show_help = "?",
           },
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
-            org_capture_refile = "<Leader>mr",
-            org_capture_kill = { "<Leader><TAB>", "q", "<C-q>" },
+            org_capture_refile = "<Leader>mR",
+            org_capture_kill = { "q", "<C-q>" },
             org_capture_show_help = "?",
           },
           note = {
             org_note_finalize = { "<C-c>", "<C-s>" },
-            org_note_kill = { "<Leader><TAB>", "q", "<C-q>" },
+            org_note_kill = { "q", "<C-q>" },
           },
           org = {
             -- Timestamp
@@ -335,7 +339,7 @@ return {
 
             -- Tags / Refile / Notes
             org_set_tags_command = "<Leader>mat",
-            org_refile = "<Leader>mr",
+            org_refile = "<Leader>mR",
 
             -- Links
             org_insert_link = "<Leader>il",
@@ -359,14 +363,14 @@ return {
             -- Gunanya buat edit contents dalam block code di beda buffer,
             -- cara: masuk ke block code (begin_src), lalu combine mapping ini,
             -- jika selesi :wq
-            org_edit_special = "<prefix>E",
+            org_edit_special = "<Leader>meE",
 
             -- set current node to archived
             org_archive_subtree = "<Leader>mA",
             org_toggle_archive_tag = "<Leader>maA",
 
             org_toggle_checkbox = "<C-c>",
-            org_open_at_point = { "<Leader>oo", "<Leader>ld" },
+            org_open_at_point = { "<Leader>ld", "<Leader>mo" },
 
             org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
@@ -426,7 +430,53 @@ return {
     "chipsenkbeil/org-roam.nvim",
     event = "LazyFile",
     keys = {
-      { "<Leader>nd", "", desc = "date/capture" },
+      { "<Leader>nd", "", desc = "date/navigate by date" },
+
+      -- {
+      --   "<Leader>nff",
+      --   function()
+      --     local roam = require "org-roam"
+      --     local id = {}
+      --
+      --     ---@type any
+      --     local node = roam.database:files()
+      --     if not node then
+      --       require("org-roam.core.log").fmt_warn("node %s does not exist, so not inserting link", id)
+      --       return
+      --     end
+      --
+      --     local value = node._value
+      --     if not value or not value._values then
+      --       return
+      --     end
+      --
+      --     local node_org_files = value._values[1].all_files
+      --     RUtils.info(vim.inspect(node_org_files))
+      --
+      --     local contents = {}
+      --     for i, _ in pairs(node_org_files) do
+      --       contents[#contents + 1] = i
+      --     end
+      --
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     fzf_lua.fzf_exec(
+      --       contents,
+      --       RUtils.fzflua.open_dock_bottom {
+      --         winopts = { title = RUtils.fzflua.format_title("Node Orgs", "") },
+      --         actions = {
+      --           ["default"] = function(selection, _)
+      --             if not selection then
+      --               return
+      --             end
+      --
+      --             RUtils.info(selection[1])
+      --           end,
+      --         },
+      --       }
+      --     )
+      --   end,
+      --   desc = "Note: list of nodes [org-roam]",
+      -- },
     },
     opts = {
       directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
@@ -438,52 +488,29 @@ return {
 
       bindings = {
         ---Adjusts the prefix for every keybinding. Can be used in keybindings with <prefix>.
-        prefix = "<Leader>n",
+        prefix = "<Leader>m",
+        add_alias = "<prefix>aa", ---Adds an alias to the node under cursor.
+        add_origin = "<prefix>ao", ---Adds an origin to the node under cursor.
 
-        ---Adds an alias to the node under cursor.
-        add_alias = "<prefix>aa",
+        capture = "<Leader>ncC", ---Opens org-roam capture window.
 
-        ---Adds an origin to the node under cursor.
-        add_origin = "<prefix>oa",
+        complete_at_point = "<prefix>.", ---Completes the node under cursor.
 
-        ---Opens org-roam capture window.
-        capture = "<prefix>N",
+        find_node = "<Leader>nff", ---Finds node and moves to it.
 
-        ---Completes the node under cursor.
-        complete_at_point = "<prefix>.",
+        goto_next_node = "<S-Right>",
+        goto_prev_node = "<S-Left>",
 
-        ---Finds node and moves to it.
-        find_node = "<prefix>ff",
+        insert_node = "<Leader>ii", ---Inserts node at cursor position.
+        insert_node_immediate = "<Leader>iI", ---Inserts node at cursor position without opening capture buffer.
 
-        ---Goes to the next node sequentially based on origin of the node under cursor.
-        ---
-        ---If more than one node has the node under cursor as its origin, a selection
-        ---dialog is displayed to choose the node.
-        goto_next_node = "<prefix>n",
+        quickfix_backlinks = "<prefix>q", ---Opens the quickfix menu for backlinks to the current node under cursor.
 
-        ---Goes to the previous node sequentially based on origin of the node under cursor.
-        goto_prev_node = "<prefix>p",
+        remove_alias = "<prefix>ra", ---Removes an alias from the node under cursor.
+        remove_origin = "<prefix>ro", ---Removes the origin from the node under cursor.
 
-        ---Inserts node at cursor position.
-        insert_node = "<Leader>ii",
-
-        ---Inserts node at cursor position without opening capture buffer.
-        insert_node_immediate = "<prefix>I",
-
-        ---Opens the quickfix menu for backlinks to the current node under cursor.
-        quickfix_backlinks = "<prefix>q",
-
-        ---Removes an alias from the node under cursor.
-        remove_alias = "<prefix>S",
-
-        ---Removes the origin from the node under cursor.
-        remove_origin = "<prefix>or",
-
-        ---Toggles the org-roam node-view buffer for the node under cursor.
-        toggle_roam_buffer = "<prefix>l",
-
-        ---Toggles a fixed org-roam node-view buffer for a selected node.
-        toggle_roam_buffer_fixed = "<prefix>b",
+        toggle_roam_buffer = "<Leader>mb", ---Toggles the org-roam node-view buffer for the node under cursor.
+        toggle_roam_buffer_fixed = "<Leader>mB", ---Toggles a fixed org-roam node-view buffer for a selected node.
       },
 
       extensions = {
@@ -499,25 +526,25 @@ return {
           ---@class org-roam.config.extensions.dailies.Bindings
           bindings = {
             ---Capture note by today/tomorrow/yesterday
-            capture_date = "<prefix>dD",
-            capture_today = "<prefix>dN",
-            capture_tomorrow = "<prefix>dT",
-            capture_yesterday = "<prefix>dY",
+            capture_date = "<Leader>ncD",
+            capture_today = "<Leader>nct",
+            capture_tomorrow = "<Leader>ncw",
+            capture_yesterday = "<Leader>ncy",
 
             ---Navigate to dailies note directory.
-            find_directory = "<prefix>d.",
+            find_directory = "<Leader>nfE",
 
             ---Navigate to specific date's note.
-            goto_date = "<prefix>dd",
+            goto_date = "<Leader>ndD",
 
             ---Navigate to the next/prev by date's note
-            goto_next_date = "<prefix>>",
-            goto_prev_date = "<prefix><",
+            goto_next_date = "<Leader>ndn",
+            goto_prev_date = "<Leader>ndp",
 
             ---Navigate to today/tomorrow/yesterday
-            goto_today = "<prefix>dn",
-            goto_tomorrow = "<prefix>dt",
-            goto_yesterday = "<prefix>dy",
+            goto_today = "<Leader>ndt",
+            goto_tomorrow = "<Leader>ndw",
+            goto_yesterday = "<Leader>ndy",
           },
 
           templates = {
@@ -622,7 +649,7 @@ return {
         cycle_todo = "t", -- cycle TODO state
         set_state = "<Leader>mt", -- set state directly (st, sd, etc.) or show menu
         reload = "R", -- refresh agenda
-        refile = "<Leader>mr", -- refile via Telescope/org-telescope
+        refile = "<Leader>mR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
         preview = "K", -- preview headline content
         reset_hidden = "X", -- clear hidden list

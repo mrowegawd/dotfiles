@@ -19,7 +19,7 @@ local base_colors = {
   cmpdocnormal_bg_alter = 4.8,
   comment_fg_alter = 0.65,
   cursor_fg = "#c7063c",
-  cursorline_fg_alter = 0.1,
+  cursorlinenr_bg_alter = 0.1,
   dapstopped_bg_alter = 0.25,
   float_title_bg_alter = -0.1,
   float_title_fg_alter = 0.05,
@@ -121,7 +121,7 @@ local update_col_colorscheme = {
     blink_ghost_text_fg_alter = -0.65,
     cmpdocnormal_bg_alter = 6,
     comment_fg_alter = 0.8,
-    cursorline_fg_alter = 0.08,
+    cursorlinenr_bg_alter = 0.08,
     floatborder_fg_alter = 0.55,
     fzflua_file_part_fg = 0.5,
     grugfar_result_linenr_bg_alter = -0.3,
@@ -338,6 +338,7 @@ local update_col_colorscheme = {
     cmpdocnormal_bg_alter = 2,
     comment_fg_alter = 0.7,
     cursor_fg = "#b3276f",
+    cursorlinenr_bg_alter = 0.15,
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 0.25,
     grugfar_result_linenr_fg_alter = 0.55,
@@ -419,7 +420,8 @@ local update_col_colorscheme = {
     blink_cmp_label_kind_fg_alter = 0.5,
     cmpdocnormal_bg_alter = 6,
     comment_fg_alter = 0.1,
-    linenr_fg_alter = 1.8,
+    cursorlinenr_bg_alter = 0.1,
+    linenr_fg_alter = 1.5,
     lsp_code_lens_bg_alter = 3.5,
     lsp_code_lens_fg_alter = 15,
     noice_cmdline_fg_alter = 0.95,
@@ -456,7 +458,7 @@ local update_col_colorscheme = {
     cmpdocnormal_bg_alter = 4.5,
     comment_fg_alter = 0.6,
     cursor_fg = "#deeeed",
-    cursorline_fg_alter = 0.2,
+    cursorlinenr_bg_alter = 0.25,
     floatborder_fg_alter = 0.4,
     fzflua_file_part_fg = 1.2,
     linenr_fg_alter = 1.3,
@@ -525,6 +527,7 @@ local update_col_colorscheme = {
     cmpdocnormal_bg_alter = 2,
     comment_fg_alter = 0.25,
     cursor_fg = "#98d1ce",
+    cursorlinenr_bg_alter = 0.1,
     dapstopped_bg_alter = 0.15,
     floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
@@ -604,6 +607,7 @@ local update_col_colorscheme = {
     normal_keyword_alter = 0.12,
     pmenu_sel_bg_alter = -0.3,
     quickfixline_linenr_fg_alter = 0.85,
+    cursorlinenr_bg_alter = 0.15,
     quickfixline_sp_alter = 1.8,
     quickfixwinbar_fg_alter = 3.5,
     statusline_bg_alter = 0.05,
@@ -704,6 +708,7 @@ local update_col_colorscheme = {
 
     code_block_note_bg_alter = -0.25,
     comment_note_fg_alter = 0.65,
+    floatborder_note_fg_alter = 0.2,
     fold_note_fg_alter = 0.05,
     linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.45,
@@ -726,9 +731,9 @@ local update_col_colorscheme = {
     fold_fg = 0.1,
     fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.55,
-    linenr_fg_alter = 0.8,
-    lsp_code_lens_bg_alter = 0.6,
-    lsp_code_lens_fg_alter = 3.5,
+    linenr_fg_alter = 0.6,
+    lsp_code_lens_bg_alter = 0.5,
+    lsp_code_lens_fg_alter = 3,
     noice_cmdline_fg_alter = 1.5,
     nontext_col = { from = "Keyword", attr = "fg", alter = -0.55 },
     normal_keyword_alter = 0.08,
@@ -737,10 +742,10 @@ local update_col_colorscheme = {
     snacks_indent_scope_fg_alter = 0.13,
     statusline_fg_alter = 3,
     trouble_indent_fg_alter = 2,
-    winbar_fg_alter = 4.5,
+    winbar_fg_alter = 4,
     winbar_right_block_bg_alter = 0.1,
     winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.4,
+    winseparator_alter = 0.3,
 
     comment_note_fg_alter = 0.7,
     fold_note_fg_alter = -0.1,
@@ -757,6 +762,7 @@ local update_col_colorscheme = {
     cmpdocnormal_bg_alter = 0.7,
     comment_fg_alter = 0.15,
     cursor_fg = "#ece1d7",
+    cursorlinenr_bg_alter = 0.15,
     dapstopped_bg_alter = 0.15,
     floatborder_fg_alter = 0.15,
     fold_fg = 0.08,
@@ -780,14 +786,15 @@ local update_col_colorscheme = {
     statusline_fg_alter = 1.3,
     tabline_bg_alter = 0.1,
     trouble_indent_fg_alter = 0.5,
-    winbar_fg_alter = 1.8,
+    winbar_fg_alter = 1.65,
     winbar_right_block_bg_alter = 0.1,
     winbar_right_block_fg_alter = -0.3,
     winseparator_alter = 0.15,
 
     comment_note_fg_alter = 0.7,
-    linenr_note_fg_alter = 0.5,
+    floatborder_note_fg_alter = 0.2,
     fold_note_fg_alter = -0.1,
+    linenr_note_fg_alter = 0.5,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 0.5,
     normal_note_fg_alter = 0.15,
@@ -801,7 +808,7 @@ local update_col_colorscheme = {
     cmpdocnormal_bg_alter = 5.5,
     comment_fg_alter = 0.55,
     cursor_fg = "#fa1919",
-    cursorline_fg_alter = 0.1,
+    cursorlinenr_bg_alter = 0.1,
     dapstopped_bg_alter = 0.2,
     floatborder_fg_alter = 0.45,
     fold_fg = 0.15,
@@ -902,6 +909,7 @@ local update_col_colorscheme = {
     blink_ghost_text_fg_alter = -0.45,
     cmpdocnormal_bg_alter = 0.6,
     comment_fg_alter = 0.08,
+    cursorlinenr_bg_alter = 0.15,
     floatborder_fg_alter = 0.2,
     fold_fg = 0.15,
     fzflua_file_part_fg = 0.7,
@@ -937,7 +945,8 @@ local update_col_colorscheme = {
     linenr_note_fg_alter = 0.4,
     fold_note_fg_alter = 0.05,
     nontext_note_fg_alter = 0.4,
-    normal_note_bg_alter = 0.8,
+    normal_note_bg_alter = 0.3,
+    floatborder_note_fg_alter = 0.15,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = -0.1,
     winbar_note_fg_alter = 0.25,
@@ -1005,7 +1014,7 @@ local general_overrides = function()
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
-        bg = H.darken(H.get("Keyword", "fg"), colors.cursorline_fg_alter, H.get("Normal", "bg")),
+        bg = H.darken(H.get("Keyword", "fg"), colors.cursorlinenr_bg_alter, H.get("Normal", "bg")),
         bold = true,
       },
     },
@@ -2049,7 +2058,7 @@ local general_overrides = function()
     { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
 
     -- ╭────────╮
-    -- │ Prompt │
+    -- │ PROMPT │
     -- ╰────────╯
     { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
     { TelescopePromptTitle = { inherit = "FzfLuaPreviewTitle" } },
@@ -2058,14 +2067,14 @@ local general_overrides = function()
     { TelescopePromptCounter = { fg = { from = "FzfLuaBorder", attr = "fg" } } },
 
     -- ╭─────────╮
-    -- │ Preview │
+    -- │ PREVIEW │
     -- ╰─────────╯
     { TelescopePreviewNormal = { inherit = "FzfLuaPreviewNormal" } },
     { TelescopePreviewTitle = { inherit = "FzfLuaPreviewTitle" } },
     { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
 
     -- ╭─────────╮
-    -- │ Results │
+    -- │ RESULTS │
     -- ╰─────────╯
     {
       TelescopeResultsNormal = {

@@ -1,6 +1,160 @@
 local toggle_state = false
 
 return {
+  -- OIL.NVIM
+  {
+    "stevearc/oil.nvim",
+    lazy = false,
+    cmd = { "Oil" },
+    keys = {
+      { "<Leader>mv", "", desc = "view", ft = { "oil" } },
+
+      { "<Leader>oe", "<CMD>Oil<CR>", desc = "Open: current tree-directory" },
+      {
+        "<Leader>oE",
+        function()
+          require("oil").open(vim.fn.getcwd())
+        end,
+        desc = "Open: cwd tree-directory",
+      },
+    },
+    opts = {
+      delete_to_trash = true,
+      skip_confirm_for_simple_edits = true,
+      prompt_save_on_select_new_entry = false,
+      watch_for_changes = true,
+      win_options = {
+        concealcursor = "n",
+      },
+      keymaps = {
+        ["<BS>"] = { "actions.parent", mode = "n" },
+        ["~"] = { "<cmd>edit $HOME<CR>", mode = "n", desc = "Open CWD" },
+
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
+        ["<C-t>"] = { "actions.select", opts = { tab = true } },
+
+        ["<Leader>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
+        ["<Leader>p"] = "actions.paste_from_system_clipboard",
+        ["<Leader>t"] = "actions.open_terminal",
+        ["<a-t>"] = "actions.open_terminal",
+
+        ["P"] = "actions.preview",
+        ["H"] = { "actions.toggle_hidden", mode = "n" },
+
+        ["<Leader>cd"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+
+        ["<a-o>"] = {
+          function()
+            local reverse = {}
+            local dropbox_path = RUtils.config.path.dropbox_path
+            local path_fzmark = dropbox_path .. "/data.programming.forprivate/marked-pwd"
+
+            local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
+            if cat_fzmark.output ~= nil then
+              local res = vim.split(cat_fzmark.output, "\n")
+              for index = 2, #res - 1 do
+                if #res[index] > 1 then
+                  reverse[#reverse + 1] = res[index]
+                end
+              end
+            end
+
+            return require("fzf-lua").fzf_exec(reverse, {
+              prompt = RUtils.fzflua.padding_prompt(),
+              winopts = {
+                title = RUtils.fzflua.format_title("FzMark", "󰈙"),
+              },
+              actions = {
+                ["default"] = function(e)
+                  if not e then
+                    return
+                  end
+
+                  vim.cmd.cd(e[1])
+                  require("oil").open(e[1])
+                end,
+              },
+            })
+          end,
+        },
+        ["<a-g>"] = {
+          function()
+            Snacks.lazygit()
+          end,
+        },
+        ["<a-d>"] = {
+          function()
+            RUtils.terminal.lazydocker()
+          end,
+        },
+
+        ["<Leader><Leader>"] = {
+          function()
+            local dir = require("oil").get_current_dir()
+            if vim.api.nvim_win_get_config(0).relative ~= "" then
+              vim.api.nvim_win_close(0, true)
+            end
+            local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+            fzf_lua.files { cwd = dir }
+          end,
+          desc = "[F]ind [F]iles in dir",
+        },
+        ["<Leader>fg"] = {
+          function()
+            local dir = require("oil").get_current_dir()
+            if vim.api.nvim_win_get_config(0).relative ~= "" then
+              vim.api.nvim_win_close(0, true)
+            end
+            local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+            fzf_lua.live_grep { cwd = dir }
+          end,
+          desc = "[F]ind by [G]rep in dir",
+        },
+        ["<Leader>mvp"] = {
+          desc = "Toggle detail view",
+          callback = function()
+            local oil = require "oil"
+            local config = require "oil.config"
+            if #config.columns == 1 then
+              oil.set_columns { "icon", "permissions", "size", "mtime" }
+            else
+              oil.set_columns { "icon" }
+            end
+          end,
+        },
+      },
+      view_options = {
+        show_hidden = true,
+      },
+    },
+    config = function(_, opts)
+      local oil = require "oil"
+      oil.setup(opts)
+
+      -- local p = require "p"
+      -- local ftplugin = p.require "ftplugin"
+      -- ftplugin.set("oil", {
+      --   callback = function(bufnr)
+      --     vim.api.nvim_buf_create_user_command(bufnr, "Save", function(params)
+      --       oil.save { confirm = not params.bang }
+      --     end, {
+      --       desc = "Save oil changes with a preview",
+      --       bang = true,
+      --     })
+      --     vim.api.nvim_buf_create_user_command(bufnr, "OpenTerminal", function(params)
+      --       require("oil.adapters.ssh").open_terminal()
+      --     end, {
+      --       desc = "Open the debug terminal for ssh connections",
+      --     })
+      --   end,
+      -- })
+    end,
+  },
+  -- OIL-GIT.NVIM
+  {
+    "benomahony/oil-git.nvim",
+  },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -20,31 +174,31 @@ return {
         end,
         desc = "Misc: open file explore [neotree]",
       },
-      {
-        "<Leader>ue",
-        function()
-          local tmux = os.getenv "TMUX"
-          if not tmux then
-            vim.cmd "Neotree toggle left"
-          else
-            vim.cmd "Neotree toggle right"
-          end
-        end,
-        desc = "Toggle: open file explore [neotree]",
-      },
-
-      {
-        "<Leader>uE",
-        function()
-          local tmux = os.getenv "TMUX"
-          if not tmux then
-            vim.cmd "Neotree focus reveal left"
-          else
-            vim.cmd "Neotree focus reveal right"
-          end
-        end,
-        desc = "Toggle: open file focus path explore [neotree]",
-      },
+      -- {
+      --   "<Leader>ue",
+      --   function()
+      --     local tmux = os.getenv "TMUX"
+      --     if not tmux then
+      --       vim.cmd "Neotree toggle left"
+      --     else
+      --       vim.cmd "Neotree toggle right"
+      --     end
+      --   end,
+      --   desc = "Toggle: open file explore [neotree]",
+      -- },
+      --
+      -- {
+      --   "<Leader>uE",
+      --   function()
+      --     local tmux = os.getenv "TMUX"
+      --     if not tmux then
+      --       vim.cmd "Neotree focus reveal left"
+      --     else
+      --       vim.cmd "Neotree focus reveal right"
+      --     end
+      --   end,
+      --   desc = "Toggle: open file focus path explore [neotree]",
+      -- },
     },
 
     dependencies = {

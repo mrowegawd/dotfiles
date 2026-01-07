@@ -245,6 +245,8 @@ end
 
 ---@param line_str string
 local function open_mpv_sxiv_or_git(line_str)
+  local git_ft_relatives = { "NeogitCommitView", "git" }
+
   local sel_open_with = {
     ["Open MPV - Download/Open local/http video"] = {
       -- prefix_cmd = {
@@ -279,7 +281,7 @@ local function open_mpv_sxiv_or_git(line_str)
     ["DL IMG Open Sxiv - Open/Download image with Sxiv"] = { prefix_cmd = {} },
   }
 
-  if vim.bo.filetype == "git" then
+  if vim.tbl_contains(git_ft_relatives, vim.bo.filetype) then
     sel_open_with = {
       ["Diffview - Open specific commit"] = {
         prefix_cmd = { "DiffviewOpen" },
@@ -380,7 +382,7 @@ local function open_mpv_sxiv_or_git(line_str)
             end
           end
 
-          if vim.bo.filetype == "git" then
+          if vim.tbl_contains(git_ft_relatives, vim.bo.filetype) then
             if sel == "Open PR with Octo" then
               vim.cmd "tabnew e"
             end

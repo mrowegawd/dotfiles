@@ -53,7 +53,7 @@ local set_conditions = {
   end,
   is_path_git_relative = function()
     local path = get_vars.path()
-    return path:match "fugitive:/" or path:match "diffview:/"
+    return path:match "fugitive:/" or path:match "diffview:/" or path:match "neogit:/"
   end,
   is_terminal_ft = function()
     return vim.bo.buftype == "terminal"
@@ -569,7 +569,11 @@ M.FilePath = {
   end,
   {
     provider = function()
-      if set_conditions.is_terminal_ft() or set_conditions.is_path_git_relative() then
+      if
+        set_conditions.is_terminal_ft()
+        or set_conditions.is_path_git_relative()
+        or vim.bo.filetype == "codecompanion"
+      then
         return " "
       end
 
@@ -591,6 +595,10 @@ M.FilePath = {
         relative = "cwd",
         length = 3,
       }
+
+      if vim.bo.filetype == "codecompanion" then
+        return
+      end
 
       local path = vim.fn.expand "%:p" --[[@as string]]
       if path == "" then
@@ -1623,6 +1631,10 @@ M.WinbarFilePath = {
       local parts = vim.split(path, "[\\/]")
 
       if vim.bo.filetype == "octo" then
+        return path
+      end
+
+      if set_conditions.is_path_git_relative() then
         return path
       end
 

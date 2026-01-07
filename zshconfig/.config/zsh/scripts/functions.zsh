@@ -407,7 +407,7 @@ run-mark() {
 }
 
 zle -N run-mark
-bindkey '^o' run-mark
+bindkey '^[o' run-mark
 
 function fg-bg() {
   if [[ -z $BUFFER ]]; then

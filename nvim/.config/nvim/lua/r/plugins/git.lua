@@ -480,9 +480,6 @@ return {
         map("n", "<Leader>gvL", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
 
         -- Toggle
-        map("n", "<Leader>gB", function()
-          vim.cmd "G blame"
-        end, "Git: open blame [gitsigns]")
         map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
         map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
         map("n", "<Leader>gul", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
@@ -548,7 +545,6 @@ return {
       "GlLog",
       "Gclog",
       "Gdiffsplit",
-      "Gblame",
       "Gedit",
       "Git",
       "GitEditChanged",
@@ -557,11 +553,17 @@ return {
     },
     keys = {
       {
-        "<Leader>gg",
-        "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
-        desc = "Git: open fugitive [fugitive]",
+        "<Leader>gB",
+        "<Cmd>G blame<CR>",
+        desc = "Git: open blame [gitsigns]",
         mode = { "n", "x" },
       },
+      -- {
+      --   "<Leader>gg",
+      --   "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
+      --   desc = "Git: open fugitive [fugitive]",
+      --   mode = { "n", "x" },
+      -- },
       -- {
       --   "<Leader>gvd",
       --   function()
@@ -1014,16 +1016,16 @@ return {
       }
     end,
   },
-  -- VSCODE-DIFF
+  -- CODEDIFF
   {
-    "esmuellert/vscode-diff.nvim",
-    cmd = "CodeDiff",
+    "esmuellert/codediff.nvim",
+    cmd = "VscodeDiff",
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
         "<Leader>goc",
         function()
-          vim.cmd "CodeDiff"
+          vim.cmd "VscodeDiff"
         end,
         desc = "Git: open CodeDiff [vscode-diff]",
         mode = { "n", "x" },
@@ -1047,60 +1049,75 @@ return {
           refresh = "R",
           toggle_view_mode = "i", -- Toggle between 'list' and 'tree' views
         },
+        conflict = {
+          accept_incoming = "<leader>ct", -- Accept incoming (theirs/left) change
+          accept_current = "<leader>co", -- Accept current (ours/right) change
+          accept_both = "<leader>cb", -- Accept both changes (incoming first)
+          discard = "<leader>cx", -- Discard both, keep base
+          next_conflict = "]x", -- Jump to next conflict
+          prev_conflict = "[x", -- Jump to previous conflict
+          -- Vimdiff-style numbered diffget (from result buffer)
+          diffget_incoming = "2do", -- Get hunk from incoming (left/theirs) buffer
+          diffget_current = "3do", -- Get hunk from current (right/ours) buffer
+        },
       },
     },
   },
-  -- NEOGIT (disabled)
+  -- NEOGIT
   {
     "NeogitOrg/neogit",
-    enabled = false,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "sindrets/diffview.nvim", -- optional - Diff integration
-    },
+    -- dependencies = {
+    --   "nvim-lua/plenary.nvim",
+    --   "sindrets/diffview.nvim", -- optional - Diff integration
+    -- },
     cmd = { "Neogit", "NeogitCommit" },
     keys = {
       {
-        "<Leader>gN",
+        "<Leader>gg",
         function()
           vim.cmd "Neogit"
+          vim.cmd "wincmd ="
         end,
         desc = "Git: open neogit [neogit]",
         mode = { "n", "x" },
       },
     },
-    opts = function()
-      return {
-        signs = {
-          section = { "", "" }, -- "󰁙", "󰁊"
-          item = { "▸", "▾" },
-          hunk = { "󰐕", "󰍴" },
+    opts = {
+      kind = "vsplit",
+      signs = {
+        section = { "", "" }, -- "󰁙", "󰁊"
+        item = { "▸", "▾" },
+        hunk = { "󰐕", "󰍴" },
+      },
+      mappings = {
+        rebase_editor = {
+          ["q"] = false,
         },
-        mappings = {
-          rebase_editor = {
-            ["q"] = false,
-          },
-          status = {
-            ["q"] = false,
-          },
-          finder = {
-            ["<c-c>"] = false,
-            ["<esc>"] = false,
-          },
-          popup = {
-            ["t"] = false,
-            ["m"] = false,
+        status = {
+          ["q"] = false,
+        },
+        finder = {
+          ["<c-c>"] = false,
+          ["<esc>"] = false,
+        },
+        popup = {
+          ["t"] = false,
+          ["m"] = false,
 
-            ["M"] = "MergePopup",
-            ["T"] = "TagPopup",
-          },
+          ["M"] = "MergePopup",
+          ["T"] = "TagPopup",
+
+          ["v"] = false,
+          ["<a-v>"] = "RevertPopup",
+          ["<esc>"] = false,
         },
-        integrations = {
-          -- diffview = true,
-          telescope = true,
-        },
-      }
-    end,
+      },
+      integrations = {
+        diffview = true,
+        -- telescope = true,
+        fzf_lua = true,
+      },
+    },
   },
   -- MINI.DIFF (disabled)
   {

@@ -68,27 +68,27 @@ autocmds.winhighlight_filetype_blacklist = {
   ["CommandTMatchListing"] = true,
   ["CommandTPrompt"] = true,
   ["CommandTTitle"] = true,
-  ["noice"] = true,
-  ["neo-tree"] = true,
+  ["Glance"] = true,
+  ["NeogitCommitSelectView"] = true,
+  ["NeogitCommitView"] = true,
+  ["NeogitStatus"] = true,
+  ["Outline"] = true,
   ["alpha"] = true,
+  ["dashboard"] = true,
+  ["fugitiveblame"] = true,
+  ["grug-far"] = true,
   ["lazy"] = true,
   ["mason"] = true,
-  ["dashboard"] = true,
-  -- ["diff"] = true,
-  ["Glance"] = true,
-  ["qf"] = true,
-  ["Outline"] = true,
-  ["trouble"] = true,
-  ["rgflow"] = true,
-  -- ["git"] = true,
-  -- ["floggraph"] = true,
+  ["neo-tree"] = true,
+  ["noice"] = true,
   ["octo"] = true,
-  ["grug-far"] = true,
-  ["fugitiveblame"] = true,
   ["packer"] = true,
+  ["qf"] = true,
+  ["rgflow"] = true,
   ["sagahover"] = true,
   ["sagasignature"] = true,
   ["startup"] = true,
+  ["trouble"] = true,
   ["tsplayground"] = true,
   ["undotree"] = true,
 }
@@ -97,35 +97,34 @@ autocmds.winhighlight_filetype_blacklist = {
 -- full-width irrespective of 'textwidth').
 autocmds.colorcolumn_filetype_blacklist = {
   ["DiffviewFileHistory"] = true,
+  ["Glance"] = true,
   ["NeogitCommitSelectView"] = true,
   ["NeogitStatus"] = true,
   ["TelescopePrompt"] = true,
   ["Trouble"] = true,
   ["alpha"] = true,
-  ["lazy"] = true,
-  ["mason"] = true,
   ["capture"] = true,
-  -- ["grug-far"] = true,
   ["command-t"] = true,
-  ["git"] = true,
-  ["floggraph"] = true,
   ["dap-repl"] = true,
   ["dap-variables"] = true,
   ["dapui_breakpoints"] = true,
   ["dapui_scopes"] = true,
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
-  ["noice"] = true,
   ["dashboard"] = true,
   ["diff"] = true,
   ["dirvish"] = true,
+  ["floggraph"] = true,
   ["fugitive"] = true,
-  ["Glance"] = true,
   ["fugitiveblame"] = true,
+  ["git"] = true,
   ["gitcommit"] = true,
   ["help"] = true,
+  ["lazy"] = true,
   ["man"] = true,
+  ["mason"] = true,
   ["mind"] = true,
+  ["noice"] = true,
   ["octo"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
@@ -179,6 +178,9 @@ autocmds.cursorline_blacklist = {
   ["CommandTMatchListing"] = true,
   ["CommandTPrompt"] = true,
   ["CommandTTitle"] = true,
+  ["NeogitCommitSelectView"] = true,
+  ["NeogitCommitView"] = true,
+  ["NeogitStatus"] = true,
   ["NvimTree"] = true,
   ["Outline"] = true,
   ["TelescopePrompt"] = true,
@@ -191,13 +193,12 @@ autocmds.cursorline_blacklist = {
   ["dapui_scopes"] = true,
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
+  ["diff"] = true,
   ["help"] = true,
   ["mason"] = true,
   ["noice"] = true,
-  ["diff"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
-  -- ["qf"] = true,
   ["rgflow"] = true,
   ["snacks_notif_history"] = true,
   ["trouble"] = true,
@@ -317,6 +318,7 @@ end
 
 local saved_cursorline_hl = nil
 local color_cursorline_bright = ""
+local color_cursorlinenr_bright = ""
 
 local hi_cursorline = "highlight CursorLine"
 local hi_cursorlinenr = "highlight CursorLineNr"
@@ -324,6 +326,7 @@ local hi_cursorlinenr = "highlight CursorLineNr"
 local function save_cursorline_hl()
   if not saved_cursorline_hl then
     local hl = H.h "CursorLine"
+    local hlnr = H.h "CursorLineNr"
 
     local more_bright = 0.5
 
@@ -343,11 +346,15 @@ local function save_cursorline_hl()
       more_bright = 5
     end
 
+    if vim.g.colorscheme == "nordfox" then
+      more_bright = 0.35
+    end
+
     if vim.tbl_contains({ "nightingale", "minimal" }, vim.g.colorscheme) then
       more_bright = 0.8
     end
 
-    if vim.g.colorscheme == "oxocarbon" then
+    if vim.tbl_contains({ "oxocarbon", "nightfox" }, vim.g.colorscheme) then
       more_bright = 1
     end
 
@@ -355,12 +362,12 @@ local function save_cursorline_hl()
       more_bright = 1
     end
 
-    if vim.tbl_contains({ "rose-pine", "neogotham", "nightfox" }, vim.g.colorscheme) then
+    if vim.tbl_contains({ "rose-pine", "neogotham", "kanagawa" }, vim.g.colorscheme) then
       more_bright = 1.3
     end
 
     if vim.g.colorscheme == "ashen" then
-      more_bright = 0.8
+      more_bright = 4.5
     end
 
     if vim.g.colorscheme == "darcubox" then
@@ -380,6 +387,7 @@ local function save_cursorline_hl()
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)
+    color_cursorlinenr_bright = tostring(hlnr.bg)
 
     if hl then
       saved_cursorline_hl = hl
@@ -389,7 +397,7 @@ end
 
 local function set_bright_cursorline()
   vim.cmd(hi_cursorline .. " guibg=" .. color_cursorline_bright)
-  vim.cmd(hi_cursorlinenr .. " guibg=" .. color_cursorline_bright)
+  vim.cmd(hi_cursorlinenr .. " guibg=" .. color_cursorlinenr_bright)
 end
 
 local function restore_cursorline()

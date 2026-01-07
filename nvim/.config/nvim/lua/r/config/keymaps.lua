@@ -26,7 +26,6 @@ RUtils.map.inoremap("<a-k>", "<Up>", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
 
--- RUtils.map.inoremap("hh", "<Esc>")
 RUtils.map.inoremap("hh", function()
   vim.cmd "noh"
   RUtils.cmp.actions.snippet_stop()
@@ -232,7 +231,7 @@ RUtils.map.nnoremap(
 )
 -- }}}
 -- {{{ Buffers
-RUtils.map.nnoremap("<Leader>bt", "<C-w><S-t>", { desc = "Buffer: move to new tab", silent = true })
+RUtils.map.nnoremap("<Leader>bt", "<C-w><S-t>", { desc = "Buffer: move buffer to the new tab", silent = true })
 RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: alternate/last buffer", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size", silent = true })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })
@@ -250,10 +249,10 @@ RUtils.map.nnoremap("<Leader>bp", function()
 end, { desc = "Buffer: prev buffer" })
 RUtils.map.nnoremap("<Leader>bk", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
--- RUtils.map.nnoremap("<Leader>R", function()
---   vim.cmd [[wall!]]
---   vim.cmd [[restart]]
--- end, { desc = "Buffer: restart nvim" })
+RUtils.map.nnoremap("<Leader>hr", function()
+  vim.cmd [[wall!]]
+  vim.cmd [[restart]]
+end, { desc = "Help: restart nvim" })
 RUtils.map.xnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 RUtils.map.nnoremap("<Leader>hb", RUtils.map.show_help_buf_keymap, {
   desc = "Help: show keymaps curbuf",
@@ -392,7 +391,7 @@ RUtils.map.nnoremap("<Leader>qQ", function()
   end
 
   vim.cmd "wqa!"
-end, { desc = "Quit: and save, but check first if any buffers are modified" })
+end, { desc = "Quit: quit and save, but check first if any buffers are modified" })
 
 RUtils.map.nnoremap("*", function()
   -- Don't jump to first match with *
@@ -420,18 +419,18 @@ RUtils.map.nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
   vim.cmd(fmt("cd %s", filepath))
   vim.notify(fmt("ROOT CHANGED: %s", filepath))
-end, { desc = "Action: change pwd to dir file" })
+end, { desc = "Action: change cwd to dir file" })
 RUtils.map.nnoremap("<Leader>fy", function()
   local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" })
 end, { silent = true, desc = "Files: yank current path" })
-RUtils.map.nnoremap("<Esc>", function()
+RUtils.map.nnoremap("<Leader>hn", function()
   -- "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
   -- convert into lua:
   vim.cmd "nohlsearch"
   vim.cmd "diffupdate"
-  vim.cmd "normal! <C-L>"
+  -- vim.cmd "normal! <C-L>"
 
   -- clean up vim-highlighter
   --
@@ -442,7 +441,12 @@ RUtils.map.nnoremap("<Esc>", function()
       vim.cmd "Hi -"
     end
   end
-end, { desc = "Misc: redraw / clear hlsearch / diff update" })
+end, { desc = "Help: redraw / clear hlsearch / diff update" })
+RUtils.map.nnoremap("<Esc>", function()
+  vim.cmd "noh"
+  -- RUtils.cmp.actions.snippet_stop()
+  return "<Esc>"
+end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 RUtils.map.xnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
 RUtils.map.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
@@ -510,12 +514,21 @@ RUtils.map.vnoremap("<Leader>oO", function()
 end, { desc = "Open: media (visual)" })
 
 -- Open file under cursor
-RUtils.map.nnoremap("<Leader>oo", function()
+RUtils.map.nnoremap("<Leader>be", function()
   RUtils.cmd.open_with "go to file"
 end, { desc = "Open: file under cursor" })
-RUtils.map.xnoremap("<Leader>oo", function()
+RUtils.map.xnoremap("<Leader>be", function()
   RUtils.cmd.open_with "go to file"
 end, { desc = "Open: file under cursor (visual)" })
+
+RUtils.map.nnoremap("<Leader>bv", function()
+  vim.cmd "vsplit"
+  RUtils.cmd.open_with "go to file"
+end, { desc = "Open: file under cursor (vsplit)" })
+RUtils.map.xnoremap("<Leader>bv", function()
+  vim.cmd "vsplit"
+  RUtils.cmd.open_with "go to file"
+end, { desc = "Open: file under cursor (vsplit) (visual)" })
 
 -- Browse error messages
 RUtils.map.nnoremap("<Leader>sE", function()
@@ -714,22 +727,16 @@ local ctrl_o_nvim = function()
     ["R-kill"] = function()
       RUtils.terminal.float_rkill()
     end,
-  }, { winopts = { title = "CtrlO" } })
+  }, { winopts = { title = "ALT-O" } })
 end
 
-RUtils.map.nnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.tnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds" })
-RUtils.map.xnoremap("<a-o>", ctrl_o_nvim, { desc = "Bulk: ctrl_o cmds (visual)" })
+-- RUtils.map.nnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+-- RUtils.map.tnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+-- RUtils.map.xnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   local cmds = {
-    ["Qf - Load qf/lf list"] = function()
-      cmd "LoadQf"
-    end,
-    ["Qf - Save qf/lf list"] = function()
-      cmd "SaveQf"
-    end,
-    ["Browser - Open tailwindcss.com"] = function()
+    ["Browser Open - tailwindcss.com"] = function()
       cmd "!open https://tailwindcss.com"
     end,
     ["Kulala - Run"] = function()
@@ -748,7 +755,7 @@ local bulk_cmd_misc = function()
       RUtils.warn "this RUtils warn"
       RUtils.error "this RUtils error"
     end,
-    ["Browser - Open devdocs (with input)"] = function()
+    ["Browser devdocs - with input"] = function()
       local query = vim.fn.input "Search DevDocs: "
       if #query > 0 then
         local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))

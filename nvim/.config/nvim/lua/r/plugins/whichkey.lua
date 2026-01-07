@@ -86,6 +86,7 @@ return {
           },
 
           { "<Localleader>g", group = "grug-far" },
+          { "<Localleader>q", group = "qfbookmarks" },
 
           { "<Localleader>a", group = "ai" },
 
