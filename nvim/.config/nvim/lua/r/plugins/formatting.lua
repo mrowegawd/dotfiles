@@ -29,7 +29,7 @@ return {
     cmd = "ConformInfo",
     keys = {
       {
-        "<leader>cF",
+        "<leader>cf",
         function()
           RUtils.info("Format injected langs", { title = "Conform" })
           require("conform").format { formatters = { "injected" }, timeout_ms = 3000 }
@@ -80,8 +80,6 @@ return {
           fish = { "fish_indent" },
           sh = { "shfmt" },
 
-          ["norg"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
-          ["org"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
           ["_"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
         },
         -- The options you set here will be merged with the builtin formatters.

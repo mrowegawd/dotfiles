@@ -36,7 +36,7 @@ return {
     },
     opts = {
       -- custom props to disable blink in certain filetypes
-      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input" },
+      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
@@ -360,7 +360,8 @@ return {
           function(cmp)
             if vim.bo.filetype == "org-roam-select" then
               cmp.hide {}
-              return
+              local fallback = require("blink.cmp.keymap.fallback").wrap("i", "<Down>")
+              return fallback()
             end
 
             if not cmp.is_visible() then
@@ -369,20 +370,19 @@ return {
               cmp.select_next()
             end
           end,
-          "fallback",
         },
         ["<C-p>"] = {
           function(cmp)
             if vim.bo.filetype == "org-roam-select" then
               cmp.hide {}
-              return
+              local fallback = require("blink.cmp.keymap.fallback").wrap("i", "<Up>")
+              return fallback()
             end
 
             if cmp.is_visible() then
               cmp.select_prev()
             end
           end,
-          "fallback",
         },
 
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },

@@ -8,12 +8,12 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<Leader>ml"] = {
+      ["<Leader>nfl"] = {
         function()
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
         end,
-        "Note: find http link (curbuf)",
+        "Note: find http link on curbuf",
       },
       ["<Leader>fT"] = {
         function()
@@ -52,7 +52,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: find backlinks (like references)",
       },
-      ["<Leader>mb"] = {
+      ["<Leader>nfb"] = {
         function()
           RUtils.markdown.find_backlinks()
         end,

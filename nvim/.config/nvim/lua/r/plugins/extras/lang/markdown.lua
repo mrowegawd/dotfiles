@@ -6,8 +6,11 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc", "cbfmt" },
-        ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc", "cbfmt" },
+        ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc", "injected" },
+        ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc", "injected" },
+
+        ["norg"] = { "trim_whitespace", "trim_newlines", "injected" },
+        ["org"] = { "trim_whitespace", "trim_newlines", "injected" },
       },
       formatters = {
         ["markdown-toc"] = {
@@ -18,18 +21,42 @@ return {
               end
             end
           end,
+        },
+        ["markdownlint-cli2"] = {
+          condition = function(_, ctx)
+            local diag = vim.tbl_filter(function(d)
+              return d.source == "markdownlint"
+            end, vim.diagnostic.get(ctx.buf))
+            return #diag > 0
+          end,
+        },
 
-          ["markdownlint-cli2"] = {
-            condition = function(_, ctx)
-              local diag = vim.tbl_filter(function(d)
-                return d.source == "markdownlint"
-              end, vim.diagnostic.get(ctx.buf))
-              return #diag > 0
-            end,
+        -- NOTE: cbfmt is no longer used
+        -- since we can use `injected` instead
+        cbfmt = { -- use for markdown, org, norg
+          cwd = require("conform.util").root_file {
+            vim.env.HOME .. "/.config/linters/.cbfmt.toml",
           },
         },
-        cbfmt = {
-          prepend_args = { "--config=" .. vim.env.HOME .. "/.config/linters/.cbfmt.toml" },
+
+        -- NOTE: orgfmt works as expected, but it applies indentation
+        -- to all lines, including those inside code blocks
+        orgfmt = {
+          format = function(_, ctx, lines, callback)
+            local view = vim.fn.winsaveview()
+            local out_lines = vim.deepcopy(lines)
+
+            vim.api.nvim_buf_call(ctx.buf, function()
+              if ctx.range then
+                vim.cmd(string.format("%d,%d=", ctx.range.start[1], ctx.range["end"][1]))
+              else
+                vim.cmd "normal! gg=G"
+              end
+            end)
+
+            vim.fn.winrestview(view)
+            callback(nil, out_lines)
+          end,
         },
       },
     },

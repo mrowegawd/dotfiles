@@ -5,6 +5,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 opt.wrap = false
 opt.list = false
+opt.textwidth = 70
 
 local listchars = vim.deepcopy(vim.opt.listchars:get())
 listchars.tab = "  "

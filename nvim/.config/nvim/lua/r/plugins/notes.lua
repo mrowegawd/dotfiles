@@ -2,11 +2,9 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "LazyFile",
-    -- enabled = false,
-    -- ft = { "org" },
-    -- event = "VeryLazy",
-    -- lazy = false,
+    -- event = "LazyFile",
+    ft = "org",
+    cmd = "Org",
     dependencies = {
       "akinsho/org-bullets.nvim",
       "danilshvalov/org-modern.nvim",
@@ -45,6 +43,8 @@ return {
       { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
       { "<Leader>me", "", desc = "edit", ft = { "orgagenda", "org" } },
       { "<Leader>mr", "", desc = "remove", ft = { "orgagenda", "org" } },
+      { "<Leader>mu", "", desc = "toggle", ft = { "orgagenda", "org" } },
+      { "<Leader>mb", "", desc = "buffer", ft = { "orgagenda", "org" } },
 
       { "<Leader>nf", "", desc = "find/grep" },
       { "<Leader>nc", "", desc = "create/capture" },
@@ -145,18 +145,18 @@ return {
         },
         org_agenda_files = {
           -- Mobilephone
-          string.format("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
 
           -- Notes
-          -- string.format("%s/**/*", RUtils.config.path.wiki_path),
+          string.format("%s/**/*", RUtils.config.path.wiki_path),
 
           -- Todo/Task
-          string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
-          string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = string.format("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {
@@ -187,6 +187,13 @@ return {
           t = {
             description = "Todo",
             template = "* TODO %? \n  SCHEDULED: %T\n\n\tDescribe:\n\n\tCode Error:\n\n\tExpected:\n",
+            -- headline = "Another herading",
+            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
+          },
+          d = "dotfiles",
+          dt = {
+            description = "Todo dotfiles",
+            template = "* TODO %? \t\t\t\t\t:config:\n  SCHEDULED: %T",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
           },
           i = {
@@ -217,6 +224,89 @@ return {
           -- },
         },
         win_split_mode = { "float", 0.6 },
+        org_agenda_custom_commands = {
+          -- "c" is the shortcut that will be used in the prompt
+          c = {
+            description = "Task for edit dotfiles (nvim, emacs, and stuff)", -- Description shown in the prompt for the shortcut
+            types = {
+              {
+                type = "tags_todo", -- Type can be agenda | tags | tags_todo
+                -- match = "config", -- Type can be agenda | tags | tags_todo
+                match = '+PRIORITY="A"', --Same as providing a "Match:" for tags view <leader>oa + m, See: https://orgmode.org/manual/Matching-tags-and-properties.html
+                org_agenda_overriding_header = "⭐ Dotfiles: High priority todo",
+                org_agenda_todo_ignore_deadlines = "far", -- Ignore all deadlines that are too far in future (over org_deadline_warning_days). Possible values: all | near | far | past | future
+                org_agenda_remove_tags = false,
+              },
+              {
+                type = "tags",
+                match = "config",
+                org_agenda_overriding_header = "🔧 Dotfiles: Some broken",
+                org_agenda_remove_tags = false,
+                -- org_agenda_todo_ignore_scheduled = "all",
+              },
+              -- {
+              --   type = "agenda",
+              --   org_agenda_overriding_header = "Whole week overview",
+              --   -- org_agenda_tag_filter_preset = { "personal" },
+              --   org_agenda_span = "week", -- 'week' is default, so it's not necessary here, just an example
+              --   org_agenda_start_on_weekday = 1, -- Start on Monday
+              --   org_agenda_remove_tags = true, -- Do not show tags only for this view
+              -- },
+            },
+          },
+          L = {
+            description = "LEARNING",
+            types = {
+              -- {
+              --   type = "tags_todo",
+              --   org_agenda_overriding_header = "LEARNING todos",
+              --   org_agenda_category_filter_preset = "todos", -- Show only headlines from `todos` category. Same value providad as when pressing `/` in the Agenda view
+              --   org_agenda_sorting_strategy = { "todo-state-up", "priority-down" }, -- See all options available on org_agenda_sorting_strategy
+              -- },
+              {
+                type = "agenda",
+                org_agenda_overriding_header = "Learning: Whole week overview",
+                org_agenda_tag_filter_preset = "learning",
+                -- org_agenda_span = "week", -- 'week' is default, so it's not necessary here, just an example
+                org_agenda_start_on_weekday = 1, -- Start on Monday
+                -- org_agenda_remove_tags = true, -- Do not show tags only for this view
+              },
+              -- {
+              --   type = "agenda",
+              --   org_agenda_overriding_header = "Personal projects agenda",
+              --   org_agenda_files = { "~/my-projects/**/*" }, -- Can define files outside of the default org_agenda_files
+              -- },
+              -- {
+              --   type = "tags",
+              --   org_agenda_overriding_header = "Personal projects notes",
+              --   org_agenda_files = { "~/my-projects/**/*" },
+              --   org_agenda_tag_filter_preset = "NOTES-REFACTOR", -- Show only headlines with NOTES tag that does not have a REFACTOR tag. Same value providad as when pressing `/` in the Agenda view
+              -- },
+            },
+          },
+          w = {
+            description = "Work",
+            types = {
+              {
+                type = "tags_todo",
+                org_agenda_overriding_header = "My personal todos",
+                org_agenda_category_filter_preset = "todos", -- Show only headlines from `todos` category. Same value providad as when pressing `/` in the Agenda view
+                org_agenda_sorting_strategy = { "todo-state-up", "priority-down" }, -- See all options available on org_agenda_sorting_strategy
+              },
+              {
+                type = "agenda",
+                org_agenda_overriding_header = "Personal projects agenda",
+                org_agenda_files = { "~/my-projects/**/*" }, -- Can define files outside of the default org_agenda_files
+              },
+              {
+                type = "tags",
+                org_agenda_overriding_header = "Personal projects notes",
+                org_agenda_files = { "~/my-projects/**/*" },
+                org_agenda_tag_filter_preset = "NOTES-REFACTOR", -- Show only headlines with NOTES tag that does not have a REFACTOR tag. Same value providad as when pressing `/` in the Agenda view
+              },
+            },
+          },
+        },
         mappings = {
           disable_all = false,
           prefix = "<Leader>c",
@@ -298,7 +388,7 @@ return {
             -- Todo / Heading
             org_todo = "<Leader>mt",
             org_todo_prev = "<Leader>maT",
-            org_toggle_heading = "*",
+            org_toggle_heading = "<Leader>muh",
 
             -- Navigation
             org_next_visible_heading = "<a-n>",
@@ -348,7 +438,7 @@ return {
             -- Timestamp Insert
             org_time_stamp = "<Leader>it",
             org_time_stamp_inactive = "<Leader>id",
-            org_toggle_timestamp_type = "<Leader>iT",
+            org_toggle_timestamp_type = "<Leader>mut",
 
             -- Insert Deadline or Schedule
             org_deadline = "<Leader>mdd",
@@ -367,13 +457,13 @@ return {
 
             -- set current node to archived
             org_archive_subtree = "<Leader>mA",
-            org_toggle_archive_tag = "<Leader>maA",
+            org_toggle_archive_tag = "<Leader>mut",
 
             org_toggle_checkbox = "<C-c>",
             org_open_at_point = { "<Leader>ld", "<Leader>mo" },
 
-            org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
-            org_return = "<F11>",
+            org_meta_return = "<s-CR>", -- Add heading, item or row (context-dependent)
+            org_return = "<a-w>",
 
             org_show_help = "?",
           },
@@ -396,11 +486,19 @@ return {
         },
       }
 
+      local set_cr_mapping = function()
+        vim.keymap.set("i", "<s-CR>", '<cmd>lua require("orgmode").action("org_mappings.meta_return")<CR>', {
+          silent = true,
+          buffer = true,
+        })
+      end
+
       RUtils.map.augroup("ManageNoteMappingOrg", {
         event = { "FileType" },
         pattern = { "org" },
         command = function()
           require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
+          set_cr_mapping()
         end,
       })
     end,
@@ -509,8 +607,8 @@ return {
         remove_alias = "<prefix>ra", ---Removes an alias from the node under cursor.
         remove_origin = "<prefix>ro", ---Removes the origin from the node under cursor.
 
-        toggle_roam_buffer = "<Leader>mb", ---Toggles the org-roam node-view buffer for the node under cursor.
-        toggle_roam_buffer_fixed = "<Leader>mB", ---Toggles a fixed org-roam node-view buffer for a selected node.
+        toggle_roam_buffer = "<Leader>mbb", ---Toggles the org-roam node-view buffer for the node under cursor.
+        toggle_roam_buffer_fixed = "<Leader>mbB", ---Toggles a fixed org-roam node-view buffer for a selected node.
       },
 
       extensions = {
@@ -569,6 +667,24 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("org-roam").setup(opts)
+
+      -- RUtils.map.augroup("OrgScraper", {
+      --   event = "FileType",
+      --   pattern = "org-roam-select*",
+      --   command = function()
+      --     vim.opt_local.list = false
+      --     vim.opt_local.listchars = {
+      --       eol = nil,
+      --       tab = "→ ", -- Alternatives: '▷▷',
+      --       extends = "»", -- Alternatives: … » › ░
+      --       precedes = "«", -- Alternatives: … « ‹ ░
+      --       trail = " ", -- BULLET (U+2022, UTF-8: E2 80 A2)
+      --     }
+      --   end,
+      -- })
+    end,
   },
   -- ORG-SUPER-AGENDA
   {
@@ -788,70 +904,72 @@ return {
     cmd = "Obsidian",
     ft = "markdown",
     keys = {
-      -- {
-      --   "<Leader>nfg",
-      --   function()
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     return fzf_lua.live_grep_glob {
-      --       prompt = RUtils.fzflua.padding_prompt(),
-      --       cwd = RUtils.config.path.wiki_path,
-      --       rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
-      --       winopts = {
-      --         title = RUtils.fzflua.format_title(
-      --           "Obsidian > Grep",
-      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-      --         ),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note: grep [obsidian]",
-      -- },
-      -- {
-      --   "<Leader>nfg",
-      --   function()
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     local viz = RUtils.get_visual_selection { strict = true }
-      --     if viz then
-      --       return fzf_lua.grep {
-      --         prompt = RUtils.fzflua.padding_prompt(),
-      --         query = string.format("%s", viz.selection),
-      --         -- no_esc = true,
-      --         rg_glob = true,
-      --         cwd = RUtils.config.path.wiki_path,
-      --         rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
-      --         winopts = {
-      --           title = RUtils.fzflua.format_title(
-      --             "Obsidian > Grep",
-      --             RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-      --           ),
-      --         },
-      --       }
-      --     end
-      --   end,
-      --   desc = "Note: grep (visual) [obsidian]",
-      --   mode = "x",
-      -- },
-      -- {
-      --   "<Leader>nff",
-      --   function()
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     return fzf_lua.files {
-      --       prompt = RUtils.fzflua.padding_prompt(),
-      --       cwd = RUtils.config.path.wiki_path,
-      --       file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
-      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
-      --
-      --       winopts = {
-      --         -- fullscreen = true,
-      --         title = RUtils.fzflua.format_title(
-      --           "Obsidian > Note files",
-      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
-      --         ),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note: find note files [obsidian]",
-      -- },
+      {
+        "<Leader>nfg",
+        function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+          return fzf_lua.live_grep_glob {
+            prompt = RUtils.fzflua.padding_prompt(),
+            cwd = RUtils.config.path.wiki_path,
+            rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
+            -- rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.org" ]],
+            winopts = {
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Grep",
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
+              ),
+            },
+          }
+        end,
+        desc = "Note: grep [obsidian]",
+      },
+      {
+        "<Leader>nfg",
+        function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+          local viz = RUtils.get_visual_selection { strict = true }
+          if viz then
+            return fzf_lua.grep {
+              prompt = RUtils.fzflua.padding_prompt(),
+              query = string.format("%s", viz.selection),
+              -- no_esc = true,
+              rg_glob = true,
+              cwd = RUtils.config.path.wiki_path,
+              rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
+              winopts = {
+                title = RUtils.fzflua.format_title(
+                  "Obsidian > Grep",
+                  RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
+                ),
+              },
+            }
+          end
+        end,
+        desc = "Note: grep (visual) [obsidian]",
+        mode = "x",
+      },
+      {
+        "<Leader>nfe",
+        function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+          return fzf_lua.files {
+            prompt = RUtils.fzflua.padding_prompt(),
+            cwd = RUtils.config.path.wiki_path,
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
+            -- file_ignore_patterns = { "%.norg$", "%.json$", "%.md$", "%.png$" },
+            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
+
+            winopts = {
+              -- fullscreen = true,
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Note files",
+                RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
+              ),
+            },
+          }
+        end,
+        desc = "Note: find note files [obsidian]",
+      },
       -- {
       --   "<Leader>nN",
       --   ":ObsidianNew ",
@@ -868,7 +986,7 @@ return {
       --   desc = "Note: open and select daily note [obsidian]",
       -- },
       {
-        "<Leader>nt",
+        "<Leader>nfv",
         function()
           RUtils.markdown.find_note_by_tag()
         end,
