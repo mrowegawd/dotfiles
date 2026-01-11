@@ -36,25 +36,59 @@ return {
     },
     keys = {
       -- { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
-      { "<Leader>md", "", desc = "date/schedule", ft = { "orgagenda", "org" } },
-      { "<Leader>mc", "", desc = "clock", ft = { "orgagenda", "org" } },
-      { "<Leader>mp", "", desc = "priority", ft = { "orgagenda", "org" } },
-      { "<Leader>ma", "", desc = "add", ft = { "orgagenda", "org" } },
+      -- { "<Leader>md", "", desc = "date/schedule", ft = { "orgagenda", "org" } },
+      -- { "<Leader>mp", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<Leader>ma", "", desc = "add/priority/clock/set todo", ft = { "orgagenda", "org" } },
+      { "<Leader>map", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<Leader>mac", "", desc = "clock", ft = { "orgagenda", "org" } },
       { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
-      { "<Leader>me", "", desc = "edit", ft = { "orgagenda", "org" } },
-      { "<Leader>mr", "", desc = "remove", ft = { "orgagenda", "org" } },
-      { "<Leader>mu", "", desc = "toggle", ft = { "orgagenda", "org" } },
-      { "<Leader>mb", "", desc = "buffer", ft = { "orgagenda", "org" } },
+      { "<Leader>me", "", desc = "edit date/schedule/codeblock", ft = { "orgagenda", "org" } },
+      { "<Leader>mx", "", desc = "export/exec", ft = { "orgagenda", "org" } },
 
+      { "<Leader>mr", "", desc = "remove/redo", ft = "org" },
+      { "<Leader>mu", "", desc = "toggle", ft = "org" },
+      { "<Leader>mb", "", desc = "buffer", ft = "org" },
+      { "<Leader>mf", "", desc = "find/title/links", ft = "org" },
+
+      { "<Leader>nd", "", desc = "date/navigate by date" },
       { "<Leader>nf", "", desc = "find/grep" },
-      { "<Leader>nc", "", desc = "create/capture" },
+      { "<Leader>nc", "", desc = "create note/capture" },
 
       {
-        "<Leader>nfF",
-        function()
-          return RUtils.notes.open_agenda_file_lists()
-        end,
-        desc = "Note: list file todo/refile/habit [orgmode]",
+        "<Leader>nft",
+        RUtils.notes.filter_by_tags,
+        desc = "Note: find notes by tags",
+      },
+
+      {
+        "<Leader>nff",
+        RUtils.notes.find_files_notes,
+        desc = "Note: find notes files",
+      },
+
+      {
+        "<Leader>nfg",
+        RUtils.notes.live_grep,
+        desc = "Note: live grep",
+      },
+
+      {
+        "<c-v>",
+        RUtils.notes.open_item_heading_vsplit,
+        desc = "Note: open item heading in vsplit",
+        ft = "orgagenda",
+      },
+      {
+        "<c-s>",
+        RUtils.notes.open_item_heading_split,
+        desc = "Note: open item heading in split",
+        ft = "orgagenda",
+      },
+      {
+        "<c-t>",
+        RUtils.notes.open_item_heading_tab,
+        desc = "Note: open item heading in tab",
+        ft = "orgagenda",
       },
       -- {
       --   "<Leader>ncc",
@@ -70,24 +104,24 @@ return {
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
-      {
-        "<Leader>nft",
-        function()
-          RUtils.markdown.find_local_titles()
-          vim.cmd "normal! zRzz"
-        end,
-        desc = "Note: jump local title [orgmode]",
-        ft = "org",
-      },
-      {
-        "<Leader>nfT",
-        function()
-          RUtils.markdown.find_global_titles()
-          vim.cmd "normal! zRzz"
-        end,
-        desc = "Note: jump global title [orgmode]",
-        ft = "org",
-      },
+      -- {
+      --   "<Leader>nft",
+      --   function()
+      --     RUtils.markdown.find_local_titles()
+      --     vim.cmd "normal! zRzz"
+      --   end,
+      --   desc = "Note: jump local title [orgmode]",
+      --   ft = "org",
+      -- },
+      -- {
+      --   "<Leader>nfT",
+      --   function()
+      --     RUtils.markdown.find_global_titles()
+      --     vim.cmd "normal! zRzz"
+      --   end,
+      --   desc = "Note: jump global title [orgmode]",
+      --   ft = "org",
+      -- },
     },
     opts = function()
       -- local Highlight = require "r.settings.highlights"
@@ -126,6 +160,7 @@ return {
         --   },
         -- },
         ui = {
+          input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
           menu = {
             handler = function(data)
               Menu:new({
@@ -183,6 +218,10 @@ return {
         },
         org_agenda_skip_scheduled_if_done = true,
         org_hide_emphasis_markers = true,
+        org_agenda_use_time_grid = false,
+        org_priority_highest = "A",
+        org_priority_default = "A",
+        org_priority_lowest = "C",
         org_capture_templates = {
           t = {
             description = "Todo",
@@ -206,7 +245,7 @@ return {
             template = "* TODO %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
-          u = {
+          b = {
             description = "URL bookmarks",
             template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
@@ -236,13 +275,14 @@ return {
                 org_agenda_overriding_header = "⭐ Dotfiles: High priority todo",
                 org_agenda_todo_ignore_deadlines = "far", -- Ignore all deadlines that are too far in future (over org_deadline_warning_days). Possible values: all | near | far | past | future
                 org_agenda_remove_tags = false,
+                -- org_agenda_sorting_strategy = "",
               },
               {
                 type = "tags",
                 match = "config",
-                org_agenda_overriding_header = "🔧 Dotfiles: Some broken",
+                org_agenda_overriding_header = "🔧 Dotfiles: Some broken configs..",
                 org_agenda_remove_tags = false,
-                -- org_agenda_todo_ignore_scheduled = "all",
+                -- org_agenda_todo_ignore_scheduled = "near",
               },
               -- {
               --   type = "agenda",
@@ -332,46 +372,46 @@ return {
             org_agenda_switch_to = "<TAB>",
 
             -- Todo Effort
-            org_agenda_todo = "<Leader>mt",
+            org_agenda_todo = "<Leader>mat",
             org_agenda_set_effort = "<Leader>mae",
 
             -- Clock
-            org_agenda_clock_in = "<Leader>mci",
-            org_agenda_clock_out = "<Leader>mco",
-            org_agenda_clock_goto = "<Leader>mcg",
-            org_agenda_clock_cancel = "<Leader>mcc",
+            org_agenda_clock_in = "<Leader>maci",
+            org_agenda_clock_out = "<Leader>maco",
+            org_agenda_clock_goto = "<Leader>macg",
+            org_agenda_clock_cancel = "<Leader>macc",
 
-            org_agenda_clockreport_mode = "<Leader>mcr", -- buat report clock
+            org_agenda_clockreport_mode = "<Leader>macr", -- buat report clock
 
             -- Priority
-            org_agenda_priority = "<Leader>mpp",
+            org_agenda_priority = "<Leader>mapP",
             org_agenda_priority_up = "<c-k>",
             org_agenda_priority_down = "<c-j>",
 
             org_agenda_archive = "<Leader>mA",
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "<Leader>mat",
+            org_agenda_set_tags = "<Leader>mag",
             org_agenda_refile = "<Leader>mR",
             org_agenda_add_note = "<Leader>man",
 
             org_agenda_toggle_archive_tag = "<Leader>maA",
 
-            org_agenda_deadline = "<Leader>mdd",
-            org_agenda_schedule = "<Leader>mds",
+            org_agenda_deadline = "<Leader>med",
+            org_agenda_schedule = "<Leader>mes",
 
             org_agenda_preview = "K",
 
             -- Misc
             org_agenda_filter = "<Leader>sf",
-            org_agenda_redo = "r",
-            org_agenda_quit = "q",
+            org_agenda_redo = "R",
+            org_agenda_quit = { "<Leader>bk" },
             org_agenda_show_help = "?",
           },
           capture = {
             org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>mR",
-            org_capture_kill = { "q", "<C-q>" },
+            org_capture_kill = { "q", "<C-q>", "<Leader>bk" },
             org_capture_show_help = "?",
           },
           note = {
@@ -386,7 +426,7 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "<Leader>mt",
+            org_todo = "<Leader>mat",
             org_todo_prev = "<Leader>maT",
             org_toggle_heading = "<Leader>muh",
 
@@ -407,15 +447,15 @@ return {
             org_global_cycle = { "<S-TAB>", "zb" },
 
             -- Clock
-            org_clock_in = "<Leader>mci",
-            org_clock_out = "<Leader>mco",
-            org_clock_cancel = "<Leader>mcc",
-            org_clock_goto = "<Leader>mcg",
+            org_clock_in = "<Leader>maci",
+            org_clock_out = "<Leader>maco",
+            org_clock_cancel = "<Leader>macc",
+            org_clock_goto = "<Leader>macg",
 
             -- Priority
-            org_priority = "<Leader>mpp",
-            org_priority_up = "<Leader>mpu",
-            org_priority_down = "<Leader>mpd",
+            org_priority = "<Leader>mapP",
+            org_priority_up = "<Leader>mapn",
+            org_priority_down = "<Leader>mapp",
 
             -- Promote / Demote
             org_do_promote = "<c-h>",
@@ -428,7 +468,7 @@ return {
             org_move_subtree_down = "<c-j>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "<Leader>mat",
+            org_set_tags_command = "<Leader>mag",
             org_refile = "<Leader>mR",
 
             -- Links
@@ -441,13 +481,13 @@ return {
             org_toggle_timestamp_type = "<Leader>mut",
 
             -- Insert Deadline or Schedule
-            org_deadline = "<Leader>mdd",
-            org_schedule = "<Leader>mds",
+            org_deadline = "<Leader>med",
+            org_schedule = "<Leader>mes",
             org_set_effort = "<Leader>mae",
             org_add_note = "<Leader>man",
 
             -- Export / Babel
-            org_export = "<Leader>mE",
+            org_export = "<Leader>mxe",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
@@ -470,7 +510,6 @@ return {
         },
       }
     end,
-
     config = function(_, opts)
       local orgmode = require "orgmode"
       orgmode.setup(opts)
@@ -500,6 +539,15 @@ return {
           require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
           set_cr_mapping()
         end,
+      }, {
+        event = { "BufWritePost" },
+        pattern = { "*.org" },
+        command = function()
+          local bufnr = vim.fn.bufnr "orgagenda" or -1
+          if bufnr > -1 then
+            require("orgmode").agenda:redo()
+          end
+        end,
       })
     end,
   },
@@ -527,55 +575,6 @@ return {
   {
     "chipsenkbeil/org-roam.nvim",
     event = "LazyFile",
-    keys = {
-      { "<Leader>nd", "", desc = "date/navigate by date" },
-
-      -- {
-      --   "<Leader>nff",
-      --   function()
-      --     local roam = require "org-roam"
-      --     local id = {}
-      --
-      --     ---@type any
-      --     local node = roam.database:files()
-      --     if not node then
-      --       require("org-roam.core.log").fmt_warn("node %s does not exist, so not inserting link", id)
-      --       return
-      --     end
-      --
-      --     local value = node._value
-      --     if not value or not value._values then
-      --       return
-      --     end
-      --
-      --     local node_org_files = value._values[1].all_files
-      --     RUtils.info(vim.inspect(node_org_files))
-      --
-      --     local contents = {}
-      --     for i, _ in pairs(node_org_files) do
-      --       contents[#contents + 1] = i
-      --     end
-      --
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     fzf_lua.fzf_exec(
-      --       contents,
-      --       RUtils.fzflua.open_dock_bottom {
-      --         winopts = { title = RUtils.fzflua.format_title("Node Orgs", "") },
-      --         actions = {
-      --           ["default"] = function(selection, _)
-      --             if not selection then
-      --               return
-      --             end
-      --
-      --             RUtils.info(selection[1])
-      --           end,
-      --         },
-      --       }
-      --     )
-      --   end,
-      --   desc = "Note: list of nodes [org-roam]",
-      -- },
-    },
     opts = {
       directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
       -- org_files = {
@@ -594,7 +593,7 @@ return {
 
         complete_at_point = "<prefix>.", ---Completes the node under cursor.
 
-        find_node = "<Leader>nff", ---Finds node and moves to it.
+        find_node = "<Leader>nfr", ---Finds node and moves to it.
 
         goto_next_node = "<S-Right>",
         goto_prev_node = "<S-Left>",
@@ -623,14 +622,13 @@ return {
           ---Bindings associated with org-roam dailies functionality.
           ---@class org-roam.config.extensions.dailies.Bindings
           bindings = {
-            ---Capture note by today/tomorrow/yesterday
             capture_date = "<Leader>ncD",
             capture_today = "<Leader>nct",
             capture_tomorrow = "<Leader>ncw",
             capture_yesterday = "<Leader>ncy",
 
             ---Navigate to dailies note directory.
-            find_directory = "<Leader>nfE",
+            find_directory = "<Leader>nE",
 
             ---Navigate to specific date's note.
             goto_date = "<Leader>ndD",
@@ -647,9 +645,9 @@ return {
 
           templates = {
             d = {
-              description = "default",
+              description = "Daily journal note, stored per year and date",
               template = "%?",
-              target = "%<%Y-%m-%d>.org",
+              target = "%<%Y>/%<%Y-%m-%d>.org",
             },
           },
 
@@ -669,21 +667,6 @@ return {
     },
     config = function(_, opts)
       require("org-roam").setup(opts)
-
-      -- RUtils.map.augroup("OrgScraper", {
-      --   event = "FileType",
-      --   pattern = "org-roam-select*",
-      --   command = function()
-      --     vim.opt_local.list = false
-      --     vim.opt_local.listchars = {
-      --       eol = nil,
-      --       tab = "→ ", -- Alternatives: '▷▷',
-      --       extends = "»", -- Alternatives: … » › ░
-      --       precedes = "«", -- Alternatives: … « ‹ ░
-      --       trail = " ", -- BULLET (U+2022, UTF-8: E2 80 A2)
-      --     }
-      --   end,
-      -- })
     end,
   },
   -- ORG-SUPER-AGENDA
@@ -693,7 +676,19 @@ return {
     keys = {
       {
         "<Leader>nA",
-        "<CMD>OrgSuperAgenda<CR>",
+        function()
+          -- fix error "buffer name already exists"
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_valid(buf) then
+              local bufname = vim.fn.bufname(buf)
+              if bufname == "Org Super Agenda" then
+                vim.api.nvim_buf_delete(buf, { force = true })
+              end
+            end
+          end
+
+          vim.cmd "OrgSuperAgenda"
+        end,
         desc = "Note: open agenda orgmode [org-super-agenda]",
       },
     },
@@ -743,7 +738,6 @@ return {
           fields = { "filename", "todo", "headline", "priority", "date", "tags" },
         },
         {
-
           name = "DONE",
           keymap = "od",
           color = "#50FA7B",
@@ -760,14 +754,14 @@ return {
         filter_fuzzy = "<Leader>sf", -- live filter (fuzzy)
         filter_query = "<Leader>sF", -- advanced query input
         undo = "u", -- undo last change
-        reschedule = "<Leader>mds", -- set/change SCHEDULED
-        set_deadline = "<Leader>mdd", -- set/change DEADLINE
+        reschedule = "<Leader>mes", -- set/change SCHEDULED
+        set_deadline = "<Leader>med", -- set/change DEADLINE
         cycle_todo = "t", -- cycle TODO state
-        set_state = "<Leader>mt", -- set state directly (st, sd, etc.) or show menu
+        set_state = "<Leader>mat", -- set state directly (st, sd, etc.) or show menu
         reload = "R", -- refresh agenda
         refile = "<Leader>mR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
-        preview = "K", -- preview headline content
+        preview = "P", -- preview headline content
         reset_hidden = "X", -- clear hidden list
         toggle_duplicates = "D", -- duplicate items may appear in multiple groups
         cycle_view = "<Leader>mvv", -- switch view (classic/compact)
@@ -826,7 +820,7 @@ return {
         {
           name = "🏠 Habit & Workout Today",
           matcher = function(i)
-            return i.scheduled and i.scheduled:is_today() and i:has_tag "personal"
+            return i.scheduled and i.scheduled:is_today() and i:has_tag "personal" and i.todo_state ~= "DONE"
           end,
           sort = { by = "priority", order = "desc" },
         },
@@ -904,25 +898,25 @@ return {
     cmd = "Obsidian",
     ft = "markdown",
     keys = {
-      {
-        "<Leader>nfg",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          return fzf_lua.live_grep_glob {
-            prompt = RUtils.fzflua.padding_prompt(),
-            cwd = RUtils.config.path.wiki_path,
-            rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
-            -- rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.org" ]],
-            winopts = {
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Grep",
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-              ),
-            },
-          }
-        end,
-        desc = "Note: grep [obsidian]",
-      },
+      -- {
+      --   "<Leader>nfg",
+      --   function()
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     return fzf_lua.live_grep_glob {
+      --       prompt = RUtils.fzflua.padding_prompt(),
+      --       cwd = RUtils.config.path.wiki_path,
+      --       rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
+      --       -- rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.org" ]],
+      --       winopts = {
+      --         title = RUtils.fzflua.format_title(
+      --           "Obsidian > Grep",
+      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
+      --         ),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note: grep [obsidian]",
+      -- },
       {
         "<Leader>nfg",
         function()
@@ -948,28 +942,28 @@ return {
         desc = "Note: grep (visual) [obsidian]",
         mode = "x",
       },
-      {
-        "<Leader>nfe",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          return fzf_lua.files {
-            prompt = RUtils.fzflua.padding_prompt(),
-            cwd = RUtils.config.path.wiki_path,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
-            -- file_ignore_patterns = { "%.norg$", "%.json$", "%.md$", "%.png$" },
-            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
-
-            winopts = {
-              -- fullscreen = true,
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Note files",
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
-              ),
-            },
-          }
-        end,
-        desc = "Note: find note files [obsidian]",
-      },
+      -- {
+      --   "<Leader>nfe",
+      --   function()
+      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+      --     return fzf_lua.files {
+      --       prompt = RUtils.fzflua.padding_prompt(),
+      --       cwd = RUtils.config.path.wiki_path,
+      --       file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
+      --       -- file_ignore_patterns = { "%.norg$", "%.json$", "%.md$", "%.png$" },
+      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
+      --
+      --       winopts = {
+      --         -- fullscreen = true,
+      --         title = RUtils.fzflua.format_title(
+      --           "Obsidian > Note files",
+      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
+      --         ),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note: find note files [obsidian]",
+      -- },
       -- {
       --   "<Leader>nN",
       --   ":ObsidianNew ",
@@ -985,22 +979,15 @@ return {
       --   "<CMD>ObsidianDailies<CR>",
       --   desc = "Note: open and select daily note [obsidian]",
       -- },
-      {
-        "<Leader>nfv",
-        function()
-          RUtils.markdown.find_note_by_tag()
-        end,
-        desc = "Note: search by tags [obsidian]",
-      },
-      {
-        "<Leader>nft",
-        function()
-          RUtils.markdown.find_local_titles()
-          vim.cmd "normal! zRzz"
-        end,
-        desc = "Note: jump local title [obsidian]",
-        ft = "markdown",
-      },
+      -- {
+      --   "<Leader>nft",
+      --   function()
+      --     RUtils.markdown.find_local_titles()
+      --     vim.cmd "normal! zRzz"
+      --   end,
+      --   desc = "Note: jump local title [obsidian]",
+      --   ft = "markdown",
+      -- },
       {
         "<Leader>nfT",
         function()

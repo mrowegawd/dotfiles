@@ -310,7 +310,8 @@ function M.open_lsp_code_action(opts)
   }, opts))
 end
 
-local function get_extracted_cmds(fzf_lua_, opts, only_key)
+local function get_extracted_cmds(fzf_lua_, opts, only_key, is_dock)
+  is_dock = is_dock or false
   only_key = only_key or false
 
   local width_cmd = 1
@@ -331,7 +332,12 @@ local function get_extracted_cmds(fzf_lua_, opts, only_key)
     else
       local str_x = vim.split(idx, "-")
       local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", str_x[1])
-      str_cmds = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
+
+      if is_dock then
+        str_cmds = string.format("%-" .. (width_cmd + 25) .. "s        %s", str_x_hl, str_x[2])
+      else
+        str_cmds = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
+      end
     end
     table.insert(cmds, str_cmds)
   end
@@ -384,6 +390,41 @@ function M.open_cmd_bulk(commands, opts)
   fzf_lua_.fzf_exec(
     cmds,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
+      winopts = { title = opts.title and opts.title or "" },
+      actions = {
+        ["default"] = function(selected, _)
+          if not selected then
+            return
+          end
+
+          local sel = selected[1]
+          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          local display_str_split = vim.split(display_str, "-")
+
+          local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
+            .. " - "
+            .. RUtils.strip_whitespaces(display_str_split[2])
+
+          if commands[build_idx_cmd] then
+            commands[build_idx_cmd]()
+            return
+          end
+
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(commands))
+        end,
+      },
+    }, opts))
+  )
+end
+
+function M.open_cmd_bulk_dock(commands, opts)
+  local fzf_lua_ = require "fzf-lua"
+
+  local cmds = get_extracted_cmds(fzf_lua_, commands, false)
+
+  fzf_lua_.fzf_exec(
+    cmds,
+    M.open_dock_bottom(vim.tbl_deep_extend("force", {
       winopts = { title = opts.title and opts.title or "" },
       actions = {
         ["default"] = function(selected, _)

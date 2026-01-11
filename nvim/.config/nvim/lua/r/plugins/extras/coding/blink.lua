@@ -24,6 +24,10 @@ return {
       -- "saghen/filler-begone.nvim",
       -- add blink.compat to dependencies
       {
+        "mikavilpas/blink-ripgrep.nvim",
+        version = "*",
+      },
+      {
         "saghen/blink.compat",
         optional = true, -- make optional so it's only enabled if any extras need it
         opts = {},
@@ -259,7 +263,7 @@ return {
       },
       sources = {
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer", "git" },
+        default = { "lsp", "path", "snippets", "buffer", "git", "ripgrep" },
 
         providers = {
           snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
@@ -284,6 +288,16 @@ return {
               end,
             },
           },
+
+          cmdline = {
+            -- Taken from
+            -- https://cmp.saghen.dev/recipes#disable-completion-in-only-shell-command-mode
+            --
+            -- ignores cmdline completions when executing shell commands
+            enabled = function()
+              return vim.fn.getcmdtype() ~= ":" or not vim.fn.getcmdline():match "^[%%0-9,'<>%-]*!"
+            end,
+          },
           lsp = {
             name = "lsp",
             module = "blink.cmp.sources.lsp",
@@ -303,6 +317,30 @@ return {
               return vim.tbl_contains({ "octo", "gitcommit" }, vim.bo.filetype)
             end,
           },
+          ripgrep = {
+            name = "RG",
+            module = "blink-ripgrep",
+            score_offset = -10,
+            opts = {
+              project_root_marker = { "package.json", ".git" },
+              backend = {
+                use = "gitgrep-or-ripgrep",
+              },
+            },
+          },
+
+          omni = {
+            module = "blink.cmp.sources.complete_func",
+            enabled = function()
+              return vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc"
+            end,
+            ---@type blink.cmp.CompleteFuncOpts
+            opts = {
+              complete_func = function()
+                return vim.bo.omnifunc
+              end,
+            },
+          },
         },
       },
       signature = {
@@ -318,6 +356,12 @@ return {
         ["<C-f>"] = {},
         ["<C-e>"] = {},
         ["<C-b>"] = {},
+
+        ["<C-g>"] = {
+          function(cmp)
+            return cmp.show { providers = { "ripgrep" } }
+          end,
+        },
 
         ["<Tab>"] = {
           function(cmp)

@@ -1129,13 +1129,28 @@ function M.change_colors()
   M.send_contents_to_file(defined_cols, "/tmp/master-colors-themes", true)
 end
 
----@param bufnr? integer
-function M.force_foldopen(bufnr)
-  bufnr = bufnr or 0
-
+---@param bufnr integer
+local function is_line_fold(bufnr)
   local pos = vim.api.nvim_win_get_cursor(bufnr)
   local line = pos[1]
-  local fold_start = vim.fn.foldclosed(line)
+  return vim.fn.foldclosed(line)
+end
+
+---@param is_only_check? boolean
+---@param bufnr? integer
+function M.force_foldopen(is_only_check, bufnr)
+  bufnr = bufnr or 0
+  is_only_check = is_only_check or false
+
+  local fold_start = is_line_fold(bufnr)
+
+  if is_only_check then
+    if fold_start ~= -1 then
+      return true
+    end
+    return false
+  end
+
   if fold_start ~= -1 then
     vim.cmd "silent! foldopen!"
   end

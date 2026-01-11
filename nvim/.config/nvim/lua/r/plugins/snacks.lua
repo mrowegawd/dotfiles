@@ -183,7 +183,7 @@ return {
           keys = {
             {
               icon = " ",
-              key = "f",
+              key = "<space>",
               desc = "Find File",
               action = function()
                 require("fzf-lua").files()

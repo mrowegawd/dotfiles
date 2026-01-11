@@ -263,9 +263,9 @@ local __colors = function()
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
     -- Termasuk filetype: debug dap, dbui
-    mode_gray_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
-    mode_gray_fg = H.tint(H.get("PanelSideBackground", "bg"), 2),
-    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.15),
+    mode_gray_fg_keyword = H.darken(H.get("Keyword", "fg"), 0.5, H.get("PanelSideBackground", "bg")),
+    mode_gray_fg = H.darken(H.get("Keyword", "fg"), 0.6, H.get("PanelSideBackground", "bg")),
+    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.4),
 
     -- Termasuk filetype: note
     mode_note_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),

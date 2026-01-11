@@ -200,13 +200,13 @@ return {
       --   end,
       --   desc = "Buffer: live grep across buffers [snackspicker]",
       -- },
-      {
-        "<Leader>bb",
-        function()
-          Snacks.picker.buffers { layout = "select" }
-        end,
-        desc = "Buffer: show buffers [snackspicker]",
-      },
+      -- {
+      --   "<Leader>bb",
+      --   function()
+      --     Snacks.picker.buffers { layout = "select" }
+      --   end,
+      --   desc = "Buffer: show buffers [snackspicker]",
+      -- },
       -- { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
       -- { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       -- { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },

@@ -3,7 +3,19 @@ return {
   -- desc = "Neotest support. Requires language specific adapters to be configured. (see lang extras)",
   {
     "nvim-neotest/neotest",
-    dependencies = { "nvim-neotest/nvim-nio" },
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      -- NVIM-COVERAGE
+      {
+        "andythigpen/nvim-coverage", -- Display test coverage information
+        version = "*",
+        config = function()
+          require("coverage").setup {
+            auto_reload = true,
+          }
+        end,
+      },
+    },
     opts = {
       status = { virtual_text = true },
       output = { open_on_run = true },
@@ -111,40 +123,76 @@ return {
 
       require("neotest").setup(opts)
     end,
-    -- stylua: ignore
     keys = {
-      { "<leader>ta", function() require("neotest").run.attach() end, desc = "Testing: attach to test" },
-      { "<Leader>tt", function() require("neotest").run.run(vim.fn.expand "%") end, desc = "Testing: run file" },
-      { "<Leader>tT", function() require("neotest").run.run(vim.uv.cwd()) end, desc = "Testing: run all test files" },
-      { "<Leader>tr", function() require("neotest").run.run() end, desc = "Testing: test nearest" },
-      { "<Leader>tl", function() require("neotest").run.run_last() end, desc = "Testing: run last" },
-      { "<Leader>to", function() require("neotest").summary.toggle() end, desc = "Testing: open/close summary" },
-      { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false } end, desc = "Testing: show output preview" },
-      { "<Leader>tS", function() require("neotest").run.stop() end, desc = "Testing: stop" },
-      { "<Leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Testing: toggle watch" },
-      { "<Leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug: nearest [dap]" },
+      {
+        "<Leader>tn",
+        function()
+          require("neotest").run.run()
+        end,
+        desc = "Testing: test nearest",
+      },
+      {
+        "<Leader>tN",
+        function()
+          require("neotest").run.run(vim.uv.cwd())
+        end,
+        desc = "Testing: run all test files",
+      },
+      {
+        "<Leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Testing: run last",
+      },
+      {
+        "<Leader>tO",
+        function()
+          require("neotest").summary.toggle()
+        end,
+        desc = "Testing: toggle summary test",
+      },
+      {
+        "<Leader>tP",
+        function()
+          require("neotest").output.open { enter = true, short = false }
+        end,
+        desc = "Testing: show output preview",
+      },
       {
         "<Leader>tf",
         function()
           local neotest = require "neotest"
-          RUtils.fzflua.open_cmd_bulk({
-            ["Test - File"] = function()
-              vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
+          RUtils.fzflua.open_cmd_bulk_dock({
+            ["Test - Attach to test"] = function()
+              neotest.run.attach()
             end,
-            ["Test - All files"] = function()
-              vim.cmd [[lua require("neotest").run.run(vim.uv.cwd())]]
+            ["Test - Run test on current file"] = function()
+              neotest.run.run(vim.fn.expand "%")
             end,
-            ["Test - Unit"] = function()
-              vim.cmd [[lua require("neotest").run.run()]]
+            ["Test - Run all test files"] = function()
+              neotest.run.run(vim.uv.cwd())
             end,
-            ["Test - Stop"] = function()
-              vim.cmd [[lua require("neotest").run.stop { interactive = true }]]
+            ["Test - Run last test"] = function()
+              neotest.run.run_last()
             end,
-            ["Test - Suit"] = function()
+            ["Test - Run test nearest"] = function()
+              neotest.run.run()
+            end,
+            ["Test - Run suit"] = function()
               vim.cmd [[lua for _, adapter_id in ipairs(require("neotest").state.adapter_ids()) do require("neotest").run.run { suite = true, adapter = adapter_id, } end]]
             end,
-            ["Test - nearest"] = function()
-              vim.cmd [[lua require("neotest").run.run { strategy = "dap" }]]
+            ["Test - Stop / Quit"] = function()
+              neotest.run.stop { interactive = true }
+            end,
+            ["Test - Run test with strategy Dap"] = function()
+              neotest.run.run { strategy = "dap" }
+            end,
+            ["Test - Toggle summery test"] = function()
+              neotest.summary.toggle()
+            end,
+            ["Test - Run toggle watch"] = function()
+              neotest.watch.toggle(vim.fn.expand "%")
             end,
             ["Coverage - Run"] = function()
               vim.cmd [[CoverageLoad]]
@@ -165,17 +213,14 @@ return {
             ["Coverage - Clear"] = function()
               vim.cmd [[CoverageClear]]
             end,
-            ["Toggle - Summery test"] = function()
-              neotest.summary.toggle()
-            end,
-            ["Toggle - coverage"] = function()
+            ["Coverage - Toggle"] = function()
               vim.cmd [[CoverageToggle]]
             end,
           }, {
-            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing",  },
+            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing" },
           })
         end,
-        desc = "Bulk: testing cmds",
+        desc = "Bulk: test cmds",
       },
     },
   },

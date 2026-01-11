@@ -93,12 +93,6 @@ return {
     optional = true,
     dependencies = {
       "mfussenegger/nvim-dap-python",
-      -- stylua: ignore
-      keys = {
-        { "<Leader>dl", "", desc = "+DebugLSP" },
-        { "<Leader>dlm", function() require("dap-python").test_method() end, desc = "DebugLSP: Method", ft = "python" },
-        { "<Leader>dlc", function() require("dap-python").test_class() end, desc = "DebugLSP: Class", ft = "python" },
-      },
       config = function()
         require("dap-python").setup "debugpy-adapter"
       end,
@@ -175,7 +169,6 @@ return {
   -- DJANGO.NVIM
   {
     "mizisu/django.nvim",
-    -- event = "VeryLazy",
     ft = "python",
     opts = {
       -- Default configuration
@@ -222,5 +215,57 @@ return {
         },
       },
     },
+  },
+
+  {
+    "matarina/pyrola.nvim",
+    build = ":UpdateRemotePlugins",
+    config = function()
+      local pyrola = require "pyrola"
+
+      pyrola.setup {
+        kernel_map = {
+          python = "py3", -- Jupyter kernel name
+          r = "ir",
+        },
+        split_horizontal = false,
+        split_ratio = 0.65, -- width of split REPL terminal
+        image = {
+          cell_width = 10, -- approximate terminal cell width in pixels
+          cell_height = 20, -- approximate terminal cell height in pixels
+          max_width_ratio = 0.5, -- image width as a fraction of editor columns
+          max_height_ratio = 0.5, -- image height as a fraction of editor lines
+          offset_row = 0, -- adjust image row position (cells)
+          offset_col = 0, -- adjust image col position (cells)
+        },
+      }
+
+      -- Default key mappings (adjust to taste)
+
+      -- Send semantic code block under cursor
+      vim.keymap.set("n", "<CR>", function()
+        pyrola.send_statement_definition()
+      end, { noremap = true })
+
+      -- Send visual selection
+      vim.keymap.set("v", "<leader>vs", function()
+        pyrola.send_visual_to_repl()
+      end, { noremap = true })
+
+      -- Send entire buffer
+      vim.keymap.set("n", "<leader>vb", function()
+        pyrola.send_buffer_to_repl()
+      end, { noremap = true })
+
+      -- Inspect variable under cursor
+      vim.keymap.set("n", "<leader>is", function()
+        pyrola.inspect()
+      end, { noremap = true })
+
+      -- Open history image viewer
+      vim.keymap.set("n", "<leader>im", function()
+        pyrola.open_history_manager()
+      end, { noremap = true })
+    end,
   },
 }

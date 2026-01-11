@@ -39,7 +39,22 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- }}}
 -- {{{ Folds
 RUtils.map.nnoremap("<C-a>", function()
-  RUtils.map.wrap_fold_cmd "normal! zMzv"
+  local is_line_folded = RUtils.cmd.force_foldopen(true)
+
+  if is_line_folded then
+    RUtils.map.wrap_fold_cmd "normal! zMzv" -- "normal! zMzO"
+
+    local row = vim.fn.winline()
+    local height = vim.api.nvim_win_get_height(0)
+
+    if row > height * 0.7 then
+      vim.cmd "normal! zb"
+    else
+      vim.cmd "normal! zt"
+    end
+  else
+    RUtils.map.wrap_fold_cmd "normal! zc"
+  end
 end, { desc = "Fold: focus current" })
 RUtils.map.nnoremap("zf", function()
   RUtils.map.wrap_fold_cmd "normal! zMzv"
@@ -51,7 +66,10 @@ RUtils.map.nnoremap("zb", function()
   RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle fold level (util)" })
 RUtils.map.nnoremap("zo", function()
-  RUtils.map.wrap_fold_cmd "normal! zRzz"
+  RUtils.map.wrap_fold_cmd "normal! zO"
+end, { desc = "Fold: open folds recursively" })
+RUtils.map.nnoremap("zO", function()
+  RUtils.map.wrap_fold_cmd "normal! zR"
 end, { desc = "Fold: open all" })
 
 -- Navigate magic fold
@@ -372,9 +390,9 @@ RUtils.map.xnoremap(
 -- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
 -- RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
 
-RUtils.map.nnoremap("<Leader>qq", function()
-  vim.cmd "qal!"
-end, { desc = "Quit: from nvim without save" })
+-- RUtils.map.nnoremap("<Leader>qq", function()
+--   vim.cmd "qal!"
+-- end, { desc = "Quit: from nvim without save" })
 RUtils.map.nnoremap("<Leader>qQ", function()
   local buffers = vim.api.nvim_list_bufs()
 
@@ -500,10 +518,10 @@ RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: repla
 -- Open with browser
 RUtils.map.nnoremap("<Leader>so", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Search: look up online/browser" })
+end, { desc = "Search: open or look up online/browser" })
 RUtils.map.vnoremap("<Leader>so", function()
   RUtils.cmd.open_with "browser"
-end, { desc = "Search: look up online/browser (visual" })
+end, { desc = "Search: open or look up online/browser (visual" })
 
 -- Open with mpv or svix
 RUtils.map.nnoremap("<Leader>oO", function()
@@ -730,9 +748,9 @@ local ctrl_o_nvim = function()
   }, { winopts = { title = "ALT-O" } })
 end
 
--- RUtils.map.nnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
--- RUtils.map.tnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
--- RUtils.map.xnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
+RUtils.map.nnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+RUtils.map.tnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+RUtils.map.xnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   local cmds = {
@@ -784,7 +802,7 @@ RUtils.map.tnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
 RUtils.map.xnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds (visual)" })
 
 local bulk_cmd_git = function()
-  RUtils.fzflua.open_cmd_bulk({
+  RUtils.fzflua.open_cmd_bulk_dock({
     ["Diffview - DiffviewOpen"] = function()
       vim.cmd [[DiffviewOpen]]
     end,

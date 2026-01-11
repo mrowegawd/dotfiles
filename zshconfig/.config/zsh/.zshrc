@@ -61,8 +61,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#181818"
-colorsuggest="fg=#262626"
+colorline="#343a55"
+colorsuggest="fg=#4f5881"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -264,7 +264,7 @@ export MANPAGER="/bin/sh -c \"col -b | \
 # https://superuser.com/questions/151803/how-do-i-customize-zshs-vim-mode
 # http://pawelgoscicki.com/archives/2012/09/vi-mode-indicator-in-zsh-prompt/
 vim_insert_mode=""
-vim_normal_mode="%F{${colorline}}╰─%f %F{green} %f "
+vim_normal_mode="%F{${colorline}}╰─%f%F{green} %f"
 vim_mode=$vim_insert_mode
 
 function zle-line-finish {
@@ -283,9 +283,15 @@ function TRAPINT() {
 
 cursor_mode() {
   # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
-  cursor_block='\e[2 q'
-  cursor_beam='\e[2 q' # <-- I set this block cursor because dont want to use beam "|"
+
+  # Uncomment this if you want a block cursor
+  # cursor_block='\e[2 q'
+  # cursor_beam='\e[2 q' # <-- I set this block cursor because dont want to use beam "|"
   # cursor_beam='\e[6 q'
+
+  # Uncomment this if you want a blinking block cursor
+  cursor_block='\e[1 q'
+  cursor_beam='\e[1 q'
 
   function zle-keymap-select {
     vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
@@ -611,6 +617,8 @@ fi
 if [[ -f ~/.local/bin/uv ]]; then
   eval "$(~/.local/bin/uv generate-shell-completion zsh)"
 fi
+
+export PATH="${PATH}:$HOME/.config/emacs/bin"
 
 # --- powerlevel10k (optional) ---
 # to customize prompt, run `p10k configure`

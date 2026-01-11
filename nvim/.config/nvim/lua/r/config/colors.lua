@@ -64,18 +64,20 @@ local base_colors = {
   winbar_right_block_fg_alter = -0.1,
   winseparator_alter = 0.2,
 
+  code_block_nm_note_fg_alter = 0.3,
   code_block_note_bg_alter = -0.25, -- for Org file (better to leave it as is)
   comment_note_fg_alter = 1.2,
   cursorline_note_bg_alter = 0.1,
   cursorlinenr_note_bg_alter = 0.25,
   delimeter_note_fg_alter = 1,
+  floatborder_note_fg_alter = 0.4,
+  floattitle_note_fg_alter = 0.2,
   fold_note_fg_alter = 0.1,
   linenr_note_fg_alter = 0.4,
   nontext_note_fg_alter = 0.35,
-  floatborder_note_fg_alter = 0.4,
-  floattitle_note_fg_alter = 0.2,
   normal_note_bg_alter = 5,
   normal_note_fg_alter = 0.45,
+  tag_note_fg_alter = 1.25,
   urllink_note_bg_alter = 0.6,
   urllink_note_fg_alter = 0.2,
   visual_note_bg_alter = 0.8,
@@ -2224,6 +2226,17 @@ local general_overrides = function()
     --  ──────────────────────────────[ ORGMODE ]──────────────────────────────
     { ["@org.agenda.scheduled"] = { fg = H.darken("#3f9f31", 0.8, H.get("Normal", "bg")) } },
     { ["@org.agenda.scheduled_past"] = { fg = H.darken(dark_yellow, -0.6, H.get("Normal", "bg")) } },
+
+    {
+      ["@org.block.org"] = {
+        fg = { from = "CodeBlock", attr = "bg", alter = colors.code_block_nm_note_fg_alter },
+      },
+    },
+    {
+      ["@org.tag.org"] = {
+        fg = { from = "CodeBlock", attr = "bg", alter = colors.tag_note_fg_alter },
+      },
+    },
 
     {
       ["@org.headline.level1.org"] = {

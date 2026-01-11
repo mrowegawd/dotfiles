@@ -1,0 +1,185 @@
+# Basic Configuration
+refresh_fps = 10
+network_timeout_seconds = 60
+article_scope = "unread"
+default_sort_order = "<date"
+keep_articles_days = 30
+
+# Icons
+offline_icon = ""
+read_icon = ""
+unread_icon = ""
+marked_icon = ""
+unmarked_icon = " "
+tag_icon = "󰓹"
+command_line_prompt_icon = ""
+
+# Scrollbar symbols
+scrollbar_begin_symbol = "│"
+scrollbar_end_symbol = "│"
+scrollbar_track_symbol = " "
+scrollbar_thumb_symbol = "│"
+
+# Labels
+all_label = "󱀂 All {unread_count}"
+feed_label = " {label} {unread_count}"
+category_label = "󰉋 {label} {unread_count}"
+categories_label = "󰉓 Categories {unread_count}"
+tags_label = "󰓻 Tags {unread_count}"
+tag_label = "󰓹 {label} {unread_count}"
+query_label = " {label}"
+
+# Article Display
+article_table = "{read},{marked},{tag_icons},{age},{title}"
+date_format = "%d/%m %H:%M"
+articles_after_selection = 3
+
+# Content
+auto_scrape = true
+thumbnail_show = true
+thumbnail_width = 20
+thumbnail_resize = true
+thumbnail_fetch_debounce_millis = 500
+text_max_width = 66
+content_preferred_type = "markdown"
+
+# Layout
+# Static Layout
+# feed_list_focused_width = "25%"
+# article_list_focused_width = "75%"
+# article_list_focused_height = "30%"
+# article_content_focused_height = "70%"
+
+# Dynamic Layout
+feed_list_focused_width = "20%"
+article_list_focused_width = "80%"
+article_list_focused_height = "66%"
+article_content_focused_height = "80%"
+
+# Feed List
+feed_list = [
+  'query: "Today Unread" today unread',
+  'query: "Today Marked" today marked',
+  "feeds",
+  "* categories",
+  "tags",
+]
+
+# Share Targets
+share_targets = ["clipboard", "reddit", "mastodon", "instapaper", "telegram"]
+
+# Input Configuration
+[input_config]
+scroll_amount = 10
+timeout_millis = 5000
+
+[input_config.mappings]
+"up" = ["up"]
+"down" = ["down"]
+"C-h" = ["left"]
+"C-l" = ["right"]
+"left" = ["left"]
+"right" = ["right"]
+"j" = ["down"]
+"k" = ["up"]
+"enter" = ["submit"]
+"esc" = ["abort"]
+"C-c" = ["clear"]
+"space" = ["toggle"]
+"C-f" = ["pagedown"]
+"C-b" = ["pageup"]
+"C-d" = ["pagedown"]
+"C-u" = ["pageup"]
+"g g" = ["gotofirst"]
+"G" = ["gotolast"]
+"q" = ["confirm quit"]
+# "C-c"       = ["quit"]
+"x" = ["scrape"]
+"g f" = ["focus feeds"]
+"g a" = ["focus articles"]
+"g c" = ["focus content"]
+":" = ["cmd"]
+"l" = ["next"]
+"h" = ["prev"]
+"tab" = ["nextc"]
+"backtab" = ["prevc"]
+"o" = ["open", "read", "nextunread"]
+"O" = ["open unread", "confirm read articles %"]
+"J" = ["read", "nextunread"]
+"s" = ["sync"]
+"r" = ["read"]
+"t" = ["cmd tag"]
+"R" = ["confirm read %"]
+"M-r" = ["cmd read"]
+"u" = ["unread"]
+"U" = ["confirm unread %"]
+"M-u" = ["cmd unread"]
+"m" = ["mark"]
+"M" = ["confirm mark %"]
+"M-m" = ["cmd mark"]
+"v" = ["unmark"]
+"V" = ["confirm unmark %"]
+"M-v" = ["cmd unmark"]
+"1" = ["show all"]
+"2" = ["show unread"]
+"3" = ["show marked"]
+"z" = ["zen"]
+"/" = ["find"]
+"C-g" = ["find"]
+"n" = ["searchnext"]
+"N" = ["searchprev"]
+"=" = ["cmd filter "]
+"+ r" = ["filterclear"]
+"+ +" = ["filterapply"]
+"\\" = ["cmd sort "]
+"| |" = ["sortreverse"]
+"| r" = ["sortclear"]
+"c w" = ["cmd rename"]
+"c d" = ["confirm remove"]
+"c x" = ["confirm removeall"]
+"c f" = ["cmd feedadd"]
+"c a" = ["cmd categoryadd"]
+"c u" = ["cmd feedchangeurl"]
+"c y" = ["yank"]
+"c p" = ["paste after"]
+"c P" = ["paste before"]
+"c c" = ["cmd tagchangecolor"]
+"S c" = ["share clipboard"]
+"S r" = ["share reddit"]
+"S m" = ["share mastodon"]
+"S t" = ["share telegram"]
+"S i" = ["share instapaper"]
+"?" = ["helpinput"]
+
+
+# Theme Configuration
+# Theme Configuration - Elegant & Readable
+[theme.color_palette]
+background = "#101010"
+foreground = "#cd5f59"
+muted = "#1c1c1c"
+highlight = "#ffff60"
+accent_primary = "#fd9bc1"
+accent_secondary = "#cd5f59"
+accent_tertiary = "#fe9d6e"
+accent_quaternary = "#c1d041"
+info = "#cd5f59"
+warning = "#eecf75"
+error = "#ea6926"
+
+[theme.style_set]
+header = { fg = "accent_primary", bg = "background" }
+paragraph = { fg = "foreground", bg = "background" }
+article = { fg = "accent_primary", bg = "background" }
+article_highlighted = { fg = "highlight", bg = "background", mods = ["bold"] }
+feed = { fg = "accent_primary", bg = "background" }
+category = { fg = "accent_secondary", bg = "background" }
+tag = { fg = "accent_tertiary", bg = "background" }
+query = { fg = "accent_quaternary", bg = "background" }
+yanked = { fg = "highlight", bg = "background" }
+border = { fg = "muted", bg = "background" }
+statusbar = { fg = "accent_primary", bg = "background" }
+# command_input = { fg = "foreground", bg = "#2A2A3A" } # Sedikit lebih gelap untuk membedakan input
+inactive = { fg = "muted", bg = "background" }
+# tooltip_warning = { fg = "warning", bg = "#2A2A3A" } # Sedikit gelap untuk tooltip
+unread_modifier = "bold"

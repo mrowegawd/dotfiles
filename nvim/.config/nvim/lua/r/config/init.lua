@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "nightingale"
+local colorscheme = "tokyonight-storm"
 
 _G.base = {}
 
@@ -99,6 +99,9 @@ local defaults = {
       block = "▌ ",
 
       bookmark = " ",
+      org = " ",
+      norg = " ",
+      markdown = "󰍔 ",
 
       marks = "📌",
       flags = "🚩",

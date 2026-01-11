@@ -4,7 +4,7 @@ return {
   -- OIL.NVIM
   {
     "stevearc/oil.nvim",
-    lazy = false,
+    -- lazy = false,
     cmd = { "Oil" },
     keys = {
       { "<Leader>mv", "", desc = "view", ft = { "oil" } },
@@ -17,6 +17,9 @@ return {
         end,
         desc = "Open: cwd tree-directory",
       },
+    },
+    dependencies = {
+      "benomahony/oil-git.nvim",
     },
     opts = {
       delete_to_trash = true,
@@ -152,9 +155,6 @@ return {
     end,
   },
   -- OIL-GIT.NVIM
-  {
-    "benomahony/oil-git.nvim",
-  },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",

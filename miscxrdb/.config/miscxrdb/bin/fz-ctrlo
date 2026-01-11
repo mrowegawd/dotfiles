@@ -259,6 +259,37 @@ open_newsboat() {
     fi
   fi
 }
+
+open_eilmeldung() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  session="tmp_eilmeldung"
+
+  if docker ps --format '{{.Names}}' | grep -q '^torproxy$'; then
+    PROXY_EILMELDUNG="proxychains -q eilmeldung"
+  else
+    PROXY_EILMELDUNG="eilmeldung"
+  fi
+
+  if ! _is_session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
+      -b rounded \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $PROXY_EILMELDUNG;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
+        -b rounded \
+        -E "tmux attach -t $session"
+    fi
+  fi
+}
 open_rkill() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
@@ -693,9 +724,14 @@ pomodoro_5minute_mode() {
 # |                          NOTES                           |
 # +----------------------------------------------------------+
 
-note_set_dummy() {
+todo_set_dummy() {
   local pomodoro_icon="$HOME/.config/miscxrdb/icons/pomodoro.png"
   dunstify -i "$pomodoro_icon" "To Do Now" "PRIORITY and PROGRESS tracking disabled!"
+}
+
+todo_show_progress() {
+  dunstify "hello bro"
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" handle_show_notes
 }
 
 #  +----------------------------------------------------------+
@@ -720,16 +756,16 @@ callme() {
  tmux: clear main pane id
  tmux: kill/clear other panes
  tmux: reset workspace pane size
- Note: set DUMMY and CLEAR project todo
- Note: set PRIORITAS todo
- Note: set PROGRESS todo
+ Todo: show DUMMY and CLEAR project todo
+ Todo: show PRIORITAS
+ Todo: show PROGRESS
  pomodoro: 1 hour
  pomodoro: 30 minute
  pomodoro: 25 minute
  pomodoro: 5 minute
 󰭲 rkill
  multilog
-󰎕 news
+󰎕 News RSS
  Rust upserv
  Rust upserv 2
  Rust benc
@@ -760,7 +796,8 @@ EOF
   "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
   "tmux: kill/clear other panes") tmux_kill_others_pane ;;
   "tmux: reset workspace pane size") tmux_reset_workspaces ;;
-  "Note: set DUMMY and CLEAR project todo") note_set_dummy ;;
+  "Todo: show DUMMY and CLEAR project todo") todo_set_dummy ;;
+  "Todo: show PROGRESS") todo_show_progress ;;
   "pomodoro: 1 hour") pomodoro_1hour_mode ;;
   "pomodoro: 30 minute") pomodoro_25minute_mode ;;
   "pomodoro: 25 minute") pomodoro_25minute_mode ;;
@@ -768,7 +805,8 @@ EOF
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
 
-  "news") open_newsboat ;;
+  # "news") open_newsboat ;;
+  "News RSS") open_eilmeldung ;;
   "Tock") open_tock ;;
   *) exit ;;
   esac

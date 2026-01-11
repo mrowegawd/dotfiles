@@ -1,27 +1,25 @@
-
-# # Custom completion for 'nvim/v/vim' that uses fzf-tab and grep
 _comp_files() {
-  # Periksa apakah input mengandung anystring
-  local next_word="$words[2]"
-  if [[ "$next_word" != "" ]]; then
-    _cd
-    return 0
+  local prefix
+  prefix="${words[CURRENT]}"
+
+  if [[ "$prefix" != "" ]]; then
+    _files
+    return
   fi
 
   local files
-  files=$(rg --files --column --line-number --no-heading --hidden --follow --smart-case 2>/dev/null | fzf --preview-window 'right:50%:nohidden' --preview 'bat --style=numbers --color=always --line-range :500 {}')
-  # files=$(rg --files --column --line-number --no-heading --hidden --follow --smart-case)
+  files=$(
+    rg -i --files --hidden --follow --smart-case 2>/dev/null |
+      fzf \
+        --query="$prefix" \
+        --preview-window 'right:50%:nohidden' \
+        --preview 'bat --style=numbers --color=always --line-range :500 {}'
+  )
 
-  # Jika ada file yang dipilih, return file tersebut
   if [[ -n "$files" ]]; then
     compadd -Q -- "$files"
   fi
-
-  # compadd -Q -- ${(f)"$(rg --files --column --line-number --no-heading --hidden --follow --smart-case 2>/dev/null)"}
-  # compadd -Q -- ${(f)"$(rg --files --column --line-number --no-heading --hidden --follow --smart-case)"}
 }
 
-# Use _comp_nvim_files for all editor
-compdef _comp_files nvim
-compdef _comp_files v
-compdef _comp_files vim
+# Register completion for editors
+compdef _comp_files nvim v vim

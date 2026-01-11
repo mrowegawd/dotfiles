@@ -69,6 +69,9 @@ fonts/.local/share/virtualenv
 *.db
 tags
 
+local_rss_cache.json
+newsflash.json
+
 .cache.db
 .cache.db.lock
 packer_compiled.lua

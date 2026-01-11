@@ -103,6 +103,65 @@ return {
             return opts
           end,
         },
+        peek_file_source = {
+          get = function()
+            if vim.bo.filetype ~= "orgagenda" then
+              return
+            end
+
+            local item_headline
+
+            local Orgmode = require "orgmode.api.agenda"
+
+            ---@type any
+            item_headline = Orgmode.get_headline_at_cursor()
+
+            if not item_headline then
+              return
+            end
+
+            local opts = {
+              lnum = 0,
+              col = 0,
+            }
+
+            local item_section = item_headline._section
+
+            if item_section and item_section.file then
+              local path = item_section.file.filename
+
+              if path:match "~" then
+                path = path:gsub("~", "")
+                path = RUtils.config.path.home .. path
+              end
+
+              local bufnr = vim.fn.bufadd(path)
+              if not vim.api.nvim_buf_is_loaded(bufnr) then
+                vim.fn.bufload(bufnr)
+              end
+
+              opts.target_bufnr = bufnr
+              opts.title = path
+
+              opts.lnum = item_headline.position.start_line
+              opts.col = item_headline.position.end_col
+            end
+
+            local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
+            local win_width = math.ceil(columns / 2)
+
+            local ui = vim.api.nvim_list_uis()[1]
+            local col = math.floor((ui.width - win_width) / 2)
+
+            opts.win_row = -10
+            opts.win_col = col
+
+            opts.win_width = 80
+            opts.win_height = 30
+
+            return opts
+          end,
+        },
       },
     },
     keys = {
@@ -179,6 +238,15 @@ return {
           require("overlook.api").switch_focus()
         end,
         desc = "Peek: switch focus [overlook]",
+      },
+      {
+        "P",
+        function()
+          local P = require "overlook.peek"
+          P.peek_file_source()
+        end,
+        ft = "orgagenda",
+        desc = "Peek: note file [overlook]",
       },
     },
   },

@@ -8,7 +8,7 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<Leader>nfl"] = {
+      ["<Leader>mfl"] = {
         function()
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
@@ -32,17 +32,15 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
       },
-      ["<Leader>si"] = {
+      ["<Leader>mft"] = {
         function()
-          RUtils.markdown.find_local_titles()
-          vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
+          RUtils.notes.find_local_title()
         end,
         "Note: jump local title",
       },
-      ["<Leader>sI"] = {
+      ["<Leader>mfT"] = {
         function()
-          RUtils.markdown.find_global_titles()
-          vim.cmd "normal! zRzz"
+          RUtils.notes.find_global_title()
         end,
         "Note: jump global title",
       },
@@ -52,7 +50,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: find backlinks (like references)",
       },
-      ["<Leader>nfb"] = {
+      ["<Leader>mfb"] = {
         function()
           RUtils.markdown.find_backlinks()
         end,
@@ -83,21 +81,21 @@ function M.neorg_mappings_ft(bufnr)
     ["i"] = {
       ["c<cr>"] = {
         function()
-          RUtils.markdown.insert_by_categories()
+          RUtils.notes.insert_tag()
         end,
-        "Note: insert categories (curbuf)",
+        "Note: insert local tag",
       },
       ["t<cr>"] = {
         function()
-          RUtils.markdown.insert_local_titles()
+          RUtils.notes.insert_local_title()
         end,
-        "Note: insert title (curbuf)",
+        "Note: insert local title",
       },
       ["T<cr>"] = {
         function()
-          RUtils.markdown.insert_global_titles()
+          RUtils.notes.insert_global_title()
         end,
-        "Note: insert title (global)",
+        "Note: insert global title",
       },
     },
   }

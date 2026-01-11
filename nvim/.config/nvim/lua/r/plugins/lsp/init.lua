@@ -116,6 +116,12 @@ return {
                 desc = "LSP: definitions in split",
               },
               {
+                "<Leader>lt",
+                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "tabnew"),
+                has = "definition",
+                desc = "LSP: definitions in tabnew",
+              },
+              {
                 "<Leader>lD",
                 RUtils.map.lsp.wrap_location_method(vim.lsp.buf.declaration),
                 desc = "LSP: goto declaration",

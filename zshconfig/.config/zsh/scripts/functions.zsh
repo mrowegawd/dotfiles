@@ -217,6 +217,16 @@ build-install() {
     asdf reshim rust
   # fi
 
+  if ! command -v eilmeldung >/dev/null; then
+    echo "Installing: eilmeldung - Feed news (alternative newsboat) "
+    chmod +x  "$HOME/.config/miscxrdb/exbin/install-newsboat"
+    sudo apt install build-essential \
+      perl libssl-dev pkg-config libxml2-dev \
+      clang libsqlite3-dev
+
+    cargo install --locked --git https://github.com/christo-auer/eilmeldung
+  fi
+
   # if ! command -v rg >/dev/null; then
     # echo "Installing: rg - Grep drugs"
     # cargo install ripgrep

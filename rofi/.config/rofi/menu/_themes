@@ -882,6 +882,36 @@ set_shaders_color() {
   fi
 }
 
+set_eilmeldung() {
+  _PATH_EILMELDUNG_THEMES="$DOTFILES_PATH/eilmeldung/.config/eilmeldung/config.toml"
+
+  if [ -f "$_PATH_EILMELDUNG_THEMES" ]; then
+
+    TMUX_BG=$(grep -i tmux_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^background\s=.*$/background = \"$TMUX_BG\"/g" "$_PATH_EILMELDUNG_THEMES"
+    TMUX_FG=$(grep -i tmux_fg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^foreground\s=.*$/foreground = \"$GET_BLUE\"/g" "$_PATH_EILMELDUNG_THEMES"
+
+    # Border
+    TMUX_BORDER_ACTIVE=$(grep -i tmux_border_active: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^muted\s=.*$/muted = \"$TMUX_BORDER_ACTIVE\"/g" "$_PATH_EILMELDUNG_THEMES"
+
+    TMUX_VISUAL_BG=$(grep -i tmux_visual_bg: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^highlight\s=.*$/highlight = \"$TMUX_VISUAL_BG\"/g" "$_PATH_EILMELDUNG_THEMES"
+
+    TMUX_KEYWORD=$(grep -i tmux_keyword: <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+    sed -i -e "s/^accent_primary\s=.*$/accent_primary = \"$GET_MAGENTA\"/g" "$_PATH_EILMELDUNG_THEMES"
+    sed -i -e "s/^accent_secondary\s=.*$/accent_secondary = \"$GET_BLUE\"/g" "$_PATH_EILMELDUNG_THEMES"
+    sed -i -e "s/^accent_tertiary\s=.*$/accent_tertiary = \"$GET_CYAN\"/g" "$_PATH_EILMELDUNG_THEMES"
+    sed -i -e "s/^accent_quaternary\s=.*$/accent_quaternary = \"$GET_GREEN\"/g" "$_PATH_EILMELDUNG_THEMES"
+
+    sed -i -e "s/^info\s=.*$/info = \"$GET_BLUE\"/g" "$_PATH_EILMELDUNG_THEMES"
+    sed -i -e "s/^warning\s=.*$/warning = \"$GET_YELLOW\"/g" "$_PATH_EILMELDUNG_THEMES"
+    sed -i -e "s/^error\s=.*$/error = \"$GET_RED\"/g" "$_PATH_EILMELDUNG_THEMES"
+
+  fi
+}
+
 wm_bspwm() {
   ~/.config/bspwm/bspwmrc &>/dev/null
   # ~/.config/bspwm/bspwmrc
@@ -920,6 +950,8 @@ setup() {
   # set_polybar "$1"
   set_shaders_color "$1"
   set_kitty "$1"
+
+  set_eilmeldung
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;

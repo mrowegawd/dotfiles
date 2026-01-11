@@ -3,7 +3,7 @@ background = #24283b
 foreground = #c0caf5
 
 # cursor none
-cursor-color = #b3276f
+cursor-color = #eb5a7d
 
 palette = 0=#1d202f
 palette = 1=#f7768e

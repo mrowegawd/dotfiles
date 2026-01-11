@@ -71,6 +71,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["Glance"] = true,
   ["NeogitCommitSelectView"] = true,
   ["NeogitCommitView"] = true,
+  ["NeogitLogView"] = true,
   ["NeogitStatus"] = true,
   ["Outline"] = true,
   ["alpha"] = true,
@@ -432,6 +433,7 @@ local set_cursorline = function(active)
   end
 
   if buftype == "quickfix" and filetype == "qf" then
+    vim.wo.cursorline = active
     save_cursorline_hl()
     set_bright_cursorline()
     return

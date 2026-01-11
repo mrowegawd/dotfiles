@@ -436,7 +436,7 @@ return {
                 modes = { n = "<Leader>my" },
                 index = 8,
                 callback = "keymaps.yank_code",
-                description = "[Chat] Yank code",
+                description = "[Chat] Yank or copy code",
               },
               buffer_sync_all = {
                 modes = { n = "<Leader>mba" },

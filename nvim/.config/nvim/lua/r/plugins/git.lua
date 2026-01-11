@@ -92,7 +92,7 @@ return {
         function()
           require("git-link.main").copy_line_url()
         end,
-        desc = "Git: yank line [git-link.nvim]",
+        desc = "Git: yank/copy line [git-link.nvim]",
         mode = { "n", "x" },
       },
       {
@@ -100,7 +100,7 @@ return {
         function()
           require("git-link.main").open_line_url()
         end,
-        desc = "Git: open line git in browser [git-link.nvim]",
+        desc = "Git: open in browser [git-link.nvim]",
         mode = { "n", "x" },
       },
     },
@@ -132,7 +132,6 @@ return {
       picker_config = {
         use_emojis = true,
         mappings = {
-          -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
           goto_file = { lhs = "<CR>", desc = "got to file" },
           -- copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           -- checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
@@ -864,18 +863,18 @@ return {
             { "n", "<Leader>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>mn", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
-            { "n", "<Leader>mp", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
+            { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
+            { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
-            { "n", "<Leader>mco", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview-view]" } },
-            { "n", "<Leader>mct", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview-view]" }, },
+            { "n", "<Leader>mcc", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview-view]" } },
+            { "n", "<Leader>mci", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview-view]" }, },
             { "n", "<Leader>mcb", actions.conflict_choose "base", { desc = "Git: choose the BASE version of a conflict [diffview-view]" } },
-            { "n", "<Leader>mca", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview-view]" } },
+            { "n", "<Leader>mcb", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview-view]" } },
 
-            { "n", "<Leader>mcn", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview-view]" } },
-            { "n", "<Leader>mcN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcd", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview-view]" } },
+            { "n", "<Leader>mcD", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-view]" }, },
 
-            { "n", "<Leader>mcO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcC", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-view]" }, },
             { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-view]" }, },
             { "n", "<Leader>mcB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-view]" }, },
             { "n", "<Leader>mcA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-view]" }, },
@@ -941,8 +940,8 @@ return {
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>mn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
-            { "n", "<Leader>mp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
+            { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
             { "n", "<Leader>mcO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-panel]" }, },
             { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-panel]" }, },
@@ -1050,12 +1049,12 @@ return {
           toggle_view_mode = "i", -- Toggle between 'list' and 'tree' views
         },
         conflict = {
-          accept_incoming = "<leader>ct", -- Accept incoming (theirs/left) change
-          accept_current = "<leader>co", -- Accept current (ours/right) change
-          accept_both = "<leader>cb", -- Accept both changes (incoming first)
-          discard = "<leader>cx", -- Discard both, keep base
-          next_conflict = "]x", -- Jump to next conflict
-          prev_conflict = "[x", -- Jump to previous conflict
+          accept_incoming = "<Leader>mci", -- Accept incoming (theirs/left) change
+          accept_current = "<Leader>mcc", -- Accept current (ours/right) change
+          accept_both = "<Leader>mcb", -- Accept both changes (incoming first)
+          discard = "<Leader>mcD", -- Discard both, keep base
+          next_conflict = "<Leader>mcn", -- Jump to next conflict
+          prev_conflict = "<Leader>mcp", -- Jump to previous conflict
           -- Vimdiff-style numbered diffget (from result buffer)
           diffget_incoming = "2do", -- Get hunk from incoming (left/theirs) buffer
           diffget_current = "3do", -- Get hunk from current (right/ours) buffer
@@ -1072,6 +1071,13 @@ return {
     -- },
     cmd = { "Neogit", "NeogitCommit" },
     keys = {
+      {
+        "<Leader>mo",
+        "",
+        desc = "Popup (No desc, check g? help)",
+        ft = { "NeogitStatus", "NeogitLogView", "NeogitCommitView" },
+      },
+
       {
         "<Leader>gg",
         function()
@@ -1090,11 +1096,42 @@ return {
         hunk = { "󰐕", "󰍴" },
       },
       mappings = {
+        commit_view = {
+          ["o"] = false,
+
+          ["a"] = "OpenFileInWorktree",
+
+          ["<Leader>mY"] = "OpenTree",
+
+          ["<Leader>be"] = "GoToFile",
+          ["<Leader>bv"] = "VSplitOpen",
+          ["<Leader>bs"] = "SplitOpen",
+          ["<Leader>bt"] = "TabOpen",
+
+          ["g?"] = "HelpPopup",
+        },
+
         rebase_editor = {
           ["q"] = false,
         },
         status = {
           ["q"] = false,
+          ["<c-v>"] = false,
+          ["<c-x>"] = false,
+          ["<c-t>"] = false,
+          ["Y"] = false,
+          ["o"] = false,
+
+          ["<Leader>be"] = "GoToFile",
+          ["<Leader>bv"] = "VSplitOpen",
+          ["<Leader>bs"] = "SplitOpen",
+          ["<Leader>bt"] = "TabOpen",
+
+          ["<Leader>mP"] = "PeekFile",
+          ["<Leader>my"] = "YankSelected",
+          ["<Leader>mO"] = "OpenTree",
+
+          ["<Leader>mY"] = "OpenTree",
         },
         finder = {
           ["<c-c>"] = false,
@@ -1103,13 +1140,35 @@ return {
         popup = {
           ["t"] = false,
           ["m"] = false,
-
-          ["M"] = "MergePopup",
-          ["T"] = "TagPopup",
-
+          ["w"] = false,
+          ["l"] = false,
+          ["L"] = false,
           ["v"] = false,
-          ["<a-v>"] = "RevertPopup",
+          ["d"] = false,
           ["<esc>"] = false,
+          ["?"] = false,
+          ["b"] = false,
+          ["B"] = false,
+          ["M"] = false,
+          ["Z"] = false,
+          ["o"] = false,
+          -- ["i"] = false,
+
+          -- ["<Leader>mm"] = "IgnorePopup",
+          ["<Leader>mot"] = "TagPopup",
+          ["<Leader>mom"] = "MergePopup",
+          ["<Leader>moM"] = "MarginPopup",
+          ["<Leader>mor"] = "RemotePopup",
+          ["<Leader>mow"] = "WorktreePopup",
+          ["<Leader>moR"] = "RevertPopup",
+          ["<Leader>mod"] = "DiffPopup",
+          ["<Leader>mob"] = "BranchPopup",
+          ["<Leader>moB"] = "BisectPopup",
+          ["<Leader>mos"] = "StashPopup",
+
+          ["<Leader>ml"] = "LogPopup",
+
+          ["g?"] = "HelpPopup",
         },
       },
       integrations = {

@@ -245,7 +245,7 @@ return {
     },
     keys = {
       {
-        "<Leader>bS",
+        "<Leader>bX",
         "<CMD>Scratch<CR>",
         desc = "Buffer: select list scratch buffer ft [scratch.nvim]",
       },
@@ -334,23 +334,6 @@ return {
           },
         },
         move_cursor = false,
-      }
-    end,
-  },
-  -- NVIM-COVERAGE
-  {
-    "andythigpen/nvim-coverage", -- Display test coverage information
-    version = "*",
-    -- stylua: ignore
-    keys = {
-      { "<Leader>tcc", "<CMD>Coverage<CR>", desc = "Coverage: run toggle" },
-      { "<Leader>tcC", "<CMD>CoverageClear<CR>", desc = "Coverage: clear" },
-      { "<Leader>tcl", "<CMD>CoverageLoad<CR>", desc = "Coverage: load" },
-      { "<Leader>tcP", "<CMD>CoverageSummary<CR>", desc = "Coverage: summary" },
-    },
-    config = function()
-      require("coverage").setup {
-        auto_reload = true,
       }
     end,
   },
