@@ -229,9 +229,9 @@ return {
             -- headline = "Another herading",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
           },
-          d = "dotfiles",
-          dt = {
-            description = "Todo dotfiles",
+          -- d = "dotfiles",
+          d = {
+            description = "Dotfiles",
             template = "* TODO %? \t\t\t\t\t:config:\n  SCHEDULED: %T",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
           },

@@ -570,7 +570,7 @@ local function all_item_locations_equal(items)
 end
 
 ---@param yield any
----@param open_mode? "vsplit" | "split" | "newtab" | "none"
+---@param open_mode? "vsplit" | "split" | "tabnew" | "none"
 function M.lsp.wrap_location_method(yield, open_mode)
   open_mode = open_mode or "none"
   return function()

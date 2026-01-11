@@ -150,13 +150,6 @@ return {
                 end,
                 desc = "LSP: toggle enabled words references",
               },
-              {
-                "<Leader>lcC",
-                function()
-                  Snacks.picker.lsp_config()
-                end,
-                desc = "LSP: show LSP configs",
-              },
 
               --  +----------------------------------------------------------+
               --  Hover and SignatureHelp
@@ -188,7 +181,7 @@ return {
               --  +----------------------------------------------------------+
               --  Code Actions
               --  +----------------------------------------------------------+
-              { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action lsp", has = "codeAction" },
+              { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action LSP", has = "codeAction" },
               {
                 "<Leader>ca",
                 function()
@@ -238,16 +231,6 @@ return {
               --  +----------------------------------------------------------+
               { "dn", RUtils.map.lsp.diagnostic_goto(1), desc = "Diagnostic: next item" },
               { "dp", RUtils.map.lsp.diagnostic_goto(-1), desc = "Diagnostic: prev item" },
-              {
-                "<Leader>luv",
-                function()
-                  local new_value = not vim.diagnostic.config().virtual_lines
-                  ---@diagnostic disable-next-line: undefined-field
-                  RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })
-                  vim.diagnostic.config { virtual_lines = new_value }
-                end,
-                desc = "Toggle: virtual lines [diagnostic]",
-              },
               {
                 "dP",
                 function()
@@ -433,7 +416,6 @@ return {
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
-    keys = { { "<Leader>cm", "<cmd>Mason<cr>", desc = "Action: open Mason" } },
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },
     opts = {

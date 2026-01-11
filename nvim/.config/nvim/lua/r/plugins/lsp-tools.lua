@@ -492,39 +492,49 @@ return {
   -- MEOWYARN
   {
     "retran/meow.yarn.nvim",
-    cmd = "MeowYarn",
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
-        "<Leader>lcs",
+        "<Leader>chT",
         function()
           require("meow.yarn").open_tree("type_hierarchy", "supertypes")
         end,
-        desc = "LSP: type hierarchy (super) [meow.yarn]",
+        desc = "LSP: check supertypes hierarchy",
       },
       {
-        "<Leader>lct",
+        "<Leader>cht",
         function()
           require("meow.yarn").open_tree("type_hierarchy", "subtypes")
         end,
-        desc = "LSP: type hierarchy (subtypes) [meow.yarn]",
+        desc = "LSP: check subtype hierarchy",
       },
       {
-        "<Leader>lci",
+        "<Leader>chH",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callers")
         end,
-        desc = "LSP: call hierarchy (callers) [meow.yarn]",
+        desc = "LSP: check who-call-this-func hierarchy",
       },
       {
-        "<Leader>lco",
+        "<Leader>chh",
         function()
           require("meow.yarn").open_tree("call_hierarchy", "callees")
         end,
-        desc = "LSP: call hierarchy (callees) [meow.yarn]",
+        desc = "LSP: check what-call-from-this-func hierarchy",
       },
     },
     opts = {
+      mappings = {
+        jump = "<CR>",
+        toggle = "<Tab>",
+        expand = "<S-Right",
+        expand_alt = "<Right>",
+        collapse = "<S-Left>",
+        collapse_alt = "<Left>",
+        show_super_hierarchy = "H",
+        show_sub_hierarchy = "J",
+        quit = "q",
+      },
       hierarchies = {
         type_hierarchy = {
           icons = {

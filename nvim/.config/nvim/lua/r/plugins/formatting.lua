@@ -29,13 +29,14 @@ return {
     cmd = "ConformInfo",
     keys = {
       {
-        "<leader>cf",
+        "<Leader>cF",
         function()
-          RUtils.info("Format injected langs", { title = "Conform" })
-          require("conform").format { formatters = { "injected" }, timeout_ms = 3000 }
+          ---@diagnostic disable-next-line: undefined-global
+          RUtils.info "Manual formatting.."
+          require("conform").format { timeout_ms = 3000 }
         end,
         mode = { "n", "x" },
-        desc = "Action: format injected langs [conform]",
+        desc = "Action: run manual formatting [conform.nvim]",
       },
     },
     init = function()

@@ -3,22 +3,41 @@ return {
   {
     "folke/which-key.nvim",
     event = "LazyFile",
-    keys = {
-      {
-        "<leader>?",
-        function()
-          require("which-key").show { global = false }
-        end,
-        desc = "Buffer Local Keymaps (which-key)",
-      },
-    },
+    -- keys = {
+    --   {
+    --     "<leader>?",
+    --     function()
+    --       require("which-key").show { global = false }
+    --     end,
+    --     desc = "Buffer Local Keymaps (which-key)",
+    --   },
+    -- },
     opts = {
-      --= preset = "helix",
+      -- preset = "helix",
       defaults = {},
       plugins = { registers = false }, -- registers disabled
+      sort = { "group", "order", "alphanum", "local", "mod" },
       keys = {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
+      },
+      -- icons = { mappings = false },
+      icons = {
+        rules = {
+          { plugin = "fzf-lua", icon = "💊", name = "fzf" },
+          { plugin = "orgmode", cat = "filetype", icon = "📓", name = "org" },
+          -- { plugin = "overseer.nvim", "󰜎", color = "red" },
+          { pattern = "note", icon = "📓" },
+          { plugin = "todo-comments.nvim", cat = "filetype", name = "TODO" },
+          { pattern = "help", icon = " ", color = "gray" },
+          { pattern = "insert", icon = "󰀧 ", color = "green" },
+          { pattern = "picker", icon = "💊" },
+          { pattern = "projects", icon = " ", color = "blue" },
+          { pattern = "run", icon = "󰜎", color = "red" },
+          { pattern = "open", icon = "󰏌", color = "magenta" },
+          { pattern = "lsp", icon = "📡", color = "cyan" },
+          { pattern = "action", icon = "⚡", color = "yellow" },
+        },
       },
       spec = {
         {
@@ -32,8 +51,10 @@ return {
 
           { "<Leader>c", group = "code/action" },
           { "<Leader>cp", group = "peek" },
+          { "<Leader>ch", group = "hierarchy" },
+
           { "<Leader>d", group = "debug" },
-          { "<Leader>f", group = "fzflua" },
+          { "<Leader>f", group = "picker" },
 
           { "<Leader>i", group = "insert" },
           { "<Leader>j", group = "jumpTo" },
@@ -41,7 +62,6 @@ return {
 
           { "<Leader>l", group = "LSP" },
           { "<Leader>lu", group = "toggle" },
-          { "<Leader>lc", group = "hierarchy" },
 
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
@@ -95,8 +115,8 @@ return {
           { "<Localleader>n", group = "notification" },
           { "<Localleader>o", group = "open/misc" },
 
-          { "<Localleader>r", group = "refactoring" },
-          { "<Localleader>re", group = "extract" },
+          -- { "<Localleader>r", group = "refactoring" },
+          -- { "<Localleader>re", group = "extract" },
 
           { "<Localleader>s", group = "snacks" },
           { "<Localleader>w", group = "swap" },

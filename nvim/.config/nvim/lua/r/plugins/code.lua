@@ -337,24 +337,104 @@ return {
       }
     end,
   },
+  -- GITIGNORE.NVIM
+  {
+    "wintermute-cell/gitignore.nvim",
+    cmd = "Gitignore",
+    config = function()
+      require "gitignore"
+    end,
+  },
+  -- REFACTORING
+  {
+    "ThePrimeagen/refactoring.nvim",
+    cmd = "Refactor",
+    keys = {
+      { "<Leader>rr", "", desc = "refactoring" },
+      -- {
+      --   "<Leader>rF",
+      --   function()
+      --     local refactoring = require "refactoring"
+      --     local fzf_lua = require "fzf-lua"
+      --     local results = refactoring.get_refactors()
+      --
+      --     local opts = {
+      --       prompt = "  ",
+      --       winopts = {
+      --         title = RUtils.fzflua.format_title("Refactoring?", ""),
+      --         border = "rounded",
+      --         height = #results + 3,
+      --         width = 0.30,
+      --         row = 1.05,
+      --         backdrop = 100,
+      --         relative = "cursor",
+      --       },
+      --       actions = {
+      --         ["default"] = function(selected)
+      --           vim.cmd "normal! gv"
+      --           -- refactoring.refactor(selected[1])
+      --         end,
+      --       },
+      --     }
+      --     fzf_lua.fzf_exec(results, opts)
+      --   end,
+      --   mode = { "n", "x" },
+      --   desc = "Refactoring: select ref cmds [refacoring.nvim]",
+      -- },
+
+      -- Printout
+      {
+        "<Leader>rP",
+        function()
+          require("refactoring").debug.printf { below = false }
+        end,
+        desc = "Refactoring: insert print above [refactoring]",
+      },
+      {
+        "<Leader>rp",
+        function()
+          require("refactoring").debug.print_var { normal = true }
+        end,
+        desc = "Refactoring: insert print below [refactoring]",
+      },
+    },
+    opts = {
+      prompt_func_return_type = {
+        go = false,
+        java = false,
+        cpp = false,
+        c = false,
+        h = false,
+        hpp = false,
+        cxx = false,
+      },
+      prompt_func_param_type = {
+        go = false,
+        java = false,
+        cpp = false,
+        c = false,
+        h = false,
+        hpp = false,
+        cxx = false,
+      },
+      printf_statements = {},
+      print_var_statements = {},
+      show_success_message = true, -- Shows a message with information about the refactor on success
+      -- i.e. [Refactor] Unlined 3 variable occurrences
+    },
+    config = function(_, opts)
+      require("refactoring").setup(opts)
+      if RUtils.has "telescope.nvim" then
+        RUtils.on_load("telescope.nvim", function()
+          require("telescope").load_extension "refactoring"
+        end)
+      end
+    end,
+  },
   -- OVERSEER.NVIM
   {
     "stevearc/overseer.nvim", -- Task runner and job management
-    cmd = {
-      "OverseerToggle",
-      "OverseerOpen",
-      "OverseerInfo",
-      "OverseerRun",
-      "OverseerBuild",
-      "OverseerClose",
-      "OverseerLoadBundle",
-      "OverseerSaveBundle",
-      "OverseerDeleteBundle",
-      "OverseerRunCmd",
-      "OverseerQuickAction",
-      "OverseerTaskAction",
-      "OverseerDebugParser",
-    },
+    keys = { { "<Leader>rO", "<Cmd> OverseerToggle <CR>", desc = "TaskOverseer: toggle open [overseer.nvim]" } },
     opts = {
       templates = { "builtin", "user" },
       actions = {
@@ -488,171 +568,125 @@ return {
     dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
-      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
+      { "<Leader>rn", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
 
-      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [Rmux]" },
-      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [Rmux]", mode = { "x" } },
+      { "<Leader>rv", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [Rmux]" },
+      { "<Leader>rv", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [Rmux]", mode = { "x" } },
+
       { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [Rmux]" },
       { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [Rmux]" },
 
-      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors [Rmux]" },
-
       { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [Rmux]" },
-      { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane [Rmux]" },
 
       { "<a-R>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: open single find err [Rmux]" },
 
-      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config [Rmux]" },
-      { "<Leader>rE", "<Cmd> RmuxSelectFilerc <CR>", desc = "Task: select filerc [Rmux]" },
-      { "<Leader>rP", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config [Rmux]" },
+      {
+        "<Leader>rf",
+        function()
+          local task_cmds = {
+            ["Task - Run task with Rmux"] = function()
+              vim.cmd "RmuxRunFile"
+            end,
+            ["Task - Send interrupt"] = function()
+              vim.cmd "RmuxSendInterrupt"
+            end,
+            ["Task - Send interrupt all"] = function()
+              vim.cmd "RmuxSendInterruptAll"
+            end,
+            ["Task - Grep error (task running required)"] = function()
+              vim.cmd "RmuxGrepErr"
+            end,
+            ["Task - Kill all panes"] = function()
+              vim.cmd "RmuxKillAllPanes"
+            end,
+            ["Task - Select target pane"] = function()
+              vim.cmd "RmuxKillAllPanes"
+            end,
+            ["Task - Edit config tasks.json"] = function()
+              vim.cmd "RmuxEDITConfig"
+            end,
+            ["Task - Select filerc"] = function()
+              vim.cmd "RmuxSelectFilerc"
+            end,
+            ["Task - Printout / Show configs"] = function()
+              vim.cmd "RmuxSelectFilerc"
+            end,
+
+            ["TaskOverseer - Open overseer window toggle"] = function()
+              vim.cmd "OverseerToggle"
+            end,
+            ["TaskOverseer - Run task with Overseer"] = function()
+              vim.cmd "OverseerRun"
+            end,
+            ["TaskOverseer - Run open shell"] = function()
+              vim.cmd "OverseerShell"
+            end,
+
+            ["Gitignore - Run generate gitignore"] = function()
+              vim.cmd "Gitignore"
+            end,
+
+            -- Refactoring
+            -- ["Refactoring - Inline variable"] = function()
+            --   require("refactoring").refactor "Inline Variable"
+            -- end,
+            ["Refactoring - Extract"] = function()
+              vim.cmd "Refactor extract"
+            end,
+            -- ["Refactoring - Extract variable"] = function()
+            --   require("refactoring").refactor "Extract Variable"
+            -- end,
+            ["Refactoring - Extract entire block"] = function()
+              vim.cmd "Refactor extract_block"
+            end,
+            ["Refactoring - Extract function to a file"] = function()
+              vim.cmd "Refactor extract_block_to_file"
+            end,
+            ["Refactoring - Clean all debug print string"] = function()
+              require("refactoring").debug.cleanup {}
+            end,
+          }
+
+          if vim.bo.filetype == "python" then
+            task_cmds["Pyrola - Open / Start init"] = function()
+              vim.cmd "Pyrola init"
+            end
+
+            task_cmds["Pyrola - Inspector under cursor"] = function()
+              require("pyrola").inspect()
+            end
+
+            task_cmds["Pyrola - Send entire buffer to REPL"] = function()
+              require("pyrola").send_buffer_to_repl()
+            end
+
+            task_cmds["Pyrola - History image viewer"] = function()
+              require("pyrola").open_history_manager()
+            end
+
+            task_cmds["Pyrola - Send semantic code block"] = function()
+              require("pyrola").send_statement_definition()
+            end
+          end
+
+          if vim.bo.filetype == "yaml.ansible" then
+            task_cmds["Ansible - Run task with Nvim.ansible"] = function()
+              require("ansible").run()
+            end
+          end
+
+          table.sort(task_cmds)
+
+          RUtils.fzflua.open_cmd_bulk_dock(task_cmds, { winopts = { title = RUtils.config.icons.misc.bug .. " Task" } })
+        end,
+        desc = "Bulk: tasks cmds",
+        mode = { "n", "x", "v" },
+      },
     },
     opts = {
       rmuxdirrc = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
       setnotif = false,
     },
-  },
-  -- REFACTORING
-  {
-    "ThePrimeagen/refactoring.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    keys = {
-      {
-        "<Localleader>rf",
-        function()
-          local refactoring = require "refactoring"
-          local fzf_lua = require "fzf-lua"
-          local results = refactoring.get_refactors()
-
-          local opts = {
-            prompt = "  ",
-            winopts = {
-              title = RUtils.fzflua.format_title("Refactoring?", ""),
-              border = "rounded",
-              height = #results + 3,
-              width = 0.30,
-              row = 1.05,
-              backdrop = 100,
-              relative = "cursor",
-            },
-            actions = {
-              ["default"] = function(selected)
-                refactoring.refactor(selected[1])
-              end,
-            },
-          }
-          fzf_lua.fzf_exec(results, opts)
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring: select or pick [refactoring]",
-      },
-
-      -- Extract
-      {
-        "<Localleader>rei",
-        function()
-          return require("refactoring").refactor "Inline Variable"
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring: inline variable [refactoring]",
-        expr = true,
-      },
-      {
-        "<Localleader>reb",
-        function()
-          return require("refactoring").refactor "Extract Block"
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring: extract block [refactoring]",
-        expr = true,
-      },
-      {
-        "<Localleader>ref",
-        function()
-          return require("refactoring").refactor "Extract Function"
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring:: extract function [refactoring]",
-        expr = true,
-      },
-      {
-        "<Localleader>rev",
-        function()
-          return require("refactoring").refactor "Extract Variable"
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring:: extract variable [refactoring]",
-        expr = true,
-      },
-      {
-        "<Localleader>reF",
-        function()
-          return require("refactoring").refactor "Extract Function To File"
-        end,
-        mode = { "n", "x" },
-        desc = "Refactoring:: extract function to file [refactoring]",
-        expr = true,
-      },
-
-      -- Printout
-      {
-        "<Localleader>rP",
-        function()
-          require("refactoring").debug.printf { below = false }
-        end,
-        desc = "Refactoring: debug print [refactoring]",
-      },
-      {
-        "<Localleader>rp",
-        function()
-          require("refactoring").debug.print_var { normal = true }
-        end,
-        desc = "Refactoring: debug print variable [refactoring]",
-      },
-
-      {
-        "<Localleader>rC",
-        function()
-          require("refactoring").debug.cleanup {}
-        end,
-        desc = "Refactoring: debug cleanup [refactoring]",
-      },
-    },
-    opts = {
-      prompt_func_return_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-      },
-      prompt_func_param_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-      },
-      printf_statements = {},
-      print_var_statements = {},
-      show_success_message = true, -- Shows a message with information about the refactor on success
-      -- i.e. [Refactor] Unlined 3 variable occurrences
-    },
-    config = function(_, opts)
-      require("refactoring").setup(opts)
-      if RUtils.has "telescope.nvim" then
-        RUtils.on_load("telescope.nvim", function()
-          require("telescope").load_extension "refactoring"
-        end)
-      end
-    end,
   },
   -- MARKER-GROUPS (disabled)
   {
@@ -697,21 +731,6 @@ return {
           },
         },
       }
-    end,
-  },
-  -- GITIGNORE.NVIM
-  {
-    "wintermute-cell/gitignore.nvim",
-    ft = "gitignore",
-    keys = {
-      {
-        "<Leader>rG",
-        "<CMD>Gitignore<CR>",
-        desc = "Task: select gitignore generate",
-      },
-    },
-    config = function()
-      require "gitignore"
     end,
   },
 }

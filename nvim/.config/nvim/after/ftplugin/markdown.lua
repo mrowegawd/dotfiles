@@ -20,7 +20,7 @@ local command_markdown = {
   ImgInsert = { cmd = "ImgInsert" },
 }
 
-keymap.set("n", "<Leader>rf", function()
+keymap.set("n", "<Leader>rn", function()
   local opts = {
     winopts = {
       border = RUtils.config.icons.border.rectangle,

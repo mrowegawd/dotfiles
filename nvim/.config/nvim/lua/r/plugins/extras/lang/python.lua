@@ -33,22 +33,6 @@ return {
               logLevel = "error",
             },
           },
-          keys = {
-            {
-              "<Leader>cli",
-              RUtils.lsp.action["source.organizeImports"],
-              desc = "ActionLSP: organize imports [ruff]",
-            },
-          },
-        },
-        ruff_lsp = {
-          keys = {
-            {
-              "<Leader>cli",
-              RUtils.lsp.action["source.organizeImports"],
-              desc = "ActionLSP: organize imports [ruff_lsp]",
-            },
-          },
         },
       },
       setup = {
@@ -121,15 +105,6 @@ return {
   {
     "benomahony/uv.nvim",
     ft = "python",
-    keys = {
-      { "<Leader>cl", "", desc = "+ActionLSP" },
-      {
-        "<Leader>clv",
-        "<cmd>lua require('uv').pick_uv_commands()<CR>",
-        desc = "ActionLSP: select command [uv.nvim]",
-        ft = "python",
-      },
-    },
     opts = { keymaps = false }, -- Keymaps to register (set to false to disable)
   },
   {
@@ -220,6 +195,37 @@ return {
   {
     "matarina/pyrola.nvim",
     build = ":UpdateRemotePlugins",
+    ft = "python",
+    keys = {
+      { "<Leader>rm", "", desc = "pyrola", ft = { "python" } },
+
+      {
+        "<Leader>rmv",
+        function()
+          require("pyrola").send_statement_definition()
+        end,
+        desc = "Pyrola: send line [pyrola.nvim]",
+        ft = "python",
+      },
+      {
+        "<Leader>rmv",
+        function()
+          require("pyrola").send_visual_to_repl()
+        end,
+        desc = "Pyrola: send line (visual) [pyrola.nvim]",
+        mode = { "x" },
+        ft = "python",
+      },
+      {
+        "<Leader>rmB",
+        function()
+          require("pyrola").send_buffer_to_repl()
+        end,
+        desc = "Pyrola: send entire buffer [pyrola.nvim]",
+        mode = { "x", "n" },
+        ft = "python",
+      },
+    },
     config = function()
       local pyrola = require "pyrola"
 
@@ -239,33 +245,6 @@ return {
           offset_col = 0, -- adjust image col position (cells)
         },
       }
-
-      -- Default key mappings (adjust to taste)
-
-      -- Send semantic code block under cursor
-      vim.keymap.set("n", "<CR>", function()
-        pyrola.send_statement_definition()
-      end, { noremap = true })
-
-      -- Send visual selection
-      vim.keymap.set("v", "<leader>vs", function()
-        pyrola.send_visual_to_repl()
-      end, { noremap = true })
-
-      -- Send entire buffer
-      vim.keymap.set("n", "<leader>vb", function()
-        pyrola.send_buffer_to_repl()
-      end, { noremap = true })
-
-      -- Inspect variable under cursor
-      vim.keymap.set("n", "<leader>is", function()
-        pyrola.inspect()
-      end, { noremap = true })
-
-      -- Open history image viewer
-      vim.keymap.set("n", "<leader>im", function()
-        pyrola.open_history_manager()
-      end, { noremap = true })
     end,
   },
 }

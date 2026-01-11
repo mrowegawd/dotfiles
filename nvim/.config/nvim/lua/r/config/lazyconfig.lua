@@ -37,7 +37,8 @@ require("lazy").setup {
   },
   change_detection = { notify = false },
   ui = { border = "rounded", backdrop = 100 },
-  checker = { enabled = true, notify = false }, --   automatically check for plugin updates
+  -- Dikarenakan lagi check nvim slow, maka `checker` di disable dahulu
+  checker = { enabled = false, notify = false }, --   automatically check for plugin updates
   performance = {
     rtp = {
       -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field

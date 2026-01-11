@@ -7,7 +7,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 
-keymap.set("n", "<Leader>rf", function()
+keymap.set("n", "<Leader>rn", function()
   local opts = {
     winopts = {
       fullscreen = false,

@@ -1107,47 +1107,68 @@ return {
                     ["Run TSC"] = function()
                       vim.cmd [[TSC]]
                     end,
-                    ["LSP - Organizer Imports"] = function()
+                    ["TypescriptLSP - Organizer Imports"] = function()
                       vim.cmd [[TSToolsOrganizeImports]]
                     end,
-                    ["LSP - Short Imports"] = function()
+                    ["TypescriptLSP - Short Imports"] = function()
                       vim.cmd [[TSToolsSortImports]]
                     end,
-                    ["LSP - Remove Unused imports"] = function()
+                    ["TypescriptLSP - Remove Unused imports"] = function()
                       vim.cmd [[TSToolsRemoveUnusedImports]]
+                    end,
+                    ["TypescriptLSP - Check missing imports"] = function()
+                      vim.cmd [[TSToolsAddMissingImports]]
                     end,
                     ["Eslint - Fix all"] = function()
                       vim.cmd [[TSToolsFixAll]]
-                    end,
-                    ["LSP - Check missing imports"] = function()
-                      vim.cmd [[TSToolsAddMissingImports]]
                     end,
                   })
                 end
 
                 if check_current_ft { "go" } then
                   table.insert(lang_lsp_cmds, {
-                    ["Run Gomod"] = function()
+                    ["LSP - Run Gomod"] = function()
                       vim.cmd [[GoGenerate %]]
                     end,
-                    ["Run go tidy"] = function()
+                    ["LSP - Run go tidy"] = function()
                       vim.cmd [[GoMod tidy]]
                     end,
                   })
                 end
 
+                if check_current_ft { "python" } then
+                  table.insert(lang_lsp_cmds, {
+                    ["PythonLSP - Run organize imports"] = function()
+                      RUtils.lsp.action["source.organizeImports"]()
+                    end,
+                    ["Virtualenv - List cmds from uv.nvim"] = function()
+                      require("uv").pick_uv_commands()
+                    end,
+                  })
+                end
+
                 local lsp_cmds = vim.tbl_deep_extend("force", {
-                  ["LazyFormatInfo - Show format info"] = function()
+                  ["Lazy - Show format info"] = function()
                     vim.cmd [[LazyFormatInfo]]
                   end,
-                  ["LSPInfo - Show LSP Info"] = function()
+                  ["LSP - Open Mason"] = function()
+                    vim.cmd [[Mason]]
+                  end,
+                  ["LSP - Show LSP Info (LspInfo)"] = function()
                     vim.cmd [[LspInfo]]
                   end,
-                  ["LSPLog - Show LSP Log"] = function()
+                  ["LSP - Show LSP Log (LspLog)"] = function()
                     vim.cmd [[LspLog]]
                   end,
-                  ["LSPDisabled - Disable LSP Client"] = function()
+                  ["LSP - Disable LSP Client"] = function()
                     vim.cmd [[lsp stop]]
+                  end,
+                  ["LSP - Show LSP's configs"] = function()
+                    Snacks.picker.lsp_config()
+                  end,
+
+                  ["Diagnostics - Disable diagnostics"] = function()
+                    Snacks.toggle.diagnostics()
                   end,
                   ["Diagnostics - Toggle virtual_lines"] = function()
                     local new_value = not vim.diagnostic.config().virtual_lines
@@ -1158,7 +1179,12 @@ return {
                   end,
                 }, unpack(lang_lsp_cmds) or {})
 
-                RUtils.fzflua.open_cmd_bulk(lsp_cmds, { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } })
+                table.sort(lsp_cmds)
+
+                RUtils.fzflua.open_cmd_bulk_dock(
+                  lsp_cmds,
+                  { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } }
+                )
               end,
               desc = "Bulk: LSP cmds",
             },

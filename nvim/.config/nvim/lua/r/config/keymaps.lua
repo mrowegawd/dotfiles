@@ -178,7 +178,6 @@ local function jump_back_to_back_windows()
   end
 end
 
-RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to side panel" })
 RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to side panel" })
 
 if not RUtils.has "smart-splits.nvim" then
@@ -636,7 +635,6 @@ Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 -- Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
 Snacks.toggle.zoom():map "<a-m>"
 Snacks.toggle.zen():map "<Leader>uz"
-Snacks.toggle.diagnostics():map "<Leader>lud"
 Snacks.toggle.treesitter():map "<Leader>us"
 -- Snacks.toggle.scroll():map "<Leader>uS"
 -- Snacks.toggle.animate():map "<Leader>ua"
