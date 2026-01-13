@@ -974,6 +974,14 @@ return {
       --   ":ObsidianToday<CR>",
       --   desc = "Note: add note today [obsidian]",
       -- },
+      {
+        "<Leader>mo",
+        function()
+          RUtils.cmd.open_with "go to file"
+        end,
+        desc = "Note: follow link [obsidian]",
+        ft = "markdown",
+      },
       -- {
       --   "<Leader>nd",
       --   "<CMD>ObsidianDailies<CR>",

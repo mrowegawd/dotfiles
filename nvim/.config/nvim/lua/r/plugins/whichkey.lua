@@ -26,6 +26,8 @@ return {
         rules = {
           { plugin = "fzf-lua", icon = "💊", name = "fzf" },
           { plugin = "orgmode", cat = "filetype", icon = "📓", name = "org" },
+          { plugin = "diffview", cat = "filetype", icon = " ", name = "diffview" },
+
           -- { plugin = "overseer.nvim", "󰜎", color = "red" },
           { pattern = "note", icon = "📓" },
           { plugin = "todo-comments.nvim", cat = "filetype", name = "TODO" },
@@ -37,6 +39,7 @@ return {
           { pattern = "open", icon = "󰏌", color = "magenta" },
           { pattern = "lsp", icon = "📡", color = "cyan" },
           { pattern = "action", icon = "⚡", color = "yellow" },
+          { pattern = "git", icon = " ", color = "orange" },
         },
       },
       spec = {

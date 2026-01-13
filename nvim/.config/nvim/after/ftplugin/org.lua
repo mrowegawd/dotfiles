@@ -2,6 +2,7 @@ local keymap = vim.keymap
 local opt = vim.opt_local
 
 opt.textwidth = 60
+opt.list = false
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 

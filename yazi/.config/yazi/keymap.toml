@@ -25,7 +25,7 @@ prepend_keymap = [
     "<c-t>",
   ], run = "plugin smart-enter -- tab", desc = "Open tab the selected item" },
   { on = [
-    "<c-o>",
+    "<a-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },
   { on = [
     "O",

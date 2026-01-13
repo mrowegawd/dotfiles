@@ -235,6 +235,7 @@ return {
       -- Git
       { "<c-c>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
       { "<c-c>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<c-c>gd", "<CMD>DFile<CR>", desc = "Git: check diff [fzflua]" },
       { "<c-c>gl", function() require("fzf-lua").git_bcommits() end, desc = "Git: commit buffer [fzflua]" },
       { "<c-c>gL", function() require("fzf-lua").git_commits() end, desc = "Git: commit repo [fzflua]" },
       { "<c-c>gf", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },

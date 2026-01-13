@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- INTENT
+  {
+    "GasimGasimzada/intent.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local intent_themes = { "intent" }
+      if vim.tbl_contains(intent_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NIGHTFOX
   {
     "EdenEast/nightfox.nvim",

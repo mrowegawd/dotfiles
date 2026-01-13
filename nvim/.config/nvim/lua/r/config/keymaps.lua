@@ -65,12 +65,12 @@ end, { desc = "Fold: close all" })
 RUtils.map.nnoremap("zb", function()
   RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle fold level (util)" })
-RUtils.map.nnoremap("zo", function()
-  RUtils.map.wrap_fold_cmd "normal! zO"
-end, { desc = "Fold: open folds recursively" })
-RUtils.map.nnoremap("zO", function()
-  RUtils.map.wrap_fold_cmd "normal! zR"
-end, { desc = "Fold: open all" })
+-- RUtils.map.nnoremap("zo", function()
+--   RUtils.map.wrap_fold_cmd "normal! zO"
+-- end, { desc = "Fold: open folds recursively" })
+-- RUtils.map.nnoremap("zO", function()
+--   RUtils.map.wrap_fold_cmd "normal! zmzO"
+-- end, { desc = "Fold: open all current" })
 
 -- Navigate magic fold
 RUtils.map.nnoremap("<a-n>", function()
@@ -703,6 +703,55 @@ end, {
 vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", {
   desc = "Show LSP info",
 })
+
+vim.api.nvim_create_user_command("DFile", function()
+  local has_fzf, fzf = pcall(require, "fzf-lua")
+
+  if has_fzf then
+    -- Get current file path relative to git root
+    local current_file = vim.fn.expand "%:p"
+    local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+    local relative_path = current_file:sub(#git_root + 2) -- +2 to account for trailing slash
+
+    -- Use fzf-lua for commit selection
+    fzf.git_commits {
+      prompt = "Select commit> ",
+      cmd = string.format("git log --oneline --decorate --color=always %s", vim.fn.shellescape(relative_path)),
+      actions = {
+        ["alt-u"] = function(selected)
+          if selected and selected[1] then
+            -- Extract commit hash from the first word of the selected line
+            local commit_hash = selected[1]:match "^([^ ]+)"
+            if commit_hash then
+              vim.cmd(
+                string.format("DiffviewOpen %s^ -- %s", commit_hash, current_file, vim.fn.shellescape(relative_path))
+              )
+            end
+          end
+        end,
+        ["default"] = function(selected)
+          if selected and selected[1] then
+            -- Extract commit hash from the first word of the selected line
+            local commit_hash = selected[1]:match "^([^ ]+)"
+            if commit_hash then
+              vim.cmd(
+                string.format("DiffviewOpen %s^ -- %s", commit_hash, current_file, vim.fn.shellescape(relative_path))
+              )
+            end
+          end
+        end,
+      },
+      winopts = {
+        preview = { horizontal = "right:70%" }, -- right|left:size
+        title = "Changes of file against Commits - Selecting end change on right",
+      },
+      preview_pager = string.format(
+        "git diff {1}^..{1} -- %s | delta --features=commit-hashes --commit-style=box --side-by-side --width ${FZF_PREVIEW_COLUMNS-$COLUMNS}",
+        vim.fn.shellescape(relative_path)
+      ),
+    }
+  end
+end, {})
 
 -- vim.api.nvim_create_user_command("Cfilter", function(opts)
 --   vim.cmd.packadd "cfilter"

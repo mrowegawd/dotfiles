@@ -1557,7 +1557,7 @@ M.status_active_left = {
 
   M.Gap,
 
-  M.LazyStatus,
+  -- M.LazyStatus,
   M.Dap,
   M.Diagnostics,
   M.LSPActive,

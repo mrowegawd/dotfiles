@@ -363,7 +363,7 @@ local function save_cursorline_hl()
       more_bright = 1
     end
 
-    if vim.tbl_contains({ "rose-pine", "neogotham", "kanagawa" }, vim.g.colorscheme) then
+    if vim.tbl_contains({ "rose-pine", "neogotham", "kanagawa", "intent" }, vim.g.colorscheme) then
       more_bright = 1.3
     end
 

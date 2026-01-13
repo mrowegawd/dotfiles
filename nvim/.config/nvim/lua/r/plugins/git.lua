@@ -1026,7 +1026,7 @@ return {
         function()
           vim.cmd "VscodeDiff"
         end,
-        desc = "Git: open CodeDiff [vscode-diff]",
+        desc = "Git: CodeDiff [vscode-diff]",
         mode = { "n", "x" },
       },
     },

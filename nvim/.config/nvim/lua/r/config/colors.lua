@@ -56,7 +56,7 @@ local base_colors = {
   statusline_right_block_bg = 0.3,
   statusline_right_block_fg = 1,
   tabline_bg_alter = 0.3,
-  tabline_fg_alter = 1.2,
+  tabline_fg_alter = 0.5,
   trouble_indent_fg_alter = 0.55,
   visual_bg_alter = 0.3,
   winbar_fg_alter = 3,
@@ -160,6 +160,40 @@ local update_col_colorscheme = {
 
     zshlines_fg_alter = 3.2,
     zshlines_bg_alter = 10,
+  },
+  ["intent"] = {
+    blink_ghost_text_fg_alter = -0.55,
+    cmpdocnormal_bg_alter = 3,
+    floatborder_fg_alter = 0.4,
+    fold_fg = 0.1,
+    linenr_fg_alter = 0.5,
+    cursorlinenr_bg_alter = 0.2,
+    lsp_code_lens_bg_alter = 0.65,
+    lsp_code_lens_fg_alter = 3.5,
+    normal_keyword_alter = 0.15,
+    quickfixline_linenr_fg_alter = 1.5,
+    quickfixline_sp_alter = 1.5,
+    quickfixwinbar_bg_alter = 0.5,
+    quickfixwinbar_fg_alter = 3,
+    statusline_fg_alter = 4.5,
+    winbar_fg_alter = 5,
+    tabline_fg_alter = 0.65,
+    winbar_right_block_fg_alter = -0.1,
+    winseparator_alter = 0.5,
+
+    comment_note_fg_alter = 0.7,
+    fold_note_fg_alter = 0.05,
+    linenr_note_fg_alter = 0.5,
+    nontext_note_fg_alter = 0.8,
+    floatborder_note_fg_alter = 0.3,
+    normal_note_bg_alter = 4,
+    urllink_note_bg_alter = 0.4,
+    urllink_note_fg_alter = -0.1,
+    winbar_note_bg_alter = 0.2,
+    winbar_note_fg_alter = 0.3,
+
+    zshlines_fg_alter = 1.5,
+    zshlines_bg_alter = 3,
   },
   ["darcubox"] = {
     comment_fg_alter = 1,
@@ -1226,7 +1260,7 @@ local general_overrides = function()
 
     {
       TabLine = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+        fg = { from = "LineNr", attr = "fg", alter = colors.tabline_fg_alter },
         bg = { from = "StatusLine", attr = "bg", alter = colors.tabline_bg_alter },
         reverse = false,
       },
