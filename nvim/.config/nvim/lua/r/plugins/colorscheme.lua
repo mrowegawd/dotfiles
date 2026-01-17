@@ -120,24 +120,41 @@ return {
       return false
     end,
   },
-  -- GRUVBOX
+  -- GRUVBOX.NVIM
   {
-    "ellisonleao/gruvbox.nvim",
+    "https://gitlab.com/motaz-shokry/gruvbox.nvim",
+    name = "gruvbox",
+    lazy = false,
     priority = 1000,
-    config = true,
     enabled = function()
-      local gruvbox_themes = { "gruvbox" }
-      if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
+      local gruvboxnvim_themes = { "gruvbox" }
+      if vim.tbl_contains(gruvboxnvim_themes, vim.g.colorscheme) then
         return true
       end
       return false
     end,
     opts = {
-      overrides = {
-        Normal = { bg = "#101010" },
-      },
+      variant = "hard", -- auto, hard, medium, soft, light
     },
   },
+  -- GRUVBOX
+  -- {
+  --   "ellisonleao/gruvbox.nvim",
+  --   priority = 1000,
+  --   config = true,
+  --   enabled = function()
+  --     local gruvbox_themes = { "gruvbox" }
+  --     if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
+  --       return true
+  --     end
+  --     return false
+  --   end,
+  --   opts = {
+  --     overrides = {
+  --       Normal = { bg = "#101010" },
+  --     },
+  --   },
+  -- },
   -- ZENBURN
   {
     "phha/zenburn.nvim",

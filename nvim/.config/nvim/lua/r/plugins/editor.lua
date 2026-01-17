@@ -375,7 +375,35 @@ return {
       },
       search = {
         command = "rg",
-        pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
+        -- pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
+        search = {
+          pattern = [[(?:\/\/|--(\[\[)?|\*|#\|?|%\{?|;|\{-)[\t ]*(?:(KEYWORDS):)]],
+          -- https://www.reddit.com/r/neovim/comments/1qdhr3s/todocommentsnvim_reducing_amount_of_false/
+          --[[
+          Regex explanation:
+          1. (?:...) - non-capture group for comment tokens:
+            \/\/ - matches // , used in lots of languages
+            --(\[\[)? - matches -- and --[[ , -- used in  SQL, Haskell, Lua,
+                  Ada, AppleScript, VHDL, --[[ used in Lua multiline, also
+                  matches <!-- for HTML, XML, Markdown
+            \*   - matches various formats ( /* /** (* ), lines starting 
+                  with * in formatted multiline comments (usually
+                  after /* ), also COBOL
+            #\|? - matches # and #| - lots of languages comment with # ,
+                  ### used in CoffeeScript, #| in Racket and Common
+                  Lisp multiline
+            %\{? - matches % and %{, % used in MATLAB, Erlang, Prolog,
+                  TeX/LaTeX, also %{ used in MATLAB
+            ;    - used in Assembly, Lisp, Clojure, Scheme, INI files
+            {-   - Haskel multiline
+          2. [\t ]* - 0 or any amount of tabs and spaces
+          3. (?:(KEYWORDS):) - non-capture group with keywords placeholder ending with :
+
+          This regex does not match: Python docstrings ( """ or ''' ), Ruby
+          multiline ( =begin ), Clojure comment reader macro, Batch files,
+          Roxygen, Fortran, Visual Basic, VBScript, Basic, PostScript, J, M4
+          ]]
+        },
         args = {
           "--color=never",
           "--no-heading",

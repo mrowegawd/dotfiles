@@ -230,13 +230,13 @@ return {
       H.plugin("NeoTreeHi", {
         theme = {
           ["*"] = {
-            { Directory = { link = "Directory" } },
-            { NeoTreeNormal = { link = "PanelSideBackground" } },
-            { NeoTreeNormalNC = { link = "PanelSideBackground" } },
-            { NeoTreeCursorLine = { link = "HoveredCursorline" } },
-            { NeoTreeRootName = { link = "PanelSideRootName" } },
-            { NeoTreeStatusLine = { link = "PanelSideStusLine" } },
-            { NeoTreeWinSeparator = { link = "PanelSideWinSeparator" } },
+            { Directory = { inherit = "Directory" } },
+            { NeoTreeNormal = { inherit = "PanelSideBackground" } },
+            { NeoTreeNormalNC = { inherit = "PanelSideBackground" } },
+            { NeoTreeCursorLine = { inherit = "HoveredCursorline" } },
+            { NeoTreeRootName = { inherit = "PanelSideRootName" } },
+            { NeoTreeStatusLine = { inherit = "PanelSideStusLine" } },
+            { NeoTreeWinSeparator = { inherit = "PanelSideWinSeparator" } },
             {
               NeoTreeTabActive = {
                 fg = { from = "Keyword", attr = "fg" },
@@ -255,8 +255,8 @@ return {
             { NeoTreeIndentMarker = { fg = { from = "OutlineGuides", attr = "fg" }, bold = false } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelSideNormal", fg = { from = "Comment" } } },
 
-            { NeoTreeGitAdded = { link = "GitSignsAdd" } },
-            { NeoTreeGitModified = { link = "GitSignsChange" } },
+            { NeoTreeGitAdded = { inherit = "GitSignsAdd" } },
+            { NeoTreeGitModified = { inherit = "GitSignsChange" } },
             {
               NeoTreeTabSeparatorInactive = {
                 inherit = "NeoTreeTabInactive",

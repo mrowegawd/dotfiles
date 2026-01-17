@@ -240,7 +240,7 @@ return {
       -- { "<Leader>sC", function() Snacks.picker.commands() end, desc = "Snackspicker: commands", },
       -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
       -- { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
-      -- -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
+      -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
       {
         "<Leader>ii",
         function()

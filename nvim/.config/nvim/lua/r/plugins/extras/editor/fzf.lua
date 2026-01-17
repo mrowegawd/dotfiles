@@ -58,7 +58,6 @@ return {
               },
             },
           },
-          colors = { RgFlowInputPattern = { link = "GitSignsAdd", bold = true } },
         },
       },
     },

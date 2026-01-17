@@ -155,17 +155,17 @@ timeout_millis = 5000
 # Theme Configuration
 # Theme Configuration - Elegant & Readable
 [theme.color_palette]
-background = "#101010"
-foreground = "#cd5f59"
-muted = "#1c1c1c"
-highlight = "#ffff60"
-accent_primary = "#fd9bc1"
-accent_secondary = "#cd5f59"
-accent_tertiary = "#fe9d6e"
-accent_quaternary = "#c1d041"
-info = "#cd5f59"
-warning = "#eecf75"
-error = "#ea6926"
+background = "#24283b"
+foreground = "#7aa2f7"
+muted = "#39405d"
+highlight = "#ffff06"
+accent_primary = "#bb9af7"
+accent_secondary = "#7aa2f7"
+accent_tertiary = "#7dcfff"
+accent_quaternary = "#9ece6a"
+info = "#7aa2f7"
+warning = "#e0af68"
+error = "#7dcfff"
 
 [theme.style_set]
 header = { fg = "accent_primary", bg = "background" }

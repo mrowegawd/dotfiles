@@ -337,23 +337,31 @@ local function insert_tag_org()
 end
 
 ---@param is_global boolean?
+local function insert_local_title(is_global)
+  is_global = is_global or false
+
+  RUtils.info "asdf"
+end
+
+---@param is_global boolean?
 local function jump_to_heading(is_global)
   is_global = is_global or false
 
   local fnames = __define_tbl_paths()
 
   RUtils.info(vim.inspect(fnames))
+  local regex_title_org = [[^\*{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
 
   Fzflua = setup_fzflua()
-  Fzflua.grep {
+  Fzflua.live_grep {
     prompt = RUtils.fzflua.padding_prompt(),
-    cwd = RUtils.config.path.wiki_path,
-    -- search = is_markdown_file(filename) and regex_title or regex_title_org,
+    -- cwd = RUtils.config.path.wiki_path,
+    search = regex_title_org,
     rg_glob = false,
     no_esc = true,
     -- file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
-    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.md$" },
     -- winopts = {
     --   title = format_prompt_strings "Jump Global Title",
     --   fullscreen = false,
@@ -408,10 +416,10 @@ local get_cmds = {
       live_grep_org()
     end,
     insert_title_curbuf = function()
-      not_implement()
+      insert_local_title()
     end,
     insert_title_global = function()
-      not_implement()
+      insert_local_title(true)
     end,
     insert_tags = function()
       insert_tag_org()

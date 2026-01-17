@@ -1,4 +1,9 @@
 return {
+  -- CALENDAR.NVIM
+  {
+    "wsdjeg/calendar.nvim",
+    cmd = "Calendar",
+  },
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",

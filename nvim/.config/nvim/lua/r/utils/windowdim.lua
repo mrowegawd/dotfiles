@@ -384,7 +384,7 @@ local function save_cursorline_hl()
     end
 
     if vim.g.colorscheme == "gruvbox" then
-      more_bright = 1.5
+      more_bright = 0.5
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)

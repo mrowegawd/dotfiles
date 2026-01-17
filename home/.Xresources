@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/jellybeans"
+#include ".config/miscxrdb/xresource-theme/tokyonight-storm"
 
 ! --------------
 ! XFT SETTINGS
