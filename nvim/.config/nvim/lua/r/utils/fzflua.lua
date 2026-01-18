@@ -76,6 +76,7 @@ local __lastIndexOf = function(haystack, needle)
   end
 end
 
+---@return string
 local __stripBeforeLastOccurrenceOf = function(str, sep)
   local idx = __lastIndexOf(str, sep) or 0
   return str:sub(idx + 1), idx
@@ -553,6 +554,7 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
   end
 end
 
+---@return string|nil
 function M.__strip_str(selected)
   local pth = M.strip_ansi_coloring(selected)
   if pth == nil then

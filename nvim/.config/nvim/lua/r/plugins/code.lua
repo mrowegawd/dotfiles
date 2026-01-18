@@ -350,7 +350,7 @@ return {
     "ThePrimeagen/refactoring.nvim",
     cmd = "Refactor",
     keys = {
-      { "<Leader>rr", "", desc = "refactoring" },
+      -- { "<Leader>rr", "", desc = "refactoring" },
       -- {
       --   "<Leader>rF",
       --   function()

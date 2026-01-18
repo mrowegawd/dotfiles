@@ -154,7 +154,6 @@ return {
       -- })
     end,
   },
-  -- OIL-GIT.NVIM
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",

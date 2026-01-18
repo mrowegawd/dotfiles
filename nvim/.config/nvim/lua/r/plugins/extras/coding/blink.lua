@@ -292,10 +292,23 @@ return {
           cmdline = {
             -- Taken from
             -- https://cmp.saghen.dev/recipes#disable-completion-in-only-shell-command-mode
-            --
-            -- ignores cmdline completions when executing shell commands
             enabled = function()
-              return vim.fn.getcmdtype() ~= ":" or not vim.fn.getcmdline():match "^[%%0-9,'<>%-]*!"
+              local cmdtype = vim.fn.getcmdtype()
+              local cmdline = vim.fn.getcmdline()
+
+              -- Existing: ignore cmdline completions when executing shell commands
+              if cmdtype ~= ":" or cmdline:match "^[%%0-9,'<>%-]*!" then
+                return false
+              end
+
+              -- New: check for absolute paths starting from root
+              local path_match = cmdline:match "%s(/[^%s]*)"
+              if path_match then
+                local slash_count = select(2, path_match:gsub("/", ""))
+                return slash_count >= 6 -- Only enable completion 6 levels down
+              end
+
+              return true
             end,
           },
           lsp = {

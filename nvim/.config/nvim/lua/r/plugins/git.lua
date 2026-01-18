@@ -12,15 +12,16 @@ local normal_themes = {
   "base46-kanagawa",
   "base46-material-darker",
   "darcubox",
+  "jellybeans",
+  "kanagawa",
   "lackluster",
   "neogotham",
+  "nordfox",
   "rose-pine",
   "rose-pine-moon",
   "tokyonight-storm",
-  -- "vscode_modern",
   "y9nika",
-  "kanagawa",
-  -- "vscode",
+  -- "vscode_modern",
 }
 
 if vim.tbl_contains(normal_themes, vim.g.colorscheme) then
@@ -1046,7 +1047,12 @@ return {
           select = "<CR>",
           hover = "K",
           refresh = "R",
-          toggle_view_mode = "i", -- Toggle between 'list' and 'tree' views
+          toggle_view_mode = "i",
+
+          toggle_stage = "s",
+          stage_all = "S",
+          unstage_all = "U",
+          restore = "X",
         },
         conflict = {
           accept_incoming = "<Leader>mci", -- Accept incoming (theirs/left) change

@@ -348,7 +348,7 @@ local function save_cursorline_hl()
     end
 
     if vim.g.colorscheme == "nordfox" then
-      more_bright = 0.35
+      more_bright = 0.3
     end
 
     if vim.tbl_contains({ "nightingale", "minimal" }, vim.g.colorscheme) then

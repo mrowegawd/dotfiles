@@ -10,10 +10,15 @@ function M.neorg_mappings_ft(bufnr)
     ["n"] = {
       ["<Leader>mfl"] = {
         function()
-          RUtils.markdown.find_local_sitelink()
-          vim.cmd "normal! zRzz"
+          RUtils.notes.find_local_url_and_backlinks()
         end,
-        "Note: find http link on curbuf",
+        "Note: find local URL and backlinks",
+      },
+      ["<Leader>mfL"] = {
+        function()
+          RUtils.notes.find_global_url_and_backlinks()
+        end,
+        "Note: find global URL and backlinks",
       },
       ["<Leader>fT"] = {
         function()
@@ -46,15 +51,15 @@ function M.neorg_mappings_ft(bufnr)
       },
       ["<Leader>lr"] = {
         function()
-          RUtils.markdown.find_backlinks()
+          RUtils.notes.find_backlinks()
         end,
-        "Note: find backlinks (like references)",
+        "Note: find backlinks (alternative)",
       },
       ["<Leader>mfb"] = {
         function()
-          RUtils.markdown.find_backlinks()
+          RUtils.notes.find_backlinks()
         end,
-        "Note: find backlinks (like references)",
+        "Note: find backlinks",
       },
       ["<Leader>lv"] = {
         function()
@@ -84,6 +89,18 @@ function M.neorg_mappings_ft(bufnr)
           RUtils.notes.insert_tag()
         end,
         "Note: insert local tag",
+      },
+      ["b<cr>"] = {
+        function()
+          RUtils.notes.add_and_insert_backlinks()
+        end,
+        "Note: insert backlinks",
+      },
+      ["B<cr>"] = {
+        function()
+          RUtils.notes.add_and_insert_backlinks()
+        end,
+        "Note: insert backlinks (alternative)",
       },
       ["t<cr>"] = {
         function()
