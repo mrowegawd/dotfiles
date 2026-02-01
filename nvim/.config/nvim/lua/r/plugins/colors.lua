@@ -1,7 +1,8 @@
 return {
-  -- NVIM-HIGHLIGHT-COLORS
+  -- NVIM-HIGHLIGHT-COLORS (disabled)
   {
     "brenoprata10/nvim-highlight-colors",
+    enabled = false,
     keys = {
       {
         "<Leader>uc",

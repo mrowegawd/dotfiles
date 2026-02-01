@@ -338,13 +338,13 @@ return {
     end,
     opts = {
       highlights = {
-        background = { bg = "#050505" },
+        background = { bg = "#1e1e1e" }, -- "#050505"
       },
       color_overrides = {
         Normal = "#FFFFFF",
       },
       group_overrides = {
-        Normal = { bg = "#050505", fg = "#d4d4d4" },
+        Normal = { bg = "#1e1e1e", fg = "#d4d4d4" },
       },
     },
   },
@@ -373,7 +373,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local tokyonight_themes = { "tokyonight-night", "tokyonight-storm" }
+      local tokyonight_themes = { "tokyonight", "tokyonight-night", "tokyonight-storm" }
       if vim.tbl_contains(tokyonight_themes, vim.g.colorscheme) then
         return true
       end

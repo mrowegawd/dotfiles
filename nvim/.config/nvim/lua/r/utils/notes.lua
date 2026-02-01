@@ -47,7 +47,9 @@ else
   icon_note = icon_orgmode
   rg_opts[#rg_opts + 1] = "--type=org"
   regex_url_backlinks = [[http|\[\[]]
-  regex_title = [[^\*{1,}\s[\w<`].*$]] -- [[^\*{1,}\s[\w<`].*$]]
+  -- regex_title = [[^\*{1,}\s[\w<`\?].*$]]
+  regex_title = [[^\*\s|^\*+\s*[\w<`\?].*$]]
+  -- regex_title = [[^\*{1,}+\s*(.*)$]]
 end
 
 ---@param title string?
@@ -596,7 +598,7 @@ function Mappicker.insert_title(filename, is_global)
       local fmt_str
 
       if not is_global then
-        fmt_str = "[[*" .. file_opts.title_str .. "]]"
+        fmt_str = "[[*" .. file_opts.title_str .. "][ " .. file_opts.title_str .. "]]"
       else
         local e = Fzflua.path.entry_to_file(selected[1])
         local target_path = e and e.path or nil
@@ -616,7 +618,7 @@ function Mappicker.insert_title(filename, is_global)
 
               if relative then
                 -- fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "]]"
-                fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "]]"
+                fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "][🔗" .. file_opts.title_str .. "]]"
               end
             end
           end
@@ -806,34 +808,34 @@ local function call_fzf_grep(is_global, target_file, opts)
 
   local fzfopts = vim.tbl_deep_extend("force", {
     prompt = RUtils.fzflua.padding_prompt(),
-    winopts = { title = get_title_note "- Backlinks / URLs" },
+    winopts = { title = get_title_note "- Notes" },
     previewer = previewer,
     rg_glob = false,
     no_esc = true,
     file_ignore_patterns = file_ignores,
     rg_opts = table.concat(clone_rg_opts, " "),
-    fzf_opts = {
-      -- ["--delimiter"] = "[:\t]",
-      --
-      ["--tabstop"] = "1",
-      -- ["--tiebreak"] = "index",
-      -- Separated by tab and ':', 1: file icon+name, 2: file path 3: line number, it is dependes on rg_opts whether column or line number is enabled or not.
-      ["--with-nth"] = "2..",
-      -- Search fileds
-      ["--nth"] = "4..",
-
-      -- ["--delimiter"] = "[\t]",
-      -- ["--tabstop"] = "1",
-      -- ["--tiebreak"] = "index",
-      -- ["--with-nth"] = "2..",
-      -- ["--nth"] = "4..",
-
-      -- ["--multi"] = true,
-      -- ["--delimiter"] = "[:\t]",
-      -- ["--with-nth"] = "2..",
-      -- ["--with-nth"] = "3..",
-      -- ["--tiebreak"] = "index",
-    },
+    -- fzf_opts = {
+    --   -- ["--delimiter"] = "[:\t]",
+    --   --
+    --   ["--tabstop"] = "1",
+    --   -- ["--tiebreak"] = "index",
+    --   -- Separated by tab and ':', 1: file icon+name, 2: file path 3: line number, it is dependes on rg_opts whether column or line number is enabled or not.
+    --   ["--with-nth"] = "2..",
+    --   -- Search fileds
+    --   ["--nth"] = "3..",
+    --
+    --   -- ["--delimiter"] = "[\t]",
+    --   -- ["--tabstop"] = "1",
+    --   -- ["--tiebreak"] = "index",
+    --   -- ["--with-nth"] = "2..",
+    --   -- ["--nth"] = "4..",
+    --
+    --   -- ["--multi"] = true,
+    --   -- ["--delimiter"] = "[:\t]",
+    --   -- ["--with-nth"] = "2..",
+    --   -- ["--with-nth"] = "3..",
+    --   -- ["--tiebreak"] = "index",
+    -- },
   }, opts)
 
   Fzflua = setup_fzflua()
@@ -853,9 +855,9 @@ local function insert_heading_title(is_global)
   local __title = "- Insert " .. title_a .. " Title"
 
   call_fzf_grep(is_global, target_file, {
-    actions = Mappicker.insert_title(target_file, is_global),
-    search = regex_title,
     winopts = { title = get_title_note(__title) },
+    search = regex_title,
+    actions = Mappicker.insert_title(target_file, is_global),
   })
 end
 
@@ -865,8 +867,9 @@ local function find_url_and_backlinks(is_global)
 
   local target_file = get_target_file(is_global)
   call_fzf_grep(is_global, target_file, {
-    actions = Mappicker.open_and_jump_to_file(target_file, is_global),
+    winopts = { title = get_title_note "- Backlinks / URLs" },
     search = regex_url_backlinks,
+    actions = Mappicker.open_and_jump_to_file(target_file, is_global),
   })
 end
 

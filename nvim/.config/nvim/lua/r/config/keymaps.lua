@@ -128,9 +128,11 @@ local arange_wins = function(direction)
       if direction == "split" then
         require("overlook.api").open_in_split()
       end
-
       if direction == "vsplit" then
         require("overlook.api").open_in_vsplit()
+      end
+      if direction == "tabe" then
+        require("overlook.api").open_in_tab()
       end
       return
     end
@@ -140,13 +142,21 @@ local arange_wins = function(direction)
       return
     end
 
+    if direction == "tabe" then
+      vim.cmd "tabedit %"
+      return
+    end
+
     vim.cmd("wincmd " .. direction)
     vim.cmd "wincmd ="
   end
 end
 
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
+RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
+
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
+RUtils.map.nnoremap("<c-w>v", arange_wins "vsplit", { desc = "Window: vsplit" })
 
 RUtils.map.nnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down" })
 RUtils.map.xnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down (visual)" })
@@ -161,6 +171,12 @@ RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right"
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right (visual)" })
 
 local function jump_back_to_back_windows()
+  local Stack = require "overlook.stack"
+  if Stack.instances[vim.api.nvim_get_current_win()] and not Stack.empty() then
+    require("overlook.api").switch_focus()
+    return
+  end
+
   local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
 
   -- Go back to the window if any windows are open
@@ -178,7 +194,8 @@ local function jump_back_to_back_windows()
   end
 end
 
-RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to side panel" })
+RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to side panel/peek" })
+RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to side panel/peek alterntive" })
 
 if not RUtils.has "smart-splits.nvim" then
   -- Resize
@@ -248,7 +265,7 @@ RUtils.map.nnoremap(
 )
 -- }}}
 -- {{{ Buffers
-RUtils.map.nnoremap("<Leader>bt", "<C-w><S-t>", { desc = "Buffer: move buffer to the new tab", silent = true })
+RUtils.map.nnoremap("<Leader>bt", arange_wins "tabe", { desc = "Buffer: move buffer to the new tab", silent = true })
 RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: alternate/last buffer", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size", silent = true })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })

@@ -10,8 +10,10 @@ local git_sign = {
 
 local normal_themes = {
   "base46-kanagawa",
+  "base46-everforest",
   "base46-material-darker",
   "darcubox",
+  "tokyonight",
   "jellybeans",
   "kanagawa",
   "lackluster",
@@ -21,7 +23,7 @@ local normal_themes = {
   "rose-pine-moon",
   "tokyonight-storm",
   "y9nika",
-  -- "vscode_modern",
+  "vscode",
 }
 
 if vim.tbl_contains(normal_themes, vim.g.colorscheme) then
@@ -867,18 +869,18 @@ return {
             { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
             { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
-            { "n", "<Leader>mcc", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview-view]" } },
-            { "n", "<Leader>mci", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview-view]" }, },
-            { "n", "<Leader>mcb", actions.conflict_choose "base", { desc = "Git: choose the BASE version of a conflict [diffview-view]" } },
-            { "n", "<Leader>mcb", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview-view]" } },
+            { "n", "<a-1>", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
+            { "n", "<a-3>", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
+            { "n", "<a-0>", actions.conflict_choose "base", { desc = "Git: choose BASE (kosong) conflict [diffview-view]" } },
+            { "n", "<a-2>", actions.conflict_choose "all", { desc = "Git: choose BOTH conflict [diffview-view]" } },
 
-            { "n", "<Leader>mcd", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview-view]" } },
-            { "n", "<Leader>mcD", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcd", actions.conflict_choose "none", { desc = "Git: delete region conflict [diffview-view]" } },
+            { "n", "<Leader>mcD", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-view]" }, },
 
-            { "n", "<Leader>mcC", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>mcB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-view]" }, },
-            { "n", "<Leader>mcA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-view]" }, },
+            { "n", "<Leader>mcH", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-view]" }, },
+            { "n", "<Leader>mcL", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-view]" }, },
+            { "n", "<Leader>mcb", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-view]" }, },
+            { "n", "<Leader>mcB", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-view]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview-view]" } },
@@ -944,12 +946,12 @@ return {
             { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
             { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
-            { "n", "<Leader>mcO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>mcT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>mcB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview-panel]" }, },
-            { "n", "<Leader>mcA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview-panel]" }, },
+            { "n", "<a-1>", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
+            { "n", "<a-3>", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },
+            { "n", "<a-0>", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-panel]" }, },
+            { "n", "<a-2>", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-panel]" }, },
 
-            { "n", "<Leader>mcN", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview-panel]" }, },
+            { "n", "<Leader>mcD", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-panel]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview-panel]" } },
@@ -1055,9 +1057,9 @@ return {
           restore = "X",
         },
         conflict = {
-          accept_incoming = "<Leader>mci", -- Accept incoming (theirs/left) change
-          accept_current = "<Leader>mcc", -- Accept current (ours/right) change
-          accept_both = "<Leader>mcb", -- Accept both changes (incoming first)
+          accept_incoming = "<a-3>", -- Accept incoming (theirs/left) change
+          accept_current = "<a-1>", -- Accept current (ours/right) change
+          accept_both = "<a-2>", -- Accept both changes (incoming first)
           discard = "<Leader>mcD", -- Discard both, keep base
           next_conflict = "<Leader>mcn", -- Jump to next conflict
           prev_conflict = "<Leader>mcp", -- Jump to previous conflict

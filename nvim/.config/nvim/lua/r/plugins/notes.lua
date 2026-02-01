@@ -6,10 +6,10 @@ return {
   },
   -- ORGMODE
   {
-    "nvim-orgmode/orgmode",
-    -- event = "LazyFile",
+    "MadKuntilanak/orgmode", -- "nvim-orgmode/orgmode",
+    branch = "fix/ignore-key-agenda-redo",
+    -- event = "VeryLazy",
     ft = "org",
-    cmd = "Org",
     dependencies = {
       "akinsho/org-bullets.nvim",
       "danilshvalov/org-modern.nvim",
@@ -40,9 +40,6 @@ return {
       },
     },
     keys = {
-      -- { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
-      -- { "<Leader>md", "", desc = "date/schedule", ft = { "orgagenda", "org" } },
-      -- { "<Leader>mp", "", desc = "priority", ft = { "orgagenda", "org" } },
       { "<Leader>ma", "", desc = "add/priority/clock/set todo", ft = { "orgagenda", "org" } },
       { "<Leader>map", "", desc = "priority", ft = { "orgagenda", "org" } },
       { "<Leader>mac", "", desc = "clock", ft = { "orgagenda", "org" } },
@@ -95,13 +92,6 @@ return {
         desc = "Note: open item heading in tab",
         ft = "orgagenda",
       },
-      -- {
-      --   "<Leader>ncc",
-      --   function()
-      --     require("orgmode").action "capture.prompt"
-      --   end,
-      --   desc = "Note: capture note [orgmode]",
-      -- },
       {
         "<Leader>na",
         function()
@@ -109,24 +99,6 @@ return {
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
-      -- {
-      --   "<Leader>nft",
-      --   function()
-      --     RUtils.markdown.find_local_titles()
-      --     vim.cmd "normal! zRzz"
-      --   end,
-      --   desc = "Note: jump local title [orgmode]",
-      --   ft = "org",
-      -- },
-      -- {
-      --   "<Leader>nfT",
-      --   function()
-      --     RUtils.markdown.find_global_titles()
-      --     vim.cmd "normal! zRzz"
-      --   end,
-      --   desc = "Note: jump global title [orgmode]",
-      --   ft = "org",
-      -- },
     },
     opts = function()
       -- local Highlight = require "r.settings.highlights"
@@ -135,35 +107,6 @@ return {
       -- local todo_fg = Highlight.get("KeywordMatch", "fg")
       local Menu = require "org-modern.menu"
       return {
-        -- ui = {
-        --   input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
-        --   agenda = { preview_window = { border = RUtils.config.icons.border.line }, focusable = false },
-        --   menu = {
-        --     handler = function(data)
-        --       local items = vim
-        --         .iter(data.items)
-        --         :map(function(i)
-        --           return (i.key and not i.label:lower():match "quit") and i or nil
-        --         end)
-        --         :totable()
-        --
-        --       vim.ui.select(items, {
-        --         prompt = string.format(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
-        --         kind = "pojokan",
-        --         format_item = function(item)
-        --           return string.format("%s → %s", item.key, item.label)
-        --         end,
-        --       }, function(choice)
-        --         if not choice then
-        --           return
-        --         end
-        --         if choice.action then
-        --           choice.action()
-        --         end
-        --       end)
-        --     end,
-        --   },
-        -- },
         ui = {
           input = { use_vim_ui = true }, -- menggunakan vim.ui.input nvim, jadi snacks.nvim yang handle nya
           menu = {
@@ -224,9 +167,13 @@ return {
         org_agenda_skip_scheduled_if_done = true,
         org_hide_emphasis_markers = true,
         org_agenda_use_time_grid = false,
-        org_priority_highest = "A",
-        org_priority_default = "A",
-        org_priority_lowest = "C",
+        org_agenda_remove_tags = true,
+        -- org_priority_highest = "A",
+        -- org_priority_default = "A",
+        -- org_priority_lowest = "C",
+        -- org_priority_highest = "A",
+        -- org_priority_default = "B",
+        -- org_priority_lowest = "C",
         org_capture_templates = {
           t = {
             description = "Todo",
@@ -234,7 +181,6 @@ return {
             -- headline = "Another herading",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
           },
-          -- d = "dotfiles",
           d = {
             description = "Dotfiles",
             template = "* TODO %? \t\t\t\t\t:config:\n  SCHEDULED: %T",
@@ -267,7 +213,7 @@ return {
           --     filetype = "markdown",
           -- },
         },
-        win_split_mode = { "float", 0.6 },
+        win_split_mode = "horizontal",
         org_agenda_custom_commands = {
           -- "c" is the shortcut that will be used in the prompt
           c = {
@@ -448,8 +394,8 @@ return {
             org_insert_todo_heading_respect_content = "<C-t>",
 
             -- Fold / Cycle
-            org_cycle = { "<TAB>", "fc", "oz" },
-            org_global_cycle = { "<S-TAB>", "zb" },
+            org_cycle = "zr",
+            org_global_cycle = "ZR",
 
             -- Clock
             org_clock_in = "<Leader>maci",
@@ -560,7 +506,7 @@ return {
   {
     "saghen/blink.cmp",
     optional = true,
-    dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
+    dependencies = { "MadKuntilanak/orgmode", "saghen/blink.compat" },
     opts = {
       sources = {
         per_filetype = {
@@ -1284,10 +1230,9 @@ return {
       },
     },
   },
-
+  -- IMAGE FOR ORG
   {
     "3rd/image.nvim",
-    lazy = false,
     ft = { "norg", "syslang", "vimwiki", "html", "org", "image_nvim" },
     opts = {
       debug = {

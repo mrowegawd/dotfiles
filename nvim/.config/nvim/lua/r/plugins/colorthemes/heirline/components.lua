@@ -1668,6 +1668,9 @@ M.WinbarFilePath = {
     end,
   },
   {
+    condition = function()
+      return vim.bo[0].filetype ~= "qf" and not set_conditions.is_diff()
+    end,
     provider = function(self)
       return RUtils.file.basename(self.filename) .. " "
     end,

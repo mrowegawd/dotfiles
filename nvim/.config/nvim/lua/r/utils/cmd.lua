@@ -899,8 +899,8 @@ function M.change_colors()
     lazygit_default_text_fg = 0.8
   end
   if vim.g.colorscheme == "vscode" then
-    lazygit_inactive_border_fg = 4
-    lazygit_default_text_fg = 3
+    lazygit_inactive_border_fg = 1
+    lazygit_default_text_fg = 1.5
   end
   if vim.g.colorscheme == "zenburn" then
     lazygit_inactive_border_fg = 0.5

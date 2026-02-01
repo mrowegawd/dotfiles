@@ -3,6 +3,42 @@ return {
   {
     "MadKuntilanak/overlook.nvim",
     branch = "feat/allow-customize-ui-adapter",
+    keys = {
+      {
+        "K",
+        function()
+          local P = require "overlook.peek"
+          P.peek_qf()
+        end,
+        ft = "qf",
+        desc = "Peek: peek on qf item [overlook]",
+      },
+      {
+        "P",
+        function()
+          local P = require "overlook.peek"
+          P.peek_qf()
+        end,
+        ft = "qf",
+        desc = "Peek: peek on qf item (alternatif) [overlook]",
+      },
+      {
+        "P",
+        function()
+          local P = require "overlook.peek"
+          P.peek_file_source()
+        end,
+        ft = "orgagenda",
+        desc = "Peek: note file [overlook]",
+      },
+      {
+        "<Leader>cp",
+        function()
+          require("overlook.api").peek_definition()
+        end,
+        desc = "Peek: peek definition [overlook]",
+      },
+    },
     opts = {
       ui = {
         size_ratio = 0.70,
@@ -164,91 +200,23 @@ return {
         },
       },
     },
-    keys = {
-      {
-        "K",
-        function()
-          local P = require "overlook.peek"
-          P.peek_qf()
-        end,
-        ft = "qf",
-        desc = "Peek: peek on qf item [overlook]",
-      },
-      {
-        "P",
-        function()
-          local P = require "overlook.peek"
-          P.peek_qf()
-        end,
-        ft = "qf",
-        desc = "Peek: peek on qf item (alternatif) [overlook]",
-      },
-      {
-        "<Leader>cpp",
-        function()
-          require("overlook.api").peek_definition()
-        end,
-        desc = "Peek: peek definition [overlook]",
-      },
-      {
-        "<Leader>cpC",
-        function()
-          require("overlook.api").close_all()
-        end,
-        desc = "Peek: close all popup [overlook]",
-      },
-      {
-        "<Leader>cpr",
-        function()
-          require("overlook.api").restore_popup()
-        end,
-        desc = "Peek: restore popup [overlook]",
-      },
-      {
-        "<Leader>cpR",
-        function()
-          require("overlook.api").restore_all_popups()
-        end,
-        desc = "Peek: restore all popup [overlook]",
-      },
-      {
-        "<Leader>cpv",
-        function()
-          require("overlook.api").open_in_vsplit()
-        end,
-        desc = "Peek: open in vsplit [overlook]",
-      },
-      {
-        "<Leader>cps",
-        function()
-          require("overlook.api").open_in_split()
-        end,
-        desc = "Peek: open in split [overlook]",
-      },
-      {
-        "<Leader>cpt",
-        function()
-          require("overlook.api").open_in_tab()
-        end,
-        desc = "Peek: open in tab [overlook]",
-      },
-      {
-        "<Leader>cpw",
-        function()
-          require("overlook.api").switch_focus()
-        end,
-        desc = "Peek: switch focus [overlook]",
-      },
-      {
-        "P",
-        function()
-          local P = require "overlook.peek"
-          P.peek_file_source()
-        end,
-        ft = "orgagenda",
-        desc = "Peek: note file [overlook]",
-      },
-    },
+    config = function(_, opts)
+      local p = require "overlook"
+
+      p.setup(opts)
+
+      vim.api.nvim_create_user_command("PeekCloseAll", function()
+        require("overlook.api").peek_definition()
+      end, { desc = "Peek: peek definition [overlook]" })
+
+      vim.api.nvim_create_user_command("PeekRestorePopup", function()
+        require("overlook.api").restore_popup()
+      end, { desc = "Peek: restore popup [overlook]" })
+
+      vim.api.nvim_create_user_command("PeekRestoreAllPopup", function()
+        require("overlook.api").restore_all_popups()
+      end, { desc = "Peek: restore all popup [overlook]" })
+    end,
   },
   -- GOTO-PREVIEW (disabled)
   {
@@ -493,36 +461,7 @@ return {
   {
     "retran/meow.yarn.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
-    keys = {
-      {
-        "<Leader>chT",
-        function()
-          require("meow.yarn").open_tree("type_hierarchy", "supertypes")
-        end,
-        desc = "LSP: check supertypes hierarchy",
-      },
-      {
-        "<Leader>cht",
-        function()
-          require("meow.yarn").open_tree("type_hierarchy", "subtypes")
-        end,
-        desc = "LSP: check subtype hierarchy",
-      },
-      {
-        "<Leader>chH",
-        function()
-          require("meow.yarn").open_tree("call_hierarchy", "callers")
-        end,
-        desc = "LSP: check who-call-this-func hierarchy",
-      },
-      {
-        "<Leader>chh",
-        function()
-          require("meow.yarn").open_tree("call_hierarchy", "callees")
-        end,
-        desc = "LSP: check what-call-from-this-func hierarchy",
-      },
-    },
+    cmd = { "PeekWHOCallThisFunc", "PeekWHATCallThisFunc", "PeekSUBTYPE", "PeekSUPERTYPE" },
     opts = {
       mappings = {
         jump = "<CR>",
@@ -556,6 +495,22 @@ return {
     },
     config = function(_, opts)
       require("meow.yarn").setup(opts)
+
+      vim.api.nvim_create_user_command("PeekWHOCallThisFunc", function()
+        require("meow.yarn").open_tree("call_hierarchy", "callers")
+      end, { desc = "LSP: who call this func hierarcy [meow.yarn]" })
+
+      vim.api.nvim_create_user_command("PeekWHATCallThisFunc", function()
+        require("meow.yarn").open_tree("call_hierarchy", "callees")
+      end, { desc = "LSP: what call this func hierarcy [meow.yarn]" })
+
+      vim.api.nvim_create_user_command("PeekSUPERTYPE", function()
+        require("meow.yarn").open_tree("type_hierarchy", "supertypes")
+      end, { desc = "LSP: check supertype hierarcy [meow.yarn]" })
+
+      vim.api.nvim_create_user_command("PeekSUBTYPE", function()
+        require("meow.yarn").open_tree("type_hierarchy", "subtypes")
+      end, { desc = "LSP: check subtype hierarcy [meow.yarn]" })
     end,
   },
 }

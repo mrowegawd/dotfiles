@@ -3,7 +3,7 @@
 ! vscode dark .Xresources
 
 *.foreground: #d4d4d4
-*.background: #050505
+*.background: #1e1e1e
 *.cursorColor: #d4d4d4
 
 *.color0: #1f1f1f

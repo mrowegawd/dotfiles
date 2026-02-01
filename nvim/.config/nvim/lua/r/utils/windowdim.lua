@@ -76,6 +76,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["Outline"] = true,
   ["alpha"] = true,
   ["dashboard"] = true,
+  ["oil"] = true,
   ["fugitiveblame"] = true,
   ["grug-far"] = true,
   ["lazy"] = true,
@@ -198,7 +199,7 @@ autocmds.cursorline_blacklist = {
   ["help"] = true,
   ["mason"] = true,
   ["noice"] = true,
-  ["orgagenda"] = true,
+  -- ["orgagenda"] = true,
   ["packer"] = true,
   ["rgflow"] = true,
   ["snacks_notif_history"] = true,
@@ -344,7 +345,7 @@ local function save_cursorline_hl()
     end
 
     if vim.g.colorscheme == "vscode" then
-      more_bright = 5
+      more_bright = 0.6
     end
 
     if vim.g.colorscheme == "nordfox" then
@@ -385,6 +386,10 @@ local function save_cursorline_hl()
 
     if vim.g.colorscheme == "gruvbox" then
       more_bright = 0.5
+    end
+
+    if vim.g.colorscheme == "base46-everforest" then
+      more_bright = 0.3
     end
 
     color_cursorline_bright = H.tint(hl.bg, more_bright)
@@ -432,7 +437,7 @@ local set_cursorline = function(active)
     return
   end
 
-  if buftype == "quickfix" and filetype == "qf" then
+  if (buftype == "quickfix" and filetype == "qf") or filetype == "orgagenda" then
     vim.wo.cursorline = active
     save_cursorline_hl()
     set_bright_cursorline()

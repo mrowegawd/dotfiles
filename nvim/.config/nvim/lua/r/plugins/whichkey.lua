@@ -53,8 +53,6 @@ return {
           { "<Leader>A", group = "projectionist" },
 
           { "<Leader>c", group = "code/action" },
-          { "<Leader>cp", group = "peek" },
-          { "<Leader>ch", group = "hierarchy" },
 
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "picker" },
