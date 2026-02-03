@@ -914,33 +914,38 @@ M.virtualenv = {
     local filename = get_vars.filename(bufname)
     local extension = get_vars.extension(filename)
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-
-    local python_logo = "" -- Icon Python
-    local venv_path = vim.env.VIRTUAL_ENV or ""
-    local venv_name = ""
-
-    -- Ambil nama folder virtualenv (nama environment)
-    if venv_path ~= "" then
-      venv_name = venv_path:match "([^/\\]+)$" or venv_path
-    end
-
-    -- Cek apakah ini Poetry (.venv biasanya Poetry default)
-    local is_poetry_venv = venv_name:find "%.venv" ~= nil
-
-    if is_poetry_venv then
-      self.venv = string.format("%s UV ", python_logo)
-    elseif venv_name ~= "" then
-      self.venv = string.format("%s venv ", python_logo)
-    else
-      self.venv = ""
-    end
+    --
+    --   local python_logo = "" -- Icon Python
+    --   local venv_path = vim.env.VIRTUAL_ENV or ""
+    --   local venv_name = ""
+    --
+    --   -- Ambil nama folder virtualenv (nama environment)
+    --   if venv_path ~= "" then
+    --     venv_name = venv_path:match "([^/\\]+)$" or venv_path
+    --   end
+    --
+    --   -- Cek apakah ini Poetry (.venv biasanya Poetry default)
+    --   local is_poetry_venv = venv_name:find "%.venv" ~= nil
+    --
+    --   if is_poetry_venv then
+    --     self.venv = string.format("%s UV ", python_logo)
+    --   elseif venv_name ~= "" then
+    --     self.venv = string.format("%s venv ", python_logo)
+    --   else
+    --     self.venv = ""
+    --   end
   end,
   {
-    provider = function(self)
-      if self.venv and #self.venv > 0 then
-        return self.venv .. " "
+    provider = function()
+      local uv = require "uv"
+      local uv_venv = uv.get_venv()
+      local python_logo = "" -- Icon Python
+
+      local venv = ""
+      if uv_venv then
+        venv = string.format("%s %s ", python_logo, uv_venv)
       end
-      return ""
+      return venv
     end,
     hl = function(self)
       return { fg = self.icon_color, bold = true }

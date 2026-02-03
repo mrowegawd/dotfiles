@@ -1,0 +1,27 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! Catppuccin Mocha Xresources
+! Base 16 colors
+*.foreground: #cdd6f4
+*.background: #1e1e2e
+*.cursorColor: #f5e0dc
+
+! Black, Red, Green, Yellow, Blue, Magenta, Cyan, White
+*.color0:  #1e1e2e
+*.color1:  #ef596f
+*.color2:  #a6e3a1
+*.color3:  #f9e2af
+*.color4:  #89b4fa
+*.color5:  #f5c2e7
+*.color6:  #94e2d5
+*.color7:  #cdd6f4
+
+*.color8:  #45475a
+*.color9:  #ef596f
+*.color10: #a6e3a1
+*.color11: #f9e2af
+*.color12: #89b4fa
+*.color13: #f5c2e7
+*.color14: #94e2d5
+*.color15: #f5e0dc
+
+*.color16: #cba6f7

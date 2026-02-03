@@ -154,9 +154,11 @@ end
 
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
+RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alternative)" })
 
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
-RUtils.map.nnoremap("<c-w>v", arange_wins "vsplit", { desc = "Window: vsplit" })
+RUtils.map.nnoremap("<c-w>v", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
+RUtils.map.nnoremap("<c-w>l", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
 
 RUtils.map.nnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down" })
 RUtils.map.xnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down (visual)" })
@@ -696,7 +698,7 @@ end, { desc = "Toggle: cursorline" })
 RUtils.map.nnoremap("<Leader>oI", function()
   vim.treesitter.inspect_tree()
   vim.api.nvim_input "I"
-end, { desc = "Open: inspect tree" })
+end, { desc = "Open: inspect treesitter" })
 RUtils.create_command("Snippets", RUtils.cmd.edit_snippet, { desc = "Misc: edit snippet file" })
 RUtils.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.create_command("InfoOption", function()

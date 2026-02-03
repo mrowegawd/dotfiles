@@ -347,6 +347,9 @@ local function open(mode_open, opts_file)
     cmd_msg = "e " .. opts_file.filename
   else
     cmd_msg = mode_open .. " " .. opts_file.filename
+    if mode_open == "vsplit" then
+      cmd_msg = "botright " .. cmd_msg
+    end
   end
 
   vim.cmd(cmd_msg)
@@ -671,6 +674,8 @@ function Mappicker.insert_backlinks()
   }
 end
 
+local match_tags
+
 function Mappicker.open_tags()
   return {
     ["default"] = function(selection)
@@ -679,7 +684,6 @@ function Mappicker.open_tags()
       end
 
       local sel = {}
-      local match_tags = ""
       if #selection > 1 then
         for _, x in pairs(selection) do
           table.insert(sel, x)
@@ -731,8 +735,17 @@ function Mappicker.open_tags()
   }
 end
 
-local function get_tags()
+---@param opts? {last: boolean }
+local function get_tags(opts)
+  opts = opts or {}
   Orgmode = setup_orgmode()
+
+  if opts.last and match_tags then
+    RUtils.info("Last tags: " .. vim.inspect(match_tags))
+    Orgmode.agenda:tags { match_query = match_tags }
+    return
+  end
+
   -- RUtils.info(vim.inspect(orgmode.files:get_tags()))
   -- RUtils.info(vim.inspect(orgmode.files:all()))
   -- RUtils.info(vim.inspect(result:check {}))
@@ -741,13 +754,13 @@ local function get_tags()
     return
   end
 
-  local opts = {
+  local fzopts = {
     winopts = { title = get_title_note "- Search note by tags" },
     actions = Mappicker.open_tags(),
   }
 
   Fzflua = setup_fzflua()
-  Fzflua.fzf_exec(contents_tags, RUtils.fzflua.open_center_medium(opts_fzf(opts)))
+  Fzflua.fzf_exec(contents_tags, RUtils.fzflua.open_center_medium(opts_fzf(fzopts)))
 end
 
 ---@param is_global boolean
@@ -923,6 +936,7 @@ end
 
 ---@class NotesCmdsObjt
 ---@field filter_by_tags fun()
+---@field lfilter_by_tags fun()
 ---@field find_files_notes fun()
 ---@field find_curbuf_title_notes fun()
 ---@field find_global_title_notes fun()
@@ -940,6 +954,9 @@ local get_cmds = {
   ["org"] = {
     filter_by_tags = function()
       get_tags()
+    end,
+    lfilter_by_tags = function()
+      get_tags { last = true }
     end,
     find_files_notes = function()
       find_files_org()
@@ -978,6 +995,9 @@ local get_cmds = {
   ["markdown"] = {
     filter_by_tags = function()
       RUtils.markdown.find_note_by_tag()
+    end,
+    lfilter_by_tags = function()
+      get_tags { last = true }
     end,
     find_files_notes = function()
       not_implement()
@@ -1026,6 +1046,10 @@ end
 
 function M.filter_by_tags()
   return call_cmd "filter_by_tags"()
+end
+
+function M.last_filter_by_tags()
+  return call_cmd "lfilter_by_tags"()
 end
 
 function M.find_files_notes()

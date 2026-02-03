@@ -859,9 +859,12 @@ function M.change_colors()
   local tab_active_bg = H.darken(H.get("WinBarRightBlock", "bg"), 0.7, H.get("Normal", "bg"))
 
   -- Inactive Tab
-  local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
-  local tab_inactive_bg = H.get("NormalNote", "bg")
-  local tab_statusline_fg = H.tint(H.get("Comment", "fg"), 0.1)
+  -- local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
+  -- local tab_inactive_bg = H.get("NormalNote", "bg")
+
+  local tab_inactive_fg = H.get("TmuxStatusline", "fg")
+  local tab_inactive_bg = H.get("TmuxStatusline", "bg")
+  local tab_statusline_fg = H.get("TmuxStatusline", "fg")
 
   -- Border Pane
   local border_active = H.tint(H.get("WinSeparator", "fg"), 0.4)

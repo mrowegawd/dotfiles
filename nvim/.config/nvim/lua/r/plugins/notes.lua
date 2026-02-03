@@ -8,7 +8,6 @@ return {
   {
     "MadKuntilanak/orgmode", -- "nvim-orgmode/orgmode",
     branch = "fix/ignore-key-agenda-redo",
-    -- event = "VeryLazy",
     ft = "org",
     dependencies = {
       "akinsho/org-bullets.nvim",
@@ -60,6 +59,11 @@ return {
         "<Leader>nft",
         RUtils.notes.filter_by_tags,
         desc = "Note: find notes by tags",
+      },
+      {
+        "<Leader>nfl",
+        RUtils.notes.last_filter_by_tags,
+        desc = "Note: last find notes by tags",
       },
 
       {
@@ -1013,38 +1017,41 @@ return {
         },
       },
       preferred_link_style = "markdown",
-      note_frontmatter_func = function(note)
-        -- Add the title of the note as an alias.
-        -- if note and note.title then
-        --   note:add_alias(note.title)
-        -- end
+      frontmatter = {
+        func = function(note)
+          -- Add the title of the note as an alias.
+          -- if note and note.title then
+          --   note:add_alias(note.title)
+          -- end
 
-        local out = {
-          id = note.id,
-          aliases = note.aliases,
-          tags = note.tags,
-        }
+          local out = {
+            id = note.id,
+            aliases = note.aliases,
+            tags = note.tags,
+          }
 
-        local getDate = function(metadata)
-          if metadata.create_at then
-            return metadata.create_at
+          local getDate = function(metadata)
+            if metadata.create_at then
+              return metadata.create_at
+            end
+
+            local date = os.date "%Y-%m-%d %H:%M"
+            return date
           end
 
-          local date = os.date "%Y-%m-%d %H:%M"
-          return date
-        end
-
-        note.metadata = {
-          create_at = getDate(note.metadata),
-          last_edited = os.date "%Y-%m-%d %H:%M",
-        }
-        if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
-          for k, v in pairs(note.metadata) do
-            out[k] = v
+          note.metadata = {
+            create_at = getDate(note.metadata),
+            last_edited = os.date "%Y-%m-%d %H:%M",
+          }
+          if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
+            for k, v in pairs(note.metadata) do
+              out[k] = v
+            end
           end
-        end
-        return out
-      end,
+          return out
+        end,
+      },
+      -- note_frontmatter_func = function(note) end,
       completion = {
         nvim_cmp = false,
         blink = true,
@@ -1053,9 +1060,9 @@ return {
       ui = {
         enable = false, -- set to false to disable all additional syntax features
       },
-      follow_url_func = function(url)
-        vim.fn.jobstart { "open", url }
-      end,
+      -- follow_url_func = function(url)
+      --   vim.fn.jobstart { "open", url }
+      -- end,
       footer = {
         enabled = false,
         format = "{{backlinks}} backlinks  {{properties}} properties  {{words}} words  {{chars}} chars",

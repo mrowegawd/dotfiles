@@ -411,6 +411,7 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "LazyFile",
+    cmd = { "GitToggleDelete", "GitToggleWordDiff", "GitToggleLineHl" },
     opts = {
       signs_staged_enable = false,
       -- debug_mode = true,
@@ -478,13 +479,18 @@ return {
         map("n", "<Leader>gR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
 
         -- Hunk preview
-        map("n", "<Leader>gvl", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
-        map("n", "<Leader>gvL", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
+        map("n", "<Leader>gp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
+        map("n", "<Leader>gP", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
 
-        -- Toggle
-        map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle diff changes [gitsigns]")
-        map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
-        map("n", "<Leader>gul", gs.toggle_linehl, "Git: toggle linehl [gitsigns]")
+        vim.api.nvim_create_user_command("GitToggleDelete", function()
+          gs.toggle_deleted()
+        end, { desc = "Git: toggle diff changes [gitsigns]" })
+        vim.api.nvim_create_user_command("GitToggleWordDiff", function()
+          gs.toggle_word_diff()
+        end, { desc = "Git: toggle word diff [gitsigns]" })
+        vim.api.nvim_create_user_command("GitToggleLineHl", function()
+          gs.toggle_linehl()
+        end, { desc = "Git: toggle linehl [gitsigns]" })
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -549,110 +555,14 @@ return {
       "Gdiffsplit",
       "Gedit",
       "Git",
-      "GitEditChanged",
-      "GitHistory",
       "Gwrite",
-    },
-    keys = {
-      {
-        "<Leader>gB",
-        "<Cmd>G blame<CR>",
-        desc = "Git: open blame [gitsigns]",
-        mode = { "n", "x" },
-      },
-      -- {
-      --   "<Leader>gg",
-      --   "<Cmd>botright Git<CR><Cmd>wincmd K<bar>20 wincmd _<CR>4j",
-      --   desc = "Git: open fugitive [fugitive]",
-      --   mode = { "n", "x" },
-      -- },
-      -- {
-      --   "<Leader>gvd",
-      --   function()
-      --     local ok, treesitter_context = pcall(require, "treesitter-context")
-      --     if ok then
-      --       treesitter_context.disable()
-      --     end
-      --
-      --     -- after 0.5 sec, run this command
-      --     vim.defer_fn(function()
-      --       vim.cmd "Gdiffsplit!"
-      --     end, 500)
-      --   end,
-      --   desc = "Git: open Gdiffsplit [fugitive]",
-      -- },
-      -- {
-      --   "<Leader>gvl",
-      --   function()
-      --     vim.cmd "0,3Git blame"
-      --     vim.cmd "wincmd j"
-      --     vim.cmd "normal! 5j"
-      --     vim.cmd "25 wincmd _"
-      --   end,
-      --   desc = "Buffer: open git blame for curbuf [fugitive]",
-      -- },
+      "GitBlame",
     },
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
-      vim.cmd "command! GitHistory Git! log -- %"
-
-      ---@param files string[]
-      local function open_files(files)
-        vim.cmd.tabnew()
-        for _, file in ipairs(files) do
-          vim.cmd.edit { args = { file } }
-        end
-      end
-
-      local function get_git_root()
-        local root = vim.fs.find(".git", { upward = true })[1]
-        if not root then
-          return nil
-        end
-        return vim.fs.dirname(root)
-      end
-
-      local function run_files_cmd(cmd, callback)
-        local root = get_git_root()
-        if not root then
-          return callback {}
-        end
-        local stdout = {}
-        vim.fn.jobstart(cmd, {
-          stdout_buffered = true,
-          on_stdout = function(_, data, _)
-            vim.list_extend(stdout, data)
-          end,
-          on_exit = function(_, code)
-            if code ~= 0 then
-              return callback {}
-            end
-            local ret = {}
-            for _, name in ipairs(stdout) do
-              local fullname = root .. "/" .. name
-              if vim.fn.filereadable(fullname) == 1 then
-                table.insert(ret, fullname)
-              end
-            end
-            callback(ret)
-          end,
-        })
-      end
-
-      vim.api.nvim_create_user_command("GitEditChanged", function()
-        run_files_cmd({ "git", "diff", "--name-only" }, function(files)
-          if vim.tbl_isempty(files) then
-            vim.notify("No uncommitted changes", vim.log.levels.INFO)
-            return
-          end
-          open_files(files)
-        end)
-      end, {
-        desc = "Edit files with uncommitted changes",
-      })
-
-      -- vim.api.nvim_create_autocmd("FileType", {
-      --   group = vim.api.nvim_create_augroup("ps_fugitive", { clear = true }),
+      vim.api.nvim_create_user_command("GitBlame", function()
+        vim.cmd "G blame"
+      end, { desc = "Git: open git blame [fugitive]" })
 
       RUtils.map.augroup("ps_fugitive", {
         event = "FileType",

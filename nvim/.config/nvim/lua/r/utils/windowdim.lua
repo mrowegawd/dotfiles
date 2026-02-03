@@ -21,8 +21,9 @@ local focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(80, 256
 local winhighlight_bottom_panel = table.concat({
   "Normal:PanelBottomNormal",
   "NormalNC:PanelBottomNormal",
-  "CursorLineNr:LineNr",
   "SignColumn:PanelBottomNormal",
+  "CursorLine:PanelBottomCursorLine",
+  "CursorLineNr:PanelBottomCursorLineNr",
   "LineNr:QuickFixLineNr",
   "WinSeparator:QuickFixWinSeparator",
   "Delimiter:QuickFixWinDelimiter",
@@ -319,8 +320,8 @@ end
 -- end
 
 local saved_cursorline_hl = nil
-local color_cursorline_bright = ""
-local color_cursorlinenr_bright = ""
+local color_cursorline_bright
+local color_cursorlinenr_bright
 
 local hi_cursorline = "highlight CursorLine"
 local hi_cursorlinenr = "highlight CursorLineNr"
@@ -328,72 +329,12 @@ local hi_cursorlinenr = "highlight CursorLineNr"
 local function save_cursorline_hl()
   if not saved_cursorline_hl then
     local hl = H.h "CursorLine"
-    local hlnr = H.h "CursorLineNr"
+    local hlbg = H.h "PanelBottomCursorLine"
 
-    local more_bright = 0.5
+    local more_bright = 0.1
 
-    if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-      more_bright = 0.1
-    end
-
-    if vim.tbl_contains({ "lackluster" }, vim.g.colorscheme) then
-      more_bright = 4
-    end
-
-    if vim.g.colorscheme == "zenburn" then
-      more_bright = 0.15
-    end
-
-    if vim.g.colorscheme == "vscode" then
-      more_bright = 0.6
-    end
-
-    if vim.g.colorscheme == "nordfox" then
-      more_bright = 0.3
-    end
-
-    if vim.tbl_contains({ "nightingale", "minimal" }, vim.g.colorscheme) then
-      more_bright = 0.8
-    end
-
-    if vim.tbl_contains({ "oxocarbon", "nightfox" }, vim.g.colorscheme) then
-      more_bright = 1
-    end
-
-    if vim.g.colorscheme == "tokyonight-night" then
-      more_bright = 1
-    end
-
-    if vim.tbl_contains({ "rose-pine", "neogotham", "kanagawa", "intent" }, vim.g.colorscheme) then
-      more_bright = 1.3
-    end
-
-    if vim.g.colorscheme == "ashen" then
-      more_bright = 4.5
-    end
-
-    if vim.g.colorscheme == "darcubox" then
-      more_bright = 1.8
-    end
-
-    if vim.g.colorscheme == "jellybeans" then
-      more_bright = 1.2
-    end
-
-    if vim.g.colorscheme == "lemons" then
-      more_bright = 4
-    end
-
-    if vim.g.colorscheme == "gruvbox" then
-      more_bright = 0.5
-    end
-
-    if vim.g.colorscheme == "base46-everforest" then
-      more_bright = 0.3
-    end
-
-    color_cursorline_bright = H.tint(hl.bg, more_bright)
-    color_cursorlinenr_bright = tostring(hlnr.bg)
+    color_cursorline_bright = H.tint(hlbg.bg, more_bright)
+    color_cursorlinenr_bright = tostring(hlbg.bg)
 
     if hl then
       saved_cursorline_hl = hl

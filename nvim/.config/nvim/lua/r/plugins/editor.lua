@@ -423,14 +423,7 @@ return {
   -- ATONE.NVIM -> alternative undotree
   {
     "XXiaoA/atone.nvim",
-    cmd = "Atone",
-    keys = {
-      {
-        "<Leader>ou",
-        "<CMD>Atone toggle<CR>",
-        desc = "Open: undotree [atone.nvim]",
-      },
-    },
+    cmd = { "Atone", "UndoTree" },
     opts = {
       keymaps = {
         tree = {
@@ -449,5 +442,12 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("atone").setup(opts)
+
+      vim.api.nvim_create_user_command("UndoTree", function()
+        vim.cmd "Atone toggle"
+      end, { desc = "Open: undo tree [atone.nvim]" })
+    end,
   },
 }

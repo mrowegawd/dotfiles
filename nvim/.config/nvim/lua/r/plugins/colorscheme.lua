@@ -271,7 +271,7 @@ return {
     opts = {
       hl = {
         force_override = {
-          Normal = { "#FFFFFF", "#040404" },
+          Normal = { "#FFFFFF", "#121212" },
         },
       },
     },
@@ -296,7 +296,7 @@ return {
         transparency = false,
       },
       highlight_groups = {
-        Normal = { bg = "#0A0A0A" },
+        Normal = { bg = "#12171c" },
       },
     },
   },

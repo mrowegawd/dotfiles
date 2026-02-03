@@ -14,7 +14,6 @@ return {
         "<Leader>ot",
         function()
           vim.cmd "TermNew layout=right"
-          -- code
         end,
         desc = "Open: terminal on the right [ergoterm.nvim]",
       },

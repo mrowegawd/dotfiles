@@ -901,7 +901,7 @@ return {
           -- open_in_tab = "<C-t>",
           -- open_in_float = "O",
 
-          filter_symbols = "<Leader>ff",
+          filter_symbols = { "<Leader>ff", "<Leader><Leader>" },
         },
       }
     end,
