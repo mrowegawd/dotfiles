@@ -96,17 +96,18 @@ RUtils.map.tnoremap("<A-N>", function()
   RUtils.map.feedkey("<C-\\><C-n><A-N>", "t")
 end, { desc = "Terminal: new tab", silent = true })
 
+-- Navigation from terminal
 RUtils.map.tnoremap("<a-h>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t")
 end, { desc = "Terminal: move left" })
 RUtils.map.tnoremap("<a-j>", function()
-  RUtils.map.feedkey("<C-\\><C-n><C-w>j", "t")
+  RUtils.map.feedkey("<C-\\><C-n>:wincmd j<CR>", "t")
 end, { desc = "Terminal: move down" })
 RUtils.map.tnoremap("<a-k>", function()
   RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t")
 end, { desc = "Terminal: move up" })
 RUtils.map.tnoremap("<a-l>", function()
-  RUtils.map.feedkey("<C-\\><C-n><C-w>l", "t")
+  RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t")
 end, { desc = "Terminal: move right" })
 
 -- }}}
@@ -376,7 +377,7 @@ end, {
 })
 
 RUtils.map.xnoremap(
-  "<Leader>gvv",
+  "<Leader>gv",
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )

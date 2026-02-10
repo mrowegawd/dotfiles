@@ -295,6 +295,8 @@ local function open_mpv_sxiv_or_git(line_str)
       ["Git - Checkout this commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Git - Cherry pick this commit"] = { prefix_cmd = { "DiffviewOpen" } },
       ["Git - Collect files and send to QF"] = { prefix_cmd = { "DiffviewOpen" } },
+      ["Octo - Open this PR"] = { prefix_cmd = { "Octo pr edit " } },
+      ["Octo - Open this Issue"] = { prefix_cmd = { "Octo issue edit " } },
     }
   end
 

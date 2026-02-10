@@ -1,0 +1,25 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! Habamax (terminal version)
+
+*.background: #1c1c1c
+*.foreground: #d0d0d0
+*.cursorColor: #d0d0d0
+
+*.color0:  #1c1c1c
+*.color1:  #af5f5f
+*.color2:  #5f875f
+*.color3:  #87875f
+*.color4:  #5f87af
+*.color5:  #875f87
+*.color6:  #5f8787
+*.color7:  #d0d0d0
+
+*.color8:  #4e4e4e
+*.color9:  #ff8787
+*.color10: #87af87
+*.color11: #ffffaf
+*.color12: #87afd7
+*.color13: #af87af
+*.color14: #87d7d7
+*.color15: #ffffff
+*.color16: #af87af

@@ -1,0 +1,23 @@
+
+# --- Hubbamax Color Scheme ---
+
+palette = 0=#1c1c1c
+palette = 1=#af5f5f
+palette = 2=#5f875f
+palette = 3=#87875f
+palette = 4=#5f87af
+palette = 5=#875f87
+palette = 6=#5f8787
+palette = 7=#d0d0d0
+palette = 8=#4e4e4e
+palette = 9=#ff8787
+palette = 10=#87af87
+palette = 11=#ffffaf
+palette = 12=#87afd7
+palette = 13=#af87af
+palette = 14=#87d7d7
+palette = 15=#ffffff
+
+background = #1c1c1c
+foreground = #d0d0d0
+cursor-color = #d0d0d0

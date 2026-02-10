@@ -1,4 +1,3 @@
--- local providers = { "lsp", "snippets", "buffer", "codeium" }
 local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local callme = 0
 local idx = 1

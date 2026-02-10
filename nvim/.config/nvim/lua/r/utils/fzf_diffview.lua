@@ -12,7 +12,11 @@ local status_cmd_git = {
   ["open commit only with fugitive"] = function(commit_hash)
     return "Gedit " .. commit_hash
   end,
+  ["open commit only with gitsigns"] = function(commit_hash)
+    return "Gedit " .. commit_hash
+  end,
   ["check all files changed"] = function(commit_hash)
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
     return "DiffviewOpen " .. commit_hash .. "~..HEAD"
   end,
@@ -763,8 +767,8 @@ function M.git_open_with_compare_hash()
       -- local cmdmsg = "Gvdiffsplit " .. commit_hash
       -- vim.cmd(cmdmsg)
 
-      -- With vscode-diff
-      vim.cmd("CodeDiff file " .. commit_hash)
+      -- With codediff.nvim
+      vim.cmd("VscodeDiff file " .. commit_hash)
 
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info("Compare diff: current commit --> " .. commit_hash, { title = "FZFGit" })

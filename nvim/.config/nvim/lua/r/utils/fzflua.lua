@@ -19,7 +19,7 @@ local dropdown = function(opts)
   local fzf_tbl = {
     prompt = M.padding_prompt(),
     fzf_opts = {
-      ["--layout"] = "reverse",
+      ["--layout"] = "reverse", -- "reverse" or "default"
       ["--multi"] = true,
     },
     ---@diagnostic disable: missing-fields
@@ -33,6 +33,7 @@ local dropdown = function(opts)
       -- backdrop = v_backdrop,
       backdrop = 100,
       fullscreen = false,
+      treesitter = false,
       preview = {
         hidden = false,
         layout = "vertical",
@@ -169,6 +170,7 @@ function M.open_center_big(opts)
         layout = "horizontal",
         vertical = "down:50%",
         horizontal = "up:45%",
+        winopts = { number = false },
       },
     },
   }

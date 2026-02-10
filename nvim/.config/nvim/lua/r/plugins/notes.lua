@@ -8,6 +8,7 @@ return {
   {
     "MadKuntilanak/orgmode", -- "nvim-orgmode/orgmode",
     branch = "fix/ignore-key-agenda-redo",
+    cmd = "Org",
     ft = "org",
     dependencies = {
       "akinsho/org-bullets.nvim",
@@ -105,10 +106,6 @@ return {
       },
     },
     opts = function()
-      -- local Highlight = require "r.settings.highlights"
-      -- local done_hi = Highlight.get("Comment", "fg")
-      -- local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, Highlight.get("KeywordMatch", "fg"))
-      -- local todo_fg = Highlight.get("KeywordMatch", "fg")
       local Menu = require "org-modern.menu"
       return {
         ui = {
@@ -131,21 +128,11 @@ return {
           },
         },
         org_agenda_files = {
-          -- Mobilephone
-          -- string.format("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
-
-          -- Notes
-          string.format("%s/**/*", RUtils.config.path.wiki_path),
-
-          -- Todo/Task
-          -- string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
+          string.format("%s/*/*/*", RUtils.config.path.wiki_path),
+          string.format("%s/*/*", RUtils.config.path.wiki_path),
+          string.format("%s/*", RUtils.config.path.wiki_path),
         },
-        org_default_notes_file = string.format("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
+        org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
         org_todo_keywords = {
           "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
@@ -172,52 +159,46 @@ return {
         org_hide_emphasis_markers = true,
         org_agenda_use_time_grid = false,
         org_agenda_remove_tags = true,
-        -- org_priority_highest = "A",
-        -- org_priority_default = "A",
-        -- org_priority_lowest = "C",
-        -- org_priority_highest = "A",
-        -- org_priority_default = "B",
-        -- org_priority_lowest = "C",
         org_capture_templates = {
           t = {
             description = "Todo",
             template = "* TODO %? \n  SCHEDULED: %T\n\n\tDescribe:\n\n\tCode Error:\n\n\tExpected:\n",
             -- headline = "Another herading",
-            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
+            target = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
           },
           d = {
             description = "Dotfiles",
             template = "* TODO %? \t\t\t\t\t:config:\n  SCHEDULED: %T",
-            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
+            target = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
           },
           i = {
             description = "Inbox",
             template = "* TODO %? \n  SCHEDULED: %t\n\n\tDescribe:\n",
-            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+            target = RUtils.file.get_agenda_path "/orgmode/gtd/inbox.org",
           },
           l = {
             description = "Link",
             template = "* TODO %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
-            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+            target = RUtils.file.get_agenda_path "/orgmode/gtd/inbox.org",
           },
-          b = {
-            description = "URL bookmarks",
-            template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
-            target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
-          },
+          -- b = {
+          --   description = "URL bookmarks",
+          --   template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
+          --   target = RUtils.file.get_agenda_path "/orgmode/bookmarks/urls.org",
+          -- },
           j = {
             description = "Journal",
             template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
-            target = RUtils.config.path.wiki_path .. "/orgmode/journal/journal.org",
+            target = RUtils.file.get_agenda_path "/orgmode/journal/journal.org",
           },
           -- k = {
           --     description = "Markdown",
           --     template = "\n* TODO %? \n  SCHEDULED: %t",
-          --     target = RUtils.config.path.wiki_path .. "/orgmode/gtd/base.md",
+          --     target = RUtils.file.get_agenda_path "/orgmode/gtd/base.md",
           --     filetype = "markdown",
           -- },
         },
-        win_split_mode = "horizontal",
+        win_split_mode = "vertical",
         org_agenda_custom_commands = {
           -- "c" is the shortcut that will be used in the prompt
           c = {
@@ -364,7 +345,7 @@ return {
             org_agenda_show_help = "?",
           },
           capture = {
-            org_capture_finalize = { "<C-c>", "<C-s>" },
+            org_capture_finalize = { "<CR>", "<C-s>" },
             org_capture_refile = "<Leader>mR",
             org_capture_kill = { "q", "<C-q>", "<Leader>bk" },
             org_capture_show_help = "?",

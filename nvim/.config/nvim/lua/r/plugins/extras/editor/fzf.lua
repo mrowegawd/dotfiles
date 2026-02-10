@@ -107,9 +107,8 @@ return {
             cwd = "~/.config/miscxrdb/xresource-theme",
             actions = {
               ["default"] = function(selected)
-                local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
-                local pth = selected[1]:sub(slice_num_str)
-                local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. pth
+                local colorscheme = selected[1]
+                local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. colorscheme
                 vim.cmd [[ChangeMasterTheme]]
                 vim.cmd([[!bash ]] .. script_path)
               end,
@@ -329,6 +328,9 @@ return {
           no_header_i = true, -- hide interactive header?
           copen = RUtils.qf.copen,
           lopen = RUtils.qf.lopen,
+
+          git_icons = false,
+          file_icons = false,
         },
         winopts = {
           backdrop = 100,

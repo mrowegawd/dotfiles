@@ -167,6 +167,12 @@ function M.is_descendant(root, path)
   return dir == root
 end
 
+---@param path string
+function M.get_agenda_path(path)
+  local npath = vim.fs.joinpath(RUtils.config.path.wiki_path, path)
+  return npath
+end
+
 -- local path_separator = RUtils.is_win() and ";" or ":"
 
 return M

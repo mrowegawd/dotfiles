@@ -31,7 +31,7 @@ if vim.tbl_contains(normal_themes, vim.g.colorscheme) then
     add = "▌",
     change = "▌",
     delete = "_",
-    topdelete = "‾",
+    topdelete = { text = "" }, -- '‾'
     changedelete = "~",
   }
 end
@@ -411,11 +411,12 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "LazyFile",
-    cmd = { "GitToggleDelete", "GitToggleWordDiff", "GitToggleLineHl" },
+    cmd = { "GitToggleDelete", "GitToggleWordDiff", "GitToggleLineHl", "GitBlame", "GitBlameLine" },
     opts = {
-      signs_staged_enable = false,
       -- debug_mode = true,
+      signs_staged_enable = false,
       attach_to_untracked = true,
+      current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
       signs_staged = {
         add = { text = git_sign.add }, --  "▎" "▌" "┆"
         change = { text = git_sign.change },
@@ -491,6 +492,13 @@ return {
         vim.api.nvim_create_user_command("GitToggleLineHl", function()
           gs.toggle_linehl()
         end, { desc = "Git: toggle linehl [gitsigns]" })
+        vim.api.nvim_create_user_command("GitBlame", function()
+          gs.blame()
+          RUtils.info "Sometimes git blame is too slow. Please wait."
+        end, { desc = "Git: blame [gitsigns]" })
+        vim.api.nvim_create_user_command("GitBlameLine", function()
+          gs.blame_line()
+        end, { desc = "Git: blame line [gitsigns]" })
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
@@ -556,14 +564,9 @@ return {
       "Gedit",
       "Git",
       "Gwrite",
-      "GitBlame",
     },
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
-      vim.api.nvim_create_user_command("GitBlame", function()
-        vim.cmd "G blame"
-      end, { desc = "Git: open git blame [fugitive]" })
-
       RUtils.map.augroup("ps_fugitive", {
         event = "FileType",
         pattern = { "fugitive" }, -- gstatus
