@@ -60,14 +60,38 @@ return {
       {
         "<S-Down>",
         function()
-          require("dap").down()
+          local function status_dap(req)
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            require("dap").down()
+          else
+            local line = vim.api.nvim_win_get_cursor(0)[1]
+            vim.cmd.move(tostring(line + vim.v.count1))
+            pcall(function()
+              vim.cmd.normal { args = { "zO" }, bang = true, mods = { silent = true } }
+            end)
+          end
         end,
         desc = "Debug: step down",
       },
       {
         "<S-Up>",
         function()
-          require("dap").up()
+          local function status_dap(req)
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            require("dap").up()
+          else
+            local line = vim.api.nvim_win_get_cursor(0)[1]
+            vim.cmd.move(tostring(line - vim.v.count1 - 1))
+            pcall(function()
+              vim.cmd.normal { args = { "zO" }, bang = true, mods = { silent = true } }
+            end)
+          end
         end,
         desc = "Debug: setup up",
       },

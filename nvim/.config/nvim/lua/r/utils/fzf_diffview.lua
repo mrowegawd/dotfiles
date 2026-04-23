@@ -754,9 +754,9 @@ function M.git_open_with_compare_hash()
     local commit_hash = extract_git_hash_single(selected)
     if commit_hash then
       -- With gitsigns
-      -- local gitsigns = require "gitsigns"
-      -- vim.cmd "tabnew %"
-      -- gitsigns.diffthis(commit_hash)
+      local gitsigns = require "gitsigns"
+      vim.cmd "tabnew %"
+      gitsigns.diffthis(commit_hash)
 
       -- With vim-fugitive
       -- local cmdmsg = "Gvdiffsplit " .. commit_hash
@@ -764,11 +764,10 @@ function M.git_open_with_compare_hash()
 
       -- With diffview
       -- local cmdmsg = "DiffviewOpen -uno " .. commit_hash
-      -- local cmdmsg = "Gvdiffsplit " .. commit_hash
       -- vim.cmd(cmdmsg)
 
       -- With codediff.nvim
-      vim.cmd("VscodeDiff file " .. commit_hash)
+      -- vim.cmd("VscodeDiff file " .. commit_hash)
 
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info("Compare diff: current commit --> " .. commit_hash, { title = "FZFGit" })

@@ -40,12 +40,11 @@ return {
       },
     },
     keys = {
-      { "<Leader>ma", "", desc = "add/priority/clock/set todo", ft = { "orgagenda", "org" } },
-      { "<Leader>map", "", desc = "priority", ft = { "orgagenda", "org" } },
-      { "<Leader>mac", "", desc = "clock", ft = { "orgagenda", "org" } },
-      { "<Leader>mv", "", desc = "view", ft = { "orgagenda", "org" } },
-      { "<Leader>me", "", desc = "edit date/schedule/codeblock", ft = { "orgagenda", "org" } },
-      { "<Leader>mx", "", desc = "export/exec", ft = { "orgagenda", "org" } },
+      { "<Leader>mv", "", desc = "view", ft = { "orgagenda" } },
+      { "<Leader>ms", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
+      { "<Leader>msp", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<Leader>msc", "", desc = "clock", ft = { "orgagenda", "org" } },
+      { "<Leader>mx", "", desc = "export", ft = { "org" } },
 
       { "<Leader>mr", "", desc = "remove/redo", ft = "org" },
       { "<Leader>mu", "", desc = "toggle", ft = "org" },
@@ -131,7 +130,7 @@ return {
           string.format("%s/*/**/*", RUtils.config.path.wiki_path),
           -- string.format("%s/*/*/*", RUtils.config.path.wiki_path),
           -- string.format("%s/*/*", RUtils.config.path.wiki_path),
-          string.format("%s/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
         org_todo_keywords = {
@@ -309,39 +308,39 @@ return {
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "o" },
-            org_agenda_goto_date = "<Leader>ndd",
+            org_agenda_goto_date = "<Leader>mvD",
             org_agenda_open_at_point = "<Leader>mo",
 
             org_agenda_switch_to = "<TAB>",
 
             -- Todo Effort
-            org_agenda_todo = "<Leader>mat",
-            org_agenda_set_effort = "<Leader>mae",
+            org_agenda_todo = "<Leader>mst",
+            org_agenda_set_effort = "<Leader>mse",
 
             -- Clock
-            org_agenda_clock_in = "<Leader>maci",
-            org_agenda_clock_out = "<Leader>maco",
-            org_agenda_clock_goto = "<Leader>macg",
-            org_agenda_clock_cancel = "<Leader>macc",
+            org_agenda_clock_in = "<Leader>msci",
+            org_agenda_clock_out = "<Leader>msco",
+            org_agenda_clock_goto = "<Leader>mscg",
+            org_agenda_clock_cancel = "<Leader>mscc",
 
-            org_agenda_clockreport_mode = "<Leader>macr", -- buat report clock
+            org_agenda_clockreport_mode = "<Leader>mscr", -- buat report clock
 
             -- Priority
-            org_agenda_priority = "<Leader>mapP",
-            org_agenda_priority_up = "<c-k>",
-            org_agenda_priority_down = "<c-j>",
+            org_agenda_priority = "<Leader>mspP",
+            org_agenda_priority_up = "g]",
+            org_agenda_priority_down = "g[",
 
-            org_agenda_archive = "<Leader>mA",
+            org_agenda_archived = "<Leader>mA",
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "<Leader>mag",
+            org_agenda_set_tags = "<Leader>msg",
             org_agenda_refile = "<Leader>mR",
-            org_agenda_add_note = "<Leader>man",
+            org_agenda_add_note = "<Leader>msn",
 
-            org_agenda_toggle_archive_tag = "<Leader>maA",
+            org_agenda_toggle_archive_tag = "<Leader>msG",
 
-            org_agenda_deadline = "<Leader>med",
-            org_agenda_schedule = "<Leader>mes",
+            org_agenda_deadline = "<Leader>msd",
+            org_agenda_schedule = "<Leader>mss",
 
             org_agenda_preview = "K",
 
@@ -358,8 +357,8 @@ return {
             org_capture_show_help = "?",
           },
           note = {
-            org_note_finalize = { "<C-c>", "<C-s>" },
-            org_note_kill = { "q", "<C-q>" },
+            org_note_finalize = { "<CR>", "<C-s>" },
+            org_note_kill = { "q", "<C-q>", "<Leader>bk" },
           },
           org = {
             -- Timestamp
@@ -369,8 +368,8 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "<Leader>mat",
-            org_todo_prev = "<Leader>maT",
+            org_todo = "<Leader>mst",
+            org_todo_prev = "<Leader>msT",
             org_toggle_heading = "<Leader>muh",
 
             -- Navigation
@@ -390,28 +389,28 @@ return {
             org_global_cycle = "ZR",
 
             -- Clock
-            org_clock_in = "<Leader>maci",
-            org_clock_out = "<Leader>maco",
-            org_clock_cancel = "<Leader>macc",
-            org_clock_goto = "<Leader>macg",
+            org_clock_in = "<Leader>msci",
+            org_clock_out = "<Leader>msco",
+            org_clock_cancel = "<Leader>mscc",
+            org_clock_goto = "<Leader>mscg",
 
             -- Priority
-            org_priority = "<Leader>mapP",
-            org_priority_up = "<Leader>mapn",
-            org_priority_down = "<Leader>mapp",
+            org_priority = "<Leader>mspP",
+            org_priority_up = "g]",
+            org_priority_down = "g[",
 
             -- Promote / Demote
-            org_do_promote = "<c-h>",
-            org_do_demote = "<c-l>",
-            org_promote_subtree = "<S-Left>",
-            org_demote_subtree = "<S-Right>",
+            org_do_promote = "<S-Left>",
+            org_do_demote = "<S-Right>",
+            org_promote_subtree = "<C-Left>",
+            org_demote_subtree = "<C-Right>",
 
             -- Move subtree
-            org_move_subtree_up = "<c-k>",
-            org_move_subtree_down = "<c-j>",
+            org_move_subtree_up = "<S-Up>",
+            org_move_subtree_down = "<S-Down>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "<Leader>mag",
+            org_set_tags_command = "<Leader>msg",
             org_refile = "<Leader>mR",
 
             -- Links
@@ -424,23 +423,22 @@ return {
             org_toggle_timestamp_type = "<Leader>mut",
 
             -- Insert Deadline or Schedule
-            org_deadline = "<Leader>med",
-            org_schedule = "<Leader>mes",
-            org_set_effort = "<Leader>mae",
-            org_add_note = "<Leader>man",
+            org_deadline = "<Leader>msd",
+            org_schedule = "<Leader>mss",
+            org_set_effort = "<Leader>mse",
+            org_add_note = "<Leader>msn",
 
             -- Export / Babel
-            org_export = "<Leader>mxe",
+            org_export = "<Leader>mx",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
-            -- cara: masuk ke block code (begin_src), lalu combine mapping ini,
-            -- jika selesi :wq
-            org_edit_special = "<Leader>meE",
+            -- cara: ini work ketika cursor berada di dalam block code
+            org_edit_special = "<Leader>msE",
 
             -- set current node to archived
             org_archive_subtree = "<Leader>mA",
-            org_toggle_archive_tag = "<Leader>mut",
+            org_toggle_archive_tag = "<Leader>msG",
 
             org_toggle_checkbox = "<C-c>",
             org_open_at_point = { "<Leader>ld", "<Leader>mo" },
@@ -538,8 +536,8 @@ return {
 
         find_node = "<Leader>nfr", ---Finds node and moves to it.
 
-        goto_next_node = "<S-Right>",
-        goto_prev_node = "<S-Left>",
+        goto_next_node = "]]]",
+        goto_prev_node = "[[[",
 
         insert_node = "<Leader>ii", ---Inserts node at cursor position.
         insert_node_immediate = "<Leader>iI", ---Inserts node at cursor position without opening capture buffer.
@@ -697,10 +695,10 @@ return {
         filter_fuzzy = "<Leader>sf", -- live filter (fuzzy)
         filter_query = "<Leader>sF", -- advanced query input
         undo = "u", -- undo last change
-        reschedule = "<Leader>mes", -- set/change SCHEDULED
-        set_deadline = "<Leader>med", -- set/change DEADLINE
+        reschedule = "<Leader>mss", -- set/change SCHEDULED
+        set_deadline = "<Leader>msd", -- set/change DEADLINE
         cycle_todo = "t", -- cycle TODO state
-        set_state = "<Leader>mat", -- set state directly (st, sd, etc.) or show menu
+        set_state = "<Leader>mst", -- set state directly (st, sd, etc.) or show menu
         reload = "R", -- refresh agenda
         refile = "<Leader>mR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
@@ -952,7 +950,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
-      legacy_commands = false,
+      -- legacy_commands = false,
       link = { style = "markdown" },
       workspaces = {
         {

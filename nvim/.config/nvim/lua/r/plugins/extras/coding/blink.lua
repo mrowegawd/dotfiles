@@ -138,7 +138,7 @@ return {
                     return ""
                   end
 
-                  -- return "CmpItemKind" .. ctx.kind
+                  return "CmpItemKind" .. ctx.kind
                 end,
               },
               source_name = {

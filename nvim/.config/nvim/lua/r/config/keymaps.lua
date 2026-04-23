@@ -22,6 +22,9 @@ RUtils.map.inoremap("<a-h>", "<Left>", silent)
 RUtils.map.inoremap("<a-j>", "<Down>", silent)
 RUtils.map.inoremap("<a-k>", "<Up>", silent)
 
+RUtils.map.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
+RUtils.map.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
+
 -- RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
@@ -270,7 +273,7 @@ RUtils.map.nnoremap(
 -- {{{ Buffers
 RUtils.map.nnoremap("<Leader>bt", arange_wins "tabe", { desc = "Buffer: move buffer to the new tab", silent = true })
 RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: alternate/last buffer", silent = true })
-RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size", silent = true })
+RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size buffer window", silent = true })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })
 RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close (force)", silent = true })
 RUtils.map.nnoremap("<Leader>bK", function()
@@ -306,7 +309,7 @@ RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: left" })
 RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: right" })
 RUtils.map.cnoremap("<C-b>", "<S-Left>", { desc = "Commandline: back word" })
-RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: fwd word" })
+-- RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: fwd word" })
 -- }}}
 -- {{{ Cabbrev
 RUtils.map.cabbrev("BD", "bd!")
@@ -662,8 +665,9 @@ Snacks.toggle.treesitter():map "<Leader>us"
 -- Snacks.toggle.profiler():map "<Localleader>spp"
 -- Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 
+-- Snacks.toggle.inlay_hints():map "<Leader>un"
+
 -- if vim.lsp.inlay_hint then
-Snacks.toggle.inlay_hints():map "<Leader>un"
 --   if not vim.g.inlay_hints then
 --     RUtils.info "Inlay hint On"
 --     vim.g.inlay_hints = true
