@@ -3,7 +3,7 @@
 # +-----------------------------------------------------------+
 font-family                     = "SF Mono"
 
-font-size                       = 13.8
+font-size                       = 9
 # font-feature                    = -calt
 # font-feature                    = -liga
 # font-feature                    = -dlig
@@ -16,7 +16,7 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = tokyonight-storm
+theme = habamax
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |

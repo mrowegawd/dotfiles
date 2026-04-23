@@ -2025,42 +2025,42 @@ local general_overrides = function()
       CmpItemKindArray = {
         inherit = "LspKindArray",
         fg = { from = "LspKindArray", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindArray", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindArray", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindFunction = {
         inherit = "LspKindFunction",
         fg = { from = "LspKindFunction", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindFunction", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindFunction", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindBoolean = {
         inherit = "LspKindBoolean",
         fg = { from = "LspKindBoolean", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindBoolean", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindBoolean", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindVariable = {
         inherit = "LspKindVariable",
         fg = { from = "LspKindVariable", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindVariable", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindVariable", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindMethod = {
         inherit = "LspKindMethod",
         fg = { from = "LspKindMethod", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindMethod", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindMethod", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindModule = {
         inherit = "LspKindModule",
         fg = { from = "LspKindModule", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindModule", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindModule", attr = "fg", alter = -0.65 },
       },
     },
     -- {
@@ -2086,175 +2086,175 @@ local general_overrides = function()
       CmpItemKindConstant = {
         inherit = "LspKindConstant",
         fg = { from = "LspKindConstant", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindConstant", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindConstant", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindStruct = {
         inherit = "LspKindStruct",
         fg = { from = "LspKindStruct", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindStruct", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindStruct", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindSnippet = {
         inherit = "LspKindSnippet",
         fg = { from = "LspKindSnippet", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindSnippet", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindSnippet", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindString = {
         inherit = "LspKindString",
         fg = { from = "LspKindString", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindString", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindString", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindNumber = {
         inherit = "LspKindNumber",
         fg = { from = "LspKindNumber", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindNumber", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindNumber", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindPackage = {
         inherit = "LspKindPackage",
         fg = { from = "LspKindPackage", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindPackage", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindPackage", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindObject = {
         inherit = "LspKindObject",
         fg = { from = "LspKindObject", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindObject", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindObject", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindNamespace = {
         inherit = "LspKindNamespace",
         fg = { from = "LspKindNamespace", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindNamespace", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindNamespace", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindEvent = {
         inherit = "LspKindEvent",
         fg = { from = "LspKindEvent", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindEvent", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindEvent", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindField = {
         inherit = "LspKindField",
         fg = { from = "LspKindField", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindField", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindField", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindFile = {
         inherit = "LspKindFile",
         fg = { from = "LspKindFile", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindFile", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindFile", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindFolder = {
         inherit = "LspKindFolder",
         fg = { from = "LspKindFolder", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindFolder", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindFolder", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindInterface = {
         inherit = "LspKindInterface",
         fg = { from = "LspKindInterface", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindInterface", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindInterface", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindUnit = {
         inherit = "LspKindUnit",
         fg = { from = "LspKindUnit", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindUnit", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindUnit", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindKey = {
         inherit = "LspKindKey",
         fg = { from = "LspKindKey", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindKey", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindKey", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindKeyword = {
         inherit = "LspKindKeyword",
         fg = { from = "LspKindKeyword", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindKeyword", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindKeyword", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindNull = {
         inherit = "LspKindNull",
         fg = { from = "LspKindNull", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindNull", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindNull", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindOperator = {
         inherit = "LspKindOperator",
         fg = { from = "LspKindOperator", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindOperator", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindOperator", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindProperty = {
         inherit = "LspKindProperty",
         fg = { from = "LspKindProperty", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindProperty", attr = "fg", alter = -0.65 },
+        -- bg = { from = "LspKindProperty", attr = "fg", alter = -0.65 },
       },
     },
     {
       CmpItemKindReference = {
         inherit = "LspKindReference",
         fg = { from = "LspKindReference", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindReference", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindReference", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindValue = {
         inherit = "LspKindValue",
         fg = { from = "LspKindValue", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindValue", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindValue", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindEnum = {
         inherit = "LspKindEnum",
         fg = { from = "LspKindEnum", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindEnum", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindEnum", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindEnumMember = {
         inherit = "LspKindEnumMember",
         fg = { from = "LspKindEnumMember", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindEnumMember", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindEnumMember", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindConstructor = {
         inherit = "LspKindConstructor",
         fg = { from = "LspKindConstructor", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindConstructor", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindConstructor", attr = "fg", alter = -0.5 },
       },
     },
     {
       CmpItemKindTypeParameter = {
         inherit = "LspKindTypeParameter",
         fg = { from = "LspKindTypeParameter", attr = "fg", alter = 0.1 },
-        bg = { from = "LspKindTypeParameter", attr = "fg", alter = -0.5 },
+        -- bg = { from = "LspKindTypeParameter", attr = "fg", alter = -0.5 },
       },
     },
     { CmpItemKindCopilot = { bg = "NONE", fg = "#118c74" } },

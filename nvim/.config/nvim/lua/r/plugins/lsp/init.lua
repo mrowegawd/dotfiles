@@ -63,7 +63,7 @@ return {
         -- Be aware that you also will need to properly configure your LSP server to
         -- provide the code lenses.
         codelens = {
-          enabled = true,
+          enabled = false,
         },
         -- Enable this to enable the builtin LSP folding on Neovim.
         -- Be aware that you also will need to properly configure your LSP server to
@@ -199,16 +199,14 @@ return {
               },
               {
                 "<Leader>cc",
-                vim.lsp.codelens.run,
-                desc = "Action: run codelens",
+                function()
+                  local code_lens_enabled = not vim.lsp.codelens.is_enabled()
+                  vim.lsp.codelens.enable(code_lens_enabled)
+
+                  RUtils.info(tostring(code_lens_enabled), { title = "CodeLens Status" })
+                end,
+                desc = "Action: toggle codelens",
                 mode = { "n", "x" },
-                has = "codeLens",
-              },
-              {
-                "<Leader>cC",
-                vim.lsp.codelens.refresh,
-                desc = "Action: codelens refresh",
-                mode = { "n" },
                 has = "codeLens",
               },
 
@@ -292,6 +290,13 @@ return {
     config = vim.schedule_wrap(function(_, opts)
       -- setup autoformat
       RUtils.format.register(RUtils.lsp.formatter())
+      --
+      -- setup keymaps
+      local keys = {}
+      for server in pairs(opts.servers) do
+        table.insert(keys, server)
+      end
+      table.sort(keys)
 
       -- disable default keybindings
       for _, bind in ipairs { "grn", "gra", "gri", "grr", "gO", "grt" } do
@@ -300,7 +305,10 @@ return {
       vim.keymap.del("s", "<C-s>")
 
       -- setup keymaps
-      for server, server_opts in pairs(opts.servers) do
+      local names = vim.tbl_keys(opts.servers) ---@type string[]
+      table.sort(names)
+      for _, server in ipairs(names) do
+        local server_opts = opts.servers[server]
         if type(server_opts) == "table" and server_opts.keys then
           require("r.keymaps.lsp").set({ name = server ~= "*" and server or nil }, server_opts.keys)
         end
@@ -337,10 +345,12 @@ return {
       -- code lens
       if opts.codelens.enabled and vim.lsp.codelens then
         Snacks.util.lsp.on({ method = "textDocument/codeLens" }, function(buffer)
-          vim.lsp.codelens.refresh()
           vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
             buffer = buffer,
-            callback = vim.lsp.codelens.refresh,
+            callback = function()
+              local code_lens_enabled = not vim.lsp.codelens.is_enabled()
+              vim.lsp.codelens.enable(code_lens_enabled)
+            end,
           })
         end)
       end

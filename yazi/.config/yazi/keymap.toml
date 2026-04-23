@@ -4,7 +4,7 @@
 [mgr]
 prepend_keymap = [
   { on = [
-    "l",
+    "<Enter>",
   ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [
     "<Tab>",
@@ -135,7 +135,7 @@ keymap = [
   ], run = "arrow 100%", desc = "Move cursor down one page" },
 
   { on = [
-    "h",
+    "<BackSpace>",
   ], run = [
     "leave",
     "escape --visual --select",
@@ -394,6 +394,30 @@ keymap = [
     "n",
   ], run = "tab_create --current", desc = "Create a new tab using the current path" },
   { on = [
+    "t",
+    "h",
+  ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+  { on = [
+    "t",
+    "l",
+  ], run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
+  { on = [
+    "<",
+  ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+  { on = [
+    ">",
+  ], run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
+  { on = [
+    "{",
+  ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
+  { on = [
+    "}",
+  ], run = "tab_swap 1", desc = "Swap the current tab with the next tab" },
+  { on = [
+    "t",
+    "c",
+  ], run = "tab_close", desc = "Switch to the next tab" },
+  { on = [
     "1",
   ], run = "tab_switch 0", desc = "Switch to the first tab" },
   { on = [
@@ -420,26 +444,6 @@ keymap = [
   { on = [
     "9",
   ], run = "tab_switch 8", desc = "Switch to the ninth tab" },
-  { on = [
-    "t",
-    "h",
-  ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
-  { on = [
-    "t",
-    "l",
-  ], run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
-  { on = [
-    "<",
-  ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
-  { on = [
-    ">",
-  ], run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
-  { on = [
-    "{",
-  ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
-  { on = [
-    "}",
-  ], run = "tab_swap 1", desc = "Swap the current tab with the next tab" },
 
   # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
   # ╎ Tasks                                                    ╎

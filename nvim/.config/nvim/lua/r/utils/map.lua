@@ -745,19 +745,16 @@ end
 
 local is_set_toggle_words = false
 function M.lsp.toggle_words()
-  local notify_msg
   local is_enabled = Snacks.words.enabled
 
   if is_enabled and is_set_toggle_words then
     Snacks.words.disable()
     is_set_toggle_words = false
-    notify_msg = "LSP Document Highlight: OFF"
   else
     Snacks.words.enable()
     is_set_toggle_words = true
-    notify_msg = "LSP Document Highlight: ON"
   end
-  RUtils.info(notify_msg)
+  RUtils.info(tostring(not is_enabled), { title = "Toggle Jump Scope Highlight" })
 end
 
 return M

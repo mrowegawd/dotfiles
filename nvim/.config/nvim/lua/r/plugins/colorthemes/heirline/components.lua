@@ -587,7 +587,7 @@ M.FilePath = {
         return " " .. cwd .. "/"
       end
     end,
-    hl = { fg = colors.qf_indicator_fg, bold = true },
+    hl = { fg = colors.qf_indicator_fg, bold = false },
   },
   {
     provider = function(self)
@@ -1669,7 +1669,7 @@ M.WinbarFilePath = {
     end,
     hl = function()
       local hl_opts = set_hl()
-      return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
+      return { fg = hl_opts.fg, bg = hl_opts.bg, bold = false }
     end,
   },
   {

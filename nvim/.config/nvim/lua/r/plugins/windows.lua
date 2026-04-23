@@ -17,6 +17,14 @@
 --   return false
 -- end
 
+local function get_status_stacked()
+  local Stack = require "overlook.stack"
+  if not Stack.empty() then
+    return true
+  end
+  return false
+end
+
 return {
   -- STICKYBUF.NVIM
   {
@@ -227,6 +235,11 @@ return {
         {
           "<a-H>",
           function()
+            if get_status_stacked() then
+              vim.cmd "vertical resize -8"
+              return
+            end
+
             local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
             if exclude_win.found then
               local resizer_h = "+5"
@@ -235,7 +248,6 @@ return {
               end
               return vim.cmd("vertical resize " .. resizer_h)
             end
-            -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "left")
             require("smart-splits").resize_left()
           end,
           desc = "Window: resize window left [smart-splits]",
@@ -243,26 +255,34 @@ return {
         {
           "<a-J>",
           function()
+            if get_status_stacked() then
+              vim.cmd "resize +8"
+              return
+            end
+
             require("smart-splits").resize_down()
-            -- if RUtils.navigate_window.check_split_or_vsplit() then
-            --   vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "down")
-            -- end
           end,
           desc = "Window: resize window down [smart-splits]",
         },
         {
           "<a-K>",
           function()
+            if get_status_stacked() then
+              vim.cmd "resize -8"
+              return
+            end
             require("smart-splits").resize_up()
-            -- if RUtils.navigate_window.check_split_or_vsplit() then
-            --   vim.cmd("resize " .. RUtils.navigate_window.resize_plus_or_mines "up")
-            -- end
           end,
           desc = "Window: resize window up [smart-splits]",
         },
         {
           "<a-L>",
           function()
+            if get_status_stacked() then
+              vim.cmd "vertical resize +8"
+              return
+            end
+
             local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
             if exclude_win.found then
               local resizer_l = "-5"
@@ -271,7 +291,6 @@ return {
               end
               return vim.cmd("vertical resize " .. resizer_l)
             end
-            -- vim.cmd("vertical resize " .. RUtils.navigate_window.resize_plus_or_mines "right")
             require("smart-splits").resize_right()
           end,
           desc = "Window: resize window right [smart-splits]",
