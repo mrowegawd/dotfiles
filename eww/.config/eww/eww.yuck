@@ -11,10 +11,10 @@
     (right-widgets)))
 
 (defwindow bar
-   :geometry (geometry :x "10px" ; ---> ini mengatur gap antara monitor dan window
+   :geometry (geometry :x "8px" ; ---> ini mengatur gap antara monitor dan window
                        :y "0px"
-                       :width "3%"
-                       :height "98%"
+                       :width "5%"
+                       :height "96%"
                        :anchor "left center")
   :monitor 0
   :windowtype "desktop" ; --> use 'desktop' untuk membuat sidebar agar di hide ketika fullscreen

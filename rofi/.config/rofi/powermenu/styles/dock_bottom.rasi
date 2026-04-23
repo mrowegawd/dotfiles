@@ -17,7 +17,7 @@ window {
     width:                          100%;
     location:                       south;
     x-offset:                       0;
-    y-offset:                       -30%; // kembali kan ke 0, jika tidak memakai broken monitor
+    y-offset:                       0; // kembali kan ke 0, jika tidak memakai broken monitor -30%
 }
 
 prompt {

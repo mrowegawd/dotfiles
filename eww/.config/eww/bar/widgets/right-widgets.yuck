@@ -12,7 +12,7 @@
        :orientation "v"
        :space-evenly true
        :halign "center"
-       :valign "end"
+       :valign "center"
        ; :spacing 20
 
        ;(network)

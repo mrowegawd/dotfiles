@@ -1,12 +1,23 @@
 (defwidget cpu []
   (box
-       :orientation "v"
-       :space-evenly false
-       :tooltip "CPU"
-    (button :class "icon" :onclick "bar/scripts/openwindow.sh btop &"
+    :orientation "v"
+    :space-evenly false
+    :tooltip "CPU"
+    :hexpand false
+    :vexpand true
+    (button
+      :class "icon"
+      :hexpand false
+      :vexpand false
+      :onclick "bar/scripts/openwindow.sh btop &"
       (label :text "")
     )
-    (button :class "texting" (label :text "${round(EWW_CPU.avg, 0)}%")
+    (button
+      :class "texting"
+      :hexpand false
+      :vexpand false
+      (label :text "${round(EWW_CPU.avg, 0)}%")
     )
+
   )
 )

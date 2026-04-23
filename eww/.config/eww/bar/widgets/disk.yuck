@@ -1,12 +1,22 @@
 (defwidget disk []
-  (box :class ""
-       :orientation "v"
-       :space-evenly false
-       :tooltip "DISK"
-    (button :class "icon" :onclick "gnome-disks &"
+  (box
+    :class ""
+    :orientation "v"
+    :space-evenly false
+    :tooltip "DISK"
+    :hexpand false
+    :vexpand false
+    (button
+      :class "icon"
+      :halign "center"
+      :valign "center"
+      :onclick "gnome-disks &"
       (label :text "")
     )
-    (button :class "texting"
+    (button
+      :class "texting"
+      :halign "center"
+      :valign "center"
       (label :text "${round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}%")
     )
   )

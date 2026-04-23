@@ -34,12 +34,12 @@ window {
     border-radius:                  12px;
     width: 						              20%;
     height: 					              50%;
-    // y-offset:                       -8.5em;
-    // x-offset:                       -16em;
+    y-offset:                       -8.5em;
+    x-offset:                       -16em;
 
     // broken monitor
-    y-offset:                       -12em;
-    x-offset:                       -20em;
+    // y-offset:                       -12em;
+    // x-offset:                       -20em;
 }
 
 prompt {

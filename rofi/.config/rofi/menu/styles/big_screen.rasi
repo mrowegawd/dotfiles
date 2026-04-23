@@ -38,8 +38,8 @@ window {
     height: 					              50%;
 
     // broken monitor
-    y-offset:                       -8em;
-    x-offset:                       3em;
+    // y-offset:                       -8em;
+    // x-offset:                       3em;
 }
 
 prompt {
