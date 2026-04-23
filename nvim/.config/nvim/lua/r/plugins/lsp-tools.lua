@@ -406,10 +406,11 @@ return {
   },
   -- TINY-CODE-ACTION
   {
-    "rachartier/tiny-code-action.nvim",
+    -- "rachartier/tiny-code-action.nvim",
+    dir = "~/.local/src/nvim_plugins/tiny-code-action.nvim",
     event = "LspAttach",
     opts = {
-      backend = "delta",
+      backend = "delta", -- delta, vim
       picker = "fzf-lua",
       backend_opts = {
         delta = { header_lines_to_remove = 4 },

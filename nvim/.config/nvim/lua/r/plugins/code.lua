@@ -302,6 +302,7 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     cmd = "Refactor",
+    -- event = { "BufReadPre", "BufNewFile" },
     keys = {
       -- { "<Leader>rr", "", desc = "refactoring" },
       -- {

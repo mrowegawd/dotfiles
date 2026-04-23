@@ -650,7 +650,7 @@ return {
   },
   -- DIFFVIEW
   {
-    "sindrets/diffview.nvim",
+    "dlyongemallo/diffview.nvim",
     event = "LazyFile",
     keys = {
       { "<Leader>mc", "", desc = "conflict", ft = { "DiffviewFiles", "DiffviewFileHistory" } },
@@ -951,10 +951,10 @@ return {
         view = {
           quit = "q", -- Close diff tab
           toggle_explorer = "<Leader>ue", -- Toggle explorer
-          next_hunk = "<C-n>",
-          prev_hunk = "<C-p>",
-          next_file = "<A-n>",
-          prev_file = "<A-p>",
+          next_hunk = "<a-n>",
+          prev_hunk = "<a-p>",
+          next_file = "<c-n>",
+          prev_file = "<c-p>",
           diff_get = "do", -- Get change from other buffer (like vimdiff)
           diff_put = "dp", -- Put change to other buffer (like vimdiff)
         },

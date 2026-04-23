@@ -1,18 +1,12 @@
 #!/bin/bash
 
-# Daftar proses yang ingin dicari dan di-kill
-processes=("nvim" "firefox")
+# Daftar process yang ingin dikill
+processes=("nvim" "firefox" "zen")
 
 for proc in "${processes[@]}"; do
-    # Mengambil PID dari proses
-    pids=$(pgrep "$proc")
+  pids=$(pgrep "$proc")
 
-    if [ -n "$pids" ]; then
-        echo "Menemukan proses $proc dengan PID: $pids"
-        # Menghentikan semua proses tersebut
-        kill -9 $pids
-        echo "Proses $proc telah dihentikan."
-    else
-        echo "Tidak ada proses $proc yang ditemukan."
-    fi
+  if [ -n "$pids" ]; then
+    kill -9 "$pids"
+  fi
 done

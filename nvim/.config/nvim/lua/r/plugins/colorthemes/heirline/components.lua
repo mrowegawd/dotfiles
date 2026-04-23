@@ -53,7 +53,7 @@ local set_conditions = {
   end,
   is_path_git_relative = function()
     local path = get_vars.path()
-    return path:match "fugitive:/" or path:match "diffview:/" or path:match "neogit:/"
+    return path:match "fugitive:/" or path:match "diffview:/" or path:match "neogit:/" or path:match "gitsigns:/"
   end,
   is_terminal_ft = function()
     return vim.bo.buftype == "terminal"
@@ -1026,10 +1026,10 @@ M.SearchCount = {
       if search_query == "" then
         return string.format("%s/%s  ", current, total)
       else
-        return string.format("(%s) %s/%s  ", search_query, current, total)
+        return string.format(" (%s) %s/%s  ", search_query, current, total)
       end
     end,
-    hl = { bg = colors.diagnostic_err, fg = colors.statusline_bg, bold = true },
+    hl = { bg = colors.diagnostic_err, fg = colors.bright, bold = true },
   },
 }
 M.Diagnostics = {
@@ -1674,7 +1674,7 @@ M.WinbarFilePath = {
   },
   {
     condition = function()
-      return vim.bo[0].filetype ~= "qf" and not set_conditions.is_diff()
+      return vim.bo[0].filetype ~= "qf" and not set_conditions.is_diff() and not set_conditions.is_path_git_relative()
     end,
     provider = function(self)
       return RUtils.file.basename(self.filename) .. " "

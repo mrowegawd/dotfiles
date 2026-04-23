@@ -119,17 +119,21 @@ return {
       "ProjectAdd",
       "ProjectConfig",
       "ProjectDelete",
-      "ProjectExportJSON",
-      "ProjectImportJSON",
+      "ProjectExport",
+      "ProjectFzf", -- If using `fzf-lua` integration
       "ProjectHealth",
       "ProjectHistory",
+      "ProjectImport",
+      "ProjectLog", -- If logging is enabled
+      -- "ProjectPicker", -- If using `picker.nvim` integration
       "ProjectRecents",
       "ProjectRoot",
       "ProjectSession",
+      -- "ProjectSnacks", -- If using `snacks.nvim` integration
+      -- "ProjectTelescope", -- If using `telescope.nvim` integration
     },
     keys = {
-      { "<Leader>pF", "<CMD>ProjectFzf<CR>", desc = "Project: find files in projects [project.nvim]" },
-      { "<Leader>pf", "<CMD>FzfLua files<CR>", desc = "Project: find files current project [project.nvim]" },
+      { "<Leader>pf", "<CMD>ProjectFzf<CR>", desc = "Project: find files in projects [project.nvim]" },
       { "<Leader>pp", "<CMD>ProjectRecents<CR>", desc = "Project: switch project [project.nvim]" },
       { "<Leader>ph", "<CMD>ProjectConfig<CR>", desc = "Project: show configs [project.nvim]" },
       {
@@ -151,10 +155,9 @@ return {
     opts = {
       show_hidden = true,
       fzf_lua = { enabled = true },
-
-      -- Path where project.nvim will store the project history
-      -- datapath = vim.fn.stdpath "data" <-- the default
-      datapath = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path),
+      history = {
+        save_dir = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path),
+      },
     },
   },
 }

@@ -128,8 +128,9 @@ return {
           },
         },
         org_agenda_files = {
-          string.format("%s/*/*/*", RUtils.config.path.wiki_path),
-          string.format("%s/*/*", RUtils.config.path.wiki_path),
+          string.format("%s/*/**/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/*/*/*", RUtils.config.path.wiki_path),
+          -- string.format("%s/*/*", RUtils.config.path.wiki_path),
           string.format("%s/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
@@ -138,14 +139,14 @@ return {
           "LEARNING(l)", -- task untuk jadwal learning
           "PROGRESS(p)", -- task yang sedang dikerjakan
           "WAITING(n)", -- task yang akan dialankan setelah 'progress' task selesai
-          -- "CHECK(c)", -- task yang boleh dikerjakan saat free-time
+          "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
           -- "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
           "|",
           "DONE(d)",
         },
         org_todo_keyword_faces = {
-          -- CHECK = ":foreground blue :background royalblue :weight bold :slant normal",
+          CHECK = ":foreground blue :background royalblue :weight bold :slant normal",
           NEXT = ":foreground brightmagenta :background darkmagenta :weight bold :slant normal",
           TODO = ":foreground red :weight bold :slant normal",
           HBD = ":foreground black :background pink :weight bold :slant normal",
@@ -199,6 +200,12 @@ return {
           -- },
         },
         win_split_mode = "vertical",
+        -- win_split_mode = function(name)
+        --   vim.cmd("vsplit " .. name)
+        --   local width = math.floor(vim.o.columns * 0.3) -- 30% layar
+        --   vim.cmd("vertical resize " .. width)
+        -- end,
+        org_agenda_min_height = 2,
         org_agenda_custom_commands = {
           -- "c" is the shortcut that will be used in the prompt
           c = {
@@ -945,6 +952,8 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
+      legacy_commands = false,
+      link = { style = "markdown" },
       workspaces = {
         {
           name = "journal",
@@ -997,7 +1006,6 @@ return {
           insert_link = "<C-l>",
         },
       },
-      preferred_link_style = "markdown",
       frontmatter = {
         func = function(note)
           -- Add the title of the note as an alias.

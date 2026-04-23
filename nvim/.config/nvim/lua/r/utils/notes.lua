@@ -668,7 +668,7 @@ function Mappicker.insert_backlinks()
       --ex: [[./../financial.org]] -> [[./../financial.org][financial]]
       local label = filename_label(relative)
 
-      local link = string.format("[[./%s][%s]]", relative, label)
+      local link = string.format("[[./%s][ %s]]", relative, label)
       vim.api.nvim_put({ link }, "c", false, true)
     end,
   }

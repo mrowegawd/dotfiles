@@ -3,7 +3,6 @@ return {
   {
     "azabiong/vim-highlighter",
     -- https://github.com/t9md/vim-quickhl (alternatif??)
-    -- event = "BufReadPost", -- no need it
     keys = {
       {
         "<leader>uh",
@@ -18,13 +17,13 @@ return {
           end
           vim.cmd ":Hi + "
         end,
-        desc = "Misc: highlight on cursor [vim-highlighter]",
+        desc = "Misc: highlighter on cursor [vim-highlighter]",
         mode = { "n", "v" },
       },
       {
         "<Leader>uH",
         "<CMD>Hi clear<CR>",
-        desc = "Misc: clear highlight [vim-highlighter]",
+        desc = "Misc: highlighter clear all [vim-highlighter]",
       },
     },
   },

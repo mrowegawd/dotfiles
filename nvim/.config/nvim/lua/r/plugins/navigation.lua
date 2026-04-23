@@ -4,18 +4,17 @@ return {
   -- OIL.NVIM
   {
     "stevearc/oil.nvim",
-    -- lazy = false,
     cmd = { "Oil" },
     keys = {
       { "<Leader>mv", "", desc = "view", ft = { "oil" } },
 
-      { "<Leader>oe", "<CMD>Oil<CR>", desc = "Open: current tree-directory" },
+      { "<Leader>oe", "<CMD>Oil<CR>", desc = "Open: focus file explorer" },
       {
         "<Leader>oE",
         function()
           require("oil").open(vim.fn.getcwd())
         end,
-        desc = "Open: cwd tree-directory",
+        desc = "Open: cwd explorer",
       },
     },
     dependencies = {
@@ -570,6 +569,8 @@ return {
             ["tn"] = "noop",
             ["<space>"] = "noop",
             ["w"] = "noop",
+            ["l"] = "noop",
+            -- ["h"] = "noop",
 
             ["<c-o>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
@@ -580,8 +581,8 @@ return {
 
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
-            ["l"] = "child_or_open",
-            ["h"] = "parent_or_close",
+            -- ["l"] = "child_or_open",
+            ["<BS>"] = "parent_or_close",
             ["P"] = {
               "toggle_open_preview",
               config = { use_float = true, use_image_nvim = true },
@@ -605,6 +606,7 @@ return {
             ["tl"] = "next_source",
             ["gh"] = "prev_source",
             ["gl"] = "next_source",
+
             [",c"] = { "order_by_created", nowait = false },
             [",d"] = { "order_by_diagnostics", nowait = false },
             [",m"] = { "order_by_modified", nowait = false },

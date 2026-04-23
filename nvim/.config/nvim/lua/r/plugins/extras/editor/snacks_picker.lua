@@ -301,6 +301,11 @@ return {
       {
         "<c-n>",
         function()
+          if vim.wo.diff then
+            RUtils.warn "The current file is in diff mode. cannot continue."
+            return
+          end
+
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
             local hilist = vim.fn.HiList()
@@ -333,6 +338,11 @@ return {
       {
         "<c-p>",
         function()
+          if vim.wo.diff then
+            RUtils.warn "The current file is in diff mode. cannot continue."
+            return
+          end
+
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
             local hilist = vim.fn.HiList()

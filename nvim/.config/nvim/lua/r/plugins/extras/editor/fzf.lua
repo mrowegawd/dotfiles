@@ -1065,7 +1065,11 @@ return {
         callback = function(bufn)
           vim.keymap.set("t", "<F2>", require("fzf-lua").builtin, { buffer = bufn.buf })
           vim.keymap.set("t", "<a-x>", "<a-x>", { buffer = bufn.buf })
-          -- vim.keymap.set("t", "<c-w>", "<c-w>", { buffer = buf, nowait = true })
+
+          vim.keymap.set("t", "<a-l>", "", { buffer = bufn.buf })
+          vim.keymap.set("t", "<a-h>", "", { buffer = bufn.buf })
+          vim.keymap.set("t", "<a-j>", "", { buffer = bufn.buf })
+          vim.keymap.set("t", "<a-k>", "", { buffer = bufn.buf })
         end,
       })
     end,

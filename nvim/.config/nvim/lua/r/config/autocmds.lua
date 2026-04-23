@@ -115,6 +115,7 @@ RUtils.map.augroup("SmartClose", {
 ---------------------------------
 -- WINDOW
 ---------------------------------
+local resize_window = { "orgagenda", "NeogitCommitMessage" }
 RUtils.map.augroup("WindowBehaviour", {
   event = "FileType",
   pattern = {
@@ -129,7 +130,7 @@ RUtils.map.augroup("WindowBehaviour", {
   },
   command = function()
     cmd "wincmd J"
-    if vim.bo[0].filetype == "NeogitCommitMessage" then
+    if vim.tbl_contains(resize_window, vim.bo[0].filetype) then
       cmd [[resize 20]]
     end
   end,

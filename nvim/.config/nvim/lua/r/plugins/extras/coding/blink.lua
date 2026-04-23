@@ -46,16 +46,16 @@ return {
           return RUtils.cmp.expand(snippet)
         end,
       },
-      appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
-      fuzzy = {
-        implementation = "rust",
-        sorts = {
-          "exact",
-          -- defaults
-          "score",
-          "sort_text",
-        },
-      },
+      -- appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
+      -- fuzzy = {
+      --   implementation = "rust",
+      --   sorts = {
+      --     "exact",
+      --     -- defaults
+      --     "score",
+      --     "sort_text",
+      --   },
+      -- },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
@@ -74,32 +74,12 @@ return {
           winhighlight = "Normal:Pmenu,FloatBorder:PmenuFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
-            -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            -- columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
-            columns = { { "label", "kind", "kind_icon", gap = 1 } },
+            columns = {
+              { "kind_icon" },
+              { "label" },
+              { "source_name" },
+            },
             components = {
-              kind_icon = {
-                text = function(ctx)
-                  local kind = ""
-                  if ctx.kind == "Commit" then
-                    kind = RUtils.config.icons.git.unmerged
-                  else
-                    kind = RUtils.config.icons.kinds[ctx.kind] or ""
-                  end
-                  return " " .. RUtils.strip_whitespaces(kind) .. " "
-                end,
-                highlight = function(ctx)
-                  if ctx.deprecated then
-                    return "BlinkCmpLabelDeprecated"
-                  end
-
-                  if ctx.kind == "Text" then
-                    return ""
-                  end
-
-                  return "CmpItemKind" .. ctx.kind
-                end,
-              },
               label = {
                 width = { fill = true, max = 60 },
                 text = function(ctx)
@@ -129,14 +109,57 @@ return {
                   return highlights
                 end,
               },
-              kind = {
-                ellipsis = false,
-                width = { fill = true },
-                text = function(item)
-                  if item.kind == "Color" then
+              kind_icon = {
+                text = function(ctx)
+                  if ctx.source_name == "Cmdline" then
+                    return ""
+                  end
+
+                  local kind = ""
+
+                  if ctx.kind == "Color" then
                     return "██"
                   end
-                  return ("(%s)"):format(item.kind)
+
+                  if ctx.kind == "Commit" then
+                    kind = RUtils.config.icons.git.unmerged
+                  else
+                    kind = RUtils.config.icons.kinds[ctx.kind] or ""
+                  end
+
+                  return " " .. RUtils.strip_whitespaces(kind) .. " "
+                end,
+                highlight = function(ctx)
+                  if ctx.deprecated then
+                    return "BlinkCmpLabelDeprecated"
+                  end
+
+                  if ctx.kind == "Text" then
+                    return ""
+                  end
+
+                  -- return "CmpItemKind" .. ctx.kind
+                end,
+              },
+              source_name = {
+                ellipsis = false,
+                width = { fill = true },
+                text = function(ctx)
+                  local map = {
+                    buffer = "[Buffer]",
+                    codecompanion = "[CodeCompanion]",
+                    copilot = "[Copilot]",
+                    dbee = "[dbee]",
+                    emoji = "[Emoji]",
+                    git = "[Git]",
+                    lsp = "[LSP]",
+                    luasnip = "[Snippet]",
+                    path = "[Path]",
+                    tmux = "[Tmux]",
+                  }
+                  return map[ctx.source_id]
+                    or map[ctx.source_name]
+                    or ("[" .. (ctx.source_name or ctx.source_id or "?") .. "]")
                 end,
                 highlight = function(item)
                   if item.deprecated then
@@ -145,7 +168,6 @@ return {
                   if item.kind == "Color" then
                     return item.kind_hl
                   end
-                  -- return "LspKind" .. item.kind
                   return "BlinkCmpLabelKind"
                 end,
               },
@@ -154,12 +176,9 @@ return {
         },
         documentation = {
           auto_show = true,
-          auto_show_delay_ms = 200,
           window = {
-            border = RUtils.config.icons.border.rightsideonly,
-            -- border = "none",
+            border = RUtils.config.icons.border.rightsideonly, -- "none",
             winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
-            -- pri
           },
           -- draw = function(opts)
           --   opts.default_implementation()
@@ -175,17 +194,7 @@ return {
         },
       },
       cmdline = {
-        completion = { menu = { auto_show = true } },
-        sources = function()
-          local type = vim.fn.getcmdtype()
-          if type == "/" or type == "?" then
-            return { "buffer" }
-          end
-          if type == ":" or type == "@" then
-            return { "cmdline", "path" }
-          end
-          return {}
-        end,
+        completion = { menu = { auto_show = true }, ghost_text = { enabled = false } },
         keymap = {
           preset = "none",
           ["<Right>"] = false,
@@ -263,7 +272,16 @@ return {
       },
       sources = {
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer", "git", "ripgrep" },
+        default = function()
+          local sources = { "lsp", "path", "snippets", "buffer", "ripgrep" }
+
+          -- Workaround for git source not supporting per_filetype configuration
+          -- https://github.com/Kaiser-Yang/blink-cmp-git/issues/62#issuecomment-3062425218
+          if vim.tbl_contains({ "gitcommit", "octo" }, vim.bo.filetype) then
+            sources = { "buffer", "git" }
+          end
+          return sources
+        end,
 
         providers = {
           snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
@@ -288,28 +306,6 @@ return {
               end,
             },
           },
-          -- cmdline = {
-          --   -- Taken from
-          --   -- https://cmp.saghen.dev/recipes#disable-completion-in-only-shell-command-mode
-          --   enabled = function()
-          --     local cmdtype = vim.fn.getcmdtype()
-          --     local cmdline = vim.fn.getcmdline()
-          --
-          --     -- Existing: ignore cmdline completions when executing shell commands
-          --     if cmdtype ~= ":" or cmdline:match "^[%%0-9,'<>%-]*!" then
-          --       return false
-          --     end
-          --
-          --     -- New: check for absolute paths starting from root
-          --     local path_match = cmdline:match "%s(/[^%s]*)"
-          --     if path_match then
-          --       local slash_count = select(2, path_match:gsub("/", ""))
-          --       return slash_count >= 6 -- Only enable completion 6 levels down
-          --     end
-          --
-          --     return true
-          --   end,
-          -- },
           lsp = {
             name = "lsp",
             module = "blink.cmp.sources.lsp",
@@ -338,19 +334,6 @@ return {
               backend = {
                 use = "gitgrep-or-ripgrep",
               },
-            },
-          },
-
-          omni = {
-            module = "blink.cmp.sources.complete_func",
-            enabled = function()
-              return vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc"
-            end,
-            ---@type blink.cmp.CompleteFuncOpts
-            opts = {
-              complete_func = function()
-                return vim.bo.omnifunc
-              end,
             },
           },
         },

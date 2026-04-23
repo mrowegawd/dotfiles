@@ -34,6 +34,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
 
+-- require("vim._core.ui2").enable {} -- experimental new TUI message grid
+
 -- {{{ Generals
 -- opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
 opt.breakindent = true -- start wrapped lines indented

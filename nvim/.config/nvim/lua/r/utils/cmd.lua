@@ -249,24 +249,24 @@ local function open_mpv_sxiv_or_git(line_str)
 
   local sel_open_with = {
     ["Open MPV - Download/Open local/http video"] = {
-      -- prefix_cmd = {
-      --   "tsp",
-      --   "mpv",
-      --   "--ontop",
-      --   "--no-border",
-      --   "--force-window",
-      --   "--autofit=1000x500",
-      --   "--geometry=-20-60",
-      -- },
-      prefix_cmd = { -- broken monitor
+      prefix_cmd = {
         "tsp",
         "mpv",
         "--ontop",
         "--no-border",
         "--force-window",
-        "--autofit=600x500",
-        "--geometry=95%:40%",
+        "--autofit=1000x500",
+        "--geometry=-20-60",
       },
+      -- prefix_cmd = { -- broken monitor
+      --   "tsp",
+      --   "mpv",
+      --   "--ontop",
+      --   "--no-border",
+      --   "--force-window",
+      --   "--autofit=600x500",
+      --   "--geometry=95%:40%",
+      -- },
     },
 
     -- Kendala dengan sxiv ini, tidak bisa open image dengan line_str
@@ -869,8 +869,14 @@ function M.change_colors()
   local tab_statusline_fg = H.get("TmuxStatusline", "fg")
 
   -- Border Pane
-  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.4)
-  local border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.05)
+  local border_active, border_inactive
+  if vim.g.colorscheme == "rose-pine" then
+    border_active = H.tint(H.get("WinSeparator", "fg"), -0.6)
+    border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.1)
+  else
+    border_active = H.tint(H.get("WinSeparator", "fg"), 0.4)
+    border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.05)
+  end
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
   local zsh_lines = H.get("Zshlines", "fg")
