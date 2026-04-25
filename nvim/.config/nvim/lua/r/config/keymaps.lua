@@ -25,7 +25,6 @@ RUtils.map.inoremap("<a-k>", "<Up>", silent)
 RUtils.map.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
 RUtils.map.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
 
--- RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
 
@@ -34,11 +33,6 @@ RUtils.map.inoremap("hh", function()
   RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
-
--- conflict with mapping tmux split vertial/horizontal
--- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
--- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-
 -- }}}
 -- {{{ Folds
 RUtils.map.nnoremap("<C-a>", function()
@@ -68,12 +62,6 @@ end, { desc = "Fold: close all" })
 RUtils.map.nnoremap("zb", function()
   RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle fold level (util)" })
--- RUtils.map.nnoremap("zo", function()
---   RUtils.map.wrap_fold_cmd "normal! zO"
--- end, { desc = "Fold: open folds recursively" })
--- RUtils.map.nnoremap("zO", function()
---   RUtils.map.wrap_fold_cmd "normal! zmzO"
--- end, { desc = "Fold: open all current" })
 
 -- Navigate magic fold
 RUtils.map.nnoremap("<a-n>", function()
@@ -303,13 +291,9 @@ RUtils.map.nnoremap("<Leader>hb", RUtils.map.show_help_buf_keymap, {
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
--- Disabled: conflict with blink cmdline
--- RUtils.map.cnoremap("<C-n>", "<Down>", { desc = "Commandline: next hist" })
--- RUtils.map.cnoremap("<C-p>", "<Up>", { desc = "Commandline: prev hist" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: left" })
 RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: right" })
 RUtils.map.cnoremap("<C-b>", "<S-Left>", { desc = "Commandline: back word" })
--- RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: fwd word" })
 -- }}}
 -- {{{ Cabbrev
 RUtils.map.cabbrev("BD", "bd!")
@@ -384,37 +368,8 @@ RUtils.map.xnoremap(
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
--- if vim.fn.executable "lazygit" == 1 then
---   RUtils.map.nnoremap("<a-G>", function()
---     ---@diagnostic disable-next-line: missing-fields
---     Snacks.lazygit { cwd = RUtils.root.git() }
---   end, { desc = "Git: lazygit (root dir) [snacks]" })
---
---   RUtils.map.nnoremap("<Leader>gg", function()
---     ---@diagnostic disable-next-line: missing-fields
---     Snacks.lazygit { cwd = RUtils.root.git() }
---   end, { desc = "Git: lazygit (root dir) [snacks]" })
---   RUtils.map.nnoremap("<Leader>gG", function()
---     Snacks.lazygit()
---   end, { desc = "Git: lazygit (cwd) [snacks]" })
---   -- RUtils.map.nnoremap("<Leader>glc", function()
---   --   Snacks.lazygit.log_file()
---   -- end, { desc = "Git: lazygit current file history" })
---   -- RUtils.map.nnoremap("<Leader>glC", function()
---   --   Snacks.lazygit.log { cwd = RUtils.root.git() }
---   -- end, { desc = "Git: lazygit log" })
---   -- RUtils.map.nnoremap("<Leader>glg", function()
---   --   Snacks.lazygit.log()
---   -- end, { desc = "Git: lazygit log (cwd)" })
--- end
 -- }}}
 -- {{{ Misc
--- RUtils.map.nnoremap("<C-o>", "<C-o>zvzz", { desc = "Misc: jump back <c-o> and center" })
--- RUtils.map.nnoremap("<C-i>", "<C-i>zvzz", { desc = "Misc: jump forward <c-i> and center" })
-
--- RUtils.map.nnoremap("<Leader>qq", function()
---   vim.cmd "qal!"
--- end, { desc = "Quit: from nvim without save" })
 RUtils.map.nnoremap("<Leader>qQ", function()
   local buffers = vim.api.nvim_list_bufs()
 
@@ -466,11 +421,9 @@ RUtils.map.nnoremap("<Leader>fy", function()
   vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" })
 end, { silent = true, desc = "Files: yank current path" })
 RUtils.map.nnoremap("<Leader>hn", function()
-  -- "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-  -- convert into lua:
+  -- convert into lua: "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
   vim.cmd "nohlsearch"
   vim.cmd "diffupdate"
-  -- vim.cmd "normal! <C-L>"
 
   -- clean up vim-highlighter
   --
@@ -484,7 +437,6 @@ RUtils.map.nnoremap("<Leader>hn", function()
 end, { desc = "Help: redraw / clear hlsearch / diff update" })
 RUtils.map.nnoremap("<Esc>", function()
   vim.cmd "noh"
-  -- RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 RUtils.map.xnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
@@ -533,9 +485,6 @@ end
 -- Search & replace
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Search: replace under cursor" })
 RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: replace under cursor (visual)" })
-
--- Lazy log
--- RUtils.map.nnoremap("<Leader>ol", "<Cmd>Lazy log<CR>", { desc = "Open: lazy log" })
 
 -- Open with browser
 RUtils.map.nnoremap("<Leader>so", function()
@@ -623,10 +572,7 @@ end, { expr = true })
 local function print_non_builtin_maps(mode)
   local maps = vim.api.nvim_get_keymap(mode)
   for _, map in ipairs(maps) do
-    -- Builtin mappings biasanya punya sid > 0
-    -- RUtils.info(vim.inspect(map))
     if map.sid < 0 then
-      -- RUtils.info(string.format("[%s] %s -> %s", mode, map.lhs, map.rhs or ""))
       print(string.format("Mode:%s - %s -  %s desc: %s", mode, map.lhs, map.rhs or "", map.desc or ""))
     end
   end
@@ -638,44 +584,12 @@ RUtils.create_command("CheckMappings", function()
     print_non_builtin_maps(mode)
   end
 end, { desc = "Misc: edit snippet file" })
-
--- RUtils.map.nnoremap("<F1>", function()
---   local qf = require "trouble"
--- end)
-
--- Visual
--- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
--- RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
--- RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
--- RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
 -- }}}
 -- {{{ Toggle
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
--- Snacks.toggle.option("background", { off = "light", on = "dark", name = "Toggle: dark background" }):map "<Leader>ub"
--- Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
--- Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
--- Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
--- Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
 Snacks.toggle.zoom():map "<a-m>"
 Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.treesitter():map "<Leader>us"
--- Snacks.toggle.scroll():map "<Leader>uS"
--- Snacks.toggle.animate():map "<Leader>ua"
--- Snacks.toggle.line_number():map "<leader>ul"
--- Snacks.toggle.profiler():map "<Localleader>spp"
--- Snacks.toggle.profiler_highlights():map "<Localleader>sph"
-
--- Snacks.toggle.inlay_hints():map "<Leader>un"
-
--- if vim.lsp.inlay_hint then
---   if not vim.g.inlay_hints then
---     RUtils.info "Inlay hint On"
---     vim.g.inlay_hints = true
---   else
---     RUtils.info "Inlay hint OFF"
---     vim.g.inlay_hints = false
---   end
--- end
 
 RUtils.map.nnoremap("<Leader>ul", function()
   local msg_notify
@@ -690,14 +604,6 @@ RUtils.map.nnoremap("<Leader>ul", function()
 
   RUtils.warn("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
 end, { desc = "Toggle: cursorline" })
-
--- RUtils.map.nnoremap("<space><F9>", function()
---   Snacks.notify.error("This is error", {})
---   Snacks.notify.warn("This is warn", {})
---   Snacks.notify.info("This is info", {})
--- end, {
---   desc = "Misc: check color Snacks Notify",
---   silent = true,
 -- }}}
 -- {{{ Commands
 RUtils.map.nnoremap("<Leader>oI", function()
@@ -776,11 +682,6 @@ vim.api.nvim_create_user_command("DFile", function()
     }
   end
 end, {})
-
--- vim.api.nvim_create_user_command("Cfilter", function(opts)
---   vim.cmd.packadd "cfilter"
---   vim.cmd.Cfilter { args = opts.fargs, bang = opts.bang }
--- end, { force = true, bang = true, nargs = "*" })
 -- }}}
 -- {{{ Bulk commands
 -- These commands run outside tmux

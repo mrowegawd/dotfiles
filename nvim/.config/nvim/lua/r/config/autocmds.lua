@@ -119,14 +119,11 @@ local resize_window = { "orgagenda", "NeogitCommitMessage" }
 RUtils.map.augroup("WindowBehaviour", {
   event = "FileType",
   pattern = {
-    "orgagenda",
-    "capture",
-    "gitcommit",
-    -- "qf",
     "NeogitCommitMessage",
     "NeogitPopup",
-    -- "help",
-    -- "Trouble",
+    "capture",
+    "gitcommit",
+    "orgagenda",
   },
   command = function()
     cmd "wincmd J"
@@ -166,7 +163,6 @@ RUtils.map.augroup("WindowBehaviour", {
     if vim.bo.filetype == "codecompanion" then
       vim.opt_local.relativenumber = false
       vim.opt_local.number = false
-      -- vim.wo.winhighlight = "Normal:Pmenu,FloatBorder:CmpDocFloatBorder,CursorLine:CursorLine,Search:None"
     end
   end,
 }, {
@@ -185,20 +181,6 @@ RUtils.map.augroup("WindowBehaviour", {
     end, 100)
   end,
 })
-
--- local filetypes_with_auto_folding = { "org" } -- filetypes that trigger auto folding, markdown
-
--- RUtils.map.augroup("AutoFoldOnBufferEvents", {
---   event = { "BufEnter", "BufRead" },
---   pattern = "*",
---   command = function(event)
---     if vim.api.nvim_buf_is_valid(event.buf) then
---       if vim.tbl_contains(filetypes_with_auto_folding, vim.bo[event.buf].filetype) then
---         vim.cmd [[normal! zMzvzz]]
---       end
---     end
---   end,
--- })
 
 RUtils.map.augroup("WindowDim", {
   event = { "BufRead" },

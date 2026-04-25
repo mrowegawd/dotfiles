@@ -432,7 +432,6 @@ return {
         changedelete = { text = git_sign.changedelete },
         untracked = { text = "┆" },
       },
-      -- numhl = true,
       preview_config = {
         -- Options passed to nvim_open_win
         border = "rounded",
@@ -526,11 +525,7 @@ return {
             vim.cmd.normal { "]c", bang = true }
           else
             vim.schedule(function()
-              gs.nav_hunk(
-                "next",
-                { navigation_message = false, foldopen = true }
-                -- function() vim.fn.feedkeys("zz", "n") end
-              )
+              gs.nav_hunk("next", { navigation_message = false, foldopen = true })
             end)
           end
         end, "Git: next hunk [gitsigns]")
@@ -539,11 +534,7 @@ return {
             vim.cmd.normal { "[c", bang = true }
           else
             vim.schedule(function()
-              gs.nav_hunk(
-                "prev",
-                { navigation_message = false, foldopen = true }
-                -- function() vim.fn.feedkeys("zz", "n") end
-              )
+              gs.nav_hunk("prev", { navigation_message = false, foldopen = true })
             end)
           end
         end, "Git: prev hunk [gitsigns]")
@@ -574,11 +565,10 @@ return {
           -- Options
           vim.opt_local.winfixheight = true
           vim.opt_local.winfixbuf = true
+
           -- Mappings
           vim.keymap.set("n", "<c-n>", "]m", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<c-p>", "[m", { buffer = e.buf, remap = true })
-          -- vim.keymap.set("n", "<a-n>", "]m=zt", { buffer = e.buf, remap = true })
-          -- vim.keymap.set("n", "<a-p>", "[m=zt", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<tab>", "=zt", { buffer = e.buf, remap = true })
 
           vim.keymap.set("n", "<Leader>bs", "o", { buffer = e.buf, remap = true })
@@ -586,13 +576,6 @@ return {
 
           vim.keymap.set("n", "<Leader>bt", "O", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<Leader>bv", "gO", { buffer = e.buf, remap = true })
-
-          -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
-          -- vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
-          -- vim.keymap.set("n", "<Leader>gP", "<Cmd>Git pull<CR>", { buffer = true })
-          -- vim.keymap.set("n", "<Leader>gl", function()
-          --   vim.cmd "Git log --oneline"
-          -- end, { buffer = e.buf })
         end,
       }, {
         event = "BufWinEnter",
@@ -600,7 +583,6 @@ return {
         command = function()
           -- If it's a new commit, start in insert mode, otherwise start in normal mode
           if vim.fn.getline(1) == "" then
-            -- vim.cmd "15 wincmd _"
             vim.cmd "15 wincmd K"
             vim.cmd "normal! gg0"
             if vim.api.nvim_get_current_line() == "" then
@@ -609,43 +591,6 @@ return {
           end
         end,
       })
-
-      -- local function merge_base(ref1, ref2, callback)
-      --   ref1 = ref1 or "origin/master"
-      --   ref2 = ref2 or "HEAD"
-      --   local stdout = ""
-      --   vim.fn.jobstart({ "git", "merge-base", ref1, ref2 }, {
-      --     stdout_buffered = true,
-      --     on_stdout = function(_, data, _)
-      --       stdout = vim.trim(table.concat(data, "\n"))
-      --     end,
-      --     on_exit = function(_, code)
-      --       if code ~= 0 then
-      --         return callback "Error"
-      --       else
-      --         callback(nil, stdout)
-      --       end
-      --     end,
-      --   })
-      -- end
-
-      -- vim.api.nvim_create_user_command("GitEditDiff", function()
-      --   merge_base(nil, nil, function(err, ref)
-      --     if err or not ref then
-      --       vim.notify("Error calculating merge base", vim.log.levels.ERROR)
-      --       return
-      --     end
-      --     run_files_cmd({ "git", "diff", "--name-only", ref }, function(files)
-      --       if vim.tbl_isempty(files) then
-      --         vim.notify("No diff from master", vim.log.levels.INFO)
-      --         return
-      --       end
-      --       open_files(files)
-      --     end)
-      --   end)
-      -- end, {
-      --   desc = "Edit files that differ from master",
-      -- })
     end,
   },
   -- DIFFVIEW
@@ -986,10 +931,6 @@ return {
   -- NEOGIT
   {
     "NeogitOrg/neogit",
-    -- dependencies = {
-    --   "nvim-lua/plenary.nvim",
-    --   "sindrets/diffview.nvim", -- optional - Diff integration
-    -- },
     cmd = { "Neogit", "NeogitCommit" },
     keys = {
       {
@@ -1073,9 +1014,7 @@ return {
           ["M"] = false,
           ["Z"] = false,
           ["o"] = false,
-          -- ["i"] = false,
 
-          -- ["<Leader>mm"] = "IgnorePopup",
           ["<Leader>mot"] = "TagPopup",
           ["<Leader>mom"] = "MergePopup",
           ["<Leader>moM"] = "MarginPopup",
@@ -1094,7 +1033,7 @@ return {
       },
       integrations = {
         diffview = true,
-        -- telescope = true,
+        telescope = false,
         fzf_lua = true,
       },
     },

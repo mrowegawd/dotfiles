@@ -364,7 +364,61 @@ return {
     opts = function()
       local constants = require("codecompanion.config").config.constants
       return {
-        strategies = {
+        -- Adapters
+        adapters = {
+          http = {
+            opts = {
+              show_presets = false,
+              show_model_choices = false,
+            },
+            -- openai_gpt_54 = adapter_config.openai_gpt_54,
+            -- openai_gpt_54_nano = adapter_config.openai_gpt_54_nano,
+            -- openai_gpt_54_nano_legacy = adapter_config.openai_gpt_54_nano_legacy,
+            -- gemini_flash_3 = adapter_config.gemini_flash_3,
+            -- ollama_qwen35_08b = adapter_config.ollama_qwen35_08b,
+            -- tavily = adapter_config.tavily,
+          },
+          acp = {
+            opts = {
+              show_presets = false,
+              show_model_choices = false,
+            },
+            -- claude_code = adapter_config.claude_code,
+            -- codex = adapter_config.codex,
+          },
+        },
+        display = {
+          chat = {
+            intro_message = "",
+            icons = {
+              buffer_sync_all = " ",
+              buffer_sync_diff = " ",
+            },
+            -- window = { -- atm, using a floating window may cause conflicts with the translation plugin
+            --   layout = "float",
+            --   border = "rounded",
+            --   height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
+            --   width = 0.45,
+            --   relative = "editor",
+            --   col = vim.o.columns, -- right position
+            --   row = 1,
+            --   opts = { winfixbuf = true },
+            -- },
+            debug_window = {
+              width = math.floor(vim.o.columns * 0.535),
+              height = vim.o.lines - 4,
+            },
+          },
+          action_palette = {
+            prompt = "> ",
+            opts = {
+              show_default_actions = true,
+              show_default_prompt_library = false,
+            },
+          },
+          diff = { layout = "vertical" },
+        },
+        interactions = {
           chat = {
             intro_message = "",
             roles = {
@@ -378,6 +432,18 @@ return {
               end,
             },
             keymaps = {
+              create_chat = {
+                modes = { n = "<A-c>", i = "<A-c>" },
+                description = "Create new chat",
+                callback = function()
+                  vim.cmd.CodeCompanionChat()
+                  -- Hack to make completions work immediately in a new chat
+                  vim.cmd.stopinsert()
+                  vim.defer_fn(function()
+                    vim.cmd.startinsert { bang = true }
+                  end, 100)
+                end,
+              },
               options = {
                 modes = { n = "g?" },
                 callback = "keymaps.options",
@@ -391,10 +457,7 @@ return {
                 description = "[Chat] Completion menu",
               },
               send = {
-                modes = {
-                  n = { "<CR>", "<C-s>" },
-                  i = "<C-s>",
-                },
+                modes = { n = { "<CR>", "<C-s>" }, i = "<C-s>" },
                 index = 2,
                 callback = "keymaps.send",
                 description = "[Request] Send response",
@@ -656,37 +719,6 @@ return {
             --   },
             -- },
           },
-        },
-        display = {
-          chat = {
-            intro_message = "",
-            icons = {
-              pinned_buffer = " ",
-              watched_buffer = " ",
-            },
-            -- window = { -- atm, using a floating window may cause conflicts with the translation plugin
-            --   layout = "float",
-            --   border = "rounded",
-            --   height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
-            --   width = 0.45,
-            --   relative = "editor",
-            --   col = vim.o.columns, -- right position
-            --   row = 1,
-            --   opts = { winfixbuf = true },
-            -- },
-            debug_window = {
-              width = math.floor(vim.o.columns * 0.535),
-              height = vim.o.lines - 4,
-            },
-          },
-          action_palette = {
-            prompt = "> ",
-            opts = {
-              show_default_actions = true,
-              show_default_prompt_library = false,
-            },
-          },
-          diff = { layout = "vertical" },
         },
         prompt_library = {
           ["Ask ai chat"] = {
@@ -1182,7 +1214,6 @@ Silakan berikan kode hasil refaktor beserta penjelasan singkat mengenai perubaha
             },
           },
         },
-
         extensions = {
           history = {
             enabled = true,

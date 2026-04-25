@@ -218,14 +218,6 @@ return {
       end, { desc = "Peek: restore all popup [overlook]" })
     end,
   },
-  -- GOTO-PREVIEW (disabled)
-  {
-    "rmagatti/goto-preview",
-    enabled = false,
-    dependencies = { "rmagatti/logger.nvim" },
-    event = "LspAttach",
-    config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
-  },
   -- INCRENAME
   {
     "smjonas/inc-rename.nvim",
@@ -255,147 +247,6 @@ return {
           },
         },
       },
-    },
-  },
-  -- SYMBOL-USAGE (disabled)
-  {
-    "MadKuntilanak/symbol-usage.nvim",
-    -- dir = "~/.local/src/nvim_plugins/symbol-usage.nvim",
-    branch = "depcreated",
-    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    enabled = false,
-    keys = {
-      {
-        "<Leader>us",
-        function()
-          require("symbol-usage").refresh()
-        end,
-        desc = "Toggle: symbol usage refresh [symbol-usage]",
-      },
-    },
-    opts = function()
-      local function h(name)
-        return vim.api.nvim_get_hl(0, { name = name })
-      end
-
-      -- hl-groups can have any name
-      vim.api.nvim_set_hl(0, "SymbolUsageRounding", { fg = h("MyCodeUsage").bg, italic = true })
-      vim.api.nvim_set_hl(
-        0,
-        "SymbolUsageContent",
-        { fg = h("MyCodeUsage").fg, bg = h("MyCodeUsage").bg, italic = true }
-      )
-      vim.api.nvim_set_hl(0, "SymbolUsageRef", { fg = h("Normal").fg, bg = h("MyCodeUsage").bg, italic = true })
-      vim.api.nvim_set_hl(0, "SymbolUsageDef", { fg = h("Type").fg, bg = h("MyCodeUsage").bg, italic = true })
-      vim.api.nvim_set_hl(0, "SymbolUsageImpl", { fg = h("Normal").bg, bg = h("MyCodeUsage").bg, italic = true })
-
-      -- vim.api.nvim_set_hl(0, "SymbolUsageRounding", { fg = h("CursorLine").bg, italic = true })
-      -- vim.api.nvim_set_hl(0, "SymbolUsageContent", { bg = h("CursorLine").bg, fg = h("Comment").fg, italic = true })
-      -- vim.api.nvim_set_hl(0, "SymbolUsageRef", { fg = h("Function").fg, bg = h("CursorLine").bg, italic = true })
-      -- vim.api.nvim_set_hl(0, "SymbolUsageDef", { fg = h("Type").fg, bg = h("CursorLine").bg, italic = true })
-      -- vim.api.nvim_set_hl(0, "SymbolUsageImpl", { fg = h("@keyword").fg, bg = h("CursorLine").bg, italic = true })
-
-      local function text_format(symbol)
-        local res = {}
-
-        local round_start = { "", "SymbolUsageRounding" }
-        local round_end = { "", "SymbolUsageRounding" }
-
-        if symbol.references then
-          local usage = symbol.references <= 1 and "usage" or "usages"
-          local num = symbol.references == 0 and "no" or symbol.references
-          table.insert(res, round_start)
-          table.insert(res, { "󰌹 ", "SymbolUsageRef" })
-          table.insert(res, { string.format("%s %s", num, usage), "SymbolUsageContent" })
-          table.insert(res, round_end)
-        end
-
-        if symbol.definition then
-          if #res > 0 then
-            table.insert(res, { " ", "NonText" })
-          end
-          table.insert(res, round_start)
-          table.insert(res, { "󰳽 ", "SymbolUsageDef" })
-          table.insert(res, { symbol.definition .. " defs", "SymbolUsageContent" })
-          table.insert(res, round_end)
-        end
-
-        if symbol.implementation then
-          if #res > 0 then
-            table.insert(res, { " ", "NonText" })
-          end
-          table.insert(res, round_start)
-          table.insert(res, { "󰡱 ", "SymbolUsageImpl" })
-          table.insert(res, { symbol.implementation .. " impls", "SymbolUsageContent" })
-          table.insert(res, round_end)
-        end
-
-        return res
-      end
-      return {
-        hl = { link = "MyCodeUsage" },
-        text_format = text_format,
-        disable = {
-          filetypes = { "dockerfile", "markdown", "org", "neorg" },
-          cond = {
-            function()
-              if vim.wo.diff or vim.api.nvim_win_get_config(0).relative ~= "" then
-                return true
-              end
-              return false
-            end,
-          },
-        },
-        ---@type 'above'|'end_of_line'|'textwidth'|'signcolumn' `above` by default
-        vt_position = "end_of_line",
-      }
-    end,
-  },
-  -- LENSLINE (disabled)
-  {
-    "oribarilan/lensline.nvim",
-    enabled = false,
-    event = "LspAttach",
-    keys = {
-      {
-        "<Leader>l<C-l>",
-        "<cmd>LenslineToggleView<CR>",
-        desc = "LSP | Toggle Lens",
-        silent = true,
-      },
-    },
-    opts = {
-      -- style = {
-      --   prefix = "",
-      --   placement = "inline",
-      -- },
-    },
-  },
-  -- KULALA (disabled)
-  {
-    "mistweaverco/kulala.nvim",
-    enabled = false,
-    ft = "http",
-    --stylua: ignore
-    keys = {
-      { "<Leader>R", "", desc = "Kulala: rest", ft = "http" },
-      { "<Leader>Rb", "<cmd>lua require('kulala').scratchpad()<cr>", desc = "Kulala: open scratchpad [kulala]", ft = "http" },
-      { "<Leader>Rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Kulala: copy as cURL [kulala]", ft = "http" },
-      { "<leader>RC", "<cmd>lua require('kulala').from_curl()<cr>", desc = "Kulala: paste from curl [kulala]", ft = "http" },
-      { "<leader>Re", "<cmd>lua require('kulala').set_selected_env()<cr>", desc = "Kulala: set environment [kulala]", ft = "http" },
-      {
-        "<Leader>Rg",
-        "<cmd>lua require('kulala').download_graphql_schema()<cr>",
-        desc = "Kulala: download GraphQL schema [kulala]",
-        ft = "http",
-      },
-
-      { "<Leader>Ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Kulala: inspect current request [kulala]", ft = "http" },
-      { "<Leader>Rq", "<cmd>lua require('kulala').close()<cr>", desc = "Kulala: close window [kulala]", ft = "http" },
-      { "<Leader>RL", "<cmd>lua require('kulala').replay()<cr>", desc = "Kulala: replay the last request [kulala]", ft ="http" },
-      { "<Leader>Rr", "<cmd>lua require('kulala').run()<cr>", desc = "Kulala: send the request [kulala]", ft = "http" },
-      { "<Leader>RS", "<cmd>lua require('kulala').show_stats()<cr>", desc = "Kulala: show stats [kulala]", ft = "http" },
-      { "<Leader>Rt", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body [kulala]", ft = "http" },
     },
   },
   -- TINY-INLINE-DIAGNOSTIC
@@ -450,13 +301,6 @@ return {
   {
     "framallo/taskwarrior.vim",
     ft = "taskrc",
-  },
-  -- GARBAGE-DAY (disabled)
-  {
-    "zeioth/garbage-day.nvim",
-    enabled = false,
-    event = "LspAttach",
-    opts = {},
   },
   -- MEOWYARN
   {

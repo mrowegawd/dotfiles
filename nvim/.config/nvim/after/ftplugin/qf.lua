@@ -9,10 +9,6 @@ opt.listchars:append "trail: "
 opt.buflisted = false
 opt.list = false
 
--- Let Quicker.nvim plugin handle this number stuff
--- opt.number = false
--- opt.relativenumber = false -- otherwise, show relative numbers in the ruler
-
 -- These keys are disabled
 keymap.set("n", "<c-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 keymap.set("n", "<c-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
@@ -110,7 +106,6 @@ keymap.set("n", "<Leader>fg", function()
     .. " -e "
 
   return fzf_lua().live_grep {
-    -- debug = true,
     winopts = { title = RUtils.fzflua.format_title(title_, __get_vars.title_icon()) },
     rg_opts = rg_opts_format,
     actions = {

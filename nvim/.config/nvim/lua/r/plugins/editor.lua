@@ -8,43 +8,6 @@ local alts = {
 }
 
 return {
-  -- MINIBUFFER (disabled)
-  {
-    -- mesti di set-> on, dengan line ini?
-    -- require("vim._extui").enable { enable = true, msg = { target = "msg" } }
-    "simifalaye/minibuffer.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    dependencies = {
-      {
-        "nvim-mini/mini.pick",
-        dependencies = { "echasnovski/mini.extra" },
-      },
-    },
-    config = function()
-      -- local minibuffer = require "minibuffer"
-      local minipick = require "mini.pick"
-
-      -- TODO: conflict with fzf-lua
-      -- vim.ui.select = require "minibuffer.builtin.ui_select"
-      -- vim.ui.input = require "minibuffer.builtin.ui_input"
-
-      local pick_mb = require "minibuffer.integrations.mini-pick"
-      minipick.is_picker_active = pick_mb.is_picker_active
-      minipick.set_picker_items = pick_mb.set_picker_items
-      minipick.start = pick_mb.start
-
-      vim.keymap.set("n", "<a-r>", function()
-        minipick.builtin.files {}
-      end)
-
-      -- vim.keymap.set("n", "<leader>.", require "minibuffer.examples.files")
-      -- vim.keymap.set("n", "<Leader>.", function()
-      --   minipick.builtin.buffers {}
-      -- end)
-      vim.keymap.set("n", ":", require "minibuffer.builtin.cmdline")
-    end,
-  },
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
@@ -99,7 +62,6 @@ return {
               flags = "-i",
               paths = path,
             },
-            -- instanceName = "far",
             staticTitle = "Find and Replace",
           }
         end,
@@ -122,7 +84,6 @@ return {
               paths = path,
               flags = "--hidden -i",
             },
-            -- instanceName = "far",
             staticTitle = "Find and Replace",
           }
         end,
@@ -177,26 +138,6 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
         desc = "Exec: references LSP [trouble]",
       },
-      -- {
-      --   "gi",
-      --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: implementations [trouble]",
-      -- },
-      -- {
-      --   "gO",
-      --   "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: outgoing calls [trouble]",
-      -- },
-      -- {
-      --   "gI",
-      --   "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: incomming calls [trouble]",
-      -- },
-      -- {
-      --   "gt",
-      --   "<cmd>Trouble lsp_type_definitions<CR>",
-      --   desc = "LSP: type definitions [trouble]",
-      -- },
       {
         "<Leader>xx",
         function()
@@ -345,7 +286,6 @@ return {
         end,
         desc = "Picker: todo local dir (fzflua) [todocomments]",
       },
-      -- { "<Leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
     },
     opts = {
       signs = true, -- show icons in the signs column

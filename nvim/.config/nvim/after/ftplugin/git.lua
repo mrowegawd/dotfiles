@@ -3,10 +3,6 @@ local keymap, api, opt = vim.keymap, vim.api, vim.opt_local
 opt.foldexpr = ""
 opt.foldmethod = "syntax"
 
--- opt.number = false
--- opt.relativenumber = false
--- opt.signcolumn = "no"
-
 keymap.set("n", "<Tab>", function()
   vim.schedule(function()
     local _, err = pcall(function()
@@ -28,9 +24,7 @@ keymap.set("n", "<Leader>bt", "O", { buffer = api.nvim_get_current_buf(), remap 
 keymap.set("n", "<Leader>bv", "gO", { buffer = api.nvim_get_current_buf(), remap = true })
 
 keymap.set("n", "<Leader>mY", function() -- code
-  -- local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  -- local full_path = cwd .. "/" .. fname
   vim.cmd("GBrowse " .. fname)
 end, {
   buffer = api.nvim_get_current_buf(),

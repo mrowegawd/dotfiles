@@ -172,56 +172,17 @@ return {
         end,
         desc = "Misc: open file explore [neotree]",
       },
-      -- {
-      --   "<Leader>ue",
-      --   function()
-      --     local tmux = os.getenv "TMUX"
-      --     if not tmux then
-      --       vim.cmd "Neotree toggle left"
-      --     else
-      --       vim.cmd "Neotree toggle right"
-      --     end
-      --   end,
-      --   desc = "Toggle: open file explore [neotree]",
-      -- },
-      --
-      -- {
-      --   "<Leader>uE",
-      --   function()
-      --     local tmux = os.getenv "TMUX"
-      --     if not tmux then
-      --       vim.cmd "Neotree focus reveal left"
-      --     else
-      --       vim.cmd "Neotree focus reveal right"
-      --     end
-      --   end,
-      --   desc = "Toggle: open file focus path explore [neotree]",
-      -- },
     },
 
     dependencies = {
       "MunifTanjim/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
-      -- {
-      --   "ten3roberts/window-picker.nvim",
-      --   name = "window-picker",
-      --   config = function()
-      --     local picker = require "window-picker"
-      --     picker.setup()
-      --     picker.pick_window = function()
-      --       return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
-      --         return winid or nil
-      --       end)
-      --     end
-      --   end,
-      -- },
     },
     opts = function()
       RUtils.map.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
 
       local Preview = require "neo-tree.sources.common.preview"
-      -- local events = require "neo-tree.events"
       local log = require "neo-tree.log"
 
       local H = require "r.settings.highlights"
@@ -347,21 +308,12 @@ return {
               ["gn"] = "next_git_modified",
               ["<a-p>"] = "prev_git_modified",
               ["<a-n>"] = "next_git_modified",
-              -- ["<leader>ff"] = "fuzzy_finder",
-              -- ["<Leader>ff"] = "filter_on_submit",
-              -- ["gd"] = "fuzzy_finder_directory",
-              -- ["<C-x>"] = "clear_filter",
-              -- ["/"] = "filter_as_you_type", -- this was the default until v1.28
-              -- ["D"] = "fuzzy_sorter_directory",
-              -- ["/"] = "noop",
             },
           },
         },
         default_component_configs = {
           indent = {
             with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-            -- expander_collapsed = "",
-            -- expander_expanded = "",
             expander_collapsed = "",
             expander_expanded = "",
             expander_highlight = "NeoTreeExpander",
@@ -419,15 +371,6 @@ return {
               local modify = vim.fn.fnamemodify
 
               local file_extension = modify(filename, ":e")
-
-              -- local results = {
-              --   filepath,
-              --   modify(filepath, ":."),
-              --   modify(filepath, ":~"),
-              --   filename,
-              --   modify(filename, ":r"),
-              --   modify(filename, ":e"),
-              -- }
 
               if file_extension == "pdf" then
                 if os.getenv "TERMINAL" == "kitty" then
@@ -570,7 +513,6 @@ return {
             ["<space>"] = "noop",
             ["w"] = "noop",
             ["l"] = "noop",
-            -- ["h"] = "noop",
 
             ["<c-o>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
@@ -581,7 +523,6 @@ return {
 
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
-            -- ["l"] = "child_or_open",
             ["<BS>"] = "parent_or_close",
             ["P"] = {
               "toggle_open_preview",
@@ -589,15 +530,12 @@ return {
             },
             ["o"] = "child_or_open",
             ["e"] = "child_or_open",
-            -- ["s"] = "filter_on_submit",
-            -- ["S"] = "fuzzy_finder_directory",
             ["t"] = "", -- disabled open tab
             ["z"] = "",
             ["<Tab>"] = "toggle_node",
             ["<S-Tab>"] = "close_all_nodes",
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
-            -- ["<c-t>"] = "open_tabnew",
             ["<esc>"] = "revert_preview",
             ["m"] = "",
             ["zM"] = "close_all_nodes",
@@ -688,10 +626,9 @@ return {
                     local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
                     if outline_win.found then
                       vim.cmd [[AerialToggle]]
-                      -- outline.close_outline()
                     end
 
-                    -- must reload
+                    -- Force it to reload
                     vim.cmd "e "
                     if selection == "all" then
                       opts_aerial.filter_kind = false
@@ -863,7 +800,6 @@ return {
             StaticMethod = { icon = kind.StaticMethod, hl = "Function" },
             Macro = { icon = kind.Macro, hl = "Function" },
           },
-          --
         },
         preview_window = {
           live = true,
@@ -897,11 +833,6 @@ return {
 
           down_and_jump = { "<a-n>", "<c-n>" },
           up_and_jump = { "<a-p>", "<c-p>" },
-
-          -- open_in_vsplit = "<C-v>",
-          -- open_in_split = "<C-s>",
-          -- open_in_tab = "<C-t>",
-          -- open_in_float = "O",
 
           filter_symbols = { "<Leader>ff", "<Leader><Leader>" },
         },

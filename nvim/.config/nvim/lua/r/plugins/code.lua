@@ -151,43 +151,6 @@ return {
     event = "LazyFile",
     opts = true,
   },
-  -- MINI.AI (disabled)
-  {
-    "nvim-mini/mini.ai",
-    enabled = false,
-    event = "LazyFile",
-    opts = function()
-      local ai = require "mini.ai"
-      return {
-        n_lines = 500,
-        custom_textobjects = {
-          o = ai.gen_spec.treesitter { -- code block
-            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-          },
-          f = ai.gen_spec.treesitter { a = "@function.outer", i = "@function.inner" }, -- function
-          c = ai.gen_spec.treesitter { a = "@class.outer", i = "@class.inner" }, -- class
-          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
-          d = { "%f[%d]%d+" }, -- digits
-          e = { -- Word with case
-            { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
-            "^().*()$",
-          },
-          g = RUtils.mini.ai_buffer, -- buffer
-          u = ai.gen_spec.function_call(), -- u for "Usage"
-          U = ai.gen_spec.function_call { name_pattern = "[%w_]" }, -- without dot in function name
-        },
-      }
-    end,
-    config = function(_, opts)
-      require("mini.ai").setup(opts)
-      RUtils.on_load("which-key.nvim", function()
-        vim.schedule(function()
-          RUtils.mini.ai_whichkey(opts)
-        end)
-      end)
-    end,
-  },
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
@@ -298,43 +261,49 @@ return {
       require "gitignore"
     end,
   },
+  -- ASYNC.NVIM
+  { "lewis6991/async.nvim", lazy = true },
   -- REFACTORING
   {
     "ThePrimeagen/refactoring.nvim",
-    cmd = "Refactor",
-    -- event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile" },
     keys = {
-      -- { "<Leader>rr", "", desc = "refactoring" },
-      -- {
-      --   "<Leader>rF",
-      --   function()
-      --     local refactoring = require "refactoring"
-      --     local fzf_lua = require "fzf-lua"
-      --     local results = refactoring.get_refactors()
-      --
-      --     local opts = {
-      --       prompt = "  ",
-      --       winopts = {
-      --         title = RUtils.fzflua.format_title("Refactoring?", ""),
-      --         border = "rounded",
-      --         height = #results + 3,
-      --         width = 0.30,
-      --         row = 1.05,
-      --         backdrop = 100,
-      --         relative = "cursor",
-      --       },
-      --       actions = {
-      --         ["default"] = function(selected)
-      --           vim.cmd "normal! gv"
-      --           -- refactoring.refactor(selected[1])
-      --         end,
-      --       },
-      --     }
-      --     fzf_lua.fzf_exec(results, opts)
-      --   end,
-      --   mode = { "n", "x" },
-      --   desc = "Refactoring: select ref cmds [refacoring.nvim]",
-      -- },
+      {
+        "<leader>ri",
+        function()
+          return require("refactoring").inline_var()
+        end,
+        mode = "x",
+        desc = "Refactoring: inline variable",
+        expr = true,
+      },
+      {
+        "<leader>rf",
+        function()
+          return require("refactoring").extract_func()
+        end,
+        mode = "x",
+        desc = "Refactoring: extract function",
+        expr = true,
+      },
+      {
+        "<leader>rF",
+        function()
+          return require("refactoring").extract_func_to_file()
+        end,
+        mode = { "x" },
+        desc = "Refactoring: extract function to file",
+        expr = true,
+      },
+      {
+        "<leader>rx",
+        function()
+          return require("refactoring").extract_var()
+        end,
+        mode = { "x" },
+        desc = "Refactoring: Extract variable",
+        expr = true,
+      },
 
       -- Printout
       {
@@ -352,38 +321,7 @@ return {
         desc = "Refactoring: insert print below [refactoring]",
       },
     },
-    opts = {
-      prompt_func_return_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-      },
-      prompt_func_param_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-      },
-      printf_statements = {},
-      print_var_statements = {},
-      show_success_message = true, -- Shows a message with information about the refactor on success
-      -- i.e. [Refactor] Unlined 3 variable occurrences
-    },
-    config = function(_, opts)
-      require("refactoring").setup(opts)
-      if RUtils.has "telescope.nvim" then
-        RUtils.on_load("telescope.nvim", function()
-          require("telescope").load_extension "refactoring"
-        end)
-      end
-    end,
+    opts = {},
   },
   -- OVERSEER.NVIM
   {
@@ -581,15 +519,12 @@ return {
             end,
 
             -- Refactoring
-            -- ["Refactoring - Inline variable"] = function()
-            --   require("refactoring").refactor "Inline Variable"
-            -- end,
+            ["Refactoring - Select refactor"] = function()
+              require("refactoring").select_refactor()
+            end,
             ["Refactoring - Extract"] = function()
               vim.cmd "Refactor extract"
             end,
-            -- ["Refactoring - Extract variable"] = function()
-            --   require("refactoring").refactor "Extract Variable"
-            -- end,
             ["Refactoring - Extract entire block"] = function()
               vim.cmd "Refactor extract_block"
             end,
@@ -634,57 +569,12 @@ return {
           RUtils.fzflua.open_cmd_bulk_dock(task_cmds, { winopts = { title = RUtils.config.icons.misc.bug .. " Task" } })
         end,
         desc = "Bulk: tasks cmds",
-        mode = { "n", "x", "v" },
+        mode = { "n" },
       },
     },
     opts = {
       rmuxdirrc = RUtils.config.path.dropbox_path .. "/data.programming.forprivate/runmux/vscode",
       setnotif = false,
     },
-  },
-  -- MARKER-GROUPS (disabled)
-  {
-    "jameswolensky/marker-groups.nvim",
-    enabled = false,
-    events = "LazyFile",
-    dependencies = {
-      "nvim-lua/plenary.nvim", -- Required
-      "nvim-telescope/telescope.nvim", -- Optional: for fuzzy search
-    },
-    config = function()
-      require("marker-groups").setup {
-        data_dir = RUtils.config.path.wiki_path .. "/marker/project-todo",
-        keymaps = {
-          enabled = true, -- Keybindings (declarative; override per entry or disable by setting to false)
-          prefix = "<leader>m",
-          mappings = {
-            marker = {
-              add = { suffix = "a", mode = { "n", "x" }, desc = "Add marker" },
-              edit = { suffix = "e", desc = "Edit marker at cursor" },
-              delete = { suffix = "d", desc = "Delete marker at cursor" },
-              list = { suffix = "l", desc = "List markers in buffer" },
-              info = { suffix = "i", desc = "Show marker at cursor" },
-            },
-            group = {
-              create = { suffix = "gc", desc = "Create marker group" },
-              select = { suffix = "gs", desc = "Select marker group" },
-              list = { suffix = "gl", desc = "List marker groups" },
-              rename = { suffix = "gr", desc = "Rename marker group" },
-              delete = { suffix = "gd", desc = "Delete marker group" },
-              info = { suffix = "gi", desc = "Show active group info" },
-              -- next/prev/toggle_last/cleanup removed
-              from_branch = { suffix = "gb", desc = "Create group from git branch" },
-            },
-            view = {
-              toggle = { suffix = "x", desc = "Toggle drawer marker viewer" },
-            },
-            telescope = {
-              groups = { suffix = "fg", desc = "Telescope: marker groups" },
-              markers = { suffix = "ff", desc = "Telescope: markers in active group" },
-            },
-          },
-        },
-      }
-    end,
   },
 }

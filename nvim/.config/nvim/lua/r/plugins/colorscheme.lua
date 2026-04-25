@@ -137,24 +137,6 @@ return {
       variant = "hard", -- auto, hard, medium, soft, light
     },
   },
-  -- GRUVBOX
-  -- {
-  --   "ellisonleao/gruvbox.nvim",
-  --   priority = 1000,
-  --   config = true,
-  --   enabled = function()
-  --     local gruvbox_themes = { "gruvbox" }
-  --     if vim.tbl_contains(gruvbox_themes, vim.g.colorscheme) then
-  --       return true
-  --     end
-  --     return false
-  --   end,
-  --   opts = {
-  --     overrides = {
-  --       Normal = { bg = "#101010" },
-  --     },
-  --   },
-  -- },
   -- ZENBURN
   {
     "phha/zenburn.nvim",

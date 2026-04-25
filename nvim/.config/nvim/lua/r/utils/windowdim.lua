@@ -200,7 +200,6 @@ autocmds.cursorline_blacklist = {
   ["help"] = true,
   ["mason"] = true,
   ["noice"] = true,
-  -- ["orgagenda"] = true,
   ["packer"] = true,
   ["rgflow"] = true,
   ["snacks_notif_history"] = true,
@@ -252,6 +251,11 @@ end
 
 local blurred_window = function()
   local filetype, _ = RUtils.buf.get_bo_buft()
+  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+
+  if is_float then
+    return
+  end
 
   if filetype == "" and api.nvim_win_get_config(0).relative == "win" then
     wo.winhighlight = ""
@@ -280,11 +284,7 @@ local blurred_window = function()
     is_winhighlight_disabled = true
   end
 
-  if is_winhighlight_disabled then
-    return
-  end
-
-  if autocmds.winhighlight_filetype_blacklist[filetype] then
+  if is_winhighlight_disabled or autocmds.winhighlight_filetype_blacklist[filetype] then
     return
   end
 

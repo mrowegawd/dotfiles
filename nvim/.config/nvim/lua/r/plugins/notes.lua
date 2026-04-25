@@ -181,16 +181,16 @@ return {
             template = "* TODO %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
             target = RUtils.file.get_agenda_path "/orgmode/gtd/inbox.org",
           },
-          -- b = {
-          --   description = "URL bookmarks",
-          --   template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
-          --   target = RUtils.file.get_agenda_path "/orgmode/bookmarks/urls.org",
-          -- },
           j = {
             description = "Journal",
             template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
             target = RUtils.file.get_agenda_path "/orgmode/journal/journal.org",
           },
+          -- b = {
+          --   description = "URL bookmarks",
+          --   template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
+          --   target = RUtils.file.get_agenda_path "/orgmode/bookmarks/urls.org",
+          -- },
           -- k = {
           --     description = "Markdown",
           --     template = "\n* TODO %? \n  SCHEDULED: %t",
@@ -518,12 +518,6 @@ return {
     event = "LazyFile",
     opts = {
       directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
-      -- org_files = {
-      --   "~/another_org_dir",
-      --   "~/some/folder/*.org",
-      --   "~/a/single/org_file.org",
-      -- },
-
       bindings = {
         ---Adjusts the prefix for every keybinding. Can be used in keybindings with <prefix>.
         prefix = "<Leader>m",

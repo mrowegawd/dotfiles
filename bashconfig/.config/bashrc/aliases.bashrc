@@ -1,3 +1,4 @@
+# vim: foldmethod=marker foldlevel=0 ft=zsh
 # ----------------------------------------
 #░█▀█░█░░░▀█▀░█▀█░█▀▀░█▀▀░█▀▀░░░░█▀▄░█▀▀ +
 #░█▀█░█░░░░█░░█▀█░▀▀█░█▀▀░▀▀█░░░░█▀▄░█░░ +
@@ -461,6 +462,57 @@ c_os() {
   echo -e "\n${RED}Informasi VGA:${NC}"
   lspci | grep -i vga
 
+}
+
+# check: memory info
+c_memory_info() {
+  # Warna
+  RED="\033[1;31m"
+  GREEN="\033[1;32m"
+  YELLOW="\033[1;33m"
+  BLUE="\033[1;34m"
+  CYAN="\033[1;36m"
+  NC="\033[0m" # No Color
+
+  # echo -e "${BLUE}========================================"
+  # echo -e "       MEMORY INFORMATION"
+  # echo -e "${BLUE}========================================${NC}"
+
+  # DMIDECODE SUMMARY
+  echo -e "\n${BLUE}========================================${NC}"
+  echo -e "${CYAN}[1] DMIDECODE (Summary RAM Info)${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  echo -e "${YELLOW}Menampilkan informasi umum RAM dari BIOS (slot, size, speed, dll)${NC}"
+  sudo dmidecode -t memory
+
+  # DMIDECODE DETAIL (TYPE 17)
+  echo -e "\n${BLUE}========================================${NC}"
+  echo -e "${CYAN}[2] DMIDECODE (Detail per Slot)${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  echo -e "${YELLOW}Informasi detail tiap keping RAM (manufacturer, speed, part number)${NC}"
+  sudo dmidecode --type 17
+
+  # INXI MEMORY
+  echo -e "\n${BLUE}========================================${NC}"
+  echo -e "${CYAN}[3] INXI Memory Info${NC}"
+  echo -e "${YELLOW}Ringkasan RAM yang lebih readable (total, used, slot, dll)${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  inxi -m
+
+  # SYSBENCH MEMORY TEST
+  echo -e "\n${BLUE}========================================${NC}"
+  echo -e "${CYAN}[4] SYSBENCH Memory Benchmark (READ)${NC}"
+  echo -e "${YELLOW}Benchmark kecepatan baca RAM (bandwidth & latency)${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  sysbench memory --memory-oper=read run
+
+  echo -e "\n${BLUE}========================================${NC}"
+  echo -e "${CYAN}[5] PANTEST BENCHMARK MEMTESTER${NC}"
+  echo -e "${YELLOW}Jumlah GB:4gb, 2 kali loop${NC}"
+  echo -e "${BLUE}========================================${NC}"
+  sudo memtester 4G 2
+
+  echo -e "\n${GREEN}✔ Done${NC}"
 }
 
 # check: listing all the listening ports of tcp and udp connections

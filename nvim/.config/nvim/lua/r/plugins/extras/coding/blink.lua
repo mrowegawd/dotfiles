@@ -46,16 +46,6 @@ return {
           return RUtils.cmp.expand(snippet)
         end,
       },
-      -- appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
-      -- fuzzy = {
-      --   implementation = "rust",
-      --   sorts = {
-      --     "exact",
-      --     -- defaults
-      --     "score",
-      --     "sort_text",
-      --   },
-      -- },
       completion = {
         keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
@@ -180,14 +170,6 @@ return {
             border = RUtils.config.icons.border.rightsideonly, -- "none",
             winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
-          -- draw = function(opts)
-          --   opts.default_implementation()
-          --   RUtils.lsp.highlight_doc_patterns(opts.window.buf)
-          --   local win_id = opts.window:get_win()
-          --   if win_id then
-          --     require("render-markdown.core.ui").update(opts.window.buf, win_id, "BlinkDraw", true)
-          --   end
-          -- end,
         },
         ghost_text = {
           enabled = false,
