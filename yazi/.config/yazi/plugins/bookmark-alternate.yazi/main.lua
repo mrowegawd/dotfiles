@@ -36,7 +36,13 @@ local function jump(cwd)
       os.execute [[dunstify "No bookmark found, You can create a new one"]]
     end
 
-    ya.manager_emit("cd", { target_bookmark_path })
+    ya.emit("cd", { target_bookmark_path })
+    ya.notify {
+      title = "Alternate Workspaces",
+      content = 'Jump to "' .. target_bookmark_path .. '"',
+      timeout = 2,
+      level = "info",
+    }
   end
 end
 

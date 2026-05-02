@@ -81,6 +81,27 @@ __is_pane_id_exists() {
   tmux list-panes -a -F "#{pane_id}" 2>/dev/null | grep -Fxq "$pane_id"
 }
 
+__send_notify() {
+  local message=${2:-}
+  local headerdunst="🔄 Tmux WORKSPCHelper"
+
+  case "$1" in
+  workspaces_notify)
+    dunstify -i view-refresh -t 2000 "$headerdunst" "$message"
+    ;;
+  workspaces_notify_warn)
+    dunstify -i view-refresh -u critical -t 5000 "$headerdunst" "$message"
+    ;;
+  open_in_nvim)
+    dunstify -i text-editor -u normal -t 3000 "󰢱 Open In Nvim" "$message"
+    ;;
+  *)
+    dunstify "$headerdunst" "$message"
+    ;;
+  esac
+
+}
+
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ NAVIGATION                                               ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
@@ -203,7 +224,7 @@ __update_field_session_obj() {
   field="$4"
 
   if [[ -z "$session_name" || -z "$pane_id" || -z "$field" ]]; then
-    dunstify "Error: Missing arguments for JSON update"
+    __send_notify "workspaces_notify_warn" "Missing arguments for JSON update"
     return 1
   fi
 
@@ -220,7 +241,7 @@ __update_main_pane_id() {
   pane_id="$3"
 
   if [[ -z "$pane_id" ]]; then
-    dunstify "⚠️  Toggle term pane ID is empty!"
+    __send_notify "workspaces_notify_warn" "⚠️  Toggle term pane ID is empty!"
   else
     __update_field_session_obj "$session_name" "$window_id" "$pane_id" "main_pane_id"
   fi
@@ -232,7 +253,7 @@ __update_pane_file_manager_id() {
   pane_id="$3"
 
   if [[ -z "$pane_id" ]]; then
-    dunstify "⚠️  File manager pane ID is empty!"
+    __send_notify "workspaces_notify" "⚠️  File manager pane ID is empty!"
   else
     __update_field_session_obj "$session_name" "$window_id" "$pane_id" "file_manager_pane_id"
   fi
@@ -244,7 +265,7 @@ __update_pane_toggle_term() {
   pane_id="$3"
 
   if [[ -z "$pane_id" ]]; then
-    dunstify "⚠️  Toggle term pane ID is empty!"
+    __send_notify "workspaces_notify" "⚠️  Toggle term pane ID is empty!"
   else
     __update_field_session_obj "$session_name" "$window_id" "$pane_id" "toggle_term_pane_id"
   fi
@@ -256,7 +277,7 @@ __update_pane_clock_id() {
   pane_id="$3"
 
   if [[ -z "$pane_id" ]]; then
-    dunstify "⚠️  Toggle term pane ID is empty!"
+    __send_notify "workspaces_notify" "⚠️  Toggle term pane ID is empty!"
   else
     __update_field_session_obj "$session_name" "$window_id" "$pane_id" "clock_pane_id"
   fi
@@ -298,8 +319,6 @@ __extract_id_from_json() {
     echo "ERROR: JSON file not found: $json_file" >&2
     return 1
   fi
-
-  # dunstify "DEBUG QUERY: session='$session_name' window='$window_name' field='$field_name'" >&2
 
   jq -r \
     --arg session_name "$session_name" \
@@ -375,7 +394,7 @@ reset_pane_workspaces() {
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    dunstify "Create base layout first"
+    __send_notify "workspaces_notify_warn" "Create base layout first"
     tmux select-layout -E
     exit
   fi
@@ -425,7 +444,7 @@ update_global_pane_ids() {
 
   #  Check and update main pane id
   if ! __is_pane_id_exists "$MAIN_PANE_ID"; then
-    dunstify -i view-refresh "🔄 Main Pane Updated" "A new main pane (ID) has been successfully updated!"
+    __send_notify "workspaces_notify" "A new main pane (ID) has been successfully updated!"
     MAIN_PANE_ID=$current_pane
     __update_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID" "$MAIN_PANE_ID"
   fi
@@ -557,7 +576,6 @@ handle_open_filetree() {
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
 
     if [[ $LAYOUT_SIDE == "left" ]]; then
       FILE_MANAGER_PANE_ID=$(
@@ -612,7 +630,6 @@ handle_split_term() {
 
   TOGGLE_TERM_PANE_ID=$(__get_toggle_term_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ $TOGGLE_TERM_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    # dunstify -i terminal "🖥️ New Toggle Terminal Created" "A new terminal pane (ID) has been successfully created!"
 
     CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
     _go_select_pane_with_id "$MAIN_PANE_ID"
@@ -680,7 +697,6 @@ handle_show_notes() {
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
   if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-    # dunstify -i system-file-manager "📂 New File Manager Pane" "A new file manager pane (ID) has been successfully created!"
 
     FILE_MANAGER_PANE_ID=$(
       tmux list-panes -F "#{pane_id} #{pane_left}" |
@@ -736,7 +752,7 @@ open_clock_mode() {
 
   update_global_pane_ids
 
-  [[ $CURRENT_SESSION == "" ]] && dunstify "Create base layout first" && exit
+  [[ $CURRENT_SESSION == "" ]] && __send_notify "workspaces_notify" "Create base layout first" && exit
 
   _go_select_pane_with_id "$MAIN_PANE_ID"
 
@@ -746,7 +762,7 @@ open_clock_mode() {
     # Need file manager pane id
     FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
     if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-      dunstify "Create base layout first"
+      __send_notify "workspaces_notify" "Create base layout first"
       exit
     fi
 
@@ -850,32 +866,64 @@ _send_message() {
   title="$2"
 
   if [[ -z "$2" ]]; then
-    title="Open In Nvim"
+    title="open_in_nvim"
   fi
 
-  dunstify "$title" "$messages"
+  __send_notify "$title" "$messages"
 }
 
 _open_in_nvim() {
+  if [[ "$GET_TOTAL_ACTIVE_PANES" == 1 ]]; then
+    setup_layout_workspace "$LAYOUT_SIDE"
+  fi
   update_global_pane_ids
 
-  local path=$1
-  local line=""
+  local path="$1"
+  local line="$2"
+  local pane_id
+  local current_session window_id
 
-  local pane_id="$MAIN_PANE_ID"
+  current_session="$(tmux display-message -p '#S')"
+  window_id="$(tmux display-message -p '#I')"
 
-  if [ -n "$path" ]; then
-    _go_select_pane_with_id "$pane_id"
+  pane_id="$(__get_main_pane_id "$current_session" "$window_id")"
 
-    _send_keys_command_to_target_pane "$pane_id" ":vsplit $path"
+  # -------------------------
+  # VALIDATION
+  # -------------------------
+  if [[ -z "$pane_id" ]]; then
+    _send_message "Open in nvim failed: no target pane found (session=$current_session, window=$window_id)"
+    return 1
+  fi
 
-    if [ -n "$2" ]; then
-      line=$2
-      _send_keys_command_to_target_pane "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line, 1 })"
-      line="line: $line"
-    fi
+  if [[ -z "$path" ]]; then
+    _send_message "Open in nvim failed: empty file path"
+    return 1
+  fi
 
-    _send_message "$path\n$line"
+  if [[ ! -f "$path" ]]; then
+    _send_message "Open in nvim warning: file not found → $path"
+    return 1
+  fi
+
+  # -------------------------
+  # ACTION
+  # -------------------------
+  _go_select_pane_with_id "$pane_id"
+  _send_keys_command_to_target_pane "$pane_id" ":vsplit $path"
+
+  if [[ -n "$line" ]]; then
+    _send_keys_command_to_target_pane "$pane_id" ":$line"
+  fi
+
+  # -------------------------
+  # SUCCESS MESSAGE
+  # -------------------------
+  if [[ ! -z "$line" ]]; then
+    _send_message "$(basename "$path"):$line"
+
+  else
+    _send_message "$(basename "$path")"
   fi
 }
 

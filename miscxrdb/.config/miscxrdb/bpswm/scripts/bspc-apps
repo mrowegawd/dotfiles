@@ -5,85 +5,174 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
-is_file_exists() {
+__send_notify() {
+  dunstify "BSPC APPS" "$1"
+}
+
+__is_file_exists() {
   if [[ ! -f "$1" ]]; then
     dunstify -u critical "Showlinuxhelp" "File path '$1' does not exist or has been deleted."
     exit
   fi
 }
 
-is_dir_exists() {
+__is_dir_exists() {
   if [[ ! -d "$1" ]]; then
     dunstify -u critical "Showlinuxhelp" "Directory path '$1' does not exist or has been deleted."
     exit
   fi
 }
 
+__get_rectangle() {
+  local scale=${1:-60}      # default 60%
+  local mode="${2:-center}" # center | br | tr
+
+  read -r MON_WIDTH MON_HEIGHT <<<"$(xrandr | awk '/\*/ {print $1}' | head -n1 | tr 'x' ' ')"
+
+  local WIN_WIDTH=$((MON_WIDTH * scale / 100))
+  local WIN_HEIGHT=$((MON_HEIGHT * scale / 100))
+
+  local POS_X POS_Y
+
+  case "$mode" in
+  center)
+    POS_X=$(((MON_WIDTH - WIN_WIDTH) / 2))
+    POS_Y=$(((MON_HEIGHT - WIN_HEIGHT) / 2))
+    ;;
+  br | bottom-right)
+    POS_X=$((MON_WIDTH - WIN_WIDTH - 20))
+    POS_Y=$((MON_HEIGHT - WIN_HEIGHT - 40))
+    ;;
+  tr | top-right)
+    POS_X=$((MON_WIDTH - WIN_WIDTH - 20))
+    POS_Y=40
+    ;;
+  *)
+    POS_X=$(((MON_WIDTH - WIN_WIDTH) / 2))
+    POS_Y=$(((MON_HEIGHT - WIN_HEIGHT) / 2))
+    ;;
+  esac
+
+  echo "${WIN_WIDTH}x${WIN_HEIGHT}+${POS_X}+${POS_Y}"
+}
+
+__apply_float_rule() {
+  local rect="$1"
+  local mode="${2:-center}"
+
+  case "$mode" in
+  center | "")
+    bspc rule -a '*' -o state=floating center=true rectangle="$rect"
+    ;;
+  br | tr | bottom-right | top-right)
+    bspc rule -a '*' -o state=floating rectangle="$rect"
+    ;;
+  *)
+    # fallback aman
+    bspc rule -a '*' -o state=floating center=true rectangle="$rect"
+    ;;
+  esac
+}
+
 open_float() {
-  # Open a command in float mode
-  if [ "$1" == "calcurse" ]; then
-    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
-  elif [ "$1" == 'ncmpcpp-ueberzug' ]; then
-    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
-  elif [ "$1" == 'ncmpcpp' ] || [ "$1" == 'rmpc' ]; then
-    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && $TERMINAL -e "$1"
-  else
-    bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$1"
-  fi
+  local RECTANGLE
+  RECTANGLE=$(__get_rectangle 60)
+
+  __apply_float_rule "$RECTANGLE"
+
+  case "$1" in
+  calcurse)
+    kitty -e bash -c "export VISUAL=nvim; calcurse"
+    ;;
+  ncmpcpp-ueberzug)
+    kitty -e "$1"
+    ;;
+  ncmpcpp | rmpc)
+    "$TERMINAL" -e "$1"
+    ;;
+  *)
+    kitty -e "$1"
+    ;;
+  esac
 }
 
 open_note() {
+  local RECTANGLE
+  RECTANGLE=$(__get_rectangle 80)
+
   DIR_NOTES="$HOME/Dropbox"
+  __is_dir_exists "$DIR_NOTES" || return 1
 
-  # elif [ "$1" == 'addnote' ]; then
-  # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
-  # zsh -i -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
+  __apply_float_rule "$RECTANGLE"
 
-  # bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && $TERMINAL -e \ %%
-  #   zsh -i -c "source ~/.fzf.zsh; nvim ~/Dropbox/neorg/orgmode/gtd/inbox.org" %%
+  "$TERMINAL" -e zsh -i -c "cd \"$DIR_NOTES\" && nvim"
+}
 
-  is_dir_exists "$DIR_NOTES"
-  bspc rule -a \* -o state=floating center=true rectangle=1600x900+0+0 && $TERMINAL -e \
-    zsh -i -c "cd $DIR_NOTES; nvim"
+open_translate() {
+  local RECTANGLE
+  RECTANGLE=$(__get_rectangle 40 br)
+
+  DIR_NOTES="$HOME/Dropbox"
+  __is_dir_exists "$DIR_NOTES" || return 1
+
+  __apply_float_rule "$RECTANGLE" "br"
+
+  "$TERMINAL" -e nvim -c 'lua vim.cmd[[only]]' \
+    -c 'lua vim.cmd[[nmap <space>q :qal!<cr>]]' \
+    -c 'lua require("codecompanion").prompt_library(
+          require("codecompanion.config").prompt_library["Translate into indo xclip"],
+          {
+            display = {
+              chat = {
+                window = { layout = "buffer" }
+              }
+            }
+          }
+        )'
 }
 
 open_mpv() {
+  local SELECT
   SELECT="$(echo -e "$MPV_LISTS" | sort | $rofi_command -p " 🗂  MPV" -dmenu -i)"
 
-  [[ -z $SELECT ]] && exit
+  [[ -z "$SELECT" ]] && return
 
-  MSG_DUNST="MPV"
-  MSG_PROXYCHAINS=""
-  MSG_ICON="->"
+  local CLIPBOARD_SEL
   CLIPBOARD_SEL="$(xclip -o -sel clip)"
 
-  [[ -z "$CLIPBOARD_SEL" ]] && exit
+  [[ -z "$CLIPBOARD_SEL" ]] && return
 
-  if [[ $SELECT == "open with proxychains" ]]; then
-    MSG_PROXYCHAINS="with proxychains"
-    tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" "$CLIPBOARD_SEL"
+  local MSG_DUNST="MPV"
+  local MSG_PROXYCHAINS=""
+  local MSG_ICON="->"
+
+  # Base command
+  local MPV_CMD=(mpv -ontop -no-border -force-window --geometry=-15-60)
+
+  if [[ "$SELECT" == "open with proxychains" ]]; then
+    MSG_PROXYCHAINS="(with proxychains)"
+    MPV_CMD=(proxychains -q "${MPV_CMD[@]}" --autofit=853x500 --ytdl-raw-options="yes-playlist=,format=best")
   else
-    tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$CLIPBOARD_SEL"
+    MPV_CMD+=("--autofit=800x500")
   fi
 
-  dunstify "Bspwmfloat" "$MSG_DUNST $MSG_PROXYCHAINS $MSG_ICON $CLIPBOARD_SEL"
+  tsp "${MPV_CMD[@]}" "$CLIPBOARD_SEL"
+
+  __send_notify "$MSG_DUNST $MSG_PROXYCHAINS $MSG_ICON $CLIPBOARD_SEL"
 }
 
 remember_me_snippet() {
-  SPAWN_TERMINAL=$TERMINAL
+  local SPAWN_TERMINAL="$TERMINAL"
   [[ $TERMINAL == "wezterm" ]] && SPAWN_TERMINAL="st"
 
-  SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet"
-  is_file_exists "$SNIPPET_PATH"
-  bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
+  local RECTANGLE
+  RECTANGLE=$(__get_rectangle 60)
 
-  # broken monitor
-  # bspc rule -a \* -o state=floating rectangle=800x400+$(($(xwininfo -root | awk '/Width/ {print $2}') / 2 - 400))+200 && $SPAWN_TERMINAL -e zsh -e "$SNIPPET_PATH"
+  local SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet"
+  __is_file_exists "$SNIPPET_PATH"
 
-  # test
-  # SNIPPET_PATH="$HOME/.config/miscxrdb/bin/snippet_test"
-  # is_path_exits "$SNIPPET_PATH"
-  # bspc rule -a \* -o state=floating center=true rectangle=1500x800+0+0 && st -e zsh -c "$SNIPPET_PATH"
+  __apply_float_rule "$RECTANGLE"
+  "$SPAWN_TERMINAL" -e zsh -e "$SNIPPET_PATH"
 }
 
 "$@"

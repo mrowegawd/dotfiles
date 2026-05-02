@@ -65,7 +65,7 @@ return {
             staticTitle = "Find and Replace",
           }
         end,
-        desc = "GrepEnchanted: grug far [grugfar]",
+        desc = "GrepEnchanted: grug far current path [grugfar]",
       },
       {
         "<Localleader>gb",
@@ -88,7 +88,7 @@ return {
           }
         end,
         mode = "v",
-        desc = "GrepEnchanted: grug far [grugfar]",
+        desc = "GrepEnchanted: grug far current path (visual) [grugfar]",
       },
       {
         "<Localleader>gg",

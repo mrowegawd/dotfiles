@@ -6,10 +6,8 @@ return {
   },
   -- ORGMODE
   {
-    "MadKuntilanak/orgmode", -- "nvim-orgmode/orgmode",
-    branch = "fix/ignore-key-agenda-redo",
-    cmd = "Org",
-    ft = "org",
+    "MadKuntilanak/orgmode",
+    event = "VeryLazy",
     dependencies = {
       "akinsho/org-bullets.nvim",
       "danilshvalov/org-modern.nvim",
@@ -126,13 +124,10 @@ return {
             end,
           },
         },
-        org_agenda_files = {
-          string.format("%s/*/**/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/*/*/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/*/*", RUtils.config.path.wiki_path),
-          -- string.format("%s/*", RUtils.config.path.wiki_path),
-        },
+
+        org_agenda_files = string.format("%s/**/*", RUtils.config.path.wiki_path),
         org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
+
         org_todo_keywords = {
           "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
@@ -198,12 +193,7 @@ return {
           --     filetype = "markdown",
           -- },
         },
-        win_split_mode = "vertical",
-        -- win_split_mode = function(name)
-        --   vim.cmd("vsplit " .. name)
-        --   local width = math.floor(vim.o.columns * 0.3) -- 30% layar
-        --   vim.cmd("vertical resize " .. width)
-        -- end,
+        win_split_mode = "float",
         org_agenda_min_height = 2,
         org_agenda_custom_commands = {
           -- "c" is the shortcut that will be used in the prompt
@@ -454,6 +444,7 @@ return {
     config = function(_, opts)
       local orgmode = require "orgmode"
       orgmode.setup(opts)
+
       require("org-bullets").setup {
         concealcursor = true, -- If false then when the cursor is on a line underlying characters are visible
         symbols = {
@@ -826,9 +817,10 @@ return {
       debug = false,
     },
   },
-  -- OBSIDIAN.NVIM
+  -- OBSIDIAN.NVIM (disabled)
   {
     "obsidian-nvim/obsidian.nvim",
+    enabled = false,
     version = "*", -- recommended, use latest release instead of latest commit
     cmd = "Obsidian",
     ft = "markdown",

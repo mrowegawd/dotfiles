@@ -116,10 +116,8 @@ return {
 
     if output then
       local target = output.stdout:gsub("\n$", "")
-      -- fail(target:match("[/\\]$"))
       if target ~= "" then
-        -- ya.manager_emit(target:match("[/\\]$") and "cd" or "reveal", { target })
-        ya.manager_emit("cd", { target })
+        ya.emit("cd", { target })
       end
     end
   end,

@@ -1,4 +1,16 @@
 return {
+  -- WAYFINDER
+  {
+    "error311/wayfinder.nvim",
+    keys = {
+      {
+        "<Leader>cP",
+        "<Plug>(WayfinderOpen)",
+        desc = "Peek: peek with wayfinder [wayfinder.nvim]",
+      },
+    },
+    opts = {},
+  },
   -- OVERLOOK.NVIM
   {
     "MadKuntilanak/overlook.nvim",
@@ -11,7 +23,7 @@ return {
           P.peek_qf()
         end,
         ft = "qf",
-        desc = "Peek: peek on qf item [overlook]",
+        desc = "Peek: peek on qf item [overlook.nvim]",
       },
       {
         "P",
@@ -20,7 +32,7 @@ return {
           P.peek_qf()
         end,
         ft = "qf",
-        desc = "Peek: peek on qf item (alternatif) [overlook]",
+        desc = "Peek: peek on qf item (alternatif) [overlook.nvim]",
       },
       {
         "P",
@@ -29,14 +41,14 @@ return {
           P.peek_file_source()
         end,
         ft = "orgagenda",
-        desc = "Peek: note file [overlook]",
+        desc = "Peek: note file [overlook.nvim]",
       },
       {
         "<Leader>cp",
         function()
           require("overlook.api").peek_definition()
         end,
-        desc = "Peek: peek definition [overlook]",
+        desc = "Peek: peek definition [overlook.nvim]",
       },
     },
     opts = {
@@ -207,15 +219,15 @@ return {
 
       vim.api.nvim_create_user_command("PeekCloseAll", function()
         require("overlook.api").peek_definition()
-      end, { desc = "Peek: peek definition [overlook]" })
+      end, { desc = "Peek: peek definition [overlook.nvim]" })
 
       vim.api.nvim_create_user_command("PeekRestorePopup", function()
         require("overlook.api").restore_popup()
-      end, { desc = "Peek: restore popup [overlook]" })
+      end, { desc = "Peek: restore popup [overlook.nvim]" })
 
       vim.api.nvim_create_user_command("PeekRestoreAllPopup", function()
         require("overlook.api").restore_all_popups()
-      end, { desc = "Peek: restore all popup [overlook]" })
+      end, { desc = "Peek: restore all popup [overlook.nvim]" })
     end,
   },
   -- INCRENAME
@@ -257,8 +269,10 @@ return {
   },
   -- TINY-CODE-ACTION
   {
-    -- "rachartier/tiny-code-action.nvim",
-    dir = "~/.local/src/nvim_plugins/tiny-code-action.nvim",
+    "rachartier/tiny-code-action.nvim",
+    -- dir = "~/.local/src/nvim_plugins/tiny-code-action.nvim",
+    -- "MadKuntilanak/tiny-code-action.nvim",
+    -- branch = "fix/fzflua",
     event = "LspAttach",
     opts = {
       backend = "delta", -- delta, vim
@@ -306,7 +320,7 @@ return {
   {
     "retran/meow.yarn.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
-    cmd = { "PeekWHOCallThisFunc", "PeekWHATCallThisFunc", "PeekSUBTYPE", "PeekSUPERTYPE" },
+    cmd = { "PeekWHOCallers", "PeekWHATCallees", "PeekSUBTYPE", "PeekSUPERTYPE" },
     opts = {
       mappings = {
         jump = "<CR>",
@@ -315,7 +329,7 @@ return {
         expand_alt = "<Right>",
         collapse = "<S-Left>",
         collapse_alt = "<Left>",
-        show_super_hierarchy = "H",
+        show_super_hierarchy = "K",
         show_sub_hierarchy = "J",
         quit = "q",
       },
@@ -341,21 +355,21 @@ return {
     config = function(_, opts)
       require("meow.yarn").setup(opts)
 
-      vim.api.nvim_create_user_command("PeekWHOCallThisFunc", function()
+      vim.api.nvim_create_user_command("PeekWHOCallers", function()
         require("meow.yarn").open_tree("call_hierarchy", "callers")
-      end, { desc = "LSP: who call this func hierarcy [meow.yarn]" })
+      end, { desc = "LSP: show callers (who calls this function) [meow.yarn]" })
 
-      vim.api.nvim_create_user_command("PeekWHATCallThisFunc", function()
+      vim.api.nvim_create_user_command("PeekWHATCallees", function()
         require("meow.yarn").open_tree("call_hierarchy", "callees")
-      end, { desc = "LSP: what call this func hierarcy [meow.yarn]" })
+      end, { desc = "LSP: show callees (functions called by this function) [meow.yarn]" })
 
       vim.api.nvim_create_user_command("PeekSUPERTYPE", function()
         require("meow.yarn").open_tree("type_hierarchy", "supertypes")
-      end, { desc = "LSP: check supertype hierarcy [meow.yarn]" })
+      end, { desc = "LSP: show supertypes (parent types) [meow.yarn]" })
 
       vim.api.nvim_create_user_command("PeekSUBTYPE", function()
         require("meow.yarn").open_tree("type_hierarchy", "subtypes")
-      end, { desc = "LSP: check subtype hierarcy [meow.yarn]" })
+      end, { desc = "LSP: show subtypes (derived/child types) [meow.yarn]" })
     end,
   },
 }

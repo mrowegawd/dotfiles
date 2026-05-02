@@ -89,7 +89,8 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
 #[fg=$GREEN]#{pomodoro_status}\
-#[fg=$RED]#{?@resize-locked,󰌾 Resize Pane,}#[default] \
+#[fg=$RED]#{?@resize-locked,🔒 Resize Pane OFF,}#[default] \
+#[fg=$RED]#{?pane_input_off,🔒 Input OFF,}#[default] \
 #[fg=$STATUSLINE_FG]#[bold]  #(date +\"%A %d-%b-%y\" | sed \
 -e 's/Monday/Senin/' \
 -e 's/Tuesday/Selasa/' \

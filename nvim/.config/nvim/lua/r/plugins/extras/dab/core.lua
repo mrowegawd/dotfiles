@@ -336,7 +336,6 @@ return {
       -- setup dap config by VsCode launch.json file
       local vscode = require "dap.ext.vscode"
       local json = require "plenary.json"
-      ---@diagnostic disable-next-line: duplicate-set-field
       vscode.json_decode = function(str)
         return vim.json.decode(json.json_strip_comments(str))
       end
@@ -413,16 +412,15 @@ return {
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open {}
       end
-      -- dap.listeners.before.event_terminated["dapui_config"] = function()
-      --   dapui.close {}
-      -- end
-      -- dap.listeners.before.event_exited["dapui_config"] = function()
-      --   dapui.close {}
-      -- end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close {}
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close {}
+      end
     end,
   },
-
-  -- MASON-NVIM-DAP.NVIM
+  -- MASON.NVIM INTEGRATION
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = "mason.nvim",

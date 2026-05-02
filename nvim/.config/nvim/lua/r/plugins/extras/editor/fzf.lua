@@ -202,14 +202,7 @@ return {
         "<Leader>fw",
         function()
           local fzf_cword = require("fzf-lua.utils").rg_escape(vim.fn.expand "<cword>")
-          require("fzf-lua").grep_cword {
-            winopts = {
-              title = RUtils.fzflua.format_title(
-                string.format("Grep cword >> %s", fzf_cword),
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
-              ),
-            },
-          }
+          require("fzf-lua").grep_cword { winopts = { title = string.format("Grep cword >> %s", fzf_cword) } }
         end,
         desc = "Picker: grep word [fzflua]",
       },
@@ -217,14 +210,7 @@ return {
         "<Leader>fw",
         function()
           local fzf_visual = require("fzf-lua.utils").get_visual_selection()
-          require("fzf-lua").grep_visual {
-            winopts = {
-              title = RUtils.fzflua.format_title(
-                string.format("Grep word visual >> %s", fzf_visual),
-                RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
-              ),
-            },
-          }
+          require("fzf-lua").grep_visual { winopts = { title = string.format("Grep word visual >> %s", fzf_visual) } }
         end,
         desc = "Picker: grep word visual [fzflua]",
         mode = { "x" },
@@ -261,26 +247,10 @@ return {
       end
 
       ---@diagnostic disable: missing-fields
-      ---@type fzf-lua.config.Defaults
+      ---@type fzf-lua.config.Base
       return {
         __HLS = {
           cursor = "CurSearch",
-        },
-        fzf_colors = {
-          ["fg"] = { "fg", "FzfLuaFilePart" },
-          ["bg"] = { "bg", "FzfLuaNormal" },
-          ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-          ["fg+"] = { "fg", "FzfLuaSel" },
-          ["bg+"] = { "bg", "FzfLuaSel" },
-          ["hl+"] = { "fg", "FzfLuaFzfMatch" },
-          ["info"] = { "fg", "FzfLuaHeaderText" },
-          ["prompt"] = { "fg", "Conditional" },
-          ["pointer"] = { "fg", "Keyword" },
-          ["marker"] = { "fg", "KeywordMatch" },
-          ["spinner"] = { "fg", "Label" },
-          ["header"] = { "fg", "FzfLuaHeaderText" },
-          ["gutter"] = { "bg", "FzfLuaBorder" },
-          ["border"] = { "fg", "FzfLuaBorder" },
         },
         previewers = {
           builtin = {
@@ -384,7 +354,6 @@ return {
                     RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
                   ),
                 },
-                formatter = false, -- disable setting "path first"
                 actions = {
                   ["default"] = function(selected)
                     local paths = {}
@@ -392,14 +361,11 @@ return {
                     if #selected > 1 then
                       for _, sel in pairs(selected) do
                         if #sel > 0 then
-                          local slice_num_str = sel:match ".*\xe2\x80\x82()"
-                          local path = sel:sub(slice_num_str)
-                          table.insert(paths, path)
+                          table.insert(paths, sel)
                         end
                       end
                     else
-                      local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
-                      path_str = selected[1]:sub(slice_num_str)
+                      path_str = selected[1]
                     end
 
                     local opts = {}
@@ -407,10 +373,7 @@ return {
                     local title_path
                     if #paths > 1 then
                       title_path = "[ " .. table.concat(paths, ", ") .. " ]"
-                      opts.rg_opts = "--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
-                        .. table.concat(paths, " ")
-                        .. " -e "
-                      print(opts.rg_opts)
+                      opts.cmd = "rg --hidden --files " .. table.concat(paths, " ")
                     else
                       opts.cwd = path_str
                       title_path = path_str
@@ -623,7 +586,6 @@ return {
                     RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
                   ),
                 },
-                formatter = false, -- disable setting "path first"
                 actions = {
                   ["default"] = function(selected)
                     local paths = {}
@@ -631,14 +593,11 @@ return {
                     if #selected > 1 then
                       for _, sel in pairs(selected) do
                         if #sel > 0 then
-                          local slice_num_str = sel:match ".*\xe2\x80\x82()"
-                          local path = sel:sub(slice_num_str)
-                          table.insert(paths, path)
+                          table.insert(paths, sel)
                         end
                       end
                     else
-                      local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
-                      path_str = selected[1]:sub(slice_num_str)
+                      path_str = selected[1]
                     end
 
                     local opts = {}
@@ -649,7 +608,6 @@ return {
                       opts.rg_opts = "--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
                         .. table.concat(paths, " ")
                         .. " -e "
-                      print(opts.rg_opts)
                     else
                       opts.cwd = path_str
                       title_path = path_str
@@ -993,7 +951,7 @@ return {
             },
           },
           code_actions = RUtils.fzflua.open_lsp_code_action {
-            winopts = { title = RUtils.fzflua.format_title("Code Actions", "󰌵", "@type") },
+            winopts = { title = RUtils.fzflua.format_title("Code Actions", "󰌵") },
           },
           finder = RUtils.fzflua.open_lsp_references {
             async = true,

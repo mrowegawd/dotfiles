@@ -36,7 +36,7 @@ local set_conditions = {
   ---@param size number
   hide_in_width = function(size)
     size = size or 120
-    return vim.fn.winwidth(0) > size
+    return vim.api.nvim_win_get_width(0) > size
   end,
   hide_in_col_width = function(size)
     size = size or 120
@@ -74,6 +74,10 @@ local set_conditions = {
   is_green_ft = function()
     local dap_ft = { "help" }
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
+  end,
+  is_dont_show_at_ft = function()
+    local dont_show_at_ft = { "oil" }
+    return vim.tbl_contains(dont_show_at_ft, vim.bo.filetype)
   end,
   is_note_ft = function()
     local note_ft = { "org", "markdown", "octo", "codecompanion" }
@@ -247,8 +251,8 @@ local __colors = function()
     block_notice = H.tint(H.darken(H.get("Error", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
-    block_mux_fg = H.tint(H.darken(H.get("Error", "fg"), 0.8, H.get("Normal", "bg")), 0.8),
-    block_mux_bg = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), -0.2),
+    block_mux_fg = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 0.5),
+    block_mux_bg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), 0.5),
 
     winbar_keyword = H.get("WinBarRightBlock", "fg"),
     winbar_fg = H.get("WinBar", "fg"),
@@ -959,6 +963,7 @@ M.LSPActive = {
       and vim.bo.filetype ~= "qf"
       and vim.fn.mode(1) ~= "t"
       and not set_conditions.is_path_git_relative()
+      and set_conditions.hide_in_col_width(100)
   end,
 
   init = function(self)
@@ -1012,7 +1017,7 @@ M.SearchCount = {
     end,
 
     provider = function(self)
-      if self.result.incomplete == 1 then
+      if self.result.incomplete == 1 or self.result.incomplete == nil then
         return ""
       end
 
@@ -1280,7 +1285,7 @@ M.RmuxTargetPane = {
   {
     provider = function(self)
       if self.task > 0 then
-        return "  " .. self.task
+        return "  " .. self.task
       end
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
@@ -1288,7 +1293,7 @@ M.RmuxTargetPane = {
   {
     provider = function(self)
       if #self.watch > 0 then
-        return "  " .. self.watch
+        return "  " .. self.watch
       end
     end,
     hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
@@ -1674,7 +1679,10 @@ M.WinbarFilePath = {
   },
   {
     condition = function()
-      return vim.bo[0].filetype ~= "qf" and not set_conditions.is_diff() and not set_conditions.is_path_git_relative()
+      return vim.bo[0].filetype ~= "qf"
+        and not set_conditions.is_diff()
+        and not set_conditions.is_path_git_relative()
+        and not set_conditions.is_dont_show_at_ft()
     end,
     provider = function(self)
       return RUtils.file.basename(self.filename) .. " "
@@ -1697,7 +1705,7 @@ M.WinBarNavic = {
     self.req_navic = get_navic()
   end,
   condition = function()
-    return get_navic() ~= nil
+    return get_navic() ~= nil and set_conditions.hide_in_width(75)
   end,
   {
     condition = function(self)

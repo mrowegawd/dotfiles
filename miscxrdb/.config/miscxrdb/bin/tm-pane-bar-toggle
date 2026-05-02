@@ -41,7 +41,7 @@ toggle_border_visibility_and_file_manager() {
   _force_color_filemanager
 }
 
-hide_bar_pane() {
+toggle_zoom_and_hide_bar_pane() {
   if [ "$(tmux display-message -p '#{window_zoomed_flag}')" -eq 1 ]; then
     if [[ "$1" == 1 ]]; then
       tmux set-option -g pane-border-status top

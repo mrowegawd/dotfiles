@@ -27,7 +27,8 @@ return {
   },
   -- QFBOOKMARK
   {
-    dir = "~/.local/src/nvim_plugins/qfbookmark",
+    -- dir = "~/.local/src/nvim_plugins/qfbookmark",
+    "MadKuntilanak/qfbookmark",
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {

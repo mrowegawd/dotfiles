@@ -720,9 +720,9 @@ local ctrl_o_nvim = function()
   }, { winopts = { title = "ALT-O" } })
 end
 
-RUtils.map.nnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
-RUtils.map.tnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
-RUtils.map.xnoremap("<a-s-o>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
+RUtils.map.nnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+RUtils.map.tnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
+RUtils.map.xnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
 
 local bulk_cmd_misc = function()
   local cmds = {

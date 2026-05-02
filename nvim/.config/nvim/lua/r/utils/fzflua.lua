@@ -77,7 +77,7 @@ local __lastIndexOf = function(haystack, needle)
   end
 end
 
----@return string
+---@return string, number
 local __stripBeforeLastOccurrenceOf = function(str, sep)
   local idx = __lastIndexOf(str, sep) or 0
   return str:sub(idx + 1), idx
@@ -111,13 +111,12 @@ function M.padding_prompt(is_expand)
   return padding
 end
 
-function M.format_title(str, icon, icon_hl)
-  return {
-    { " ", "FzfLuaTitle" },
-    { (icon and icon .. " " or ""), icon_hl or "FzfLuaTitle" },
-    { str, "FzfLuaTitle" },
-    { " ", "FzfLuaTitle" },
-  }
+---@param str string
+---@param icon? string
+---@return string
+function M.format_title(str, icon)
+  icon = icon and icon .. " " or ""
+  return icon .. str
 end
 
 function M.open_cursor_dropdown(opts)
@@ -556,11 +555,11 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
   end
 end
 
----@return string|nil
+---@return string|nil, number|nil
 function M.__strip_str(selected)
   local pth = M.strip_ansi_coloring(selected)
   if pth == nil then
-    return
+    return nil, nil
   end
   return __stripBeforeLastOccurrenceOf(pth, nbsp)
 end

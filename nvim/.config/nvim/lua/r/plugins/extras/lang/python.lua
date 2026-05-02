@@ -191,9 +191,10 @@ return {
       },
     },
   },
-
+  -- PYROLA (disabled)
   {
     "matarina/pyrola.nvim",
+    enabled = false,
     build = ":UpdateRemotePlugins",
     ft = "python",
     keys = {

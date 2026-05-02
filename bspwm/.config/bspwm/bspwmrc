@@ -143,8 +143,8 @@ if [ ! -f "$STARTUP_LOCK_FILE" ]; then
 
   [ -f "$HOME/.local/bin/mpdris2-rs" ] && pkill mpdris2-rs && "$HOME/.local/bin/mpdris2-rs" &
 
-  if [ -f "$HOME/.local/bin/zen-browser" ]; then
-    run_once zen-browser
+  if [ -f "$HOME/.local/bin/zen" ]; then
+    run_once zen
   else
     run_once firefox
   fi

@@ -245,7 +245,7 @@ return {
     local action = job.args[1]
 
     if hovered_item_is_dir() then
-      ya.manager_emit("enter" or "open", { hovered = true })
+      ya.emit("enter" or "open", { hovered = true })
     else
       local fpath = tostring(get_hovered_item_path())
       local fpath_ext = check_file_extension(fpath)

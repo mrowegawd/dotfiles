@@ -18,5 +18,5 @@ default_icon = ~/.config/miscxrdb/icons/bell-notification.png
 background = "%%critical_bg%%"
 foreground = "%%critical_fg%%"
 frame_color = "%%critical_frame_fg%%"
-timeout = 15
+timeout = 20
 default_icon = ~/.config/miscxrdb/icons/warning.png

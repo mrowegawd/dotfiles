@@ -481,7 +481,7 @@ function M.load(name)
       end, { msg = "Failed loading " .. mod })
     end
   end
-  local pattern = "LazyVim" .. name:sub(1, 1):upper() .. name:sub(2)
+  local pattern = "RUtils" .. name:sub(1, 1):upper() .. name:sub(2)
   -- always load lazyvim, then user file
   if M.defaults[name] or name == "options" then
     _load("r.config." .. name)
@@ -543,6 +543,62 @@ end
 ---@alias LazyVimDefault {name: string, extra: string, enabled?: boolean, origin?: "global" | "default" | "extra" }
 
 local default_extras ---@type table<string, LazyVimDefault>
+
+---@param name string
+---@param extras LazyVimDefault[]
+function M.register_defaults(name, extras)
+  assert(default_extras, "defaults should be loaded by now, this should never happen")
+  local valid = vim.tbl_map(function(extra)
+    return extra.name
+  end, extras) --[[@as string[] ]]
+
+  local origin = "default"
+  local ret ---@type LazyVimDefault?
+  local use ---@type string?
+
+  local global = vim.g["lazyvim_" .. name]
+  if vim.tbl_contains(valid, global) then
+    origin = "global" -- was set by the user in their config
+    use = global
+  else
+    if global and global ~= "auto" then
+      vim.notify(
+        ("Invalid value for `vim.g.lazyvim_%s`: `%s`\nValid options are: %s"):format(
+          name,
+          global,
+          table.concat(valid, ", ")
+        ),
+        vim.log.levels.ERROR,
+        { title = "LazyVim" }
+      )
+    end
+    for _, extra in ipairs(extras) do
+      if RUtils.has_extra(extra.extra) then
+        use = extra.name -- was imported by the user in their lazy spec or added by LazyExtras
+        origin = "extra"
+        break
+      end
+    end
+  end
+
+  use = use or valid[1] -- fallback to the first one if nothing was set
+
+  for _, extra in ipairs(extras) do
+    local import = "r.plugins.extras." .. extra.extra
+    extra = vim.deepcopy(extra)
+    extra.enabled = extra.name == use
+    extra.import = import
+    extra.group = name
+    if extra.enabled then
+      extra.origin = origin
+      ret = extra
+    end
+    default_extras[import] = extra
+  end
+
+  return assert(ret, "One of the extras should be enabled, this should never happen")
+end
+
 function M.get_defaults()
   if default_extras then
     return default_extras

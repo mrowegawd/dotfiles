@@ -6,18 +6,18 @@ startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v
 [[session]]
 name = "Downloads"
 path = "~/Downloads"
-startup_command = "ls"
-preview_command = "bat --color=always ~/.config/zsh/.zshrc"
+disable_startup_command = true
+# preview_command = "bat --color=always ~/.config/zsh/.zshrc"
 
-[[session]]
-name = "Torrent"
-path = "~/moxconf/media_and_tuts/torrents"
-startup_command = "ls"
-
-[[session]]
-name = "PDF"
-path = "~/moxconf/media_and_tuts/pdf"
-startup_command = "ls"
+# [[session]]
+# name = "Torrent"
+# path = "~/moxconf/media_and_tuts/torrents"
+# startup_command = "ls"
+#
+# [[session]]
+# name = "PDF"
+# path = "~/moxconf/media_and_tuts/pdf"
+# startup_command = "ls"
 
 [[session]]
 name = "Linux void"

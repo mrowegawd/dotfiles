@@ -46,9 +46,21 @@ open_bookmark() {
   exit
 }
 edit_bookmark() {
+  read -r MON_WIDTH MON_HEIGHT <<<$(xrandr | grep '*' | awk '{print $1}' | head -n1 | sed 's/x/ /')
+
+  # Calculate window size (e.g., 80% of the screen)
+  WIN_WIDTH=$((MON_WIDTH * 80 / 100))
+  WIN_HEIGHT=$((MON_HEIGHT * 80 / 100))
+
+  # Calculate position to keep the window centered (optional, center=true already handles this)
+  POS_X=$(((MON_WIDTH - WIN_WIDTH) / 2))
+  POS_Y=$(((MON_HEIGHT - WIN_HEIGHT) / 2))
+
+  REACTANGLE=${WIN_WIDTH}x${WIN_HEIGHT}+${POS_X}+${POS_Y}
+
   case $WM_WINDOW in
   "bspwm")
-    bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
+    bspc rule -a \* -o state=floating center=true rectangle=$REACTANGLE &&
       $TERMINAL -e bash -c "nvim $FILE_BOOKMARKED"
     ;;
 
@@ -298,7 +310,6 @@ main() {
   if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
     open_pass ""
   fi
-
 }
 
 main

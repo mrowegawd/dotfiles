@@ -248,11 +248,11 @@ build-install() {
 
   # if ! command -v yazi >/dev/null; then
     echo "Installing: yazi - File manager tui"
-    # cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
-    cargo install --locked yazi-fm yazi-cli
+    cargo install --force yazi-build --locked
     asdf reshim rust
+
     # yazi git integration
-    # ya pack -a yazi-rs/plugins:git
+    # ya pkg add yazi-rs/plugins:git
   # fi
 
   # if ! command -v rust-analyzer >/dev/null; then
@@ -434,13 +434,6 @@ function fg-bg() {
 
 zle -N fg-bg
 bindkey '^z' fg-bg
-
-function tmc() {
-  LBUFFER+="tm "
-  zle accept-line
-}
-zle -N tmc
-bindkey '^[y' tmc
 
 function exitme() {
   LBUFFER+="exit "

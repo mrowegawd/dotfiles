@@ -1,67 +1,77 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+
 # : Manager {{{
 
-[mgr]
-cwd = { fg = "%%col_cwd%%" }
+[indicator]
 
-# Hovered
-hovered = { bg = "%%col_hovered%%", bold = true }
-preview_hovered = { underline = true }
+preview         = {}
+current         = { bg = "%%col_hovered%%" }
+parent          = { bg = "%%col_hovered%%" }
+padding         = { open = "▐", close = "▌" }
+
+[mgr]
+
+cwd             = { fg = "%%col_cwd%%" }
 
 # Find
-find_keyword = { fg = "%%col_find_keyword_fg%%", bg = "%%col_find_keyword_bg%%", italic = true, bold = true }
-find_position = { fg = "#fe8019", bg = "reset", italic = true }
+find_keyword    = { fg = "%%col_find_keyword_fg%%", bg = "%%col_find_keyword_bg%%", italic = true, bold = true }
+find_position   = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_copied = { fg = "%%col_copied%%", bg = "%%col_copied%%" }
-marker_cut = { fg = "%%col_cut%%", bg = "%%col_cut%%" }
+marker_copied   = { fg = "%%col_copied%%", bg = "%%col_copied%%" }
+marker_cut      = { fg = "%%col_cut%%", bg = "%%col_cut%%" }
 marker_marked   = { fg = "%%col_marked_fg%%", bg = "%%col_marked_bg%%" }
 marker_selected = { fg = "%%col_selected%%", bg = "%%col_selected%%" }
 
-count_selected = { fg = "%%col_count_selected_fg%%", bg = "%%col_count_selected_bg%%" }
-count_copied = { fg = "%%col_count_copied_fg%%", bg = "%%col_count_copied_bg%%" }
-count_cut = { fg = "%%col_count_cut_fg%%", bg = "%%col_count_cut_bg%%" }
+# Count
+count_selected  = { fg = "%%col_count_selected_fg%%", bg = "%%col_count_selected_bg%%" }
+count_copied    = { fg = "%%col_count_copied_fg%%", bg = "%%col_count_copied_bg%%" }
+count_cut       = { fg = "%%col_count_cut_fg%%", bg = "%%col_count_cut_bg%%" }
 
 # Border
-border_symbol = "│"
-border_style = { fg = "#1c1c1c" }
+border_symbol   = "│"
+border_style    = { fg = "#1c1c1c" }
 
 [tabs]
-active = { fg = "%%col_tab_active_fg%%", bg = "%%col_tab_active_bg%%", bold = true }
-inactive = { fg = "%%col_tab_inactive_fg%%", bg = "%%col_tab_inactive_bg%%", bold = true }
-# sep_inner = { open = "", close = "" }
-# sep_outer = { open = "", close = "" }
-sep_inner = { open = "", close = "" }
-sep_outer = { open = "", close = "" }
+
+active          = { fg = "%%col_tab_active_fg%%", bg = "%%col_tab_active_bg%%", bold = true }
+inactive        = { fg = "%%col_tab_inactive_fg%%", bg = "%%col_tab_inactive_bg%%", bold = true }
+# sep_inner     = { open = "", close = "" }
+# sep_outer     = { open = "", close = "" }
+sep_inner       = { open = "", close = "" }
+sep_outer       = { open = "", close = "" }
 
 # : }}}
 
 [mode]
-normal_main = { fg = "%%col_statusline_normal_fg%%", bg = "%%col_statusline_normal_bg%%", bold = true }
-normal_alt = { fg = "%%col_statusline_normal_fg_alt%%", bg = "%%col_statusline_normal_bg_alt%%" }
 
-select_main = { fg = "%%col_statusline_select_fg%%", bg = "%%col_statusline_select_bg%%", bold = true }
-select_alt = { fg = "%%col_statusline_select_fg_alt%%", bg = "%%col_statusline_select_bg_alt%%" }
+normal_main     = { fg = "%%col_statusline_normal_fg%%", bg = "%%col_statusline_normal_bg%%", bold = true }
+normal_alt      = { fg = "%%col_statusline_normal_fg_alt%%", bg = "%%col_statusline_normal_bg_alt%%" }
 
-unset_main = { fg = "%%col_statusline_unset_fg%%", bg = "%%col_statusline_unset_bg%%", bold = true }
-unset_alt = { fg = "%%col_statusline_unset_fg_alt%%", bg = "%%col_statusline_unset_bg_alt%%" }
+select_main     = { fg = "%%col_statusline_select_fg%%", bg = "%%col_statusline_select_bg%%", bold = true }
+select_alt      = { fg = "%%col_statusline_select_fg_alt%%", bg = "%%col_statusline_select_bg_alt%%" }
+
+unset_main      = { fg = "%%col_statusline_unset_fg%%", bg = "%%col_statusline_unset_bg%%", bold = true }
+unset_alt       = { fg = "%%col_statusline_unset_fg_alt%%", bg = "%%col_statusline_unset_bg_alt%%" }
 
 # : Status {{{
 
 [status]
-sep_left  = { open = "", close = "" }
-sep_right = { open = "", close = "" }
+
+sep_left        = { open = "", close = "" }
+sep_right       = { open = "", close = "" }
 
 # Progress
-progress_label = { fg = "#ebdbb2", bold = true }
+progress_label  = { fg = "#ebdbb2", bold = true }
 progress_normal = { fg = "#504945", bg = "#3c3836" }
-progress_error = { fg = "#fb4934", bg = "#3c3836" }
+progress_error  = { fg = "#fb4934", bg = "#3c3836" }
 
 # Permissions
-perm_exec = { fg = "#a6d189" }
-perm_read = { fg = "#e5c890" }
-perm_sep = { fg = "#838ba7" }
-perm_type = { fg = "#8caaee" }
-perm_write = { fg = "#e78284" }
+perm_exec       = { fg = "#a6d189" }
+perm_read       = { fg = "#e5c890" }
+perm_sep        = { fg = "#838ba7" }
+perm_type       = { fg = "#8caaee" }
+perm_write      = { fg = "#e78284" }
 
 # : }}}
 
@@ -69,10 +79,11 @@ perm_write = { fg = "#e78284" }
 # : Input {{{
 
 [input]
-border = { fg = "#bdae93" }
-title = {}
-value = {}
-selected = { reversed = true }
+
+border          = { fg = "#bdae93" }
+title           = {}
+value           = {}
+selected        = { reversed = true }
 
 # : }}}
 
@@ -80,9 +91,9 @@ selected = { reversed = true }
 # : Select {{{
 
 [select]
-border = { fg = "#504945" }
-active = { fg = "#fe8019" }
-inactive = {}
+border          = { fg = "#504945" }
+active          = { fg = "#fe8019" }
+inactive        = {}
 
 # : }}}
 
@@ -90,9 +101,10 @@ inactive = {}
 # : Tasks {{{
 
 [tasks]
-border = { fg = "#504945" }
-title = {}
-hovered = { underline = true }
+
+border          = { fg = "#504945" }
+title           = {}
+hovered         = { underline = true }
 
 # : }}}
 
@@ -100,11 +112,12 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "%%col_which_bg%%" }
-cand = { fg = "#83a598" }
-rest = { fg = "#928374" }
-desc = { fg = "#fe8019" }
-separator = "  "
+
+mask            = { bg = "%%col_which_bg%%" }
+cand            = { fg = "#83a598" }
+rest            = { fg = "#928374" }
+desc            = { fg = "#fe8019" }
+separator       = "  "
 separator_style = { fg = "#504945" }
 
 # : }}}
@@ -113,11 +126,12 @@ separator_style = { fg = "#504945" }
 # : Help {{{
 
 [help]
-on = { fg = "#fe8019" }
-exec = { fg = "#83a598" }
-desc = { fg = "#928374" }
-hovered = { bg = "%%col_cwd%%", bold = true }
-footer = { fg = "#3c3836", bg = "#a89984" }
+
+on              = { fg = "#fe8019" }
+exec            = { fg = "#83a598" }
+desc            = { fg = "#928374" }
+hovered         = { bg = "%%col_cwd%%", bold = true }
+footer          = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
 
@@ -157,6 +171,7 @@ rules = [
 # : Icons styles {{{
 
 [icon]
+
 files = [
   { name = "kritadisplayrc", text = "", fg = "#ca9ee6" },
   { name = ".gtkrc-2.0", text = "", fg = "#f2d5cf" },

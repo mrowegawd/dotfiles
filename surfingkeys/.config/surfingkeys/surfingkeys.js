@@ -131,15 +131,11 @@ mapkey("<Alt-f>", "#1Open link and simulates Zen's Glance", () => {
   });
 });
 
-mapkey(
-  "Q",
-  "#1Click on an Image or a button in background, multiple",
-  function () {
-    Hints.create("img, button", (i) => {
-      tabOpenLink(i.src)();
-    });
-  },
-);
+mapkey("Q", "#1Click on an Image or a button in background, multiple", function () {
+  Hints.create("img, button", (i) => {
+    tabOpenLink(i.src)();
+  });
+});
 
 // TEST ============================================================
 // mapkey(";dv", "#1Download video", function () {
@@ -399,11 +395,7 @@ addSearchAlias(
   },
 );
 
-addSearchAlias(
-  "y",
-  "YouTube LOL",
-  "https://www.youtube.com/results?search_query=",
-);
+addSearchAlias("y", "YouTube LOL", "https://www.youtube.com/results?search_query=");
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ HINT                                                    │

@@ -17,16 +17,16 @@ super + shift + b
         bspc node -f @brother
 
 # state: toggle sticky, unsticky
-super + F9
+super + shift + F9
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state sticky
 
 # state: toggle locked, unlocked
-super + F10
+super + shift + F10
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
 
 # state: toggle zoom-in-out
-super + F8
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall win_big_zoom_toggle
+# super + shift + F8
+#         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall win_big_zoom_toggle
 
 ########################################
 # WINDOW
@@ -48,7 +48,7 @@ super + {Tab,shift+Tab}
         bspc node -f {next,prev}.local
 
 # window: swap window
-super + {Left,Down,Up,Right}
+super + shift + {Left,Down,Up,Right}
         bspc node -s {west,south,north,east}
 
 # window: move window to the left,right,up,down (float)
@@ -56,7 +56,7 @@ super + ctrl + {h,j,k,l}
         xdotool getwindowfocus windowmove --relative %1 {-25 0, 0 +25, 0 -25, +25 0}
 
 # window: rotate the windows
-super + R
+super + shift + r
         bspc node @parent -R 90
 
 # window: resize or expand window up
@@ -159,32 +159,33 @@ super + shift + ctrl + p
 ########################################
 # APPS
 ########################################
+
 # misc: reload/restart sxhkd config
-super + F5
+super + shift + F5
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD" "Reload config.."
 
-# misc: quit/stop record video
-super + F6
-        pkill ffmpeg; dunstify "Quit ffmpeg.."
-
 # misc: reload/restart bspwm config
-super + F7
+super + shift + F7
         bspc wm -r && SLEEP=2 && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
+
+# misc: close/kill current app/window
+super + w
+        xdo close
+
+# misc: quit/stop record video
+super + shift + F8
+        pkill ffmpeg; dunstify -t 1500 "Quit ffmpeg.."
 
 # misc: open terminal
 super + Return
         $TERMINAL
 
 # misc: open rofi menu
-super + r
+super + shift + y
         $HOME/.config/rofi/menu/menu
 
-# misc: close/kill current app/window
-super + w
-        xdo close
-
 # misc: open rofi tools
-super + e
+super + shift + e
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
 # misc: change wallpaper
@@ -194,10 +195,6 @@ super + shift + Home
 # misc: open neovide
 super + shift + Return
         zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
-
-# misc: open snipets
-super + shift + s
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps remember_me_snippet
 
 # misc: open music
 super + shift + m
@@ -213,7 +210,7 @@ super + shift + f
 
 # misc: open translate with nvim
 super + shift + o
-        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && $TERMINAL -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate into indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_translate
 
 # bspc: call window firefox (side by side)
 super + shift + d
@@ -224,7 +221,7 @@ super + shift + a
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
 
 # misc: open link with mpv (or with proxychains)
-super + shift + y
+super + shift + v
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_mpv
 
 # misc: killus, free memory or lagging

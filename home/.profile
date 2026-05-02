@@ -31,7 +31,7 @@ fi
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
 export TERMINAL="kitty"
-export NUBROWSER="zen-browser"
+export NUBROWSER="zen"
 
 # Set PATH ditaruh disini karena alasan nya biar 'ensure` PATH terakses ketika
 # membuka neovide

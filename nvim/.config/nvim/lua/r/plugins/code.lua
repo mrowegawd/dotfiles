@@ -176,81 +176,49 @@ return {
   {
     -- how to use it: `ysiw`, `yc<brackets>`, `yd<brackets>`
     "kylechui/nvim-surround",
-    version = "*",
-    keys = {
-      { "ys", mode = "n", desc = "Surround: motion [nvim-surround]" },
-      { "ySS", mode = "n", desc = "Surround: current line [nvim-surround]" },
-      -- { "yS", mode = "n", desc = "Surround + motion + line" },
-      { "<c-x>s", mode = "i", desc = "Surround: surround (insert) [nvim-surround]" },
-      { "S", mode = "x", desc = "Surround: motion (visual) [nvim-surround]" },
-      { "yd", mode = "n", desc = "Surround: delete surround [nvim-surround]" },
-      { "yc", mode = "n", desc = "Surround: change surround [nvim-surround]" },
-      { "yC", mode = "n", desc = "Surround: change line [nvim-surround]" },
-    },
+    event = "VeryLazy",
+    init = function()
+      -- Disable the default keymaps.
+      vim.g.nvim_surround_no_mappings = true
+    end,
     config = function()
-      local input = require("nvim-surround.input").get_input
-      require("nvim-surround").setup {
-        keymaps = {
-          insert = "<C-x>s",
-          insert_line = "<C-x>S",
+      require("nvim-surround").setup()
 
-          normal = "ys",
-          normal_cur = "ya",
-          normal_line = "ySA",
-          normal_cur_line = "ySS",
-          visual = "S",
-          visual_line = "gS",
-          delete = "yd",
-          change = "yc",
-          change_line = "yC",
-        },
-        -- Configuration here, or leave empty to use defaults
-        aliases = {
-          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- Any delimiter
-          ["b"] = { "{", "[", "(", "<" }, -- Bracket
-          ["p"] = { "(" },
-        },
-        surrounds = {
-          ["f"] = {
-            change = {
-              target = "^.-([%w_.]+!?)()%(.-%)()()$",
-              replacement = function()
-                local result = input "Enter the function name: "
-                if result then
-                  return { { result }, { "" } }
-                end
-              end,
-            },
-          },
-          ["g"] = {
-            add = function()
-              local result = require("nvim-surround.config").get_input "Enter the generic name: "
-              if result then
-                return {
-                  { result .. "<" },
-                  { ">" },
-                }
-              end
-            end,
-            find = "[%w_]-<.->",
-            delete = "^([%w_]-<)().-(>)()$",
-          },
-          ["G"] = {
-            add = function()
-              local result = require("nvim-surround.config").get_input "Enter the generic name: "
-              if result then
-                return {
-                  { result .. "<" },
-                  { ">" },
-                }
-              end
-            end,
-            find = "[%w_]-<.->",
-            delete = "^([%w_]-<)().-(>)()$",
-          },
-        },
-        move_cursor = false,
-      }
+      vim.keymap.set("i", "<C-g>s", "<Plug>(nvim-surround-insert)", {
+        desc = "Add a surrounding pair around the cursor (insert mode)",
+      })
+      vim.keymap.set("i", "<C-g>S", "<Plug>(nvim-surround-insert-line)", {
+        desc = "Add a surrounding pair around the cursor, on new lines (insert mode)",
+      })
+      vim.keymap.set("n", "ys", "<Plug>(nvim-surround-normal)", {
+        desc = "Add a surrounding pair around a motion (normal mode)",
+      })
+      vim.keymap.set("n", "yss", "<Plug>(nvim-surround-normal-cur)", {
+        desc = "Add a surrounding pair around the current line (normal mode)",
+      })
+      vim.keymap.set("n", "yS", "<Plug>(nvim-surround-normal-line)", {
+        desc = "Add a surrounding pair around a motion, on new lines (normal mode)",
+      })
+      vim.keymap.set("n", "ySS", "<Plug>(nvim-surround-normal-cur-line)", {
+        desc = "Add a surrounding pair around the current line, on new lines (normal mode)",
+      })
+
+      vim.keymap.set("x", "S", "<Plug>(nvim-surround-visual)", {
+        desc = "Add a surrounding pair around a visual selection",
+      })
+      vim.keymap.set("x", "gS", "<Plug>(nvim-surround-visual-line)", {
+        desc = "Add a surrounding pair around a visual selection, on new lines",
+      })
+
+      vim.keymap.set("n", "yd", "<Plug>(nvim-surround-delete)", {
+        desc = "Delete a surrounding pair",
+      })
+      vim.keymap.set("n", "yc", "<Plug>(nvim-surround-change)", {
+        desc = "Change a surrounding pair",
+      })
+      vim.keymap.set("n", "yC", "<Plug>(nvim-surround-change-line)", {
+        desc = "Change a surrounding pair, putting replacements on new lines",
+      })
     end,
   },
   -- GITIGNORE.NVIM
@@ -460,20 +428,25 @@ return {
     dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
-      { "<Leader>rn", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
+      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run file [rmux]" },
 
-      { "<Leader>rv", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [Rmux]" },
-      { "<Leader>rv", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [Rmux]", mode = { "x" } },
+      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line [rmux]" },
+      { "<Leader>rl", "<Cmd> RmuxSendlineV <CR>", desc = "Task: send line (visual) [rmux]", mode = { "x" } },
+      { "<Leader>r<CR>", "<Cmd> RmuxSendEnter <CR>", desc = "Task: send enter key [rmux]", mode = { "x", "n" } },
 
-      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [Rmux]" },
-      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [Rmux]" },
+      { "<Leader>rs", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select target pane [rmux]" },
 
-      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [Rmux]" },
+      { "<Leader>rR", "<Cmd> RmuxSendRestartTaskPane <CR>", desc = "Task: restart the selected task pane [rmux]" },
 
-      { "<a-R>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: open single find err [Rmux]" },
+      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [rmux]" },
+      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [rmux]" },
+
+      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [rmux]" },
+
+      { "<a-R>", "<Cmd> RmuxGrepBuf <CR>", desc = "Task: open single find err [rmux]" },
 
       {
-        "<Leader>rf",
+        "<Leader>rF",
         function()
           local task_cmds = {
             ["Task - Run task with Rmux"] = function()

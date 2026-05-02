@@ -7,6 +7,49 @@ local state = ya.sync(function()
   return cx.active.current.cwd
 end)
 
+local function get_rectangle(scale, mode)
+  scale = scale or 60
+  mode = mode or "center"
+
+  -- ambil resolusi aktif dari xrandr
+  local handle = io.popen "xrandr | awk '/\\*/ {print $1}' | head -n1"
+  if not handle then
+    return nil
+  end
+
+  local res = handle:read "*a"
+  handle:close()
+
+  local w, h = res:match "(%d+)x(%d+)"
+  w = tonumber(w)
+  h = tonumber(h)
+
+  if not w or not h then
+    return nil
+  end
+
+  local win_w = math.floor(w * scale / 100)
+  local win_h = math.floor(h * scale / 100)
+
+  local x, y = 0, 0
+
+  if mode == "center" then
+    x = math.floor((w - win_w) / 2)
+    y = math.floor((h - win_h) / 2)
+  elseif mode == "br" or mode == "bottom-right" then
+    x = w - win_w - 20
+    y = h - win_h - 40
+  elseif mode == "tr" or mode == "top-right" then
+    x = w - win_w - 20
+    y = 40
+  else
+    x = math.floor((w - win_w) / 2)
+    y = math.floor((h - win_h) / 2)
+  end
+
+  return string.format("%dx%d+%d+%d", win_w, win_h, x, y)
+end
+
 local function fail(s, ...)
   ---@diagnostic disable-next-line: undefined-global
   ya.notify { title = "Opener", content = string.format(s, ...), timeout = 5, level = "error" }
@@ -120,11 +163,11 @@ return {
     if action == "terminal" then
       local termopen = os.getenv "TERMINAL"
 
-      -- if termopen == "ghostty" or termopen == "kitty" then
-      -- 	termopen = "ghostty"
-      -- end
+      local rect = get_rectangle(60, "br")
 
-      os.execute([[bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && ]] .. termopen)
+      if rect then
+        os.execute("bspc rule -a \\* -o state=floating rectangle=" .. rect .. " && " .. termopen)
+      end
 
       return
     end

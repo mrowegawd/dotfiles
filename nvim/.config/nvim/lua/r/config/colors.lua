@@ -53,8 +53,8 @@ local base_colors = {
   statusline_bg_alter = 0.1,
   statusline_fg_alter = 1.5,
   statusline_left_block_fg = 0.5,
-  statusline_right_block_bg = 0.3,
-  statusline_right_block_fg = 1,
+  statusline_right_block_bg = 0.15,
+  statusline_right_block_fg = 1.8,
   tabline_bg_alter = 0.3,
   tabline_fg_alter = 0.5,
   tmux_statusline_fg_alter = -0.2,
@@ -100,8 +100,8 @@ local base_colors = {
 
   render_markdown_code_bg_alter = -0.25,
   render_markdown_code_border_fg_alter = -0.1,
-  render_markdown_code_inline_bg_alter = 0.12,
-  render_markdown_code_inline_fg_alter = 0.1,
+  render_markdown_code_inline_bg_alter = 0.1,
+  render_markdown_code_inline_fg_alter = 0.2,
 
   snacks_notifier_info_bg = 0.5,
   snacks_notifier_border_info_fg = -0.5,
@@ -416,7 +416,6 @@ local update_col_colorscheme = {
     pmenu_sel_bg_alter = -0.6,
     quickfixline_linenr_fg_alter = 0.4,
     quickfixline_sp_alter = 1.5,
-    statusline_right_block_fg = 0.5,
     quickfixwinbar_fg_alter = 3.5,
     snacks_indent_scope_fg_alter = 0.13,
     statusline_fg_alter = 2.5,
@@ -2652,14 +2651,6 @@ local general_overrides = function()
       },
     },
     { DiffviewFilePanelFileName = { fg = { from = "DiffviewHash", attr = "fg", alter = 0.5 } } },
-
-    --  ──────────────────────────────[ QFBOOKMARK ]───────────────────────────
-    -- {
-    --   QFBookmarkFloatNormal = {
-    --     fg = { from = "NormalFloat", attr = "fg" },
-    --     bg = { from = "ErrorMsg", attr = "bg" },
-    --   },
-    -- },
 
     --  ──────────────────────────────[ LAZYGIT ]──────────────────────────────
     { LazygitselectedLineBgColor = { bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },

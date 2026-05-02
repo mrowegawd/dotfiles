@@ -77,7 +77,6 @@ autocmds.winhighlight_filetype_blacklist = {
   ["Outline"] = true,
   ["alpha"] = true,
   ["dashboard"] = true,
-  ["oil"] = true,
   ["fugitiveblame"] = true,
   ["grug-far"] = true,
   ["lazy"] = true,
@@ -85,6 +84,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["neo-tree"] = true,
   ["noice"] = true,
   ["octo"] = true,
+  ["oil"] = true,
   ["packer"] = true,
   ["qf"] = true,
   ["rgflow"] = true,
@@ -201,6 +201,7 @@ autocmds.cursorline_blacklist = {
   ["mason"] = true,
   ["noice"] = true,
   ["packer"] = true,
+  ["qfbookmark"] = true,
   ["rgflow"] = true,
   ["snacks_notif_history"] = true,
   ["trouble"] = true,
@@ -374,7 +375,9 @@ local set_cursorline = function(active)
   local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
   if is_float or filetype == "" or vim.wo.diff then
-    wo.cursorline = false
+    if not autocmds.cursorline_blacklist[filetype] then
+      wo.cursorline = false
+    end
     return
   end
 

@@ -17,14 +17,14 @@
       "label": "Tail lsp.log",
       "type": "shell",
       "command": "tail",
-      "args": ["-f", "$HOME/.local/state/nvim/lsp.log"],
+      "args": ["-f", "$HOME/.local/state/nvim/logs/lsp.log"],
       "problemMatcher": []
     },
     {
-      "label": "Tail nvim log",
+      "label": "Tail nvim.log",
       "type": "shell",
       "command": "tail",
-      "args": ["-f", "$HOME/.local/state/nvim/log"],
+      "args": ["-f", "$HOME/.local/state/nvim/logs/nvim.log"],
       "problemMatcher": []
     },
     {
@@ -52,31 +52,6 @@
       "label": "Orchestrations: debug mark",
       "type": "shell",
       "dependsOn": ["Check watch mark", "Cat data mark"]
-    },
-    {
-      "label": "Check watch mark",
-      "type": "shell",
-      "command": "watch",
-      "args": [
-        "-n",
-        "1",
-        "ls",
-        "-la",
-        "$HOME/Dropbox/neorg/orgmode/nvim-plugin/qfbookmark/dotfiles-e76759d5fc3b1a7eeb3562a2509046c1110adf02"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Cat data mark",
-      "type": "shell",
-      "command": "watch",
-      "args": [
-        "-n",
-        "1",
-        "cat",
-        "$HOME/Dropbox/neorg/orgmode/nvim-plugin/qfbookmark/dotfiles-e76759d5fc3b1a7eeb3562a2509046c1110adf02/mark_master.lua"
-      ],
-      "problemMatcher": []
     }
   ]
 }
