@@ -111,10 +111,10 @@ return {
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
-    -- "pwntester/octo.nvim",
+    "pwntester/octo.nvim",
     -- "MadKuntilanak/octo.nvim",
-    dir = "~/.local/src/nvim_plugins/octo.nvim",
-    branch = "feat/big-updates",
+    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
+    -- branch = "feat/big-updates",
     cmd = "Octo",
     keys = {
       { "<Leader>ma", "", desc = "add", ft = "octo" },
@@ -385,9 +385,9 @@ return {
   },
   -- OCTO
   {
-    -- "pwntester/octo.nvim",
+    "pwntester/octo.nvim",
     -- "MadKuntilanak/octo.nvim",
-    dir = "~/.local/src/nvim_plugins/octo.nvim",
+    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
     optional = true,
     opts = function()
       vim.treesitter.language.register("markdown", "octo")
@@ -919,9 +919,9 @@ return {
           restore = "X",
         },
         conflict = {
-          accept_incoming = "<a-3>", -- Accept incoming (theirs/left) change
-          accept_current = "<a-1>", -- Accept current (ours/right) change
-          accept_both = "<a-2>", -- Accept both changes (incoming first)
+          accept_incoming = "<Leader>mt", -- Accept incoming (theirs/left) change
+          accept_current = "<Leader>mo", -- Accept current (ours/right) change
+          accept_both = "<Leader>mb", -- Accept both changes (incoming first)
           discard = "<Leader>mcD", -- Discard both, keep base
           next_conflict = "<Leader>mcn", -- Jump to next conflict
           prev_conflict = "<Leader>mcp", -- Jump to previous conflict

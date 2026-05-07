@@ -1,7 +1,8 @@
 return {
-  -- OTHER.NVIM
+  -- OTHER.NVIM (disabled)
   {
     "rgroli/other.nvim",
+    enabled = false,
     keys = {
       { "<Leader>AA", "<CMD>Other<CR>", desc = "Alternate: edit [other.nvim]" },
       { "<Leader>AV", "<Cmd>OtherVSplit`<CR>", desc = "Alternate: vsplit [other.nvim]" },

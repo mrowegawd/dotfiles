@@ -1,3 +1,29 @@
+local AgendaMode = {
+  FAST = "fast",
+  SLOW = "slow",
+}
+
+local agenda_mode = AgendaMode.FAST
+
+local function setup_agenda(pattern)
+  require("orgmode").setup {
+    org_agenda_files = pattern,
+  }
+end
+
+local function refresh_agenda_files(force_slow)
+  if force_slow then
+    agenda_mode = AgendaMode.SLOW
+  else
+    agenda_mode = (agenda_mode == AgendaMode.FAST) and AgendaMode.SLOW or AgendaMode.FAST
+  end
+
+  local is_fast = agenda_mode == AgendaMode.FAST
+
+  setup_agenda(is_fast and "~/Dropbox/neorg/**/*" or "~/Dropbox/neorg/orgmode/**/*.org")
+
+  return is_fast
+end
 return {
   -- CALENDAR.NVIM
   {
@@ -8,6 +34,7 @@ return {
   {
     "MadKuntilanak/orgmode",
     event = "VeryLazy",
+    ft = { "org" },
     dependencies = {
       "akinsho/org-bullets.nvim",
       "danilshvalov/org-modern.nvim",
@@ -55,7 +82,15 @@ return {
 
       {
         "<Leader>nft",
-        RUtils.notes.filter_by_tags,
+        function()
+          if agenda_mode == AgendaMode.SLOW then
+            refresh_agenda_files()
+            require("orgmode").agenda:agenda()
+            return
+          end
+
+          RUtils.notes.filter_by_tags()
+        end,
         desc = "Note: find notes by tags",
       },
       {
@@ -97,9 +132,22 @@ return {
       {
         "<Leader>na",
         function()
+          refresh_agenda_files(true)
           require("orgmode").action "agenda.prompt"
         end,
         desc = "Note: open agenda orgmode [orgmode]",
+      },
+
+      {
+        "<Leader>nR",
+        function()
+          local is_fast = refresh_agenda_files()
+
+          RUtils.info("Agenda mode: " .. (is_fast and "Fast" or "Slow"))
+
+          require("orgmode").agenda:agenda()
+        end,
+        desc = "Note: refresh agenda files Fast or Slow [orgmode]",
       },
     },
     opts = function()
@@ -125,7 +173,7 @@ return {
           },
         },
 
-        org_agenda_files = string.format("%s/**/*", RUtils.config.path.wiki_path),
+        org_agenda_files = string.format("%s/orgmode/**/*.org", RUtils.config.path.wiki_path),
         org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
 
         org_todo_keywords = {
@@ -284,7 +332,7 @@ return {
           prefix = "<Leader>c",
           global = {
             org_capture = "<Leader>ncc",
-            org_agenda = "<Leader>na",
+            org_agenda = "<Leader>nC",
           },
           agenda = {
             -- Views
@@ -596,11 +644,10 @@ return {
       require("org-roam").setup(opts)
     end,
   },
-  -- ORG-SUPER-AGENDA (disabled)
+  -- ORG-SUPER-AGENDA
   {
     "hamidi-dev/org-super-agenda.nvim",
-    event = "LazyFile",
-    enabled = false,
+    ft = { "org" },
     keys = {
       {
         "<Leader>nA",
@@ -621,18 +668,8 @@ return {
       },
     },
     opts = {
-      org_files = {
-        string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-        string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-        string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
-        string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
-        string.format("%s/orgmode/nvim-plugin/qfbookmark/**/*", RUtils.config.path.wiki_path),
-      },
-      org_directories = {
-        string.format("%s/orgmode", RUtils.config.path.wiki_path),
-      },
-      exclude_files = {},
-      exclude_directories = {},
+      org_files = { string.format("%s/orgmode/**/*", RUtils.config.path.wiki_path) },
+      org_directories = { string.format("%s/orgmode", RUtils.config.path.wiki_path) },
 
       -- TODO states + their quick filter keymaps and highlighting
       -- Optional: add `shortcut` field to override the default key (first letter)

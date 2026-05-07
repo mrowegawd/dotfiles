@@ -409,7 +409,7 @@ local update_col_colorscheme = {
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1.5,
     noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.75 },
+    nontext_col = { from = "Keyword", attr = "fg", alter = -0.5 },
     normal_keyword_alter = 0.06,
     panel_bottom_cursorline_bg_alter = 0.8,
     panel_bottom_cursorlinenr_fg_alter = 4,
@@ -1669,8 +1669,8 @@ local general_overrides = function()
     -- ║                       ERROR COLOR                       ║
     -- ╚═════════════════════════════════════════════════════════╝
 
-    { ErrorMsg = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
-    { Error = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
+    { ErrorMsg = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 }, reverse = false } },
+    { Error = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 }, reverse = false } },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                       DIAGNOSTIC                        ║

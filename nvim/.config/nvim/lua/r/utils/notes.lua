@@ -128,6 +128,7 @@ local function setup_orgmode()
   end
 
   Orgmode = require "orgmode"
+  -- Orgmode = require("orgmode").setup { org_agenda_files = "~/Dropbox/neorg/**/*" }
   return Orgmode
 end
 
@@ -738,6 +739,7 @@ end
 ---@param opts? {last: boolean }
 local function get_tags(opts)
   opts = opts or {}
+  -- Orgmode = setup_orgmode()
   Orgmode = setup_orgmode()
 
   if opts.last and match_tags then
@@ -746,9 +748,6 @@ local function get_tags(opts)
     return
   end
 
-  -- RUtils.info(vim.inspect(orgmode.files:get_tags()))
-  -- RUtils.info(vim.inspect(orgmode.files:all()))
-  -- RUtils.info(vim.inspect(result:check {}))
   local contents_tags = Orgmode.files:get_tags()
   if #contents_tags == 0 then
     return

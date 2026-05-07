@@ -1,9 +1,4 @@
 return {
-  -- HELPVIEW.NVIM
-  {
-    "OXY2DEV/helpview.nvim",
-    lazy = false, -- Using ft = "help" will not start it on the first time
-  },
   -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
