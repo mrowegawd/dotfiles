@@ -1,7 +1,9 @@
 [[session]]
 name = "Dotfiles"
 path = "~/moxconf/development/dotfiles"
-startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v"
+# WARN: startup_command fails (sesh 2.26.1)
+# issue: https://github.com/joshmedeski/sesh/issues/380
+# startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v"
 
 [[session]]
 name = "Downloads"
