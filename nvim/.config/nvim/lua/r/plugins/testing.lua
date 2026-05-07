@@ -129,7 +129,7 @@ return {
         function()
           require("neotest").run.run()
         end,
-        desc = "Testing: test nearest",
+        desc = "Testing: run test nearest",
       },
       {
         "<Leader>tN",
@@ -146,7 +146,7 @@ return {
         desc = "Testing: run last",
       },
       {
-        "<Leader>tO",
+        "<Leader>tS",
         function()
           require("neotest").summary.toggle()
         end,
@@ -160,10 +160,10 @@ return {
         desc = "Testing: show output preview",
       },
       {
-        "<Leader>tf",
+        "<Leader>tF",
         function()
           local neotest = require "neotest"
-          RUtils.fzflua.open_cmd_bulk_dock({
+          RUtils.fzflua.open_cmd_bulk_center({
             ["Test - Attach to test"] = function()
               neotest.run.attach()
             end,
@@ -217,10 +217,12 @@ return {
               vim.cmd [[CoverageToggle]]
             end,
           }, {
-            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing" },
+            winopts = {
+              title = RUtils.fzflua.format_title("Test Commands", RUtils.config.icons.dap.BreakpointCondition),
+            },
           })
         end,
-        desc = "Bulk: test cmds",
+        desc = "Bulk: test commands",
       },
     },
   },

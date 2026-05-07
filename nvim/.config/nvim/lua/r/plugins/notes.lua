@@ -338,13 +338,13 @@ return {
             org_agenda_filter = "<Leader>sf",
             org_agenda_redo = "R",
             org_agenda_quit = { "<Leader>bk" },
-            org_agenda_show_help = "?",
+            org_agenda_show_help = "g?",
           },
           capture = {
             org_capture_finalize = { "<CR>", "<C-s>" },
             org_capture_refile = "<Leader>mR",
             org_capture_kill = { "q", "<C-q>", "<Leader>bk" },
-            org_capture_show_help = "?",
+            org_capture_show_help = "g?",
           },
           note = {
             org_note_finalize = { "<CR>", "<C-s>" },
@@ -436,7 +436,7 @@ return {
             org_meta_return = "<s-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<a-w>",
 
-            org_show_help = "?",
+            org_show_help = "g?",
           },
         },
       }
@@ -503,9 +503,10 @@ return {
       },
     },
   },
-  -- ORG-ROAM
+  -- ORG-ROAM (disabled)
   {
     "chipsenkbeil/org-roam.nvim",
+    enabled = false,
     event = "LazyFile",
     opts = {
       directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
@@ -595,10 +596,11 @@ return {
       require("org-roam").setup(opts)
     end,
   },
-  -- ORG-SUPER-AGENDA
+  -- ORG-SUPER-AGENDA (disabled)
   {
     "hamidi-dev/org-super-agenda.nvim",
     event = "LazyFile",
+    enabled = false,
     keys = {
       {
         "<Leader>nA",

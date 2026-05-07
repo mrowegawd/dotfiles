@@ -400,14 +400,6 @@ function M.magic_jump(is_jump_prev)
     return M.feedkey "<c-n>"
   end
 
-  if vim.wo.diff then
-    if is_jump_prev then
-      return M.feedkey "[c"
-    else
-      return M.feedkey "]c"
-    end
-  end
-
   if vim.bo.filetype == "http" then
     local ok, kulala = pcall(require, "kulala")
     if not ok then

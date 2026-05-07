@@ -301,11 +301,6 @@ return {
       {
         "<c-n>",
         function()
-          if vim.wo.diff then
-            RUtils.warn "The current file is in diff mode. cannot continue."
-            return
-          end
-
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
             local hilist = vim.fn.HiList()
@@ -319,30 +314,20 @@ return {
             return
           end
 
-          local qfbook = get_qfbookmark()
-          if qfbook and qfbook.status_mark() then
-            qfbook.next_mark()
-            return
+          if vim.wo.diff then
+            vim.cmd.normal { "]c", bang = true }
+          else
+            local gs = package.loaded.gitsigns
+            vim.schedule(function()
+              gs.nav_hunk("next", { navigation_message = false, foldopen = true })
+            end)
           end
-
-          local opts = { bottom = true }
-          Snacks.scope.get(function(scope)
-            if not scope then
-              return
-            end
-            jump_scope(scope, opts)
-          end, opts)
         end,
-        desc = "LSP: next snack scope, mark, word highlighter",
+        desc = "LSP: next -> snack scope, mark, githunk, highlighter",
       },
       {
         "<c-p>",
         function()
-          if vim.wo.diff then
-            RUtils.warn "The current file is in diff mode. cannot continue."
-            return
-          end
-
           local ok, _ = pcall(vim.fn.HiList)
           if ok then
             local hilist = vim.fn.HiList()
@@ -356,21 +341,16 @@ return {
             return
           end
 
-          local qfbook = get_qfbookmark()
-          if qfbook and qfbook.status_mark() then
-            qfbook.prev_mark()
-            return
+          if vim.wo.diff then
+            vim.cmd.normal { "[c", bang = true }
+          else
+            local gs = package.loaded.gitsigns
+            vim.schedule(function()
+              gs.nav_hunk("prev", { navigation_message = false, foldopen = true })
+            end)
           end
-
-          local opts = { bottom = false }
-          Snacks.scope.get(function(scope)
-            if not scope then
-              return
-            end
-            jump_scope(scope, opts)
-          end, opts)
         end,
-        desc = "LSP: prev snack scope, mark, word highlighter",
+        desc = "LSP: prev -> snack scope, mark, githunk, highlighter",
       },
     },
   },

@@ -179,7 +179,7 @@ return {
       -- Misc commands
       -- +----------------------------------------------------------+
       {
-        "<Leader>df",
+        "<Leader>dF",
         function()
           local debug_cmds = {
             ["Breakpoint - Add breakpoint with conditions"] = function()
@@ -304,12 +304,13 @@ return {
 
           table.sort(debug_cmds)
 
-          RUtils.fzflua.open_cmd_bulk_dock(
-            debug_cmds,
-            { winopts = { title = RUtils.config.icons.misc.bug .. " Debug" } }
-          )
+          RUtils.fzflua.open_cmd_bulk_center(debug_cmds, {
+            winopts = {
+              title = RUtils.fzflua.format_title("Debug Commands", RUtils.config.icons.dap.BreakpointCondition),
+            },
+          })
         end,
-        desc = "Bulk: debug cmds",
+        desc = "Bulk: debug commands",
       },
     },
     config = function()

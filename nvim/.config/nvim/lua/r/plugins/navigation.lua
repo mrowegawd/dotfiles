@@ -8,7 +8,19 @@ return {
     keys = {
       { "<Leader>mv", "", desc = "view", ft = { "oil" } },
 
-      { "<Leader>oe", "<CMD>Oil<CR>", desc = "Open: focus file explorer" },
+      {
+        "<Leader>oe",
+        function()
+          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+          if vim.tbl_contains(right_win, vim.bo.filetype) then
+            RUtils.warn "This filetype is excluded and cannot be opened in oil.nvim"
+            return
+          end
+
+          vim.cmd "Oil"
+        end,
+        desc = "Open: focus file explorer",
+      },
       {
         "<Leader>oE",
         function()
@@ -306,8 +318,8 @@ return {
               ["H"] = "toggle_hidden",
               ["gp"] = "prev_git_modified",
               ["gn"] = "next_git_modified",
-              ["<a-p>"] = "prev_git_modified",
-              ["<a-n>"] = "next_git_modified",
+              ["<C-n>"] = "next_git_modified",
+              ["<C-p>"] = "prev_git_modified",
             },
           },
         },
@@ -491,10 +503,10 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<Leader>gha"] = "git_add_file",
-              ["<Leader>ghA"] = "git_add_all",
-              ["<Leader>ghu"] = "git_unstage_file",
-              ["<Leader>ghr"] = "git_revert_file",
+              ["<Leader>gsa"] = "git_add_file",
+              ["<Leader>gsA"] = "git_add_all",
+              ["<Leader>gsu"] = "git_unstage_file",
+              ["<Leader>gsr"] = "git_revert_file",
               ["w"] = "noop",
 
               ["gg"] = "noop",
@@ -813,7 +825,7 @@ return {
         -- These keymaps can be a string or a table for multiple keys.
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
-          show_help = "?",
+          show_help = "g?",
           close = { "q", "<Leader><Tab>" },
           goto_location = { "<Cr>", "o" },
           peek_location = {},
@@ -831,8 +843,8 @@ return {
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
 
-          down_and_jump = { "<a-n>", "<c-n>" },
-          up_and_jump = { "<a-p>", "<c-p>" },
+          down_and_jump = { "<a-n>" },
+          up_and_jump = { "<a-p>" },
 
           filter_symbols = { "<Leader>ff", "<Leader><Leader>" },
         },

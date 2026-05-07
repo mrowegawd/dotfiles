@@ -56,9 +56,6 @@ end, { desc = "Fold: focus current" })
 RUtils.map.nnoremap("zf", function()
   RUtils.map.wrap_fold_cmd "normal! zMzv"
 end, { desc = "Fold: focus current (alternativ)" })
-RUtils.map.nnoremap("zc", function()
-  RUtils.map.wrap_fold_cmd "normal! zM"
-end, { desc = "Fold: close all" })
 RUtils.map.nnoremap("zb", function()
   RUtils.fold.cycle_fold_level()
 end, { desc = "Fold: cycle fold level (util)" })
@@ -164,10 +161,24 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move left (
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right (visual)" })
 
-local function jump_back_to_back_windows()
-  local Stack = require "overlook.stack"
-  if Stack.instances[vim.api.nvim_get_current_win()] and not Stack.empty() then
-    require("overlook.api").switch_focus()
+local function switch_focus_targeted_window()
+  local function call_stack_peek()
+    local Stack = require "overlook.stack"
+    local switch_to_winid = nil
+    if vim.w.is_overlook_popup then
+      switch_to_winid = vim.w.overlook_popup.root_winid
+    elseif Stack.instances[vim.api.nvim_get_current_win()] and not Stack.empty() then
+      switch_to_winid = Stack.top().winid
+    end
+
+    if switch_to_winid == nil then
+      return false, nil
+    end
+    return true, switch_to_winid
+  end
+  local ok, switch_winid = call_stack_peek()
+  if ok then
+    pcall(vim.api.nvim_set_current_win, switch_winid)
     return
   end
 
@@ -188,8 +199,8 @@ local function jump_back_to_back_windows()
   end
 end
 
-RUtils.map.nnoremap("<Leader>wo", jump_back_to_back_windows, { desc = "Window: jump to side panel/peek" })
-RUtils.map.nnoremap("<Leader>ow", jump_back_to_back_windows, { desc = "Window: jump to side panel/peek alterntive" })
+RUtils.map.nnoremap("<Leader>wo", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.nnoremap("<Leader>ow", switch_focus_targeted_window, { desc = "Window: switch focus (alternative)" })
 
 if not RUtils.has "smart-splits.nvim" then
   -- Resize
@@ -717,20 +728,17 @@ local ctrl_o_nvim = function()
     ["R-kill"] = function()
       RUtils.terminal.float_rkill()
     end,
-  }, { winopts = { title = "ALT-O" } })
+  }, { winopts = { title = RUtils.fzflua.format_title("Alt-Y", RUtils.config.icons.misc.circle) } })
 end
 
-RUtils.map.nnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
-RUtils.map.tnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds" })
-RUtils.map.xnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_o cmds (visual)" })
+RUtils.map.nnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands" })
+RUtils.map.tnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands" })
+RUtils.map.xnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands (visual)" })
 
 local bulk_cmd_misc = function()
   local cmds = {
-    ["Browser Open - tailwindcss.com"] = function()
+    ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
-    end,
-    ["Kulala - Run"] = function()
-      require("kulala").run()
     end,
     ["TestNotify - Run to test notification display"] = function()
       -- to replace an existing notification just use the same id.
@@ -766,15 +774,18 @@ local bulk_cmd_misc = function()
     end
   end
 
-  RUtils.fzflua.open_cmd_bulk(cmds, { winopts = { title = "Bulk Misc" } })
+  RUtils.fzflua.open_cmd_bulk_center(
+    cmds,
+    { winopts = { title = RUtils.fzflua.format_title("Open Commands", RUtils.config.icons.misc.fire) } }
+  )
 end
 
-RUtils.map.nnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
-RUtils.map.tnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds" })
-RUtils.map.xnoremap("<Leader>of", bulk_cmd_misc, { desc = "Bulk: misc cmds (visual)" })
+RUtils.map.nnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands" })
+RUtils.map.tnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands" })
+RUtils.map.xnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands (visual)" })
 
 local bulk_cmd_git = function()
-  RUtils.fzflua.open_cmd_bulk_dock({
+  RUtils.fzflua.open_cmd_bulk_center({
     ["Diffview - DiffviewOpen"] = function()
       vim.cmd [[DiffviewOpen]]
     end,
@@ -785,7 +796,10 @@ local bulk_cmd_git = function()
       vim.cmd [[DiffviewFileHistory --follow %]]
     end,
     ["Diffview - DiffviewFileHistory Line"] = function()
-      vim.cmd [[.DiffviewFileHistory --follow]]
+      vim.cmd [[DiffviewFileHistory --follow]]
+    end,
+    ["Codediff - VscodeDiff"] = function()
+      vim.cmd [[VscodeDiff]]
     end,
     ["Diff - Windo this"] = function()
       vim.cmd [[windo diffthis]]
@@ -835,12 +849,12 @@ local bulk_cmd_git = function()
       local gs = package.loaded.gitsigns
       gs.toggle_word_diff()
     end,
-  }, { winopts = { title = RUtils.config.icons.git.branch .. "Git " } })
+  }, { winopts = { title = RUtils.fzflua.format_title("Git Commands", RUtils.config.icons.git.branch) } })
 end
 
-RUtils.map.nnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds" })
-RUtils.map.tnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds" })
-RUtils.map.xnoremap("<Leader>gf", bulk_cmd_git, { desc = "Bulk: git cmds (visual)" })
+RUtils.map.nnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
+RUtils.map.tnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
+RUtils.map.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (visual)" })
 
 -- }}}
 -- {{{ Tmux integration

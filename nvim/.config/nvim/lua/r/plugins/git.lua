@@ -169,8 +169,8 @@ return {
           delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [discussion]" },
           remove_label = { lhs = "<Leader>mrl", desc = "remove label [discussion]" },
 
-          next_comment = { lhs = "<a-n>", desc = "go to next comment [discussion]" },
-          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [discussion]" },
+          next_comment = { lhs = "<c-n>", desc = "go to next comment [discussion]" },
+          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [discussion]" },
 
           react_hooray = { lhs = "<Leader>marp", desc = "add/remove 🎉 reaction [discussion]" },
           react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [discussion]" },
@@ -213,8 +213,8 @@ return {
           add_reply = { lhs = "<Leader>may", desc = "add reply [issue]" },
           delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [issue]" },
 
-          next_comment = { lhs = "<a-n>", desc = "go to next comment [issue]" },
-          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [issue]" },
+          next_comment = { lhs = "<c-n>", desc = "go to next comment [issue]" },
+          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [issue]" },
 
           react_hooray = { lhs = "<Leader>maro", desc = "add/remove 🎉 reaction [issue]" },
           react_heart = { lhs = "<Leader>marh", desc = "add/remove ❤️ reaction [issue]" },
@@ -270,8 +270,8 @@ return {
           add_reply = { lhs = "<Leader>may", desc = "add reply [pull request]" },
           delete_comment = { lhs = "<Leader>mrc", desc = "delete comment [pull request]" },
 
-          next_comment = { lhs = "<a-n>", desc = "go to next comment [pull request]" },
-          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [pull request]" },
+          next_comment = { lhs = "<c-n>", desc = "go to next comment [pull request]" },
+          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [pull request]" },
 
           add_reviewer = { lhs = "<Leader>mRa", desc = "add reviewer [pull request]" },
           remove_reviewer = { lhs = "<Leader>mRd", desc = "remove reviewer request [pull request]" },
@@ -520,24 +520,24 @@ return {
         end, "Exec: git hunks quickfix (qf) [gitsigns] [trouble]")
 
         -- Jump next/prev between hunks
-        map("n", "gn", function()
-          if vim.wo.diff then
-            vim.cmd.normal { "]c", bang = true }
-          else
-            vim.schedule(function()
-              gs.nav_hunk("next", { navigation_message = false, foldopen = true })
-            end)
-          end
-        end, "Git: next hunk [gitsigns]")
-        map("n", "gp", function()
-          if vim.wo.diff then
-            vim.cmd.normal { "[c", bang = true }
-          else
-            vim.schedule(function()
-              gs.nav_hunk("prev", { navigation_message = false, foldopen = true })
-            end)
-          end
-        end, "Git: prev hunk [gitsigns]")
+        -- map("n", "gn", function()
+        --   if vim.wo.diff then
+        --     vim.cmd.normal { "]c", bang = true }
+        --   else
+        --     vim.schedule(function()
+        --       gs.nav_hunk("next", { navigation_message = false, foldopen = true })
+        --     end)
+        --   end
+        -- end, "Git: next hunk [gitsigns]")
+        -- map("n", "gp", function()
+        --   if vim.wo.diff then
+        --     vim.cmd.normal { "[c", bang = true }
+        --   else
+        --     vim.schedule(function()
+        --       gs.nav_hunk("prev", { navigation_message = false, foldopen = true })
+        --     end)
+        --   end
+        -- end, "Git: prev hunk [gitsigns]")
       end,
     },
   },
@@ -707,8 +707,8 @@ return {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
           view = {
-            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
-            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
+            { "n", "gn", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview-view]" }, },
+            { "n", "gp", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview-view]" } },
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview-view]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview-view]" } },
@@ -769,8 +769,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-panel]" } },
 
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
+            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
+            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},
@@ -852,8 +852,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-history]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-history]" } },
 
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
+            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
+            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},
@@ -894,14 +894,18 @@ return {
     opts = {
       keymaps = {
         view = {
-          quit = "q", -- Close diff tab
-          toggle_explorer = "<Leader>ue", -- Toggle explorer
-          next_hunk = "<a-n>",
-          prev_hunk = "<a-p>",
-          next_file = "<c-n>",
-          prev_file = "<c-p>",
+          quit = "<Leader>bk",
+          toggle_explorer = "<Leader>ue",
+          next_hunk = "<c-n>",
+          prev_hunk = "<c-p>",
+          next_file = "gn",
+          prev_file = "gp",
           diff_get = "do", -- Get change from other buffer (like vimdiff)
           diff_put = "dp", -- Put change to other buffer (like vimdiff)
+          stage_hunk = "<leader>gs",
+          unstage_hunk = "<leader>gu",
+          discard_hunk = "<leader>hr",
+          toggle_layout = "<F4>", -- Toggle diff layout for the current codediff session
         },
         explorer = {
           select = "<CR>",

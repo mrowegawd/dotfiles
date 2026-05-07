@@ -218,8 +218,12 @@ return {
       p.setup(opts)
 
       vim.api.nvim_create_user_command("PeekCloseAll", function()
-        require("overlook.api").peek_definition()
-      end, { desc = "Peek: peek definition [overlook.nvim]" })
+        require("overlook.api").close_all()
+      end, { desc = "Peek: peek close all [overlook.nvim]" })
+
+      vim.api.nvim_create_user_command("PeekCursor", function()
+        require("overlook.api").peek_cursor()
+      end, { desc = "Peek: peek cursor [overlook.nvim]" })
 
       vim.api.nvim_create_user_command("PeekRestorePopup", function()
         require("overlook.api").restore_popup()

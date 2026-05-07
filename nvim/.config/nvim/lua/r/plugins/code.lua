@@ -335,8 +335,8 @@ return {
           ["<PageUp>"] = "keymap.scroll_output_up",
           ["<PageDown>"] = "keymap.scroll_output_down",
 
-          ["<c-u>"] = "keymap.scroll_output_up",
-          ["<c-d>"] = "keymap.scroll_output_down",
+          ["<C-u>"] = "keymap.scroll_output_up",
+          ["<C-d>"] = "keymap.scroll_output_down",
 
           ["P"] = "keymap.toggle_preview",
           ["<A-p>"] = "keymap.prev_task",
@@ -411,7 +411,7 @@ return {
             ["<C-h>"] = false,
             ["<C-l>"] = false,
 
-            ["?"] = "ShowHelp",
+            ["g?"] = "ShowHelp",
           },
         },
       },
@@ -438,8 +438,8 @@ return {
 
       { "<Leader>rR", "<Cmd> RmuxSendRestartTaskPane <CR>", desc = "Task: restart the selected task pane [rmux]" },
 
-      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt (current) [rmux]" },
-      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all panes) [rmux]" },
+      { "<Leader>ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Task: send interrupt [rmux]" },
+      { "<Leader>rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Task: send interrupt (all) [rmux]" },
 
       { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes [rmux]" },
 
@@ -451,6 +451,9 @@ return {
           local task_cmds = {
             ["Task - Run task with Rmux"] = function()
               vim.cmd "RmuxRunFile"
+            end,
+            ["Task - Setup file rc"] = function()
+              vim.cmd "RmuxSetTemplate"
             end,
             ["Task - Send interrupt"] = function()
               vim.cmd "RmuxSendInterrupt"
@@ -539,9 +542,12 @@ return {
 
           table.sort(task_cmds)
 
-          RUtils.fzflua.open_cmd_bulk_dock(task_cmds, { winopts = { title = RUtils.config.icons.misc.bug .. " Task" } })
+          RUtils.fzflua.open_cmd_bulk_center(
+            task_cmds,
+            { winopts = { title = RUtils.fzflua.format_title("Task Commands", RUtils.config.icons.misc.checklist) } }
+          )
         end,
-        desc = "Bulk: tasks cmds",
+        desc = "Bulk: task commands",
         mode = { "n" },
       },
     },

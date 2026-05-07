@@ -350,6 +350,7 @@ local function get_extracted_cmds(fzf_lua_, opts, only_key, is_dock)
 end
 
 function M.open_cmd_bulk_key_only(commands, opts)
+  RUtils.info "oke lah bro"
   local fzf_lua_ = require "fzf-lua"
 
   local cmds = get_extracted_cmds(fzf_lua_, commands, true)
@@ -384,7 +385,7 @@ function M.open_cmd_bulk_key_only(commands, opts)
   )
 end
 
-function M.open_cmd_bulk(commands, opts)
+function M.open_cmd_bulk_pojok_kanan(commands, opts)
   local fzf_lua_ = require "fzf-lua"
 
   local cmds = get_extracted_cmds(fzf_lua_, commands)
@@ -393,6 +394,50 @@ function M.open_cmd_bulk(commands, opts)
     cmds,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
       winopts = { title = opts.title and opts.title or "" },
+      actions = {
+        ["default"] = function(selected, _)
+          if not selected then
+            return
+          end
+
+          local sel = selected[1]
+          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          local display_str_split = vim.split(display_str, "-")
+
+          local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
+            .. " - "
+            .. RUtils.strip_whitespaces(display_str_split[2])
+
+          if commands[build_idx_cmd] then
+            commands[build_idx_cmd]()
+            return
+          end
+
+          RUtils.warn("Selection does not match!\n--> " .. vim.inspect(commands))
+        end,
+      },
+    }, opts))
+  )
+end
+
+function M.open_cmd_bulk_center(commands, opts)
+  local fzf_lua_ = require "fzf-lua"
+
+  local cmds = get_extracted_cmds(fzf_lua_, commands)
+
+  local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
+  local win_height = math.ceil(lines * 0.5)
+
+  fzf_lua_.fzf_exec(
+    cmds,
+    M.layout_pojokan(vim.tbl_deep_extend("force", {
+      winopts = {
+        title = opts.title and opts.title or "",
+        height = win_height - 10,
+        width = 0.60,
+        col = 0.50,
+        row = 0.50,
+      },
       actions = {
         ["default"] = function(selected, _)
           if not selected then

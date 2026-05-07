@@ -44,7 +44,7 @@ return {
                 ["<CR>"] = "start", -- With the ui open, start a search with the current parameters
                 ["<ESC>"] = "close", -- With the ui open, discard and close the UI window
                 ["q"] = "close", -- With the ui open, start a search with the current parameters (from insert mode)
-                ["?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
+                ["g?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
                 ["<BS>"] = "nop", -- No operation
                 ["<C-^>"] = "nop", -- No operation
                 ["<C-6>"] = "nop", -- No operation
@@ -1055,7 +1055,7 @@ return {
               desc = "LSP: references [fzflua]",
             },
             {
-              "<Leader>lf",
+              "<Leader>lF",
               function()
                 local function check_current_ft(fts)
                   if vim.tbl_contains(fts, vim.bo[0].filetype) then
@@ -1145,12 +1145,12 @@ return {
 
                 table.sort(lsp_cmds)
 
-                RUtils.fzflua.open_cmd_bulk_dock(
+                RUtils.fzflua.open_cmd_bulk_center(
                   lsp_cmds,
-                  { winopts = { title = RUtils.config.icons.misc.lsp .. "LSP" } }
+                  { winopts = { title = RUtils.fzflua.format_title("LSP Commands", RUtils.config.icons.misc.lsp) } }
                 )
               end,
-              desc = "Bulk: LSP cmds",
+              desc = "Bulk: LSP commands",
             },
           },
         },

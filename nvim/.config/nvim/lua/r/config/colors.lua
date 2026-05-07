@@ -426,7 +426,7 @@ local update_col_colorscheme = {
     winseparator_alter = 0.15,
 
     code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 0.5,
+    comment_note_fg_alter = 1,
     linenr_note_fg_alter = 0.4,
     normal_note_bg_alter = 1,
     winbar_note_fg_alter = 0.25,

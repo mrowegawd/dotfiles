@@ -233,7 +233,9 @@ local focus_window = function()
   local filetype, buftype = RUtils.buf.get_bo_buft()
 
   if filetype ~= "" and autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
-    wo.winhighlight = ""
+    if not vim.w.is_overlook_popup then
+      wo.winhighlight = ""
+    end
   end
 
   -- Dont dim pada floating window, seperti TelescopePrompt

@@ -371,11 +371,11 @@ return {
           next_node = "j", -- support v:count
           pre_node = "k", -- support v:count
           undo_to = "<CR>",
-          help = { "?", "g?" },
+          help = { "g?" },
         },
         auto_diff = {
           quit = { "<C-c>", "q" },
-          help = { "?", "g?" },
+          help = { "g?" },
         },
         help = {
           quit_help = { "<C-c>", "q" },
