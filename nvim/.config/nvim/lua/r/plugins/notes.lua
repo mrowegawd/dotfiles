@@ -32,7 +32,7 @@ return {
   },
   -- ORGMODE
   {
-    "MadKuntilanak/orgmode",
+    "nvim-orgmode/orgmode",
     event = "VeryLazy",
     ft = { "org" },
     dependencies = {

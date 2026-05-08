@@ -1,73 +1,22 @@
 local base_colors = {
   Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" },
-  CurSearch = {
-    fg = { from = "Dark_yellow", attr = "fg", alter = -1 },
-    bg = { from = "Dark_yellow", attr = "fg", alter = 0.15 },
-    bold = true,
-    reverse = false,
-  },
-  Search = {
-    fg = { from = "Dark_orange", attr = "fg", alter = 1 },
-    bg = { from = "Dark_orange", attr = "fg", alter = -0.35 },
-    bold = true,
-    reverse = false,
-  },
   blink_cmp_label_kind_fg_alter = 0.4,
   blink_cmp_label_match_fg_alter = 0.3,
   blink_ghost_text_fg_alter = -0.65,
-  bqf_keyword = "Keyword",
-  cmpdocnormal_bg_alter = 4.8,
-  comment_fg_alter = 0.65,
-  cursor_fg = "#c7063c",
-  cursorlinenr_bg_alter = 0.1,
   dapstopped_bg_alter = 0.25,
-  float_title_bg_alter = -0.1,
-  float_title_fg_alter = 0.05,
-  floatborder_fg_alter = 0.5,
-  fzflua_file_part_fg = 0.85,
-  fzflua_normal_bg_alter = 0.5,
   grugfar_result_linenr_bg_alter = -0.35,
   grugfar_result_linenr_fg_alter = 0.65,
   grugfar_result_number_fg_alter = 0.6,
   hovered_cursorline_bg_alter = 0.3,
-  linenr_fg_alter = 0.08,
   lsp_code_lens_bg_alter = 0.15,
   lsp_code_lens_fg_alter = 1.5,
-  lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
-  lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
-  lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.2 },
-  my_code_usage_bg_alter = -0.55,
-  my_code_usage_fg_alter = -0.25,
-  noice_cmdline_fg_alter = 0.6,
   normal_float_fg_alter = -0.01,
-  panel_sidebar_bg_alter = 0.25,
-  panel_sidebar_fg_alter = 0.3,
-  pmenu_fg_alter = -0.1,
-  pmenu_sel_bg_alter = -0.55,
   pmenu_thumb_bg_alter = 0.4,
-  quickfixline_linenr_fg_alter = 0.1,
-  quickfixline_sp_alter = 1.5,
-  quickfixwinbar_bg_alter = 0.2,
-  quickfixwinbar_fg_alter = 2.5,
-  snacks_indent_scope_fg_alter = 0.2,
-  statusline_bg_alter = 0.1,
-  statusline_fg_alter = 1.5,
-  statusline_left_block_fg = 0.5,
-  statusline_right_block_bg = 0.15,
-  statusline_right_block_fg = 1.8,
-  tabline_bg_alter = 0.3,
-  tabline_fg_alter = 0.5,
   tmux_statusline_fg_alter = -0.2,
   trouble_indent_fg_alter = 0.55,
-  visual_bg_alter = 0.3,
-  winbar_fg_alter = 3,
-  winbar_right_block_bg_alter = 0.3,
-  winbar_right_block_fg_alter = -0.1,
-  winseparator_alter = 0.2,
 
-  code_block_nm_note_fg_alter = 0.3,
-  code_block_note_bg_alter = -0.25, -- for Org file (better to leave it as is)
-  comment_note_fg_alter = 1.2,
+  normal_note_bg_alter = 5,
+  normal_note_fg_alter = 0.45,
   cursorline_note_bg_alter = 0.1,
   cursorlinenr_note_bg_alter = 0.25,
   delimeter_note_fg_alter = 1,
@@ -76,42 +25,15 @@ local base_colors = {
   fold_note_fg_alter = 0.1,
   linenr_note_fg_alter = 0.4,
   nontext_note_fg_alter = 0.35,
-  normal_note_bg_alter = 5,
-  normal_note_fg_alter = 0.45,
-  tag_note_fg_alter = 1.25,
   urllink_note_bg_alter = 0.6,
   urllink_note_fg_alter = 0.2,
   visual_note_bg_alter = 0.8,
-  winbar_note_bg_alter = 0.2,
-  winbar_note_fg_alter = 0.55,
   winseparator_note_fg_alter = 0.08,
 
-  normal_keyword_alter = 0.14,
-
-  panel_bottom_normal_fg_alter = -0.05,
   panel_bottom_normal_bg_alter = 0.1,
-  panel_bottom_cursorline_bg_alter = 0.4,
-  panel_bottom_cursorlinenr_fg_alter = 2,
-
-  nontext_col = { from = "Keyword", attr = "fg", alter = -0.55 },
 
   fold_fg = 0.05,
   fold_bg = 0.05,
-
-  render_markdown_code_bg_alter = -0.25,
-  render_markdown_code_border_fg_alter = -0.1,
-  render_markdown_code_inline_bg_alter = 0.1,
-  render_markdown_code_inline_fg_alter = 0.2,
-
-  snacks_notifier_info_bg = 0.5,
-  snacks_notifier_border_info_fg = -0.5,
-
-  snacks_notifier_warn_bg = 0.3,
-  snacks_notifier_border_warn_fg = -0.6,
-
-  snacks_notifier_error_fg = 0.1,
-  snacks_notifier_error_bg = 0.3,
-  snacks_notifier_border_error_fg = -0.4,
 
   zshlines_fg_alter = 0.9,
   zshlines_bg_alter = 2,
@@ -124,73 +46,30 @@ local base_colors = {
 local update_col_colorscheme = {
   ["ashen"] = {
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 6,
-    comment_fg_alter = 0.65,
-    cursorlinenr_bg_alter = 0.08,
-    floatborder_fg_alter = 0.3,
-    fzflua_file_part_fg = 0.5,
     grugfar_result_linenr_bg_alter = -0.3,
     grugfar_result_linenr_fg_alter = 0.65,
     grugfar_result_number_fg_alter = 0.65,
-    linenr_fg_alter = 0.6,
     lsp_code_lens_bg_alter = 0.5,
     lsp_code_lens_fg_alter = 2.5,
-    noice_cmdline_fg_alter = 2,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.55 },
-    normal_keyword_alter = 0.15,
-    panel_bottom_cursorline_bg_alter = 0.45,
-    panel_bottom_cursorlinenr_fg_alter = 3,
-    pmenu_sel_bg_alter = -0.8,
-    quickfixline_linenr_fg_alter = 0.4,
-    quickfixline_sp_alter = 1,
-    quickfixwinbar_bg_alter = 0.8,
-    quickfixwinbar_fg_alter = 3.5,
-    statusline_bg_alter = 0.1,
-    statusline_fg_alter = 3,
     trouble_indent_fg_alter = 0.8,
-    winbar_fg_alter = 3,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.3,
 
-    comment_note_fg_alter = 0.7,
     fold_note_fg_alter = 0.05,
     linenr_note_fg_alter = 0.5,
     nontext_note_fg_alter = 0.8,
     normal_note_bg_alter = 15,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = -0.1,
-    winbar_note_bg_alter = 0.25,
-    winbar_note_fg_alter = -0.1,
 
     zshlines_fg_alter = 0.8,
     zshlines_bg_alter = 2.5,
   },
   ["intent"] = {
     blink_ghost_text_fg_alter = -0.55,
-    cmpdocnormal_bg_alter = 3,
-    comment_fg_alter = 0.8,
-    cursorlinenr_bg_alter = 0.2,
-    floatborder_fg_alter = 0.4,
     fold_fg = 0.35,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.65,
     lsp_code_lens_fg_alter = 3.5,
-    normal_keyword_alter = 0.15,
-    panel_bottom_cursorline_bg_alter = 1,
-    panel_bottom_cursorlinenr_fg_alter = 7,
-    quickfixline_linenr_fg_alter = 1,
-    quickfixline_sp_alter = 1.5,
-    quickfixwinbar_bg_alter = 0.5,
-    quickfixwinbar_fg_alter = 3,
-    statusline_fg_alter = 4.5,
-    tabline_fg_alter = 0.65,
     trouble_indent_fg_alter = 2.2,
-    winbar_fg_alter = 5,
-    winbar_right_block_fg_alter = -0.1,
-    winseparator_alter = 0.5,
 
-    comment_note_fg_alter = 0.7,
     floatborder_note_fg_alter = 0.3,
     fold_note_fg_alter = 0.05,
     linenr_note_fg_alter = 0.5,
@@ -198,149 +77,39 @@ local update_col_colorscheme = {
     normal_note_bg_alter = 4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = -0.1,
-    winbar_note_bg_alter = 0.2,
-    winbar_note_fg_alter = 0.3,
 
     zshlines_fg_alter = 1.5,
     zshlines_bg_alter = 3.5,
   },
   ["darcubox"] = {
-    comment_fg_alter = 1,
-    floatborder_fg_alter = 1,
     fold_fg = 0.4,
     hovered_cursorline_bg_alter = 0.8,
-    linenr_fg_alter = 0.2,
-    nontext_col = { from = "Keyword", attr = "fg", alter = 3 },
-    render_markdown_code_bg_alter = 0.5,
-    statusline_bg_alter = 0.4,
-    statusline_fg_alter = -0.4,
-    statusline_right_block_bg = 0.2,
-    statusline_right_block_fg = 1.5,
-    visual_bg_alter = 0.2,
-    winbar_right_block_bg_alter = 0.15,
-    winseparator_alter = 0.3,
-  },
-  ["base46-palenight"] = {
-    comment_fg_alter = 0.5,
-    linenr_fg_alter = -0.02,
-    winbar_right_block_bg_alter = 0.3,
-    winseparator_alter = 0.25,
   },
   ["base46-material-darker"] = {
-    comment_fg_alter = 0.6,
-    cursor_fg = "#16afca",
     dapstopped_bg_alter = 0.2,
-    fzflua_file_part_fg = 0.65,
-    linenr_fg_alter = -0.02,
-    noice_cmdline_fg_alter = 0.6,
-    quickfixline_linenr_fg_alter = 0.3,
-    quickfixline_sp_alter = 0.5,
-    render_markdown_code_inline_bg_alter = 0.15,
-    snacks_indent_scope_fg_alter = 0.18,
-    visual_bg_alter = -0.2,
-    winseparator_alter = 0.4,
   },
   ["base46-jellybeans"] = {
-    cursor_fg = "#ffa560",
     dapstopped_bg_alter = 0.2,
-    fzflua_file_part_fg = 0.7,
-    linenr_fg_alter = 0.15,
-    noice_cmdline_fg_alter = 0.65,
-    nontext_col = { from = "Keyword", attr = "fg", alter = 2.5 },
-    normal_keyword_alter = 0.14,
-    panel_sidebar_bg_alter = 4,
-    render_markdown_code_bg_alter = 0.9,
-    render_markdown_code_inline_bg_alter = 0.15,
-    render_markdown_code_inline_fg_alter = 0.05,
     trouble_indent_fg_alter = 0.7,
-    winbar_fg_alter = 1.5,
-    winbar_right_block_bg_alter = 1,
-    winseparator_alter = 0.9,
   },
   ["base46-material-lighter"] = {
-    CurSearch = {
-      fg = { from = "Dark_red", attr = "fg", alter = 1 },
-      bg = { from = "Dark_red", attr = "fg", alter = -0.1 },
-      bold = true,
-    },
-    Search = {
-      fg = { from = "CurSearch", attr = "fg", alter = 0.15 },
-      bg = { from = "CurSearch", attr = "bg", alter = -0.15 },
-      bold = false,
-    },
     blink_cmp_label_match_fg_alter = 0.6,
-    comment_fg_alter = -0.19,
-    cursor_fg = "#dfdfe0",
     dapstopped_bg_alter = 0.2,
-    fzflua_file_part_fg = -0.4,
-    linenr_fg_alter = -0.04,
-    lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = 0.26 },
-    lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg" },
-    lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = 0.26 },
-    my_code_usage_bg_alter = 3.5,
-    my_code_usage_fg_alter = 0.7,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.45 },
-    pmenu_fg_alter = -0.2,
-    pmenu_sel_bg_alter = -0.05,
-    snacks_indent_scope_fg_alter = 0.7,
     trouble_indent_fg_alter = 0.5,
-    winseparator_alter = -0.16,
   },
   ["base46-melange"] = {
     blink_ghost_text_fg_alter = -0.4,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
     fold_fg = 0.2,
-    fzflua_file_part_fg = 0.7,
-    linenr_fg_alter = 0.05,
-    noice_cmdline_fg_alter = 0.6,
-    normal_keyword_alter = 0.1,
-    render_markdown_code_bg_alter = 0.25,
-    snacks_indent_scope_fg_alter = 0.13,
-    winbar_fg_alter = 1.5,
     trouble_indent_fg_alter = 0.6,
-    winbar_right_block_bg_alter = 0.35,
-    winseparator_alter = 0.3,
   },
   ["base46-everforest"] = {
-    CurSearch = {
-      fg = { from = "Dark_yellow", attr = "fg", alter = -0.8 },
-      bg = { from = "Dark_yellow", attr = "fg", alter = 15 },
-      bold = true,
-      reverse = false,
-    },
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 0.4,
-    comment_fg_alter = 0.35,
-    cursor_fg = "#b3276f",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.15,
-    fzflua_file_part_fg = 1,
-    linenr_fg_alter = 0.3,
     lsp_code_lens_bg_alter = 0.1,
     lsp_code_lens_fg_alter = 1,
-    noice_cmdline_fg_alter = 1.5,
-    nontext_col = { from = "Normal", attr = "bg", alter = 1.4 },
-    normal_keyword_alter = 0.4,
-    pmenu_sel_bg_alter = -0.4,
-    quickfixline_linenr_fg_alter = 0.2,
-    quickfixline_sp_alter = 0.6,
-    quickfixwinbar_bg_alter = 0.05,
-    quickfixwinbar_fg_alter = 1.5,
-    render_markdown_code_border_fg_alter = 0.5,
-    render_markdown_code_inline_bg_alter = 0.2,
-    snacks_indent_scope_fg_alter = 0.22,
-    statusline_bg_alter = 0.08,
-    statusline_fg_alter = 1.8,
-    statusline_left_block_fg = 0.1,
-    tabline_bg_alter = 0.1,
-    tabline_fg_alter = 0.3,
     trouble_indent_fg_alter = 0.7,
-    winbar_fg_alter = 1.8,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.05,
-    winseparator_alter = 0.15,
 
     delimeter_note_fg_alter = 1.5,
     floatborder_note_fg_alter = 0.25,
@@ -349,243 +118,94 @@ local update_col_colorscheme = {
     normal_note_fg_alter = 0.4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.3,
-    winbar_note_bg_alter = 0.15,
-    winbar_note_fg_alter = 0.4,
 
     zshlines_fg_alter = 0.5,
     zshlines_bg_alter = 1.2,
   },
   ["catppuccin"] = {
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 1,
-    comment_fg_alter = 0.3,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
-    fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.7,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1.5,
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.75 },
-    normal_keyword_alter = 0.06,
-    panel_bottom_cursorline_bg_alter = 0.8,
-    panel_bottom_cursorlinenr_fg_alter = 4,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.4,
-    quickfixline_sp_alter = 1.5,
-    statusline_right_block_fg = 0.5,
-    quickfixwinbar_fg_alter = 2.5,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 1.5,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 2.4,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.15,
 
-    code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 0.5,
     linenr_note_fg_alter = 0.4,
     normal_note_bg_alter = 1,
-    winbar_note_fg_alter = 0.25,
 
     zshlines_fg_alter = 0.65,
     zshlines_bg_alter = 1.8,
   },
   ["habamax"] = {
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 1,
-    comment_fg_alter = 0.3,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
-    fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.7,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1.5,
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.5 },
-    normal_keyword_alter = 0.06,
-    panel_bottom_cursorline_bg_alter = 0.8,
-    panel_bottom_cursorlinenr_fg_alter = 4,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.4,
-    quickfixline_sp_alter = 1.5,
-    quickfixwinbar_fg_alter = 3.5,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 2.5,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 2.4,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.15,
 
-    code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 1,
     linenr_note_fg_alter = 0.4,
     normal_note_bg_alter = 1,
-    winbar_note_fg_alter = 0.25,
 
     zshlines_fg_alter = 0.65,
     zshlines_bg_alter = 1.8,
   },
   ["github_dark"] = {
-    comment_fg_alter = 1,
-    linenr_fg_alter = -0.05,
-    statusline_fg_alter = 0.8,
     winbar_bg_alter = 0.8,
-    winbar_right_block_bg_alter = 0.8,
-    winseparator_alter = 1.3,
   },
   ["gruvbox-material"] = {
-    comment_fg_alter = 0.6,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.3,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = -0.03,
     lsp_code_lens_fg_alter = 0.5,
-    normal_keyword_alter = 0.15,
-    pmenu_sel_bg_alter = -0.48,
-    render_markdown_code_bg_alter = 0.25,
     trouble_indent_fg_alter = 0.35,
-    visual_bg_alter = 0.5,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = 0.05,
   },
   ["night-owl"] = {
-    comment_fg_alter = 1.2,
     fold_fg = 0.3,
-    linenr_fg_alter = 0.6,
-    quickfixline_linenr_fg_alter = 0.3,
-    statusline_fg_alter = 2,
-    winbar_fg_alter = 3,
   },
   ["techbase"] = {
-    comment_fg_alter = 0.68,
-    linenr_fg_alter = -0.05,
     fold_fg = 0.3,
-    fzflua_file_part_fg = 0.6,
-    render_markdown_code_bg_alter = 0.7,
-    statusline_fg_alter = 0.85,
-    winseparator_alter = 0.58,
   },
   ["jellybeans"] = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
     blink_cmp_label_kind_fg_alter = 2,
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 1.2,
-    comment_fg_alter = 0.35,
-    cursor_fg = "#ffa560",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.3,
-    fzflua_file_part_fg = 0.65,
-    linenr_fg_alter = 0.7,
     lsp_code_lens_bg_alter = 0.4,
     lsp_code_lens_fg_alter = 2.2,
-    noice_cmdline_fg_alter = 1.5,
-    normal_keyword_alter = 0.14,
-    panel_bottom_cursorline_bg_alter = 0.7,
-    panel_bottom_cursorlinenr_fg_alter = 6,
     panel_sidebar_bg_altcer = 4,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.8,
-    render_markdown_code_inline_bg_alter = 0.15,
-    render_markdown_code_inline_fg_alter = 0.05,
-    statusline_bg_alter = 0.05,
-    statusline_fg_alter = 2.5,
     trouble_indent_fg_alter = 1,
-    winbar_fg_alter = 3.8,
-    winbar_right_block_bg_alter = 0.2,
-    winseparator_alter = 0.25,
 
-    comment_note_fg_alter = 0.6,
     floatborder_note_fg_alter = 0.25,
     linenr_note_fg_alter = 0.45,
     normal_note_bg_alter = 2,
     normal_note_fg_alter = 0.6,
-    winbar_note_bg_alter = 0.15,
-    winbar_note_fg_alter = 0.3,
 
     zshlines_fg_alter = 0.95,
     zshlines_bg_alter = 2.2,
   },
   ["kanagawa"] = {
     blink_ghost_text_fg_alter = -0.45,
-    cmpdocnormal_bg_alter = 2,
-    comment_fg_alter = 0.8,
-    cursor_fg = "#b3276f",
-    cursorlinenr_bg_alter = 0.15,
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.25,
     grugfar_result_linenr_fg_alter = 0.55,
     grugfar_result_number_fg_alter = 0.55,
-    linenr_fg_alter = 0.65,
     lsp_code_lens_bg_alter = 1,
     lsp_code_lens_fg_alter = 4,
-    noice_cmdline_fg_alter = 0.8,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.5 },
-    normal_keyword_alter = 0.08,
-    quickfixline_linenr_fg_alter = 0.8,
-    quickfixline_sp_alter = 2,
-    render_markdown_code_bg_alter = -0.2,
-    render_markdown_code_inline_bg_alter = 0.2,
-    snacks_indent_scope_fg_alter = 0.22,
-    statusline_bg_alter = 0.15,
-    statusline_fg_alter = 4,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 6.5,
-    winbar_right_block_bg_alter = 0.16,
-    winseparator_alter = 0.5,
 
-    code_block_note_bg_alter = -0.15,
     linenr_note_fg_alter = 0.55,
-    winbar_note_fg_alter = 0.5,
 
     zshlines_fg_alter = 1.2,
     zshlines_bg_alter = 2.5,
   },
   ["gruvbox"] = {
-    CurSearch = {
-      fg = { from = "Dark_yellow", attr = "fg", alter = -0.8 },
-      bg = { from = "Dark_yellow", attr = "fg", alter = 15 },
-      bold = true,
-      reverse = false,
-    },
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 0.5,
-    comment_fg_alter = 0.45,
-    cursor_fg = "#b3276f",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.35,
-    linenr_fg_alter = 0.4,
     lsp_code_lens_bg_alter = 0.25,
     lsp_code_lens_fg_alter = 1.5,
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Normal", attr = "bg", alter = 1.4 },
-    normal_keyword_alter = 0.2,
-    panel_bottom_cursorlinenr_fg_alter = 3,
-    quickfixline_linenr_fg_alter = 0.5,
-    quickfixline_sp_alter = 1,
-    quickfixwinbar_bg_alter = 0.2,
-    quickfixwinbar_fg_alter = 2.5,
-    render_markdown_code_border_fg_alter = 0.5,
-    render_markdown_code_inline_bg_alter = 0.2,
-    snacks_indent_scope_fg_alter = 0.22,
-    statusline_bg_alter = 0.08,
-    statusline_fg_alter = 1.8,
-    statusline_left_block_fg = 0.2,
-    tabline_fg_alter = 0.5,
     trouble_indent_fg_alter = 1,
-    winbar_fg_alter = 2,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.05,
-    winseparator_alter = 0.15,
 
     delimeter_note_fg_alter = 1.5,
     floatborder_note_fg_alter = 0.25,
@@ -594,47 +214,17 @@ local update_col_colorscheme = {
     normal_note_fg_alter = 0.4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.3,
-    winbar_note_bg_alter = 0.15,
-    winbar_note_fg_alter = 0.4,
 
     zshlines_fg_alter = 0.7,
     zshlines_bg_alter = 2,
   },
   ["gruvbox-old"] = {
-    CurSearch = {
-      fg = { from = "Dark_yellow", attr = "fg", alter = -0.8 },
-      bg = { from = "Dark_yellow", attr = "fg", alter = 15 },
-      bold = true,
-      reverse = false,
-    },
     blink_ghost_text_fg_alter = -0.6,
-    cmpdocnormal_bg_alter = 1.8,
-    comment_fg_alter = 0.45,
-    cursor_fg = "#b3276f",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.08,
-    linenr_fg_alter = 0.75,
     lsp_code_lens_bg_alter = 0.5,
     lsp_code_lens_fg_alter = 2.8,
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Normal", attr = "bg", alter = 1.4 },
-    normal_keyword_alter = 0.05,
-    quickfixline_linenr_fg_alter = 0.95,
-    quickfixline_sp_alter = 3,
-    quickfixwinbar_bg_alter = 0.3,
-    quickfixwinbar_fg_alter = 3.8,
-    render_markdown_code_border_fg_alter = 0.5,
-    render_markdown_code_inline_bg_alter = 0.2,
-    snacks_indent_scope_fg_alter = 0.22,
-    statusline_bg_alter = 0.08,
-    statusline_fg_alter = 3,
-    tabline_fg_alter = 0.8,
     trouble_indent_fg_alter = 1.8,
-    winbar_fg_alter = 4.5,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.05,
-    winseparator_alter = 0.25,
 
     delimeter_note_fg_alter = 1.5,
     linenr_note_fg_alter = 0.6,
@@ -642,35 +232,15 @@ local update_col_colorscheme = {
     normal_note_fg_alter = 0.4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.3,
-    winbar_note_bg_alter = 0.15,
-    winbar_note_fg_alter = 0.8,
 
     zshlines_fg_alter = 0.85,
     zshlines_bg_alter = 2.5,
   },
   ["lemons"] = {
     blink_cmp_label_kind_fg_alter = 0.5,
-    cmpdocnormal_bg_alter = 6,
-    comment_fg_alter = 0.1,
-    cursorlinenr_bg_alter = 0.1,
-    linenr_fg_alter = 1.5,
     lsp_code_lens_bg_alter = 3.5,
     lsp_code_lens_fg_alter = 15,
-    noice_cmdline_fg_alter = 0.95,
-    normal_keyword_alter = 0.08,
-    quickfixline_linenr_fg_alter = 1.2,
-    quickfixwinbar_bg_alter = 0.5,
-    quickfixwinbar_fg_alter = 5,
-    statusline_bg_alter = 0.25,
-    statusline_fg_alter = 15,
-    statusline_right_block_bg = 0.2,
-    statusline_right_block_fg = 2,
-    tabline_fg_alter = 1.8,
     trouble_indent_fg_alter = 3,
-    winbar_fg_alter = 20,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = -0.2,
-    winseparator_alter = 2.5,
 
     linenr_note_fg_alter = 1,
     nontext_note_fg_alter = 0.45,
@@ -678,7 +248,6 @@ local update_col_colorscheme = {
     normal_note_fg_alter = 0.4,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.05,
-    winbar_note_fg_alter = 0.45,
 
     zshlines_fg_alter = 4,
     zshlines_bg_alter = 10,
@@ -686,41 +255,9 @@ local update_col_colorscheme = {
   ["lackluster"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
     blink_ghost_text_fg_alter = -0.5,
-    bqf_keyword = "String",
-    cmpdocnormal_bg_alter = 4.5,
-    comment_fg_alter = 0.6,
-    cursor_fg = "#deeeed",
-    cursorlinenr_bg_alter = 0.25,
-    floatborder_fg_alter = 0.4,
-    fzflua_file_part_fg = 1.2,
-    linenr_fg_alter = 1.3,
     lsp_code_lens_bg_alter = 2,
     lsp_code_lens_fg_alter = 9,
-    lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-    lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
-    lsp_reference_write_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-    my_code_usage_bg_alter = -0.35,
-    my_code_usage_fg_alter = -0.1,
-    noice_cmdline_fg_alter = 1.5,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.65 },
-    normal_keyword_alter = 0.15,
-    panel_bottom_cursorline_bg_alter = 1.5,
-    panel_bottom_cursorlinenr_fg_alter = 6,
-    quickfixline_linenr_fg_alter = 1,
-    quickfixline_sp_alter = 0.8,
-    quickfixwinbar_bg_alter = 0.3,
-    quickfixwinbar_fg_alter = 3,
-    render_markdown_code_inline_bg_alter = 0.3,
-    render_markdown_code_inline_fg_alter = 0.4,
-    snacks_notifier_info_fg = 1.6,
-    statusline_bg_alter = 0.05,
-    statusline_fg_alter = 8,
-    tabline_fg_alter = 1.5,
     trouble_indent_fg_alter = 1.8,
-    visual_bg_alter = 0.4,
-    winbar_fg_alter = 14,
-    winbar_right_block_fg_alter = 0.1,
-    winseparator_alter = 1.6,
 
     cursorlinenr_note_bg_alter = 0.3,
     linenr_note_fg_alter = 0.7,
@@ -732,87 +269,32 @@ local update_col_colorscheme = {
   },
   ["lackluster-mint"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
-    bqf_keyword = "String",
-    comment_fg_alter = 1.2,
-    cursor_fg = "#deeeed",
     fold_bg = 0,
     fold_fg = 0.18,
-    fzflua_file_part_fg = 1.2,
-    linenr_fg_alter = 0.9,
-    lsp_reference_read_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-    lsp_reference_text_bg_alter = { from = "Normal", attr = "bg", alter = 1.2 },
-    lsp_reference_write_bg_alter = { from = "Function", attr = "fg", alter = -0.6 },
-    my_code_usage_bg_alter = -0.35,
-    my_code_usage_fg_alter = -0.1,
-    noice_cmdline_fg_alter = 0.6,
-    normal_keyword_alter = 0.4,
-    quickfixline_sp_alter = 0.45,
-    render_markdown_code_bg_alter = 1.35,
-    render_markdown_code_inline_bg_alter = 0.35,
-    snacks_notifier_info_fg = 1.6,
-    statusline_fg_alter = 2,
     trouble_indent_fg_alter = 0.5,
-    visual_bg_alter = 0.05,
-    winbar_fg_alter = 4.5,
-    winbar_right_block_fg_alter = 0.1,
   },
   ["neogotham"] = {
     blink_ghost_text_fg_alter = -0.6,
-    cmpdocnormal_bg_alter = 2,
-    comment_fg_alter = 0.25,
-    cursor_fg = "#98d1ce",
-    cursorlinenr_bg_alter = 0.1,
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
     grugfar_result_number_fg_alter = 0.5,
-    linenr_fg_alter = 0.85,
     lsp_code_lens_bg_alter = 0.45,
     lsp_code_lens_fg_alter = 3,
-    noice_cmdline_fg_alter = 1.8,
-    normal_keyword_alter = 0.15,
-    quickfixline_linenr_fg_alter = 0.65,
-    quickfixwinbar_fg_alter = 2,
-    statusline_fg_alter = 3.5,
     trouble_indent_fg_alter = 1.2,
-    winbar_fg_alter = 5,
-    winbar_right_block_bg_alter = 0.15,
-    winseparator_alter = 0.28,
 
     normal_note_bg_alter = 2.5,
     normal_note_fg_alter = 0.45,
     nontext_note_fg_alter = 0.45,
-    winbar_note_bg_alter = 0.2,
-    winbar_note_fg_alter = 0.35,
   },
   ["oxocarbon"] = {
     blink_ghost_text_fg_alter = -0.6,
-    cmpdocnormal_bg_alter = 2,
-    comment_fg_alter = 0.15,
-    cursor_fg = "#ffffff",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.3,
     fold_fg = 0.08,
-    fzflua_file_part_fg = 0.7,
     hovered_cursorline_bg_alter = 0.6,
-    linenr_fg_alter = 0.9,
     lsp_code_lens_bg_alter = 0.4,
     lsp_code_lens_fg_alter = 2.5,
-    noice_cmdline_fg_alter = 1,
-    normal_keyword_alter = 0.08,
-    quickfixline_linenr_fg_alter = 0.8,
-    quickfixline_sp_alter = 1.5,
-    quickfixwinbar_bg_alter = 0.1,
-    quickfixwinbar_fg_alter = 2,
-    render_markdown_code_inline_bg_alter = 0.16,
-    statusline_fg_alter = 2.5,
-    tabline_bg_alter = 0.15,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 3.5,
-    winbar_right_block_bg_alter = 0.2,
-    winseparator_alter = 0.25,
 
-    comment_note_fg_alter = 0.95,
     linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 2,
@@ -825,40 +307,14 @@ local update_col_colorscheme = {
   },
   ["rose-pine"] = {
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 0.8,
-    comment_fg_alter = 0.5,
-    cursorlinenr_bg_alter = 0.15,
-    floatborder_fg_alter = 0.5,
     fold_fg = 0.4,
-    fzflua_file_part_fg = 1.1,
     grugfar_result_linenr_fg_alter = 0.75,
     grugfar_result_number_fg_alter = 0.5,
     hovered_cursorline_bg_alter = 0.6,
-    linenr_fg_alter = 1.35,
     lsp_code_lens_bg_alter = 0.35,
     lsp_code_lens_fg_alter = 2,
-    noice_cmdline_fg_alter = 2,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.4 },
-    normal_keyword_alter = 0.12,
-    panel_bottom_cursorline_bg_alter = 1,
-    panel_bottom_cursorlinenr_fg_alter = 6,
-    pmenu_sel_bg_alter = -0.55,
-    quickfixline_linenr_fg_alter = 0.6,
-    quickfixline_sp_alter = 1.5,
-    quickfixwinbar_fg_alter = 3.5,
-    statusline_bg_alter = -0.05,
-    statusline_fg_alter = 1.5,
-    statusline_right_block_bg = 0.3,
-    statusline_right_block_fg = 0.5,
-    tabline_bg_alter = 1,
-    tabline_fg_alter = 0.4,
     trouble_indent_fg_alter = 1.8,
-    winbar_fg_alter = 2.5,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = 0.2,
-    winseparator_alter = -0.2,
 
-    comment_note_fg_alter = 0.4,
     linenr_note_fg_alter = 0.5,
     nontext_note_fg_alter = 0.95,
     normal_note_bg_alter = 1.6,
@@ -867,56 +323,21 @@ local update_col_colorscheme = {
     zshlines_bg_alter = 2.25,
   },
   ["rose-pine-moon"] = {
-    comment_fg_alter = 0.2,
-    floatborder_fg_alter = 0.25,
     hovered_cursorline_bg_alter = 0.6,
-    linenr_fg_alter = 0.55,
-    noice_cmdline_fg_alter = 0.8,
-    normal_keyword_alter = 0.2,
-    pmenu_sel_bg_alter = -0.4,
-    quickfixline_linenr_fg_alter = 0.35,
-    render_markdown_code_bg_alter = -0.15,
     trouble_indent_fg_alter = 1,
-    winbar_fg_alter = 3.4,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = 0.12,
 
     zshlines_fg_alter = 0.5,
     zshlines_bg_alter = 1.5,
   },
   ["tokyonight"] = {
     blink_ghost_text_fg_alter = -0.6,
-    cmpdocnormal_bg_alter = 0.7,
-    comment_fg_alter = 0.5,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.1,
     fold_fg = 0.7,
-    fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.7,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 2,
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.75 },
-    normal_keyword_alter = 0.06,
-    panel_bottom_cursorline_bg_alter = 1,
-    panel_bottom_cursorlinenr_fg_alter = 6,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.7,
-    quickfixline_sp_alter = 2,
-    quickfixwinbar_fg_alter = 3,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 2,
-    statusline_right_block_fg = 0.7,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 2.5,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.15,
 
-    code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 0.8,
     linenr_note_fg_alter = 0.5,
     normal_note_bg_alter = 1,
 
@@ -925,32 +346,13 @@ local update_col_colorscheme = {
   },
   ["tokyonight-night"] = {
     blink_ghost_text_fg_alter = -0.6,
-    comment_fg_alter = 0.5,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
-    fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.7,
-    linenr_fg_alter = 1,
     lsp_code_lens_bg_alter = 0.8,
     lsp_code_lens_fg_alter = 5,
-    noice_cmdline_fg_alter = 1.5,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.75 },
-    normal_keyword_alter = 0.06,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 1.1,
-    quickfixline_sp_alter = 2.5,
-    quickfixwinbar_fg_alter = 3.5,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 4.5,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 7.3,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.6,
 
-    code_block_note_bg_alter = -0.25,
     linenr_note_fg_alter = 0.6,
 
     zshlines_fg_alter = 1,
@@ -958,37 +360,15 @@ local update_col_colorscheme = {
   },
   ["tokyonight-storm"] = {
     blink_ghost_text_fg_alter = -0.55,
-    cmpdocnormal_bg_alter = 0.35,
-    comment_fg_alter = 0.25,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.05,
-    fzflua_file_part_fg = 0.7,
     grugfar_result_linenr_bg_alter = -0.25,
     grugfar_result_linenr_fg_alter = 0.4,
     grugfar_result_number_fg_alter = 0.8,
-    linenr_fg_alter = 0.35,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1.2,
-    noice_cmdline_fg_alter = 0.7,
-    normal_keyword_alter = 0.2,
     panel_bottom_normal_bg_alter = 0.05,
-    quickfixline_linenr_fg_alter = 0.2,
-    quickfixline_sp_alter = 1,
-    quickfixwinbar_bg_alter = 0.05,
-    quickfixwinbar_fg_alter = 1.25,
-    statusline_fg_alter = 1.8,
-    statusline_right_block_bg = 0.1,
-    tabline_bg_alter = 0.1,
-    tabline_fg_alter = 0.2,
     trouble_indent_fg_alter = 0.75,
-    visual_bg_alter = 0.2,
-    winbar_fg_alter = 2,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.2,
-    winseparator_alter = 0.15,
 
-    code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 0.35,
     floatborder_note_fg_alter = 0.2,
     fold_note_fg_alter = 0.05,
     linenr_note_fg_alter = 0.45,
@@ -997,41 +377,19 @@ local update_col_colorscheme = {
     normal_note_fg_alter = 0.3,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = 0.1,
-    winbar_note_fg_alter = 0.05,
 
     zshlines_fg_alter = 0.45,
     zshlines_bg_alter = 1.2,
   },
   ["nightfox"] = {
     blink_ghost_text_fg_alter = -0.65,
-    cmpdocnormal_bg_alter = 2.5,
-    comment_fg_alter = 0.6,
-    cursor_fg = "#ece1d7",
     dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.25,
     fold_fg = 0.1,
-    fzflua_file_part_fg = 0.6,
     grugfar_result_linenr_fg_alter = 0.55,
-    linenr_fg_alter = 0.6,
     lsp_code_lens_bg_alter = 0.5,
     lsp_code_lens_fg_alter = 4,
-    noice_cmdline_fg_alter = 1.5,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.55 },
-    normal_keyword_alter = 0.08,
-    panel_bottom_cursorline_bg_alter = 1,
-    panel_bottom_cursorlinenr_fg_alter = 6,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.8,
-    quickfixline_sp_alter = 2,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 3,
     trouble_indent_fg_alter = 2,
-    winbar_fg_alter = 4,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.3,
 
-    comment_note_fg_alter = 0.7,
     fold_note_fg_alter = -0.1,
     linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.5,
@@ -1041,92 +399,16 @@ local update_col_colorscheme = {
     zshlines_fg_alter = 1,
     zshlines_bg_alter = 2.5,
   },
-  ["nordfox"] = {
-    blink_ghost_text_fg_alter = -0.4,
-    cmpdocnormal_bg_alter = 0.7,
-    comment_fg_alter = 0.3,
-    cursor_fg = "#ece1d7",
-    cursorlinenr_bg_alter = 0.15,
-    dapstopped_bg_alter = 0.15,
-    floatborder_fg_alter = 0.15,
-    fold_fg = 0.08,
-    fzflua_file_part_fg = 1,
-    grugfar_result_linenr_bg_alter = -0.15,
-    grugfar_result_linenr_fg_alter = 0.55,
-    grugfar_result_number_fg_alter = 0.75,
-    hovered_cursorline_bg_alter = -0.12,
-    linenr_fg_alter = 0.25,
-    lsp_code_lens_bg_alter = 0.18,
-    lsp_code_lens_fg_alter = 1,
-    noice_cmdline_fg_alter = 0.55,
-    nontext_col = { from = "Normal", attr = "bg", alter = 0.65 },
-    normal_keyword_alter = 0.4,
-    pmenu_sel_bg_alter = -0.4,
-    quickfixline_linenr_fg_alter = 0.12,
-    quickfixline_sp_alter = 0.7,
-    quickfixwinbar_bg_alter = -0.15,
-    quickfixwinbar_fg_alter = 0.9,
-    snacks_indent_scope_fg_alter = 0.13,
-    statusline_fg_alter = 1.5,
-    tabline_bg_alter = 0.1,
-    tabline_fg_alter = 0.25,
-    trouble_indent_fg_alter = 0.5,
-    winbar_fg_alter = 1.65,
-    winbar_right_block_bg_alter = 0.1,
-    winbar_right_block_fg_alter = -0.3,
-    winseparator_alter = 0.15,
-
-    comment_note_fg_alter = 0.7,
-    floatborder_note_fg_alter = 0.2,
-    fold_note_fg_alter = -0.1,
-    linenr_note_fg_alter = 0.5,
-    nontext_note_fg_alter = 0.5,
-    normal_note_bg_alter = 0.5,
-    normal_note_fg_alter = 0.15,
-    winbar_note_fg_alter = 0.4,
-
-    zshlines_fg_alter = 0.5,
-    zshlines_bg_alter = 1,
-  },
   ["vscode"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
-    cmpdocnormal_bg_alter = 0.8,
-    comment_fg_alter = 0.5,
-    cursor_fg = "#fa1919",
-    cursorlinenr_bg_alter = 0.1,
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.3,
     fold_fg = 0.15,
-    fzflua_file_part_fg = 0.85,
     grugfar_result_linenr_fg_alter = 0.3,
-    linenr_fg_alter = 0.5,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1.8,
-    lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
-    lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
-    lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
-    noice_cmdline_fg_alter = 2,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.5 },
-    normal_keyword_alter = 0.08,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 1.5,
-    quickfixline_sp_alter = 2,
-    quickfixwinbar_bg_alter = 0.5,
-    quickfixwinbar_fg_alter = 3.5,
-    snacks_indent_scope_fg_alter = 0.15,
-    statusline_fg_alter = 2.5,
-    statusline_right_block_bg = 0.15,
-    tabline_bg_alter = 0.15,
-    tabline_fg_alter = 0.25,
     tmux_statusline_fg_alter = -0.25,
     trouble_indent_fg_alter = 1.5,
-    winbar_fg_alter = 2.5,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = 0.05,
-    winseparator_alter = 0.25,
 
-    code_block_note_bg_alter = -0.25,
-    comment_note_fg_alter = 0.55,
     linenr_note_fg_alter = 0.6,
     nontext_note_fg_alter = 0.5,
     normal_note_bg_alter = 1.25,
@@ -1137,101 +419,37 @@ local update_col_colorscheme = {
   },
   ["vscode_modern"] = {
     Directory = { fg = "#569cd6", bg = "NONE" },
-    comment_fg_alter = 0.2,
-    cursor_fg = "#fa1919",
     dapstopped_bg_alter = 0.2,
-    floatborder_fg_alter = 0.25,
     hovered_cursorline_bg_alter = 0.35,
-    linenr_fg_alter = 0.8,
     lsp_code_lens_bg_alter = 0.3,
     lsp_code_lens_fg_alter = 2,
-    lsp_reference_read_bg_alter = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
-    lsp_reference_text_bg_alter = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
-    lsp_reference_write_bg_alter = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
-    noice_cmdline_fg_alter = 1,
-    nontext_col = { from = "Keyword", attr = "fg", alter = -0.4 },
-    quickfixline_linenr_fg_alter = 0.45,
-    render_markdown_code_bg_alter = 0.2,
-    snacks_indent_scope_fg_alter = 0.15,
-    statusline_fg_alter = 2,
     trouble_indent_fg_alter = 1.2,
-    winbar_fg_alter = 3,
-    winbar_right_block_bg_alter = 0.2,
-    winseparator_alter = 0.18,
 
     zshlines_fg_alter = 0.55,
   },
   ["xenos"] = {
     blink_cmp_label_kind_fg_alter = 2,
-    comment_fg_alter = 0.75,
     fold_fg = 0.35,
-    fzflua_file_part_fg = 0.5,
-    linenr_fg_alter = 0.7,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1,
-    pmenu_fg_alter = -0.05,
-    pmenu_sel_bg_alter = -0.63,
-    quickfixline_linenr_fg_alter = 0.15,
-    render_markdown_code_bg_alter = 0.45,
-    statusline_right_block_bg = 0.1,
-    statusline_right_block_fg = 1.5,
     trouble_indent_fg_alter = 0.6,
-    visual_bg_alter = -0.32,
-    winbar_fg_alter = 3.7,
-    winbar_right_block_bg_alter = 0.15,
-    winbar_right_block_fg_alter = -0.3,
 
     zshlines_fg_alter = 0.5,
   },
   ["y9nika"] = {
-    comment_fg_alter = 0.85,
     fold_fg = 0.25,
-    fzflua_file_part_fg = 0.6,
-    linenr_fg_alter = -0.05,
-    render_markdown_code_bg_alter = 1.4,
-    statusline_fg_alter = 0.8,
-    winbar_right_block_bg_alter = 0.6,
-    winbar_right_block_fg_alter = -0.25,
-    winseparator_alter = 1.1,
   },
   ["zenburn"] = {
     blink_ghost_text_fg_alter = -0.45,
-    cmpdocnormal_bg_alter = 0.6,
-    comment_fg_alter = 0.08,
-    cursorlinenr_bg_alter = 0.15,
-    floatborder_fg_alter = 0.2,
     fold_fg = 0.15,
-    fzflua_file_part_fg = 0.7,
     grugfar_result_linenr_bg_alter = -0.2,
     grugfar_result_linenr_fg_alter = 0.5,
     grugfar_result_number_fg_alter = 0.65,
     hovered_cursorline_bg_alter = 0.1,
-    linenr_fg_alter = 0.55,
     lsp_code_lens_bg_alter = 0.2,
     lsp_code_lens_fg_alter = 1,
-    noice_cmdline_fg_alter = 0.65,
-    normal_keyword_alter = 0.4,
-    pmenu_sel_bg_alter = -0.6,
-    quickfixline_linenr_fg_alter = 0.1,
-    quickfixline_sp_alter = 0.4,
-    quickfixwinbar_bg_alter = -0.2,
-    quickfixwinbar_fg_alter = 0.5,
-    render_markdown_code_inline_bg_alter = 0.05,
-    render_markdown_code_inline_fg_alter = -0.05,
-    statusline_bg_alter = 0.1,
-    statusline_fg_alter = 1.2,
-    statusline_right_block_bg = 0.2,
-    statusline_right_block_fg = 0.8,
-    tabline_bg_alter = 0.15,
-    tabline_fg_alter = 0.1,
     trouble_indent_fg_alter = 0.5,
-    visual_bg_alter = 0.15,
-    winbar_fg_alter = 1.8,
-    winbar_right_block_bg_alter = 0.2,
-    winbar_right_block_fg_alter = -0.2,
-    winseparator_alter = 0.1,
 
-    comment_note_fg_alter = 0.35,
     linenr_note_fg_alter = 0.4,
     fold_note_fg_alter = 0.05,
     nontext_note_fg_alter = 0.4,
@@ -1239,7 +457,6 @@ local update_col_colorscheme = {
     floatborder_note_fg_alter = 0.15,
     urllink_note_bg_alter = 0.4,
     urllink_note_fg_alter = -0.1,
-    winbar_note_fg_alter = 0.25,
 
     zshlines_fg_alter = 0.4,
     zshlines_bg_alter = 1,
@@ -1280,82 +497,44 @@ local general_overrides = function()
 
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
-    { NonText = { fg = colors.nontext_col, bg = "NONE" } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = colors.winseparator_alter }, bg = "NONE" } },
+    { NonText = { fg = { from = "NonText", attr = "fg", alter = 0.1, opacity = 0.5 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5, opacity = 0.4 }, bg = "NONE" } },
 
     {
       LineNr = {
         bg = "NONE",
-        fg = { from = "WinSeparator", attr = "fg", alter = colors.linenr_fg_alter },
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.6 },
         bold = false,
       },
     },
     { LineNrAbove = { inherit = "LineNr" } },
     { LineNrBelow = { inherit = "LineNr" } },
-    { Comment = { fg = { from = "LineNr", attr = "fg", alter = colors.comment_fg_alter }, italic = true } },
+    { Comment = { fg = { from = "Normal", attr = "bg", alter = 3, opacity = 0.6 }, italic = true } },
     { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
-    {
-      CursorLine = {
-        bg = { from = "Normal", attr = "bg" },
-      },
-    },
+    { CursorLine = { bg = { from = "Normal", attr = "bg" } } },
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
-        bg = H.darken(H.get("Keyword", "fg"), colors.cursorlinenr_bg_alter, H.get("Normal", "bg")),
+        bg = { from = "Keyword", attr = "fg", opacity = 0.15 },
         bold = true,
       },
     },
-    {
-      Visual = {
-        bg = H.darken(H.get("Function", "fg"), colors.visual_bg_alter, H.get("Normal", "bg")),
-      },
-    },
-    {
-      Visual = {
-        fg = { from = "Visual", attr = "bg", alter = 2 },
-        bold = true,
-      },
-    },
+    { Visual = { bg = { from = "Keyword", attr = "fg", opacity = 0.15 }, fg = "NONE" } },
 
     {
       StatusLine = {
-        fg = { from = "Normal", attr = "bg", alter = colors.statusline_fg_alter },
-        bg = { from = "WinSeparator", attr = "fg", alter = colors.statusline_bg_alter },
+        fg = { from = "LineNr", attr = "fg", alter = 1 },
+        bg = { from = "LineNr", attr = "fg", opacity = 0.25 },
         reverse = false,
       },
     },
     { StatusLineNC = { inherit = "StatusLine" } },
 
     {
-      StatusLineRightBlock = {
-        bg = H.darken(H.get("Keyword", "fg"), colors.statusline_right_block_bg, H.get("Normal", "bg")),
-      },
-    },
-    {
-      StatusLineRightBlock = {
-        fg = { from = "StatusLineRightBlock", attr = "bg", alter = colors.statusline_right_block_fg },
-      },
-    },
-    {
-      StatusLineRightBlockDarken = {
-        fg = { from = "StatusLineRightBlock", attr = "fg", alter = -0.1 },
-        bg = { from = "StatusLineRightBlock", attr = "bg", alter = -0.12 },
-      },
-    },
-    { StatusLineLeftBlock = { bg = { from = "StatusLineRightBlock", attr = "bg" } } },
-    {
-      StatusLineLeftBlock = {
-        fg = { from = "StatusLineRightBlock", attr = "fg", alter = colors.statusline_left_block_fg },
-        bold = true,
-      },
-    },
-
-    {
       Pmenu = {
-        fg = { from = "Normal", attr = "fg", alter = colors.pmenu_fg_alter },
+        fg = { from = "Normal", attr = "fg", opacity = 0.6 },
         bg = { from = "Normal", attr = "bg" },
         reverse = false,
       },
@@ -1363,7 +542,7 @@ local general_overrides = function()
     {
       PmenuSel = {
         fg = "NONE",
-        bg = { from = "Keyword", attr = "fg", alter = colors.pmenu_sel_bg_alter },
+        bg = { from = "Keyword", attr = "fg", opacity = 0.15 },
         underline = false,
         reverse = false,
       },
@@ -1387,13 +566,13 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = colors.floatborder_fg_alter },
+        fg = { from = "NormalFloat", attr = "bg", alter = 1, opacity = 0.4 },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
     {
       FloatTitle = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.float_title_fg_alter },
+        fg = { from = "Keyword", attr = "fg" },
         bg = { from = "NormalFloat", attr = "bg" },
         bold = true,
       },
@@ -1405,11 +584,10 @@ local general_overrides = function()
       },
     },
 
-    { NormalKeyword = { fg = H.darken(H.get("Keyword", "fg"), colors.normal_keyword_alter, H.get("Normal", "bg")) } },
     {
       NormalKeyword = {
-        fg = { from = "NormalKeyword", attr = "fg", alter = 3 },
-        bg = { from = "NormalKeyword", attr = "fg" },
+        fg = { from = "Normal", attr = "bg", opacity = 3 },
+        bg = { from = "Normal", attr = "bg", opacity = 1 },
       },
     },
 
@@ -1434,36 +612,20 @@ local general_overrides = function()
 
     {
       NormalNote = {
-        fg = { from = "Normal", attr = "fg", alter = colors.normal_note_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = colors.normal_note_bg_alter },
+        fg = { from = "Normal", attr = "fg", alter = 0.15 },
+        bg = { from = "Normal", attr = "bg", alter = 1 },
       },
     },
-    {
-      CommentNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.comment_note_fg_alter },
-      },
-    },
-    {
-      NonTextNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.nontext_note_fg_alter },
-      },
-    },
+    { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 0.7, opacity = 0.8 } } },
+    { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = colors.nontext_note_fg_alter } } },
     {
       LineNrNote = {
         fg = { from = "NormalNote", attr = "bg", alter = colors.linenr_note_fg_alter },
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
-    {
-      DelimiterNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.delimeter_note_fg_alter },
-      },
-    },
-    {
-      CursorLineNote = {
-        bg = { from = "NormalNote", attr = "bg", alter = colors.cursorline_note_bg_alter },
-      },
-    },
+    { DelimiterNote = { fg = { from = "NormalNote", attr = "bg", alter = colors.delimeter_note_fg_alter } } },
+    { CursorLineNote = { bg = { from = "NormalNote", attr = "bg", alter = colors.cursorline_note_bg_alter } } },
     {
       CursorLineNrNote = {
         fg = { from = "Keyword", attr = "fg", alter = 0.5 },
@@ -1471,11 +633,7 @@ local general_overrides = function()
         bold = true,
       },
     },
-    {
-      FoldedNote = {
-        fg = { from = "LineNrNote", attr = "fg", alter = colors.fold_note_fg_alter },
-      },
-    },
+    { FoldedNote = { fg = { from = "LineNrNote", attr = "fg", alter = colors.fold_note_fg_alter } } },
     {
       FloatBorderNote = {
         fg = { from = "NormalNote", attr = "bg", alter = colors.floatborder_note_fg_alter },
@@ -1490,19 +648,6 @@ local general_overrides = function()
       },
     },
 
-    {
-      WinBarNote = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.winbar_note_fg_alter },
-        bg = { from = "NormalNote", attr = "bg", alter = colors.winbar_note_bg_alter },
-      },
-    },
-    -- code block for org file
-    {
-      CodeBlock = {
-        bg = { from = "NormalNote", attr = "bg", alter = colors.code_block_note_bg_alter },
-        reverse = false,
-      },
-    },
     { VisualNote = { bg = { from = "Visual", attr = "bg", alter = colors.visual_note_bg_alter } } },
     { PmenuNote = { bg = { from = "NormalNote", attr = "bg" } } },
     {
@@ -1512,22 +657,29 @@ local general_overrides = function()
       },
     },
 
-    {
-      TabLine = {
-        fg = { from = "LineNr", attr = "fg", alter = colors.tabline_fg_alter },
-        bg = { from = "StatusLine", attr = "bg", alter = colors.tabline_bg_alter },
-        reverse = false,
-      },
-    },
+    { TabLine = { bg = { from = "StatusLine", attr = "bg", alter = 0.5, opacity = 0.5 }, reverse = false } },
+    { TabLine = { fg = { from = "TabLine", attr = "bg", alter = 1 } } },
 
     { Dark_red = { fg = dark_red } },
     { Dark_yellow = { fg = dark_yellow } },
     { Dark_orange = { fg = dark_orange } },
-
-    { CurSearch = colors.CurSearch },
-    { Search = colors.Search },
+    {
+      CurSearch = {
+        fg = { from = "CurSearch", attr = "bg", alter = 0.7 },
+        bg = { from = "CurSearch", attr = "bg", opacity = 0.4 },
+        bold = true,
+        reverse = false,
+      },
+    },
+    {
+      Search = {
+        inherit = "CurSearch",
+        bg = { from = "CurSearch", attr = "bg", opacity = 0.2 },
+        bold = true,
+        reverse = true,
+      },
+    },
     { IncSearch = { inherit = "CurSearch" } },
-    { Cursor = { bg = colors.cursor_fg, reverse = false } },
     { TermCursor = { inherit = "Cursor" } },
     { Substitute = { inherit = "Search" } },
 
@@ -1580,34 +732,19 @@ local general_overrides = function()
     { diffNewFile = { bg = "NONE" } },
     { diffOldFile = { bg = "NONE" } },
 
-    {
-      DiffAdd = {
-        fg = "NONE",
-        bg = H.darken(git_diff_add, 0.2, H.get("Normal", "bg")),
-        reverse = false,
-      },
-    },
-    {
-      DiffChange = {
-        fg = "NONE",
-        bg = H.darken(git_diff_change, 0.3, H.get("Normal", "bg")),
-        reverse = false,
-      },
-    },
-    {
-      DiffDelete = {
-        fg = H.tint(H.darken(git_diff_delete, 0.6, H.get("Normal", "bg")), 1.2),
-        bg = H.darken(git_diff_delete, 0.4, H.get("Normal", "bg")),
-        reverse = false,
-      },
-    },
+    { DiffAdd = { fg = "NONE", bg = git_diff_add, reverse = false } },
+    { DiffAdd = { bg = { from = "DiffAdd", attr = "bg", opacity = 0.1 } } },
+
+    { DiffChange = { fg = "NONE", bg = git_diff_change, reverse = false } },
+    { DiffChange = { bg = { from = "DiffChange", attr = "bg", opacity = 0.2 } } },
+
+    { DiffDelete = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE", reverse = false } },
+
+    { DiffText = { bg = git_diff_change, reverse = false } },
     {
       DiffText = {
-        -- fg = { from = "DiffChange", attr = "bg", alter = 3 },
-        fg = "NONE",
-        bg = { from = "DiffChange", attr = "bg", alter = 0.8 },
-        bold = true,
-        reverse = false,
+        fg = { from = "DiffText", attr = "bg", alter = 0.5 },
+        bg = { from = "DiffText", attr = "bg", alter = 0.1, opacity = 0.5 },
       },
     },
 
@@ -1625,13 +762,9 @@ local general_overrides = function()
         bold = true,
       },
     },
-    {
-      GitSignsDeleteInline = {
-        fg = "NONE",
-        bg = { from = "DiffDelete", attr = "bg" },
-        bold = true,
-      },
-    },
+
+    { GitSignsDeleteInline = { fg = "NONE", bg = git_diff_delete, reverse = false } },
+    { GitSignsDeleteInline = { bg = { from = "GitSignsDeleteInline", attr = "bg" } } },
 
     { GitSignsAdd = { bg = "NONE", fg = H.tint(git_diff_add, 0.4) } },
     { GitSignsChange = { bg = "NONE", fg = H.tint(git_diff_change, 0.4) } },
@@ -1639,7 +772,7 @@ local general_overrides = function()
 
     { diffAdded = { inherit = "DiffAdd", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.05 } } },
     { diffChanged = { inherit = "DiffChange", fg = { from = "GitSignsChange", attr = "fg", alter = 0.05 } } },
-    { diffRemoved = { inherit = "DiffDelete", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.05 } } },
+    -- { diffRemoved = { inherit = "DiffDelete", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.05 } } },
 
     {
       deltaPlus = {
@@ -1660,7 +793,7 @@ local general_overrides = function()
 
     { NeogitDiffAdd = { inherit = "diffAdded" } },
     { NeogitDiffAddHighlight = { inherit = "diffAdded" } },
-    { NeogitDiffDelete = { inherit = "diffDelete" } },
+    -- { NeogitDiffDelete = { inherit = "diffDelete" } },
     { NeogitDiffDeleteHighlight = { inherit = "diffDelete" } },
 
     -- { diffText = { link = "DiffText" } },
@@ -1862,41 +995,18 @@ local general_overrides = function()
     -- ╚═════════════════════════════════════════════════════════╝
 
     { heading1 = { fg = "#4d85c3" } },
-    { heading1 = { fg = { from = "heading1", attr = "fg", alter = 1 } } },
-
     { heading2 = { fg = "#389674" } },
-    { heading2 = { fg = { from = "heading2", attr = "fg", alter = 0.4 } } },
-
     { heading3 = { fg = "#b0be1e" } },
-    { heading3 = { fg = { from = "heading3", attr = "fg", alter = 0.5 } } },
-
     { heading4 = { fg = "#8594c8" } },
-    { heading4 = { fg = { from = "heading4", attr = "fg", alter = 0.5 } } },
-
     { heading5 = { fg = "#f76328" } },
-    { heading5 = { fg = { from = "heading5", attr = "fg", alter = 0.8 } } },
-
     { heading6 = { fg = "#fccf3e" } },
-    { heading6 = { fg = { from = "heading6", attr = "fg", alter = 0.8 } } },
 
     {
       HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = colors.hovered_cursorline_bg_alter } },
     },
-    { YankInk = { bg = { from = "DiffDelete", attr = "bg", alter = 0.5 } } },
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
-    {
-      MyCodeUsage = {
-        fg = H.tint(H.get("String", "fg"), colors.my_code_usage_fg_alter),
-        bg = H.tint(H.darken(H.get("String", "fg"), 0.7, H.get("Normal", "bg")), colors.my_code_usage_bg_alter),
-        italic = true,
-      },
-    },
 
-    {
-      KeywordMatch = {
-        fg = { from = "DiagnosticError", attr = "fg" },
-      },
-    },
+    { KeywordMatch = { fg = { from = "Function", attr = "fg", alter = 0.1, opacity = 0.4 } } },
     {
       KeywordMatchFuzzy = {
         fg = { from = "KeywordMatch", attr = "fg", alter = -0.1 },
@@ -1906,23 +1016,40 @@ local general_overrides = function()
     -- WINBAR
     {
       WinBar = {
-        fg = { from = "Normal", attr = "bg", alter = colors.winbar_fg_alter },
+        fg = { from = "LineNr", attr = "fg", alter = 0.5 },
         bg = { from = "Normal", attr = "bg" },
-        bold = false,
-      },
-    },
-    {
-      WinBarNC = {
-        fg = { from = "WinBar", attr = "fg" },
-        bg = { from = "WinBar", attr = "bg" },
-        bold = false,
-      },
-    },
-    {
-      WinBarRightBlock = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.winbar_right_block_fg_alter },
-        bg = H.darken(H.get("Keyword", "fg"), colors.winbar_right_block_bg_alter, H.get("Normal", "bg")),
         bold = true,
+      },
+    },
+    { WinBarNC = { inherit = "WinBar" } },
+    {
+      WinBarGrey = {
+        fg = { from = "NormalKeyword", attr = "fg", alter = 1.5 },
+        bg = { from = "NormalKeyword", attr = "bg", opacity = 0.2 },
+      },
+    },
+    {
+      WinBarGreen = {
+        fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 },
+        bg = { from = "GitSignsAdd", attr = "fg", opacity = 0.2 },
+      },
+    },
+    {
+      WinBarRed = {
+        fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 },
+        bg = { from = "GitSignsDelete", attr = "fg", opacity = 0.2 },
+      },
+    },
+    {
+      WinBarYellow = {
+        fg = { from = "StatusLine", attr = "fg" },
+        bg = { from = "StatusLine", attr = "bg" },
+      },
+    },
+    {
+      WinBarNote = {
+        fg = { from = "NormalNote", attr = "bg", alter = 1 },
+        bg = { from = "NormalNote", attr = "bg" },
       },
     },
 
@@ -1946,25 +1073,18 @@ local general_overrides = function()
     {
       CmpDocNormal = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = colors.cmpdocnormal_bg_alter },
+        bg = { from = "NormalFloat", attr = "bg", alter = 0.5, opacity = 0.65 },
       },
     },
     { CmpDocFloatBorder = { inherit = "CmpDocNormal", fg = { from = "CmpDocNormal", attr = "bg" } } },
     { CmpDocSbar = { inherit = "PmenuSbar" } },
 
-    --  ───────────────────────────────[ BEACON ]──────────────────────────────
-    { BeaconDefault = { bg = colors.cursor_fg } },
-
     --  ───────────────────────────────[ NOICE ]───────────────────────────────
-    {
-      NoiceCmdline = {
-        fg = { from = "StatusLine", attr = "fg", alter = colors.noice_cmdline_fg_alter },
-        bg = "NONE",
-      },
-    },
+    { NoiceCmdline = { fg = { from = "StatusLine", attr = "bg", alter = 5 }, bg = "NONE" } },
 
     -- Color for :Messages
-    { NoiceSplit = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+    { NoiceSplit = { bg = { from = "Keyword", attr = "fg", opacity = 0.05 } } },
+    { NoiceSplit = { fg = { from = "NoiceSplit", attr = "bg", alter = 5 } } },
 
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
     {
@@ -2020,18 +1140,11 @@ local general_overrides = function()
     -- ╭─────────╮
     -- │ CMPKIND │
     -- ╰─────────╯
-    {
-      CmpItemKindArray = {
-        inherit = "LspKindArray",
-        fg = { from = "LspKindArray", attr = "fg", alter = 0.1 },
-        -- bg = { from = "LspKindArray", attr = "fg", alter = -0.65 },
-      },
-    },
+    { CmpItemKindArray = { inherit = "LspKindArray", fg = { from = "LspKindArray", attr = "fg", alter = 0.1 } } },
     {
       CmpItemKindFunction = {
         inherit = "LspKindFunction",
         fg = { from = "LspKindFunction", attr = "fg", alter = 0.1 },
-        -- bg = { from = "LspKindFunction", attr = "fg", alter = -0.65 },
       },
     },
     {
@@ -2283,17 +1396,22 @@ local general_overrides = function()
     -- ╰────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
     {
-      FzfLuaBorder = {
-        fg = { from = "FloatBorder", attr = "fg" },
+      FzfLuaTitle = {
+        inherit = "FloatTitle",
+        bg = { from = "FzfLuaNormal", attr = "bg" },
+        reverse = false,
+        bold = true,
+      },
+    },
+    { FzfLuaBorder = { inherit = "FloatBorder", bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    {
+      FzfLuaFilePart = {
+        fg = { from = "Keyword", attr = "fg", alter = 0.1, opacity = 0.5 },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
-
-    { FzfLuaFilePart = { fg = H.darken(H.get("Keyword", "fg"), colors.fzflua_file_part_fg, H.get("Normal", "bg")) } },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
-
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", alter = -0.25 } } },
-
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", opacity = 0.7 } } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
     {
       FzfLuaFzfMatch = {
@@ -2302,20 +1420,10 @@ local general_overrides = function()
         bold = true,
       },
     },
-
     {
       FzfLuaSel = {
-        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.5 },
+        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.7 },
         bg = { from = "PmenuSel", attr = "bg" },
-        bold = true,
-      },
-    },
-
-    {
-      FzfLuaTitle = {
-        fg = { from = "FloatTitle", attr = "fg" },
-        bg = { from = "FloatTitle", attr = "bg" },
-        reverse = false,
         bold = true,
       },
     },
@@ -2423,7 +1531,7 @@ local general_overrides = function()
     -- ╭───────────────╮
     -- │ SNACKS INDENT │
     -- ╰───────────────╯
-    { SnacksIndentScope = { fg = H.darken(dark_yellow, colors.snacks_indent_scope_fg_alter, H.get("Normal", "bg")) } },
+    { SnacksIndentScope = { fg = { from = "Keyword", attr = "fg", opacity = 0.3 }, bg = "NONE" } },
 
     -- ╭─────────────────╮
     -- │ SNACKS NOTIFIER │
@@ -2431,87 +1539,82 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "String", attr = "fg" },
-        bg = { from = "Normal", attr = "bg" },
+        fg = { from = "Normal", attr = "bg", alter = 9 },
+        bg = { from = "Normal", attr = "bg", alter = 0.5 },
       },
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "fg", alter = colors.snacks_notifier_border_info_fg },
+        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 1 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleInfo = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "SnacksNotifierInfo", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.2 },
+        bg = { from = "SnacksNotifierInfo", attr = "bg" },
         bold = true,
       },
     },
     -- WARN
     {
       SnacksNotifierWarn = {
-        fg = { from = "Type", attr = "fg" },
-        bg = { from = "Normal", attr = "bg" },
+        fg = { from = "Type", attr = "fg", alter = 0.2 },
+        bg = { from = "Type", attr = "fg", opacity = 0.2 },
       },
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "fg", alter = colors.snacks_notifier_border_warn_fg },
+        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.8 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleWarn = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.4 },
+        fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.2 },
+        bg = { from = "SnacksNotifierWarn", attr = "bg" },
         bold = true,
       },
     },
     -- ERROR
     {
       SnacksNotifierError = {
-        fg = { from = "GitSignsDelete", attr = "fg", alter = colors.snacks_notifier_error_fg },
-        bg = { from = "Normal", attr = "bg" },
+        fg = { from = "ErrorMsg", attr = "fg", alter = 0.2 },
+        bg = { from = "ErrorMsg", attr = "fg", opacity = 0.2 },
       },
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "fg", alter = colors.snacks_notifier_border_error_fg },
+        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.8 },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleError = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "SnacksNotifierError", attr = "fg", alter = 0.5 },
+        fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.2 },
+        bg = { from = "SnacksNotifierError", attr = "bg" },
         bold = true,
       },
     },
 
-    -- ╭─────────────╮
-    -- │ SNACKS MISC │
-    -- ╰─────────────╯
-    { SnacksNotifierHistory = { link = "NormalFloat" } },
-
     -- ────────────────────────────[ NOTIFY.NVIM ]────────────────────────────
-    { NotifyBackground = { bg = { from = "Keyword", attr = "fg" } } },
+    { NotifyBackground = { inherit = "SnacksNotifierInfo" } },
 
     -- INFO
     { NotifyINFOBody = { inherit = "SnacksNotifierInfo" } },
-    { NotifyINFOBorder = { inherit = "SnacksNotifierBorderInfo", bg = "NONE" } },
-    { NotifyINFOTitle = { fg = { from = "SnacksNotifierTitleInfo", attr = "bg" }, bg = "NONE" } },
-    { NotifyINFOIcon = { fg = { from = "SnacksNotifierTitleInfo", attr = "bg" }, bg = "NONE" } },
+    { NotifyINFOBorder = { inherit = "SnacksNotifierBorderInfo" } },
+    { NotifyINFOTitle = { inherit = "SnacksNotifierTitleInfo" } },
+    { NotifyINFOIcon = { inherit = "SnacksNotifierBorderInfo" } },
     -- WARN
     { NotifyWARNBody = { inherit = "SnacksNotifierWarn" } },
-    { NotifyWARNBorder = { inherit = "SnacksNotifierBorderWarn", bg = "NONE" } },
-    { NotifyWARNTitle = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
-    { NotifyWARNIcon = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
+    { NotifyWARNBorder = { inherit = "SnacksNotifierBorderWarn" } },
+    { NotifyWARNTitle = { inherit = "SnacksNotifierTitleWarn" } },
+    { NotifyWARNIcon = { inherit = "SnacksNotifierBorderWarn" } },
     -- ERROR
     { NotifyERRORBody = { inherit = "SnacksNotifierError" } },
-    { NotifyERRORBorder = { inherit = "SnacksNotifierBorderError", bg = "NONE" } },
-    { NotifyERRORTitle = { fg = { from = "SnacksNotifierTitleError", attr = "bg" }, bg = "NONE" } },
-    { NotifyERRORIcon = { fg = { from = "SnacksNotifierTitleError", attr = "bg" }, bg = "NONE" } },
+    { NotifyERRORBorder = { inherit = "SnacksNotifierBorderError" } },
+    { NotifyERRORTitle = { inherit = "SnacksNotifierTitleError" } },
+    { NotifyERRORIcon = { inherit = "SnacksNotifierBorderError" } },
 
     -- ───────────────────────────────[ OCTO ]────────────────────────────
     {
@@ -2520,71 +1623,133 @@ local general_overrides = function()
       },
     },
 
+    --  ─────────────────────────────[ MARKDOWN ]──────────────────────────
+    {
+      ["@markup.heading.1.markdown"] = {
+        fg = { from = "heading1", attr = "fg", alter = 0.6 },
+        bg = { from = "heading1", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.heading.2.markdown"] = {
+        fg = { from = "heading2", attr = "fg", alter = 0.6 },
+        bg = { from = "heading2", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+    {
+      ["@markup.heading.3.markdown"] = {
+        fg = { from = "heading3", attr = "fg", alter = 0.6 },
+        bg = { from = "heading3", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+    {
+      ["@markup.heading.4.markdown"] = {
+        fg = { from = "heading4", attr = "fg", alter = 0.6 },
+        bg = { from = "heading4", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+    {
+      ["@markup.heading.5.markdown"] = {
+        fg = { from = "heading5", attr = "fg", alter = 0.6 },
+        bg = { from = "heading5", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+    {
+      ["@markup.heading.6.markdown"] = {
+        fg = { from = "heading6", attr = "fg", alter = 0.6 },
+        bg = { from = "heading6", attr = "fg", opacity = 0.3 },
+        bold = true,
+      },
+    },
+
+    {
+      ["@markup.raw.block.markdown"] = {
+        bg = { from = "NormalNote", attr = "bg" },
+      },
+    },
+    { ["@markup.list.markdown"] = { bg = "NONE" } },
+
+    {
+      ["@markup.link.label.markdown_inline"] = {
+        fg = { from = "@markup.link", attr = "fg" },
+        bg = "NONE",
+      },
+    },
+    {
+      ["@markup.quote.markdown"] = {
+        fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+        bg = { from = "Keyword", attr = "fg", opacity = 0.1 },
+        italic = true,
+        bold = false,
+      },
+    },
+    {
+      ["@markup.strong.markdown_inline"] = {
+        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.9),
+        bg = "NONE",
+        bold = true,
+      },
+    },
+    {
+      ["@markup.italic.markdown_inline"] = {
+        fg = { from = "@markup.quote.markdown", attr = "fg", alter = 0.05 },
+        bg = "NONE",
+        bold = false,
+        italic = true,
+      },
+    },
+    {
+      ["@punctuation.special.markdown"] = {
+        fg = { from = "@markup.quote.markdown", attr = "fg" },
+      },
+    },
+    {
+      markdownItalic = {
+        fg = { from = "@tag.attribute", attr = "fg", alter = 0.5 },
+        italic = false,
+        underline = false,
+      },
+    },
+    {
+      markdownBold = {
+        fg = { from = "Boolean", attr = "fg" },
+        bold = true,
+      },
+    },
+
+    {
+      RenderMarkdownCode = {
+        bg = { from = "NormalNote", attr = "bg", opacity = 0.5 },
+        italic = false,
+      },
+    },
+    {
+      RenderMarkdownCodeInline = {
+        fg = H.darken(H.get("String", "fg"), 1.25, H.get("NormalNote", "bg")),
+        bg = H.darken(H.get("NormalNote", "bg"), 0.65, H.get("String", "fg")),
+      },
+    },
+
+    { RenderMarkdownCodeBorder = { bg = { from = "NormalNote", attr = "bg", alter = -0.1 } } },
+    { RenderMarkdownCodeBorder = { fg = { from = "RenderMarkdownCodeBorder", attr = "bg", alter = 0.6 } } },
+
     --  ──────────────────────────────[ ORGMODE ]──────────────────────────────
     { ["@org.agenda.scheduled"] = { fg = H.darken("#3f9f31", 0.8, H.get("Normal", "bg")) } },
     { ["@org.agenda.scheduled_past"] = { fg = H.darken(dark_yellow, -0.6, H.get("Normal", "bg")) } },
     { ["@org.agenda.header"] = { fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
 
-    {
-      ["@org.block.org"] = {
-        fg = { from = "CodeBlock", attr = "bg", alter = colors.code_block_nm_note_fg_alter },
-      },
-    },
-    {
-      ["@org.tag.org"] = {
-        fg = { from = "CodeBlock", attr = "bg", alter = colors.tag_note_fg_alter },
-      },
-    },
-
-    {
-      ["@org.headline.level1.org"] = {
-        fg = { from = "heading1", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      ["@org.headline.level2.org"] = {
-        fg = { from = "heading2", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      ["@org.headline.level3.org"] = {
-        fg = { from = "heading3", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      ["@org.headline.level4.org"] = {
-        fg = { from = "heading4", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      ["@org.headline.level5.org"] = {
-        fg = { from = "heading5", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      ["@org.headline.level6.org"] = {
-        fg = { from = "heading6", attr = "fg" },
-        bold = true,
-        italic = true,
-      },
-    },
-
-    { ["Headline1"] = { bg = "NONE" } },
-    { ["Headline2"] = { bg = "NONE" } },
-    { ["Headline3"] = { bg = "NONE" } },
-    { ["Headline4"] = { bg = "NONE" } },
-    { ["Headline5"] = { bg = "NONE" } },
-    { ["Headline6"] = { bg = "NONE" } },
+    { ["Headline1"] = { inherit = "@markup.heading.1.markdown" } },
+    { ["Headline2"] = { inherit = "@markup.heading.2.markdown" } },
+    { ["Headline3"] = { inherit = "@markup.heading.3.markdown" } },
+    { ["Headline4"] = { inherit = "@markup.heading.4.markdown" } },
+    { ["Headline5"] = { inherit = "@markup.heading.5.markdown" } },
+    { ["Headline6"] = { inherit = "@markup.heading.6.markdown" } },
 
     {
       ["@org.agenda.today"] = {
@@ -2593,13 +1758,14 @@ local general_overrides = function()
         italic = true,
       },
     },
-    {
-      ["@org.hyperlink.url.org"] = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.urllink_note_fg_alter },
-        bg = H.darken(H.get("Keyword", "fg"), colors.urllink_note_bg_alter, H.get("Normal", "bg")),
-        bold = true,
-      },
-    },
+    -- {
+    --   ["@org.hyperlink.url.org"] = {
+    --     -- fg = { from = "Keyword", attr = "fg", alter = colors.urllink_note_fg_alter },
+    --     -- bg = H.darken(H.get("Keyword", "fg"), colors.urllink_note_bg_alter, H.get("Normal", "bg")),
+    --     -- bold = true,
+    --     inherit = "@markup.link.label.markdown_inline",
+    --   },
+    -- },
 
     { ["@org.timestamp.active"] = { inherit = "PreProc" } },
     { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
@@ -2607,16 +1773,28 @@ local general_overrides = function()
     { ["@org.drawer"] = { inherit = "Constant" } },
     { ["@org.plan"] = { inherit = "Constant" } },
     { ["@org.latex"] = { inherit = "Statement" } },
-    { ["@org.hyperlinks"] = { inherit = "Underlined" } },
-    { ["@org.code"] = { inherit = "String" } },
+    { ["@org.hyperlink.org"] = { inherit = "@markup.link.label.markdown_inline" } },
+    { ["@org.code"] = { inherit = "RenderMarkdownCodeInline" } },
 
-    { ["@org.block"] = { inherit = "CommentNote" } },
-    { ["@org.checkbox"] = { inherit = "ErrorMsg" } },
-    { ["@org.checkbox.checked"] = { inherit = "NonTextNote" } },
-    { ["@org.directive"] = { inherit = "CommentNote" } },
-    { ["@org.timestamp.inactive"] = { inherit = "CommentNote" } },
+    { ["@org.bold"] = { inherit = "@markup.strong.markdown_inline" } },
+    { ["@org.italic"] = { inherit = "@markup.italic.markdown_inline" } },
+    {
+      ["@org.comment.org"] = {
+        inherit = "@markup.italic.markdown_inline",
+        bg = { from = "NormalNote", attr = "bg", alter = 0.2 },
+      },
+    },
+
+    -- { ["@org.block"] = { inherit = "CommentNote" } },
+    { ["@org.checkbox.org"] = { inherit = "ErrorMsg", fg = { from = "NormalNote", attr = "bg", alter = 2 } } },
+    { ["@org.checkbox.checked"] = { inherit = "org.comment.org" } },
+    { ["@org.directive"] = { fg = { from = "NormalNote", attr = "bg", alter = 1 } } },
+    { ["@org.tag.org"] = { fg = { from = "@org.directive", attr = "fg", alter = 0.5 } } },
+    { ["@org.timestamp.inactive"] = { fg = { from = "NormalNote", attr = "bg", alter = 0.8 } } },
 
     { OrgBulletDash = { inherit = "Special" } },
+    { CodeBlock = { inherit = "RenderMarkdownCode", reverse = false } },
+    { ["@org.block.org"] = { fg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.5 } } },
 
     --  ─────────────────────────────[ FUGITIVE ]──────────────────────────
     { fugitiveStagedModifier = { inherit = "GitSignsAdd" } },
@@ -2660,11 +1838,11 @@ local general_overrides = function()
 
     --  ────────────────────────────────[ BQF ]────────────────────────────
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
-    { BqfPreviewBorder = { fg = { from = colors.bqf_keyword, attr = "fg", alter = -0.5 }, bg = "NONE" } },
+    { BqfPreviewBorder = { fg = { from = "Keyword", attr = "fg", alter = -0.5 }, bg = "NONE" } },
     { BqfPreviewThumb = { bg = { from = "BqfPreviewBorder", attr = "fg", alter = 0.2 } } },
     {
       BqfPreviewTitle = {
-        fg = { from = colors.bqf_keyword, attr = "fg", alter = 0.1 },
+        fg = { from = "Keyword", attr = "fg", alter = 0.1 },
         bg = { from = "BqfPreviewBorder", attr = "fg" },
       },
     },
@@ -2684,189 +1862,15 @@ local general_overrides = function()
     { GlanceListMatch = { fg = dark_red, bg = "NONE" } },
     { GlancePreviewCursorLine = { bg = "#1b1c4b" } },
 
-    --  ─────────────────────────────[ MARKDOWN ]──────────────────────────
-    {
-      ["@markup.heading.1.markdown"] = {
-        fg = { from = "heading1", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH1 = {
-        fg = { from = "heading1", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    {
-      ["@markup.heading.2.markdown"] = {
-        fg = { from = "heading2", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH2 = {
-        fg = { from = "heading2", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    {
-      ["@markup.heading.3.markdown"] = {
-        fg = { from = "heading3", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH3 = {
-        fg = { from = "heading3", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    {
-      ["@markup.heading.4.markdown"] = {
-        fg = { from = "heading4", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH4 = {
-        fg = { from = "heading4", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    {
-      ["@markup.heading.5.markdown"] = {
-        fg = { from = "heading5", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH5 = {
-        fg = { from = "heading5", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    {
-      ["@markup.heading.6.markdown"] = {
-        fg = { from = "heading6", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        bold = true,
-        italic = true,
-      },
-    },
-    {
-      RenderMarkdownH6 = {
-        fg = { from = "heading6", attr = "fg" },
-        bg = { from = "NormalNote", attr = "bg" },
-        reverse = false,
-        bold = true,
-      },
-    },
-
-    { ["@markup.raw.block.markdown"] = { bg = "NONE" } },
-    { ["@markup.list.markdown"] = { bg = "NONE" } },
-
-    {
-      ["@markup.link.label.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg", alter = -0.15 },
-        bg = H.darken(H.get("Keyword", "fg"), 0.15, H.get("Normal", "bg")),
-        bold = true,
-      },
-    },
-    {
-      ["@markup.quote.markdown"] = {
-        fg = H.tint(H.darken(dark_red, 0.6, H.get("Normal", "fg")), -0.05),
-        bg = H.darken(dark_red, 0.15, H.get("Normal", "bg")),
-        italic = true,
-        bold = false,
-      },
-    },
-    {
-      ["@markup.strong.markdown_inline"] = {
-        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.9),
-        bg = "NONE",
-        bold = true,
-      },
-    },
-    {
-      ["@markup.italic.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg" },
-        bg = "NONE",
-        bold = false,
-        italic = true,
-      },
-    },
-    {
-      ["@punctuation.special.markdown"] = {
-        fg = { from = "@markup.quote.markdown", attr = "fg" },
-      },
-    },
-    {
-      markdownItalic = {
-        fg = { from = "@tag.attribute", attr = "fg", alter = 0.5 },
-        italic = false,
-        underline = false,
-      },
-    },
-    {
-      markdownBold = {
-        fg = { from = "Boolean", attr = "fg" },
-        bold = true,
-      },
-    },
-
-    {
-      RenderMarkdownCode = {
-        bg = { from = "NormalNote", attr = "bg", alter = colors.render_markdown_code_bg_alter },
-      },
-    },
-    {
-      RenderMarkdownCodeInline = {
-        fg = { from = "Keyword", attr = "fg", alter = colors.render_markdown_code_inline_fg_alter },
-        bg = H.darken(H.get("Keyword", "fg"), colors.render_markdown_code_inline_bg_alter, H.get("Normal", "bg")),
-        bold = true,
-      },
-    },
-    {
-      RenderMarkdownCodeBorder = {
-        bg = { from = "RenderMarkdownCodeInline", attr = "bg", alter = colors.render_markdown_code_border_fg_alter },
-      },
-    },
-    { ["@markup.raw.markdown_inline"] = { inherit = "RenderMarkdownCodeInline" } },
-
     --  ──────────────────────────[ CODECOMPANION ]────────────────────────────
 
-    {
-      CodeCompanionInputHeader = {
-        fg = { from = "DiffDelete", attr = "bg", alter = 2 },
-        bg = { from = "DiffDelete", attr = "bg", alter = 0.2 },
-        bold = true,
-      },
-    },
+    -- {
+    --   CodeCompanionInputHeader = {
+    --     fg = { from = "DiffDelete", attr = "bg", alter = 2 },
+    --     bg = { from = "DiffDelete", attr = "bg", alter = 0.2 },
+    --     bold = true,
+    --   },
+    -- },
 
     --  ───────────────────────────────[ FLASH ]───────────────────────────────
     { FlashMatch = { fg = "white", bg = "red", bold = true } },
@@ -2912,8 +1916,8 @@ local general_overrides = function()
     --  ──────────────────────────────[ RGFLOW ]───────────────────────────
     {
       RgFlowHeadLine = {
-        bg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
-        fg = { from = "NormalKeyword", attr = "bg", alter = 0.1 },
+        bg = { from = "NormalKeyword", attr = "bg" },
+        fg = { from = "NormalKeyword", attr = "bg" },
       },
     },
     {
@@ -3059,8 +2063,8 @@ local function set_panel_highlight()
     -- +---------+
     {
       PanelSideNormal = {
-        fg = { from = "Normal", attr = "fg", alter = -0.05 },
-        bg = { from = "NormalKeyword", attr = "bg", alter = -0.4 },
+        fg = { from = "NormalKeyword", attr = "fg", alter = 4 },
+        bg = { from = "NormalKeyword", attr = "bg", alter = -0.25, opacity = 0.9 },
       },
     },
     { PanelSideBackground = { link = "PanelSideNormal", fg = "NONE" } },
@@ -3085,33 +2089,16 @@ local function set_panel_highlight()
     -- +--------+
     -- | BOTTOM |
     -- +--------+
-    {
-      PanelBottomNormal = {
-        fg = { from = "NormalKeyword", attr = "fg", alter = colors.panel_bottom_normal_fg_alter },
-        bg = { from = "PanelSideNormal", attr = "bg" },
-      },
-    },
+    { PanelBottomNormal = { inherit = "PanelSideNormal" } },
     { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },
     { PanelBottomBackground = { bg = { from = "PanelBottomNormal", attr = "bg" } } },
-
     {
       PanelBottomCursorLine = {
-        bg = {
-          from = "PanelBottomNormal",
-          attr = "bg",
-          alter = colors.panel_bottom_cursorline_bg_alter,
-        },
+        bg = { from = "Keyword", attr = "fg", opacity = 0.06 },
+        bold = true,
       },
     },
-    {
-      PanelBottomCursorLineNr = {
-        fg = {
-          from = "PanelBottomNormal",
-          attr = "bg",
-          alter = colors.panel_bottom_cursorlinenr_fg_alter,
-        },
-      },
-    },
+    { PanelBottomCursorLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 4.5 } } },
 
     { PanelBottomDarkBackground = { bg = { from = "PanelBottomBackground", attr = "bg", alter = -0.1 } } },
     { PanelBottomDarkHeading = { inherit = "PanelBottomDarkBackground", bold = true } },
@@ -3134,23 +2121,17 @@ local function set_panel_highlight()
       QuickFixLine = {
         fg = "NONE",
         bg = "NONE",
-        sp = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_sp_alter },
+        sp = { from = "PanelBottomNormal", attr = "bg", alter = 2.5 },
         underline = true,
-        bold = true,
         reverse = false,
       },
     },
-    { QuickFixLineNr = { fg = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixline_linenr_fg_alter } } },
+    { QuickFixLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 1.5 } } },
+    { QuickFixWinDelimiter = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 1 } } },
     {
       QuickFixWinSeparator = {
         fg = { from = "WinSeparator", attr = "fg" },
         bg = { from = "Normal", attr = "bg" },
-      },
-    },
-    {
-      QuickFixWinDelimiter = {
-        fg = { from = "QuickFixLineNr", attr = "fg", alter = -0.4 },
-        bg = "NONE",
       },
     },
     { qfSeparator1 = { fg = { from = "Error", attr = "fg", alter = 0.1 } } },
@@ -3159,8 +2140,8 @@ local function set_panel_highlight()
 
     {
       QuickFixWinbar = {
-        fg = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixwinbar_fg_alter },
-        bg = { from = "NormalKeyword", attr = "bg", alter = colors.quickfixwinbar_bg_alter },
+        fg = { from = "Normal", attr = "bg", alter = 2 },
+        bg = { from = "Normal", attr = "bg" },
       },
     },
 
@@ -3236,8 +2217,7 @@ local function set_panel_highlight()
     },
     {
       OutlineCurrent = {
-        bg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 },
-        fg = { from = "Normal", attr = "bg" },
+        fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 },
         bold = true,
         reverse = false,
       },
@@ -3425,35 +2405,6 @@ local function colorscheme_overrides()
           fg = H.darken(H.get("Keyword", "fg"), 0.4, H.get("Error", "fg")),
         },
       },
-    },
-
-    ["xenos"] = {
-      -- WARN
-      {
-        SnacksNotifierWarn = {
-          fg = { from = "diffChanged", attr = "fg" },
-          bg = { from = "Normal", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierBorderWarn = {
-          fg = { from = "SnacksNotifierWarn", attr = "fg", alter = -0.2 },
-          bg = { from = "SnacksNotifierWarn", attr = "bg" },
-        },
-      },
-      {
-        SnacksNotifierTitleWarn = {
-          fg = { from = "Normal", attr = "bg" },
-          bg = { from = "SnacksNotifierWarn", attr = "fg", alter = 0.4 },
-          bold = true,
-        },
-      },
-
-      -- WARN
-      { NotifyWARNBody = { inherit = "SnacksNotifierWarn" } },
-      { NotifyWARNBorder = { inherit = "SnacksNotifierBorderWarn", bg = "NONE" } },
-      { NotifyWARNTitle = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
-      { NotifyWARNIcon = { fg = { from = "SnacksNotifierTitleWarn", attr = "bg" }, bg = "NONE" } },
     },
   }
 

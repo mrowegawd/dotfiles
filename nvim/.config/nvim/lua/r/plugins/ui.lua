@@ -216,34 +216,6 @@ return {
     },
     opts = {},
   },
-  -- BEACON (disabled)
-  {
-    "rainbowhxch/beacon.nvim", -- (alternative smear-cursor)
-    enabled = false,
-    event = "LazyFile",
-    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
-    opts = function()
-      local Highlight = require "r.settings.highlights"
-      Highlight.plugin(
-        "beaconHiC",
-        { theme = { ["*"] = { { ["BeaconDefault"] = { bg = { from = "Cursor", attr = "bg" } } } } } }
-      )
-      return {
-        ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
-        ignore_filetypes = {
-          "qf",
-          "dap_watches",
-          "dap_scopes",
-          -- "neo-tree",
-          "fzf",
-          "lazy",
-          "NeogitCommitMessage",
-          "NeogitPopup",
-          "NeogitStatus",
-        },
-      }
-    end,
-  },
   -- NEOSCROLL (disabled)
   {
     "karb94/neoscroll.nvim",

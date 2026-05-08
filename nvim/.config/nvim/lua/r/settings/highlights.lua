@@ -169,6 +169,45 @@ function M.lighten(color, amount)
   return rgb_to_hex(r, g, b)
 end
 
+-- local function luminance(r, g, b)
+--   return (0.299 * r + 0.587 * g + 0.114 * b)
+-- end
+--
+-- function M.contrast(color, amount)
+--   local function hex_to_rgb_2(hex_str)
+--     if hex_str == "NONE" or not hex_str then
+--       hex_str = "#000000"
+--     end
+--
+--     hex_str = hex_str:lower()
+--
+--     local pat = "^#(%x%x)(%x%x)(%x%x)$"
+--     local r, g, b = hex_str:match(pat)
+--
+--     assert(r and g and b, "invalid hex color: " .. tostring(hex_str))
+--
+--     return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
+--   end
+--
+--   local r, g, b = hex_to_rgb_2(color)
+--
+--   local lum = luminance(r, g, b)
+--
+--   if lum < 128 then
+--     -- background gelap -> brighten
+--     r = clamp(r + (255 - r) * amount)
+--     g = clamp(g + (255 - g) * amount)
+--     b = clamp(b + (255 - b) * amount)
+--   else
+--     -- background terang -> darken
+--     r = clamp(r * (1 - amount))
+--     g = clamp(g * (1 - amount))
+--     b = clamp(b * (1 - amount))
+--   end
+--
+--   return rgb_to_hex(r, g, b)
+-- end
+
 --- Change the brightness of a color, negative numbers darken and positive ones brighten
 ---see:
 --- 1. https://stackoverflow.com/q/5560248
@@ -313,10 +352,40 @@ local function resolve_from_attribute(hl, attr)
   if type(hl) ~= "table" or not hl.from then
     return hl
   end
+
   local colour = M.get(hl.from, hl.attr or attr)
+
   if hl.alter then
     colour = M.tint(colour, hl.alter)
   end
+
+  -- opacity support
+  if hl.opacity then
+    local bg
+
+    -- custom background source
+    if hl.bg then
+      if type(hl.bg) == "string" then
+        bg = hl.bg
+      elseif type(hl.bg) == "table" and hl.bg.from then
+        bg = M.get(hl.bg.from, hl.bg.attr or "bg")
+      end
+    end
+
+    -- fallback to Normal background
+    bg = bg or M.get("Normal", "bg", "#000000")
+
+    colour = M.blend(colour, bg, hl.opacity)
+  end
+
+  -- -- contrast support
+  -- if hl.contrast then
+  --   -- local bg
+  --   -- fallback to Normal background
+  --   -- bg = colour or M.get("Normal", "bg", "#000000")
+  --   colour = M.contrast(colour, hl.contrast)
+  -- end
+
   return colour
 end
 

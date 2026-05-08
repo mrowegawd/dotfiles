@@ -854,19 +854,18 @@ function M.change_colors()
 
   -- ─< TAB >────────────────────────────────────────────────────────────
   -- Active Tab
-  local tab_session_fg = H.get("WinBarRightBlock", "fg")
-  local tab_session_bg = H.get("WinBarRightBlock", "bg")
+  local tab_session_fg = H.get("Winbar", "fg")
+  local tab_session_bg = H.get("Winbar", "bg")
 
-  local tab_active_fg = H.tint(H.get("WinBarRightBlock", "bg"), 0.95)
-  local tab_active_bg = H.darken(H.get("WinBarRightBlock", "bg"), 0.7, H.get("Normal", "bg"))
+  local tab_active_fg = H.get("Winbar", "bg")
+  local tab_active_bg = H.get("Winbar", "fg")
 
   -- Inactive Tab
   -- local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
   -- local tab_inactive_bg = H.get("NormalNote", "bg")
 
-  local tab_inactive_fg = H.get("TmuxStatusline", "fg")
-  local tab_inactive_bg = H.get("TmuxStatusline", "bg")
-  local tab_statusline_fg = H.get("TmuxStatusline", "fg")
+  local tab_inactive_fg = H.get("Winbar", "fg")
+  local tab_inactive_bg = H.get("Winbar", "bg")
 
   -- Border Pane
   local border_active, border_inactive
@@ -887,47 +886,9 @@ function M.change_colors()
   local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
 
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
-  local lazygit_inactive_border_fg = 3.5
-  local lazygit_inactive_text_fg = 1
-  local lazygit_default_text_fg = 1
-  if vim.g.colorscheme == "lackluster" then
-    lazygit_default_text_fg = 3
-  end
-  if vim.g.colorscheme == "lemons" then
-    lazygit_inactive_border_fg = 5
-    lazygit_default_text_fg = 5
-  end
-  if vim.g.colorscheme == "neogotham" then
-    lazygit_inactive_border_fg = 1.5
-    lazygit_default_text_fg = 1.5
-  end
-  if vim.g.colorscheme == "oxocarbon" then
-    lazygit_inactive_border_fg = 1
-    lazygit_default_text_fg = 2
-  end
-  if vim.tbl_contains({ "nordfox", "tokyonight-storm" }, vim.g.colorscheme) then
-    lazygit_inactive_border_fg = 0.5
-    lazygit_default_text_fg = 0.8
-  end
-  if vim.g.colorscheme == "vscode" then
-    lazygit_inactive_border_fg = 1
-    lazygit_default_text_fg = 1.5
-  end
-  if vim.g.colorscheme == "zenburn" then
-    lazygit_inactive_border_fg = 0.5
-    lazygit_default_text_fg = 0.7
-  end
-  if vim.g.colorscheme == "rose-pine" then
-    lazygit_inactive_border_fg = 1.5
-    lazygit_default_text_fg = 3
-  end
-  if vim.g.colorscheme == "nightfox" then
-    lazygit_inactive_border_fg = 1.5
-    lazygit_default_text_fg = 1.5
-  end
-  local lazygit_inactive_border = H.tint(H.get("Normal", "bg"), lazygit_inactive_border_fg)
-  local lazygit_inactive_text = H.tint(H.get("Normal", "fg"), lazygit_inactive_text_fg)
-  local lazygit_option_text = H.tint(lazygit_inactive_border, lazygit_default_text_fg)
+  local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.5)
+  local lazygit_inactive_text = H.tint(H.get("WinSeparator", "fg"), 4)
+  local lazygit_option_text = H.tint(H.get("Normal", "bg"), 4)
 
   -- ─< EWW >────────────────────────────────────────────────────────────
   local __eww_icon_fg = 1
@@ -960,6 +921,7 @@ function M.change_colors()
       fg = H.tint(H.get("Normal", "fg"), -0.2),
       bg = H.get("Normal", "bg"),
 
+      -- file manager bg ex: yazi, nnn, etc
       fm_bg = H.get("PanelSideBackground", "bg"),
 
       keyword = H.get("Keyword", "fg"),
@@ -967,7 +929,8 @@ function M.change_colors()
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      statusline_fg = tab_statusline_fg,
+      statusline_fg = H.get("Winbar", "fg"),
+      statusline_bg = H.get("Winbar", "bg"),
 
       session_fg = tab_session_fg,
       session_bg = tab_session_bg,
@@ -1013,9 +976,9 @@ function M.change_colors()
       normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.7),
       normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.7),
 
-      critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4),
-      critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25),
-      critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2),
+      critical_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.4),
+      critical_bg = H.tint(H.get("GitSignsDelete", "fg"), -0.25),
+      critical_frame = H.tint(H.get("GitSignsDelete", "fg"), -0.2),
 
       bg = H.tint(H.get("Normal", "bg"), 0.25),
       fg = H.tint(H.get("Normal", "bg"), 0.25),
@@ -1030,7 +993,7 @@ function M.change_colors()
       bg = H.get("Normal", "bg"),
 
       yellow_alt = H.tint(H.get("diffChanged", "fg"), -0.45),
-      highlight_key = H.tint(H.get("diffRemoved", "fg"), 0.1),
+      highlight_key = H.tint(H.get("GitSignsDelete", "fg"), 0.1),
 
       cursorline_fg = H.tint(H.get("Keyword", "fg"), 1),
       cursorline_bg = H.tint(H.get("Keyword", "fg"), -0.5),
@@ -1052,15 +1015,15 @@ function M.change_colors()
       line_number_plus = H.get("deltaPlus", "fg"),
       line_number_minus = H.get("deltaMinus", "fg"),
 
-      hunk_plus_fg = H.tint(H.get("GitSignsAdd", "fg"), -0.15),
-      hunk_plus_bg = H.get("deltaPlus", "bg"),
-      hunk_emp_plus_fg = H.tint(H.get("GitSignsAdd", "fg"), 0.4),
-      hunk_emp_plus_bg = H.tint(H.get("deltaPlus", "fg"), 0.5),
+      hunk_plus_fg = H.get("GitSignsAdd", "fg"),
+      hunk_plus_bg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 0.15),
+      hunk_emp_plus_fg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 1.5),
+      hunk_emp_plus_bg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 0.5),
 
-      hunk_minus_fg = H.tint(H.get("GitSignsDelete", "fg"), -0.15),
-      hunk_minus_bg = H.get("deltaMinus", "bg"),
-      hunk_emp_minus_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.8),
-      hunk_emp_minus_bg = H.tint(H.get("deltaMinus", "fg"), 0.5),
+      hunk_minus_fg = H.get("GitSignsDelete", "fg"),
+      hunk_minus_bg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 0.15),
+      hunk_emp_minus_fg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 1.5),
+      hunk_emp_minus_bg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 0.5),
     },
     eww = {
       bg = H.get("Normal", "bg"),
@@ -1071,7 +1034,7 @@ function M.change_colors()
       bg_darken = H.tint(H.get("Normal", "fg"), -0.3),
       bg_alt = H.tint(H.get("Normal", "fg"), 0.3),
 
-      red = H.tint(H.get("diffRemoved", "fg"), 0.5),
+      red = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
 
       icon_fg = eww_icon_fg,
 
@@ -1081,8 +1044,8 @@ function M.change_colors()
       cwd = H.get("PanelSideRootName", "fg"),
       hovered = yazi_hovered,
 
-      selected = H.tint(H.get("diffRemoved", "fg"), 0.3),
-      count_selected_bg = H.tint(H.get("diffRemoved", "fg"), -0.5),
+      selected = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
+      count_selected_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
 
       find_keyword_fg = H.get("CurSearch", "fg"),
       find_keyword_bg = H.get("CurSearch", "bg"),
@@ -1101,10 +1064,15 @@ function M.change_colors()
       tab_inactive_fg = H.get("NormalKeyword", "bg"),
       tab_inactive_bg = H.tint(H.get("TabLine", "bg"), 0.66),
 
-      statusline_normal_fg = H.get("StatusLineRightBlock", "fg"),
-      statusline_normal_bg = H.get("StatusLineRightBlock", "bg"),
-      statusline_normal_fg_alt = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
-      statusline_normal_bg_alt = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
+      -- statusline_normal_fg = H.get("StatusLineRightBlock", "fg"),
+      -- statusline_normal_bg = H.get("StatusLineRightBlock", "bg"),
+      -- statusline_normal_fg_alt = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
+      -- statusline_normal_bg_alt = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
+
+      statusline_normal_fg = H.get("Statusline", "fg"),
+      statusline_normal_bg = H.get("Statusline", "bg"),
+      statusline_normal_fg_alt = H.darken(H.get("Statusline", "fg"), 0.7, H.get("Normal", "bg")),
+      statusline_normal_bg_alt = H.darken(H.get("Statusline", "bg"), 0.6, H.get("Normal", "bg")),
 
       statusline_select_fg = H.tint(H.get("Visual", "bg"), 2),
       statusline_select_bg = H.tint(H.get("Visual", "bg"), 0.4),
@@ -1132,7 +1100,7 @@ function M.change_colors()
 
       keyword = H.get("Keyword", "fg"),
 
-      red = H.tint(H.get("diffRemoved", "fg"), -0.3),
+      red = H.tint(H.get("GitSignsDelete", "fg"), -0.3),
       green = H.tint(H.get("diffAdded", "bg"), -0.3),
     },
   }

@@ -135,63 +135,12 @@ return {
       local H = require "r.settings.highlights"
       vim.schedule(function()
         H.plugin("RenderMarkdownHi", {
-          {
-            RenderMarkdownH1Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.1.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-          {
-            RenderMarkdownH2Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.2.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-          {
-            RenderMarkdownH3Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.3.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-          {
-            RenderMarkdownH4Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.4.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-          {
-            RenderMarkdownH5Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.5.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-          {
-            RenderMarkdownH6Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.6.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
-
-          {
-            RenderMarkdownH6Bg = {
-              fg = { from = "NormalNote", attr = "bg" },
-              bg = { from = "@markup.heading.6.markdown", attr = "fg" },
-              reverse = false,
-              bold = true,
-            },
-          },
+          { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown" } },
+          { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown" } },
+          { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown" } },
+          { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown" } },
+          { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown" } },
+          { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown" } },
         })
       end)
       return {
@@ -225,23 +174,26 @@ return {
             table_border = { "n" },
           },
         },
+        dash = {
+          width = 80,
+        },
         heading = {
           enabled = true,
-          sign = true,
+          sign = false,
           width = "block",
           left_pad = 1,
           right_pad = 0,
-          position = "right",
-          icons = {
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-            -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-          },
+          position = "inline", --"left",
+          -- icons = {
+          --   "",
+          --   "",
+          --   "",
+          --   "",
+          --   "",
+          --   "",
+          -- },
+          -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+          icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
           signs = {
             "󰉫 ", -- H1
             "󰉬 ", -- H2

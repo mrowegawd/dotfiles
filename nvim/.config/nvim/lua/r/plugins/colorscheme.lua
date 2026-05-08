@@ -26,7 +26,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local nightfox_themes = { "nightfox", "nordfox" }
+      local nightfox_themes = { "nightfox" }
       if vim.tbl_contains(nightfox_themes, vim.g.colorscheme) then
         return true
       end

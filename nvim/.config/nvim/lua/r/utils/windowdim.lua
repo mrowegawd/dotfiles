@@ -88,6 +88,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["packer"] = true,
   ["qf"] = true,
   ["rgflow"] = true,
+  ["notify"] = true,
   ["sagahover"] = true,
   ["sagasignature"] = true,
   ["startup"] = true,
@@ -107,6 +108,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["Trouble"] = true,
   ["alpha"] = true,
   ["capture"] = true,
+  ["notify"] = true,
   ["command-t"] = true,
   ["dap-repl"] = true,
   ["dap-variables"] = true,
@@ -334,9 +336,11 @@ local function save_cursorline_hl()
     local hl = H.h "CursorLine"
     local hlbg = H.h "PanelBottomCursorLine"
 
-    local more_bright = 0.1
+    -- local more_bright = 0.1
+    -- color_cursorline_bright = H.tint(hlbg.bg, more_bright)
+    -- color_cursorlinenr_bright = tostring(hlbg.bg)
 
-    color_cursorline_bright = H.tint(hlbg.bg, more_bright)
+    color_cursorline_bright = hlbg.bg
     color_cursorlinenr_bright = tostring(hlbg.bg)
 
     if hl then

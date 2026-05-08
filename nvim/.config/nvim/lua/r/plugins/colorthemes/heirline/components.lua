@@ -226,7 +226,12 @@ local __colors = function()
     statusline_fg = H.get("StatusLine", "fg"),
     statusline_bg = H.get("StatusLine", "bg"),
 
+    winbar_fg = H.get("WinBar", "fg"),
+    winbar_bg = H.get("WinBar", "bg"),
+    winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
+
     bright = H.tint(H.get("StatusLine", "fg"), 0.65),
+    bright_winbar = H.tint(H.get("StatusLineWinbar", "fg"), 0.65),
 
     keyword = H.darken(H.get("Keyword", "fg"), col_opts.keyword_fg, H.get("Normal", "bg")),
 
@@ -234,19 +239,16 @@ local __colors = function()
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
-    statusline_right_block_fg = H.get("StatusLineRightBlock", "fg"),
-    statusline_right_block_bg = H.get("StatusLineRightBlock", "bg"),
-
-    statusline_right_block_fg_darken = H.get("StatusLineRightBlockDarken", "fg"),
-    statusline_right_block_bg_darken = H.get("StatusLineRightBlockDarken", "bg"),
-
-    qf_indicator_fg = H.tint(H.get("Keyword", "fg"), 0.5),
-    qf_indicator_bg = H.tint(H.get("Keyword", "fg"), -0.5),
-    lf_indicator_fg = H.tint(H.get("String", "fg"), 1),
-    lf_indicator_bg = H.tint(H.get("String", "fg"), -0.3),
+    qf_indicator_fg = H.get("Keyword", "fg"),
+    qf_indicator_bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
+    lf_indicator_fg = H.get("String", "fg"),
+    lf_indicator_bg = H.darken(H.get("String", "fg"), 0.2, H.get("Normal", "bg")),
 
     qf_keyword_fg = H.get("QuickFixWinbar", "fg"),
     qf_keyword_bg = H.get("QuickFixWinbar", "bg"),
+
+    search_count_fg = H.tint(H.get("GitSignsDelete", "fg"), 1),
+    search_count_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.5, H.get("Normal", "bg")),
 
     block_notice = H.tint(H.darken(H.get("Error", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
@@ -254,42 +256,33 @@ local __colors = function()
     block_mux_fg = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 0.5),
     block_mux_bg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), 0.5),
 
-    winbar_keyword = H.get("WinBarRightBlock", "fg"),
-    winbar_fg = H.get("WinBar", "fg"),
-    winbar_bg = H.get("Normal", "bg"),
-    winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
-    winbarNC_fg = H.get("WinBarNC", "bg"),
-    winbarNC_bg = H.get("WinBarNC", "bg"),
-    winbar_bg_right_block = H.get("WinBarRightBlock", "bg"),
-    winbar_fg_right_block = H.get("WinBarRightBlock", "fg"),
-
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
     -- Termasuk filetype: debug dap, dbui
-    mode_gray_fg_keyword = H.darken(H.get("Keyword", "fg"), 0.5, H.get("PanelSideBackground", "bg")),
-    mode_gray_fg = H.darken(H.get("Keyword", "fg"), 0.6, H.get("PanelSideBackground", "bg")),
-    mode_gray_bg = H.tint(H.get("PanelSideBackground", "bg"), 0.4),
+    mode_gray_fg = H.get("WinBarGrey", "fg"),
+    mode_gray_fg_bright = H.tint(H.get("WinBarGrey", "fg"), 0.25),
+    mode_gray_bg = H.get("WinBarGrey", "bg"),
 
     -- Termasuk filetype: note
-    mode_note_fg_keyword = H.tint(H.get("PanelSideBackground", "bg"), 3),
     mode_note_fg = H.get("WinBarNote", "fg"),
+    mode_note_fg_bright = H.tint(H.get("WinBarNote", "fg"), 0.25),
     mode_note_bg = H.get("WinBarNote", "bg"),
 
     -- Termasuk filetype: readonly, commit
-    mode_red_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.3),
-    mode_red_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.1, H.get("Normal", "bg")),
-    mode_red_bg_right_block = H.tint(H.get("GitSignsDelete", "fg"), -0.5),
+    mode_red_fg = H.get("WinBarRed", "fg"),
+    mode_red_fg_bright = H.tint(H.get("WinBarRed", "fg"), 0.1),
+    mode_red_bg = H.get("WinBarRed", "bg"),
 
     -- Termasuk filetype: git fugtive-relative
-    mode_yellow_fg = H.tint(H.get("GitSignsChange", "fg"), 0.3),
-    mode_yellow_bg = H.darken(H.get("GitSignsChange", "fg"), 0.15, H.get("Normal", "bg")),
-    mode_yellow_bg_right_block = H.tint(H.get("GitSignsChange", "fg"), -0.5),
+    mode_yellow_fg = H.get("WinBarYellow", "fg"),
+    mode_yellow_fg_bright = H.tint(H.get("WinBarYellow", "fg"), 0.1),
+    mode_yellow_bg = H.get("WinBarYellow", "bg"),
 
     -- Termasuk filetype: help,
-    mode_green_fg = H.tint(H.get("GitSignsAdd", "fg"), 0.3),
-    mode_green_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.1, H.get("Normal", "bg")),
-    mode_green_bg_right_block = H.tint(H.get("GitSignsAdd", "fg"), -0.5),
+    mode_green_fg = H.get("WinBarGreen", "fg"),
+    mode_green_fg_bright = H.tint(H.get("WinBarGreen", "fg"), 0.1),
+    mode_green_bg = H.get("WinBarGreen", "bg"),
 
     mode_visual_bg = H.get("Visual", "bg"),
     mode_visual_fg = H.tint(H.get("Visual", "bg"), 0.5),
@@ -297,9 +290,6 @@ local __colors = function()
     mode_term_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.8, H.get("Normal", "bg")), 0.1),
     mode_term_statusline_fg = H.tint(H.darken(H.get("Boolean", "fg"), 0.5, H.get("Normal", "bg")), 0.2),
     mode_term_statusline_bg = H.tint(H.darken(H.get("Boolean", "fg"), 0.1, H.get("Normal", "bg")), 0.1),
-
-    branch_fg = H.get("StatusLineLeftBlock", "fg"),
-    branch_bg = H.get("StatusLineLeftBlock", "bg"),
 
     diff_add = col_opts.diff_add,
     diff_change = col_opts.diff_change,
@@ -313,95 +303,58 @@ local __colors = function()
 end
 local colors = __colors()
 
-local set_hl = function(is_base)
-  is_base = is_base or false
+local set_winbar_hl = function(is_more_bright)
+  is_more_bright = is_more_bright or false
 
-  local hl_opts = {
-    fg = colors.winbar_keyword,
+  local hlWinbarOpts = {
+    fg = colors.winbar_fg,
     bg = colors.winbar_bg,
   }
 
-  if is_base then
-    hl_opts.fg = colors.statusline_fg
-    hl_opts.bg = colors.winbar_bg
-  end
-
-  if set_conditions.is_path_git_relative() then
-    hl_opts.fg = tostring(colors.mode_yellow_fg)
-    hl_opts.bg = colors.mode_yellow_bg_right_block
-    if is_base then
-      hl_opts.bg = colors.mode_yellow_bg
-    end
+  if is_more_bright then
+    hlWinbarOpts.fg = colors.statusline_fg
+    hlWinbarOpts.bg = colors.winbar_bg
   end
 
   if set_conditions.is_readonly() then
-    if vim.bo.filetype ~= "qf" then
-      hl_opts.fg = tostring(colors.mode_red_fg)
-      hl_opts.bg = colors.mode_red_bg_right_block
-      if is_base then
-        hl_opts.fg = tostring(colors.mode_red_fg)
-        hl_opts.bg = colors.mode_red_bg
-      end
-    end
+    hlWinbarOpts.fg = colors.mode_red_fg
+    hlWinbarOpts.bg = colors.mode_red_bg
+  end
+
+  if set_conditions.is_path_git_relative() then
+    hlWinbarOpts.fg = colors.mode_yellow_fg
+    hlWinbarOpts.bg = colors.mode_yellow_bg
   end
 
   if set_conditions.is_gray_ft() then
-    hl_opts.fg = colors.mode_gray_fg
-    hl_opts.bg = colors.mode_gray_bg
+    hlWinbarOpts.fg = colors.mode_gray_fg
+    hlWinbarOpts.bg = colors.mode_gray_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_gray_fg_bright
+    end
   end
 
   if set_conditions.is_note_ft() then
-    hl_opts.fg = colors.mode_note_fg
-    hl_opts.bg = colors.mode_note_bg
+    hlWinbarOpts.fg = colors.mode_note_fg
+    hlWinbarOpts.bg = colors.mode_note_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_note_fg_bright
+    end
   end
 
   if set_conditions.is_green_ft() then
-    hl_opts.fg = colors.mode_green_fg
-    hl_opts.bg = colors.mode_green_bg_right_block
-    if is_base then
-      hl_opts.fg = colors.mode_green_fg
-      hl_opts.bg = colors.mode_green_bg
+    hlWinbarOpts.fg = colors.mode_green_fg
+    hlWinbarOpts.bg = colors.mode_green_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_green_fg_bright
     end
   end
 
   if vim.bo.filetype == "qf" then
-    hl_opts.bg = colors.winbar_bg_bottom
+    hlWinbarOpts.bg = colors.winbar_bg_bottom
   end
 
-  return hl_opts
-end
-local set_hl_separator = function()
-  local hl_opts = {
-    fg = colors.winbar_bg,
-    bg = colors.winbar_bg,
-  }
-
-  if set_conditions.is_path_git_relative() then
-    hl_opts.fg = colors.mode_yellow_bg_right_block
-    hl_opts.bg = colors.mode_yellow_bg
-  end
-
-  if set_conditions.is_readonly() then
-    hl_opts.fg = colors.mode_red_bg_right_block
-    hl_opts.bg = colors.mode_red_bg
-  end
-
-  if set_conditions.is_gray_ft() then
-    hl_opts.fg = colors.mode_gray_bg
-    hl_opts.bg = colors.mode_gray_bg
-  end
-
-  if set_conditions.is_note_ft() then
-    hl_opts.fg = colors.mode_note_bg
-    hl_opts.bg = colors.mode_note_bg
-  end
-
-  if set_conditions.is_green_ft() then
-    hl_opts.fg = colors.mode_green_bg_right_block
-    hl_opts.bg = colors.mode_green_bg
-  end
-
-  return hl_opts
+  return hlWinbarOpts
 end
 
 local function get_branch_name(buf)
@@ -559,7 +512,7 @@ M.Branch = {
       end
       return ""
     end,
-    hl = { fg = colors.branch_fg, bold = true },
+    hl = { bold = true },
   },
 }
 M.FilePath = {
@@ -591,7 +544,7 @@ M.FilePath = {
         return " " .. cwd .. "/"
       end
     end,
-    hl = { fg = colors.qf_indicator_fg, bold = false },
+    hl = { bold = true },
   },
   {
     provider = function(self)
@@ -654,7 +607,7 @@ M.FilePath = {
         end
       end
     end,
-    hl = { fg = colors.branch_fg, bold = true },
+    hl = { bold = true },
   },
   {
     provider = function(self)
@@ -710,7 +663,7 @@ M.FileIcon = {
     return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
-    local hl_opts = set_hl()
+    local hl_opts = set_winbar_hl()
     return { fg = self.icon_color, bg = hl_opts.bg }
   end,
 }
@@ -1034,7 +987,7 @@ M.SearchCount = {
         return string.format(" (%s) %s/%s  ", search_query, current, total)
       end
     end,
-    hl = { bg = colors.diagnostic_err, fg = colors.bright, bold = true },
+    hl = { bg = colors.search_count_bg, fg = colors.search_count_fg, bold = true },
   },
 }
 M.Diagnostics = {
@@ -1331,7 +1284,6 @@ M.RmuxTargetPane = {
         fg = colors.block_mux_bg
       end
 
-      -- return { fg = fg, bg = colors.statusline_right_block_bg_darken }
       return { fg = fg, bg = colors.statusline_bg }
     end,
   },
@@ -1382,7 +1334,6 @@ M.Filetype = {
   --       fg = colors.block_mux_bg
   --     end
   --
-  --     -- return { fg = fg, bg = colors.statusline_right_block_bg_darken }
   --     return { fg = fg, bg = colors.statusline_bg }
   --   end,
   -- },
@@ -1618,9 +1569,34 @@ M.WinbarFilePath = {
         length = 3,
       }
 
-      local path = vim.fn.expand "%:p" --[[@as string]]
+      ------------------------------------------------------------------------
+      -- normalize diffview path
+      ------------------------------------------------------------------------
+      local function parse_diffview_path(path)
+        if not path:match "^diffview://" then
+          return nil
+        end
 
-      if path == "" then
+        -- remove scheme
+        local clean = path:gsub("^diffview://", "")
+
+        -- capture:
+        -- /home/user/repo/.git/<commit>/path/to/file
+        local commit, filepath = clean:match "/%.git/([^/]+)/(.+)$"
+
+        if not filepath then
+          return nil
+        end
+
+        return {
+          commit = commit,
+          filepath = filepath,
+        }
+      end
+
+      local raw_path = vim.fn.expand "%:p"
+
+      if raw_path == "" then
         return ""
       end
 
@@ -1628,53 +1604,87 @@ M.WinbarFilePath = {
         return "[Unknown Filename]"
       end
 
+      ------------------------------------------------------------------------
+      -- diffview
+      ------------------------------------------------------------------------
+      local dv = parse_diffview_path(raw_path)
+
+      if dv then
+        local sep = package.config:sub(1, 1)
+
+        local parts = vim.split(dv.filepath, "[\\/]")
+
+        -- shorten path
+        if opts.length > 0 and #parts > opts.length then
+          parts = {
+            "…",
+            unpack(parts, #parts - opts.length + 1, #parts),
+          }
+        end
+
+        local short_path = table.concat(parts, sep)
+
+        return string.format(" %s [%s] ", short_path, dv.commit)
+      end
+
+      ------------------------------------------------------------------------
+      -- special ft
+      ------------------------------------------------------------------------
+      if vim.bo.filetype == "octo" then
+        return raw_path
+      end
+
+      if set_conditions.is_path_git_relative() then
+        return raw_path
+      end
+
+      ------------------------------------------------------------------------
+      -- normal path logic
+      ------------------------------------------------------------------------
+      local path = raw_path
+
       local root = RUtils.root.get { normalize = true }
       local cwd = RUtils.root.cwd()
 
       if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
-        path = path:sub(#cwd + 3)
+        path = path:sub(#cwd + 2)
       elseif path:find(root, 1, true) == 1 then
-        path = path:sub(#root + 3)
+        path = path:sub(#root + 2)
       end
 
       local sep = package.config:sub(1, 1)
       local parts = vim.split(path, "[\\/]")
 
-      if vim.bo.filetype == "octo" then
-        return path
-      end
-
-      if set_conditions.is_path_git_relative() then
-        return path
-      end
-
+      ------------------------------------------------------------------------
+      -- shorten path
+      ------------------------------------------------------------------------
       if opts.length == 0 then
         parts = parts
-      elseif #parts > opts.length and opts.relative == "cwd" then
-        -- remove the last one to modified hl self.filename
-        parts = { "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
-        -- parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
-      else
-        -- remove the last one too
-        -- parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
-        parts = { "…", unpack(parts, #parts - opts.length + 1, #parts - 1) }
+      elseif #parts > opts.length then
+        parts = {
+          "…",
+          unpack(parts, #parts - opts.length + 1, #parts - 1),
+        }
       end
 
       if not set_conditions.is_terminal_ft() then
         local jparts = vim.split(self.filename, "[\\/]")
+
         if #jparts == 1 then
           return ""
         end
 
         path = table.concat(parts, sep)
+
         if #path > 0 then
           return path .. sep
         end
       end
+      return ""
     end,
     hl = function()
-      local hl_opts = set_hl()
-      return { fg = hl_opts.fg, bg = hl_opts.bg, bold = false }
+      local hl_opts = set_winbar_hl()
+      return { fg = hl_opts.fg, bg = hl_opts.bg }
     end,
   },
   {
@@ -1685,18 +1695,14 @@ M.WinbarFilePath = {
         and not set_conditions.is_dont_show_at_ft()
     end,
     provider = function(self)
+      if vim.bo.filetype == "octo" then
+        return ""
+      end
       return RUtils.file.basename(self.filename) .. " "
     end,
     hl = function()
-      local hl_opts = set_hl()
+      local hl_opts = set_winbar_hl(true)
       return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local hl_opts = set_hl_separator()
-      return { fg = hl_opts.fg, bg = hl_opts.bg }
     end,
   },
 }
@@ -1778,8 +1784,8 @@ M.status_winbar_active_left = {
   M.Gap,
 
   hl = function()
-    local hl_opts = set_hl(true)
-    return { fg = hl_opts.fg, bg = hl_opts.bg }
+    local hl_opts = set_winbar_hl()
+    return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
   end,
 }
 

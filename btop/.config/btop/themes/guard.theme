@@ -1,39 +1,39 @@
 # vim: foldmethod=marker foldlevel=0 ft=cfg
 
 # Main background, empty for terminal default, need to be empty if you want transparent background
-theme[main_bg]="#1c1c1c"
+theme[main_bg]="#1a1b26"
 
 # Main text color
-theme[main_fg]="#9f9f9f"
+theme[main_fg]="#99a1c4"
 
 # Title color for boxes
-theme[title]="#8c6c8c"
+theme[title]="#64a5cc"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="#ff988f"
+theme[hi_fg]="#dd615d"
 
 # Color cursorline
-theme[selected_fg]="#ffffff"
-theme[selected_bg]="#574357"
+theme[selected_fg]="#faffff"
+theme[selected_bg]="#3e677f"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="#4f4f4f"
+theme[inactive_fg]="#4c5062"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="#F2D5CF"
 
 # Background color of the percentage meters
-theme[meter_bg]="#0e0e0e"
+theme[meter_bg]="#0d0d13"
 
 # Misc colors for processes box including mini cpu graphs, details memory graph and details status text
 theme[proc_misc]="#F2D5CF"
 
 # CPU, Memory, Network, Proc box outline colors
-theme[cpu_box]="#282828"
-theme[mem_box]="#282828"
-theme[net_box]="#282828"
-theme[proc_box]="#282828"
-theme[div_line]="#282828"
+theme[cpu_box]="#262839"
+theme[mem_box]="#262839"
+theme[net_box]="#262839"
+theme[proc_box]="#262839"
+theme[div_line]="#262839"
 
 # Temperature graph color (Green -> Yellow -> Red)
 theme[temp_start]="#a7c080"
