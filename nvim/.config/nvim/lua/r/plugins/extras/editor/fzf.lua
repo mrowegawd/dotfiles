@@ -31,35 +31,6 @@ return {
     cmd = "FzfLua",
     dependencies = {
       "tpope/vim-fugitive",
-      {
-        "mangelozzi/nvim-rgflow.lua",
-        opts = {
-          default_trigger_mappings = false,
-          default_ui_mappings = false,
-          cmd_flags = rg_opts,
-          mappings = {
-            ui = {
-              -- Normal mode maps
-              n = {
-                ["<CR>"] = "start", -- With the ui open, start a search with the current parameters
-                ["<ESC>"] = "close", -- With the ui open, discard and close the UI window
-                ["q"] = "close", -- With the ui open, start a search with the current parameters (from insert mode)
-                ["g?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
-                ["<BS>"] = "nop", -- No operation
-                ["<C-^>"] = "nop", -- No operation
-                ["<C-6>"] = "nop", -- No operation
-              },
-              -- Insert mode maps
-              i = {
-                ["<cr>"] = "nop", -- With the ui open, start a search with the current parameters (from insert mode)
-                ["<c-j>"] = "auto_complete", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-                ["<C-n>"] = "nop", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-                -- ["<C-P>"] = "auto_complete", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-              },
-            },
-          },
-        },
-      },
     },
     --stylua: ignore
     keys = {
@@ -328,7 +299,7 @@ return {
         files = RUtils.fzflua.open_dock_bottom {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-          fzf_opts = { ["--header"] = [[^r:rgflow  a-c:copypath  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
+          fzf_opts = { ["--header"] = [[^r:grugfar  a-c:copypath  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
           line_query = true, -- now we can use "example_file:32"
           fd_opts = fd_opts,
           git_icons = false,
@@ -415,22 +386,28 @@ return {
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
-            ["ctrl-r"] = function(_, args)
-              require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
-                custom_start = function(pattern, flags, path)
-                  args.cwd = path
-                  args.rg_opts = flags
-                  args.cmd = "fd" .. " " .. flags
-                  args.query = pattern
-                  return require("fzf-lua").files {
-                    query = args.query,
-                    cwd = args.cwd,
-                    cmd = args.cmd,
-                    rg_opts = args.rg_opts,
-                    winopts = { title = RUtils.fzflua.format_title("Files: RgFlow", "") },
-                  }
-                end,
-              })
+            ["ctrl-r"] = function(selected)
+              local paths = {}
+              if #selected > 1 then
+                for _, file in pairs(selected) do
+                  if not RUtils.check_tbl_element(paths, file) then
+                    paths[#paths + 1] = file
+                  end
+                end
+              else
+                table.insert(paths, selected[1])
+              end
+
+              local grug = require "grug-far"
+              grug.open {
+                prefills = {
+                  search = "",
+                  replacement = "",
+                  filesFilter = "",
+                  flags = "--hidden -i",
+                  paths = table.concat(paths, "  "),
+                },
+              }
             end,
             ["alt-c"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
@@ -575,7 +552,7 @@ return {
           -- debug = true,
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[^r:rgflow  ^g:lgrep  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
+          fzf_opts = { ["--header"] = [[^r:grugfar  ^g:lgrep  ^o:peek  ^x:selectcwd  ^z:hidden  ^q:ignore]] },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
@@ -656,27 +633,28 @@ return {
               local P = require "overlook.peek"
               P.peek_fzflua(...)
             end,
-            ["ctrl-r"] = function(_, args)
-              require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
-                custom_start = function(pattern, flags, path)
-                  args.cwd = path
-                  args.rg_opts = flags
-                  args.cmd = "rg" .. " " .. flags
-                  args.query = pattern
-                  return require("fzf-lua").live_grep_glob {
-                    query = args.query,
-                    cwd = args.cwd,
-                    cmd = args.cmd,
-                    rg_opts = args.rg_opts,
-                    winopts = {
-                      title = RUtils.fzflua.format_title(
-                        "Live Grep: RgFlow",
-                        RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)
-                      ),
-                    },
-                  }
-                end,
-              })
+            ["ctrl-r"] = function(selected)
+              local paths = {}
+              if #selected > 1 then
+                for _, file in pairs(selected) do
+                  if not RUtils.check_tbl_element(paths, file) then
+                    paths[#paths + 1] = file
+                  end
+                end
+              else
+                table.insert(paths, selected[1])
+              end
+
+              local grug = require "grug-far"
+              grug.open {
+                prefills = {
+                  search = "",
+                  replacement = "",
+                  filesFilter = "",
+                  flags = "--hidden -i",
+                  paths = table.concat(paths, "  "),
+                },
+              }
             end,
           },
         },
@@ -1047,13 +1025,6 @@ return {
         end,
       })
     end,
-  },
-
-  {
-    "saghen/blink.cmp",
-    optional = true,
-    dependencies = { "mangelozzi/nvim-rgflow.lua", "saghen/blink.compat" },
-    opts = { sources = { per_filetype = { rgflow = { "buffer", "path" } } } },
   },
 
   {
