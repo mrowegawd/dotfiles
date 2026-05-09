@@ -497,7 +497,7 @@ local general_overrides = function()
 
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
-    { NonText = { fg = { from = "NonText", attr = "fg", alter = 0.1, opacity = 0.5 }, bg = "NONE" } },
+    { NonText = { fg = { from = "NonText", attr = "fg", alter = 0.5, opacity = 0.5 }, bg = "NONE" } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5, opacity = 0.4 }, bg = "NONE" } },
 
     {
@@ -958,8 +958,7 @@ local general_overrides = function()
     },
     {
       LspSignatureActiveParameter = {
-        fg = H.darken(dark_yellow, 0.8, H.get("Normal", "fg")),
-        bg = H.darken(dark_yellow, 0.25, H.get("Normal", "bg")),
+        bg = { from = "Normal", attr = "bg", alter = 0.5, opacity = 0.2 },
         bold = true,
       },
     },
@@ -1082,9 +1081,8 @@ local general_overrides = function()
     --  ───────────────────────────────[ NOICE ]───────────────────────────────
     { NoiceCmdline = { fg = { from = "StatusLine", attr = "bg", alter = 5 }, bg = "NONE" } },
 
-    -- Color for :Messages
-    { NoiceSplit = { bg = { from = "Keyword", attr = "fg", opacity = 0.05 } } },
-    { NoiceSplit = { fg = { from = "NoiceSplit", attr = "bg", alter = 5 } } },
+    -- Color for :Messages noice
+    { NoiceSplit = { bg = { from = "PanelSideNormal", attr = "bg", alter = -0.05, opacity = 0.5 } } },
 
     --  ───────────────────────────────[ BLINK ]───────────────────────────────
     {
@@ -1406,12 +1404,12 @@ local general_overrides = function()
     { FzfLuaBorder = { inherit = "FloatBorder", bg = { from = "FzfLuaNormal", attr = "bg" } } },
     {
       FzfLuaFilePart = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.1, opacity = 0.5 },
+        fg = { from = "Keyword", attr = "fg", opacity = 0.75 },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
-    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", opacity = 0.7 } } },
+    { FzfLuaHeaderText = { fg = { from = "FzfLuaFilePart", attr = "fg", opacity = 0.6 } } },
     { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg" }, bg = "NONE" } },
     {
       FzfLuaFzfMatch = {
@@ -1422,7 +1420,7 @@ local general_overrides = function()
     },
     {
       FzfLuaSel = {
-        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.7 },
+        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.3 },
         bg = { from = "PmenuSel", attr = "bg" },
         bold = true,
       },
