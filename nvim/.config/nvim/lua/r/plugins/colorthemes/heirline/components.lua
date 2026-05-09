@@ -138,7 +138,7 @@ local overseer_tasks_for_status = function(status, colors)
     end,
     hl = function()
       local fg
-      local bg = colors.block_mux_bg
+      local bg = colors.task_bg
       if status == "RUNNING" then
         fg = colors.diff_delete
       elseif status == "SUCCESS" then
@@ -253,8 +253,8 @@ local __colors = function()
     block_notice = H.tint(H.darken(H.get("Error", "fg"), 0.7, H.get("CurSearch", "fg")), 0.1),
     block_notice_keyword = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 1.5),
 
-    block_mux_fg = H.tint(H.darken(H.get("Error", "fg"), 0.6, H.get("Normal", "bg")), 0.5),
-    block_mux_bg = H.tint(H.darken(H.get("Function", "fg"), 0.3, H.get("Normal", "bg")), 0.5),
+    task_fg = H.get("GitSignsAdd", "fg"),
+    task_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.2, H.get("Normal", "bg")),
 
     modified_fg = H.get("KeywordMatch", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
@@ -1170,7 +1170,7 @@ M.Tasks = {
         end
       end
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg },
+    hl = { fg = colors.statusline_bg, bg = colors.task_bg },
   },
   {
     provider = function(self)
@@ -1180,7 +1180,7 @@ M.Tasks = {
         end
       end
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.block_mux_bg, bold = true },
+    hl = { fg = colors.statusline_bg, bg = colors.task_bg, bold = true },
   },
   rpad(overseer_tasks_for_status("CANCELED", colors)),
   rpad(overseer_tasks_for_status("RUNNING", colors)),
@@ -1194,7 +1194,7 @@ M.Tasks = {
         end
       end
     end,
-    hl = { fg = colors.block_mux_bg, bg = colors.block_mux_bg },
+    hl = { fg = colors.task_bg, bg = colors.task_bg },
   },
 }
 M.RmuxTargetPane = {
@@ -1232,7 +1232,7 @@ M.RmuxTargetPane = {
       if set_conditions.is_terminal_ft() then
         fg = colors.mode_term_statusline_bg
       end
-      return { fg = fg, bg = colors.block_mux_bg }
+      return { fg = fg, bg = colors.task_bg }
     end,
   },
   {
@@ -1241,7 +1241,7 @@ M.RmuxTargetPane = {
         return "  " .. self.task
       end
     end,
-    hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
+    hl = { fg = colors.task_fg, bg = colors.task_bg, bold = true },
   },
   {
     provider = function(self)
@@ -1249,7 +1249,7 @@ M.RmuxTargetPane = {
         return "  " .. self.watch
       end
     end,
-    hl = { fg = colors.block_mux_fg, bg = colors.block_mux_bg, bold = true },
+    hl = { fg = colors.task_fg, bg = colors.task_bg, bold = true },
   },
   {
     provider = function(self)
@@ -1261,7 +1261,7 @@ M.RmuxTargetPane = {
         return RUtils.config.icons.misc.separator_down
       end
     end,
-    hl = { fg = colors.block_mux_bg, bg = colors.block_mux_bg },
+    hl = { fg = colors.task_bg, bg = colors.task_bg },
   },
   {
     provider = function(self)
@@ -1281,7 +1281,7 @@ M.RmuxTargetPane = {
       elseif not set_conditions.hide_in_col_width(120) then
         fg = colors.statusline_bg
       elseif has_task or self.has_overseer_task then
-        fg = colors.block_mux_bg
+        fg = colors.task_bg
       end
 
       return { fg = fg, bg = colors.statusline_bg }
@@ -1331,7 +1331,7 @@ M.Filetype = {
   --     elseif not set_conditions.hide_in_col_width(120) then
   --       fg = colors.statusline_bg
   --     elseif has_task or has_overseer_task then
-  --       fg = colors.block_mux_bg
+  --       fg = colors.task_bg
   --     end
   --
   --     return { fg = fg, bg = colors.statusline_bg }

@@ -1539,13 +1539,13 @@ local general_overrides = function()
     -- INFO
     {
       SnacksNotifierInfo = {
-        fg = { from = "Normal", attr = "bg", alter = 9 },
+        fg = { from = "Normal", attr = "bg", alter = 5 },
         bg = { from = "Normal", attr = "bg", alter = 0.5 },
       },
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 1 },
+        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.5 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
@@ -1565,7 +1565,7 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.8 },
+        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.5 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
@@ -1585,7 +1585,7 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.8 },
+        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
@@ -1598,7 +1598,7 @@ local general_overrides = function()
     },
 
     -- ────────────────────────────[ NOTIFY.NVIM ]────────────────────────────
-    { NotifyBackground = { inherit = "SnacksNotifierInfo" } },
+    -- { NotifyBackground = { bg = "red" } },
 
     -- INFO
     { NotifyINFOBody = { inherit = "SnacksNotifierInfo" } },

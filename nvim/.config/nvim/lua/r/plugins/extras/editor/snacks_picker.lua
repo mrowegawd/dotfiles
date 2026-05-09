@@ -17,43 +17,43 @@ if not RUtils.pick.register(picker) then
   return {}
 end
 
-local qfbookmark
+-- local qfbookmark
 
-local function get_qfbookmark()
-  if not qfbookmark then
-    local ok, qfbook = pcall(require, "qfbookmark.qf")
-    if ok then
-      qfbookmark = qfbook
-    end
-  end
-  return qfbookmark
-end
-
-local function jump_scope(scope, opts)
-  local buf = vim.api.nvim_get_current_buf()
-  local max_line = vim.api.nvim_buf_line_count(buf)
-
-  while scope do
-    local line = opts.bottom and scope.to or scope.from
-
-    if line >= 1 and line <= max_line then
-      local line_text = vim.api.nvim_buf_get_lines(buf, line - 1, line, false)[1] or ""
-      local indent = vim.fn.indent(line)
-
-      local col = math.min(indent, #line_text)
-
-      local current = vim.api.nvim_win_get_cursor(0)
-      local target = { line, col }
-
-      if not vim.deep_equal(current, target) then
-        vim.api.nvim_win_set_cursor(0, target)
-        return
-      end
-    end
-
-    scope = scope:parent()
-  end
-end
+-- local function get_qfbookmark()
+--   if not qfbookmark then
+--     local ok, qfbook = pcall(require, "qfbookmark.qf")
+--     if ok then
+--       qfbookmark = qfbook
+--     end
+--   end
+--   return qfbookmark
+-- end
+--
+-- local function jump_scope(scope, opts)
+--   local buf = vim.api.nvim_get_current_buf()
+--   local max_line = vim.api.nvim_buf_line_count(buf)
+--
+--   while scope do
+--     local line = opts.bottom and scope.to or scope.from
+--
+--     if line >= 1 and line <= max_line then
+--       local line_text = vim.api.nvim_buf_get_lines(buf, line - 1, line, false)[1] or ""
+--       local indent = vim.fn.indent(line)
+--
+--       local col = math.min(indent, #line_text)
+--
+--       local current = vim.api.nvim_win_get_cursor(0)
+--       local target = { line, col }
+--
+--       if not vim.deep_equal(current, target) then
+--         vim.api.nvim_win_set_cursor(0, target)
+--         return
+--       end
+--     end
+--
+--     scope = scope:parent()
+--   end
+-- end
 
 return {
   {

@@ -14,7 +14,9 @@ alias .....="cd ../../../.."
 # alias rg="rg --hidden"
 
 alias v="nvim"
-alias pvim="poetry run nvim"
+alias pvv="poetry run nvim"
+alias uvv="uv run nvim"
+
 # alias vvim="uv run nvim"
 alias vvim="source ./.venv/bin/activate && nvim"
 alias svim="sudo nvim"
@@ -304,7 +306,7 @@ c_sysinfo() {
   local GREEN='\e[1;32m'
   local YELLOW='\e[1;33m'
   local BLUE='\e[1;34m'
-  -- CYAN='\e[1;36m'
+  local CYAN='\e[1;36m'
   local NC='\e[0m' # No Color
 
   clear

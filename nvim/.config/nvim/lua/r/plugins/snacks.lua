@@ -74,32 +74,9 @@ return {
     optional = true,
     opts = {
       bigfile = { enabled = true },
-      notifier = {
-        enabled = false,
-        width = { min = 40, max = 100 },
-        height = { min = 1, max = 0.6 },
-        timeout = 3000, -- waktu tampil notifikasi (ms)
-        -- gap = 0, -- gap between notifications
-        -- style = "compact",
-        -- style = function(buf, notif, ctx)
-        --   local render = ctx.notifier:get_render "compact"
-        --   render(buf, notif, ctx)
-        --   vim.schedule(function()
-        --     notif.layout.top = notif.layout.top + 1
-        --     ctx.notifier:process()
-        --   end)
-        -- end,
-        -- style = function(buf, notif, ctx)
-        --   local render = ctx.notifier:get_render "compact"
-        --   ctx.notifier.layout = function(self)
-        --     gap_layout(self, 1)
-        --   end
-        --   render(buf, notif, ctx)
-        -- end,
-        -- top_down = false, -- atur urutan tampil (opsional)
-      },
-      quickfile = { enabled = true },
-      scroll = { enabled = false },
+      notifier = { enabled = true },
+      quickfile = { enabled = false },
+      scroll = { enabled = true },
       input = {
         -- https://github.com/folke/snacks.nvim/blob/bc0630e43be5699bb94dadc302c0d21615421d93/lua/snacks/input.lua#L53
         enabled = true,
@@ -170,6 +147,28 @@ return {
         snacks_image = {
           relative = "editor",
           col = -1,
+        },
+        --   -- dashboard = {
+        --   --   wo = {
+        --   --     winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
+        --   --     wrap = false,
+        --   --   },
+        --   -- },
+        --   notifier = {
+        --     wo = {
+        --       winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
+        --       wrap = false,
+        --     },
+        --   },
+        notification = {
+          wo = {
+            winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
+          },
+        },
+        notification_history = {
+          wo = {
+            winhighlight = "Normal:NormalFloat",
+          },
         },
       },
       image = {
@@ -320,18 +319,6 @@ return {
           },
         },
       },
-    },
-    -- stylua: ignore
-    keys = {
-      -- { "<Localleader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
-      -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
-      -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
-      -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
-      { "gL", function() Snacks.image.hover() end, desc = "Snackspicker: hover image" },
-
-      -- { "<Localleader>nh", function() Snacks.notifier.show_history() end, desc = "Snackspicker: notification history" },
-      -- { "<Localleader>nd", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss" },
-      -- { "<Localleader>nF", function() Snacks.picker.notifications() end, desc = "Snackspicker: show list notifications" },
     },
     config = function(_, opts)
       local notify = vim.notify
