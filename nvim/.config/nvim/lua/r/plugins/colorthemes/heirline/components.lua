@@ -802,13 +802,13 @@ M.QuickfixStatus = {
     provider = function(self)
       local parts = {}
       if RUtils.qf.is_loclist() then
-        table.insert(parts, string.format(" %s ", self.title_loclist))
+        table.insert(parts, string.format(" %s %s ", "LFtitle:", self.title_loclist))
       else
-        table.insert(parts, string.format(" %s ", self.title_qflist))
+        table.insert(parts, string.format(" %s %s ", "QFtitle:", self.title_qflist))
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
+    hl = { fg = colors.statusline_fg, bg = colors.qf_keyword_bg, bold = true },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,

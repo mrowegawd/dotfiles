@@ -126,8 +126,13 @@ return {
 
               if item.text then
                 if #item.text == 0 then
-                  local path = vim.api.nvim_buf_get_name(item.bufnr)
-                  opts.title = vim.fn.fnameescape(path)
+                  local QfbookmarkUtils = require "qfbookmark.utils"
+                  local path = QfbookmarkUtils.nvim_buf_get_name(item.bufnr)
+                  if path == nil then
+                    opts.title = item.text
+                  else
+                    opts.title = vim.fn.fnamemodify(path, ":~:.")
+                  end
                 else
                   opts.title = item.text
                 end

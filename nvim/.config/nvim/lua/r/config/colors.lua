@@ -2125,6 +2125,7 @@ local function set_panel_highlight()
       },
     },
     { QuickFixLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 1.5 } } },
+    { QuickFixMiddleLineNr = { fg = { from = "Search", attr = "fg", opacity = 0.5 } } },
     { QuickFixWinDelimiter = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 1 } } },
     {
       QuickFixWinSeparator = {

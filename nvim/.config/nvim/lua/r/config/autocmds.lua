@@ -232,6 +232,14 @@ RUtils.map.augroup("WrapFiletype", {
       vim.diagnostic.config { virtual_lines = new_value }
     end
   end,
+}, {
+  event = "FileType",
+  pattern = "qf",
+  command = function()
+    vim.fn.matchadd("qfFileName", [[^[^│]*]])
+    vim.fn.matchadd("QuickFixMiddleLineNr", [[\v\d+:\d+\s]])
+    vim.fn.matchadd("QuickFixLineNr", [[│]])
+  end,
 })
 
 RUtils.map.augroup("DisableJsonConceal", {
