@@ -241,7 +241,7 @@ return {
             "cancel",
             "show",
           },
-          ["<C-c>"] = {
+          ["<C-q>"] = {
             "hide",
             "cancel",
             function()
@@ -326,7 +326,6 @@ return {
       },
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)
-
         -- How to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
 
@@ -336,6 +335,9 @@ return {
 
         ["<C-g>"] = {
           function(cmp)
+            if cmp.is_menu_visible() then
+              return cmp.select_next()
+            end
             return cmp.show { providers = { "ripgrep" } }
           end,
         },
@@ -367,16 +369,7 @@ return {
             idx = (idx % #providers) + 1
           end,
         },
-        ["<C-c>"] = {
-          "hide",
-          "cancel",
-          function()
-            if vim.fn.getcmdtype() ~= "" then
-              RUtils.map.feedkey "<C-c>"
-            end
-          end,
-        },
-
+        ["<C-q>"] = { "hide" },
         ["<C-n>"] = {
           function(cmp)
             if vim.bo.filetype == "org-roam-select" then
