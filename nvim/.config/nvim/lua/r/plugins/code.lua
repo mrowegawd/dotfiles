@@ -184,12 +184,6 @@ return {
     config = function()
       require("nvim-surround").setup()
 
-      vim.keymap.set("i", "<C-g>s", "<Plug>(nvim-surround-insert)", {
-        desc = "Add a surrounding pair around the cursor (insert mode)",
-      })
-      vim.keymap.set("i", "<C-g>S", "<Plug>(nvim-surround-insert-line)", {
-        desc = "Add a surrounding pair around the cursor, on new lines (insert mode)",
-      })
       vim.keymap.set("n", "ys", "<Plug>(nvim-surround-normal)", {
         desc = "Add a surrounding pair around a motion (normal mode)",
       })
