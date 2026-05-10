@@ -772,20 +772,7 @@ local general_overrides = function()
 
     { diffAdded = { inherit = "DiffAdd", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.05 } } },
     { diffChanged = { inherit = "DiffChange", fg = { from = "GitSignsChange", attr = "fg", alter = 0.05 } } },
-    -- { diffRemoved = { inherit = "DiffDelete", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.05 } } },
-
-    {
-      deltaPlus = {
-        fg = { from = "GitSignsAddInline", attr = "bg", alter = 0.5 },
-        bg = { from = "GitSignsAddInline", attr = "bg" },
-      },
-    },
-    {
-      deltaMinus = {
-        fg = { from = "GitSignsDeleteInline", attr = "bg", alter = 0.5 },
-        bg = { from = "GitSignsDeleteInline", attr = "bg" },
-      },
-    },
+    { diffRemoved = { inherit = "DiffDelete", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.05 } } },
 
     { MiniDiffSignAdd = { inherit = "GitSignsAdd" } },
     { MiniDiffSignChange = { inherit = "GitSignsChange" } },
@@ -793,8 +780,23 @@ local general_overrides = function()
 
     { NeogitDiffAdd = { inherit = "diffAdded" } },
     { NeogitDiffAddHighlight = { inherit = "diffAdded" } },
-    -- { NeogitDiffDelete = { inherit = "diffDelete" } },
-    { NeogitDiffDeleteHighlight = { inherit = "diffDelete" } },
+    {
+      NeogitDiffAddInline = {
+        fg = { from = "diffAdded", attr = "fg", alter = 0.5, opacity = 0.8 },
+        bg = { from = "diffAdded", attr = "fg", alter = 0.5, opacity = 0.15 },
+        reverse = false,
+      },
+    },
+
+    { NeogitDiffDelete = { fg = { from = "diffRemoved", attr = "fg" } } },
+    { NeogitDiffDeleteHighlight = { fg = { from = "diffRemoved", attr = "fg" } } },
+    {
+      NeogitDiffDeleteInline = {
+        fg = { from = "diffRemoved", attr = "fg", alter = 0.5, opacity = 0.8 },
+        bg = { from = "diffRemoved", attr = "fg", alter = 0.5, opacity = 0.15 },
+        reverse = false,
+      },
+    },
 
     -- { diffText = { link = "DiffText" } },
 

@@ -1012,18 +1012,18 @@ function M.change_colors()
 
       line_number_fg = H.tint(H.get("Comment", "fg"), -0.05),
 
-      line_number_plus = H.get("deltaPlus", "fg"),
-      line_number_minus = H.get("deltaMinus", "fg"),
+      line_number_plus = H.get("NeogitDiffAdd", "bg"),
+      line_number_minus = H.get("NeogitDiffDelete", "fg"),
 
-      hunk_plus_fg = H.get("GitSignsAdd", "fg"),
-      hunk_plus_bg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 0.15),
-      hunk_emp_plus_fg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 1.5),
-      hunk_emp_plus_bg = H.blend(tostring(H.get("GitSignsAdd", "fg")), tostring(H.get("Normal", "bg")), 0.5),
+      hunk_plus_fg = H.get("NeogitDiffAdd", "fg"),
+      hunk_plus_bg = H.get("NeogitDiffAdd", "bg"),
+      hunk_emp_plus_fg = H.get("NeogitDiffAddInline", "fg"),
+      hunk_emp_plus_bg = H.get("NeogitDiffAddInline", "bg"),
 
-      hunk_minus_fg = H.get("GitSignsDelete", "fg"),
-      hunk_minus_bg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 0.15),
-      hunk_emp_minus_fg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 1.5),
-      hunk_emp_minus_bg = H.blend(tostring(H.get("GitSignsDelete", "fg")), tostring(H.get("Normal", "bg")), 0.5),
+      hunk_minus_fg = H.get("NeogitDiffDelete", "fg"),
+      hunk_minus_bg = H.get("Normal", "bg"),
+      hunk_emp_minus_fg = H.get("NeogitDiffDeleteInline", "fg"),
+      hunk_emp_minus_bg = H.get("NeogitDiffDeleteInline", "bg"),
     },
     eww = {
       bg = H.get("Normal", "bg"),
