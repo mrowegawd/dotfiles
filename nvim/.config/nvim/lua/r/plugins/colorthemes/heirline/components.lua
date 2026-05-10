@@ -1577,7 +1577,7 @@ M.WinbarFilePath = {
       local opts = { relative = "cwd", length = 3 }
 
       local raw_path = vim.fn.expand "%:p"
-      if raw_path == "" or vim.bo.filetype == "octo" then
+      if raw_path == "" then
         return ""
       end
 
@@ -1595,7 +1595,16 @@ M.WinbarFilePath = {
       local parts = vim.split(path, "[\\/]")
 
       if #parts > opts.length then
-        parts = { "…", unpack(parts, #parts - opts.length + 1, #parts - 1) }
+        local select_last = 1
+        local select_middle = 1
+        if vim.bo.filetype == "octo" then
+          -- If we're using Octo, we need to use the format
+          -- userrepo/repo/issue/<commit> or userrepo/repo/request/<commit>."
+          select_middle = 0
+          select_last = 2
+        end
+
+        parts = { "…", unpack(parts, #parts - opts.length + select_middle, #parts - select_last) }
       else
         table.remove(parts, #parts)
       end
@@ -1610,11 +1619,18 @@ M.WinbarFilePath = {
   },
   {
     condition = function()
-      return vim.bo.filetype ~= "octo" and not (set_conditions and set_conditions.is_dont_show_at_ft())
+      return not (set_conditions and set_conditions.is_dont_show_at_ft())
     end,
     provider = function(self)
       local opts = { relative = "cwd", length = 3 }
       local path = vim.fn.fnamemodify(self.bufname, ":t")
+
+      if vim.bo.filetype == "octo" then
+        path = vim.fn.fnamemodify(self.bufname, ":p")
+        local parts = vim.split(path, "[\\/]")
+        parts = { "…", unpack(parts, #parts - opts.length + 1, #parts) }
+        return parts[#parts - 1] .. "/" .. parts[#parts]
+      end
 
       if self.git_type then
         local commit, filepath
