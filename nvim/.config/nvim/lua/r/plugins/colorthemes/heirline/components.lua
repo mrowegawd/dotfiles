@@ -271,17 +271,17 @@ local __colors = function()
 
     -- Termasuk filetype: readonly, commit
     mode_red_fg = H.get("WinBarRed", "fg"),
-    mode_red_fg_bright = H.tint(H.get("WinBarRed", "fg"), 0.1),
+    mode_red_fg_bright = H.tint(H.get("WinBarRed", "fg"), 0.3),
     mode_red_bg = H.get("WinBarRed", "bg"),
 
     -- Termasuk filetype: git fugtive-relative
     mode_yellow_fg = H.get("WinBarYellow", "fg"),
-    mode_yellow_fg_bright = H.tint(H.get("WinBarYellow", "fg"), 0.1),
+    mode_yellow_fg_bright = H.tint(H.get("WinBarYellow", "fg"), 0.3),
     mode_yellow_bg = H.get("WinBarYellow", "bg"),
 
     -- Termasuk filetype: help,
     mode_green_fg = H.get("WinBarGreen", "fg"),
-    mode_green_fg_bright = H.tint(H.get("WinBarGreen", "fg"), 0.1),
+    mode_green_fg_bright = H.tint(H.get("WinBarGreen", "fg"), 0.3),
     mode_green_bg = H.get("WinBarGreen", "bg"),
 
     mode_visual_bg = H.get("Visual", "bg"),
@@ -319,11 +319,9 @@ local set_winbar_hl = function(is_more_bright)
   if set_conditions.is_readonly() then
     hlWinbarOpts.fg = colors.mode_red_fg
     hlWinbarOpts.bg = colors.mode_red_bg
-  end
-
-  if set_conditions.is_path_git_relative() then
-    hlWinbarOpts.fg = colors.mode_yellow_fg
-    hlWinbarOpts.bg = colors.mode_yellow_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_red_fg_bright
+    end
   end
 
   if set_conditions.is_gray_ft() then
@@ -347,6 +345,14 @@ local set_winbar_hl = function(is_more_bright)
     hlWinbarOpts.bg = colors.mode_green_bg
     if is_more_bright then
       hlWinbarOpts.fg = colors.mode_green_fg_bright
+    end
+  end
+
+  if set_conditions.is_path_git_relative() then
+    hlWinbarOpts.fg = colors.mode_yellow_fg
+    hlWinbarOpts.bg = colors.mode_yellow_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_yellow_fg_bright
     end
   end
 
@@ -1556,95 +1562,28 @@ M.WinbarSeparator = {
 }
 M.WinbarFilePath = {
   init = function(self)
-    self.bufname = get_vars.bufname()
-    self.filename = get_vars.filename(self.bufname)
+    self.bufname = vim.api.nvim_buf_get_name(0)
+    -- Detect valid filetype git
+    self.git_type = self.bufname:match "^gitsigns://" and "gitsigns"
+      or self.bufname:match "^diffview://" and "diffview"
+      or self.bufname:match "^fugitive://" and "fugitive"
+      or nil
   end,
   condition = function()
-    return vim.bo[0].filetype ~= "qf"
+    return vim.bo.filetype ~= "qf"
   end,
   {
-    provider = function(self)
-      local opts = {
-        relative = "cwd",
-        length = 3,
-      }
-
-      ------------------------------------------------------------------------
-      -- normalize diffview path
-      ------------------------------------------------------------------------
-      local function parse_diffview_path(path)
-        if not path:match "^diffview://" then
-          return nil
-        end
-
-        -- remove scheme
-        local clean = path:gsub("^diffview://", "")
-
-        -- capture:
-        -- /home/user/repo/.git/<commit>/path/to/file
-        local commit, filepath = clean:match "/%.git/([^/]+)/(.+)$"
-
-        if not filepath then
-          return nil
-        end
-
-        return {
-          commit = commit,
-          filepath = filepath,
-        }
-      end
+    provider = function()
+      local opts = { relative = "cwd", length = 3 }
 
       local raw_path = vim.fn.expand "%:p"
-
-      if raw_path == "" then
+      if raw_path == "" or vim.bo.filetype == "octo" then
         return ""
       end
 
-      if #self.filename == 0 then
-        return "[Unknown Filename]"
-      end
-
-      ------------------------------------------------------------------------
-      -- diffview
-      ------------------------------------------------------------------------
-      local dv = parse_diffview_path(raw_path)
-
-      if dv then
-        local sep = package.config:sub(1, 1)
-
-        local parts = vim.split(dv.filepath, "[\\/]")
-
-        -- shorten path
-        if opts.length > 0 and #parts > opts.length then
-          parts = {
-            "…",
-            unpack(parts, #parts - opts.length + 1, #parts),
-          }
-        end
-
-        local short_path = table.concat(parts, sep)
-
-        return string.format(" %s [%s] ", short_path, dv.commit)
-      end
-
-      ------------------------------------------------------------------------
-      -- special ft
-      ------------------------------------------------------------------------
-      if vim.bo.filetype == "octo" then
-        return raw_path
-      end
-
-      if set_conditions.is_path_git_relative() then
-        return raw_path
-      end
-
-      ------------------------------------------------------------------------
-      -- normal path logic
-      ------------------------------------------------------------------------
-      local path = raw_path
-
       local root = RUtils.root.get { normalize = true }
       local cwd = RUtils.root.cwd()
+      local path = raw_path
 
       if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
         path = path:sub(#cwd + 2)
@@ -1655,32 +1594,14 @@ M.WinbarFilePath = {
       local sep = package.config:sub(1, 1)
       local parts = vim.split(path, "[\\/]")
 
-      ------------------------------------------------------------------------
-      -- shorten path
-      ------------------------------------------------------------------------
-      if opts.length == 0 then
-        parts = parts
-      elseif #parts > opts.length then
-        parts = {
-          "…",
-          unpack(parts, #parts - opts.length + 1, #parts - 1),
-        }
+      if #parts > opts.length then
+        parts = { "…", unpack(parts, #parts - opts.length + 1, #parts - 1) }
+      else
+        table.remove(parts, #parts)
       end
 
-      if not set_conditions.is_terminal_ft() then
-        local jparts = vim.split(self.filename, "[\\/]")
-
-        if #jparts == 1 then
-          return ""
-        end
-
-        path = table.concat(parts, sep)
-
-        if #path > 0 then
-          return path .. sep
-        end
-      end
-      return ""
+      path = table.concat(parts, sep)
+      return #path > 0 and (" " .. path .. sep) or " "
     end,
     hl = function()
       local hl_opts = set_winbar_hl()
@@ -1689,16 +1610,51 @@ M.WinbarFilePath = {
   },
   {
     condition = function()
-      return vim.bo[0].filetype ~= "qf"
-        and not set_conditions.is_diff()
-        and not set_conditions.is_path_git_relative()
-        and not set_conditions.is_dont_show_at_ft()
+      return vim.bo.filetype ~= "octo" and not (set_conditions and set_conditions.is_dont_show_at_ft())
     end,
     provider = function(self)
-      if vim.bo.filetype == "octo" then
-        return ""
+      local opts = { relative = "cwd", length = 3 }
+      local path = vim.fn.fnamemodify(self.bufname, ":t")
+
+      if self.git_type then
+        local commit, filepath
+        local clean = self.bufname:gsub("^%w+://", "")
+
+        if self.git_type == "gitsigns" then
+          filepath, commit = clean:match "^(.-)//(.*)$"
+        elseif self.git_type == "diffview" then
+          commit, filepath = clean:match "/%.git/([^/]+)/(.+)$"
+        elseif self.git_type == "fugitive" then
+          commit, filepath = clean:match "%.git//(%x+)/(.*)$"
+        end
+
+        if filepath and commit then
+          if commit:match "^0+$" then
+            commit = "NEW"
+          end
+
+          -- Get the path
+          -- local dir = vim.fn.fnamemodify(filepath, ":h")
+          local dir = path
+          if dir == "." then
+            dir = ""
+          end
+
+          -- Shorten the path
+          local parts = vim.split(dir, "[\\/]")
+          if #parts > opts.length then
+            parts = { "…", unpack(parts, #parts - opts.length + 1) }
+          end
+
+          local display_path = table.concat(parts, "/")
+          if #display_path > 0 then
+            display_path = display_path
+          end
+
+          return string.format("%s [%s] ", display_path, commit:sub(1, 7))
+        end
       end
-      return RUtils.file.basename(self.filename) .. " "
+      return path
     end,
     hl = function()
       local hl_opts = set_winbar_hl(true)

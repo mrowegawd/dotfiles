@@ -478,6 +478,9 @@ return {
         map("n", "<Leader>gS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
         map("n", "<Leader>gR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
 
+        map("n", "<Leader>gb", gs.blame_line, "Git: blame line [gitsigns]")
+        map("n", "<Leader>gB", gs.blame, "Git: blame [gitsigns]")
+
         -- Hunk preview
         map("n", "<Leader>gp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
         map("n", "<Leader>gP", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
@@ -491,13 +494,6 @@ return {
         vim.api.nvim_create_user_command("GitToggleLineHl", function()
           gs.toggle_linehl()
         end, { desc = "Git: toggle linehl [gitsigns]" })
-        vim.api.nvim_create_user_command("GitBlame", function()
-          gs.blame()
-          RUtils.info "Sometimes git blame is too slow. Please wait."
-        end, { desc = "Git: blame [gitsigns]" })
-        vim.api.nvim_create_user_command("GitBlameLine", function()
-          gs.blame_line()
-        end, { desc = "Git: blame line [gitsigns]" })
 
         -- Sending to qf
         map("n", "<Leader>xG", function()
