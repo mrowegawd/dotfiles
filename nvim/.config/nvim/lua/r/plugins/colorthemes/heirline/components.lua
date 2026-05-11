@@ -36,7 +36,7 @@ local set_conditions = {
   ---@param size number
   hide_in_width = function(size)
     size = size or 120
-    return vim.api.nvim_win_get_width(0) > size
+    return vim.api.nvim_win_get_width(0) < size
   end,
   hide_in_col_width = function(size)
     size = size or 120
@@ -76,7 +76,7 @@ local set_conditions = {
     return vim.tbl_contains(dap_ft, vim.bo.filetype)
   end,
   is_dont_show_at_ft = function()
-    local dont_show_at_ft = { "oil" }
+    local dont_show_at_ft = { "oil", "DiffviewFilePanel" }
     return vim.tbl_contains(dont_show_at_ft, vim.bo.filetype)
   end,
   is_note_ft = function()
@@ -256,7 +256,7 @@ local __colors = function()
     task_fg = H.get("GitSignsAdd", "fg"),
     task_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.2, H.get("Normal", "bg")),
 
-    modified_fg = H.get("KeywordMatch", "fg") or "#000000",
+    modified_fg = H.get("GitSignsDelete", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
     -- Termasuk filetype: debug dap, dbui
@@ -526,23 +526,29 @@ M.FilePath = {
     self.bufname = get_vars.bufname()
     self.filename = get_vars.filename(self.bufname)
     self.exclude_ft = vim.tbl_contains(
-      { "neo-tree", "Outline", "trouble", "qf" },
+      { "neo-tree", "Outline", "trouble", "qf", "codecompanion", "oil", "DiffviewFiles" },
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
+    -- Detect valid filetype git
+    self.git_type = self.bufname:match "^gitsigns://" and "gitsigns"
+      or self.bufname:match "^diffview://" and "diffview"
+      or self.bufname:match "^fugitive://" and "fugitive"
+      or nil
   end,
   {
-    provider = function()
+    provider = function(self)
       if
         set_conditions.is_terminal_ft()
         or set_conditions.is_path_git_relative()
-        or vim.bo.filetype == "codecompanion"
+        or self.exclude_ft
+        or (vim.bo.filetype == "octo")
       then
         return " "
       end
 
-      local patc = vim.uv.cwd()
-      if patc then
-        local cwd = vim.fn.fnamemodify(patc, ":t")
+      local path = vim.uv.cwd()
+      if path then
+        local cwd = vim.fn.fnamemodify(path, ":t")
         if not cwd or cwd == "" then
           return ""
         end
@@ -554,13 +560,14 @@ M.FilePath = {
   },
   {
     provider = function(self)
-      local opts = {
-        relative = "cwd",
-        length = 3,
-      }
+      if self.exclude_ft then
+        return ""
+      end
+
+      local opts = { relative = "cwd", length = 3 }
 
       if vim.bo.filetype == "codecompanion" then
-        return
+        return ""
       end
 
       local path = vim.fn.expand "%:p" --[[@as string]]
@@ -581,62 +588,108 @@ M.FilePath = {
         path = path:sub(#root + 2)
       end
 
+      local is_very_narrow = not Conditions.width_percent_below(#self.filename, 0.47)
+        and set_conditions.hide_in_col_width(40)
+
+      local is_medium_width = Conditions.width_percent_below(#self.filename, 0.30)
+
       local sep = package.config:sub(1, 1)
       local parts = vim.split(path, "[\\/]")
 
-      if opts.length == 0 then
-        parts = parts
-      elseif #parts > opts.length and opts.relative == "cwd" then
-        -- remove the last one to modified hl self.filename
-        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
-      else
-        -- remove the last one too
-        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
-      end
-
-      if not Conditions.width_percent_below(#self.filename, 0.47) and set_conditions.hide_in_col_width(30) then
-        path = table.concat(parts, sep)
-        if #path > 0 then
-          return path .. sep
-        end
-      end
-
-      if Conditions.is_active() then
-        parts = vim.split(self.filename, "[\\/]")
+      if #parts <= opts.length then
         table.remove(parts, #parts)
-        path = table.concat(parts, sep)
-        if #path > 0 then
-          if path:find(RUtils.config.path.home, 1, true) == 1 then
-            path = path:sub(#RUtils.config.path.home + 2)
+      else
+        local part_middle = 2
+        local part_last = 1
+
+        local middle_pack, last_pack
+        local part_first = "…"
+
+        if not is_very_narrow then
+          last_pack = #parts - 1
+          middle_pack = #parts - opts.length
+
+          if is_medium_width then
+            middle_pack = 1
+            part_first = ""
           end
-          return path .. sep
+        else
+          middle_pack = #parts - opts.length + part_middle
+          last_pack = #parts - part_last
         end
+
+        if vim.bo.filetype == "octo" then
+          part_middle = 4
+          part_last = 2
+        end
+
+        parts = { part_first, unpack(parts, middle_pack, last_pack) }
       end
+
+      path = table.concat(parts, sep)
+      if is_medium_width then
+        path = path:gsub("^/", "")
+      end
+      return #path > 0 and (path .. sep)
     end,
     hl = { bold = true },
   },
   {
     provider = function(self)
+      local opts = { relative = "cwd", length = 3 }
+      local path = vim.fn.fnamemodify(self.bufname, ":t")
+
       if #self.filename == 0 then
         return " " .. vim.api.nvim_get_option_value("filetype", { buf = 0 })
       end
 
       if vim.bo.filetype == "qf" then
-        local path = self.bufname
         if path:find(RUtils.config.path.home, 1, true) == 1 then
           path = path:sub(#RUtils.config.path.home + 2)
         end
         return RUtils.file.basename(path)
       end
+
+      if self.git_type then
+        local commit, filepath
+        local clean = self.bufname:gsub("^%w+://", "")
+
+        if self.git_type == "diffview" then
+          commit, filepath = clean:match "/%.git/([^/]+)/(.+)$"
+        elseif self.git_type == "diffview" then
+          commit, filepath = clean:match "/%.git/([^/]+)/(.+)$"
+        elseif self.git_type == "fugitive" then
+          commit, filepath = clean:match "/%.git//(%x+)/(.*)$"
+        end
+
+        if filepath and commit then
+          local dir = path
+          if dir == "." then
+            dir = ""
+          end
+
+          local parts = vim.split(dir, "[\\/]")
+          if #parts > opts.length then
+            parts = { "…", unpack(parts, #parts - opts.length + 1) }
+          end
+
+          local display_path = table.concat(parts, "/")
+          if #display_path > 0 then
+            display_path = display_path
+          end
+
+          return string.format("%s [%s] ", display_path, commit:sub(1, 7))
+        end
+      end
+
       return RUtils.file.basename(self.filename)
     end,
-    hl = function(self)
-      local fg = tostring(colors.bright)
-      local is_bold = true
-      if self.exclude_ft or #self.filename == 0 then
-        fg = colors.block_fg
+    hl = function()
+      local fg = colors.bright
+      if vim.bo.filetype == "qf" then
+        fg = colors.statusline_fg
       end
-      return { fg = fg, bold = is_bold }
+      return { fg = fg, bold = true }
     end,
   },
   {
@@ -823,33 +876,23 @@ M.QuickfixStatus = {
 }
 M.FileFlags = {
   {
-    -- condition = function()
-    --   return vim.bo.modified and not (vim.bo.filetype == "TelescopePrompt")
-    -- end,
     provider = function()
-      if vim.bo.modified then
-        return RUtils.config.icons.misc.modified
-      elseif not vim.bo.modifiable or vim.bo.readonly then
-        return RUtils.config.icons.misc.readonly
-      else
-        return "  "
+      local icon_flag = "  "
+      local is_readonly = (not vim.bo.modifiable or vim.bo.readonly) and true or false
+      local is_modifiled = vim.bo.modified
+
+      if is_readonly then
+        icon_flag = RUtils.config.icons.misc.readonly
       end
+
+      if is_modifiled then
+        icon_flag = RUtils.config.icons.misc.modified
+      end
+
+      return " " .. icon_flag .. " "
     end,
     hl = { fg = colors.modified_fg },
   },
-  -- {
-  --   -- condition = function()
-  --   --   return (not vim.bo.modifiable or vim.bo.readonly) and not (vim.bo.filetype == "DiffviewFiles")
-  --   -- end,
-  --   provider = " " .. RUtils.config.icons.misc.readonly,
-  --   hl = function()
-  --     local fg = colors.diagnostic_err
-  --     if Conditions.is_not_active() then
-  --       fg = colors.coldisorent
-  --     end
-  --     return { fg = fg }
-  --   end,
-  -- },
 }
 M.Gap = { { provider = "%=" } }
 M.Dap = {
@@ -919,10 +962,11 @@ M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
   condition = function()
     return Conditions.lsp_attached
-      and vim.bo.filetype ~= "qf"
-      and vim.fn.mode(1) ~= "t"
-      and not set_conditions.is_path_git_relative()
-      and set_conditions.hide_in_col_width(100)
+        and vim.bo.filetype ~= "qf"
+        and vim.fn.mode(1) ~= "t"
+        and not set_conditions.is_path_git_relative()
+        and set_conditions.hide_in_col_width(100)
+      or (vim.bo.filetype == "octo")
   end,
 
   init = function(self)
@@ -1597,9 +1641,10 @@ M.WinbarFilePath = {
       if #parts > opts.length then
         local select_last = 1
         local select_middle = 1
+
+        -- If we're using Octo, we need to use the correct format
+        -- userrepo/repo/issue/<commit> or userrepo/repo/request/<commit>."
         if vim.bo.filetype == "octo" then
-          -- If we're using Octo, we need to use the format
-          -- userrepo/repo/issue/<commit> or userrepo/repo/request/<commit>."
           select_middle = 0
           select_last = 2
         end
@@ -1678,12 +1723,12 @@ M.WinbarFilePath = {
     end,
   },
 }
-M.WinBarNavic = {
+M.WinbarNavic = {
   init = function(self)
     self.req_navic = get_navic()
   end,
   condition = function()
-    return get_navic() ~= nil and set_conditions.hide_in_width(75)
+    return get_navic() ~= nil
   end,
   {
     condition = function(self)
@@ -1696,41 +1741,51 @@ M.WinBarNavic = {
     end,
     provider = function(self)
       local buf = vim.api.nvim_get_current_buf()
-      self._navic_cache = {
-        buf = buf,
-        location = self.req_navic.get_location(),
-        data = self.req_navic.get_data(buf),
-      }
+      local data = self.req_navic.get_data(buf)
 
-      local status_navic = string.format(" %s", self._navic_cache.location)
+      if not data or #data == 0 then
+        return
+      end
 
-      if not set_conditions.hide_in_width(100) then
-        local data_navic = self._navic_cache.data
-        local parts_navic = vim.split(status_navic, "  ")
+      local location = self.req_navic.get_location()
+      local parts = {}
+      for _, d in ipairs(data) do
+        table.insert(parts, d.icon .. d.name)
+      end
 
-        if not data_navic or #data_navic == 0 then
-          return
+      local function format_part(item) -- function helper to add highlights group
+        local hl_group = "LspKind" .. item.type
+        return string.format("%%#%s#%s%%#WinBar#%s%%*", hl_group, item.icon, item.name)
+      end
+
+      local sep = " "
+      local first = format_part(data[1])
+
+      local fmt_navic
+
+      if set_conditions.hide_in_width(80) then
+        fmt_navic = string.format("%s%%#NavicSeparator# %s %%#NavicSeparator#", sep, first)
+      elseif set_conditions.hide_in_width(90) then
+        local last = format_part(data[#data])
+        fmt_navic = string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", sep, first, last)
+      else
+        fmt_navic = sep .. "%#NavicSeparator# " .. location
+
+        local function get_display_width(str)
+          local clean_str = str:gsub("%%#.-#", "") -- Hapus kode highlight %#GroupName#
+          clean_str = clean_str:gsub("%%%*", "") -- Hapus kode penutup highlight %*
+          clean_str = clean_str:gsub("%%.", "") -- Hapus item statusline lainnya->  %l, %c, dsb
+          return vim.fn.strdisplaywidth(clean_str)
         end
+        local display_width = get_display_width(fmt_navic)
 
-        local first_part = parts_navic[1]
-        local second_part = parts_navic[#parts_navic - 1]
-        local last_part = parts_navic[#parts_navic]
-
-        if set_conditions.hide_in_width(80) then
-          if second_part and (first_part ~= second_part) then
-            return parts_navic[1] .. "  … " .. second_part .. "  " .. last_part
-          end
-        end
-
-        if data_navic and #data_navic > 0 then
-          if first_part ~= last_part then
-            return parts_navic[1] .. "  … " .. last_part
-          end
-          return parts_navic[1]
+        if not Conditions.width_percent_below(display_width, 0.50) then
+          local last = format_part(data[#data])
+          fmt_navic = string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", sep, first, last)
         end
       end
 
-      return status_navic
+      return fmt_navic
     end,
   },
   hl = function()
@@ -1750,7 +1805,7 @@ M.status_winbar_active_left = {
   -- M.WinbarSeparator,
   M.FileIcon,
   M.WinbarFilePath,
-  M.WinBarNavic,
+  M.WinbarNavic,
   M.QuickfixStatus,
 
   M.Gap,
