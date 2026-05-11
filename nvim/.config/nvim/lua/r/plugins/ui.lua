@@ -97,8 +97,8 @@ return {
           win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
         },
         mini = {
-          -- position = { row = "98%", col = "100%" },
-          position = { row = "2%", col = "100%" },
+          position = { row = "98%", col = "100%" },
+          -- position = { row = "2%", col = "100%" },
           size = { height = "5%" },
         },
         popupmenu = {

@@ -196,8 +196,8 @@ return {
       { "<c-c>gf", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
       { "<c-c>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
 
-      { "<Leader>si", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Search: symbols [fzflua]" },
-      { "<Leader>sI", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Search: workspaces symbols [fzflua]" },
+      { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Search: symbols [fzflua]" },
+      { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Search: workspaces symbols [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"

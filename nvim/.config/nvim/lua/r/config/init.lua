@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "tokyonight"
+local colorscheme = "gruvbox"
 
 _G.base = {}
 
@@ -239,54 +239,46 @@ local defaults = {
       Array = " ",
       Boolean = "󰨙 ",
       Class = " ",
-      Codeium = "󰘦 ",
+      Codeium = " ",
       Color = " ",
       Control = " ",
       Collapsed = " ",
       Constant = "󰏿 ",
       Component = "󰅴 ",
-      Copilot = " ",
-      Enum = " ",
-      EnumMember = " ", -- " "
-      Event = " ",
-      Field = " ", -- " "
-
-      -- Method = " ",
-      -- Function = " ",
-      -- Constructor = " ",
-      Method = "󰆧 ", -- taken from "lspkind" plugin
-      Function = "󰊕 ",
       Constructor = " ",
-
+      Copilot = " ",
+      Enum = " ",
+      EnumMember = " ",
+      Event = " ",
+      Field = "󰜢 ",
       File = " ",
-      Folder = " ",
-      Interface = " ", -- " "
+      Folder = "󰉋 ",
       Fragment = "󰅴 ",
-      Macro = " ",
+      Function = "󰊕 ",
+      Interface = " ",
       Key = " ",
       Keyword = " ",
-      Module = " ", -- " "
-      StaticMethod = " ",
+      Macro = "󰁚 ",
+      Method = "󰆧 ",
+      Module = " ",
       Namespace = "󰦮 ",
       Null = " ",
       Number = "󰎠 ",
       Object = " ",
       Operator = " ",
       Package = " ",
-      Property = " ", -- " "
+      Property = " ",
       Reference = " ",
-      Snippet = " ", --"󱄽 "
-      String = " ", -- " " "﬌ "
-      Struct = " ", -- " " "󰆼 "
+      Snippet = " ",
+      String = " ",
+      Struct = "󰙅 ",
       TabNine = "󰏚 ",
-      TypeParameter = " ",
-      Parameter = " ",
-      Unit = " ",
+      Text = "󰉿 ",
       TypeAlias = " ",
-      Text = " ",
-      Value = " ",
-      Variable = " ", -- "󰀫 ",
-      stacked = "﬘ ",
+      TypeParameter = " ",
+      Unit = " ",
+      Value = "󰎟 ",
+      Variable = "󰀫 ",
     },
   },
   ---@type table<string, string[]|boolean>?

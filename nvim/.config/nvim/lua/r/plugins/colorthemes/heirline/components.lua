@@ -526,7 +526,7 @@ M.FilePath = {
     self.bufname = get_vars.bufname()
     self.filename = get_vars.filename(self.bufname)
     self.exclude_ft = vim.tbl_contains(
-      { "neo-tree", "Outline", "trouble", "qf", "codecompanion", "oil", "DiffviewFiles" },
+      { "neo-tree", "Outline", "trouble", "qf", "codecompanion", "oil", "DiffviewFiles", "grug-far" },
       vim.api.nvim_get_option_value("filetype", { buf = 0 })
     )
     -- Detect valid filetype git
@@ -1655,6 +1655,11 @@ M.WinbarFilePath = {
       end
 
       path = table.concat(parts, sep)
+
+      if set_conditions.hide_in_width(55) then
+        return " "
+      end
+
       return #path > 0 and (" " .. path .. sep) or " "
     end,
     hl = function()
@@ -1797,7 +1802,7 @@ M.WinbarNavic = {
       bg = colors.mode_note_bg
     end
 
-    return { fg = fg, bg = bg }
+    return { fg = fg, bg = bg, bold = false }
   end,
 }
 
