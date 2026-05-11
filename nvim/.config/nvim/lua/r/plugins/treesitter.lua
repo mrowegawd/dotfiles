@@ -213,11 +213,11 @@ return {
     event = "LazyFile",
     opts = {},
   },
-  -- NVIM-TREESITTER-CONTEXT
+  -- NVIM-TREESITTER-CONTEXT (disabled)
   {
     -- "mrowegawd/nvim-treesitter-context",
     "nvim-treesitter/nvim-treesitter-context",
-    -- enabled = false,
+    enabled = false,
     event = "LspAttach",
     keys = {
       {
