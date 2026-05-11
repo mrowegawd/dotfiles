@@ -101,7 +101,7 @@ end, { desc = "Terminal: move right" })
 -- }}}
 -- {{{ Windows, view and nav
 
-local exclude_ft_arrange = { "rgflow", "DiffviewFileHistory", "DiffviewFiles" }
+local exclude_ft_arrange = { "DiffviewFileHistory", "DiffviewFiles" }
 
 local arange_wins = function(direction)
   return function()
@@ -182,7 +182,7 @@ local function switch_focus_targeted_window()
     return
   end
 
-  local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
 
   -- Go back to the window if any windows are open
   if vim.tbl_contains(right_win, vim.bo.filetype) then

@@ -215,7 +215,7 @@ function M.setup(opts)
     mapping = cmd_mapping,
   })
 
-  cmp.setup.filetype({ "org", "rgflow" }, {
+  cmp.setup.filetype({ "org" }, {
     sources = cmp.config.sources({
       { name = "emoji" },
       { name = "path" },

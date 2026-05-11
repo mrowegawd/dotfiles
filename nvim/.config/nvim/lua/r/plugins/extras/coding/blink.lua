@@ -40,7 +40,7 @@ return {
     },
     opts = {
       -- custom props to disable blink in certain filetypes
-      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select" },
+      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select", "qfbookmark" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
@@ -359,7 +359,7 @@ return {
           function(cmp)
             local current_provider = providers[idx]
 
-            if current_provider == "codeium" and vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+            if current_provider == "codeium" and vim.tbl_contains({ "org" }, vim.bo[0].filetype) then
               idx = idx + 1
               current_provider = providers[idx]
             end

@@ -11,7 +11,7 @@ return {
       {
         "<Leader>oe",
         function()
-          local right_win = { "trouble", "aerial", "Outline", "rgflow", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+          local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
           if vim.tbl_contains(right_win, vim.bo.filetype) then
             RUtils.warn "This filetype is excluded and cannot be opened in oil.nvim"
             return

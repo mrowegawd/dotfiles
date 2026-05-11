@@ -99,7 +99,7 @@ return {
             cmp.complete {}
           elseif callme == 1 then
             callme = 2
-            if not vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+            if not vim.tbl_contains({ "org" }, vim.bo[0].filetype) then
               cmp.complete { config = { sources = { { name = "codeium" } } } }
             end
           elseif callme == 2 then
@@ -179,8 +179,8 @@ return {
           function(cmp)
             local current_provider = providers[idx]
 
-            if current_provider == "codeium" and vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
-              -- Jika filetype adalah 'org' atau 'rgflow', lewati 'codeium'
+            if current_provider == "codeium" and vim.tbl_contains({ "org" }, vim.bo[0].filetype) then
+              -- Jika filetype adalah 'org' atau  lewati 'codeium'
               idx = idx + 1
               current_provider = providers[idx]
             end
