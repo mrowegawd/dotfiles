@@ -61,11 +61,17 @@ nohup mpv --ontop --no-border --force-window \
 '
 """, desc = "Play video playist on mpv" },
   { on = [
-    "B",
-  ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
-  { on = [
     "<a-B>",
-  ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
+  ], run = "plugin bookmark-cycle -- pick", desc = "Bookmark pick (to select, save, delete)" },
+  { on = [
+    "b",
+  ], run = "plugin bookmark-cycle -- save", desc = "Bookmark save" },
+  { on = [
+    "B",
+  ], run = "plugin bookmark-cycle -- cycle", desc = "Bookmark cycle" },
+  # { on = [
+  #   "<a-b>",
+  # ], run = "plugin bookmark-cycle -- delete", desc = "Bookmark delete" },
 ]
 
 keymap = [

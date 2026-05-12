@@ -104,6 +104,7 @@ local save_alternate = function()
 end
 
 local toggle_alternate = function()
+  local current = tostring(state()) -- ← simpan cwd sekarang dulu
   local cwd_alternate_forward = home .. cwd_forward
   local cwd_alternate_backward = home .. cwd_backward
 
@@ -124,6 +125,7 @@ local toggle_alternate = function()
     jump(cwd_alternate_backward)
     os.execute("rm " .. state_toggle)
   else
+    os.execute('echo "' .. current .. '" > ' .. home .. cwd_backward)
     jump(cwd_alternate_forward)
     os.execute("touch " .. state_toggle)
   end
