@@ -161,6 +161,31 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move left (
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move right (visual)" })
 
+---@param tbl_wins table
+---@return boolean
+local function go_back_to_window(tbl_wins)
+  for _, win in pairs(tbl_wins) do
+    local win_checked = RUtils.cmd.windows_is_opened { win }
+    if win_checked.found then
+      -- pcall(vim.api.nvim_set_current_win, win_checked.winid)
+      vim.api.nvim_set_current_win(win_checked.winid)
+      return true
+    end
+  end
+  return false
+end
+
+---@param ft_wins table
+---@return boolean
+local function go_prev_window(ft_wins)
+  -- Go back to the window if any windows are open
+  if vim.tbl_contains(ft_wins, vim.bo.filetype) then
+    vim.cmd [[wincmd p]]
+    return true
+  end
+  return false
+end
+
 local function switch_focus_targeted_window()
   local function call_stack_peek()
     local Stack = require "overlook.stack"
@@ -182,20 +207,20 @@ local function switch_focus_targeted_window()
     return
   end
 
-  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
-
-  -- Go back to the window if any windows are open
-  if vim.tbl_contains(right_win, vim.bo.filetype) then
-    vim.cmd [[wincmd p]]
+  local float_win = { "codecompanion", "wayfinder" }
+  if go_prev_window(float_win) then
+    return
+  end
+  if go_back_to_window(float_win) then
     return
   end
 
-  for _, win in pairs(right_win) do
-    local win_checked = RUtils.cmd.windows_is_opened { win }
-    if win_checked.found then
-      vim.api.nvim_set_current_win(win_checked.winid)
-      break
-    end
+  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+  if go_prev_window(right_win) then
+    return
+  end
+  if go_back_to_window(right_win) then
+    return
   end
 end
 
