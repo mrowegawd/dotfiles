@@ -4,7 +4,17 @@ LAYOUT_SIDE="left"
 
 FIXED_HEIGHT_BELOW_PANE=15
 FIXED_HEIGHT_MAIN_PANE=50
-FIXED_RESIZE_TMUX_LEFT_OR_RIGHT=40
+
+tmux_resize_pane_to_20percent() {
+  local window_width_tmux new_width
+  window_width_tmux=$(tmux display -p "#{window_width}")
+  new_width=$((window_width_tmux * 18 / 100))
+  # new_width=$((100 * 40 / window_width_tmux)) -- will increase as the window_width decrease
+  echo $new_width
+}
+
+new_fixed_resize_value=$(tmux_resize_pane_to_20percent)
+FIXED_RESIZE_TMUX_LEFT_OR_RIGHT=$new_fixed_resize_value
 
 FILE_MANAGER="$TERM_FILEMANAGER"
 

@@ -131,7 +131,6 @@ return {
       },
     },
     opts = function()
-      vim.cmd [[hi RenderMarkdownH1Bg guibg=NONE]] -- disable the background color for H1bg
       local H = require "r.settings.highlights"
       vim.schedule(function()
         H.plugin("RenderMarkdownHi", {
@@ -158,8 +157,7 @@ return {
           left_pad = 1,
           right_pad = 1,
         },
-        render_modes = { "n", "no", "c", "t", "i", "ic" },
-        -- render_modes = true,
+        render_modes = true,
         anti_conceal = {
           ignore = {
             bullet = { "n" },
@@ -180,10 +178,10 @@ return {
         heading = {
           enabled = true,
           sign = false,
-          width = "block",
+          width = "full", -- full, block
           left_pad = 1,
           right_pad = 0,
-          position = "inline", --"left",
+          position = "inline",
           -- icons = {
           --   "",
           --   "",
@@ -192,8 +190,9 @@ return {
           --   "",
           --   "",
           -- },
-          -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-          icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+          icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+          -- icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
+          -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
           signs = {
             "󰉫 ", -- H1
             "󰉬 ", -- H2
