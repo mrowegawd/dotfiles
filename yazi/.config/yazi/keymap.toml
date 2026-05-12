@@ -61,7 +61,7 @@ nohup mpv --ontop --no-border --force-window \
 '
 """, desc = "Play video playist on mpv" },
   { on = [
-    "<a-b>",
+    "B",
   ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
   { on = [
     "<a-B>",

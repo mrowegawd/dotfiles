@@ -37,12 +37,12 @@ local function jump(cwd)
     end
 
     ya.emit("cd", { target_bookmark_path })
-    ya.notify {
-      title = "Alternate Workspaces",
-      content = 'Jump to "' .. target_bookmark_path .. '"',
-      timeout = 2,
-      level = "info",
-    }
+    -- ya.notify {
+    --   title = "Alternate Workspaces",
+    --   content = 'Jump to "' .. target_bookmark_path .. '"',
+    --   timeout = 2,
+    --   level = "info",
+    -- }
   end
 end
 
