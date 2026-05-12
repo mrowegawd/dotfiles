@@ -186,13 +186,17 @@ RUtils.map.augroup("WindowDim", {
   event = { "BufRead" },
   pattern = { "*" },
   command = function()
-    RUtils.windowdim.buf_enter()
+    vim.defer_fn(function()
+      RUtils.windowdim.buf_enter()
+    end, 1)
   end,
 }, {
   event = { "BufEnter" },
   pattern = { "*" },
   command = function()
-    RUtils.windowdim.buf_enter()
+    vim.defer_fn(function()
+      RUtils.windowdim.buf_enter()
+    end, 1)
   end,
 }, {
   event = { "VimEnter", "FocusGained", "WinEnter" },
@@ -236,7 +240,7 @@ RUtils.map.augroup("WrapFiletype", {
   event = "FileType",
   pattern = "qf",
   command = function()
-    vim.fn.matchadd("qfFileName", [[^[^│]*]])
+    vim.fn.matchadd("Directory", [[^[^│]*]])
     vim.fn.matchadd("QuickFixMiddleLineNr", [[\v\d+:\d+\s]])
     vim.fn.matchadd("QuickFixLineNr", [[│]])
   end,

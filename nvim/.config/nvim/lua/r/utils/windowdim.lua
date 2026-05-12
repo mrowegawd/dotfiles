@@ -1,5 +1,5 @@
 -- Taken from and credit: https://github.com/wincent/wincent
-local api, wo = vim.api, vim.wo
+local wo = vim.wo
 local H = require "r.settings.highlights"
 
 ---@class r.utils.windowdim
@@ -76,6 +76,7 @@ autocmds.winhighlight_filetype_blacklist = {
   ["NeogitStatus"] = true,
   ["Outline"] = true,
   ["alpha"] = true,
+  ["codecompanion"] = true,
   ["dashboard"] = true,
   ["fugitiveblame"] = true,
   ["grug-far"] = true,
@@ -83,17 +84,18 @@ autocmds.winhighlight_filetype_blacklist = {
   ["mason"] = true,
   ["neo-tree"] = true,
   ["noice"] = true,
+  ["notify"] = true,
   ["octo"] = true,
   ["oil"] = true,
   ["packer"] = true,
   ["qf"] = true,
-  ["notify"] = true,
   ["sagahover"] = true,
   ["sagasignature"] = true,
   ["startup"] = true,
   ["trouble"] = true,
   ["tsplayground"] = true,
   ["undotree"] = true,
+  ["wayfinder"] = true,
 }
 
 -- Don't use colorcolumn when these filetypes get focus (we want them to appear
@@ -107,7 +109,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["Trouble"] = true,
   ["alpha"] = true,
   ["capture"] = true,
-  ["notify"] = true,
+  ["codecompanion"] = true,
   ["command-t"] = true,
   ["dap-repl"] = true,
   ["dap-variables"] = true,
@@ -129,6 +131,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["mason"] = true,
   ["mind"] = true,
   ["noice"] = true,
+  ["notify"] = true,
   ["octo"] = true,
   ["orgagenda"] = true,
   ["packer"] = true,
@@ -138,6 +141,7 @@ autocmds.colorcolumn_filetype_blacklist = {
   ["scratch"] = true,
   ["startup"] = true,
   ["undotree"] = true,
+  ["wayfinder"] = true,
 }
 
 autocmds.number_blacklist = {
@@ -232,6 +236,11 @@ local colorcolumn_width
 local focus_window = function()
   local filetype, buftype = RUtils.buf.get_bo_buft()
 
+  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+  if is_float then
+    return
+  end
+
   if filetype ~= "" and autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
     if not vim.w.is_overlook_popup then
       wo.winhighlight = ""
@@ -239,12 +248,11 @@ local focus_window = function()
   end
 
   -- Dont dim pada floating window, seperti TelescopePrompt
-  if autocmds.colorcolumn_filetype_blacklist[filetype] == true or api.nvim_win_get_config(0).relative ~= "" then
-    wo.colorcolumn = "255"
-
+  if autocmds.colorcolumn_filetype_blacklist[filetype] == true or is_float then
     if buftype == "" then
       return
     end
+    wo.colorcolumn = "255"
   else
     colorcolumn_width = 200 -- 120
     focused_colorcolumn = RUtils.tryjoin_table_with_delimeter(tryrange(colorcolumn_width, 256), ",")
@@ -254,44 +262,31 @@ end
 
 local blurred_window = function()
   local filetype, _ = RUtils.buf.get_bo_buft()
-  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
 
-  if is_float then
-    return
-  end
-
-  if filetype == "" and api.nvim_win_get_config(0).relative == "win" then
+  if
+    filetype == ""
+    and vim.api.nvim_win_get_config(0).relative == "win"
+    and autocmds.winhighlight_filetype_blacklist[filetype] ~= true
+  then
     wo.winhighlight = ""
     return
   end
 
-  local is_winhighlight_disabled = false
-
   if autocmds.blacklist_hl_folded[filetype] then
     wo.winhighlight = winhighlight_custom_folded
-    is_winhighlight_disabled = true
   end
 
   if autocmds.bottom_panel[filetype] then
     wo.winhighlight = winhighlight_bottom_panel
-    is_winhighlight_disabled = true
   end
 
   if autocmds.notes[filetype] then
     wo.winhighlight = winhighlight_note_panel
-    is_winhighlight_disabled = true
   end
 
   if autocmds.side_panel[filetype] then
     wo.winhighlight = winhighlight_sidebar_panel
-    is_winhighlight_disabled = true
   end
-
-  if is_winhighlight_disabled or autocmds.winhighlight_filetype_blacklist[filetype] then
-    return
-  end
-
-  wo.winhighlight = ""
 end
 
 -- http://vim.wikia.com/wiki/Make_views_automatic
