@@ -1508,25 +1508,35 @@ M.Mixindent = {
 
       local space_pat = [[\v^ +]]
       local tab_pat = [[\v^\t+]]
-      local space_indent = vim.fn.search(space_pat, "nwc")
-      local tab_indent = vim.fn.search(tab_pat, "nwc")
-      local mixed = (space_indent > 0 and tab_indent > 0)
-      local mixed_same_line
+
+      local function check_indentation()
+        local space_indent = vim.fn.search(space_pat, "nwc")
+        local tab_indent = vim.fn.search(tab_pat, "nwc")
+        return (space_indent > 0 and tab_indent > 0), space_indent, tab_indent
+      end
+
+      local function check_mixed_same_line()
+        return vim.fn.search([[\v^(\t+ | +\t)]], "nwc") > 0
+      end
+
+      local mixed, space_indent, tab_indent = check_indentation()
+
       if not mixed then
-        mixed_same_line = vim.fn.search([[\v^(\t+ | +\t)]], "nwc")
-        mixed = mixed_same_line > 0
+        local mixed_same_line = check_mixed_same_line()
+        if mixed_same_line then
+          return "MI:" .. mixed_same_line
+        else
+          return ""
+        end
       end
-      if not mixed then
-        return ""
+
+      local function get_total_indentations(pat)
+        return vim.fn.searchcount({ pattern = pat, max_count = 1e3 }).total
       end
-      if mixed_same_line ~= nil and mixed_same_line > 0 then
-        return "MI:" .. mixed_same_line
-      end
-      local space_indent_cnt = vim.fn.searchcount({
-        pattern = space_pat,
-        max_count = 1e3,
-      }).total
-      local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
+
+      local space_indent_cnt = get_total_indentations(space_pat)
+      local tab_indent_cnt = get_total_indentations(tab_pat)
+
       if space_indent_cnt > tab_indent_cnt then
         return "MI:" .. tab_indent
       else
