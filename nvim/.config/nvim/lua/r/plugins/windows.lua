@@ -1,3 +1,22 @@
+---@param is_left? boolean
+---@return string,boolean
+local function is_expand_win(is_left)
+  is_left = is_left or false
+
+  local left_or_right = is_left and "left" or "right"
+  local resize_win = left_or_right == "right" and "+5" or "-5"
+
+  local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree", "codecompanion" }
+  if exclude_win.found then
+    if vim.api.nvim_win_get_number(0) == 1 then
+      resize_win = left_or_right == "right" and "+5" or "-5"
+    end
+    return resize_win, true
+  end
+
+  return resize_win, false
+end
+
 local function get_status_stacked()
   local Stack = require "overlook.stack"
   if not Stack.empty() then
@@ -241,14 +260,11 @@ return {
               return
             end
 
-            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
-            if exclude_win.found then
-              local resizer_h = "+5"
-              if vim.api.nvim_win_get_number(0) == 1 then
-                resizer_h = "-5"
-              end
-              return vim.cmd("vertical resize " .. resizer_h)
+            local resize_win, is_resize = is_expand_win()
+            if is_resize then
+              return vim.cmd("vertical resize " .. resize_win)
             end
+
             require("smart-splits").resize_left()
           end,
           desc = "Window: resize window left [smart-splits]",
@@ -284,14 +300,11 @@ return {
               return
             end
 
-            local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline", "neo-tree" }
-            if exclude_win.found then
-              local resizer_l = "-5"
-              if vim.api.nvim_win_get_number(0) == 1 then
-                resizer_l = "+5"
-              end
-              return vim.cmd("vertical resize " .. resizer_l)
+            local resize_win, is_resize = is_expand_win(true)
+            if is_resize then
+              return vim.cmd("vertical resize " .. resize_win)
             end
+
             require("smart-splits").resize_right()
           end,
           desc = "Window: resize window right [smart-splits]",

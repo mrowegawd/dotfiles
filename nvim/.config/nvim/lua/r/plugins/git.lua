@@ -91,7 +91,7 @@ return {
     "juacker/git-link.nvim",
     keys = {
       {
-        "<leader>gy",
+        "<Leader>gy",
         function()
           require("git-link.main").copy_line_url()
         end,
@@ -99,7 +99,7 @@ return {
         mode = { "n", "x" },
       },
       {
-        "<leader>gY",
+        "<Leader>gob",
         function()
           require("git-link.main").open_line_url()
         end,
@@ -111,10 +111,10 @@ return {
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
-    "pwntester/octo.nvim",
-    -- "MadKuntilanak/octo.nvim",
-    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
-    -- branch = "feat/big-updates",
+    -- "pwntester/octo.nvim",
+    --"MadKuntilanak/octo.nvim",
+    dir = "~/.local/src/nvim_plugins/octo.nvim",
+    branch = "feat/next-updates",
     cmd = "Octo",
     keys = {
       { "<Leader>ma", "", desc = "add", ft = "octo" },
@@ -160,8 +160,8 @@ return {
       },
       mappings = {
         discussion = {
-          open_in_browser = { lhs = "<Leader>mY", desc = "open issue in browser [discussion]" },
-          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [discussion]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open issue in browser [discussion]" },
+          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [discussion]" },
           add_comment = { lhs = "<Leader>mac", desc = "add comment [discussion]" },
           add_reply = { lhs = "<Leader>may", desc = "add reply [discussion]" },
           add_label = { lhs = "<Leader>mal", desc = "add label [discussion]" },
@@ -183,12 +183,12 @@ return {
         },
         runs = {
           expand_step = { lhs = "o", desc = "expand workflow step [runs]" },
-          open_in_browser = { lhs = "<Leader>mY", desc = "open workflow run in browser [runs]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open workflow run in browser [runs]" },
+          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [runs]" },
           refresh = { lhs = "<C-r>", desc = "refresh workflow [runs]" },
           rerun = { lhs = "<C-o>", desc = "rerun workflow [runs]" },
           rerun_failed = { lhs = "<C-f>", desc = "rerun failed workflow [runs]" },
           cancel = { lhs = "<C-x>", desc = "cancel workflow [runs]" },
-          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [runs]" },
         },
         issue = {
           close_issue = { lhs = "<Leader>mC", desc = "close issue [issue]" },
@@ -196,8 +196,8 @@ return {
           list_issues = { lhs = "<Leader>mf", desc = "list open issues on same repo [octo [issue]" },
           reload = { lhs = "R", desc = "reload issue [issue]" },
 
-          open_in_browser = { lhs = "<Leader>mY", desc = "open issue in browser [issue]" },
-          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [issue]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open issue in browser [issue]" },
+          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [issue]" },
 
           add_assignee = { lhs = "<Leader>mA", desc = "add assignee [issue]" },
 
@@ -252,8 +252,8 @@ return {
           reopen_issue = { lhs = "<Leader>maI", desc = "reopen PR [pull request]" },
           list_issues = { lhs = "<Leader>mf", desc = "list open issues on same repo [pull request]" },
           reload = { lhs = "R", desc = "reload PR [pull request]" },
-          open_in_browser = { lhs = "<Leader>mY", desc = "open PR in browser [pull request]" },
-          copy_url = { lhs = "<Leader>my", desc = "copy url to system clipboard [pull request]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open PR in browser [pull request]" },
+          copy_url = { lhs = "<Leader>gy", desc = "copy url to system clipboard [pull request]" },
           goto_file = { lhs = "gf", desc = "go to file [pull request]" },
 
           add_assignee = { lhs = "<Leader>mA", desc = "add assignee [pull request]" },
@@ -375,19 +375,19 @@ return {
           create_issue = { lhs = "<Leader>mci", desc = "create issue [repo]" },
           create_discussion = { lhs = "<Leader>mcd", desc = "create discussion [repo]" },
           contributing_guidelines = { lhs = "<Leader>mcG", desc = "view contributing guidelines [repo]" },
-          open_in_browser = { lhs = "<Leader>mY", desc = "open repo in browser [repo]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open repo in browser [repo]" },
         },
         release = {
-          open_in_browser = { lhs = "<Leader>mY", desc = "open release in browser [release]" },
+          open_in_browser = { lhs = "<Leader>gob", desc = "open release in browser [release]" },
         },
       },
     },
   },
   -- OCTO
   {
-    "pwntester/octo.nvim",
+    -- "pwntester/octo.nvim",
     -- "MadKuntilanak/octo.nvim",
-    -- dir = "~/.local/src/nvim_plugins/octo.nvim",
+    dir = "~/.local/src/nvim_plugins/octo.nvim",
     optional = true,
     opts = function()
       vim.treesitter.language.register("markdown", "octo")
@@ -720,8 +720,8 @@ return {
             { "n", "<Leader>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
-            { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
+            { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
+            { "n", "<S-Up>", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
             { "n", "<a-1>", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
             { "n", "<a-3>", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
@@ -797,8 +797,8 @@ return {
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<Leader>mcn", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
-            { "n", "<Leader>mcp", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
+            { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<S-Up>", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
             { "n", "<a-1>", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
             { "n", "<a-3>", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },

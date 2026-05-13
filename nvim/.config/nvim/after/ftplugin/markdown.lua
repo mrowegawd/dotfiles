@@ -3,7 +3,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 -- opt.foldlevel = 0 -- gets annoying when set to 0
 
-opt.wrap = false
+opt.wrap = true
 opt.list = false
 opt.textwidth = 70
 

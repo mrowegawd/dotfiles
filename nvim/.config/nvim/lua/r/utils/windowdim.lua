@@ -42,6 +42,7 @@ local winhighlight_note_panel = table.concat({
   "CursorLine:CursorLineNote",
   "CursorLineNr:CursorLineNrNote",
   "Folded:FoldedNote",
+  "@markup.list.markdown:@markup.list.markdown",
   "Comment:ErrorMsg",
   "@Comment:CommentNote",
   "Pmenu:PmenuNote",
@@ -50,6 +51,29 @@ local winhighlight_note_panel = table.concat({
   "LineNr:LineNrNote",
   "WinSeparator:WinSeparatorNote",
   "Delimiter:DelimiterNote",
+}, ",")
+
+local winhighlight_ai_panel = table.concat({
+  "Normal:NormalAiPrompt",
+  "NormalNC:NormalAiPrompt",
+  "ColorColumn:NormalAiPrompt",
+  "EndOfBuffer:NormalAiPrompt",
+  "SignColumn:NormalAiPrompt",
+  "NormalFloat:NormalAiPrompt",
+  "FloatBorder:FloatBorderAiPrompt",
+  "FloatTitle:TitleFloatAiPrompt",
+  "CursorLine:CursorLineAiPrompt",
+  "CursorLineNr:CursorLineNrAiPrompt",
+  "Folded:FoldedAiPrompt",
+  "@markup.list.markdown:@markup.list.markdown",
+  "Comment:ErrorMsg",
+  "@Comment:CommentAiPrompt",
+  "Pmenu:PmenuAiPrompt",
+  "Visual:VisualAiPrompt",
+  "NonText:NonTextAiPrompt",
+  "LineNr:LineNrAiPrompt",
+  "WinSeparator:WinSeparatorAiPrompt",
+  "Delimiter:DelimiterAiPrompt",
 }, ",")
 
 local winhighlight_sidebar_panel = table.concat({
@@ -158,8 +182,11 @@ autocmds.bottom_panel = {
 autocmds.notes = {
   ["org"] = true,
   ["octo"] = true,
-  ["codecompanion"] = true,
   ["markdown"] = true,
+}
+
+autocmds.ai_prompt_panel = {
+  ["codecompanion"] = true,
 }
 
 autocmds.side_panel = {
@@ -282,6 +309,10 @@ local blurred_window = function()
 
   if autocmds.notes[filetype] then
     wo.winhighlight = winhighlight_note_panel
+  end
+
+  if autocmds.ai_prompt_panel[filetype] then
+    wo.winhighlight = winhighlight_ai_panel
   end
 
   if autocmds.side_panel[filetype] then

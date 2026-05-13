@@ -177,6 +177,14 @@ return {
       require("noice").setup(opts)
     end,
   },
+  -- NOICE
+  {
+    "MadKuntilanak/noice.nvim",
+    optional = true,
+    opts = function()
+      vim.treesitter.language.register("markdown", "noice")
+    end,
+  },
   -- FOLD CYCLE
   {
     "jghauser/fold-cycle.nvim",

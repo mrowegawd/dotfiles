@@ -523,18 +523,18 @@ RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Search: replace unde
 RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: replace under cursor (visual)" })
 
 -- Open with browser
-RUtils.map.nnoremap("<Leader>so", function()
+RUtils.map.nnoremap("<Leader>ob", function()
   RUtils.cmd.open_with "browser"
 end, { desc = "Search: open or look up online/browser" })
-RUtils.map.vnoremap("<Leader>so", function()
+RUtils.map.vnoremap("<Leader>ob", function()
   RUtils.cmd.open_with "browser"
 end, { desc = "Search: open or look up online/browser (visual" })
 
 -- Open with mpv or svix
-RUtils.map.nnoremap("<Leader>oO", function()
+RUtils.map.nnoremap("<Leader>oB", function()
   RUtils.cmd.open_with("mpv or svix", true)
 end, { desc = "Open: media" })
-RUtils.map.vnoremap("<Leader>oO", function()
+RUtils.map.vnoremap("<Leader>oB", function()
   RUtils.cmd.open_with("mpv or svix", true)
 end, { desc = "Open: media (visual)" })
 

@@ -19,14 +19,14 @@ return {
 
           vim.cmd "Oil"
         end,
-        desc = "Open: focus file explorer",
+        desc = "Open: focus file explorer [oil]",
       },
       {
         "<Leader>oE",
         function()
           require("oil").open(vim.fn.getcwd())
         end,
-        desc = "Open: cwd explorer",
+        desc = "Open: cwd explorer [oil]",
       },
     },
     dependencies = {

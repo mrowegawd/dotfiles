@@ -625,9 +625,26 @@ function M.open_with(context_mode, is_exit_visual_mode)
   end
 
   if context_mode == "go to file" then
-    if vim.bo.filetype == "markdown" then
-      follow_link_markdown()
-      return
+    -- if vim.bo.filetype == "markdown" then
+    --   RUtils.info "oke lah"
+    --   follow_link_markdown()
+    --   return
+    -- end
+    local filepath, line_nr, col_nr = url:match "([^%s:]+):(%d+):(%d+)"
+    if not filepath then
+      filepath, line_nr = url:match "([^%s:]+):(%d+)"
+    end
+
+    if filepath then
+      filepath = vim.fn.expand(filepath)
+      vim.cmd("edit " .. vim.fn.fnameescape(filepath))
+      vim.api.nvim_win_set_cursor(0, { tonumber(line_nr), tonumber(col_nr or 1) - 1 })
+    else
+      RUtils.info "use fallback `gf` key"
+      local ok, err = pcall(vim.cmd.normal, { "gf", bang = true })
+      if not ok then
+        RUtils.error(err)
+      end
     end
   end
 end

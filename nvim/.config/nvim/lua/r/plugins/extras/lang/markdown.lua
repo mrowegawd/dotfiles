@@ -111,7 +111,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "rmd", "codecompanion", "octo" },
+    ft = { "markdown", "rmd", "codecompanion", "octo", "noice" },
     keys = {
       {
         "<Leader>uR",
@@ -209,6 +209,7 @@ return {
         html = { comment = { conceal = false } },
         overrides = {
           filetype = {
+            noice = {},
             -- CodeCompanion
             codecompanion = {
               heading = {
