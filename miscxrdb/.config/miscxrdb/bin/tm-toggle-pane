@@ -5,12 +5,15 @@ LAYOUT_SIDE="left"
 FIXED_HEIGHT_BELOW_PANE=15
 FIXED_HEIGHT_MAIN_PANE=50
 
+ORIGIN_SESSION=$(tmux display-message -p '#S')
+ORIGIN_WINDOW=$(tmux display-message -p '#I')
+ORIGIN_PANE=$(tmux display-message -p '#{pane_id}')
+ORIGIN_TARGET="${ORIGIN_SESSION}:${ORIGIN_WINDOW}"
+
 tmux_resize_pane_to_20percent() {
-  local window_width_tmux new_width
-  window_width_tmux=$(tmux display -p "#{window_width}")
-  new_width=$((window_width_tmux * 18 / 100))
-  # new_width=$((100 * 40 / window_width_tmux)) -- will increase as the window_width decrease
-  echo $new_width
+  local window_width
+  window_width=$(tmux display -p -t "$ORIGIN_TARGET" "#{window_width}")
+  echo $((window_width * 18 / 100))
 }
 
 new_fixed_resize_value=$(tmux_resize_pane_to_20percent)
@@ -32,7 +35,7 @@ if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   TMUX_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
-GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
+GET_TOTAL_ACTIVE_PANES=$(tmux list-panes -t "$ORIGIN_TARGET" | wc -l)
 PATH_PANE_COLLECT_JSON="/tmp/tmux-main-layout-workspaces.json"
 
 CURRENT_SESSION=""
@@ -41,19 +44,16 @@ MAIN_PANE_ID=""
 FILE_MANAGER_PANE_ID=""
 TOGGLE_TERM_PANE_ID=""
 CLOCK_PANE_ID=""
-
 CURRENT_CWD=""
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ SESSION HELPER                                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-#
-# Check if a tmux session exists
+
 session_exists() {
   tmux has-session -t "=$1" 2>/dev/null
 }
 
-# Check if currently not inside tmux
 not_in_tmux() {
   [[ -z "$TMUX" ]]
 }
@@ -62,54 +62,45 @@ not_in_tmux() {
 # ╎ UTILS                                                    ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
-# Generic check for the current pane’s running command
 _check_pane_is() {
-  local target_cmd="$1"
+  local pane_id="$1"
+  local target_cmd="$2"
   local current_cmd
-  current_cmd=$(tmux display-message -p "#{pane_current_command}" 2>/dev/null | tr -d '\n')
+  current_cmd=$(tmux display-message -p -t "$pane_id" "#{pane_current_command}" 2>/dev/null | tr -d '\n')
   [[ "$current_cmd" == "$target_cmd" ]]
 }
 
-_check_pane_is_nvim() { _check_pane_is "nvim"; }
-_check_pane_is_uv() { _check_pane_is "uv"; }
-_check_pane_is_yazi() { _check_pane_is "yazi"; }
-_check_pane_is_zsh() { _check_pane_is "zsh"; }
-_check_pane_is_tclock() { _check_pane_is "tclock"; }
-
-_send_keys_command_to_target_pane() {
-  local pane=$1
-  local cmd=$2
+_send_keys_to_pane() {
+  local pane="$1"
+  local cmd="$2"
   tmux send-keys -t "$pane" "$cmd" Enter
 }
 
-# Check if a pane ID exists across all sessions
 __is_pane_id_exists() {
   local pane_id="$1"
-
   [[ -z "$pane_id" ]] && return 1
-
   tmux list-panes -a -F "#{pane_id}" 2>/dev/null | grep -Fxq "$pane_id"
 }
 
 __send_notify() {
-  local message=${2:-}
-  local headerdunst="🔄 Tmux WORKSPCHelper"
+  local type="$1"
+  local message="${2:-}"
+  local header="🔄 Tmux WORKSPCHelper"
 
-  case "$1" in
+  case "$type" in
   workspaces_notify)
-    dunstify -i view-refresh -t 2000 "$headerdunst" "$message"
+    dunstify -i view-refresh -t 2000 "$header" "$message"
     ;;
   workspaces_notify_warn)
-    dunstify -i view-refresh -u critical -t 5000 "$headerdunst" "$message"
+    dunstify -i view-refresh -u critical -t 5000 "$header" "$message"
     ;;
   open_in_nvim)
     dunstify -i text-editor -u normal -t 3000 "󰢱 Open In Nvim" "$message"
     ;;
   *)
-    dunstify "$headerdunst" "$message"
+    dunstify "$header" "$message"
     ;;
   esac
-
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
@@ -126,19 +117,16 @@ _go_last_pane() { tmux last-pane; }
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 __init_json_file() {
-  local current_session window_id main_pane_id
-  current_session=$CURRENT_SESSION
-  window_id=$WINDOW_ID
-  main_pane_id=$MAIN_PANE_ID
+  local current_session="$CURRENT_SESSION"
+  local window_id="$WINDOW_ID"
+  local main_pane_id="$MAIN_PANE_ID"
+  local cwd="$CURRENT_CWD"
+  local json_file="$PATH_PANE_COLLECT_JSON"
 
-  local cwd json_file
-  cwd=$CURRENT_CWD
-  json_file=$PATH_PANE_COLLECT_JSON
+  [[ ! -f "$json_file" ]] && touch "$json_file"
 
-  [[ ! -f $json_file ]] && touch "$json_file"
-  if [[ ! -s $json_file ]]; then
-    json_output=$(
-      cat <<EOF
+  if [[ ! -s "$json_file" ]]; then
+    cat >"$json_file" <<EOF
 {
   "$current_session": {
     "$window_id": {
@@ -152,216 +140,147 @@ __init_json_file() {
   }
 }
 EOF
-    )
-    echo "$json_output" >"$json_file"
   fi
 }
 
 __update_session_obj() {
-  local session_name=$1
-  local current_pane=$2
-  local window_id=$3
-  local cwd=$4
-
-  if [[ -z "$session_name" || -z "$current_pane" || -z "$window_id" || -z "$cwd" ]]; then
-    echo "Usage: update session obj <json_file> <key> <main_pane_id> <cwd>"
-    return 1
-  fi
-
-  local left="$LAYOUT_SIDE"
+  local session_name="$1"
+  local current_pane="$2"
+  local window_id="$3"
+  local cwd="$4"
   local json_file="$PATH_PANE_COLLECT_JSON"
 
   jq --arg name "$session_name" \
     --arg current_pane "$current_pane" \
     --arg window_id "$window_id" \
     --arg cwd "$cwd" \
-    --arg left "$left" \
+    --arg left "$LAYOUT_SIDE" \
     '. + {($name): {($window_id): {
       "main_pane_id": $current_pane,
       "file_manager_pane_id": "",
       "toggle_term_pane_id": "",
       "cwd": $cwd,
-      "file_manager_layout": "$left"
-   }}}' $json_file >tmp.json && mv tmp.json $json_file
+      "file_manager_layout": $left
+    }}}' "$json_file" >tmp.json && mv tmp.json "$json_file"
 }
+
 __update_window_obj() {
-  local session_name=$1
-  local current_pane=$2
-  local window_id=$3
-  local cwd=$4
-
-  if [[ -z "$session_name" || -z "$current_pane" || -z "$window_id" || -z "$cwd" ]]; then
-    echo "Usage: update window obj <json_file> <key> <main_pane_id> <cwd>"
-    return 1
-  fi
-
-  local left="$LAYOUT_SIDE"
+  local session_name="$1"
+  local current_pane="$2"
+  local window_id="$3"
+  local cwd="$4"
   local json_file="$PATH_PANE_COLLECT_JSON"
 
   jq --arg session_name "$session_name" \
     --arg window_id "$window_id" \
     --arg current_pane "$current_pane" \
     --arg cwd "$cwd" \
-    --arg left "$left" \
+    --arg left "$LAYOUT_SIDE" \
     '.[$session_name][$window_id] = {
       "main_pane_id": $current_pane,
       "file_manager_pane_id": "",
       "toggle_term_pane_id": "",
       "cwd": $cwd,
-      "file_manager_layout": "$left"
-    }' $json_file >tmp.json && mv tmp.json $json_file
+      "file_manager_layout": $left
+    }' "$json_file" >tmp.json && mv tmp.json "$json_file"
+  # Bug fix: "$left" sebelumnya tidak expand
 }
+
 __remove_data_obj() {
-  local session_name=$1
-  local window_id=$2
-
-  if [[ -z "$session_name" || -z "$window_id" ]]; then
-    echo "Usage: remove obj <session_name> <window_id>"
-    return 1
-  fi
-
+  local session_name="$1"
+  local window_id="$2"
   local json_file="$PATH_PANE_COLLECT_JSON"
 
   jq --arg session_name "$session_name" --arg window_id "$window_id" \
-    '.[$session_name][$window_id] = {}' $json_file >tmp.json && mv tmp.json $json_file
+    '.[$session_name][$window_id] = {}' "$json_file" >tmp.json && mv tmp.json "$json_file"
 }
 
 __update_field_session_obj() {
-  local session_name window_id pane_id field
-  session_name="$1"
-  window_id="$2"
-  pane_id="$3"
-  field="$4"
+  local session_name="$1"
+  local window_id="$2"
+  local pane_id="$3"
+  local field="$4"
 
   if [[ -z "$session_name" || -z "$pane_id" || -z "$field" ]]; then
     __send_notify "workspaces_notify_warn" "Missing arguments for JSON update"
     return 1
   fi
 
-  jq --arg session_name "$session_name" --arg window_id "$window_id" \
-    --arg field "$field" --arg pane_id "$pane_id" \
-    '.[$session_name].[$window_id][$field] = $pane_id' "$PATH_PANE_COLLECT_JSON" \
-    >tmp.json && mv tmp.json "$PATH_PANE_COLLECT_JSON"
+  jq --arg session_name "$session_name" \
+    --arg window_id "$window_id" \
+    --arg field "$field" \
+    --arg pane_id "$pane_id" \
+    '.[$session_name][$window_id][$field] = $pane_id' \
+    "$PATH_PANE_COLLECT_JSON" >tmp.json && mv tmp.json "$PATH_PANE_COLLECT_JSON"
 }
 
 __update_main_pane_id() {
-  local session_name window_id pane_id
-  session_name="$1"
-  window_id="$2"
-  pane_id="$3"
-
-  if [[ -z "$pane_id" ]]; then
-    __send_notify "workspaces_notify_warn" "⚠️  Toggle term pane ID is empty!"
-  else
-    __update_field_session_obj "$session_name" "$window_id" "$pane_id" "main_pane_id"
-  fi
+  local session_name="$1" window_id="$2" pane_id="$3"
+  [[ -z "$pane_id" ]] && {
+    __send_notify "workspaces_notify_warn" "⚠️  Main pane ID is empty!"
+    return
+  }
+  __update_field_session_obj "$session_name" "$window_id" "$pane_id" "main_pane_id"
 }
+
 __update_pane_file_manager_id() {
-  local session_name window_id pane_id
-  session_name="$1"
-  window_id="$2"
-  pane_id="$3"
-
-  if [[ -z "$pane_id" ]]; then
+  local session_name="$1" window_id="$2" pane_id="$3"
+  [[ -z "$pane_id" ]] && {
     __send_notify "workspaces_notify" "⚠️  File manager pane ID is empty!"
-  else
-    __update_field_session_obj "$session_name" "$window_id" "$pane_id" "file_manager_pane_id"
-  fi
+    return
+  }
+  __update_field_session_obj "$session_name" "$window_id" "$pane_id" "file_manager_pane_id"
 }
+
 __update_pane_toggle_term() {
-  local session_name window_id pane_id
-  session_name="$1"
-  window_id="$2"
-  pane_id="$3"
-
-  if [[ -z "$pane_id" ]]; then
+  local session_name="$1" window_id="$2" pane_id="$3"
+  [[ -z "$pane_id" ]] && {
     __send_notify "workspaces_notify" "⚠️  Toggle term pane ID is empty!"
-  else
-    __update_field_session_obj "$session_name" "$window_id" "$pane_id" "toggle_term_pane_id"
-  fi
+    return
+  }
+  __update_field_session_obj "$session_name" "$window_id" "$pane_id" "toggle_term_pane_id"
 }
-__update_pane_clock_id() {
-  local session_name window_id pane_id
-  session_name="$1"
-  window_id="$2"
-  pane_id="$3"
 
-  if [[ -z "$pane_id" ]]; then
-    __send_notify "workspaces_notify" "⚠️  Toggle term pane ID is empty!"
-  else
-    __update_field_session_obj "$session_name" "$window_id" "$pane_id" "clock_pane_id"
-  fi
+__update_pane_clock_id() {
+  local session_name="$1" window_id="$2" pane_id="$3"
+  [[ -z "$pane_id" ]] && {
+    __send_notify "workspaces_notify" "⚠️  Clock pane ID is empty!"
+    return
+  }
+  __update_field_session_obj "$session_name" "$window_id" "$pane_id" "clock_pane_id"
 }
 
 __is_current_session_exits_from_json() {
   local session_name="$1"
-  local json_file="$PATH_PANE_COLLECT_JSON"
-
-  if jq -e --arg session_name "$session_name" '.[$session_name]' "$json_file" >/dev/null; then
-    return 0
-  fi
-  return 1
+  jq -e --arg s "$session_name" '.[$s]' "$PATH_PANE_COLLECT_JSON" >/dev/null 2>&1
 }
+
 __is_current_window_id_session_exits_from_json() {
   local session_name="$1"
   local window_name="$2"
-  local json_file="$PATH_PANE_COLLECT_JSON"
-
-  if jq -e --arg session_name "$session_name" --arg window_name "$window_name" \
-    '.[$session_name] | has($window_name)' "$json_file" >/dev/null; then
-    return 0
-  fi
-  return 1
+  jq -e --arg s "$session_name" --arg w "$window_name" '.[$s] | has($w)' \
+    "$PATH_PANE_COLLECT_JSON" >/dev/null 2>&1
 }
 
 __extract_id_from_json() {
   local session_name="$1"
   local window_name="$2"
   local field_name="$3"
-  local json_file="$PATH_PANE_COLLECT_JSON"
 
-  # Trim whitespaces
-  session_name=$(printf "%s" "$session_name")
-  window_name=$(printf "%s" "$window_name")
-  field_name=$(printf "%s" "$field_name")
-
-  if [[ ! -f "$json_file" ]]; then
-    echo "ERROR: JSON file not found: $json_file" >&2
-    return 1
-  fi
+  [[ ! -f "$PATH_PANE_COLLECT_JSON" ]] && return 1
 
   jq -r \
-    --arg session_name "$session_name" \
-    --arg window_name "$window_name" \
-    --arg field_name "$field_name" \
-    '.[$session_name][$window_name][$field_name] // empty' \
-    "$json_file"
+    --arg s "$session_name" \
+    --arg w "$window_name" \
+    --arg f "$field_name" \
+    '.[$s][$w][$f] // empty' \
+    "$PATH_PANE_COLLECT_JSON"
 }
 
-__get_main_pane_id() {
-  local session_name="$1"
-  local window_name="$2"
-
-  __extract_id_from_json "$session_name" "$window_name" "main_pane_id"
-}
-__get_file_manager_pane_id() {
-  local session_name="$1"
-  local window_name="$2"
-
-  __extract_id_from_json "$session_name" "$window_name" "file_manager_pane_id"
-}
-__get_toggle_term_id() {
-  local session_name="$1"
-  local window_name="$2"
-
-  __extract_id_from_json "$session_name" "$window_name" "toggle_term_pane_id"
-}
-__get_clock_pane_id() {
-  local session_name="$1"
-  local window_name="$2"
-
-  __extract_id_from_json "$session_name" "$window_name" "clock_pane_id"
-}
+__get_main_pane_id() { __extract_id_from_json "$1" "$2" "main_pane_id"; }
+__get_file_manager_pane_id() { __extract_id_from_json "$1" "$2" "file_manager_pane_id"; }
+__get_toggle_term_id() { __extract_id_from_json "$1" "$2" "toggle_term_pane_id"; }
+__get_clock_pane_id() { __extract_id_from_json "$1" "$2" "clock_pane_id"; }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ PANE SPLIT HELPERS                                       ╎
@@ -369,33 +288,23 @@ __get_clock_pane_id() {
 
 open_vsplit() {
   local pane_count
-  pane_count=$(tmux list-panes | wc -l)
+  pane_count=$(tmux list-panes -t "$ORIGIN_TARGET" | wc -l)
 
   if [[ "$pane_count" -gt 1 ]]; then
-    tmux split-window -h -c '#{pane_current_path}'
+    tmux split-window -h -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
   else
-    tmux split-window -hl 80 -c '#{pane_current_path}'
+    tmux split-window -hl 80 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
   fi
 }
-open_split() {
-  local pane_count
-  pane_count=$(tmux list-panes | wc -l)
 
-  if [[ "$pane_count" -gt 1 ]]; then
-    tmux split-window -v -l 20 -c '#{pane_current_path}'
-  else
-    tmux split-window -v -l 20 -c '#{pane_current_path}'
-  fi
+open_split() {
+  tmux split-window -v -l 20 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
 }
 
 auto_resize_pane() {
-  local current_session window_id
-  current_session=$(tmux display-message -p '#S')
-  window_id=$(tmux display-message -p '#I')
-
-  FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$current_session" "$window_id")
+  FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$ORIGIN_SESSION" "$ORIGIN_WINDOW")
   if __is_pane_id_exists "$FILE_MANAGER_PANE_ID"; then
-    tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x $FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
+    tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
   fi
 }
 
@@ -403,31 +312,26 @@ reset_pane_workspaces() {
   update_global_pane_ids
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
+  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ "$FILE_MANAGER_PANE_ID" == "$MAIN_PANE_ID" ]]; then
     __send_notify "workspaces_notify_warn" "Create base layout first"
     tmux select-layout -E
     exit
   fi
 
-  tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x $FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
+  tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
 }
 
 _get_pane_below_main_pane_id() {
   local target_pane="$1"
 
-  tmux list-panes -F "#{pane_id} #{pane_top} #{pane_bottom} #{pane_left} #{pane_right}" |
+  # Scope ke window asal agar tidak nyasar ke window lain
+  tmux list-panes -t "$ORIGIN_TARGET" \
+    -F "#{pane_id} #{pane_top} #{pane_bottom} #{pane_left} #{pane_right}" |
     awk -v target="$target_pane" '
       $1 == target {
-        t_bottom = $3
-        t_left   = $4
-        t_right  = $5
-        next
+        t_bottom = $3; t_left = $4; t_right = $5; next
       }
-      # pane di bawah + overlap horizontal + toleransi border
-      $2 > t_bottom &&
-      $2 <= t_bottom + 2 &&
-      $4 < t_right &&
-      $5 > t_left {
+      $2 > t_bottom && $2 <= t_bottom + 2 && $4 < t_right && $5 > t_left {
         print $1
       }
     '
@@ -442,76 +346,62 @@ _reset_pane_size() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 update_global_pane_ids() {
-  local current_session current_pane window_id cwd
-  current_session=$(tmux display-message -p '#S')
-  window_id=$(tmux display-message -p '#I')
-  current_pane=$(tmux display-message -p '#{pane_id}')
-
-  CURRENT_SESSION=$current_session
-  WINDOW_ID=$window_id
+  CURRENT_SESSION="$ORIGIN_SESSION"
+  WINDOW_ID="$ORIGIN_WINDOW"
 
   MAIN_PANE_ID=$(__get_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
 
-  #  Check and update main pane id
   if ! __is_pane_id_exists "$MAIN_PANE_ID"; then
     __send_notify "workspaces_notify" "A new main pane (ID) has been successfully updated!"
-    MAIN_PANE_ID=$current_pane
+    MAIN_PANE_ID="$ORIGIN_PANE"
     __update_main_pane_id "$CURRENT_SESSION" "$WINDOW_ID" "$MAIN_PANE_ID"
   fi
 
-  #  Check and update session name
   if ! __is_current_session_exits_from_json "$CURRENT_SESSION"; then
-    cwd=$(pwd)
+    local cwd
+    cwd=$(tmux display-message -p -t "$ORIGIN_PANE" '#{pane_current_path}')
     __update_session_obj "$CURRENT_SESSION" "$MAIN_PANE_ID" "$WINDOW_ID" "$cwd"
   fi
 
-  #  Check and update window id
-  if ! __is_current_window_id_session_exits_from_json "$current_session" "$window_id"; then
-    cwd=$(pwd)
+  if ! __is_current_window_id_session_exits_from_json "$CURRENT_SESSION" "$WINDOW_ID"; then
+    local cwd
+    cwd=$(tmux display-message -p -t "$ORIGIN_PANE" '#{pane_current_path}')
     __update_window_obj "$CURRENT_SESSION" "$MAIN_PANE_ID" "$WINDOW_ID" "$cwd"
   fi
-
 }
 
 setup_layout_workspace() {
-  local json_file=$PATH_PANE_COLLECT_JSON
-  local size_tmux_left_or_right=$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT
-
-  local layout=$1
+  local layout="$1"
 
   if [[ "$layout" == "left" ]]; then
     open_vsplit
-
-    # set pane to the most left
     tmux splitw -fhb \; swapp -t ! \; killp -t !
-
     _go_right
 
-    # get most left and resize the pane with fiexed size
-    pane_id_most_left=$(tmux list-panes -F "#{pane_id} #{pane_left}" |
-      sort -nk2 | head -n1 | awk '{print $1}')
-    tmux resize-pane -t "$pane_id_most_left" -x $size_tmux_left_or_right
+    local pane_id_most_left
+    pane_id_most_left=$(tmux list-panes -t "$ORIGIN_TARGET" \
+      -F "#{pane_id} #{pane_left}" | sort -nk2 | head -n1 | awk '{print $1}')
+    tmux resize-pane -t "$pane_id_most_left" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
   fi
 
   if [[ "$layout" == "right" ]]; then
     open_vsplit
-
-    # set pane to the most right
     tmux splitw -fh \; swapp -t ! \; killp -t !
-
     _go_right
 
-    # get most left and resize the pane with fiexed size
-    pane_id_most_right=$(tmux list-panes -F "#{pane_id} #{pane_right}" |
-      sort -nk2 | tail -n1 | awk '{print $1}')
-    tmux resize-pane -t "$pane_id_most_right" -x $size_tmux_left_or_right
+    local pane_id_most_right
+    pane_id_most_right=$(tmux list-panes -t "$ORIGIN_TARGET" \
+      -F "#{pane_id} #{pane_right}" | sort -nk2 | tail -n1 | awk '{print $1}')
+    tmux resize-pane -t "$pane_id_most_right" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
   fi
 
-  CURRENT_SESSION=$(tmux display-message -p '#S')
-  MAIN_PANE_ID=$(tmux display-message -p '#{pane_id}')
-  WINDOW_ID=$(tmux display-message -p '#I')
+  # Setelah split, update ORIGIN_PANE ke pane aktif yang baru (main pane)
+  ORIGIN_PANE=$(tmux display-message -p -t "$ORIGIN_TARGET" '#{pane_id}')
+  CURRENT_CWD=$(tmux display-message -p -t "$ORIGIN_PANE" '#{pane_current_path}')
 
-  CURRENT_CWD=$(pwd)
+  CURRENT_SESSION="$ORIGIN_SESSION"
+  WINDOW_ID="$ORIGIN_WINDOW"
+  MAIN_PANE_ID="$ORIGIN_PANE"
 
   __init_json_file
 }
@@ -525,18 +415,11 @@ _close_running_process() {
   local process="$2"
 
   case "$process" in
-  nvim)
-    tmux send-keys -t "$pane_id" Escape ":q!" C-m
-    ;;
-  yazi)
-    tmux send-keys -t "$pane_id" "q" C-m
-    ;;
-  watch)
-    tmux send-keys -t "$pane_id" "c-c" C-m
-    ;;
+  nvim) tmux send-keys -t "$pane_id" Escape ":q!" C-m ;;
+  yazi) tmux send-keys -t "$pane_id" "q" C-m ;;
+  watch) tmux send-keys -t "$pane_id" "c-c" C-m ;;
   esac
 
-  # Wait until closed
   for _ in {1..20}; do
     local current_cmd
     current_cmd=$(tmux display -p -t "$pane_id" '#{pane_current_command}' | tr -d '\n')
@@ -547,32 +430,9 @@ _close_running_process() {
   tmux send-keys -t "$pane_id" "clear" C-m
 }
 
-_open_file_manager_window_under_pane() {
+_open_file_manager_in_pane() {
   tmux send-keys -t "$1" "clear" C-m
   tmux send-keys -t "$1" "$FILE_MANAGER" C-m
-}
-
-_get_pane_id_left_or_right() {
-  local pane_left_or_right
-
-  CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
-
-  if [[ $1 == "left" ]]; then
-    pane_left_or_right=$(tmux display -p '#{pane_at_left}')
-    if [ "$pane_left_or_right" == 0 ]; then
-      tmux list-panes -F '#{pane_id} #{pane_left} #{pane_active}' | awk -v cur="$CURRENT_PANE" '
-        $3 = 1 {cur_left = $2} $2 == cur_left {print $1} ' | head -n 1
-    fi
-  fi
-
-  if [[ $1 == "right" ]]; then
-    pane_left_or_right=$(tmux display -p '#{pane_at_right}')
-    if [ "$pane_left_or_right" == 0 ]; then
-      tmux list-panes -F '#{pane_id} #{pane_left}' | awk '
-      NR == 1 || $2 > max_left {max_left = $2; rightmost = $1}
-      END {print rightmost} '
-    fi
-  fi
 }
 
 # ─[ Handle file manager ]──────────────────────────────────────────────
@@ -585,46 +445,44 @@ handle_open_filetree() {
   update_global_pane_ids
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
 
-    if [[ $LAYOUT_SIDE == "left" ]]; then
+  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ "$FILE_MANAGER_PANE_ID" == "$MAIN_PANE_ID" ]]; then
+    if [[ "$LAYOUT_SIDE" == "left" ]]; then
       FILE_MANAGER_PANE_ID=$(
-        tmux list-panes -F "#{pane_id} #{pane_left}" |
+        tmux list-panes -t "$ORIGIN_TARGET" -F "#{pane_id} #{pane_left}" |
           sort -nk2 | head -n1 | awk '{print $1}'
       )
-    fi
-
-    if [[ $LAYOUT_SIDE == "right" ]]; then
+    else
       FILE_MANAGER_PANE_ID=$(
-        tmux list-panes -F "#{pane_id} #{pane_right}" |
+        tmux list-panes -t "$ORIGIN_TARGET" -F "#{pane_id} #{pane_right}" |
           sort -nk2 | tail -n1 | awk '{print $1}'
       )
     fi
-
     __update_pane_file_manager_id "$CURRENT_SESSION" "$WINDOW_ID" "$FILE_MANAGER_PANE_ID"
   fi
 
-  CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
-  COMMAND_PROCESS=$(tmux display -p -t "$FILE_MANAGER_PANE_ID" '#{pane_current_command}' | tr -d '\n')
-
-  # 5️⃣ Jika pane target tidak ditemukan → kembali ke pane utama
   if [[ -z "$FILE_MANAGER_PANE_ID" ]]; then
-    tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$FM_BG"
-    _go_select_pane_with_id "$MAIN_PANE_ID"
-    return
+    __send_notify "workspaces_notify_warn" "File manager pane not found"
+    return 1
   fi
 
-  # 6️⃣ Tutup proses tertentu bila masih aktif
-  if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" || "$COMMAND_PROCESS" == "watch" ]]; then
-    _close_running_process "$FILE_MANAGER_PANE_ID" "$COMMAND_PROCESS"
+  if [[ "$FILE_MANAGER_PANE_ID" == "$MAIN_PANE_ID" ]]; then
+    __send_notify "workspaces_notify_warn" "Layout belum siap, buat layout dulu"
+    return 1
+  fi
+
+  local cmd_process
+  cmd_process=$(tmux display -p -t "$FILE_MANAGER_PANE_ID" '#{pane_current_command}' | tr -d '\n')
+
+  if [[ "$cmd_process" == "yazi" || "$cmd_process" == "nvim" || "$cmd_process" == "watch" ]]; then
+    _close_running_process "$FILE_MANAGER_PANE_ID" "$cmd_process"
     tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$TMUX_BG"
     _go_select_pane_with_id "$MAIN_PANE_ID"
     return
   fi
 
-  # 7️⃣ Jika tidak ada proses aktif → fokus ke pane file manager dan buka file manager
   _go_select_pane_with_id "$FILE_MANAGER_PANE_ID"
-  _open_file_manager_window_under_pane "$FILE_MANAGER_PANE_ID"
+  _open_file_manager_in_pane "$FILE_MANAGER_PANE_ID"
   tmux select-pane -t "$FILE_MANAGER_PANE_ID" -P "bg=$FM_BG"
 }
 
@@ -636,41 +494,37 @@ handle_split_term() {
   if [[ "$GET_TOTAL_ACTIVE_PANES" == 1 ]]; then
     setup_layout_workspace "$LAYOUT_SIDE"
   fi
+
   update_global_pane_ids
 
   TOGGLE_TERM_PANE_ID=$(__get_toggle_term_id "$CURRENT_SESSION" "$WINDOW_ID")
-  if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ $TOGGLE_TERM_PANE_ID == "$MAIN_PANE_ID" ]]; then
+  if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ "$TOGGLE_TERM_PANE_ID" == "$MAIN_PANE_ID" ]]; then
 
-    CURRENT_PANE=$(tmux display-message -p '#{pane_id}')
     _go_select_pane_with_id "$MAIN_PANE_ID"
 
-    # Check pane id below main_pane_id if exists
     local get_pane_id_below_main_id
     get_pane_id_below_main_id=$(_get_pane_below_main_pane_id "$MAIN_PANE_ID")
 
     if [[ -n "$get_pane_id_below_main_id" ]]; then
       _go_select_pane_with_id "$get_pane_id_below_main_id"
-
       TOGGLE_TERM_PANE_ID=$(tmux split-window -hl 20 \
         -c '#{pane_current_path}' -P -F "#{pane_id}")
-
       _reset_pane_size
     else
       TOGGLE_TERM_PANE_ID=$(tmux split-window -vl 20 \
         -c '#{pane_current_path}' -P -F "#{pane_id}")
     fi
 
-    # Simpan atau update ke toggle term
     __update_pane_toggle_term "$CURRENT_SESSION" "$WINDOW_ID" "$TOGGLE_TERM_PANE_ID"
   fi
 
-  IS_PANE_AT_TOP=$(tmux display -p '#{pane_at_top}')
-  IS_PANE_AT_BELLOW=$(tmux display -p '#{pane_at_bottom}')
+  # Cek posisi pane saat ini (dari origin pane)
+  local is_at_top is_at_bottom
+  is_at_top=$(tmux display -p -t "$ORIGIN_PANE" '#{pane_at_top}')
+  is_at_bottom=$(tmux display -p -t "$ORIGIN_PANE" '#{pane_at_bottom}')
 
-  # Kondisi ini jika posisi pane hanya satu,
-  # yakni dia juga below dan juga posisi top
-  if [[ "$IS_PANE_AT_TOP" == 1 ]] && [[ "$IS_PANE_AT_BELLOW" == 1 ]]; then
-    if [[ ! $CURRENT_PANE == "$TOGGLE_TERM_PANE_ID" ]]; then
+  if [[ "$is_at_top" == 1 && "$is_at_bottom" == 1 ]]; then
+    if [[ "$ORIGIN_PANE" != "$TOGGLE_TERM_PANE_ID" ]]; then
       _go_select_pane_with_id "$MAIN_PANE_ID"
     else
       tmux split-window -vl 15 -c '#{pane_current_path}'
@@ -679,18 +533,17 @@ handle_split_term() {
     return
   fi
 
-  if [[ "$IS_PANE_AT_TOP" == 1 ]] && [[ "$IS_PANE_AT_BELLOW" == 0 ]]; then
+  if [[ "$is_at_top" == 1 && "$is_at_bottom" == 0 ]]; then
     _go_select_pane_with_id "$TOGGLE_TERM_PANE_ID"
     tmux resize-pane -t "$TOGGLE_TERM_PANE_ID" -y "$FIXED_HEIGHT_BELOW_PANE"
-  elif [[ "$IS_PANE_AT_TOP" == 0 ]] && [[ "$IS_PANE_AT_BELLOW" == 1 ]]; then
-    if [[ $MAIN_PANE_ID == "$CURRENT_PANE" ]]; then
+  elif [[ "$is_at_top" == 0 && "$is_at_bottom" == 1 ]]; then
+    if [[ "$MAIN_PANE_ID" == "$ORIGIN_PANE" ]]; then
       _go_select_pane_with_id "$TOGGLE_TERM_PANE_ID"
       tmux resize-pane -y "$FIXED_HEIGHT_BELOW_PANE"
     else
       _go_select_pane_with_id "$MAIN_PANE_ID"
       tmux resize-pane -t "$MAIN_PANE_ID" -y "$FIXED_HEIGHT_MAIN_PANE"
     fi
-
   fi
 }
 
@@ -706,23 +559,23 @@ handle_show_notes() {
   update_global_pane_ids
 
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
-
+  if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ "$FILE_MANAGER_PANE_ID" == "$MAIN_PANE_ID" ]]; then
     FILE_MANAGER_PANE_ID=$(
-      tmux list-panes -F "#{pane_id} #{pane_left}" |
+      tmux list-panes -t "$ORIGIN_TARGET" -F "#{pane_id} #{pane_left}" |
         sort -nk2 | head -n1 | awk '{print $1}'
     )
     __update_pane_file_manager_id "$CURRENT_SESSION" "$WINDOW_ID" "$FILE_MANAGER_PANE_ID"
   fi
 
-  COMMAND_PROCESS=$(tmux display -p -t "$FILE_MANAGER_PANE_ID" '#{pane_current_command}' | tr -d '\n')
+  local cmd_process
+  cmd_process=$(tmux display -p -t "$FILE_MANAGER_PANE_ID" '#{pane_current_command}' | tr -d '\n')
 
-  if [[ "$COMMAND_PROCESS" == "yazi" || "$COMMAND_PROCESS" == "nvim" || "$COMMAND_PROCESS" == "watch" ]]; then
-    _close_running_process "$FILE_MANAGER_PANE_ID" "$COMMAND_PROCESS"
+  if [[ "$cmd_process" == "yazi" || "$cmd_process" == "nvim" || "$cmd_process" == "watch" ]]; then
+    _close_running_process "$FILE_MANAGER_PANE_ID" "$cmd_process"
   fi
 
-  _send_keys_command_to_target_pane "$FILE_MANAGER_PANE_ID" "watch -t -n 1 $HOME/.config/miscxrdb/bin/_task_doit_now run"
-
+  _send_keys_to_pane "$FILE_MANAGER_PANE_ID" \
+    "watch -t -n 1 $HOME/.config/miscxrdb/bin/_task_doit_now run"
 }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
@@ -730,13 +583,11 @@ handle_show_notes() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 float_term() {
-  session="tmp_float_term"
+  local session="tmp_float_term"
 
   if ! session_exists "$session"; then
-    set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
-      -E -d "#{pane_current_path}" \
-      -S bg="$COL_BORDER_BG",fg="$COL_BORDER_FG" \
+      -S "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session zsh;'"
   else
@@ -744,9 +595,8 @@ float_term() {
       tmux detach-client
     else
       tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
-        -S bg="$COL_BORDER_BG",fg="$COL_BORDER_FG" \
+        -S "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
         -b rounded \
-        -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
     fi
   fi
@@ -762,108 +612,76 @@ open_clock_mode() {
 
   update_global_pane_ids
 
-  [[ $CURRENT_SESSION == "" ]] && __send_notify "workspaces_notify" "Create base layout first" && exit
+  [[ -z "$CURRENT_SESSION" ]] && __send_notify "workspaces_notify" "Create base layout first" && exit
 
   _go_select_pane_with_id "$MAIN_PANE_ID"
 
   CLOCK_PANE_ID=$(__get_clock_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-  if ! __is_pane_id_exists "$CLOCK_PANE_ID" || [[ $CLOCK_PANE_ID == "" ]]; then
-
-    # Need file manager pane id
+  if ! __is_pane_id_exists "$CLOCK_PANE_ID" || [[ -z "$CLOCK_PANE_ID" ]]; then
     FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$CURRENT_SESSION" "$WINDOW_ID")
-    if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ $FILE_MANAGER_PANE_ID == "$MAIN_PANE_ID" ]]; then
+    if ! __is_pane_id_exists "$FILE_MANAGER_PANE_ID" || [[ "$FILE_MANAGER_PANE_ID" == "$MAIN_PANE_ID" ]]; then
       __send_notify "workspaces_notify" "Create base layout first"
       exit
     fi
 
-    CLOCK_PANE_ID=$(tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}' -t "$FILE_MANAGER_PANE_ID" -P -F '#{pane_id}')
-
+    CLOCK_PANE_ID=$(tmux split-pane -v -p 25 -l 10 \
+      -c '#{pane_current_path}' -t "$FILE_MANAGER_PANE_ID" -P -F '#{pane_id}')
     __update_pane_clock_id "$CURRENT_SESSION" "$WINDOW_ID" "$CLOCK_PANE_ID"
   fi
 
   tmux select-pane -t "$MAIN_PANE_ID"
 
-  local process
-  process="zsh"
-
+  # Tunggu sampai bukan tclock lagi
   for _ in {1..10}; do
     local current_cmd
     current_cmd=$(tmux display -p -t "$CLOCK_PANE_ID" '#{pane_current_command}' | tr -d '\n')
-    [[ "$current_cmd" == "tclock" ]] && _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "q"
-    [[ "$current_cmd" != "$process" ]] && break
+    [[ "$current_cmd" == "tclock" ]] && _send_keys_to_pane "$CLOCK_PANE_ID" "q"
+    [[ "$current_cmd" != "tclock" ]] && break
     sleep 0.1
   done
 
   if command -v tclock &>/dev/null; then
-
     if [[ "$clock_mode" == "clock" ]]; then
-      # tclock_command="'tclock clock -S'"
-      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' clock -S"
-    fi
-
-    if [[ "$clock_mode" == "pomodoro" ]]; then
-      # tclock_command="'tclock -c red timer -d 25m -M'"
-      _send_keys_command_to_target_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $pomodoro_time -M"
+      _send_keys_to_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' clock -S"
+    elif [[ "$clock_mode" == "pomodoro" ]]; then
+      _send_keys_to_pane "$CLOCK_PANE_ID" "tclock -c '$COLOR_CLOCK' timer -d $pomodoro_time -M"
     fi
   else
     tmux clock-mode
   fi
 }
 
-clock_mode() {
-  open_clock_mode "clock" ""
-}
-
-pomodoro_1hour() {
-  open_clock_mode "pomodoro" "1h"
-}
-
-pomdoro_30minute() {
-  open_clock_mode "pomodoro" "30m"
-}
-
-pomdoro_25minute() {
-  open_clock_mode "pomodoro" "25m"
-}
-
-pomdoro_5minute() {
-  open_clock_mode "pomodoro" "5m"
-}
+clock_mode() { open_clock_mode "clock" ""; }
+pomodoro_1hour() { open_clock_mode "pomodoro" "1h"; }
+pomdoro_30minute() { open_clock_mode "pomodoro" "30m"; }
+pomdoro_25minute() { open_clock_mode "pomodoro" "25m"; }
+pomdoro_5minute() { open_clock_mode "pomodoro" "5m"; }
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ GO LAST SESSION                                          ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 last_session() {
-  # Ambil sesi saat ini dan sesi sebelumnya
-  local current_session previous_session
+  local current_session previous_session total_sessions
   current_session=$(tmux display-message -p '#S')
   previous_session=$(tmux display-message -p '#{client_last_session}')
-
-  # Hitung total sesi yang ada
-  local total_sessions
   total_sessions=$(tmux list-sessions | wc -l)
 
-  # Jika hanya ada 1 sesi, tampilkan pesan error di tengah
   if [[ "$total_sessions" -eq 1 ]]; then
     local msg="No alternate session available. Aborting!"
     local cols padding spaces
-    #
     cols=$(tmux display -p "#{client_width}")
     padding=$(((cols - ${#msg}) / 2))
     spaces=$(printf '%*s' "$padding")
-
     tmux display-message "#[fill=$RED fg=colour0,bg=colour1,bold]${spaces}${msg}"
     return
   fi
 
-  # Jika sesi sebelumnya tidak valid atau tidak ada
   if [[ -z "$previous_session" ]]; then
     tmux display-message "⚠️  The last session no longer exists. Try selecting another one."
     return
   fi
 
-  # Berpindah ke sesi terakhir yang valid
   tmux switch-client -l
 }
 
@@ -872,13 +690,8 @@ last_session() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 _send_message() {
-  messages="$1"
-  title="$2"
-
-  if [[ -z "$2" ]]; then
-    title="open_in_nvim"
-  fi
-
+  local messages="$1"
+  local title="${2:-open_in_nvim}"
   __send_notify "$title" "$messages"
 }
 
@@ -891,18 +704,10 @@ _open_in_nvim() {
   local path="$1"
   local line="$2"
   local pane_id
-  local current_session window_id
+  pane_id="$(__get_main_pane_id "$ORIGIN_SESSION" "$ORIGIN_WINDOW")"
 
-  current_session="$(tmux display-message -p '#S')"
-  window_id="$(tmux display-message -p '#I')"
-
-  pane_id="$(__get_main_pane_id "$current_session" "$window_id")"
-
-  # -------------------------
-  # VALIDATION
-  # -------------------------
   if [[ -z "$pane_id" ]]; then
-    _send_message "Open in nvim failed: no target pane found (session=$current_session, window=$window_id)"
+    _send_message "Open in nvim failed: no target pane found (session=$ORIGIN_SESSION, window=$ORIGIN_WINDOW)"
     return 1
   fi
 
@@ -916,64 +721,44 @@ _open_in_nvim() {
     return 1
   fi
 
-  # -------------------------
-  # ACTION
-  # -------------------------
   _go_select_pane_with_id "$pane_id"
-  _send_keys_command_to_target_pane "$pane_id" ":vsplit $path"
+  _send_keys_to_pane "$pane_id" ":vsplit $path"
 
   if [[ -n "$line" ]]; then
-    _send_keys_command_to_target_pane "$pane_id" ":$line"
+    _send_keys_to_pane "$pane_id" ":$line"
   fi
 
-  # -------------------------
-  # SUCCESS MESSAGE
-  # -------------------------
-  if [[ ! -z "$line" ]]; then
+  if [[ -n "$line" ]]; then
     _send_message "$(basename "$path"):$line"
-
   else
     _send_message "$(basename "$path")"
   fi
 }
 
 jump_to_main_pane() {
+  local file_path
   file_path=$(cat)
-
-  # TODO: seharusnya di filter lagi, ketika sending file_path ke nvim:
-  # ambil pattern dari wezterm
-  # - [x] file_path:number?                   cth: ./lib/jpegli/decode_scan.cc:535
-  # - [x] file_path dengan prefix             cth: file://lib/jpegli/decode_scan.cc
-  # - [ ] apakah berupa hash commit?          cth#d9c36f57
-  # - [ ] apakah file_path yg terpotong?      cth: ../path/../folder/file.txt
-  # - [x] ketika cursor jump ke nvim, last position cursor pada last pane ikut pindah juga??
 
   case "$file_path" in
   file://*)
-    file_name="${file_path/file:\/\//}"
+    local file_name="${file_path/file:\/\//}"
     file_name="$(echo "$file_name" | cut -d":" -f1)"
-
     _open_in_nvim "$file_name"
     ;;
-
   *:[0-9]*)
+    local file_name line_number
     file_name=$(echo "$file_path" | cut -d':' -f1)
     line_number=$(echo "$file_path" | cut -d':' -f2)
-
     _open_in_nvim "$file_name" "$line_number"
     ;;
-
-  *\",[[:space:]]line*) # for python
+  *\",[[:space:]]line*)
+    local file_name line_number
     file_name=$(echo "$file_path" | cut -d'"' -f1)
-    # https://stackoverflow.com/questions/22727107/how-to-find-the-last-field-using-cut
     line_number=$(echo "$file_path" | rev | cut -d' ' -f1 | rev)
-
     _open_in_nvim "$file_name" "$line_number"
     ;;
-
   https://*)
     open "$file_path"
-
     _send_message "Open $file_path" "Open In Browser"
     ;;
   *)
