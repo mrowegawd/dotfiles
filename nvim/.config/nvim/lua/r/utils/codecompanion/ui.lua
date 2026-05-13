@@ -21,14 +21,14 @@ local function set_chat_win_title(e)
   end)
 
   if not ok or not chat or not chat.ui or not chat.ui.winnr then
-    vim.defer_fn(function()
-      local picker = telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
-      if picker then
-        vim.api.nvim_win_close(picker.prompt_win, true)
-      end
-    end, 50)
+    -- vim.defer_fn(function()
+    --   local picker = telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
+    --   if picker then
+    --     vim.api.nvim_win_close(picker.prompt_win, true)
+    --   end
+    -- end, 50)
 
-    vim.wait(100)
+    -- vim.wait(100)
 
     if vim.bo.filetype == "codecompanion" and e.data and e.data.title then
       local win_id = vim.api.nvim_get_current_win()
@@ -79,62 +79,12 @@ end
 -- Spinner internals
 local spinner = {
   states = {
-    "⢀⠀",
-    "⡀⠀",
-    "⠄⠀",
-    "⢂⠀",
-    "⡂⠀",
-    "⠅⠀",
-    "⢃⠀",
-    "⡃⠀",
-    "⠍⠀",
-    "⢋⠀",
-    "⡋⠀",
-    "⠍⠁",
-    "⢋⠁",
-    "⡋⠁",
-    "⠍⠉",
-    "⠋⠉",
-    "⠋⠉",
-    "⠉⠙",
-    "⠉⠙",
-    "⠉⠩",
-    "⠈⢙",
-    "⠈⡙",
-    "⢈⠩",
-    "⡀⢙",
-    "⠄⡙",
-    "⢂⠩",
-    "⡂⢘",
-    "⠅⡘",
-    "⢃⠨",
-    "⡃⢐",
-    "⠍⡐",
-    "⢋⠠",
-    "⡋⢀",
-    "⠍⡁",
-    "⢋⠁",
-    "⡋⠁",
-    "⠍⠉",
-    "⠋⠉",
-    "⠋⠉",
-    "⠉⠙",
-    "⠉⠙",
-    "⠉⠩",
-    "⠈⢙",
-    "⠈⡙",
-    "⠈⠩",
-    "⠀⢙",
-    "⠀⡙",
-    "⠀⠩",
-    "⠀⢘",
-    "⠀⡘",
-    "⠀⠨",
-    "⠀⢐",
-    "⠀⡐",
-    "⠀⠠",
-    "⠀⢀",
-    "⠀⡀",
+    "🤘 ",
+    "🤟 ",
+    "🖖 ",
+    "✋ ",
+    "🤚 ",
+    "👆 ",
   },
   bufnr = nil,
   timer = nil,

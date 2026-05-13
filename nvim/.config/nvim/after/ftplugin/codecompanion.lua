@@ -1,2 +1,2 @@
 local opts = vim.opt_local
-opts.wrap = false
+opts.wrap = true

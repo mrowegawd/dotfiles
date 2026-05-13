@@ -3,6 +3,7 @@ local M = {}
 
 local adapters = require "r.utils.codecompanion.adapters"
 local mappings = require "r.utils.codecompanion.keymaps"
+local extensions = require "r.utils.codecompanion.extensions"
 local cli = require "r.utils.codecompanion.cli"
 local rules = require "r.utils.codecompanion.rules"
 local slash_commands = require "r.utils.codecompanion.slash_commands"
@@ -107,8 +108,8 @@ local function setup_plugin()
     -- mcp = mcp.build(),
     -- -- Rules
     rules = rules.build(),
-    -- -- Extensions
-    -- extensions = extensions.build(),
+    -- Extensions
+    extensions = extensions.build(),
   }
 end
 
@@ -116,8 +117,8 @@ function M.setup()
   require("codecompanion").setup(setup_plugin())
   ui.setup()
 
-  local group = vim.api.nvim_create_augroup("codecompanion-ft", { clear = true })
-  mappings.setup(group)
+  local setup_group = "CodeCompanion"
+  mappings.setup(setup_group)
 end
 
 return M
