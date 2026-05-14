@@ -5,6 +5,8 @@ ratio = [0, 3, 0]     # set 0 - remove view panel
 sort_dir_first = true
 sort_by = "natural"
 
+[preview]
+image_delay = 50 # tambah delay supaya terminal sempat respond
 
 [opener]
 edit = [

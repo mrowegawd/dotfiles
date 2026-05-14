@@ -5,10 +5,7 @@ set -u -e
 LC_TIME=id_ID.UTF-8
 
 _notifysend() {
-  # COL_MSG="$(xrdb -query | grep "color6" | head -n 1 |
-  #   cut -d":" -f2 | xargs)"
-  COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 |
-    cut -d":" -f2 | xargs)"
+  COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
 }
 
 _maimselection() {

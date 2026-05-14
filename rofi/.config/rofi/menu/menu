@@ -26,6 +26,6 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
     "$HOME/.config/miscxrdb/bpswm/scripts/bspc-apps" remember_me_snippet
     ;;
   "Themes") "$dir/_themes" "main" ;;
-  "Tools") "$dir/_tools" ;;
+  "Tools") "$dir/_tools" "main" ;;
   esac
 )

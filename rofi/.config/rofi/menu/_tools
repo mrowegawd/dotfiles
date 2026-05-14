@@ -5,304 +5,360 @@ LC_TIME=id_ID.UTF-8
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Fullscreen\nRecord Video Rectangle Blur\nRecord Gif Rectangle\nRecord Video Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Fullscreen\nRecord Video Rectangle Blur\nRecord Gif Rectangle\nRecord Video Rectangle\nRecord Gif\nStop Record\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
 
-# For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
-FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-$(date +%d_%B_%Y_%s).mp4"
-FILE_NAME_RECORD="ffmpeg-$(date +%d_%B_%Y_%s).mp4"
-# FILE_NAME_RECORD_BLUR="ffmpeg-(BLUR)-$(date +%d_%B_%Y_%s).mp4"
+mkdir -p "$PATH_VIDEOS"
+
+TIMESTAMP="$(date +%d_%B_%Y_%s)"
+FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-${TIMESTAMP}.mp4"
+FILE_NAME_RECORD="ffmpeg-${TIMESTAMP}.mp4"
 FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
-# FILE_RECORDING_BLUR_BAK="$PATH_VIDEOS/$FILE_NAME_RECORD_BLUR"
-# COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
+
+PID_FILE="/tmp/ffmpeg-record.pid"
+INFO_FILE="/tmp/ffmpeg-record.info"
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ UTILS                                                    ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 send_notify() {
+  COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
+
   if command -v dunstify >/dev/null; then
-    dunstify -i "$HOME/.config/miscxrdb/icons/rec-button.png" "RECORDING" "$1"
+    dunstify -i "$HOME/.config/miscxrdb/icons/rec-button.png" \
+      "RECORDING" "<b><span foreground='$COL_MSG_SUCCSS'>$1</span></b>"
   else
     notify-send "RECORDING" "$1"
   fi
 }
 
-(
-  SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
+is_recording() {
+  [[ -f "$PID_FILE" ]] || return 1
+  local pid
+  pid=$(cat "$PID_FILE")
+  [[ -n "$pid" ]] && [[ -d "/proc/$pid" ]]
+}
 
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ FFMPEG CORE                                              ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+# record_x11() {
+#   local geometry="$1"
+#   local offset="$2"
+#   local outfile="$3"
+#   local with_audio="${4:-yes}"
+#
+#   local audio_args=()
+#   if [[ "$with_audio" == "yes" ]]; then
+#     audio_args=(-f alsa -ac 2 -i default)
+#   fi
+#
+#   ffmpeg \
+#     -f x11grab \
+#     -framerate 30 \
+#     -video_size "$geometry" \
+#     -i "${DISPLAY}${offset}" \
+#     "${audio_args[@]}" \
+#     -c:v libx264 \
+#     -preset ultrafast \
+#     -crf 18 \
+#     -pix_fmt yuv420p \
+#     -threads 0 \
+#     -y "$outfile" &
+#
+#   echo $! >"$PID_FILE"
+# }
+
+record_x11() {
+  local geometry="$1"
+  local offset="$2"
+  local outfile="$3"
+  local with_audio="${4:-yes}"
+
+  local audio_args=()
+  if [[ "$with_audio" == "yes" ]]; then
+    audio_args=(-f alsa -ac 2 -i default)
+  fi
+
+  ffmpeg \
+    -f x11grab \
+    -framerate 30 \
+    -video_size "$geometry" \
+    -i "${DISPLAY}${offset}" \
+    "${audio_args[@]}" \
+    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -c:v libx264 \
+    -preset ultrafast \
+    -crf 18 \
+    -pix_fmt yuv420p \
+    -threads 0 \
+    -y "$outfile" &
+
+  echo $! >"$PID_FILE"
+}
+
+encode_for_telegram() {
+  local input="$1"
+  local output="$2"
+  local vf="${3:-scale=min(1280\,iw):-2:flags=lanczos}"
+
+  ffmpeg -i "$input" \
+    -c:v libx264 \
+    -crf 28 \
+    -preset fast \
+    -maxrate 2M \
+    -bufsize 4M \
+    -vf "$vf" \
+    -pix_fmt yuv420p \
+    -c:a aac \
+    -b:a 96k \
+    -movflags +faststart \
+    -y "$output"
+}
+
+make_gif_from_video() {
+  local input="$1"
+  local output="$2"
+  local fps="${3:-15}"
+  local width="${4:-800}"
+  local palette="/tmp/gif_palette_$$.png"
+
+  ffmpeg -i "$input" \
+    -vf "fps=${fps},scale=${width}:-1:flags=lanczos,palettegen=stats_mode=diff" \
+    -y "$palette"
+
+  ffmpeg -i "$input" -i "$palette" \
+    -lavfi "fps=${fps},scale=${width}:-1:flags=lanczos [x]; [x][1:v] paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" \
+    -y "$output"
+
+  rm -f "$palette"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ RECORD VIDEO                                             ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+run_ffmpeg_record_fullscreen() {
+  if is_recording; then
+    send_notify "Already recording! Stop first."
+    return
+  fi
+
+  local geometry
+  geometry=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+  [[ ! $geometry =~ ^[0-9]+x[0-9]+$ ]] && return
+
+  echo "video|$FILE_RECORDING_BAK|$FILE_RECORDING|$FILE_NAME_RECORD|" >"$INFO_FILE"
+  send_notify "Start Recording (fullscreen).. \nSelect 'Stop Record' to finish"
+  record_x11 "$geometry" "" "$FILE_RECORDING_BAK"
+}
+
+run_ffmpeg_record_with_rectangle() {
+  if is_recording; then
+    send_notify "Already recording! Stop first."
+    return
+  fi
+
+  local slop_info geometry offset
+  slop_info=$(slop -D -f "%wx%h+%x+%y") || return
+
+  geometry=$(echo "$slop_info" | awk -F "+" '{print $1}')
+  offset="+$(echo "$slop_info" | awk -F "+" '{print $2"+"$3}')"
+
+  [[ ! $geometry =~ ^[0-9]+x[0-9]+$ ]] && return
+
+  echo "video|$FILE_RECORDING_BAK|$FILE_RECORDING|$FILE_NAME_RECORD|" >"$INFO_FILE"
+  send_notify "Start Recording (rectangle).. \nSelect 'Stop Record' to finish"
+  record_x11 "$geometry" "$offset" "$FILE_RECORDING_BAK"
+}
+
+run_ffmpeg_record_with_rectangle_blurred() {
+  if is_recording; then
+    send_notify "Already recording! Stop first."
+    return
+  fi
+
+  local slop_info slop_blur geometry offset blur_x blur_y blur_w blur_h
+  slop_info=$(slop -D -f "%wx%h+%x+%y") || return
+  slop_blur=$(slop -D -f "%x %y %w %h") || return
+
+  geometry=$(echo "$slop_info" | awk -F "+" '{print $1}')
+  offset="+$(echo "$slop_info" | awk -F "+" '{print $2"+"$3}')"
+  read -r blur_x blur_y blur_w blur_h <<<"$slop_blur"
+
+  [[ ! $geometry =~ ^[0-9]+x[0-9]+$ ]] && return
+
+  local blur_vf="split[main][tmp];[tmp]crop=${blur_w}:${blur_h}:${blur_x}:${blur_y},boxblur=luma_radius=10:luma_power=2[blurred];[main][blurred]overlay=${blur_x}:${blur_y}"
+  echo "video|$FILE_RECORDING_BAK|$FILE_RECORDING|$FILE_NAME_RECORD|$blur_vf" >"$INFO_FILE"
+  send_notify "Start Recording (blur).. \nSelect 'Stop Record' to finish"
+  record_x11 "$geometry" "$offset" "$FILE_RECORDING_BAK"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ RECORD GIF                                               ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_start_gif_record() {
+  local geometry="$1"
+  local offset="$2"
+
+  local ts output_mkv output_gif output_mp4
+  ts="$(date '+%y%m%d-%H%M-%S')"
+  output_mkv="$PATH_VIDEOS/${ts}.mkv"
+  output_gif="$PATH_VIDEOS/${ts}.gif"
+  output_mp4="$PATH_VIDEOS/${ts}-tg.mp4"
+
+  echo "gif|$output_mkv|$output_gif|$output_mp4" >"$INFO_FILE"
+  send_notify "Record gif start.. \nSelect 'Stop Record' to finish"
+  record_x11 "$geometry" "$offset" "$output_mkv" "no"
+}
+
+run_simplegif_with_rectangle() {
+  if is_recording; then
+    send_notify "Already recording! Stop first."
+    return
+  fi
+
+  local slop_info geometry offset
+  slop_info=$(slop -D -f "%wx%h+%x+%y") || return
+
+  geometry=$(echo "$slop_info" | awk -F "+" '{print $1}')
+  offset="+$(echo "$slop_info" | awk -F "+" '{print $2"+"$3}')"
+
+  [[ ! $geometry =~ ^[0-9]+x[0-9]+$ ]] && return
+  _start_gif_record "$geometry" "$offset"
+}
+
+run_simplegif() {
+  if is_recording; then
+    send_notify "Already recording! Stop first."
+    return
+  fi
+
+  local slop_info geometry offset
+  slop_info=$(slop -D -f "%wx%h+%x+%y") || return
+
+  geometry=$(echo "$slop_info" | awk -F "+" '{print $1}')
+  offset="+$(echo "$slop_info" | awk -F "+" '{print $2"+"$3}')"
+
+  [[ ! $geometry =~ ^[0-9]+x[0-9]+$ ]] && return
+  _start_gif_record "$geometry" "$offset"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ STOP                                                     ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+run_ffmpeg_stop() {
+  if ! is_recording; then
+    send_notify "No active recording found"
+    return
+  fi
+
+  local pid
+  pid=$(cat "$PID_FILE")
+
+  kill -INT "$pid" 2>/dev/null
+
+  local i=0
+  while kill -0 "$pid" 2>/dev/null; do
+    sleep 0.5
+    ((i++))
+    if [[ $i -gt 20 ]]; then
+      kill -9 "$pid" 2>/dev/null
+      break
+    fi
+  done
+
+  rm -f "$PID_FILE"
+
+  if [[ ! -f "$INFO_FILE" ]]; then
+    send_notify "Recording stopped (no info file)"
+    return
+  fi
+
+  local type field1 field2 field3 field4
+  IFS='|' read -r type field1 field2 field3 field4 <"$INFO_FILE"
+  rm -f "$INFO_FILE"
+
+  if [[ "$type" == "gif" ]]; then
+    local output_mkv="$field1"
+    local output_gif="$field2"
+    local output_mp4="$field3"
+
+    if [[ -f "$output_mkv" ]]; then
+      send_notify "Processing gif..."
+      make_gif_from_video "$output_mkv" "$output_gif" 15 800
+      encode_for_telegram "$output_mkv" "$output_mp4"
+      rm -f "$output_mkv"
+      send_notify "Saved gif: $(basename "$output_gif") ($(du -sh "$output_gif" | cut -f1)) | mp4: $(basename "$output_mp4") ($(du -sh "$output_mp4" | cut -f1))"
+    fi
+  else
+    local bak="$field1"
+    local final="$field2"
+    local name="$field3"
+    local vf="$field4"
+
+    if [[ -f "$bak" ]]; then
+      send_notify "Processing video for telegram..."
+      if [[ -n "$vf" ]]; then
+        encode_for_telegram "$bak" "$final" "$vf"
+      else
+        encode_for_telegram "$bak" "$final"
+      fi
+      rm -f "$bak"
+      send_notify "Saved: $name ($(du -sh "$final" | cut -f1))"
+    fi
+  fi
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ MISC                                                     ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+run_filemanager() {
+  local FILEMANAGER
+  FILEMANAGER=$(command -v nautilus)
+  pidof "$FILEMANAGER" && killall "$FILEMANAGER"
+  nautilus
+}
+
+run_screenkey() {
+  local SCREENKEY
+  SCREENKEY=$(command -v screenkey)
+  pidof "$SCREENKEY" && killall "$SCREENKEY"
+  $SCREENKEY
+}
+
+sync_update() {
+  if [[ ! -f ~/.config/polybar/scripts/sync-update ]]; then
+    notify-send "file 'sync-update' not found"
+    return
+  fi
+  ~/.config/polybar/scripts/sync-update --run
+}
+
+run_neovide() {
+  [[ -f "$HOME/.local/bin/vv" ]] && "$HOME/.local/bin/vv"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ MENU                                                     ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+main() {
+  SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
   [[ -z $SELECT ]] && exit
-
-  run_screenkey() {
-    SCREENKEY=$(command -v screenkey)
-    pidof "$SCREENKEY" && killall "$SCREENKEY"
-    $SCREENKEY
-  }
-
-  run_ffmpeg_record_fullscreen() {
-    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-    FPS="30"
-
-    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
-
-      ffmpeg \
-        -f x11grab \
-        -s "$GEOMETRY" \
-        -r "$FPS" \
-        -i "$DISPLAY" \
-        -f alsa \
-        -ac 2 \
-        -i default \
-        -vcodec libx264 \
-        -s "$GEOMETRY" \
-        -acodec libmp3lame \
-        -ab 128k \
-        -ar 44100 \
-        -threads 0 \
-        -f flv \
-        "$FILE_RECORDING_BAK"
-
-      # For telegram
-      ffmpeg \
-        -i "$FILE_RECORDING_BAK" \
-        -crf 23 \
-        -preset veryfast \
-        -vcodec libx264 \
-        -acodec aac \
-        -pix_fmt yuv420p \
-        "$FILE_RECORDING"
-
-      if [ -f "$FILE_RECORDING_BAK" ]; then
-        rm -rf "$FILE_RECORDING_BAK"
-        send_notify "Saved: $FILE_NAME_RECORD"
-      fi
-    fi
-  }
-
-  run_ffmpeg_record_with_rectangle_blurred() {
-    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
-    SLOP_BLUR=$(slop -D -f "%x %y %w %h")
-
-    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
-
-    read -r blur_x blur_y blur_width blur_height <<<"$SLOP_BLUR"
-
-    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
-
-      ffmpeg \
-        -f x11grab \
-        -s "$GEOMETRY" \
-        -r 30 \
-        -i "$DISPLAY$OFFSET" \
-        -f alsa \
-        -ac 2 \
-        -i default \
-        -vcodec libx264 \
-        -s "$GEOMETRY" \
-        -acodec libmp3lame \
-        -ab 128k \
-        -ar 44100 \
-        -threads 0 \
-        -f flv \
-        "$FILE_RECORDING_BAK"
-
-      # For telegram (for blur: use boxblur)
-      ffmpeg \
-        -i "$FILE_RECORDING_BAK" \
-        -crf 23 \
-        -preset veryfast \
-        -vcodec libx264 \
-        -acodec aac \
-        -vf "split [main][blur]; [blur] crop=${blur_width}:${blur_height}:${blur_x}:${blur_y}, boxblur=10 [blurred]; [main][blurred] overlay=${blur_x}:${blur_y},scale=-2:min(1080\,bitand(ih\,-2))" \
-        -pix_fmt yuv420p \
-        "$FILE_RECORDING"
-
-      if [ -f "$FILE_RECORDING_BAK" ]; then
-        rm -rf "$FILE_RECORDING_BAK"
-        send_notify "Saved: $FILE_NAME_RECORD"
-      fi
-    fi
-  }
-
-  run_ffmpeg_record_with_rectangle() {
-    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
-
-    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
-
-    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-      [[ -f "$FILE_ICONS" ]] && send_notify "Start Recording.."
-
-      ffmpeg \
-        -f x11grab \
-        -s "$GEOMETRY" \
-        -r 30 \
-        -i "$DISPLAY$OFFSET" \
-        -f alsa \
-        -ac 2 \
-        -i default \
-        -vcodec libx264 \
-        -s "$GEOMETRY" \
-        -acodec libmp3lame \
-        -ab 128k \
-        -ar 44100 \
-        -threads 0 \
-        -f flv \
-        "$FILE_RECORDING_BAK"
-
-      # For telegram
-      ffmpeg \
-        -i "$FILE_RECORDING_BAK" \
-        -crf 23 \
-        -preset veryfast \
-        -vcodec libx264 \
-        -acodec aac \
-        -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
-        -pix_fmt yuv420p \
-        "$FILE_RECORDING"
-
-      if [ -f "$FILE_RECORDING_BAK" ]; then
-        rm -rf "$FILE_RECORDING_BAK"
-        send_notify "Saved: $FILE_NAME_RECORD"
-      fi
-    fi
-  }
-
-  # getdim() { xrandr | grep -oP '(?<=current ).*(?=,)' | tr -d ' '; }
-
-  run_simplegif_with_rectangle() {
-    OUTPUT_MKV="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').mkv"
-    # ICON="$HOME/.config/miscxrdb/icons/rec-button.png"
-
-    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
-
-    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
-
-    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      send_notify "Record gif start.."
-
-      # -s "$(getdim)" \
-      ffmpeg \
-        -f x11grab \
-        -framerate 30 \
-        -s "$GEOMETRY" \
-        -i "$DISPLAY""$OFFSET" \
-        -c:v libx264 \
-        -qp 0 \
-        -r 30 \
-        "$OUTPUT_MKV"
-
-      # ffmpeg \
-      #   -i "$OUTPUT_MKV" \
-      #   -c:v libx264 \
-      #   -crf 23 \
-      #   -profile:v baseline \
-      #   -level 3.0 \
-      #   -movflags faststart \
-      #   -pix_fmt yuv420p \
-      #   -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
-      #   -an \
-      #   "$OUTPUT_MKV.mp4"
-
-      OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
-      ffmpeg -i "$OUTPUT_MKV" -pix_fmt rgb24 "$OUTPUT_GIF"
-
-      # OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
-      # mv "$OUTPUT_MKV.mp4" "$OUTPUT_GIF"
-      #
-      if [ -f "$OUTPUT_MKV" ]; then
-        rm -rf "$OUTPUT_MKV"
-        send_notify "Saved: $OUTPUT_GIF"
-      fi
-    fi
-  }
-
-  run_ffmpeg_stop() {
-    pkill ffmpeg
-    send_notify "Recording stoped"
-  }
-
-  run_simplegif() {
-    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
-
-    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
-
-    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
-      [[ -f "$FILE_ICONS" ]] && send_notify "Record gif start.."
-
-      ffmpeg \
-        -f x11grab \
-        -s "$GEOMETRY" \
-        -r 30 \
-        -i "$DISPLAY$OFFSET" \
-        -f alsa \
-        -ac 2 \
-        -i default \
-        -vcodec libx264 \
-        -s "$GEOMETRY" \
-        -acodec libmp3lame \
-        -ab 128k \
-        -ar 44100 \
-        -threads 0 \
-        -f flv \
-        "$FILE_RECORDING_BAK"
-
-      # For telegram
-      ffmpeg \
-        -i "$FILE_RECORDING_BAK" \
-        -crf 23 \
-        -preset veryfast \
-        -vcodec libx264 \
-        -acodec aac \
-        -vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
-        -pix_fmt yuv420p \
-        "$FILE_RECORDING"
-
-      if [[ -f $FILE_RECORDING ]]; then
-        PATHGIF="$FILE_RECORDING.gif"
-
-        "$HOME/.config/miscxrdb/exbin/gifgenerator" -o "$PATHGIF" "$FILE_RECORDING"
-        send_notify "Saved: $PATHGIF"
-      fi
-
-      if [ -f "$FILE_RECORDING_BAK" ]; then
-        rm -rf "$FILE_RECORDING_BAK"
-        rm -rf "$FILE_RECORDING"
-      fi
-    fi
-  }
-
-  run_filemanager() {
-    FILEMANAGER=$(command -v nautilus)
-    pidof "$FILEMANAGER" && killall "$FILEMANAGER"
-
-    nautilus
-  }
-
-  sync_update() {
-    if [[ ! -f ~/.config/polybar/scripts/sync-update ]]; then
-      notify-send "file 'sync-update' not found "
-    fi
-
-    ~/.config/polybar/scripts/sync-update --run
-  }
-
-  run_neovide() {
-    [[ -f "$HOME/.local/bin/vv" ]] && "$HOME/.local/bin/vv"
-  }
 
   case "$SELECT" in
   "Calendar") gnome-calendar ;;
-  "Drawing") gromit-mpx ;; # install: sudo apt install gromit-mpx
+  "Drawing") gromit-mpx ;;
   "File manager [UI]") run_filemanager ;;
   "Keyboard") run_screenkey ;;
   "Neovide") run_neovide ;;
+  "Pomodoro") : ;;
   "Record Video Fullscreen") run_ffmpeg_record_fullscreen ;;
   "Record Video Rectangle Blur") run_ffmpeg_record_with_rectangle_blurred ;;
   "Record Video Rectangle") run_ffmpeg_record_with_rectangle ;;
@@ -312,4 +368,7 @@ send_notify() {
   "Stop Record") run_ffmpeg_stop ;;
   "SyncUpdate") sync_update ;;
   esac
-)
+
+}
+
+"$@"

@@ -174,11 +174,16 @@ super + w
 
 # misc: quit/stop record video
 super + shift + F8
-        pkill ffmpeg; dunstify -t 1500 "Quit ffmpeg.."
+        zsh -c "$HOME/.config/rofi/menu/_tools run_ffmpeg_stop"
+        # pkill ffmpeg; dunstify -t 1500 "Quit ffmpeg.."
 
 # misc: open terminal
 super + Return
         $TERMINAL
+
+# misc: open terminal note
+super + shift + T
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps toggle_hide_note_float
 
 # misc: open rofi menu
 super + shift + y
@@ -186,9 +191,9 @@ super + shift + y
 
 # misc: open rofi tools
 super + shift + e
-        zsh -c "$HOME/.config/rofi/menu/_tools"
+        zsh -c "$HOME/.config/rofi/menu/_tools main"
 
-# misc: change wallpaper
+# misc: change wallpaperk
 super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
