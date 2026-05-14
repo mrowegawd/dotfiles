@@ -19,8 +19,10 @@ local PROMPT_LIBRARY_CONFIG = {
     "pydocs",
     "python_developer",
     "quickfix",
+    "git_expert",
     "slides_generator",
     "translator_spa_eng",
+    "translator_ind_eng",
     "writer_at_work",
   },
   user_prompts = {
@@ -108,6 +110,10 @@ local function python_developer_prompt()
   return build_prompt("chat", "Act as an expert Python developer.", "python_role", M.prompt "python_developer")
 end
 
+local function git_commit()
+  return build_prompt("chat", "Act as an expert Git commit message specialist.", "git_role", M.prompt "git_expert")
+end
+
 local function pydocs_prompt()
   return build_prompt("inline", "Write inline Python docstrings following NumPy-style.", "pydocs", M.prompt "pydocs")
 end
@@ -116,9 +122,9 @@ end
 local function translator_prompt()
   return build_prompt(
     "chat",
-    "Act as a translator from Spanish to English.",
+    "Act as a translator from English to Bahasa Indonesia.",
     "translator_role",
-    M.prompt "translator_spa_eng"
+    M.prompt "translator_ind_eng"
   )
 end
 
@@ -159,6 +165,7 @@ function M.build()
     -- Languages and expertise
     [" Python Developer"] = python_developer_prompt(),
     [" PyDocs"] = pydocs_prompt(),
+    [" Git Commit"] = git_commit(),
     -- Work and communication
     ["󰗊 Translator"] = translator_prompt(),
     [" Writer at Work"] = writer_at_work_prompt(),
