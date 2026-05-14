@@ -1,5 +1,58 @@
----@class r.utils.session
-local M = {}
+---@class r.utils.sessions
+
+local M = {
+  fzf = {
+    mappings = {
+      default = {},
+      delete = {},
+    },
+  },
+}
+
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ FZF MAPPING                                             │
+-- ╰─────────────────────────────────────────────────────────╯
+
+M.fzf.mappings.default = function(session)
+  return function(sel)
+    local selection = sel[1]
+    session.load(selection)
+  end
+end
+
+M.fzf.mappings.delete = function(session_path)
+  return function(sel)
+    local fname = sel[1]
+    local file_path = session_path .. "/" .. fname .. ".json"
+
+    if vim.fn.filereadable(file_path) ~= 1 then
+      RUtils.error("File not found: `" .. file_path .. "`")
+      return
+    end
+
+    local ok, err = os.remove(file_path)
+    if not ok then
+      RUtils.error("Failed to delete file: " .. err)
+      return
+    end
+    RUtils.info("Session delete `" .. file_path .. "`")
+  end
+end
+
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ HELPER                                                  │
+-- ╰─────────────────────────────────────────────────────────╯
+
+function M.last_session_name()
+  -- buat nama session "last" yang unik per direktori
+  local cwd = vim.uv.cwd() or ""
+  local safe = cwd:gsub("[^%w%-_]", "_"):gsub("_+", "_"):gsub("^_", ""):gsub("_$", "")
+  return "last__" .. safe
+end
+
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ CALLER                                                  │
+-- ╰─────────────────────────────────────────────────────────╯
 
 ---@param last? boolean
 function M.load_session_from_dashboard(last)
@@ -27,7 +80,7 @@ function M.load_session_from_dashboard(last)
 
   if has_resession then
     if last then
-      require("resession").load "last"
+      require("resession").load(M.last_session_name(), { silence_errors = true })
     else
       require("resession").load()
     end
