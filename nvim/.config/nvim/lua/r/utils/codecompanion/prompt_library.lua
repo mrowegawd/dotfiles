@@ -163,14 +163,36 @@ function M.build()
     -- General assistant
     [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
     -- Languages and expertise
-    [" Python Developer"] = python_developer_prompt(),
-    [" PyDocs"] = pydocs_prompt(),
-    [" Git Commit"] = git_commit(),
+    -- [" Python Developer"] = python_developer_prompt(),
+    -- [" PyDocs"] = pydocs_prompt(),
+    -- [" Git Commit"] = git_commit(),
     -- Work and communication
-    ["󰗊 Translator"] = translator_prompt(),
-    [" Writer at Work"] = writer_at_work_prompt(),
-    ["󰦑 Meeting Copilot"] = meeting_copilot_prompt(),
-    ["󰐨 Slides Generator"] = slides_generator_prompt(),
+    -- ["󰗊 Translator"] = translator_prompt(),
+    -- [" Writer at Work"] = writer_at_work_prompt(),
+    -- ["󰦑 Meeting Copilot"] = meeting_copilot_prompt(),
+    -- ["󰐨 Slides Generator"] = slides_generator_prompt(),
+
+    -- Languages and expertise
+    [" Rust docs"] = python_developer_prompt(),
+    [" Rustdocs"] = pydocs_prompt(),
+    [" Rust helper"] = python_developer_prompt(),
+    [" Rust analytic"] = python_developer_prompt(),
+    [" Big refactoring"] = python_developer_prompt(),
+    [" Git commit"] = git_commit(),
+    [" Generate images"] = git_commit(),
+
+    -- Work and communication
+    ["󰗊 Translator id eng"] = translator_prompt(),
+    ["󰦑 Debug tmux load"] = meeting_copilot_prompt(), -- Assuming a new function or update for this
+    ["󰐨 Debug test memory"] = slides_generator_prompt(), -- Assuming a new function or update for this
+
+    [" Note readable"] = pydocs_prompt(),
+    [" Note helper"] = writer_at_work_prompt(),
+    [" Note generate tag and time"] = writer_at_work_prompt(),
+
+    [" Workflow auto test"] = writer_at_work_prompt(),
+    [" Workflow compare git commit"] = writer_at_work_prompt(),
+    [" Workflow compare logs"] = writer_at_work_prompt(),
   }
 end
 

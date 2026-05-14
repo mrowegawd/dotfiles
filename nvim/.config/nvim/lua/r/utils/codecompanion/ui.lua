@@ -27,7 +27,6 @@ local function set_chat_win_title(e)
     --     vim.api.nvim_win_close(picker.prompt_win, true)
     --   end
     -- end, 50)
-
     -- vim.wait(100)
 
     if vim.bo.filetype == "codecompanion" and e.data and e.data.title then
@@ -119,15 +118,15 @@ end
 
 local function update_spinner()
   local winnr = spinner_winnr()
-  if not winnr then
-    return
+  if winnr then
+    local base = cwd_footer()
+    local glyph = spinner.states[spinner.index]
+    local text = base == "" and glyph or string.format("%s %s", base, glyph)
+    set_footer(winnr, text)
   end
 
-  local base = cwd_footer()
-  local glyph = spinner.states[spinner.index]
-  local text = base == "" and glyph or string.format("%s %s", base, glyph)
-  set_footer(winnr, text)
   spinner.index = spinner.index % #spinner.states + 1
+  vim.cmd "redrawstatus"
 end
 
 -- Chat display
@@ -230,6 +229,20 @@ function M.setup()
         vim.cmd.wincmd "x"
         vim.cmd.wincmd "p"
       end, 1)
+    end,
+  })
+
+  local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
+
+  vim.api.nvim_create_autocmd({ "User" }, {
+    pattern = "CodeCompanionRequest*",
+    group = group,
+    callback = function(request)
+      if request.match == "CodeCompanionRequestStarted" then
+        vim.g.processing_ai = true
+      elseif request.match == "CodeCompanionRequestFinished" then
+        vim.g.processing_ai = false
+      end
     end,
   })
 

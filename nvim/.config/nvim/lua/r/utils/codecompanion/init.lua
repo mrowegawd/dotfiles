@@ -22,6 +22,7 @@ local function setup_plugin()
 
         ollama_qwen25_14b = adapters.ollama_qwen25_14b(),
         ollama_qwen25_7b = adapters.ollama_qwen25_7b(),
+        ollama_qwen3_8b = adapters.ollama_qwen3_8b(),
         -- openai_gpt_55 = adapters.openai_gpt_55,
         -- openai_gpt_54_nano = adapters.openai_gpt_54_nano,
         -- openai_gpt_54_nano_legacy = adapters.openai_gpt_54_nano_legacy,
@@ -57,7 +58,7 @@ local function setup_plugin()
     interactions = {
       -- Chat
       chat = {
-        adapter = "ollama_qwen25_7b",
+        adapter = "ollama_qwen3_8b",
         -- roles = {
         --   user = "Me",
         --   -- llm = ui.llm_role,

@@ -17,4 +17,8 @@ function M.ollama_qwen25_14b()
   return get_ollama "qwen2.5-coder:14b"
 end
 
+function M.ollama_qwen3_8b()
+  return get_ollama "qwen3:8b"
+end
+
 return M
