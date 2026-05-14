@@ -505,19 +505,11 @@ return {
         },
       }
 
-      local set_cr_mapping = function()
-        vim.keymap.set("i", "<s-CR>", '<cmd>lua require("orgmode").action("org_mappings.meta_return")<CR>', {
-          silent = true,
-          buffer = true,
-        })
-      end
-
       RUtils.map.augroup("ManageNoteMappingOrg", {
         event = { "FileType" },
         pattern = { "org" },
         command = function()
           require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
-          set_cr_mapping()
         end,
       }, {
         event = { "BufWritePost" },

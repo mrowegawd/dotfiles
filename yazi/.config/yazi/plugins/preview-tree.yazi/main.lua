@@ -166,7 +166,7 @@ local function play_with_mpv(fpath, is_only_sound)
   if is_only_sound then
     os.execute("nohup mpv --really-quiet '" .. fpath_esc .. "' >/dev/null 2>&1 &")
   else
-    os.execute("nohup mpv --really-quiet --autofit=1000x900 '" .. fpath_esc .. "' >/dev/null 2>&1 &")
+    os.execute("nohup mpv --really-quiet --autofit=600x600 --geometry=-15-60 '" .. fpath_esc .. "' >/dev/null 2>&1 &")
   end
 end
 

@@ -902,17 +902,16 @@ RUtils.map.xnoremap("<a-C>", function()
 end, { desc = "CTRL_o: rkill" })
 
 local get_right_pane_id_wez = function()
-  local get_pane_right_id = vim.system({ "wezterm", "cli", "get-pane-direction", "right" }, { text = true }):wait()
-  if get_pane_right_id.code ~= 0 then
+  local result = vim.system({ "wezterm", "cli", "get-pane-direction", "right" }, { text = true }):wait()
+  if result.code ~= 0 then
     return nil
   end
-  return get_pane_right_id.stdout
+  return vim.trim(result.stdout)
 end
 
 ---@class TmuxDirectCmds
 ---@field close_program string
 ---@field is_kill boolean
----@field is_jump boolean
 
 ---@class TmuxLayoutCmds
 ---@field command table
@@ -924,10 +923,10 @@ RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
   local PATH_PANE_COLLECT_JSON = "/tmp/tmux-main-layout-workspaces.json"
-
   local tmux = os.getenv "TMUX"
   local terminal = os.getenv "TERMINAL"
 
+  -- ─[ Wezterm ]──────────────────────────────────────────────────────
   if not tmux then
     if terminal ~= "wezterm" then
       if RUtils.has "neo-tree.nvim" then
@@ -938,207 +937,148 @@ RUtils.map.nnoremap("<a-E>", function()
 
     local pane_right_id = get_right_pane_id_wez()
     if pane_right_id then
-      ---@diagnostic disable-next-line: assign-type-mismatch
-      vim.system { "wezterm", "cli", "kill-pane", "--pane-id", tonumber(pane_right_id) }
+      vim.system { "wezterm", "cli", "kill-pane", "--pane-id", pane_right_id }
     end
 
     vim.system { "wezterm", "cli", "split-pane", "--right", "--percent", "22" }
-    ---@diagnostic disable-next-line: assign-type-mismatch
-    vim.system { "sleep", 0.5 }
+    vim.system { "sleep", "0.5" }
     vim.system { "wezterm", "cli", "activate-pane-direction", "left" }
 
     pane_right_id = get_right_pane_id_wez()
-
     if pane_right_id then
-      local cmd_open_filemanager_wez = {
+      vim.system {
         "wezterm",
         "cli",
         "send-text",
         "--pane-id",
-        tonumber(pane_right_id),
+        pane_right_id,
         "--no-paste",
-        "" .. fm_manager .. " " .. dirname .. "\r",
+        fm_manager .. " " .. dirname .. "\r",
       }
-      vim.system(cmd_open_filemanager_wez)
       vim.system { "wezterm", "cli", "activate-pane-direction", "right" }
     end
     return
   end
 
-  ---@param io_cmd string
-  ---@return string | nil
-  local tmux_cmd = function(io_cmd)
+  -- ─[ Tmux helpers ]─────────────────────────────────────────────────
+
+  local function tmux_cmd(io_cmd)
     local handle = io.popen(io_cmd)
     if not handle then
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.warn("Something went wrong when running `" .. io_cmd "`")
-      return
+      RUtils.warn("Something went wrong when running `" .. io_cmd .. "`")
+      return nil
     end
-
-    local output_cmd = handle:read "*a"
+    local out = handle:read "*a"
     handle:close()
-
-    if output_cmd == "" then
-      return
+    if not out or out == "" then
+      return nil
     end
-
-    return output_cmd:gsub("%s+$", "")
+    return out:gsub("%s+$", "")
   end
 
-  local get_current_session = function()
-    return tmux_cmd "tmux display-message -p '#S'"
-  end
-
-  local get_current_window_id = function()
-    return tmux_cmd "tmux display-message -p '#I'"
-  end
-
-  ---@param session_name string
-  ---@param window_id string
-  ---@param field string
-  ---@param path string
-  ---@return string | nil
-  local function get_json_field(session_name, window_id, field, path)
-    if not RUtils.file.exists(path) then
-      ---@diagnostic disable-next-line: undefined-field
-      RUtils.warn("Path json not found: " .. path)
-      return
+  local function get_json_field(session_name, window_id, field)
+    if not RUtils.file.exists(PATH_PANE_COLLECT_JSON) then
+      RUtils.warn("JSON not found: " .. PATH_PANE_COLLECT_JSON)
+      return nil
     end
 
-    -- Jalankan command jq
-    local handle = io.popen(string.format("jq -r '.%s.\"%s\".%s' %s", session_name, window_id, field, path))
-    if not handle then
-      RUtils.warn "Failed to run jq"
-      return
+    local result = tmux_cmd(
+      string.format(
+        "jq -r --arg s %q --arg w %q --arg f %q '.[$s][$w][$f] // empty' %s",
+        session_name,
+        window_id,
+        field,
+        PATH_PANE_COLLECT_JSON
+      )
+    )
+
+    if not result or result == "" or result == "null" then
+      return nil
     end
-
-    local result = handle:read "*a"
-    handle:close()
-
-    -- Trim whitespace
-    result = result:gsub("^%s+", ""):gsub("%s+$", "")
-
     return result
   end
 
-  local current_session = get_current_session()
-  local current_window = get_current_window_id()
+  local function is_pane_alive(pane_id)
+    if not pane_id or pane_id == "" then
+      return false
+    end
+    local result = vim.system({ "tmux", "list-panes", "-a", "-F", "#{pane_id}" }, { text = true }):wait()
+    if result.code ~= 0 then
+      return false
+    end
+    for line in result.stdout:gmatch "[^\n]+" do
+      if vim.trim(line) == pane_id then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function get_pane_process(pane_id)
+    local result = vim
+      .system({ "tmux", "display-message", "-p", "-t", pane_id, "#{pane_current_command}" }, { text = true })
+      :wait()
+    if result.code ~= 0 then
+      return ""
+    end
+    return vim.trim(result.stdout)
+  end
+
+  -- Tunggu sampai proses di pane BUKAN target_proc lagi (mode close)
+  -- atau SUDAH menjadi target_proc (mode jump)
+  local function wait_for_process(pane_id, target_proc, is_close)
+    for _ = 1, 20 do
+      local proc = get_pane_process(pane_id)
+      if is_close then
+        if proc ~= target_proc then
+          return
+        end
+      else
+        if proc == target_proc then
+          return
+        end
+      end
+      os.execute "sleep 0.15"
+    end
+  end
+
+  -- ─[ Resolve pane IDs ]─────────────────────────────────────────────
+
+  local current_session = tmux_cmd "tmux display-message -p '#S'"
+  local current_window = tmux_cmd "tmux display-message -p '#I'"
   if not current_session or not current_window then
     return
   end
 
-  local main_pane_id = get_json_field(current_session, current_window, "main_pane_id", PATH_PANE_COLLECT_JSON)
-  local file_manager_pane_id =
-    get_json_field(current_session, current_window, "file_manager_pane_id", PATH_PANE_COLLECT_JSON)
+  local file_manager_pane_id = get_json_field(current_session, current_window, "file_manager_pane_id")
 
-  -- stop process if needed it
-  if not main_pane_id or not file_manager_pane_id then
+  if not file_manager_pane_id or not is_pane_alive(file_manager_pane_id) then
+    RUtils.warn "<a-E>: file_manager_pane_id not found or pane dead.\nRun tm-toggle-pane first to create the layout."
     return
   end
 
-  ---@param cal TmuxLayoutCmds
-  ---@param mode "close" | "jump"
-  local function wait_for_pane(cal, mode)
-    mode = mode or "close"
+  -- ─[ Execute ]──────────────────────────────────────────────────────
 
-    for _ = 1, 10 do
-      local get_cmd = vim
-        .system({
-          "sh",
-          "-c",
-          string.format([[tmux display -p -t %s '#{pane_current_command}' | tr -d '\n']], cal.pane_id),
-        }, { text = true })
-        :wait()
-
-      if get_cmd.code ~= 0 or #get_cmd.stdout == 0 then
-        break
-      end
-
-      -- berhenti jika program sudah sesuai
-      if get_cmd.stdout == cal.program then
-        break
-      end
-
-      os.execute "sleep 0.5"
-    end
+  local proc = get_pane_process(file_manager_pane_id)
+  if proc == fm_manager then
+    vim.system { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " 'q' Enter" }
+    wait_for_process(file_manager_pane_id, fm_manager, true) -- tunggu sampai bukan fm_manager
   end
 
-  ---@param cmds TmuxLayoutCmds[]
-  local function exec_commands(cmds)
-    for _, cal in pairs(cmds) do
-      if cal.direct_command.is_kill then
-        local get_current_process = vim
-          .system({
-            "sh",
-            "-c",
-            [[tmux display -p -t ]] .. file_manager_pane_id .. [[ '#{pane_current_command}' | tr -d '\n']],
-          }, { text = true })
-          :wait()
-
-        if get_current_process.code ~= 0 or #get_current_process.stdout == 0 then
-          break
-        end
-
-        if get_current_process.stdout == cal.direct_command.close_program then
-          vim.system(cal.command)
-
-          -- Wait until program is closed
-          wait_for_pane(cal, "close")
-        end
-      end
-
-      vim.system(cal.command)
-
-      if cal.direct_command.is_jump then
-        wait_for_pane(cal, "jump")
-        vim.system(cal.command)
-      end
-    end
+  proc = get_pane_process(file_manager_pane_id)
+  if proc == "nvim" then
+    vim.system { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " Escape ':qa!' Enter" }
+    wait_for_process(file_manager_pane_id, "nvim", true) -- tunggu sampai bukan nvim
   end
 
-  ---@type TmuxLayoutCmds[]
-  local send_command = {
-    --- Close yazi
-    {
-      command = { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " 'q' Enter" },
-      direct_command = { is_kill = true, close_program = fm_manager, is_jump = false },
-      pane_id = file_manager_pane_id,
-      program = "zsh",
-    },
-
-    --- Close nvim
-    {
-      command = { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " 'q' Enter" },
-      direct_command = { is_kill = true, close_program = fm_manager, is_jump = false },
-      pane_id = file_manager_pane_id,
-      program = "zsh",
-    },
-
-    --- Open yazi with targeted cwd
-    {
-      command = {
-        "sh",
-        "-c",
-        "tmux send-keys -t " .. file_manager_pane_id .. " '" .. fm_manager .. " " .. dirname .. "' Enter",
-      },
-      direct_command = { is_kill = false, close_program = "", is_jump = false },
-      pane_id = file_manager_pane_id,
-      program = fm_manager,
-    },
-
-    -- Jump to target pane
-    {
-      command = {
-        "sh",
-        "-c",
-        "tmux select-pane -t " .. file_manager_pane_id,
-      },
-      direct_command = { is_kill = false, close_program = "", is_jump = true },
-      pane_id = file_manager_pane_id,
-      program = fm_manager,
-    },
+  vim.system {
+    "sh",
+    "-c",
+    "tmux send-keys -t " .. file_manager_pane_id .. " '" .. fm_manager .. " " .. dirname .. "' Enter",
   }
 
-  exec_commands(send_command)
+  wait_for_process(file_manager_pane_id, fm_manager, false)
+  vim.system { "tmux", "select-pane", "-t", file_manager_pane_id }
 end)
+-- }}}
 -- }}}

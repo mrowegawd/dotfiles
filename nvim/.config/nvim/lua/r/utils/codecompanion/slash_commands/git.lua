@@ -33,7 +33,7 @@ local function resolve_absolute_paths(files, root)
 end
 
 local function resolve_diff_and_filelist_cmds(opts)
-  local diff_cmd = { "git", "diff", "--no-ext-diff" }
+  local diff_cmd = { "git", "diff", "--no-ext-diff", "--staged" }
   local file_list_cmd = { "git", "diff", "--name-only" }
 
   if opts and opts.base_branch then

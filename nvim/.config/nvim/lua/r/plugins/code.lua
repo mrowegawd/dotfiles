@@ -271,15 +271,17 @@ return {
       {
         "<Leader>rP",
         function()
-          require("refactoring").debug.printf { below = false }
+          return require("refactoring.debug").print_loc { output_location = "below" }
         end,
         desc = "Refactoring: insert print above [refactoring]",
       },
       {
         "<Leader>rp",
         function()
-          require("refactoring").debug.print_var { normal = true }
+          -- require("refactoring.debug").print_var { output_location = "below" } .. "iw"
+          return require("refactoring.debug").print_var { output_location = "below" } .. "iw"
         end,
+        mode = { "n", "x" },
         desc = "Refactoring: insert print below [refactoring]",
       },
     },

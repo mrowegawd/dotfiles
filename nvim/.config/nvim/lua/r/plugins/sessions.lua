@@ -1,3 +1,5 @@
+local is_setup_mapping_session
+
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
@@ -58,36 +60,50 @@ return {
       local resession = require "resession"
       resession.setup(opts)
 
-      vim.keymap.set("n", "<Leader>qS", function()
-        vim.ui.input({ prompt = "Session name" }, function(selected)
-          if selected then
-            resession.save(selected, {})
-          end
-        end)
-      end, { desc = "Session: save with session name [resession.nvim]" })
+      if is_setup_mapping_session then
+        RUtils.map.nnoremap("<Leader>qS", function()
+          vim.ui.input({ prompt = "Session name" }, function(selected)
+            if selected then
+              resession.save(selected, {})
+            end
+          end)
+        end, { desc = "Session: save with session name [resession.nvim]" })
+        RUtils.map.nnoremap("<Leader>qs", function()
+          resession.save(RUtils.sessions.last_session_name())
+        end, { desc = "Session: save session with current name [resession.nvim]" })
+        RUtils.map.nnoremap("<Leader>qL", function()
+          local home = os.getenv "HOME"
+          local session_path = vim.fs.joinpath(home, ".local", "share", "nvim", "session")
 
-      --stylua: ignore
-      vim.keymap.set("n", "<Leader>qs", function() resession.save() end, { desc = "Session: save session with current name [resession.nvim]" })
-      --stylua: ignore
-      vim.keymap.set("n", "<Leader>qL", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
-      --stylua: ignore
-      vim.keymap.set("n", "<Leader>ql", function() resession.load "last" end, { desc = "Session: load last [resession.nvim]" })
-      --stylua: ignore
-      vim.keymap.set("n", "<Leader>qD", resession.delete, { desc = "Session: delete [resession.nvim]" })
+          require("fzf-lua").files(RUtils.fzflua.open_center_small_wide {
+            cwd = session_path,
+            prompt = RUtils.fzflua.padding_prompt(),
+            no_header = true, -- disable default header
+            winopts = {
+              title = RUtils.fzflua.format_title("Load Session", "󰈙"),
+              fullscreen = false,
+              preview = {
+                hidden = true,
+              },
+            },
+            fzf_opts = { ["--header"] = [[^x:delete]] },
+            cmd = "fd -d 1 -e json --exec stat --format '%Z %n' {} | sort -nr | cut -d' ' -f2- | sed 's/.json$//' | sed 's/\\.\\///'",
+            actions = {
+              ["default"] = RUtils.sessions.fzf.mappings.default(resession),
+              ["ctrl-x"] = RUtils.sessions.fzf.mappings.delete(session_path),
+            },
+          })
+        end, { desc = "Session: load from list sessions [resession.nvim]" })
+        RUtils.map.nnoremap("<Leader>ql", function()
+          resession.load(RUtils.sessions.last_session_name(), { silence_errors = true })
+        end, { desc = "Session: load last (per CWD) [resession.nvim]" })
+        RUtils.map.nnoremap("<Leader>qD", function()
+          resession.detach()
+          RUtils.info "Session detach now"
+        end, { desc = "Session: detach [resession.nvim]" })
+      end
 
-      vim.api.nvim_create_user_command("SessionDetach", function()
-        resession.detach()
-      end, {})
-
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          -- Only load the session if nvim was started with no args
-          if vim.fn.argc(-1) == 0 then
-            -- Save these to a different directory, so our manual sessions don't get polluted
-            resession.load(vim.uv.cwd(), { dir = "dirsession", silence_errors = true })
-          end
-        end,
-      })
+      is_setup_mapping_session = true
 
       if vim.tbl_contains(resession.list(), "__quicksave__") then
         vim.defer_fn(function()
@@ -99,10 +115,20 @@ return {
         end, 50)
       end
 
-      RUtils.map.augroup("ResessionLeave", {
+      RUtils.map.augroup("AUResession", {
+        event = "VimEnter",
+        command = function()
+          -- Only load the session if nvim was started with no args
+          if vim.fn.argc(-1) == 0 then
+            -- Save these to a different directory, so our manual sessions don't get polluted
+            resession.load(vim.uv.cwd(), { dir = "dirsession", silence_errors = true })
+          end
+        end,
+      }, {
         event = { "VimLeavePre" },
         command = function()
-          resession.save "last"
+          -- resession.save "last"
+          resession.save(RUtils.sessions.last_session_name()) -- per-CWD
         end,
       })
     end,
@@ -114,32 +140,15 @@ return {
   -- PROJECTS.NVIM
   {
     "DrKJeff16/project.nvim",
-    cmd = {
-      "Project",
-      "ProjectAdd",
-      "ProjectConfig",
-      "ProjectDelete",
-      "ProjectExport",
-      "ProjectFzf", -- If using `fzf-lua` integration
-      "ProjectHealth",
-      "ProjectHistory",
-      "ProjectImport",
-      "ProjectLog", -- If logging is enabled
-      -- "ProjectPicker", -- If using `picker.nvim` integration
-      "ProjectRecents",
-      "ProjectRoot",
-      "ProjectSession",
-      -- "ProjectSnacks", -- If using `snacks.nvim` integration
-      -- "ProjectTelescope", -- If using `telescope.nvim` integration
-    },
+    cmd = { "Project" },
     keys = {
-      { "<Leader>pf", "<CMD>ProjectFzf<CR>", desc = "Project: find files in projects [project.nvim]" },
-      { "<Leader>pp", "<CMD>ProjectRecents<CR>", desc = "Project: switch project [project.nvim]" },
-      { "<Leader>ph", "<CMD>ProjectConfig<CR>", desc = "Project: show configs [project.nvim]" },
+      { "<Leader>pf", "<CMD>Project fzf-lua<CR>", desc = "Project: find files in projects [project.nvim]" },
+      { "<Leader>pp", "<CMD>Project Recents<CR>", desc = "Project: switch project [project.nvim]" },
+      { "<Leader>ph", "<CMD>Project Config<CR>", desc = "Project: show configs [project.nvim]" },
       {
         "<Leader>ps",
         function()
-          vim.cmd "ProjectRoot"
+          vim.cmd "Project root"
 
           local cwd = vim.uv.cwd()
           if cwd then
@@ -150,13 +159,62 @@ return {
         end,
         desc = "Project: save [project.nvim]",
       },
-      { "<Leader>pd", "<CMD>ProjectDelete<CR>", desc = "Project: delete [project.nvim]" },
+      { "<Leader>pd", "<CMD>Project delete<CR>", desc = "Project: delete [project.nvim]" },
     },
     opts = {
       show_hidden = true,
-      fzf_lua = { enabled = true },
+      fzf_lua = {
+        enabled = true,
+        disable_file_picker = false,
+        mappings = {
+          n = {
+            R = "rename_project",
+            b = "browse_project_files",
+            -- d = "delete_project",
+            f = "find_project_files",
+            r = "recent_project_files",
+            s = "search_in_project_files",
+            w = "change_working_directory",
+          },
+          i = {
+            ["<C-b>"] = "browse_project_files",
+            -- ["<C-d>"] = "delete_project",
+            ["<C-f>"] = "find_project_files",
+            -- ["<C-n>"] = "rename_project",
+            ["<C-r>"] = "recent_project_files",
+            ["<C-s>"] = "search_in_project_files",
+            ["<C-w>"] = "change_working_directory",
+          },
+        },
+      },
       history = {
         save_dir = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path),
+      },
+      telescope = {
+        disable_file_picker = false,
+        mappings = {
+          n = {
+            R = "rename_project",
+            b = "browse_project_files",
+            -- d = "delete_project",
+            f = "find_project_files",
+            r = "recent_project_files",
+            s = "search_in_project_files",
+            w = "change_working_directory",
+          },
+          i = {
+            ["<C-b>"] = "browse_project_files",
+            -- ["<C-d>"] = "delete_project",
+            ["<C-f>"] = "find_project_files",
+            -- ["<C-n>"] = "rename_project",
+            ["<C-r>"] = "recent_project_files",
+            ["<C-s>"] = "search_in_project_files",
+            ["<C-w>"] = "change_working_directory",
+          },
+        },
+        prefer_file_browser = false,
+        sort = "newest", ---@type 'oldest'|'newest'
+        tilde = false,
       },
     },
   },

@@ -87,10 +87,12 @@ local set_conditions = {
 
 local stl_lsp_clients = function()
   local clients = vim.lsp.get_clients { bufnr = 0 }
+
   if not state.lsp_clients_visible then
-    return { { name = string.format("%d attached", #clients), priority = 7 } }
+    return { string.format("%d attached", #clients) }
   end
 
+  -- lint
   local lint = package.loaded.lint
   if lint and vim.bo.buftype == "" then
     for _, linter in ipairs(lint.linters_by_ft[vim.bo.filetype] or {}) do
@@ -98,27 +100,24 @@ local stl_lsp_clients = function()
     end
   end
 
+  -- conform
   local conform = package.loaded.conform
   if conform and vim.bo.buftype == "" then
-    local formatters = conform.list_formatters()
-    local formatter_names = vim.tbl_map(function(f)
-      return f.name
-    end, formatters)
-    for _, formatter in ipairs(formatter_names) do
-      table.insert(clients, { name = "~" .. formatter })
+    for _, f in ipairs(conform.list_formatters()) do
+      table.insert(clients, { name = "~" .. f.name })
     end
   end
 
-  if RUtils.falsy(clients) then
-    return { { name = "No LSP clients available", priority = 7 } }
+  if vim.tbl_isempty(clients) then
+    return { "No LSP" }
   end
 
   table.sort(clients, function(a, b)
     return a.name < b.name
   end)
 
-  return vim.tbl_map(function(client)
-    return { name = client.name, priority = 4 }
+  return vim.tbl_map(function(c)
+    return c.name
   end, clients)
 end
 
@@ -727,67 +726,31 @@ M.FileIcon = {
   end,
 }
 M.Git = {
+  condition = Conditions.is_git_repo,
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
-    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
-  condition = function()
-    return Conditions.is_git_repo()
-  end,
-  {
-    provider = function(self)
-      local count_add = self.status_dict.added or 0
-      if count_add > 0 then
-        return " "
-      end
-    end,
-  },
+
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("A+" .. count)
+      return count > 0 and ("A+" .. count .. " ")
     end,
     hl = { fg = colors.diff_add },
   },
   {
     provider = function(self)
-      local count_removed = self.status_dict.removed or 0
-      if count_removed > 0 then
-        return " "
-      end
-    end,
-  },
-  {
-    provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and ("D-" .. count)
+      return count > 0 and ("D-" .. count .. " ")
     end,
     hl = { fg = colors.diff_delete },
   },
   {
     provider = function(self)
-      local count_changed = self.status_dict.changed or 0
-      if count_changed > 0 then
-        return " "
-      end
-    end,
-  },
-  {
-    provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and ("M~" .. count)
+      return count > 0 and ("M~" .. count .. " ")
     end,
     hl = { fg = colors.diff_change },
-  },
-  {
-    provider = function(self)
-      local count_add = self.status_dict.added or 0
-      local count_changed = self.status_dict.changed or 0
-      local count_removed = self.status_dict.removed or 0
-      if count_add > 0 or count_changed > 0 or count_removed > 0 then
-        return " "
-      end
-    end,
   },
 }
 M.QuickfixStatus = {
@@ -961,43 +924,33 @@ M.virtualenv = {
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
   condition = function()
-    return Conditions.lsp_attached
-        and vim.bo.filetype ~= "qf"
-        and vim.fn.mode(1) ~= "t"
-        and not set_conditions.is_path_git_relative()
-        and set_conditions.hide_in_col_width(100)
-      or (vim.bo.filetype == "octo")
+    return (
+      Conditions.lsp_attached
+      and vim.bo.filetype ~= "qf"
+      and vim.fn.mode(1) ~= "t"
+      and not set_conditions.is_path_git_relative()
+      and set_conditions.hide_in_col_width(100)
+    ) or vim.bo.filetype == "octo"
   end,
 
   init = function(self)
-    local lsp_clients = vim
-      .iter(ipairs(stl_lsp_clients()))
-      :map(function(_, client)
-        return client.name
-      end)
-      :totable()
-
-    self.names = lsp_clients
+    self.names = stl_lsp_clients()
   end,
-  {
-    provider = " LSP: ",
-    hl = { italic = false },
-  },
-  {
-    provider = function(self)
-      local lsp_clients_str = table.concat(self.names, ", ") -- "  "
-      if not Conditions.width_percent_below(#lsp_clients_str, 0.33) then
-        lsp_clients_str = "~too many~"
-      end
-      return lsp_clients_str
-    end,
-  },
+
+  { provider = " LSP: ", hl = { italic = false } },
+
   {
     provider = function(self)
-      if #self.names > 0 then
-        return "  "
-      end
+      local str = table.concat(self.names, ", ")
+      return Conditions.width_percent_below(#str, 0.33) and str or "~too many~"
     end,
+  },
+
+  {
+    condition = function(self)
+      return #self.names > 0
+    end,
+    provider = "  ",
   },
 }
 M.SearchCount = {
@@ -1041,103 +994,58 @@ M.SearchCount = {
   },
 }
 M.Diagnostics = {
-  condition = function()
-    if vim.bo[0].filetype == "lazy" then
-      return false
-    end
-    return Conditions.has_diagnostics
-  end,
-  static = {
-    error_icon = RUtils.config.icons.diagnostics.Error,
-    warn_icon = RUtils.config.icons.diagnostics.Warn,
-    info_icon = RUtils.config.icons.diagnostics.Info,
-    hint_icon = RUtils.config.icons.diagnostics.Hint,
-  },
   init = function(self)
-    local function count(severity)
-      return #vim.diagnostic.get(0, { severity = vim.diagnostic.severity[severity] })
-    end
-
-    self.errors = count "ERROR"
-    self.warnings = count "WARN"
-    self.hints = count "HINT"
-    self.info = count "INFO"
+    local d = vim.diagnostic
+    self.errors = #d.get(0, { severity = d.severity.ERROR })
+    self.warnings = #d.get(0, { severity = d.severity.WARN })
+    self.info = #d.get(0, { severity = d.severity.INFO })
+    self.hints = #d.get(0, { severity = d.severity.HINT })
   end,
-  update = { "DiagnosticChanged", "BufEnter" },
+  condition = function()
+    return vim.bo[0].filetype ~= "lazy" and Conditions.has_diagnostics
+  end,
+
   {
     condition = function(self)
       return self.errors > 0
     end,
-    {
-      provider = function(self)
-        return self.error_icon
-      end,
-      hl = { fg = colors.diagnostic_err },
-    },
-    {
-      provider = function(self)
-        return self.errors .. " "
-      end,
-      hl = { fg = colors.diagnostic_err, bold = true },
-    },
+    provider = function(self)
+      return RUtils.config.icons.diagnostics.Error .. self.errors .. " "
+    end,
+    hl = { fg = colors.diagnostic_err, bold = true },
   },
   {
     condition = function(self)
       return self.warnings > 0
     end,
-    {
-      provider = function(self)
-        return self.warn_icon
-      end,
-      hl = { fg = colors.diagnostic_warn },
-    },
-    {
-      provider = function(self)
-        return self.warnings .. " "
-      end,
-      hl = { fg = colors.diagnostic_warn, bold = true },
-    },
+    provider = function(self)
+      return RUtils.config.icons.diagnostics.Warn .. self.warnings .. " "
+    end,
+    hl = { fg = colors.diagnostic_warn, bold = true },
   },
   {
     condition = function(self)
       return self.info > 0
     end,
-    {
-      provider = function(self)
-        return self.info_icon
-      end,
-      hl = { fg = colors.diagnostic_info },
-    },
-    {
-      provider = function(self)
-        return self.info .. " "
-      end,
-      hl = { fg = colors.diagnostic_info, bold = true },
-    },
+    provider = function(self)
+      return RUtils.config.icons.diagnostics.Info .. self.info .. " "
+    end,
+    hl = { fg = colors.diagnostic_info, bold = true },
   },
   {
     condition = function(self)
       return self.hints > 0
     end,
-    {
-      provider = function(self)
-        return self.hint_icon
-      end,
-      hl = { fg = colors.diagnostic_hint },
-    },
-    {
-      provider = function(self)
-        return self.hints .. " "
-      end,
-      hl = { fg = colors.diagnostic_hint, bold = true },
-    },
+    provider = function(self)
+      return RUtils.config.icons.diagnostics.Hint .. self.hints .. " "
+    end,
+    hl = { fg = colors.diagnostic_hint, bold = true },
   },
   {
-    provider = function(self)
-      if self.errors > 0 or self.warnings > 0 or self.hints > 0 or self.info > 0 then
-        return " "
-      end
+    condition = function(self)
+      return self.errors > 0 or self.warnings > 0 or self.info > 0 or self.hints > 0
     end,
+    provider = " ",
   },
 }
 M.LazyStatus = {
@@ -1498,6 +1406,49 @@ M.Clock = {
   },
 }
 
+local spinner_index = 1
+
+M.codecompanion = {
+  init = function(self)
+    if not self._au then
+      self._au = true
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "CodeCompanionRequest*",
+        callback = function()
+          vim.cmd "redrawstatus"
+        end,
+      })
+    end
+  end,
+  {
+    provider = function()
+      local spinner_symbols = {
+        "▰▱▱▱▱▱▱",
+        "▰▰▱▱▱▱▱",
+        "▰▰▰▱▱▱▱",
+        "▰▰▰▰▱▱▱",
+        "▰▰▰▰▰▱▱",
+        "▰▰▰▰▰▰▱",
+        "▰▰▰▰▰▰▰",
+        "▰▱▱▱▱▱▱",
+      }
+      -- { "█", "▓", "▒", "░" }
+      -- { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▂" }
+      -- { "㊂", "㊀", "㊁" }
+      local spinner_symbols_len = #spinner_symbols
+      if vim.g.processing_ai then
+        spinner_index = (spinner_index % spinner_symbols_len) + 1
+        return RUtils.config.icons.misc.ai .. spinner_symbols[spinner_index] .. " " -- nerd font robot
+      end
+      return nil
+    end,
+    hl = { fg = colors.keyword },
+  },
+  {
+    provider = " ",
+  },
+}
+
 -- no longer used..
 M.Mixindent = {
   {
@@ -1579,6 +1530,7 @@ M.status_active_left = {
   M.Gap,
 
   -- M.LazyStatus,
+  M.codecompanion,
   M.Dap,
   M.Diagnostics,
   M.LSPActive,

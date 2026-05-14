@@ -255,7 +255,7 @@ return {
       sources = {
         compat = {},
         default = function()
-          local sources = { "lsp", "path", "snippets", "buffer", "ripgrep" }
+          local sources = { "lsp", "path", "snippets", "buffer" }
 
           -- Workaround for git source not supporting per_filetype configuration
           -- https://github.com/Kaiser-Yang/blink-cmp-git/issues/62#issuecomment-3062425218

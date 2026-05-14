@@ -185,22 +185,15 @@ local function toggle_chat_zoom()
   window_helpers.toggle_cc_zoom()
 end
 
-local already_setup_mappings
-
 local function setup_codecompanion_filetype_mappings(e)
   local bufnr = e.buf
 
-  if already_setup_mappings then
-    return
-  end
-  already_setup_mappings = true
-
-  RUtils.map.nnoremap("<Leader>mia", function()
+  RUtils.map.nnoremap("<Leader>msi", function()
     local chat_obj = codecompanion.buf_get_chat(bufnr)
     show_adapter_info(chat_obj)
-  end, { desc = "Show adapter info", buf = bufnr })
+  end, { desc = "Show adapter info", buf = bufnr }, true)
 
-  RUtils.map.nnoremap("<Leader>miS", function()
+  RUtils.map.nnoremap("<Leader>msS", function()
     vim.cmd.stopinsert()
     local system_role = state_helpers.get_current_system_role_prompt()
     if not system_role or system_role == "" then
@@ -210,11 +203,11 @@ local function setup_codecompanion_filetype_mappings(e)
     vim.schedule(function()
       vim.cmd.normal { args = { "g<" }, bang = true }
     end)
-  end, { desc = "Show system role prompt in message window", buf = bufnr })
+  end, { desc = "Show system role prompt in message window", buf = bufnr }, true)
 
-  RUtils.map.nnoremap("<Leader>mP", insert_last_user_prompt, { desc = "Insert last user prompt", buf = bufnr })
+  RUtils.map.nnoremap("<Leader>mP", insert_last_user_prompt, { desc = "Insert last user prompt", buf = bufnr }, true)
 
-  RUtils.map.nnoremap("<Leader>mz", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr })
+  RUtils.map.nnoremap("<Leader>mz", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
 end
 
 local function setup_filetype_mappings(group_name)
@@ -238,8 +231,8 @@ local function select_custom_prompt_and_commands()
     ["Code - Explain to me?"] = { cmd = "CodeCompanion /explain_to_me", ft = {} },
 
     -- Translate
-    ["Translate - into idn"] = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
-    ["Translate - into english"] = { cmd = "CodeCompanion /translate_in_en", ft = {} },
+    ["Translator - indonesia english"] = { cmd = "CodeCompanion /translator_role", ft = {} },
+    ["Translator - japan english"] = { cmd = "CodeCompanion /translate_in_en", ft = {} },
 
     -- Fix, correct, improve the EN or IDN sentence.
     ["Fix words - ENG sentence"] = { cmd = "CodeCompanion /correct_sentence_en", ft = {} },
@@ -247,7 +240,7 @@ local function select_custom_prompt_and_commands()
     ["Fix words - WIKI sentence"] = { cmd = "CodeCompanion /correct_wiki_sentence", ft = {} },
 
     -- Git stuff
-    ["Git - commit"] = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+    ["Git - commit"] = { cmd = "CodeCompanion /git_role", ft = git_ft_stuff },
     -- git_commit_our = { cmd = "CodeCompanion /write_commit", ft = {} },
     ["Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
 
