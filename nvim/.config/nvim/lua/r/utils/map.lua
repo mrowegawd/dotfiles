@@ -110,11 +110,16 @@ local detect_duplicate_map = function(...)
   local key = args[1] -- Misalkan 'n' adalah default mode jika tidak ada argumen
   local key_alt = args[2] -- Mengambil argumen kedua sebagai key
   local opts = args[3] -- Mengambil argumen kedua sebagai key
-  if opts and opts.unique == nil then
-    -- if opts.desc then
-    --   print(key .. " " .. opts.desc)
-    -- end
-    opts.unique = true
+  local force_map = args[4] or false
+  if not force_map then
+    if opts and opts.unique == nil then
+      -- if opts.desc then
+      --   print(key .. " " .. opts.desc)
+      -- end
+      opts.unique = true
+    end
+  else
+    opts.unique = false
   end
   return key, key_alt, opts
 end

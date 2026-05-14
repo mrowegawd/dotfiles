@@ -5,6 +5,10 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
+# ╭──────────────────────────────────────────────────────────╮
+# │ UTILS                                                    │
+# ╰──────────────────────────────────────────────────────────╯
+
 __send_notify() {
   dunstify "BSPC APPS" "$1"
 }
@@ -74,11 +78,15 @@ __apply_float_rule() {
   esac
 }
 
+# ╭──────────────────────────────────────────────────────────╮
+# │ OPEN                                                     │
+# ╰──────────────────────────────────────────────────────────╯
+
 open_float() {
   local RECTANGLE
-  RECTANGLE=$(__get_rectangle 60)
+  RECTANGLE=$(__get_rectangle 50 "$2")
 
-  __apply_float_rule "$RECTANGLE"
+  __apply_float_rule "$RECTANGLE" "$2"
 
   case "$1" in
   calcurse)
@@ -89,6 +97,9 @@ open_float() {
     ;;
   ncmpcpp | rmpc)
     "$TERMINAL" -e "$1"
+    ;;
+  kitty_note_telegram)
+    $TERMINAL --override font_size=16 -e bash -c "cd ~/Downloads && nvim $(mktemp)"
     ;;
   *)
     kitty -e "$1"
@@ -173,6 +184,40 @@ remember_me_snippet() {
 
   __apply_float_rule "$RECTANGLE"
   "$SPAWN_TERMINAL" -e zsh -e "$SNIPPET_PATH"
+}
+
+# ╭──────────────────────────────────────────────────────────╮
+# │ TOGGLE OPEN                                              │
+# ╰──────────────────────────────────────────────────────────╯
+
+toggle_hide_note_float() {
+  WINID_PATH="/tmp/winid_hide_window"
+  if [ ! -f "$WINID_PATH" ]; then
+    touch $WINID_PATH
+  fi
+
+  WINID=$(cat "$WINID_PATH")
+
+  # check if winid exists
+  if [ -n "$WINID" ] && ! bspc query -N -n "$WINID" >/dev/null 2>&1; then
+    WINID="" >"$WINID_PATH"
+  fi
+
+  if [ -z "$WINID" ]; then
+    open_float "kitty_note_telegram" "br" &
+    sleep 0.4 # wait until open_float is ready
+
+    local winid
+    winid=$(bspc query -N -n focused)
+    echo "$winid" >"$WINID_PATH"
+  fi
+
+  if bspc query -N -n "${WINID}.hidden" >/dev/null; then
+    bspc node "$WINID" --flag hidden=off
+    bspc node "$WINID" -f
+  else
+    bspc node "$WINID" --flag hidden=on
+  fi
 }
 
 "$@"

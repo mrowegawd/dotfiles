@@ -29,9 +29,10 @@ local base_options = {
     notifications_enabled = true, -- Enable notifications.
     semantic_tokens_enabled = true, -- Enable lsp semantic tokens at start.
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
-    autoformat = true, -- Highlight URLs with an underline effect.
-    colorscheme = colorscheme, -- Highlight URLs with an underline effect.
-    inlay_hints = true, -- Highlight URLs with an underline effect.
+    autoformat = true,
+    processing_ai = false,
+    colorscheme = colorscheme,
+    inlay_hints = true,
     snacks_jump_scope = false,
     -- lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-seoul256_dark", "base46-zenburn" },
     lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-material-lighter" },
@@ -52,9 +53,11 @@ local defaults = {
   colorscheme = colorscheme,
   path = {
     dropbox_path = dropbox_path,
-    wiki_path = fmt("%s/neorg", dropbox_path),
-    snippet_path = snippet_path,
+    dropbox_private = vim.fs.joinpath(dropbox_path, "/data.programming.forprivate"),
+    wiki_path = vim.fs.joinpath(dropbox_path, "neorg"),
+    prompt_dir = vim.fs.joinpath(dropbox_path, "data.programming.forprivate", "ai-prompts"),
     home = home,
+    snippet_path = snippet_path,
   },
 
   -- load the default settings
@@ -93,7 +96,7 @@ local defaults = {
       rightsideonly = { "", "", "", "", "", "", "", "│" },
     },
     misc = {
-      ai = " ",
+      ai = "  ",
       dots = "󰇘",
       arrow_right = " ",
       block = "▌ ",

@@ -5,6 +5,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field cmp r.utils.cmp
 ---@field codecompanion_fidget r.utils.codecompanion_fidget
+---@field codecompanion r.utils.codecompanion
 ---@field config LazyVimConfig
 ---@field deprecated r.utils.deprecated
 ---@field extras r.utils.extras
@@ -28,7 +29,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field plugin r.utils.plugin
 ---@field qf r.utils.qf
 ---@field root r.utils.root
----@field session r.utils.session
+---@field sessions r.utils.sessions
 ---@field statuscolumn r.utils.statuscolumn
 ---@field terminal r.utils.terminal
 ---@field tiling r.utils.tiling

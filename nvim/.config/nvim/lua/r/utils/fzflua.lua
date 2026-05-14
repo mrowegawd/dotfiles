@@ -17,6 +17,7 @@ local dropdown = function(opts)
   --   v_backdrop = 90
   -- end
   local fzf_tbl = {
+    no_header = opts.no_header, -- disable default header
     prompt = M.padding_prompt(),
     fzf_opts = {
       ["--layout"] = "reverse", -- "reverse" or "default"
