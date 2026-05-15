@@ -79,10 +79,10 @@ end
 function M.chat_keymaps()
   return {
     rules = {
-      modes = { n = "<Leader>mrC" },
+      modes = { n = "<Leader>qrC" },
     },
     reload_rules = {
-      modes = { n = "<Leader>mrR" },
+      modes = { n = "<Leader>qrR" },
       description = "Reload CodeCompanion rules",
       callback = function(chat)
         vim.cmd.stopinsert()

@@ -5,9 +5,7 @@ return {
     "olimorris/codecompanion.nvim",
     event = "VeryLazy",
     cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionCmd", "CodeCompanionActions" },
-    keys = {
-      { "<Leader>mi", "", desc = "Show Info/Adapter/Model/Help", ft = { "codecompanion" } },
-    },
+    keys = { { "<Leader>qi", "", desc = "Show Info/Adapter/Model/Help", ft = { "codecompanion" } } },
     dependencies = { "nvim-lua/plenary.nvim", { "ravitemer/codecompanion-history.nvim" } },
     config = function()
       RUtils.codecompanion.setup()

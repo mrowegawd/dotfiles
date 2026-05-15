@@ -31,21 +31,21 @@ return {
     },
     keys = {
       {
-        "<Localleader>nf",
+        "<Localleader>df",
         function()
           vim.cmd "Noice fzf"
         end,
         desc = "Noice: show list notifications",
       },
       {
-        "<Localleader>nl",
+        "<Localleader>dl",
         function()
           require("noice").cmd "all"
         end,
         desc = "Noice: show all messages",
       },
       {
-        "<Localleader>nd",
+        "<Localleader>dd",
         function()
           require("noice").cmd "dismiss"
         end,

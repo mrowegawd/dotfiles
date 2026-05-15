@@ -2,7 +2,9 @@ local api = vim.api
 local option = api.nvim_get_option_value
 
 ---@class r.utils.buf
-local M = {}
+local M = {
+  window = {},
+}
 
 function M._only()
   local del_non_modifiable = vim.g.bufonly_delete_non_modifiable or false
@@ -227,6 +229,153 @@ function M.is_big_file(buf, opts)
 
   if vim.api.nvim_buf_line_count(buf) > lines then
     return true
+  end
+end
+
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ WINDOW                                                  │
+-- ╰─────────────────────────────────────────────────────────╯
+--
+local exclude_ft_arrange = { "DiffviewFileHistory", "DiffviewFiles" }
+
+M.window.arange_wins = function(direction)
+  return function()
+    if vim.wo.diff then
+      return
+    end
+
+    if vim.tbl_contains(exclude_ft_arrange, vim.bo.filetype) then
+      return
+    end
+
+    if vim.w.is_overlook_popup then
+      if direction == "split" then
+        require("overlook.api").open_in_split()
+      end
+      if direction == "vsplit" then
+        require("overlook.api").open_in_vsplit()
+      end
+      if direction == "tabe" then
+        require("overlook.api").open_in_tab()
+      end
+      return
+    end
+
+    if vim.tbl_contains({ "split", "vsplit" }, direction) then
+      vim.cmd(direction)
+      return
+    end
+
+    if direction == "tabe" then
+      vim.cmd "tabedit %"
+      return
+    end
+
+    vim.cmd("wincmd " .. direction)
+    vim.cmd "wincmd ="
+  end
+end
+
+---@param tbl_wins table
+---@return boolean
+local function go_back_to_window(tbl_wins)
+  for _, win in pairs(tbl_wins) do
+    local win_checked = RUtils.cmd.windows_is_opened { win }
+    if win_checked.found then
+      -- pcall(vim.api.nvim_set_current_win, win_checked.winid)
+      vim.api.nvim_set_current_win(win_checked.winid)
+      return true
+    end
+  end
+  return false
+end
+
+---@param ft_wins table
+---@return boolean
+local function go_prev_window(ft_wins)
+  -- Go back to the window if any windows are open
+  if vim.tbl_contains(ft_wins, vim.bo.filetype) then
+    vim.cmd [[wincmd p]]
+    return true
+  end
+  return false
+end
+
+local function call_stack_peek()
+  local Stack = require "overlook.stack"
+  local switch_to_winid = nil
+  if vim.w.is_overlook_popup then
+    switch_to_winid = vim.w.overlook_popup.root_winid
+  elseif Stack.instances[vim.api.nvim_get_current_win()] and not Stack.empty() then
+    switch_to_winid = Stack.top().winid
+  end
+
+  if switch_to_winid == nil then
+    return false, nil
+  end
+  return true, switch_to_winid
+end
+
+function M.window.switch_focus_targeted_window()
+  local ok, switch_winid = call_stack_peek()
+  if ok then
+    pcall(vim.api.nvim_set_current_win, switch_winid)
+    return
+  end
+
+  local float_win = { "codecompanion", "wayfinder" }
+  if go_prev_window(float_win) then
+    return
+  end
+  if go_back_to_window(float_win) then
+    return
+  end
+
+  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+  if go_prev_window(right_win) then
+    return
+  end
+  if go_back_to_window(right_win) then
+    return
+  end
+end
+
+local function not_vscode()
+  return vim.fn.exists "g:vscode" == 0
+end
+
+function M.window.replace_keymap(confirmation, visual)
+  confirmation = confirmation or false
+  visual = visual or false
+  local key = [[:%s/]]
+  local search_string = ""
+  if visual then
+    local selection_str = RUtils.get_visual_selection()
+    if selection_str then
+      search_string = selection_str.selection
+    end
+  else
+    key = key .. [[\<]]
+    search_string = vim.fn.expand "<cword>"
+  end
+  key = key .. RUtils.map.escape(search_string, "[]")
+  if not visual then
+    key = key .. [[\>]]
+  end
+  key = key .. "/" .. RUtils.map.escape(search_string, "&")
+  if confirmation then
+    key = key .. [[/gcI]]
+  else
+    key = key .. [[/gI]]
+  end
+  RUtils.map.feedkey(key)
+
+  if not_vscode() then
+    local key_move = [[<Left><Left><Left>]]
+    if confirmation then
+      key_move = key_move .. [[<Left>]]
+    end
+    RUtils.map.feedkey(key_move)
   end
 end
 

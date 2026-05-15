@@ -22,6 +22,7 @@ local PROMPT_LIBRARY_CONFIG = {
     "git_expert",
     "slides_generator",
     "translator_spa_eng",
+    "note_writer",
     "translator_ind_eng",
     "writer_at_work",
   },
@@ -144,6 +145,15 @@ local function writer_at_work_prompt()
   })
 end
 
+local function note_readable_ind()
+  return build_prompt(
+    "chat",
+    "Tulis dan perbaiki kalimat, structure kalimat agar mudah dibaca.",
+    "writer_and_reformat_note_id",
+    M.prompt "note_writer"
+  )
+end
+
 local function meeting_copilot_prompt()
   return build_prompt(
     "chat",
@@ -186,7 +196,7 @@ function M.build()
     ["󰦑 Debug tmux load"] = meeting_copilot_prompt(), -- Assuming a new function or update for this
     ["󰐨 Debug test memory"] = slides_generator_prompt(), -- Assuming a new function or update for this
 
-    [" Note readable"] = pydocs_prompt(),
+    [" Note readable"] = note_readable_ind(),
     [" Note helper"] = writer_at_work_prompt(),
     [" Note generate tag and time"] = writer_at_work_prompt(),
 

@@ -1,8 +1,18 @@
+local codecompanion = require "codecompanion"
+
 local chat_helpers = require("r.utils.codecompanion.helpers").chat
 local repo_helpers = require("r.utils.codecompanion.helpers").repo
 local prompt_library = require "r.utils.codecompanion.prompt_library"
 
 local M = {}
+
+local ft_prompt_map = {
+  lua = "lua_role",
+  python = "python_role",
+  sh = "bash_role",
+  sql = "sql_role",
+  tex = "latex_role",
+}
 
 -- Process helpers
 local function wait_stdout(cmd, opts)
@@ -90,6 +100,50 @@ local function build_diff_context(opts)
     diff_cmd = diff_cmd,
     abs_files = absolute_files,
   }
+end
+
+local function detect_majority_filetype(files)
+  local counts = {}
+  local majority_filetype
+  local max_count = 0
+
+  for _, file in ipairs(files) do
+    local filetype = vim.filetype.match { filename = file }
+    if filetype and filetype ~= "" then
+      counts[filetype] = (counts[filetype] or 0) + 1
+      if counts[filetype] > max_count then
+        max_count = counts[filetype]
+        majority_filetype = filetype
+      end
+    end
+  end
+
+  if max_count > (#files / 2) then
+    return majority_filetype
+  end
+
+  return nil
+end
+
+function M.code_review(_, opts)
+  local ctx = build_diff_context(opts)
+  if not ctx then
+    return
+  end
+
+  local ft = detect_majority_filetype(ctx.abs_files)
+  local prompt_alias = ft_prompt_map[ft] or "assistant_role"
+  codecompanion.prompt(prompt_alias)
+
+  local chat = chat_helpers.get_or_create_chat()
+  chat_helpers.add_context(ctx.abs_files)
+
+  local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
+  chat:add_buf_message {
+    role = "user",
+    content = string.format(prompt_library.prompt "code_reviewer", diff_output),
+  }
+  chat:submit()
 end
 
 function M.conventional_commit(chat, opts)

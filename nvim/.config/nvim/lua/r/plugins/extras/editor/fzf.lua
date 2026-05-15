@@ -154,9 +154,6 @@ return {
         mode = { "x" },
       },
 
-      -- Buffers
-      { "<Leader>bb", function() require("fzf-lua").buffers() end, desc = "Buffer: select buffers [fzflua]" },
-
       { "<Leader>sm", function() require("fzf-lua").marks() end, desc = "Search: marks [fzflua]" },
       { "<Leader>sj", function() require("fzf-lua").jumps() end, desc = "Search: jumps [fzflua]" },
 

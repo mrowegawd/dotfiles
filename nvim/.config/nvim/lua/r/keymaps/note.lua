@@ -8,19 +8,19 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<Leader>mfl"] = {
+      ["<LocalLeader>qfl"] = {
         function()
           RUtils.notes.find_local_url_and_backlinks()
         end,
         "Note: find local URL and backlinks",
       },
-      ["<Leader>mfL"] = {
+      ["<LocalLeader>qfL"] = {
         function()
           RUtils.notes.find_global_url_and_backlinks()
         end,
         "Note: find global URL and backlinks",
       },
-      ["<Leader>fT"] = {
+      ["<LocalLeader>fT"] = {
         function()
           RUtils.todocomments.search_global_note {
             title = "Todo Note Global",
@@ -29,7 +29,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "TODOCOMMENTS: search global TODO comments in notes [fzflua]",
       },
-      ["<Leader>ft"] = {
+      ["<LocalLeader>ft"] = {
         function()
           RUtils.todocomments.search_local {
             title = "Todo Note Curbuf",
@@ -37,13 +37,13 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
       },
-      ["<Leader>mft"] = {
+      ["<LocalLeader>qft"] = {
         function()
           RUtils.notes.find_local_title()
         end,
         "Note: jump local title",
       },
-      ["<Leader>mfT"] = {
+      ["<LocalLeader>qfT"] = {
         function()
           RUtils.notes.find_global_title()
         end,
@@ -55,7 +55,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: find backlinks (alternative)",
       },
-      ["<Leader>mfb"] = {
+      ["<LocalLeader>qfb"] = {
         function()
           RUtils.notes.find_backlinks()
         end,

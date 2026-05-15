@@ -566,9 +566,9 @@ local function follow_link_markdown()
 end
 
 ---@param context_mode "mpv or svix" | "browser" | "go to file"
----@param is_exit_visual_mode? boolean
-function M.open_with(context_mode, is_exit_visual_mode)
-  is_exit_visual_mode = is_exit_visual_mode or false
+---@param mode_open?  "vsplit" | "split" | "edit"
+function M.open_with(context_mode, mode_open)
+  mode_open = mode_open or "edit"
 
   local debug_context_mode = { "mpv or svix", "browser", "go to file" }
   if not vim.tbl_contains(debug_context_mode, context_mode) then
@@ -582,7 +582,7 @@ function M.open_with(context_mode, is_exit_visual_mode)
   local mode = vim.fn.mode()
 
   if mode == "v" or mode == "V" then
-    is_exit_visual_mode = false
+    local is_exit_visual_mode = false
     if context_mode == "mpv or svix" then
       is_exit_visual_mode = true
     end
@@ -631,16 +631,23 @@ function M.open_with(context_mode, is_exit_visual_mode)
     --   return
     -- end
     local filepath, line_nr, col_nr = url:match "([^%s:]+):(%d+):(%d+)"
-    if not filepath then
-      filepath, line_nr = url:match "([^%s:]+):(%d+)"
+    if not filepath or not line_nr then
+      filepath, line_nr = url:match "^(.+):(%d+)"
     end
 
     if filepath then
       filepath = vim.fn.expand(filepath)
-      vim.cmd("edit " .. vim.fn.fnameescape(filepath))
-      vim.api.nvim_win_set_cursor(0, { tonumber(line_nr), tonumber(col_nr or 1) - 1 })
+      local target_line = tonumber(line_nr) or 1
+      local target_col = tonumber(col_nr) or 0
+
+      vim.cmd(mode_open .. " " .. filepath)
+
+      vim.defer_fn(function()
+        vim.api.nvim_win_set_cursor(0, { target_line, target_col })
+      end, 1)
     else
       RUtils.info "use fallback `gf` key"
+      vim.cmd(mode_open)
       local ok, err = pcall(vim.cmd.normal, { "gf", bang = true })
       if not ok then
         RUtils.error(err)

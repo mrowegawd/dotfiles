@@ -86,154 +86,11 @@ return {
       "benfowler/telescope-luasnip.nvim",
       "fdschmidt93/telescope-corrode.nvim",
     },
-    keys = {
-      -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "x" } },
-      -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Diagnostic: document diagnostics [telescope]" },
-      -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "Diagnostic: workspace diagnostics [telescope]" },
-      -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
-      -- { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
-      -- {
-      --   "gs",
-      --   function()
-      --     require("telescope.builtin").lsp_document_symbols {
-      --       symbols = RUtils.config.get_kind_filter(),
-      --     }
-      --   end,
-      --   desc = "Telescope (lsp): goto symbol",
-      -- },
-      -- {
-      --   "gS",
-      --   function()
-      --     require("telescope.builtin").lsp_dynamic_workspace_symbols {
-      --       symbols = RUtils.config.get_kind_filter(),
-      --     }
-      --   end,
-      --   desc = "Telescope(lsp): goto symbol (Workspace)",
-      -- },
-      -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
-      -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "x" } },
-      -- {
-      --   "<Leader>sn",
-      --   function()
-      --     require("telescope").extensions.luasnip.luasnip {}
-      --   end,
-      --   desc = "Telescope: luasnip list",
-      -- },
-      -- { "<Localleader>ff", "<CMD>Telescope find_files<CR>", desc = "Telescope: files", mode = { "n", "x" } },
-      -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
-      -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
-      -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
-      -- { "<Leader>fC", "<CMD>Telescope commands<CR>", desc = "Telescope: commands" },
-      -- { "<Localleader>fL", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
-      -- { "<Leader>f=", "<CMD>Telescope spell_suggest theme=get_cursor<CR>", desc = "Telescope: spell suggest" },
-      -- { "<Leader>fF", "<CMD>Telescope lazy theme=ivy<CR>", desc = "Telescope: plugins files" },
-      -- {
-      --   "<Leader>ff",
-      --   function()
-      --     return require("telescope").extensions.menufacture.find_files()
-      --   end,
-      --   desc = "Telescope: find files",
-      -- },
-      -- {
-      --   "<Leader>fg",
-      --   function()
-      --     return require("telescope").extensions.menufacture.live_grep()
-      --   end,
-      --   desc = "Telescope-manufacture: live_grep",
-      -- },
-      -- {
-      --   "<Leader>fg",
-      --   function()
-      --     return require("telescope").extensions.menufacture.grep_string()
-      --   end,
-      --   desc = "Telescope-manufacture: live_grep (visual)",
-      --   mode = { "x" },
-      -- },
-      --
-      -- {
-      --   "<Leader>bg",
-      --   function(opts)
-      --     local builtin = require "telescope.builtin"
-      --
-      --     opts = opts or {}
-      --
-      --     local opt = require("telescope.themes").get_ivy {
-      --       cwd = opts.dir,
-      --       prompt_title = "Live Grep for all Buffers",
-      --       grep_open_files = true,
-      --       shorten_path = true,
-      --       -- sorter = require("telescope.sorters").get_substr_matcher {},
-      --     }
-      --     return builtin.live_grep(opt)
-      --   end,
-      --   description = "Telescope: live_grep on buffers",
-      -- },
-      --
-      --         -- {
-      --         --     "<Leader>fF",
-      --         --     function()
-      --         --         local plugins_directory = vim.fn.stdpath "data"
-      --         --             .. "/lazy"
-      --         --         return require("telescope.builtin").find_files {
-      --         --             cwd = plugins_directory,
-      --         --             prompt_title = "Find plugin files",
-      --         --         }
-      --         --     end,
-      --         --     description = "Find plugin files",
-      --         -- },
-      --
-      --         -- TELESCOPE-LAZY
-      --         {
-      --             "<Leader>fF",
-      --             "<CMD>Telescope lazy theme=ivy<CR>",
-      --             desc = "Telescope-lazy: check plugins dir",
-      --         },
-      --         -- TELESCOPE-MENUFACTURE
-      --         {
-      --             "<Leader>ff",
-      --             function()
-      --                 return require("telescope").extensions.menufacture.find_files()
-      --             end,
-      --             desc = "Telescope-manufacture: find files",
-      --         },
-      --
-      --
-      --         -- TELESCOPE-GREPQF
-      --         {
-      --             "<Leader>fq",
-      --             "<CMD> Telescope grepqf theme=ivy<CR>",
-      --             desc = "Telescope-grepqf: live_grep qf items",
-      --         },
-      --
-      --         -- TELESCOPE-SYMBOLS
-      --         {
-      --             "<Leader>f1",
-      --             "<CMD> Telescope symbols theme=ivy<CR>",
-      --             desc = "Telescope-symbol: emoji",
-      --         },
-      --
-      --         -- CONDUCT-NVIM
-      --         {
-      --             "<Leader>fp",
-      --             "<CMD>Telescope conduct projects theme=ivy<CR>",
-      --             desc = "Telescope-conductt: projects",
-      --         },
-    },
     opts = function()
-      -- local trouble = require "trouble.providers.telescope"
       local actions = require "telescope.actions"
       local themes = require "telescope.themes"
 
       local layout_actions = require "telescope.actions.layout"
-
-      -- local foldMaps = function(_, _)
-      --     require("telescope.actions.set").select:enhance {
-      --         post = function()
-      --             vim.cmd.normal { args = { "zx" }, bang = true }
-      --         end,
-      --     }
-      --     return true
-      -- end
 
       ---@param opts table
       local function dropdown(opts)
@@ -258,18 +115,6 @@ return {
         end
       end
 
-      -- local function stopinsert_fb(callback, callback_dir)
-      --     return function(prompt_bufnr)
-      --         local entry =
-      --             require("telescope.actions.state").get_selected_entry()
-      --         if entry and not entry.Path:is_dir() then
-      --             stopinsert(callback)(prompt_bufnr)
-      --         elseif callback_dir then
-      --             callback_dir(prompt_bufnr)
-      --         end
-      --     end
-      -- end
-
       return {
         defaults = {
           get_selection_window = function()
@@ -293,7 +138,7 @@ return {
             "--with-filename",
             "--no-heading",
             "--smart-case",
-            "--trim", -- remove indentation
+            "--trim",
           },
           file_ignore_patterns = {
             "%.jpg",
@@ -311,13 +156,12 @@ return {
           sorting_strategy = "ascending",
           theme = "ivy",
           layout_config = {
-            -- height = 35,
             horizontal = { preview_width = 0.55 },
           },
           layout_strategy = "bottom_pane",
           prompt_prefix = " ",
           selection_caret = " ",
-          cycle_layout_list = { -- digunakan ketika use <c-l>
+          cycle_layout_list = {
             "flex",
             "horizontal",
             "vertical",
@@ -415,10 +259,6 @@ return {
             file_ignore_patterns = { ".git/", "%.svg", "%.lock" },
             max_results = 2000,
           },
-          -- current_buffer_fuzzy_find = dropdown {
-          --   previewer = false,
-          --   shorten_path = false,
-          -- },
           diagnostics = dropdown {},
           colorscheme = { enable_preview = true },
           keymaps = dropdown {
@@ -436,16 +276,14 @@ return {
             layout_config = {
               width = 0.80,
               height = 0.80,
-              -- preview_width = 0.70,
             },
           },
         },
         extensions = {
           lazy = themes.get_ivy {},
           octo = themes.get_ivy {},
-          -- dap = themes.get_ivy {}, -- not working
           live_grep_args = themes.get_ivy {
-            auto_quoting = false, -- enable/disable auto-quoting
+            auto_quoting = false,
           },
         },
       }
@@ -477,9 +315,6 @@ return {
       telescope.load_extension "tmux"
 
       telescope.load_extension "hierarchy"
-
-      -----@diagnostic disable-next-line: undefined-field
-      --telescope.load_extension "luasnip"
 
       local corrode_cfg = require "telescope._extensions.corrode.config"
       corrode_cfg.values = { theme = "ivy" }

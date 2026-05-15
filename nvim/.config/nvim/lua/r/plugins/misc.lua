@@ -17,13 +17,13 @@ return {
           end
           vim.cmd ":Hi + "
         end,
-        desc = "Misc: highlighter on cursor [vim-highlighter]",
+        desc = "Misc: highlight word on cursor [vim-highlighter]",
         mode = { "n", "v" },
       },
       {
         "<Leader>uH",
         "<CMD>Hi clear<CR>",
-        desc = "Misc: highlighter clear all [vim-highlighter]",
+        desc = "Misc: clear all highlights [vim-highlighter]",
       },
     },
   },

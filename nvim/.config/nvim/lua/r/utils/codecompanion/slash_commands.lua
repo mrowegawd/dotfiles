@@ -1,6 +1,7 @@
 local SLASH_COMMANDS = "r.utils.codecompanion.slash_commands."
 
 local git = require(SLASH_COMMANDS .. "git")
+local coding = require(SLASH_COMMANDS .. "coding")
 
 local M = {}
 
@@ -57,10 +58,10 @@ local slash_commands = {
     description = "Generate a conventional git commit message",
     callback = git.conventional_commit,
   },
-  -- ["code_review"] = {
-  --   description = "Perform a code review",
-  --   callback = git.code_review,
-  -- },
+  ["code_review"] = {
+    description = "Perform a code review",
+    callback = git.code_review,
+  },
   -- ["changelog"] = {
   --   description = "Generate a changelog entry from selected commits",
   --   callback = git.changelog,
@@ -70,10 +71,10 @@ local slash_commands = {
   --   description = "Explain quickfix/loclist code diagnostics",
   --   callback = coding.qfix,
   -- },
-  -- ["explain_code"] = {
-  --   description = "Explain selected code",
-  --   callback = coding.explain_code,
-  -- },
+  ["explain_code"] = {
+    description = "Explain selected code",
+    callback = coding.explain_code,
+  },
   -- -- Skills
   -- ["skills"] = {
   --   description = "Pick a skill name from the skills directory",

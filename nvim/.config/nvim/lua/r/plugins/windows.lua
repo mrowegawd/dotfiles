@@ -33,7 +33,7 @@ return {
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
     keys = {
       {
-        "<Leader>bP",
+        "<Leader>wP",
         function()
           local pinbuf = require "stickybuf"
           if pinbuf.is_pinned() then

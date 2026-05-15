@@ -21,7 +21,6 @@ return {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
-      -- icons = { mappings = false },
       icons = {
         rules = {
           { plugin = "fzf-lua", icon = "💊", name = "fzf" },
@@ -70,15 +69,12 @@ return {
           { "<Leader>gb", group = "buffer" },
 
           { "<Leader>h", group = "help" },
-          { "<Leader>n", group = "note" },
 
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
 
           { "<Leader>t", group = "testing" },
           { "<Leader>tc", group = "coverage" },
-
-          -- { "<Leader>m", group = "marker" },
 
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "search" },
@@ -105,13 +101,14 @@ return {
           },
 
           { "<Localleader>g", group = "grug-far" },
-          { "<Localleader>q", group = "qfbookmarks" },
+          -- { "<Localleader>q", group = "qfbookmarks" },
 
+          { "<Localleader>n", group = "note" },
           { "<Localleader>a", group = "ai" },
 
           { "<Localleader>d", group = "database" },
           { "<Localleader>f", group = "telescope" },
-          { "<Localleader>n", group = "notification" },
+          { "<Localleader>d", group = "notification" },
           { "<Localleader>o", group = "open/misc" },
 
           -- { "<Localleader>r", group = "refactoring" },

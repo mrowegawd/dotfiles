@@ -65,16 +65,16 @@ return {
       },
     },
     keys = {
-      { "<Leader>bv", "", desc = "view", ft = { "orgagenda" } },
-      { "<Leader>bs", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
-      { "<Leader>bsp", "", desc = "priority", ft = { "orgagenda", "org" } },
-      { "<Leader>bsc", "", desc = "clock", ft = { "orgagenda", "org" } },
-      { "<Leader>bx", "", desc = "export", ft = { "org" } },
+      { "<LocalLeader>qv", "", desc = "view", ft = { "orgagenda" } },
+      { "<LocalLeader>qs", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
+      { "<LocalLeader>qsp", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<LocalLeader>qsc", "", desc = "clock", ft = { "orgagenda", "org" } },
+      { "<LocalLeader>qx", "", desc = "export", ft = { "org" } },
 
       -- { "<Leader>br", "", desc = "remove/redo", ft = "org" },
-      { "<Leader>bu", "", desc = "toggle", ft = "org" },
-      { "<Leader>bb", "", desc = "buffer", ft = "org" },
-      { "<Leader>bf", "", desc = "find/title/links", ft = "org" },
+      -- { "<Leader>bu", "", desc = "toggle", ft = "org" },
+      -- { "<Leader>bb", "", desc = "buffer", ft = "org" },
+      -- { "<Leader>bf", "", desc = "find/title/links", ft = "org" },
 
       { "<LocalLeader>nd", "", desc = "date/navigate by date" },
       { "<LocalLeader>nf", "", desc = "find/grep" },
@@ -329,69 +329,69 @@ return {
         },
         mappings = {
           disable_all = false,
-          prefix = "<LocalLeader>c",
+          prefix = "<LocalLeader>q",
           global = {
             org_capture = "<LocalLeader>ncc",
             org_agenda = "<LocalLeader>nC",
           },
           agenda = {
             -- Views
-            org_agenda_day_view = "<Leader>bvd",
-            org_agenda_week_view = "<Leader>bvw",
-            org_agenda_month_view = "<Leader>bvm",
-            org_agenda_year_view = "<Leader>bvy",
+            org_agenda_day_view = "<LocalLeader>qvd",
+            org_agenda_week_view = "<LocalLeader>qvw",
+            org_agenda_month_view = "<LocalLeader>qvm",
+            org_agenda_year_view = "<LocalLeader>qvy",
 
             -- Navigation
-            org_agenda_later = "gn",
-            org_agenda_earlier = "gp",
+            org_agenda_later = "f",
+            org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
-            org_agenda_goto = { "<CR>", "o" },
-            org_agenda_goto_date = "<Leader>bvD",
-            org_agenda_open_at_point = "<Leader>bo",
+            org_agenda_goto = { "<CR>", "<Leader>oe" },
+            org_agenda_goto_date = "<Leader>oD",
+            org_agenda_open_at_point = "<Leader>oe",
 
             org_agenda_switch_to = "<TAB>",
 
             -- Todo Effort
-            org_agenda_todo = "<Leader>bst",
-            org_agenda_set_effort = "<Leader>bse",
+            org_agenda_todo = "<LocalLeader>qst",
+            org_agenda_set_effort = "<LocalLeader>qse",
 
             -- Clock
-            org_agenda_clock_in = "<Leader>bsci",
-            org_agenda_clock_out = "<Leader>bsco",
-            org_agenda_clock_goto = "<Leader>bscg",
-            org_agenda_clock_cancel = "<Leader>bscc",
+            org_agenda_clock_in = "<LocalLeader>qsci",
+            org_agenda_clock_out = "<LocalLeader>qsco",
+            org_agenda_clock_goto = "<LocalLeader>qscg",
+            org_agenda_clock_cancel = "<LocalLeader>qscc",
 
-            org_agenda_clockreport_mode = "<Leader>bscr", -- buat report clock
+            org_agenda_clockreport_mode = "<LocalLeader>qscr", -- buat report clock
 
             -- Priority
-            org_agenda_priority = "<Leader>bspP",
+            org_agenda_priority = "<LocalLeader>qspP",
             org_agenda_priority_up = "g]",
             org_agenda_priority_down = "g[",
 
-            org_agenda_archived = "<Leader>bA",
+            org_agenda_archived = "<LocalLeader>qA",
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "<Leader>bsg",
-            org_agenda_refile = "<Leader>bR",
-            org_agenda_add_note = "<Leader>bsn",
+            org_agenda_refile = "<LocalLeader>qR",
+            org_agenda_add_note = "<LocalLeader>qsn",
 
-            org_agenda_toggle_archive_tag = "<Leader>bsG",
+            org_agenda_set_tags = "<LocalLeader>qsg",
+            org_agenda_toggle_archive_tag = "<LocalLeader>qsG",
 
-            org_agenda_deadline = "<Leader>bsd",
-            org_agenda_schedule = "<Leader>bss",
+            org_agenda_deadline = "<LocalLeader>qsd",
+            org_agenda_schedule = "<LocalLeader>qss",
 
-            org_agenda_preview = "K",
+            org_agenda_preview = { "K", "P" },
 
             -- Misc
-            org_agenda_filter = "<Leader>sf",
+            org_agenda_filter = "<LocalLeader>qf",
             org_agenda_redo = "R",
-            org_agenda_quit = { "<Leader>bk" },
+            org_agenda_quit = { "<Leader>bk", "<Leader><Tab>" },
             org_agenda_show_help = "g?",
           },
           capture = {
             org_capture_finalize = { "<CR>", "<C-s>" },
             org_capture_refile = "<Leader>bR",
-            org_capture_kill = { "q", "<C-q>", "<Leader>bk" },
+            org_capture_kill = { "q", "<C-q>", "<Leader>bk", "<Leader><Tab>" },
             org_capture_show_help = "g?",
           },
           note = {
@@ -406,9 +406,9 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "<Leader>bst",
-            org_todo_prev = "<Leader>bsT",
-            org_toggle_heading = "<Leader>buh",
+            org_todo = "<LocalLeader>qst",
+            org_todo_prev = "<LocalLeader>qsT",
+            org_toggle_heading = "<LocalLeader>quh",
 
             -- Navigation
             org_next_visible_heading = "<a-n>",
@@ -427,13 +427,13 @@ return {
             org_global_cycle = "ZR",
 
             -- Clock
-            org_clock_in = "<Leader>bsci",
-            org_clock_out = "<Leader>bsco",
-            org_clock_cancel = "<Leader>bscc",
-            org_clock_goto = "<Leader>bscg",
+            org_clock_in = "<LocalLeader>qsci",
+            org_clock_out = "<LocalLeader>qsco",
+            org_clock_cancel = "<LocalLeader>qscc",
+            org_clock_goto = "<LocalLeader>qscg",
 
             -- Priority
-            org_priority = "<Leader>bspP",
+            org_priority = "<LocalLeader>qspP",
             org_priority_up = "g]",
             org_priority_down = "g[",
 
@@ -448,8 +448,8 @@ return {
             org_move_subtree_down = "<S-Down>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "<Leader>bsg",
-            org_refile = "<Leader>bR",
+            org_set_tags_command = "<LocalLeader>qsg",
+            org_refile = "<LocalLeader>qR",
 
             -- Links
             org_insert_link = "<Leader>il",
@@ -458,28 +458,28 @@ return {
             -- Timestamp Insert
             org_time_stamp = "<Leader>it",
             org_time_stamp_inactive = "<Leader>id",
-            org_toggle_timestamp_type = "<Leader>but",
+            org_toggle_timestamp_type = "<LocalLeader>qut",
 
             -- Insert Deadline or Schedule
-            org_deadline = "<Leader>bsd",
-            org_schedule = "<Leader>bss",
-            org_set_effort = "<Leader>bse",
-            org_add_note = "<Leader>bsn",
+            org_deadline = "<LocalLeader>qsd",
+            org_schedule = "<LocalLeader>qss",
+            org_set_effort = "<LocalLeader>qse",
+            org_add_note = "<LocalLeader>qsn",
 
             -- Export / Babel
-            org_export = "<Leader>bx",
+            org_export = "<LocalLeader>qx",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
             -- cara: ini work ketika cursor berada di dalam block code
-            org_edit_special = "<Leader>bsE",
+            org_edit_special = "<LocalLeader>qsE",
 
             -- set current node to archived
-            org_archive_subtree = "<Leader>bA",
-            org_toggle_archive_tag = "<Leader>bsG",
+            org_archive_subtree = "<LocalLeader>qA",
+            org_toggle_archive_tag = "<LocalLeader>qsG",
 
             org_toggle_checkbox = "<C-c>",
-            org_open_at_point = { "<Leader>ld", "<Leader>bo" },
+            org_open_at_point = { "<Leader>oe" },
 
             org_meta_return = "<s-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<a-w>",
@@ -542,99 +542,6 @@ return {
         },
       },
     },
-  },
-  -- ORG-ROAM (disabled)
-  {
-    "chipsenkbeil/org-roam.nvim",
-    enabled = false,
-    event = "LazyFile",
-    opts = {
-      directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
-      bindings = {
-        ---Adjusts the prefix for every keybinding. Can be used in keybindings with <prefix>.
-        prefix = "<Leader>b",
-        add_alias = "<prefix>aa", ---Adds an alias to the node under cursor.
-        add_origin = "<prefix>ao", ---Adds an origin to the node under cursor.
-
-        capture = "<Leader>ncC", ---Opens org-roam capture window.
-
-        complete_at_point = "<prefix>.", ---Completes the node under cursor.
-
-        find_node = "<Leader>nfr", ---Finds node and moves to it.
-
-        goto_next_node = "]]]",
-        goto_prev_node = "[[[",
-
-        insert_node = "<Leader>ii", ---Inserts node at cursor position.
-        insert_node_immediate = "<Leader>iI", ---Inserts node at cursor position without opening capture buffer.
-
-        quickfix_backlinks = "<prefix>q", ---Opens the quickfix menu for backlinks to the current node under cursor.
-
-        remove_alias = "<prefix>ra", ---Removes an alias from the node under cursor.
-        remove_origin = "<prefix>ro", ---Removes the origin from the node under cursor.
-
-        toggle_roam_buffer = "<Leader>bbb", ---Toggles the org-roam node-view buffer for the node under cursor.
-        toggle_roam_buffer_fixed = "<Leader>bbB", ---Toggles a fixed org-roam node-view buffer for a selected node.
-      },
-
-      extensions = {
-        ---Settings tied to the dailies extension.
-        ---@class org-roam.config.extensions.Dailies
-        dailies = {
-          ---Path to the directory within the org-roam directory where
-          ---daily entries will be stored.
-          ---@type string
-          directory = "daily",
-
-          ---Bindings associated with org-roam dailies functionality.
-          ---@class org-roam.config.extensions.dailies.Bindings
-          bindings = {
-            capture_date = "<Leader>ncD",
-            capture_today = "<Leader>nct",
-            capture_tomorrow = "<Leader>ncw",
-            capture_yesterday = "<Leader>ncy",
-
-            ---Navigate to dailies note directory.
-            find_directory = "<Leader>nE",
-
-            ---Navigate to specific date's note.
-            goto_date = "<Leader>ndD",
-
-            ---Navigate to the next/prev by date's note
-            goto_next_date = "<Leader>ndn",
-            goto_prev_date = "<Leader>ndp",
-
-            ---Navigate to today/tomorrow/yesterday
-            goto_today = "<Leader>ndt",
-            goto_tomorrow = "<Leader>ndw",
-            goto_yesterday = "<Leader>ndy",
-          },
-
-          templates = {
-            d = {
-              description = "Daily journal note, stored per year and date",
-              template = "%?",
-              target = "%<%Y>/%<%Y-%m-%d>.org",
-            },
-          },
-
-          ---Settings tied to org-roam dailies user interface.
-          ---@class org-roam.config.extensions.dailies.UserInterface
-          ui = {
-            ---Settings tied to org-roam dailies calendar user interface.
-            ---@class org-roam.config.extensions.dailies.ui.Calendar
-            calendar = {
-              ---Highlight group to apply to a date that already has a note.
-              ---@type string
-              hl_date_exists = "WarningMsg",
-            },
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      require("org-roam").setup(opts)
-    end,
   },
   -- ORG-SUPER-AGENDA
   {
@@ -706,22 +613,22 @@ return {
       -- Agenda keymaps (inline comments explain each)
       keymaps = {
         filter_reset = "<Leader>sR", -- reset all filters
-        toggle_other = "<Leader>bvo", -- toggle catch-all "Other" section
-        filter = "of", -- live filter (exact text)
-        filter_fuzzy = "<Leader>sf", -- live filter (fuzzy)
-        filter_query = "<Leader>sF", -- advanced query input
+        toggle_other = "<Leader>qvo", -- toggle catch-all "Other" section
+        filter = "<LocalLeader>qc", -- live filter (exact text)
+        filter_fuzzy = "<LocalLeader>qF", -- live filter (fuzzy)
+        filter_query = "<LocalLeader>qf", -- advanced query input
         undo = "u", -- undo last change
-        reschedule = "<Leader>bss", -- set/change SCHEDULED
-        set_deadline = "<Leader>bsd", -- set/change DEADLINE
+        reschedule = "<Leader>qss", -- set/change SCHEDULED
+        set_deadline = "<Leader>qsd", -- set/change DEADLINE
         cycle_todo = "t", -- cycle TODO state
-        set_state = "<Leader>bst", -- set state directly (st, sd, etc.) or show menu
+        set_state = "<Leader>qst", -- set state directly (st, sd, etc.) or show menu
         reload = "R", -- refresh agenda
-        refile = "<Leader>bR", -- refile via Telescope/org-telescope
+        refile = "<Leader>qR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
         preview = "P", -- preview headline content
         reset_hidden = "X", -- clear hidden list
         toggle_duplicates = "D", -- duplicate items may appear in multiple groups
-        cycle_view = "<Leader>bvv", -- switch view (classic/compact)
+        cycle_view = "<Leader>qvv", -- switch view (classic/compact)
       },
 
       -- Window/appearance
@@ -933,7 +840,7 @@ return {
       --   desc = "Note: add note today [obsidian]",
       -- },
       {
-        "<Leader>bo",
+        "<Leader>oe",
         function()
           RUtils.cmd.open_with "go to file"
         end,

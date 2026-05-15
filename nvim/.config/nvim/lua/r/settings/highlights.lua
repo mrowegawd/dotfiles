@@ -372,8 +372,17 @@ local function resolve_from_attribute(hl, attr)
       end
     end
 
+    local _bg = "Normal"
+    if hl.is_note then
+      _bg = "NormalNote"
+    end
+    if hl.is_aiprompt then
+      _bg = "NormalAiPrompt"
+    end
+
     -- fallback to Normal background
-    bg = bg or M.get("Normal", "bg", "#000000")
+    --
+    bg = bg or M.get(_bg, "bg", "#000000")
 
     colour = M.blend(colour, bg, hl.opacity)
   end

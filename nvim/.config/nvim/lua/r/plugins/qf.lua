@@ -1,3 +1,31 @@
+---@return boolean|nil
+local is_filetype_is_loclist = function()
+  if vim.bo.filetype ~= "qf" then
+    RUtils.warn "Not in qf filetype"
+    return nil
+  end
+
+  if RUtils.qf.is_loclist() then
+    return true
+  end
+  return false
+end
+
+---@param cmds { qf: string, lf: string }
+---@return string|nil
+local call_func = function(cmds)
+  local is_ok = is_filetype_is_loclist()
+  if is_ok == nil then
+    return
+  end
+
+  if is_ok then
+    return cmds.lf
+  end
+
+  return cmds.qf
+end
+
 return {
   -- QUICKER
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
@@ -50,66 +78,44 @@ return {
         },
         integrations = {
           cmdline_strings = {
+            enabled = true,
             commands = {
-              -- 🔍 Debug / Inspect
-              {
-                key = "<Leader>mO",
-                cmd = function(qftbl)
-                  RUtils.info(vim.inspect(qftbl))
-                end,
-                desc = "Output items current quickfix/loclist",
-                buffer = true,
-              },
-
               -- 🔧 Filter & Update (Quickfix)
               {
-                key = "<Leader>mQ",
-                cmd = "Cfilter /\\\\v\\|[^\\|]*\\|s\\*/",
-                desc = "Run Cfilter update",
+                key = "<LocalLeader>qc",
+                cmd = function()
+                  local str_cmd = call_func { qf = "Cfilter", lf = "Lfilter" }
+                  if str_cmd then
+                    local cmd = string.format([[:%s / /]], str_cmd)
+                    vim.api.nvim_feedkeys(cmd, "n", false)
+                  end
+                end,
+                desc = "Qf: run Cfilter or Lfilter",
                 buffer = true,
               },
               {
-                key = "<Leader>mqd",
-                cmd = "cdo %s/status//gi | update",
-                desc = "Run cdo status update (quickfix)",
-                buffer = true,
-              },
-              {
-                key = "<Leader>mqD",
-                cmd = "cfdo %s/WinNav/Winav/g",
-                desc = "Run cfdo replace",
-                buffer = true,
-              },
-              {
-                key = "<Leader>mql",
-                cmd = "cfdo %s/WinNav/Winav/g | update",
-                desc = "Run cfdo replace & update",
+                key = "<Localleader>ql",
+                cmd = function()
+                  local str_cmd = call_func { qf = "cdo", lf = "ldo" }
+                  if str_cmd then
+                    local cmd = string.format([[:%s %%s///gi | update]], str_cmd)
+                    vim.api.nvim_feedkeys(cmd, "n", false)
+                  end
+                end,
+                desc = "Qf: run cdo or ldo",
                 buffer = true,
               },
 
-              -- 🧩 Filter & Update (Loclist)
               {
-                key = "<Leader>mL",
-                cmd = "Lfilter / /",
-                desc = "Run Lfilter update",
-                buffer = true,
-              },
-              {
-                key = "<Leader>mld",
-                cmd = "ldo %s/status//gi | update",
-                desc = "Run ldo status update (loclist)",
-                buffer = true,
-              },
-              {
-                key = "<Leader>mlD",
-                cmd = "lfdo %s/WinNav/Winav/g",
-                desc = "Run lfdo replace",
-                buffer = true,
-              },
-              {
-                key = "<Leader>mlR",
-                cmd = "lfdo %s/WinNav/Winav/g | update",
-                desc = "Run lfdo replace & update",
+                key = "<Localleader>qf",
+                cmd = function()
+                  local str_cmd = call_func { qf = "cfdo", lf = "lfdo" }
+                  if str_cmd then
+                    local cmd = string.format([[:%s %%s///gi | update]], str_cmd)
+                    vim.api.nvim_feedkeys(cmd, "n", false)
+                  end
+                end,
+                desc = "Qf: run cfdo or lfdo",
                 buffer = true,
               },
             },

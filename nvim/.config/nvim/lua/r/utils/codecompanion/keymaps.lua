@@ -67,7 +67,7 @@ function M.chat_keymaps()
     },
 
     close = {
-      modes = { n = { "<C-c>", "<C-x>" } },
+      modes = { n = { "<Leader>bK", "<C-x>" } },
       callback = close,
     },
     clear = { modes = { n = "<A-w>", i = "<A-w>" } },
@@ -92,11 +92,11 @@ function M.chat_keymaps()
     previous_header = { modes = { n = "<C-p>", i = "<C-p>" } },
     next_header = { modes = { n = "<C-n>", i = "<C-n>" } },
 
-    goto_file_under_cursor = { modes = { n = { "gf", "<Leader>be" } } },
+    goto_file_under_cursor = { modes = { n = { "gf", "<Leader>oe" } } },
 
     -- Chat tools
     action_palette = {
-      modes = { n = "<Leader>mf" },
+      modes = { n = "<Localleader>qf" },
       description = "Action palette",
       callback = function()
         vim.defer_fn(function()
@@ -105,10 +105,10 @@ function M.chat_keymaps()
       end,
     },
 
-    change_adapter = { modes = { n = "<Leader>mC" } },
+    change_adapter = { modes = { n = "<Localleader>qC" } },
 
     debug = {
-      modes = { n = "<Leader>mD" },
+      modes = { n = "<Localleader>qD" },
       callback = open_debug,
     },
 
@@ -116,14 +116,14 @@ function M.chat_keymaps()
 
     -- Chat modes
     _btw = {
-      modes = { n = "<Leader>mW" },
+      modes = { n = "<Localleader>qW" },
     },
 
-    yolo_mode = { modes = { n = "<Leader>my" } },
+    yolo_mode = { modes = { n = "<Localleader>qY" } },
 
     -- Buffer sync
-    buffer_sync_all = { modes = { n = "<Leader>mp" } },
-    buffer_sync_diff = { modes = { n = "<Leader>mw" } },
+    buffer_sync_all = { modes = { n = "<Localleader>qp" } },
+    buffer_sync_diff = { modes = { n = "<Localleader>qw" } },
 
     -- Helps
     options = {
@@ -188,12 +188,12 @@ end
 local function setup_codecompanion_filetype_mappings(e)
   local bufnr = e.buf
 
-  RUtils.map.nnoremap("<Leader>msi", function()
+  RUtils.map.nnoremap("<Localleader>qsI", function()
     local chat_obj = codecompanion.buf_get_chat(bufnr)
     show_adapter_info(chat_obj)
   end, { desc = "Show adapter info", buf = bufnr }, true)
 
-  RUtils.map.nnoremap("<Leader>msS", function()
+  RUtils.map.nnoremap("<Localleader>qsS", function()
     vim.cmd.stopinsert()
     local system_role = state_helpers.get_current_system_role_prompt()
     if not system_role or system_role == "" then
@@ -205,9 +205,14 @@ local function setup_codecompanion_filetype_mappings(e)
     end)
   end, { desc = "Show system role prompt in message window", buf = bufnr }, true)
 
-  RUtils.map.nnoremap("<Leader>mP", insert_last_user_prompt, { desc = "Insert last user prompt", buf = bufnr }, true)
+  RUtils.map.nnoremap(
+    "<Localleader>qP",
+    insert_last_user_prompt,
+    { desc = "Insert last user prompt", buf = bufnr },
+    true
+  )
 
-  RUtils.map.nnoremap("<Leader>mz", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
+  RUtils.map.nnoremap("<Localleader>qz", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
 end
 
 local function setup_filetype_mappings(group_name)
@@ -244,6 +249,9 @@ local function select_custom_prompt_and_commands()
     -- git_commit_our = { cmd = "CodeCompanion /write_commit", ft = {} },
     ["Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
 
+    -- Note
+    ["Note - Perbaiki note, structure, rapikan"] = { cmd = "CodeCompanion /writer_and_reformat_note_id" },
+
     -- Write doc
     ["Doc - write for inline doc codes"] = { cmd = "CodeCompanion /inline_doc", ft = {} },
     ["Doc - write for func docs"] = { cmd = "CodeCompanion /doc", ft = {} },
@@ -257,6 +265,7 @@ local function select_custom_prompt_and_commands()
 
     -- Open or CodeCompanion commands stuff
     ["Open - New CodeCompanionChat"] = { cmd = "CodeCompanionChat", ft = {} },
+    ["Open - CodeCompanionHistory"] = { cmd = "CodeCompanionHistory", ft = {} },
     ["Open - CodeCompanionActions"] = { cmd = "CodeCompanionActions", ft = {} },
     ["Open - CodeCompanionCmd"] = { cmd = "CodeCompanionCmd", ft = {} },
     ["Open - Select edit prompts"] = {
@@ -426,14 +435,14 @@ end
 local function setup_global_mappings()
   RUtils.map.nnoremap("<Localleader>af", function()
     vim.cmd.CodeCompanionActions()
-  end, { desc = "Codecompanion: select actions" })
+  end, { desc = "Codecompanion: open CodeCompanionActions" })
 
   RUtils.map.nnoremap("<Localleader>ar", function()
     vim.api.nvim_input ":CodeCompanion "
-  end, { desc = "Codecompanion: run :CodeCompanion command in normal" })
+  end, { desc = "Codecompanion: run :CodeCompanion command" })
   RUtils.map.xnoremap("<Localleader>ar", function()
     vim.api.nvim_input ":CodeCompanion "
-  end, { desc = "Codecompanion: run :CodeCompanion command in visual mode" })
+  end, { desc = "Codecompanion: run :CodeCompanion command (visual)" })
 
   RUtils.map.nnoremap("<Localleader>aF", function()
     local function select_file_codecompanion_history()
@@ -494,22 +503,14 @@ local function setup_global_mappings()
     { desc = "Codecompanion: select custom prompt and commands (visual)" }
   )
 
-  RUtils.map.nnoremap(
-    "<Localleader>ab",
-    vim.cmd.CodeCompanionHistory,
-    { desc = "Codecompanion: open codecompanion history" }
-  )
+  RUtils.map.nnoremap("<Localleader>ab", vim.cmd.CodeCompanionHistory, { desc = "Codecompanion: history" })
 
   -- Selection and context mappings
   RUtils.map.nnoremap("<Localleader>ac", function()
     chat_helpers.add_context { vim.api.nvim_buf_get_name(0) }
-  end, { desc = "Codecompanion: add current file to codecompanion" })
+  end, { desc = "Codecompanion: add current file" })
 
-  RUtils.map.vnoremap(
-    "<Localleader>ap",
-    paste_selection_to_chat,
-    { desc = "Codecompanion: paste selection to codecompanion chat" }
-  )
+  RUtils.map.vnoremap("<Localleader>ap", paste_selection_to_chat, { desc = "Codecompanion: paste selection to chat" })
 end
 
 function M.setup(group)

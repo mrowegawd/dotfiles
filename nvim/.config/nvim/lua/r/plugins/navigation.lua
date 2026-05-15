@@ -6,10 +6,10 @@ return {
     "stevearc/oil.nvim",
     cmd = { "Oil" },
     keys = {
-      { "<Leader>mv", "", desc = "view", ft = { "oil" } },
+      { "<LocalLeader>qv", "", desc = "view", ft = { "oil" } },
 
       {
-        "<Leader>oe",
+        "<Leader>oo",
         function()
           local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
           if vim.tbl_contains(right_win, vim.bo.filetype) then
@@ -19,14 +19,14 @@ return {
 
           vim.cmd "Oil"
         end,
-        desc = "Open: focus file explorer [oil]",
+        desc = "Open: fucus filemanager [oil]",
       },
       {
-        "<Leader>oE",
+        "<Leader>oO",
         function()
           require("oil").open(vim.fn.getcwd())
         end,
-        desc = "Open: cwd explorer [oil]",
+        desc = "Open: filemanager or file explore [oil]",
       },
     },
     dependencies = {
@@ -125,7 +125,7 @@ return {
           end,
           desc = "[F]ind by [G]rep in dir",
         },
-        ["<Leader>mvp"] = {
+        ["<LocalLeader>qvp"] = {
           desc = "Toggle detail view",
           callback = function()
             local oil = require "oil"

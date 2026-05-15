@@ -11,11 +11,11 @@ return {
       { "<a-T>", mode = { "n", "t", "x" }, desc = "Terminal: open" },
       { "<a-N>" },
       {
-        "<Leader>ot",
+        "<Leader>oT",
         function()
           vim.cmd "TermNew layout=right"
         end,
-        desc = "Open: terminal on the right [ergoterm.nvim]",
+        desc = "Open: terminal right [ergoterm.nvim]",
       },
     },
     opts = {
