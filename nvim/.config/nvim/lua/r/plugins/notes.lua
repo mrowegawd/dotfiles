@@ -65,23 +65,23 @@ return {
       },
     },
     keys = {
-      { "<Leader>mv", "", desc = "view", ft = { "orgagenda" } },
-      { "<Leader>ms", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
-      { "<Leader>msp", "", desc = "priority", ft = { "orgagenda", "org" } },
-      { "<Leader>msc", "", desc = "clock", ft = { "orgagenda", "org" } },
-      { "<Leader>mx", "", desc = "export", ft = { "org" } },
+      { "<Leader>bv", "", desc = "view", ft = { "orgagenda" } },
+      { "<Leader>bs", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
+      { "<Leader>bsp", "", desc = "priority", ft = { "orgagenda", "org" } },
+      { "<Leader>bsc", "", desc = "clock", ft = { "orgagenda", "org" } },
+      { "<Leader>bx", "", desc = "export", ft = { "org" } },
 
-      { "<Leader>mr", "", desc = "remove/redo", ft = "org" },
-      { "<Leader>mu", "", desc = "toggle", ft = "org" },
-      { "<Leader>mb", "", desc = "buffer", ft = "org" },
-      { "<Leader>mf", "", desc = "find/title/links", ft = "org" },
+      -- { "<Leader>br", "", desc = "remove/redo", ft = "org" },
+      { "<Leader>bu", "", desc = "toggle", ft = "org" },
+      { "<Leader>bb", "", desc = "buffer", ft = "org" },
+      { "<Leader>bf", "", desc = "find/title/links", ft = "org" },
 
-      { "<Leader>nd", "", desc = "date/navigate by date" },
-      { "<Leader>nf", "", desc = "find/grep" },
-      { "<Leader>nc", "", desc = "create note/capture" },
+      { "<LocalLeader>nd", "", desc = "date/navigate by date" },
+      { "<LocalLeader>nf", "", desc = "find/grep" },
+      { "<LocalLeader>nc", "", desc = "create note/capture" },
 
       {
-        "<Leader>nft",
+        "<LocalLeader>nft",
         function()
           if agenda_mode == AgendaMode.SLOW then
             refresh_agenda_files()
@@ -94,19 +94,19 @@ return {
         desc = "Note: find notes by tags",
       },
       {
-        "<Leader>nfl",
+        "<LocalLeader>nfl",
         RUtils.notes.last_filter_by_tags,
         desc = "Note: last find notes by tags",
       },
 
       {
-        "<Leader>nff",
+        "<LocalLeader>nff",
         RUtils.notes.find_files_notes,
         desc = "Note: find notes files",
       },
 
       {
-        "<Leader>nfg",
+        "<LocalLeader>nfg",
         RUtils.notes.live_grep,
         desc = "Note: live grep",
       },
@@ -130,7 +130,7 @@ return {
         ft = "orgagenda",
       },
       {
-        "<Leader>na",
+        "<LocalLeader>na",
         function()
           refresh_agenda_files(true)
           require("orgmode").action "agenda.prompt"
@@ -139,7 +139,7 @@ return {
       },
 
       {
-        "<Leader>nR",
+        "<LocalLeader>nR",
         function()
           local is_fast = refresh_agenda_files()
 
@@ -329,56 +329,56 @@ return {
         },
         mappings = {
           disable_all = false,
-          prefix = "<Leader>c",
+          prefix = "<LocalLeader>c",
           global = {
-            org_capture = "<Leader>ncc",
-            org_agenda = "<Leader>nC",
+            org_capture = "<LocalLeader>ncc",
+            org_agenda = "<LocalLeader>nC",
           },
           agenda = {
             -- Views
-            org_agenda_day_view = "<Leader>mvd",
-            org_agenda_week_view = "<Leader>mvw",
-            org_agenda_month_view = "<Leader>mvm",
-            org_agenda_year_view = "<Leader>mvy",
+            org_agenda_day_view = "<Leader>bvd",
+            org_agenda_week_view = "<Leader>bvw",
+            org_agenda_month_view = "<Leader>bvm",
+            org_agenda_year_view = "<Leader>bvy",
 
             -- Navigation
-            org_agenda_later = "f",
-            org_agenda_earlier = "b",
+            org_agenda_later = "gn",
+            org_agenda_earlier = "gp",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "o" },
-            org_agenda_goto_date = "<Leader>mvD",
-            org_agenda_open_at_point = "<Leader>mo",
+            org_agenda_goto_date = "<Leader>bvD",
+            org_agenda_open_at_point = "<Leader>bo",
 
             org_agenda_switch_to = "<TAB>",
 
             -- Todo Effort
-            org_agenda_todo = "<Leader>mst",
-            org_agenda_set_effort = "<Leader>mse",
+            org_agenda_todo = "<Leader>bst",
+            org_agenda_set_effort = "<Leader>bse",
 
             -- Clock
-            org_agenda_clock_in = "<Leader>msci",
-            org_agenda_clock_out = "<Leader>msco",
-            org_agenda_clock_goto = "<Leader>mscg",
-            org_agenda_clock_cancel = "<Leader>mscc",
+            org_agenda_clock_in = "<Leader>bsci",
+            org_agenda_clock_out = "<Leader>bsco",
+            org_agenda_clock_goto = "<Leader>bscg",
+            org_agenda_clock_cancel = "<Leader>bscc",
 
-            org_agenda_clockreport_mode = "<Leader>mscr", -- buat report clock
+            org_agenda_clockreport_mode = "<Leader>bscr", -- buat report clock
 
             -- Priority
-            org_agenda_priority = "<Leader>mspP",
+            org_agenda_priority = "<Leader>bspP",
             org_agenda_priority_up = "g]",
             org_agenda_priority_down = "g[",
 
-            org_agenda_archived = "<Leader>mA",
+            org_agenda_archived = "<Leader>bA",
 
             --- Tags, Refile / Notes
-            org_agenda_set_tags = "<Leader>msg",
-            org_agenda_refile = "<Leader>mR",
-            org_agenda_add_note = "<Leader>msn",
+            org_agenda_set_tags = "<Leader>bsg",
+            org_agenda_refile = "<Leader>bR",
+            org_agenda_add_note = "<Leader>bsn",
 
-            org_agenda_toggle_archive_tag = "<Leader>msG",
+            org_agenda_toggle_archive_tag = "<Leader>bsG",
 
-            org_agenda_deadline = "<Leader>msd",
-            org_agenda_schedule = "<Leader>mss",
+            org_agenda_deadline = "<Leader>bsd",
+            org_agenda_schedule = "<Leader>bss",
 
             org_agenda_preview = "K",
 
@@ -390,7 +390,7 @@ return {
           },
           capture = {
             org_capture_finalize = { "<CR>", "<C-s>" },
-            org_capture_refile = "<Leader>mR",
+            org_capture_refile = "<Leader>bR",
             org_capture_kill = { "q", "<C-q>", "<Leader>bk" },
             org_capture_show_help = "g?",
           },
@@ -406,9 +406,9 @@ return {
             org_timestamp_down = "<C-PageDown>",
 
             -- Todo / Heading
-            org_todo = "<Leader>mst",
-            org_todo_prev = "<Leader>msT",
-            org_toggle_heading = "<Leader>muh",
+            org_todo = "<Leader>bst",
+            org_todo_prev = "<Leader>bsT",
+            org_toggle_heading = "<Leader>buh",
 
             -- Navigation
             org_next_visible_heading = "<a-n>",
@@ -427,13 +427,13 @@ return {
             org_global_cycle = "ZR",
 
             -- Clock
-            org_clock_in = "<Leader>msci",
-            org_clock_out = "<Leader>msco",
-            org_clock_cancel = "<Leader>mscc",
-            org_clock_goto = "<Leader>mscg",
+            org_clock_in = "<Leader>bsci",
+            org_clock_out = "<Leader>bsco",
+            org_clock_cancel = "<Leader>bscc",
+            org_clock_goto = "<Leader>bscg",
 
             -- Priority
-            org_priority = "<Leader>mspP",
+            org_priority = "<Leader>bspP",
             org_priority_up = "g]",
             org_priority_down = "g[",
 
@@ -448,8 +448,8 @@ return {
             org_move_subtree_down = "<S-Down>",
 
             -- Tags / Refile / Notes
-            org_set_tags_command = "<Leader>msg",
-            org_refile = "<Leader>mR",
+            org_set_tags_command = "<Leader>bsg",
+            org_refile = "<Leader>bR",
 
             -- Links
             org_insert_link = "<Leader>il",
@@ -458,28 +458,28 @@ return {
             -- Timestamp Insert
             org_time_stamp = "<Leader>it",
             org_time_stamp_inactive = "<Leader>id",
-            org_toggle_timestamp_type = "<Leader>mut",
+            org_toggle_timestamp_type = "<Leader>but",
 
             -- Insert Deadline or Schedule
-            org_deadline = "<Leader>msd",
-            org_schedule = "<Leader>mss",
-            org_set_effort = "<Leader>mse",
-            org_add_note = "<Leader>msn",
+            org_deadline = "<Leader>bsd",
+            org_schedule = "<Leader>bss",
+            org_set_effort = "<Leader>bse",
+            org_add_note = "<Leader>bsn",
 
             -- Export / Babel
-            org_export = "<Leader>mx",
+            org_export = "<Leader>bx",
             org_babel_tangle = "bt",
 
             -- Gunanya buat edit contents dalam block code di beda buffer,
             -- cara: ini work ketika cursor berada di dalam block code
-            org_edit_special = "<Leader>msE",
+            org_edit_special = "<Leader>bsE",
 
             -- set current node to archived
-            org_archive_subtree = "<Leader>mA",
-            org_toggle_archive_tag = "<Leader>msG",
+            org_archive_subtree = "<Leader>bA",
+            org_toggle_archive_tag = "<Leader>bsG",
 
             org_toggle_checkbox = "<C-c>",
-            org_open_at_point = { "<Leader>ld", "<Leader>mo" },
+            org_open_at_point = { "<Leader>ld", "<Leader>bo" },
 
             org_meta_return = "<s-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<a-w>",
@@ -552,7 +552,7 @@ return {
       directory = string.format("%s/orgmode/org_roam_files", RUtils.config.path.wiki_path),
       bindings = {
         ---Adjusts the prefix for every keybinding. Can be used in keybindings with <prefix>.
-        prefix = "<Leader>m",
+        prefix = "<Leader>b",
         add_alias = "<prefix>aa", ---Adds an alias to the node under cursor.
         add_origin = "<prefix>ao", ---Adds an origin to the node under cursor.
 
@@ -573,8 +573,8 @@ return {
         remove_alias = "<prefix>ra", ---Removes an alias from the node under cursor.
         remove_origin = "<prefix>ro", ---Removes the origin from the node under cursor.
 
-        toggle_roam_buffer = "<Leader>mbb", ---Toggles the org-roam node-view buffer for the node under cursor.
-        toggle_roam_buffer_fixed = "<Leader>mbB", ---Toggles a fixed org-roam node-view buffer for a selected node.
+        toggle_roam_buffer = "<Leader>bbb", ---Toggles the org-roam node-view buffer for the node under cursor.
+        toggle_roam_buffer_fixed = "<Leader>bbB", ---Toggles a fixed org-roam node-view buffer for a selected node.
       },
 
       extensions = {
@@ -642,7 +642,7 @@ return {
     ft = { "org" },
     keys = {
       {
-        "<Leader>nA",
+        "<Localleader>nA",
         function()
           -- fix error "buffer name already exists"
           for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -706,22 +706,22 @@ return {
       -- Agenda keymaps (inline comments explain each)
       keymaps = {
         filter_reset = "<Leader>sR", -- reset all filters
-        toggle_other = "<Leader>mvo", -- toggle catch-all "Other" section
+        toggle_other = "<Leader>bvo", -- toggle catch-all "Other" section
         filter = "of", -- live filter (exact text)
         filter_fuzzy = "<Leader>sf", -- live filter (fuzzy)
         filter_query = "<Leader>sF", -- advanced query input
         undo = "u", -- undo last change
-        reschedule = "<Leader>mss", -- set/change SCHEDULED
-        set_deadline = "<Leader>msd", -- set/change DEADLINE
+        reschedule = "<Leader>bss", -- set/change SCHEDULED
+        set_deadline = "<Leader>bsd", -- set/change DEADLINE
         cycle_todo = "t", -- cycle TODO state
-        set_state = "<Leader>mst", -- set state directly (st, sd, etc.) or show menu
+        set_state = "<Leader>bst", -- set state directly (st, sd, etc.) or show menu
         reload = "R", -- refresh agenda
-        refile = "<Leader>mR", -- refile via Telescope/org-telescope
+        refile = "<Leader>bR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
         preview = "P", -- preview headline content
         reset_hidden = "X", -- clear hidden list
         toggle_duplicates = "D", -- duplicate items may appear in multiple groups
-        cycle_view = "<Leader>mvv", -- switch view (classic/compact)
+        cycle_view = "<Leader>bvv", -- switch view (classic/compact)
       },
 
       -- Window/appearance
@@ -933,7 +933,7 @@ return {
       --   desc = "Note: add note today [obsidian]",
       -- },
       {
-        "<Leader>mo",
+        "<Leader>bo",
         function()
           RUtils.cmd.open_with "go to file"
         end,
