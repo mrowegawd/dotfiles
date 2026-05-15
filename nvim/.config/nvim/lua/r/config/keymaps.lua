@@ -148,6 +148,7 @@ RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alte
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<c-w>v", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
 RUtils.map.nnoremap("<c-w>l", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
+RUtils.map.nnoremap("<c-w>t", arange_wins "tabe", { desc = "Window: move buffer to the new tab", silent = true })
 
 RUtils.map.nnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down" })
 RUtils.map.xnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move down (visual)" })
@@ -295,33 +296,36 @@ RUtils.map.nnoremap(
 )
 -- }}}
 -- {{{ Buffers
-RUtils.map.nnoremap("<Leader>bt", arange_wins "tabe", { desc = "Buffer: move buffer to the new tab", silent = true })
-RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: alternate/last buffer", silent = true })
+RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate buffer", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize size buffer window", silent = true })
-RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete", silent = true })
-RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close (force)", silent = true })
-RUtils.map.nnoremap("<Leader>bK", function()
+
+-- RUtils.map.nnoremap("<Leader>bn", function()
+--   RUtils.map.go_prev_or_next_buffer(true)
+-- end, { desc = "Buffer: next buffer" })
+-- RUtils.map.nnoremap("<Leader>bp", function()
+--   RUtils.map.go_prev_or_next_buffer()
+-- end, { desc = "Buffer: prev buffer" })
+
+RUtils.map.nnoremap("<Leader>bQ", function()
   Snacks.bufdelete.other()
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
-end, { desc = "Buffer: delete all other buffers" })
-RUtils.map.nnoremap("<Leader>bn", function()
-  RUtils.map.go_prev_or_next_buffer(true)
-end, { desc = "Buffer: next buffer" })
-RUtils.map.nnoremap("<Leader>bp", function()
-  RUtils.map.go_prev_or_next_buffer()
-end, { desc = "Buffer: prev buffer" })
+end, { desc = "Buffer: kill/purge other buffers" })
 RUtils.map.nnoremap("<Leader>bk", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
-RUtils.map.nnoremap("<c-q>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
-RUtils.map.nnoremap("<Leader>hr", function()
+RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (alternative)" })
+RUtils.map.xnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
+RUtils.map.nnoremap("<Leader>bK", RUtils.buf.bufremove, { desc = "Buffer: kill/close buffer" })
+RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: force to quit (without save)", silent = true })
+
+RUtils.map.nnoremap("<Leader>hR", function()
   vim.cmd [[wall!]]
   vim.cmd [[restart]]
-end, { desc = "Help: restart nvim" })
-RUtils.map.xnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
-RUtils.map.nnoremap("<Leader>hb", RUtils.map.show_help_buf_keymap, {
-  desc = "Help: show keymaps curbuf",
-  silent = true,
-})
+end, { desc = "Buffer: restart nvim" })
+RUtils.map.nnoremap(
+  "<Leader>hb",
+  RUtils.map.show_help_buf_keymap,
+  { desc = "Help: show keymaps curbuf", silent = true }
+)
 -- }}}
 -- {{{ Commandline
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
@@ -435,6 +439,11 @@ RUtils.map.inoremap("<Esc>", function()
   RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+RUtils.map.nnoremap("<Leader>n", function()
+  vim.cmd "noh"
+  RUtils.cmp.actions.snippet_stop()
+  return "<Esc>"
+end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 RUtils.map.nnoremap("dd", function()
   if vim.fn.getline "." == "" then
     return '"_dd'
@@ -532,36 +541,34 @@ end, { desc = "Search: open or look up online/browser (visual" })
 
 -- Open with mpv or svix
 RUtils.map.nnoremap("<Leader>oB", function()
-  RUtils.cmd.open_with("mpv or svix", true)
+  RUtils.cmd.open_with "mpv or svix"
 end, { desc = "Open: media" })
 RUtils.map.vnoremap("<Leader>oB", function()
-  RUtils.cmd.open_with("mpv or svix", true)
+  RUtils.cmd.open_with "mpv or svix"
 end, { desc = "Open: media (visual)" })
 
 -- Open file under cursor
 RUtils.map.nnoremap("<Leader>be", function()
   RUtils.cmd.open_with "go to file"
-end, { desc = "Open: file under cursor" })
+end, { desc = "Buffer: open file under cursor" })
 RUtils.map.xnoremap("<Leader>be", function()
   RUtils.cmd.open_with "go to file"
-end, { desc = "Open: file under cursor (visual)" })
+end, { desc = "Buffer: open file under cursor (visual)" })
 
 RUtils.map.nnoremap("<Leader>bv", function()
-  vim.cmd "vsplit"
-  RUtils.cmd.open_with "go to file"
-end, { desc = "Open: file under cursor (vsplit)" })
+  RUtils.cmd.open_with("go to file", "vsplit")
+end, { desc = "Buffer: open vsplit file under cursor" })
 RUtils.map.xnoremap("<Leader>bv", function()
-  vim.cmd "vsplit"
-  RUtils.cmd.open_with "go to file"
-end, { desc = "Open: file under cursor (vsplit) (visual)" })
+  RUtils.cmd.open_with("go to file", "vsplit")
+end, { desc = "Buffer: open vpslit file under cursor (visual)" })
 
 -- Browse error messages
-RUtils.map.nnoremap("<Leader>sE", function()
+RUtils.map.nnoremap("<Leader>oE", function()
   RUtils.cmd.browse_this_error(true)
-end, { desc = "Search: look up errors in browser" })
-RUtils.map.xnoremap("<Leader>sE", function()
+end, { desc = "Open: look up errors in browser" })
+RUtils.map.xnoremap("<Leader>oE", function()
   RUtils.cmd.browse_this_error(true)
-end, { desc = "Search: look up errors in browser (visual)" })
+end, { desc = "Open: look up errors in browser (visual)" })
 
 -- Open notes
 RUtils.map.nnoremap("<a-W>", function()
