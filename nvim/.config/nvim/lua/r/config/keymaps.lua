@@ -4,9 +4,10 @@ local nosilent = { silent = false }
 local fn, cmd, fmt = vim.fn, vim.cmd, string.format
 local fm_manager = vim.env.TERM_FILEMANAGER
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                       Edit/Insert                       │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                 Edit/Insert                                 ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
 RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
 RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
@@ -41,9 +42,10 @@ end, silent)
 
 RUtils.map.inoremap("hh", "<C-c>", silent)
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                          FOLD                           │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                    FOLD                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.nnoremap("<C-a>", function()
   local is_line_folded = RUtils.cmd.force_foldopen(true)
 
@@ -75,9 +77,10 @@ RUtils.map.nnoremap("<a-p>", function()
   RUtils.map.magic_jump(true)
 end, { desc = "View: magic jump" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                    WINDOW <leader>w                     │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                              WINDOW <leader>w                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 local arange_wins = RUtils.buf.window.arange_wins
 local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_window
 
@@ -100,9 +103,10 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move ← (v
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                         TAB t..                         │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                   TAB t..                                   ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.nnoremap("tn", function()
   if vim.bo.filetype == "neo-tree" then
     return
@@ -119,9 +123,10 @@ RUtils.map.nnoremap("th", "<CMD>tabprevious<CR>", { desc = "Tab: prev", silent =
 RUtils.map.nnoremap("<C-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next (mod)", silent = true })
 RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev (mod)", silent = true })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                    BUFFER <leader>b                     │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                              BUFFER <leader>b                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: last buf (alternate)", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize window size", silent = true })
 RUtils.map.nnoremap("<Leader>bQ", function()
@@ -132,24 +137,27 @@ RUtils.map.nnoremap("<Leader>bk", RUtils.buf.magic_quit, { desc = "Buffer: magic
 RUtils.map.nnoremap("<Leader>bK", RUtils.buf.bufremove, { desc = "Buffer: kill/close buffer" })
 RUtils.map.nnoremap("<Leader>bN", vim.cmd.E, { desc = "Buffer: new empty" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                     HELP <leader>h                      │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                               HELP <leader>h                                ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 --stylua: ignore
 RUtils.map.nnoremap("<Leader>hR", function() vim.cmd [[wall!]] vim.cmd [[restart]] end, { desc = "Buffer: restart nvim" })
 --stylua: ignore
 RUtils.map.nnoremap( "<Leader>hb", RUtils.map.show_help_buf_keymap, { desc = "Help: show keymaps curbuf", silent = true })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                    SEARCH <leader>s                     │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                              SEARCH <leader>s                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 local replace_keymap = RUtils.buf.window.replace_keymap
 RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Search: replace under cursor" })
 RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: replace under cursor (visual)" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                     OPEN <leader>o                      │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                               OPEN <leader>o                                ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 --stylua: ignore
 RUtils.map.nnoremap("<Leader>ob", function() RUtils.cmd.open_with "browser" end, { desc = "Open: lookup in browser" })
 --stylua: ignore
@@ -209,9 +217,10 @@ RUtils.map.nnoremap("j", function()
   return mark .. move
 end, { expr = true })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                    TOGGLE <leader>u                     │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                              TOGGLE <leader>u                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.treesitter():map "<Leader>us"
@@ -229,9 +238,10 @@ RUtils.map.nnoremap("<Leader>ul", function()
   RUtils.warn("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
 end, { desc = "Toggle: cursorline" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                        TERMINAL                         │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                  TERMINAL                                   ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 --stylua: ignore
 RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 --stylua: ignore
@@ -252,9 +262,10 @@ RUtils.map.tnoremap("<a-k>", function() RUtils.map.feedkey("<C-\\><C-n><C-w>k", 
 -- stylua: ignore
 RUtils.map.tnoremap("<a-l>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t") end, { desc = "Terminal: move right" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                       COMMANDLINE                       │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                 COMMANDLINE                                 ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
@@ -283,9 +294,10 @@ RUtils.map.cabbrev("ql", "q!")
 RUtils.map.cabbrev("qla", "qal!")
 RUtils.map.cabbrev("w;", "update!")
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                         SCROLL                          │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                   SCROLL                                    ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.nnoremap(
   "zz",
   [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
@@ -320,9 +332,10 @@ RUtils.map.nnoremap(
   { expr = true, desc = "Scroll: up windows without moving the cursor" }
 )
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                          Diff                           │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                    DIFF                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 -- Create a new scratch buffer
 vim.api.nvim_create_user_command("Ns", function()
   vim.cmd [[
@@ -367,9 +380,10 @@ end, {
 --stylua: ignore
 RUtils.map.xnoremap( "<Leader>gv", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git: compare diff with selection (visual)" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                          MISC                           │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                    MISC                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Misc: force to quit (without save)", silent = true })
 
 RUtils.map.vmap("K", "<Nop>")
@@ -425,9 +439,10 @@ RUtils.map.nnoremap("<Leader>pP", function()
   RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
 end, { desc = "Misc: printout current path" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                        COMMANDS                         │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                  COMMANDS                                   ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 RUtils.create_command("Snippets", RUtils.cmd.edit_snippet, { desc = "Misc: edit snippet file" })
 RUtils.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 
@@ -650,9 +665,10 @@ RUtils.map.nnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
 RUtils.map.tnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
 RUtils.map.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (visual)" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │                    Tmux integration                     │
--- ╰─────────────────────────────────────────────────────────╯
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                              TMUX INTEGRATION                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 --stylua: ignore
 RUtils.map.nnoremap("<a-B>", function() RUtils.terminal.float_btop() end, { desc = "CTRL_o: btop" })
 --stylua: ignore

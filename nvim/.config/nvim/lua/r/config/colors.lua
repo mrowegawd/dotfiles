@@ -566,13 +566,14 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = 1, opacity = 0.4 },
+        fg = { from = "NormalFloat", attr = "bg", alter = 1.5, opacity = 0.4 },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
     {
       FloatTitle = {
-        fg = { from = "Keyword", attr = "fg" },
+        -- fg = { from = "Keyword", attr = "fg" },
+        fg = { from = "FloatBorder", attr = "fg", alter = 1.5 },
         bg = { from = "NormalFloat", attr = "bg" },
         bold = true,
       },
@@ -613,15 +614,15 @@ local general_overrides = function()
     -- NOTE
     {
       NormalNote = {
-        fg = { from = "Normal", attr = "fg", alter = 0.5 },
+        fg = { from = "Normal", attr = "fg", alter = 0.3 },
         bg = { from = "Normal", attr = "bg", alter = 1 },
       },
     },
-    { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 0.6, opacity = 0.9, is_note = true } } },
+    { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.5, opacity = 0.9, is_note = true } } },
     { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = colors.nontext_note_fg_alter } } },
     {
       LineNrNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = 0.5 },
+        fg = { from = "NormalNote", attr = "bg", alter = 0.6 },
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
@@ -1220,7 +1221,7 @@ local general_overrides = function()
     { FzfLuaBorder = { inherit = "FloatBorder", bg = { from = "FzfLuaNormal", attr = "bg" } } },
     {
       FzfLuaFilePart = {
-        fg = { from = "Keyword", attr = "fg", opacity = 0.75 },
+        fg = { from = "Keyword", attr = "fg", opacity = 0.7 },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
@@ -1439,90 +1440,97 @@ local general_overrides = function()
     --  ─────────────────────────────[ MARKDOWN ]──────────────────────────
     {
       ["@markup.heading.1.markdown"] = {
-        fg = { from = "heading1", attr = "fg", alter = 0.9 },
-        bg = { from = "heading1", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading1", attr = "fg", alter = 0.1 },
+        bg = { from = "heading1", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.1.markdown_ai"] = {
-        fg = { from = "heading1", attr = "fg", alter = 0.8 },
-        bg = { from = "heading1", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading1", attr = "fg", alter = 0.1 },
+        bg = { from = "heading1", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
 
     {
       ["@markup.heading.2.markdown"] = {
-        fg = { from = "heading2", attr = "fg", alter = 0.9 },
-        bg = { from = "heading2", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading2", attr = "fg", alter = 0.1 },
+        bg = { from = "heading2", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.2.markdown_ai"] = {
-        fg = { from = "heading2", attr = "fg", alter = 0.8 },
-        bg = { from = "heading2", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading2", attr = "fg", alter = 0.1 },
+        bg = { from = "heading2", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
 
     {
       ["@markup.heading.3.markdown"] = {
-        fg = { from = "heading3", attr = "fg", alter = 0.9 },
-        bg = { from = "heading3", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading3", attr = "fg", alter = 0.1 },
+        bg = { from = "heading3", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.3.markdown_ai"] = {
-        fg = { from = "heading3", attr = "fg", alter = 0.8 },
-        bg = { from = "heading3", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading3", attr = "fg", alter = 0.1 },
+        bg = { from = "heading3", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.4.markdown"] = {
-        fg = { from = "heading4", attr = "fg", alter = 0.9 },
-        bg = { from = "heading4", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading4", attr = "fg", alter = 0.1 },
+        bg = { from = "heading4", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.4.markdown_ai"] = {
-        fg = { from = "heading4", attr = "fg", alter = 0.8 },
-        bg = { from = "heading4", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading4", attr = "fg", alter = 0.1 },
+        bg = { from = "heading4", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.5.markdown"] = {
-        fg = { from = "heading5", attr = "fg", alter = 0.9 },
-        bg = { from = "heading5", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading5", attr = "fg", alter = 0.1 },
+        bg = { from = "heading5", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.5.markdown_ai"] = {
-        fg = { from = "heading5", attr = "fg", alter = 0.8 },
-        bg = { from = "heading5", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading5", attr = "fg", alter = 0.1 },
+        bg = { from = "heading5", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.6.markdown"] = {
-        fg = { from = "heading6", attr = "fg", alter = 0.9 },
-        bg = { from = "heading6", attr = "fg", opacity = 0.3, is_note = true },
+        fg = { from = "heading6", attr = "fg", alter = 0.1 },
+        bg = { from = "heading6", attr = "fg", opacity = 0.15, is_note = true },
         bold = true,
       },
     },
     {
       ["@markup.heading.6.markdown_ai"] = {
-        fg = { from = "heading6", attr = "fg", alter = 0.8 },
-        bg = { from = "heading6", attr = "fg", opacity = 0.2, is_aiprompt = true },
+        fg = { from = "heading6", attr = "fg", alter = 0.1 },
+        bg = { from = "heading6", attr = "fg", opacity = 0.15, is_aiprompt = true },
         bold = true,
       },
     },
+
+    { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown" } },
+    { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown" } },
+    { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown" } },
+    { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown" } },
+    { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown" } },
+    { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown" } },
 
     {
       ["@markup.raw.block.markdown"] = {
@@ -1540,8 +1548,8 @@ local general_overrides = function()
 
     {
       ["@markup.quote.markdown"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2, is_note = true },
-        bg = { from = "Keyword", attr = "fg", opacity = 0.1 },
+        fg = { from = "Keyword", attr = "fg", alter = 0.2, opacity = 0.3, is_note = true },
+        bg = { from = "NormalNote", attr = "bg" },
         italic = true,
         bold = false,
       },
@@ -1593,7 +1601,7 @@ local general_overrides = function()
       },
     },
 
-    { RenderMarkdownCodeBorder = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.2 } } },
+    { RenderMarkdownCodeBorder = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.05 } } },
     { RenderMarkdownCodeBorder = { fg = { from = "RenderMarkdownCodeBorder", attr = "bg", alter = 0.8 } } },
 
     --  ──────────────────────────────[ ORGMODE ]──────────────────────────────

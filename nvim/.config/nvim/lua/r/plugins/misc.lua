@@ -44,6 +44,16 @@ return {
   {
     "LudoPinelli/comment-box.nvim",
     event = "InsertEnter",
+    keys = {
+      { "<Leader>cb", "", desc = "comment-box" },
+      { "<Leader>cbb", "<cmd>CBlcbox5<cr>", desc = "Misc: comment box no 5" },
+      { "<Leader>cbB", "<cmd>CBlcbox9<cr>", desc = "Misc: comment box no 9" },
+      { "<Leader>cbe", "<cmd>CBlcbox10<cr>", desc = "Misc: comment box garis tips 10" },
+      { "<Leader>cbl", "<cmd>CBlcbox21<cr>", desc = "Misc: comment box no 21" },
+      { "<Leader>cba", "<cmd>CBlcline10<cr>", desc = "Misc: comment line no 10" },
+      { "<Leader>cbA", "<cmd>CBlcline13<cr>", desc = "Misc: comment line no 13" },
+      { "<Leader>cbg", "<cmd>CBcatalog<cr>", desc = "Misc: CBcatalog" },
+    },
     opts = {
       box_width = 80,
       line_width = 80,

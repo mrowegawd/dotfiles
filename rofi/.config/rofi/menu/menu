@@ -23,7 +23,7 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
     ;;
   "Emojis") "$dir/_emoji" ;;
   "Snippet")
-    "$HOME/.config/miscxrdb/bpswm/scripts/bspc-apps" remember_me_snippet
+    "$HOME/.config/miscxrdb/bspwm/scripts/bspc-apps" remember_me_snippet
     ;;
   "Themes") "$dir/_themes" "main" ;;
   "Tools") "$dir/_tools" "main" ;;

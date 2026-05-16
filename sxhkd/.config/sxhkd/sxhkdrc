@@ -18,15 +18,15 @@ super + shift + b
 
 # state: toggle sticky, unsticky
 super + shift + F9
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state sticky
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall set_win_state sticky
 
 # state: toggle locked, unlocked
 super + shift + F10
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall set_win_state locked
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall set_win_state locked
 
 # state: toggle zoom-in-out
 # super + shift + F8
-#         $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall win_big_zoom_toggle
+#         $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall win_big_zoom_toggle
 
 ########################################
 # WINDOW
@@ -183,7 +183,7 @@ super + Return
 
 # misc: open terminal note
 super + shift + T
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps toggle_hide_note_float
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps toggle_hide_note_float
 
 # misc: open rofi menu
 super + shift + y
@@ -203,31 +203,31 @@ super + shift + Return
 
 # misc: open music
 super + shift + m
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_float ncmpcpp
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps open_float ncmpcpp
 
 # misc: open nvim note
 super + shift + w
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_note
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps open_note
 
 # misc: open bookmark and pass
 super + shift + f
-        $HOME/.config/miscxrdb/bpswm/scripts/bookmark-pass
+        $HOME/.config/miscxrdb/bspwm/scripts/bookmark-pass
 
 # misc: open translate with nvim
 super + shift + o
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_translate
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps open_translate
 
 # bspc: call window firefox (side by side)
 super + shift + d
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win firefox 2
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall toggle_call_win firefox 2
 
 # bspc: call window zathura (side by side)
 super + shift + a
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-wincall toggle_call_win zathura 4
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall toggle_call_win zathura 4
 
 # misc: open link with mpv (or with proxychains)
 super + shift + v
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-apps open_mpv
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps open_mpv
 
 # misc: killus, free memory or lagging
 super + shift + Insert
