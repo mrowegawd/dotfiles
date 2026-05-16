@@ -94,7 +94,7 @@ return {
                 buffer = true,
               },
               {
-                key = "<Localleader>ql",
+                key = "<Localleader>qd",
                 cmd = function()
                   local str_cmd = call_func { qf = "cdo", lf = "ldo" }
                   if str_cmd then

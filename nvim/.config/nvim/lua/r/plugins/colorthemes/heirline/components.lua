@@ -810,7 +810,7 @@ M.QuickfixStatus = {
       )
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = false },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
@@ -830,7 +830,7 @@ M.QuickfixStatus = {
       end
       return table.concat(parts, " ")
     end,
-    hl = { fg = colors.statusline_fg, bg = colors.qf_keyword_bg, bold = true },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = false },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
@@ -1779,7 +1779,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     local hl_opts = set_winbar_hl()
-    return { fg = hl_opts.fg, bg = hl_opts.bg, bold = true }
+    return { fg = hl_opts.fg, bg = hl_opts.bg, bold = false }
   end,
 }
 

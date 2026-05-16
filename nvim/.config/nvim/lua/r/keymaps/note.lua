@@ -8,58 +8,42 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<LocalLeader>qfl"] = {
+      ["<Leader>fT"] = {
         function()
-          RUtils.notes.find_local_url_and_backlinks()
-        end,
-        "Note: find local URL and backlinks",
-      },
-      ["<LocalLeader>qfL"] = {
-        function()
-          RUtils.notes.find_global_url_and_backlinks()
-        end,
-        "Note: find global URL and backlinks",
-      },
-      ["<LocalLeader>fT"] = {
-        function()
-          RUtils.todocomments.search_global_note {
-            title = "Todo Note Global",
-          }
+          RUtils.todocomments.search_global_note { title = "Todo Note Global" }
           vim.cmd "normal! zRzz"
         end,
-        "TODOCOMMENTS: search global TODO comments in notes [fzflua]",
+        "TODOCOMMENTS: search global TODO in notes [fzflua]",
       },
-      ["<LocalLeader>ft"] = {
+      ["<Leader>ft"] = {
         function()
-          RUtils.todocomments.search_local {
-            title = "Todo Note Curbuf",
-          }
+          RUtils.todocomments.search_local { title = "Todo Note Curbuf" }
         end,
-        "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
+        "TODOCOMMENTS: search local TODO in notes [fzflua]",
       },
       ["<LocalLeader>qft"] = {
         function()
-          RUtils.notes.find_local_title()
+          RUtils.notes.insert_title_local()
         end,
         "Note: jump local title",
       },
       ["<LocalLeader>qfT"] = {
         function()
-          RUtils.notes.find_global_title()
+          RUtils.notes.insert_title_global()
         end,
         "Note: jump global title",
       },
       ["<Leader>lr"] = {
         function()
-          RUtils.notes.find_backlinks()
+          RUtils.notes.find_backlinks_local()
         end,
-        "Note: find backlinks (alternative)",
+        "Note: find local backlink",
       },
-      ["<LocalLeader>qfb"] = {
+      ["<Leader>lR"] = {
         function()
-          RUtils.notes.find_backlinks()
+          RUtils.notes.find_backlinks_global()
         end,
-        "Note: find backlinks",
+        "Note: find global backlink",
       },
       ["<Leader>lv"] = {
         function()
@@ -70,7 +54,7 @@ function M.neorg_mappings_ft(bufnr)
             vim.cmd "vsplit | ObsidianFollowLink"
           end
         end,
-        "Note: followlink vertical split",
+        "Note: link follow (vsplit)",
       },
       ["<Leader>ld"] = {
         function()
@@ -80,7 +64,7 @@ function M.neorg_mappings_ft(bufnr)
             vim.cmd "ObsidianFollowLink"
           end
         end,
-        "Note: followlink",
+        "Note: link follow",
       },
     },
     ["i"] = {
@@ -88,31 +72,25 @@ function M.neorg_mappings_ft(bufnr)
         function()
           RUtils.notes.insert_tag()
         end,
-        "Note: insert local tag",
+        "Note: insert tag",
       },
       ["b<cr>"] = {
         function()
-          RUtils.notes.add_and_insert_backlinks()
+          RUtils.notes.insert_backlinks()
         end,
-        "Note: insert backlinks",
-      },
-      ["B<cr>"] = {
-        function()
-          RUtils.notes.add_and_insert_backlinks()
-        end,
-        "Note: insert backlinks (alternative)",
+        "Note: insert backlink",
       },
       ["t<cr>"] = {
         function()
-          RUtils.notes.insert_local_title()
+          RUtils.notes.insert_title_local()
         end,
-        "Note: insert local title",
+        "Note: insert title local",
       },
       ["T<cr>"] = {
         function()
-          RUtils.notes.insert_global_title()
+          RUtils.notes.insert_title_global()
         end,
-        "Note: insert global title",
+        "Note: insert title global",
       },
     },
   }

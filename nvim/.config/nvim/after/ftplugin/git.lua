@@ -17,17 +17,6 @@ keymap.set("n", "<Tab>", function()
   end)
 end, { buffer = api.nvim_get_current_buf() })
 
-keymap.set("n", "<Leader>bs", "o", { buffer = api.nvim_get_current_buf(), remap = true })
-keymap.set("n", "<Leader>be", "o", { buffer = api.nvim_get_current_buf(), remap = true })
-
-keymap.set("n", "<Leader>bt", "O", { buffer = api.nvim_get_current_buf(), remap = true })
-keymap.set("n", "<Leader>bv", "gO", { buffer = api.nvim_get_current_buf(), remap = true })
-
-keymap.set("n", "<Leader>mY", function() -- code
-  local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  vim.cmd("GBrowse " .. fname)
-end, {
-  buffer = api.nvim_get_current_buf(),
-  remap = true,
-  desc = "Git: open this buffer commit on browser",
-})
+keymap.set("n", "<Leader>oe", "o", { buffer = api.nvim_get_current_buf(), remap = true })
+keymap.set("n", "<Leader>ot", "O", { buffer = api.nvim_get_current_buf(), remap = true })
+keymap.set("n", "<Leader>ov", "gO", { buffer = api.nvim_get_current_buf(), remap = true })

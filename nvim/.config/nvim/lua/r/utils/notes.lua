@@ -22,7 +22,7 @@ local rg_opts = {
   "--color=always",
   "--max-columns=4096",
   "--colors",
-  "'match:fg:178'", -- color match
+  "'match:fg:178'",
 }
 
 local icon_markdown = RUtils.config.icons.misc.markdown
@@ -47,9 +47,7 @@ else
   icon_note = icon_orgmode
   rg_opts[#rg_opts + 1] = "--type=org"
   regex_url_backlinks = [[http|\[\[]]
-  -- regex_title = [[^\*{1,}\s[\w<`\?].*$]]
   regex_title = [[^\*\s|^\*+\s*[\w<`\?].*$]]
-  -- regex_title = [[^\*{1,}+\s*(.*)$]]
 end
 
 ---@param title string?
@@ -91,44 +89,63 @@ local function realpath(path)
   return vim.loop.fs_realpath(vim.fn.fnamemodify(path, ":p")) or path
 end
 
--- Helper function to calculate the relative path
--- from the current directory to the target file
-local function relative_path(from_dir, to_file)
-  -- Ensure both paths are absolute
-  local from = vim.fn.fnamemodify(from_dir, ":p"):gsub("/$", "") -- hapus trailing slash
-  local to = vim.fn.fnamemodify(to_file, ":p")
+local function relative_path(from_dir, to_path)
+  from_dir = vim.fs.normalize(from_dir):gsub("/$", "")
+  to_path = vim.fs.normalize(to_path)
 
-  -- Split paths into arrays
-  local from_parts = vim.split(from, "/", { plain = true })
-  local to_parts = vim.split(to, "/", { plain = true })
+  local to_dir = vim.fs.dirname(to_path)
+  local to_file = vim.fn.fnamemodify(to_path, ":t")
 
-  -- Remove common prefix
-  while #from_parts > 0 and #to_parts > 0 and from_parts[1] == to_parts[1] do
-    table.remove(from_parts, 1)
-    table.remove(to_parts, 1)
+  local function split(path)
+    local parts = {}
+    for p in path:gmatch "[^/]+" do
+      if p ~= "" then
+        parts[#parts + 1] = p
+      end
+    end
+    return parts
   end
 
-  -- Add "../" for each remaining level in 'from'
-  local ups = {}
-  for _ = 1, #from_parts do
-    table.insert(ups, "..")
+  local from_parts = split(from_dir)
+  local to_parts = split(to_dir)
+
+  local common = 0
+  local limit = math.min(#from_parts, #to_parts)
+  for i = 1, limit do
+    if from_parts[i] == to_parts[i] then
+      common = i
+    else
+      break
+    end
   end
 
-  -- Append the remaining target path
-  for _, part in ipairs(to_parts) do
-    table.insert(ups, part)
+  local parts = {}
+
+  local up = #from_parts - common
+  if up == 0 then
+    parts[#parts + 1] = "."
+  else
+    for _ = 1, up do
+      parts[#parts + 1] = ".."
+    end
   end
 
-  return table.concat(ups, "/")
+  for i = common + 1, #to_parts do
+    parts[#parts + 1] = to_parts[i]
+  end
+
+  parts[#parts + 1] = to_file
+
+  return table.concat(parts, "/")
 end
+
+-- ─────────────────────────────────────────────────────────────────────────────
 
 local function setup_orgmode()
   if Orgmode then
     return Orgmode
   end
-
   Orgmode = require "orgmode"
-  -- Orgmode = require("orgmode").setup { org_agenda_files = "~/Dropbox/neorg/**/*" }
   return Orgmode
 end
 
@@ -149,7 +166,6 @@ local function get_headline_at_cursor()
     lnum = headline_opts.position.start_line
     col = headline_opts.position.end_col
   elseif note_mode == "markdown" then
-    -- belum di setting
     headline_opts = {}
     lnum = 0
     col = 0
@@ -173,7 +189,6 @@ local function setup_fzflua()
   if Fzflua then
     return Fzflua
   end
-
   Fzflua = require "fzf-lua"
   return Fzflua
 end
@@ -196,7 +211,6 @@ local function setup_buffer_or_file_fzflua(fn)
     if not dataparse then
       return {}
     end
-
     return dataparse
   end
 
@@ -240,7 +254,6 @@ local get_tbl_backup_and_todos = function(scan, is_ignore_file)
           table.insert(org_todos, basename_file)
         end
       else
-        -- include file org_archive
         local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org")
         if check_org_ext then
           local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
@@ -357,7 +370,7 @@ local function open(mode_open, opts_file)
 
   vim.schedule(function()
     vim.api.nvim_win_set_cursor(0, { opts_file.lnum, opts_file.col })
-    RUtils.cmd.force_foldopen() -- force to open fold
+    RUtils.cmd.force_foldopen()
 
     local row = vim.fn.winline()
     local height = vim.api.nvim_win_get_height(0)
@@ -602,18 +615,17 @@ function Mappicker.insert_title(filename, is_global)
       local fmt_str
 
       if not is_global then
-        fmt_str = "[[*" .. file_opts.title_str .. "][ " .. file_opts.title_str .. "]]"
+        fmt_str = "[[*" .. file_opts.title_str .. "][🔗" .. file_opts.title_str .. "]]"
       else
         local e = Fzflua.path.entry_to_file(selected[1])
         local target_path = e and e.path or nil
         local root = RUtils.config.path.wiki_path or ""
 
         if target_path and root then
-          target_path = vim.loop.fs_realpath(vim.fn.fnamemodify(target_path, ":p")) or ""
-          root = vim.loop.fs_realpath(vim.fn.fnamemodify(root, ":p")) or ""
+          target_path = realpath(target_path) or ""
+          root = realpath(root) or ""
 
-          local current_file = vim.api.nvim_buf_get_name(0)
-          current_file = current_file and vim.loop.fs_realpath(vim.fn.fnamemodify(current_file, ":p")) or ""
+          local current_file = realpath(vim.api.nvim_buf_get_name(0)) or ""
 
           if (#current_file > 1) and target_path then
             if vim.startswith(current_file, root) and vim.startswith(target_path, root) then
@@ -621,7 +633,6 @@ function Mappicker.insert_title(filename, is_global)
               local relative = relative_path(current_dir, target_path)
 
               if relative then
-                -- fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "]]"
                 fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "][🔗" .. file_opts.title_str .. "]]"
               end
             end
@@ -637,11 +648,6 @@ function Mappicker.insert_title(filename, is_global)
 end
 
 function Mappicker.insert_backlinks()
-  local function filename_label(path)
-    local name = vim.fn.fnamemodify(path, ":t") -- ex: financial.org
-    return vim.fn.fnamemodify(name, ":r") -- financial
-  end
-
   return {
     ["default"] = function(selected, _)
       local e = Fzflua.path.entry_to_file(selected[1])
@@ -651,25 +657,70 @@ function Mappicker.insert_backlinks()
         return
       end
 
-      local current_file = realpath(vim.api.nvim_buf_get_name(0)) or ""
-      local wiki_root = realpath(RUtils.config.path.wiki_path) or ""
+      local function norm(path)
+        if not path or path == "" then
+          return nil
+        end
+        return vim.fs.normalize(vim.fn.fnamemodify(path, ":p")):gsub("/$", "")
+      end
 
-      if not vim.startswith(current_file, wiki_root) then
-        RUtils.warn "The current file is not part of the wiki"
+      local wiki_sym = norm(RUtils.config.path.wiki_path)
+      local current_file = norm(vim.api.nvim_buf_get_name(0))
+      target_path = norm(target_path)
+
+      if not current_file or not target_path or not wiki_sym then
+        RUtils.warn "Could not resolve paths."
         return
       end
 
+      if not vim.startswith(current_file, wiki_sym) then
+        RUtils.warn "The current file is not part of the wiki."
+        return
+      end
+
+      local function find_wiki_equivalent(real_target, wiki_root)
+        local fname = vim.fn.fnamemodify(real_target, ":t")
+        local matches = vim.fn.glob(wiki_root .. "/**/" .. fname, false, true)
+
+        if #matches == 1 then
+          return norm(matches[1])
+        elseif #matches > 1 then
+          local target_parts = vim.split(real_target, "/")
+          local best, best_score = nil, 0
+          for _, candidate in ipairs(matches) do
+            local cparts = vim.split(candidate, "/")
+            local score = 0
+            local ti, ci = #target_parts, #cparts
+            while ti > 0 and ci > 0 and target_parts[ti] == cparts[ci] do
+              score = score + 1
+              ti = ti - 1
+              ci = ci - 1
+            end
+            if score > best_score then
+              best = candidate
+              best_score = score
+            end
+          end
+          return best and norm(best) or nil
+        end
+
+        return nil
+      end
+
+      if not vim.startswith(target_path, wiki_sym) then
+        local found = find_wiki_equivalent(target_path, wiki_sym)
+        if found then
+          target_path = found
+        else
+          RUtils.warn "Target file is not part of the wiki."
+          return
+        end
+      end
+
       local current_dir = vim.fs.dirname(current_file)
-      local up_to_root = relative_path(current_dir, wiki_root)
-
-      local target_tail = vim.fn.fnamemodify(target_path, ":~:.")
-
-      local relative = vim.fs.normalize(up_to_root .. "/" .. target_tail)
-
-      --ex: [[./../financial.org]] -> [[./../financial.org][financial]]
-      local label = filename_label(relative)
-
-      local link = string.format("[[./%s][ %s]]", relative, label)
+      local relative = relative_path(current_dir, target_path)
+      local label = vim.fn.fnamemodify(target_path, ":t:r")
+      local link = string.format("[[%s][ %s]]", relative, label)
       vim.api.nvim_put({ link }, "c", false, true)
     end,
   }
@@ -678,6 +729,7 @@ end
 local match_tags
 
 function Mappicker.open_tags()
+  Orgmode = setup_orgmode()
   return {
     ["default"] = function(selection)
       if selection == nil then
@@ -700,46 +752,61 @@ function Mappicker.open_tags()
         return
       end
 
-      -- RUtils.info(vim.inspect(sel))
+      -- Orgmode.agenda:tags {
+      --   match_query = match_tags,
+      -- }
 
-      Orgmode.agenda:tags {
-        match_query = match_tags,
-        -- org_agenda_todo_ignore_scheduled =
-        -- org_agenda_todo_ignore_deadlines =
-      }
+      -- Temporarily swap ke full wiki path
+      local wiki_path = RUtils.config.path.wiki_path .. "/**/*.org"
+      require("orgmode").setup { org_agenda_files = wiki_path }
+
+      require("orgmode").agenda:tags { match_query = match_tags }
+
+      -- Restore ke path original setelah agenda terbuka
+      -- vim.schedule(function()
+      --   Orgmode.setup { org_agenda_files = "~/Dropbox/neorg/orgmode/**/*.org" }
+      -- end)
     end,
-
-    -- ["ctrl-y"] = function(selection, opts)
-    --   if selection == nil then
-    --     return
-    --   end
-    --
-    --   RUtils.info(vim.inspect(selection))
-    --
-    --   local query = opts.query
-    --   if not query or query == "" then
-    --     return
-    --   end
-    --
-    --   local pattern = query
-    --   RUtils.info(vim.inspect(pattern))
-    --
-    --   local results = {}
-    --
-    --   for _, item in ipairs(opts._all_items or {}) do
-    --     if item:match(pattern) then
-    --       table.insert(results, item)
-    --     end
-    --   end
-    --   RUtils.info(vim.inspect(results))
-    -- end,
   }
+end
+
+---@param path string
+local function get_tags_from_path(path)
+  local tags = {}
+  local seen = {}
+
+  local files = vim.fn.glob(path .. "/**/*.org", false, true)
+
+  for _, file in ipairs(files) do
+    local lines = vim.fn.readfile(file)
+    for _, line in ipairs(lines) do
+      -- Skip baris timestamp, schedule, deadline, property
+      if
+        not line:match "^%s*SCHEDULED:"
+        and not line:match "^%s*DEADLINE:"
+        and not line:match "^%s*CLOSED:"
+        and not line:match "^%s*:.*:$" -- property drawer
+        and not line:match "<%d%d%d%d%-%d%d%-%d%d" -- timestamp
+      then
+        -- Tag org harus diawali huruf, minimal 2 karakter
+        for tag in line:gmatch ":([%a][%w_@]+):" do
+          if not seen[tag] then
+            seen[tag] = true
+            -- tags[#tags + 1] = tag .. " > " .. line
+            tags[#tags + 1] = tag
+          end
+        end
+      end
+    end
+  end
+
+  table.sort(tags)
+  return tags
 end
 
 ---@param opts? {last: boolean }
 local function get_tags(opts)
   opts = opts or {}
-  -- Orgmode = setup_orgmode()
   Orgmode = setup_orgmode()
 
   if opts.last and match_tags then
@@ -748,8 +815,11 @@ local function get_tags(opts)
     return
   end
 
-  local contents_tags = Orgmode.files:get_tags()
+  local wiki_path = RUtils.config.path.wiki_path
+  local contents_tags = get_tags_from_path(wiki_path)
+
   if #contents_tags == 0 then
+    RUtils.warn "No tags found."
     return
   end
 
@@ -826,28 +896,6 @@ local function call_fzf_grep(is_global, target_file, opts)
     no_esc = true,
     file_ignore_patterns = file_ignores,
     rg_opts = table.concat(clone_rg_opts, " "),
-    -- fzf_opts = {
-    --   -- ["--delimiter"] = "[:\t]",
-    --   --
-    --   ["--tabstop"] = "1",
-    --   -- ["--tiebreak"] = "index",
-    --   -- Separated by tab and ':', 1: file icon+name, 2: file path 3: line number, it is dependes on rg_opts whether column or line number is enabled or not.
-    --   ["--with-nth"] = "2..",
-    --   -- Search fileds
-    --   ["--nth"] = "3..",
-    --
-    --   -- ["--delimiter"] = "[\t]",
-    --   -- ["--tabstop"] = "1",
-    --   -- ["--tiebreak"] = "index",
-    --   -- ["--with-nth"] = "2..",
-    --   -- ["--nth"] = "4..",
-    --
-    --   -- ["--multi"] = true,
-    --   -- ["--delimiter"] = "[:\t]",
-    --   -- ["--with-nth"] = "2..",
-    --   -- ["--with-nth"] = "3..",
-    --   -- ["--tiebreak"] = "index",
-    -- },
   }, opts)
 
   Fzflua = setup_fzflua()
@@ -903,312 +951,81 @@ local function jump_to_heading(is_global)
   })
 end
 
----@param is_global boolean?
-local function find_references_backlinks(is_global)
-  is_global = is_global or false
-
-  local __title = "- Find References Backlinks"
-
-  local target_file = get_target_file(is_global)
-  call_fzf_grep(is_global, target_file, {
-    actions = Mappicker.open_and_jump_to_file(target_file, is_global),
-    search = regex_title,
-    winopts = { title = get_title_note(__title) },
-  })
-end
-
----@param is_global boolean?
-local function insert_backlinks(is_global)
-  is_global = is_global or false
-
-  local __title = "- Insert Backlinks"
-
+local function insert_backlinks_files()
   Fzflua = setup_fzflua()
   Fzflua.files {
     prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
     file_ignore_patterns = file_ignores,
-    winopts = { title = get_title_note(__title) },
+    winopts = { title = get_title_note "- Insert Backlinks" },
     actions = Mappicker.insert_backlinks(),
   }
 end
 
----@class NotesCmdsObjt
----@field filter_by_tags fun()
----@field lfilter_by_tags fun()
----@field find_files_notes fun()
----@field find_curbuf_title_notes fun()
----@field find_global_title_notes fun()
----@field find_reference_backlinks fun()
----@field find_local_url_and_backlinks fun()
----@field find_global_url_and_backlinks fun()
----@field live_grep fun()
----@field insert_title_curbuf fun()
----@field insert_title_global fun()
----@field insert_backlinks fun()
----@field insert_tags fun()
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Public API
+-- ─────────────────────────────────────────────────────────────────────────────
 
----@type table<"org" | "markdown", NotesCmdsObjt>
-local get_cmds = {
-  ["org"] = {
-    filter_by_tags = function()
-      get_tags()
-    end,
-    lfilter_by_tags = function()
-      get_tags { last = true }
-    end,
-    find_files_notes = function()
-      find_files_org()
-    end,
-    find_curbuf_title_notes = function()
-      jump_to_heading()
-    end,
-    find_global_title_notes = function()
-      jump_to_heading(true)
-    end,
-    find_reference_backlinks = function()
-      find_references_backlinks()
-    end,
-    find_local_url_and_backlinks = function()
-      find_url_and_backlinks()
-    end,
-    find_global_url_and_backlinks = function()
-      find_url_and_backlinks(true)
-    end,
-    live_grep = function()
-      live_grep_org()
-    end,
-    insert_backlinks = function()
-      insert_backlinks(true)
-    end,
-    insert_title_curbuf = function()
-      insert_heading_title()
-    end,
-    insert_title_global = function()
-      insert_heading_title(true)
-    end,
-    insert_tags = function()
-      insert_tag_org()
-    end,
-  },
-  ["markdown"] = {
-    filter_by_tags = function()
-      RUtils.markdown.find_note_by_tag()
-    end,
-    lfilter_by_tags = function()
-      get_tags { last = true }
-    end,
-    find_files_notes = function()
-      not_implement()
-    end,
-    find_curbuf_title_notes = function()
-      not_implement()
-    end,
-    find_global_title_notes = function()
-      not_implement()
-    end,
-    find_reference_backlinks = function()
-      find_references_backlinks()
-    end,
-    find_local_url_and_backlinks = function()
-      not_implement()
-    end,
-    find_global_url_and_backlinks = function()
-      not_implement()
-    end,
-    live_grep = function()
-      not_implement()
-    end,
-    insert_title_curbuf = function()
-      RUtils.markdown.insert_local_titles()
-    end,
-    insert_title_global = function()
-      RUtils.markdown.insert_global_titles()
-    end,
-    insert_backlinks = function()
-      not_implement()
-    end,
-    insert_tags = function()
-      RUtils.markdown.insert_by_categories()
-    end,
-  },
-}
+M.not_implement = not_implement
 
----@param name_cmd string
-local function call_cmd(name_cmd)
-  local f = get_cmds[note_mode][name_cmd]
-  if f then
-    return f
-  end
-  RUtils.warn(string.format("Error command `%s`", name_cmd))
+M.find_files_notes = find_files_org
+M.live_grep = live_grep_org
+
+M.filter_by_tags = get_tags
+M.last_filter_by_tags = function()
+  get_tags { last = true }
 end
 
-function M.filter_by_tags()
-  return call_cmd "filter_by_tags"()
+M.insert_tag = insert_tag_org
+
+M.insert_backlinks = insert_backlinks_files
+
+M.insert_title_local = function()
+  insert_heading_title(false)
 end
 
-function M.last_filter_by_tags()
-  return call_cmd "lfilter_by_tags"()
+M.insert_title_global = function()
+  insert_heading_title(true)
 end
 
-function M.find_files_notes()
-  return call_cmd "find_files_notes"()
+M.jump_heading_local = function()
+  jump_to_heading(false)
 end
 
-function M.find_local_title()
-  return call_cmd "find_curbuf_title_notes"()
+M.jump_heading_global = function()
+  jump_to_heading(true)
 end
 
-function M.find_global_title()
-  return call_cmd "find_global_title_notes"()
+M.find_backlinks_local = function()
+  find_url_and_backlinks(false)
 end
 
-function M.find_backlinks()
-  return call_cmd "find_backlinks"()
+M.find_backlinks_global = function()
+  find_url_and_backlinks(true)
 end
 
-function M.find_local_url_and_backlinks()
-  return call_cmd "find_local_url_and_backlinks"()
-end
-
-function M.find_global_url_and_backlinks()
-  return call_cmd "find_global_url_and_backlinks"()
-end
-
-function M.live_grep()
-  return call_cmd "live_grep"()
-end
-
-function M.insert_tag()
-  return call_cmd "insert_tags"()
-end
-
-function M.insert_local_title()
-  return call_cmd "insert_title_curbuf"()
-end
-
-function M.insert_global_title()
-  return call_cmd "insert_title_global"()
-end
-
-function M.add_and_insert_backlinks()
-  return call_cmd "insert_backlinks"()
-end
-
----@param mode_open Mode_open
-local function open_item_heading(mode_open)
-  mode_open = mode_open or "default"
-
-  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-
-  if not vim.tbl_contains({ "org", "orgagenda" }, vim.bo.filetype) or is_float then
+M.open_item_heading_vsplit = function()
+  local data = get_headline_at_cursor()
+  if not data then
     return
   end
+  open_vsplit { filename = data.filename, lnum = data.lnum, col = data.col }
+end
 
-  local headline_opts = get_headline_at_cursor()
-  if not headline_opts then
+M.open_item_heading_split = function()
+  local data = get_headline_at_cursor()
+  if not data then
     return
   end
-
-  local opts_file = {
-    filename = headline_opts.filename,
-    lnum = headline_opts.lnum,
-    col = headline_opts.col,
-  }
-  open(mode_open, opts_file)
-
-  vim.cmd "wincmd ="
+  open_split { filename = data.filename, lnum = data.lnum, col = data.col }
 end
 
-function M.open_item_heading_vsplit()
-  open_item_heading "vsplit"
-end
-
-function M.open_item_heading_split()
-  open_item_heading "split"
-end
-
-function M.open_item_heading_tab()
-  open_item_heading "tabe"
-end
-
-function M.open_agenda_file_lists()
-  local Path, scan = load_plenary_plugin()
-  local org_backup, org_todos = get_tbl_backup_and_todos(scan, true)
-
-  local contains_match = function(str_path, str)
-    if str_path:match(str) then
-      return true
-    end
-    return false
+M.open_item_heading_tab = function()
+  local data = get_headline_at_cursor()
+  if not data then
+    return
   end
-
-  local opts = {
-    winopts = { title = get_title_note "- OrgFiles" },
-    fzf_opts = { ["--header"] = [[^x:cleanup]] },
-    actions = {
-      ["default"] = function(selected, _)
-        local sel = RUtils.fzflua.__strip_str(selected[1])
-        for _, x in pairs(org_backup) do
-          if sel == x.basename_file then
-            if RUtils.file.exists(x.full_path) then
-              return vim.cmd("edit " .. x.full_path)
-            end
-            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
-          end
-        end
-      end,
-      ["ctrl-v"] = function(selected, _)
-        local sel = RUtils.fzflua.__strip_str(selected[1])
-        for _, x in pairs(org_backup) do
-          if sel == x.basename_file then
-            if RUtils.file.exists(x.full_path) then
-              return vim.cmd("vsplit " .. x.full_path)
-            end
-            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
-          end
-        end
-      end,
-      ["ctrl-s"] = function(selected, _)
-        local sel = RUtils.fzflua.__strip_str(selected[1])
-        for _, x in pairs(org_backup) do
-          if sel == x.basename_file then
-            if RUtils.file.exists(x.full_path) then
-              return vim.cmd("split " .. x.full_path)
-            end
-            return RUtils.warn("Path not exists: " .. x.full_path, { title = "Notes" })
-          end
-        end
-      end,
-      -- TODO: buat delete file, delete folder kosong
-      ["ctrl-x"] = function()
-        local project_todo_path = RUtils.config.path.dropbox_path .. "/neorg/orgmode/project-todo"
-        local dirs = scan.scan_dir(project_todo_path, { depth = 2, add_dirs = true })
-
-        for _, file_path in pairs(dirs) do
-          local is_file_org = contains_match(tostring(file_path), ".org$")
-          if is_file_org then
-            if vim.fn.getfsize(file_path) <= 3 then
-              local p = Path:new(file_path)
-              if p:exists() then
-                p:rm()
-              end
-            end
-          else
-            local p = Path:new(file_path)
-            if p:exists() then
-              p:rmdir()
-            end
-          end
-        end
-
-        RUtils.info("✅ Clean up todos path done!", { title = "Notes" })
-      end,
-    },
-  }
-
-  Fzflua = setup_fzflua()
-  Fzflua.fzf_exec(org_todos, RUtils.fzflua.open_dock_bottom(opts_fzf(opts)))
+  open_tab { filename = data.filename, lnum = data.lnum, col = data.col }
 end
 
 return M

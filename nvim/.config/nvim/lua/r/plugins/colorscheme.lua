@@ -251,10 +251,8 @@ return {
       return false
     end,
     opts = {
-      hl = {
-        force_override = {
-          Normal = { "#FFFFFF", "#121212" },
-        },
+      plugins = {
+        autoload = false,
       },
     },
   },

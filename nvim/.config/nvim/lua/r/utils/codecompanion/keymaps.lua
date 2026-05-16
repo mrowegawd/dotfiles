@@ -212,7 +212,7 @@ local function setup_codecompanion_filetype_mappings(e)
     true
   )
 
-  RUtils.map.nnoremap("<Localleader>qz", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
+  RUtils.map.nnoremap("<Leader>mm", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
 end
 
 local function setup_filetype_mappings(group_name)

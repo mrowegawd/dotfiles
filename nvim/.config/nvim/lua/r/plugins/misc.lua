@@ -44,6 +44,10 @@ return {
   {
     "LudoPinelli/comment-box.nvim",
     event = "InsertEnter",
+    opts = {
+      box_width = 80,
+      line_width = 80,
+    },
   },
   -- NREDIR
   {

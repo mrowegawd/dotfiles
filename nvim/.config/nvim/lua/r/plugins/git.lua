@@ -611,17 +611,6 @@ return {
       {
         "<Leader>gl",
         function()
-          local current_line = vim.fn.line "."
-          local file = vim.fn.expand "%"
-          -- DiffviewFileHistory --follow -L{current_line},{current_line}:{file}
-          local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
-          vim.cmd(str_cmds)
-        end,
-        desc = "Git: DiffviewFileHistory line [diffview]",
-      },
-      {
-        "<Leader>gl",
-        function()
           local function exit_visual_mode()
             -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
             local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)

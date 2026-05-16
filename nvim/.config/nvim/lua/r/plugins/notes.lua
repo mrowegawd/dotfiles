@@ -24,6 +24,7 @@ local function refresh_agenda_files(force_slow)
 
   return is_fast
 end
+
 return {
   -- CALENDAR.NVIM
   {
@@ -83,11 +84,11 @@ return {
       {
         "<LocalLeader>nft",
         function()
-          if agenda_mode == AgendaMode.SLOW then
-            refresh_agenda_files()
-            require("orgmode").agenda:agenda()
-            return
-          end
+          -- if agenda_mode == AgendaMode.SLOW then
+          --   refresh_agenda_files()
+          --   require("orgmode").agenda:agenda()
+          --   return
+          -- end
 
           RUtils.notes.filter_by_tags()
         end,

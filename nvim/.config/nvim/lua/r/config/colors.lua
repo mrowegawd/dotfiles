@@ -498,7 +498,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "NonText", attr = "fg", alter = 0.5, opacity = 0.5 }, bg = "NONE" } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5, opacity = 0.4 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5, opacity = 0.5 }, bg = "NONE" } },
 
     {
       LineNr = {
@@ -1359,13 +1359,13 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.5 },
+        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.4 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleInfo = {
-        fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.8 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
         bold = true,
       },
@@ -1379,13 +1379,13 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.5 },
+        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.4 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleWarn = {
-        fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.8 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
         bold = true,
       },
@@ -1399,13 +1399,13 @@ local general_overrides = function()
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 },
+        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.4 },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
     {
       SnacksNotifierTitleError = {
-        fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.2 },
+        fg = { from = "SnacksNotifierBorderError", attr = "fg", alter = 0.8 },
         bg = { from = "SnacksNotifierError", attr = "bg" },
         bold = true,
       },
@@ -1977,8 +1977,8 @@ local function set_panel_highlight()
 
     {
       QuickFixWinbar = {
-        fg = { from = "Normal", attr = "bg", alter = 2 },
-        bg = { from = "Normal", attr = "bg" },
+        fg = { from = "Normal", attr = "bg", alter = 4 },
+        bg = { from = "Normal", attr = "bg", alter = 0.5 },
       },
     },
 

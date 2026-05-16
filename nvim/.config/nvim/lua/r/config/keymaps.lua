@@ -13,8 +13,6 @@ RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
 
-RUtils.map.inoremap("hh", "<ESC>", silent)
-
 RUtils.map.inoremap("<a-l>", "<Right>", silent)
 RUtils.map.inoremap("<a-h>", "<Left>", silent)
 RUtils.map.inoremap("<a-j>", "<Down>", silent)
@@ -25,6 +23,23 @@ RUtils.map.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<
 
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
+
+RUtils.map.inoremap("<Esc>", function()
+  RUtils.map.feedkey "<C-c>"
+  vim.cmd "noh"
+  return "<esc>"
+end, silent)
+RUtils.map.nnoremap("<Esc>", function()
+  vim.cmd "noh"
+  return "<esc>"
+end, silent)
+RUtils.map.vnoremap("<Esc>", function()
+  RUtils.map.feedkey "<C-c>"
+  vim.cmd "noh"
+  return "<esc>"
+end, silent)
+
+RUtils.map.inoremap("hh", "<C-c>", silent)
 
 -- ╭─────────────────────────────────────────────────────────╮
 -- │                          FOLD                           │
@@ -361,7 +376,7 @@ RUtils.map.vmap("K", "<Nop>")
 RUtils.map.nmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
 
-Snacks.toggle.zoom():map "<a-m>"
+Snacks.toggle.zoom():map "<Leader>mm"
 
 --stylua: ignore
 RUtils.map.nnoremap("<a-W>", function() RUtils.terminal.float_note() end, { desc = "Misc: open notes" })
