@@ -110,7 +110,7 @@ return {
         },
         hover = {
           win_options = {
-            winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" },
+            winhighlight = { Normal = "BlinkDocNormal", FloatBorder = "BlinkDocFloatBorder" },
           },
         },
         notify = {

@@ -228,9 +228,10 @@ local __colors = function()
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
+    winbar_bright = H.tint(H.get("WinBar", "fg"), 0.6),
 
     bright = H.tint(H.get("StatusLine", "fg"), 0.65),
-    bright_winbar = H.tint(H.get("StatusLineWinbar", "fg"), 0.65),
+    -- bright_winbar = H.tint(H.get("StatusLine", "fg"), 0.65),
 
     keyword = H.darken(H.get("Keyword", "fg"), col_opts.keyword_fg, H.get("Normal", "bg")),
 
@@ -311,8 +312,7 @@ local set_winbar_hl = function(is_more_bright)
   }
 
   if is_more_bright then
-    hlWinbarOpts.fg = colors.statusline_fg
-    hlWinbarOpts.bg = colors.winbar_bg
+    hlWinbarOpts.fg = colors.winbar_bright
   end
 
   if set_conditions.is_readonly() then
@@ -684,7 +684,7 @@ M.FilePath = {
       return RUtils.file.basename(self.filename)
     end,
     hl = function()
-      local fg = colors.bright
+      local fg = colors.winbar_bright
       if vim.bo.filetype == "qf" then
         fg = colors.statusline_fg
       end
@@ -1779,7 +1779,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     local hl_opts = set_winbar_hl()
-    return { fg = hl_opts.fg, bg = hl_opts.bg, bold = false }
+    return { fg = hl_opts.fg, bg = colors.normal_bg, bold = false }
   end,
 }
 

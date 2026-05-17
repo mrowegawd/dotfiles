@@ -226,8 +226,8 @@ return {
             { NeoTreeIndentMarker = { fg = { from = "OutlineGuides", attr = "fg" }, bold = false } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelSideNormal", fg = { from = "Comment" } } },
 
-            { NeoTreeGitAdded = { inherit = "GitSignsAdd" } },
-            { NeoTreeGitModified = { inherit = "GitSignsChange" } },
+            -- { NeoTreeGitAdded = { inherit = "GitSignsAdd" } },
+            -- { NeoTreeGitModified = { inherit = "GitSignsChange" } },
             {
               NeoTreeTabSeparatorInactive = {
                 inherit = "NeoTreeTabInactive",

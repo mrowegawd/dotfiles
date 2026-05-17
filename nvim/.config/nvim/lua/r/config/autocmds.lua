@@ -182,41 +182,41 @@ RUtils.map.augroup("WindowBehaviour", {
   end,
 })
 
-RUtils.map.augroup("WindowDim", {
-  event = { "BufRead" },
-  pattern = { "*" },
-  command = function()
-    vim.defer_fn(function()
-      RUtils.windowdim.buf_enter()
-    end, 1)
-  end,
-}, {
-  event = { "BufEnter" },
-  pattern = { "*" },
-  command = function()
-    vim.defer_fn(function()
-      RUtils.windowdim.buf_enter()
-    end, 1)
-  end,
-}, {
-  event = { "VimEnter", "FocusGained", "WinEnter" },
-  pattern = "*",
-  command = function()
-    RUtils.windowdim.focus_gained()
-  end,
-}, {
-  event = { "FocusLost" },
-  pattern = "*",
-  command = function()
-    RUtils.windowdim.focus_lost()
-  end,
-}, {
-  event = { "WinLeave" },
-  pattern = "*",
-  command = function()
-    RUtils.windowdim.win_leave()
-  end,
-})
+-- RUtils.map.augroup("WindowDim", {
+--   event = { "BufRead" },
+--   pattern = { "*" },
+--   command = function()
+--     vim.defer_fn(function()
+--       RUtils.windowdim.buf_enter()
+--     end, 1)
+--   end,
+-- }, {
+--   event = { "BufEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     vim.defer_fn(function()
+--       RUtils.windowdim.buf_enter()
+--     end, 1)
+--   end,
+-- }, {
+--   event = { "VimEnter", "FocusGained", "WinEnter" },
+--   pattern = "*",
+--   command = function()
+--     RUtils.windowdim.focus_gained()
+--   end,
+-- }, {
+--   event = { "FocusLost" },
+--   pattern = "*",
+--   command = function()
+--     RUtils.windowdim.focus_lost()
+--   end,
+-- }, {
+--   event = { "WinLeave" },
+--   pattern = "*",
+--   command = function()
+--     RUtils.windowdim.win_leave()
+--   end,
+-- })
 
 ---------------------------------
 -- MISC
@@ -235,14 +235,6 @@ RUtils.map.augroup("WrapFiletype", {
     if not new_value then
       vim.diagnostic.config { virtual_lines = new_value }
     end
-  end,
-}, {
-  event = "FileType",
-  pattern = "qf",
-  command = function()
-    vim.fn.matchadd("Directory", [[^[^│]*]])
-    vim.fn.matchadd("QuickFixMiddleLineNr", [[\v\d+:\d+\s]])
-    vim.fn.matchadd("QuickFixLineNr", [[│]])
   end,
 })
 

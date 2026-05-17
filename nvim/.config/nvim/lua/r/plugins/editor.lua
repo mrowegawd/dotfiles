@@ -219,6 +219,7 @@ return {
     opts = function()
       local icons_lsp = RUtils.config.icons.kinds
       return {
+        focus = true,
         win = { position = "bottom", relative = "win" },
         icons = {
           kinds = {

@@ -80,7 +80,7 @@ return {
             },
           },
           documentation = cmp.config.window.bordered {
-            winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
+            winhighlight = "Normal:BlinkDocNormal,FloatBorder:BlinkDocFloatBorder,CursorLine:PmenuSel,Search:None",
             border = {
               { "", "DiagnosticHint" },
               { "─", "FloatBorder" },

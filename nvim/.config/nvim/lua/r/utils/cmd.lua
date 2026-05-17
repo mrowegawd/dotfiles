@@ -897,8 +897,8 @@ function M.change_colors()
     border_active = H.tint(H.get("WinSeparator", "fg"), -0.6)
     border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.1)
   else
-    border_active = H.tint(H.get("WinSeparator", "fg"), 0.4)
-    border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.05)
+    border_active = H.get("WinSeparator", "fg")
+    border_inactive = H.tint(H.get("Normal", "bg"), 0.2)
   end
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
@@ -1000,9 +1000,9 @@ function M.change_colors()
       normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.7),
       normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.7),
 
-      critical_fg = H.tint(H.get("GitSignsDelete", "fg"), 0.4),
-      critical_bg = H.tint(H.get("GitSignsDelete", "fg"), -0.25),
-      critical_frame = H.tint(H.get("GitSignsDelete", "fg"), -0.2),
+      critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4),
+      critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25),
+      critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2),
 
       bg = H.tint(H.get("Normal", "bg"), 0.25),
       fg = H.tint(H.get("Normal", "bg"), 0.25),
@@ -1017,7 +1017,7 @@ function M.change_colors()
       bg = H.get("Normal", "bg"),
 
       yellow_alt = H.tint(H.get("diffChanged", "fg"), -0.45),
-      highlight_key = H.tint(H.get("GitSignsDelete", "fg"), 0.1),
+      highlight_key = H.tint(H.get("diffRemoved", "fg"), 0.1),
 
       cursorline_fg = H.tint(H.get("Keyword", "fg"), 1),
       cursorline_bg = H.tint(H.get("Keyword", "fg"), -0.5),
@@ -1031,12 +1031,12 @@ function M.change_colors()
       darken_bg = H.tint(H.get("Normal", "bg"), -0.5),
     },
     delta = {
-      hunk_header_fg = H.get("diffLine", "fg"),
-      hunk_header_bg = H.get("diffLine", "bg"),
+      hunk_header_fg = H.get("diffFile", "fg"),
+      hunk_header_bg = H.get("diffFile", "bg"),
 
-      line_number_fg = H.tint(H.get("Comment", "fg"), -0.05),
+      line_number_fg = H.tint(H.get("Normal", "bg"), 0.5),
 
-      line_number_plus = H.get("NeogitDiffAdd", "bg"),
+      line_number_plus = H.get("NeogitDiffAdd", "fg"),
       line_number_minus = H.get("NeogitDiffDelete", "fg"),
 
       hunk_plus_fg = H.get("NeogitDiffAdd", "fg"),
@@ -1045,7 +1045,7 @@ function M.change_colors()
       hunk_emp_plus_bg = H.get("NeogitDiffAddInline", "bg"),
 
       hunk_minus_fg = H.get("NeogitDiffDelete", "fg"),
-      hunk_minus_bg = H.get("Normal", "bg"),
+      hunk_minus_bg = H.get("NeogitDiffDelete", "bg"),
       hunk_emp_minus_fg = H.get("NeogitDiffDeleteInline", "fg"),
       hunk_emp_minus_bg = H.get("NeogitDiffDeleteInline", "bg"),
     },
@@ -1058,7 +1058,7 @@ function M.change_colors()
       bg_darken = H.tint(H.get("Normal", "fg"), -0.3),
       bg_alt = H.tint(H.get("Normal", "fg"), 0.3),
 
-      red = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
+      red = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
 
       icon_fg = eww_icon_fg,
 
@@ -1068,8 +1068,8 @@ function M.change_colors()
       cwd = H.get("PanelSideRootName", "fg"),
       hovered = yazi_hovered,
 
-      selected = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
-      count_selected_bg = H.darken(H.get("GitSignsDelete", "fg"), 0.8, H.get("Normal", "bg")),
+      selected = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
+      count_selected_bg = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
 
       find_keyword_fg = H.get("CurSearch", "fg"),
       find_keyword_bg = H.get("CurSearch", "bg"),
@@ -1124,7 +1124,7 @@ function M.change_colors()
 
       keyword = H.get("Keyword", "fg"),
 
-      red = H.tint(H.get("GitSignsDelete", "fg"), -0.3),
+      red = H.tint(H.get("diffRemoved", "fg"), -0.3),
       green = H.tint(H.get("diffAdded", "bg"), -0.3),
     },
   }

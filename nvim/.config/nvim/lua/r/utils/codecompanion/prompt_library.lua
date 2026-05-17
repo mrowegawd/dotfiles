@@ -80,6 +80,10 @@ function M.prompt(name)
   return PROMPT_LIBRARY[name]
 end
 
+function M.prompt_file(relative_path)
+  return read_prompt_file(relative_path)
+end
+
 -- Shared prompt constructor
 local function build_prompt(interaction, description, alias, content, extra)
   local prompt_opts = {

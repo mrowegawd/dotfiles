@@ -168,7 +168,7 @@ return {
           auto_show = true,
           window = {
             border = RUtils.config.icons.border.rightsideonly, -- "none",
-            winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
+            winhighlight = "Normal:BlinkDocNormal,FloatBorder:BlinkDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
         },
         ghost_text = {
@@ -322,7 +322,8 @@ return {
       },
       signature = {
         enabled = true,
-        window = { border = "rounded", winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder" },
+        -- window = { border = "rounded", winhighlight = "Normal:Normal,FloatBorder:BlinkDocFloatBorder" },
+        window = { border = "rounded" },
       },
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)

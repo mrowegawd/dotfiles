@@ -78,6 +78,11 @@ local tools = {
   },
   read_file = {
     opts = NO_APPROVAL_OPTS,
+    schema = {
+      start_line_number_base_zero = {
+        default = 0,
+      },
+    },
   },
   -- Custom tools
   ---- Terminal
@@ -136,7 +141,8 @@ local tools = {
         "read_file",
         "safe_run_command",
       },
-      opts = GROUP_OPTS,
+      opts = vim.tbl_extend("force", GROUP_OPTS, NO_APPROVAL_OPTS), -- ← tambahkan ini
+      -- opts = GROUP_OPTS,
     },
     gsheet_tools = {
       description = "Google Sheets tools",

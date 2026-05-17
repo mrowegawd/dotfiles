@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 __send_notify() {
   dunstify -t 1000 "BSPC WINCALL" "$1"

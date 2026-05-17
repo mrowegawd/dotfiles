@@ -277,6 +277,8 @@ set_delta() {
 
   # Line numbers
   sed -i -e "s/^line-numbers-zero-style.*/line-numbers-zero-style = \"$(theme_get delta_line_number_fg)\"/g" "$delta_path"
+  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$(theme_get delta_line_number_plus)\"/g" "$delta_path"
+  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$(theme_get delta_line_number_minus)\"/g" "$delta_path"
 
   # Plus (added)
   sed -i -e "s/^plus-style.*/plus-style = \"$(theme_get delta_hunk_plus_fg)\" bold \"$(theme_get delta_hunk_plus_bg)\"/g" "$delta_path"

@@ -33,8 +33,8 @@ function M._only()
   vim.notify("BufOnly: " .. deleted .. " deleted buffer(s), " .. modified .. " modified buffer(s)")
 end
 
-function M.get_bo_buft()
-  local bufnr = api.nvim_get_current_buf()
+function M.get_bo_buft(bufnr)
+  bufnr = bufnr or api.nvim_get_current_buf()
   local buftype = api.nvim_get_option_value("buftype", { buf = bufnr })
   local filetype = api.nvim_get_option_value("filetype", { buf = bufnr })
   return filetype, buftype

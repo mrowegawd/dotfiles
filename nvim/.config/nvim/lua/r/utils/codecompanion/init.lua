@@ -6,12 +6,16 @@ local mappings = require "r.utils.codecompanion.keymaps"
 local extensions = require "r.utils.codecompanion.extensions"
 local cli = require "r.utils.codecompanion.cli"
 local rules = require "r.utils.codecompanion.rules"
+local tools = require "r.utils.codecompanion.tools"
 local slash_commands = require "r.utils.codecompanion.slash_commands"
 local prompt_library = require "r.utils.codecompanion.prompt_library"
 local ui = require "r.utils.codecompanion.ui"
 
 local function setup_plugin()
   return {
+    opts = {
+      log_level = "DEBUG", -- tambahkan ini
+    },
     -- Adapters
     adapters = {
       http = {
@@ -92,6 +96,16 @@ local function setup_plugin()
 
         -- Slash commands
         slash_commands = slash_commands.build(),
+        -- Tools
+        tools = tools.build(),
+        -- Editor context (variables)
+        editor_context = {
+          ["buffer"] = {
+            opts = {
+              default_params = "diff",
+            },
+          },
+        },
       },
       -- CLI
       cli = cli.build(),

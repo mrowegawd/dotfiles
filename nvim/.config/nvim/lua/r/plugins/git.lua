@@ -708,8 +708,8 @@ return {
             { "n", "<Leader>os", actions.goto_file_split, { desc = "Git: open in split [diffview-view]" } },
             { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-view]" } },
 
-            { "n", "<Leader>oe", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
-            { "n", "<Leader>oE", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
+            { "n", "<Leader>oo", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
+            { "n", "<Leader>oO", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
             { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
