@@ -61,7 +61,9 @@ end
 -- ╎ OPEN WITH TMUX                                           ╎
 -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
-local function open_with_tmux(action, fpath, fpath_ext)
+local function open_with_tmux(action, fpath, fpath_ext, line)
+  line = line or nil
+
   if fpath_ext == "pdf" then
     run('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
     return
@@ -95,6 +97,10 @@ local function open_with_tmux(action, fpath, fpath_ext)
     run([[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]])
   else
     run([[tmux send-keys "nvim ]] .. fpath .. [[" Enter]])
+  end
+
+  if line then
+    run([[tmux send-keys ":lua vim.api.nvim_win_set_cursor(0, {]] .. tostring(line) .. [[,0})]] .. [[" Enter]])
   end
 
   -- Back to yazi pane
@@ -189,16 +195,30 @@ end
 
 return {
   entry = function(_, job)
-    local action = job.args[1]
+    local args1 = job.args[1]
+    -- local args2 = job.args[2]
+    -- NOTE: dont know why dont use args2 instead of args3
+    local args3 = job.args[3]
+    local args4 = job.args[4]
 
-    if hovered_item_is_dir() then
+    if (args3 == nil) and hovered_item_is_dir() then
       ya.emit("enter", { hovered = true })
       return
     end
 
     local fpath = get_hovered_item_path()
+
+    if args3 and #args3 > 0 then
+      fpath = args3
+    end
+
     if not fpath then
       return
+    end
+
+    local line
+    if args4 then
+      line = args4
     end
 
     fpath = tostring(fpath)
@@ -206,7 +226,7 @@ return {
 
     -- Handle media/binary file types langsung, tidak perlu terminal
     if fpath_ext == "jpg" then
-      if action == "open" then
+      if args1 == "open" then
         run("feh --bg-scale " .. fpath)
       else
         run('nohup sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
@@ -233,15 +253,15 @@ return {
       return
     end
 
-    if fpath_ext == "pdf" and action == "open" then
+    if fpath_ext == "pdf" and args1 == "open" then
       run('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
       return
     end
 
     if is_in_tmux() then
-      open_with_tmux(action, fpath, fpath_ext)
+      open_with_tmux(args1, fpath, fpath_ext, line)
     elseif is_in_wezterm() then
-      open_with_wezterm(action, fpath, fpath_ext)
+      open_with_wezterm(args1, fpath, fpath_ext)
     end
   end,
 }

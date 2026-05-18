@@ -913,8 +913,7 @@ function M.change_colors()
   local zsh_sugest = H.get("Zshlines", "bg")
 
   -- ─< YAZI >───────────────────────────────────────────────────────────
-  local yazi_hovered_fg = 0
-  local yazi_hovered = H.tint(H.get("HoveredCursorline", "bg"), yazi_hovered_fg)
+  local yazi_hovered = H.get("HoveredCursorline", "bg")
 
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.5)
@@ -942,6 +941,8 @@ function M.change_colors()
       selection_fg = H.get("FzfLuaSel", "fg"),
       selection_bg = H.get("FzfLuaSel", "bg"),
       match = H.get("FzfLuaFzfMatch", "fg"),
+
+      marker = H.get("MarkerFzflua", "fg"),
 
       gutter = H.get("FzfLuaNormal", "bg"),
       pointer = H.get("Keyword", "fg"),

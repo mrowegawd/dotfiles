@@ -219,8 +219,8 @@ local general_overrides = function()
     -- ║                                 DIAGNOSTICS                                 ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { DiagnosticSignError = { bg = "NONE" } },
-    { DiagnosticSignWarn = { bg = "NONE" } },
+    { DiagnosticSignError = { bg = "NONE", fg = { from = "diffRemoved", attr = "fg", alter = 0.5, contrast = 0.05 } } },
+    { DiagnosticSignWarn = { bg = "NONE", fg = { from = "diffChanged", attr = "fg", alter = 0.5, contrast = 0.1 } } },
     { DiagnosticSignInfo = { bg = "NONE" } },
     { DiagnosticSignHint = { bg = "NONE" } },
 
@@ -402,8 +402,8 @@ local general_overrides = function()
     -- ├──────────────────────────────────┤ NOTE ├──────────────────────────────────┤
     {
       NormalNote = {
-        fg = { from = "Normal", attr = "fg", alter = 0.3 },
-        bg = { from = "Normal", attr = "bg", alter = 1 },
+        fg = { from = "Normal", attr = "fg", alter = 0.5 },
+        bg = { from = "Normal", attr = "bg", alter = 0.6 },
       },
     },
     { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.5, opacity = 0.9, is_note = true } } },
@@ -505,17 +505,7 @@ local general_overrides = function()
     { heading5 = { fg = "#f76328" } },
     { heading6 = { fg = "#fccf3e" } },
 
-    {
-      HoveredCursorline = { bg = { from = "NormalKeyword", attr = "bg", alter = colors.hovered_cursorline_bg_alter } },
-    },
     { InactiveBorderColorLazy = { fg = { from = "WinSeparator", attr = "fg", alter = 0.2 } } },
-
-    { KeywordMatch = { fg = { from = "Function", attr = "fg", alter = 0.1, opacity = 0.4 } } },
-    {
-      KeywordMatchFuzzy = {
-        fg = { from = "KeywordMatch", attr = "fg", alter = -0.1 },
-      },
-    },
 
     -- ├─────────────────────────────────┤ WINBAR ├─────────────────────────────────┤
 
@@ -631,13 +621,13 @@ local plugins_overrides = function()
     {
       BlinkDocNormal = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "NormalFloat", attr = "bg" },
+        bg = { from = "NormalFloat", attr = "bg", alter = 0.25 },
       },
     },
     {
       BlinkDocFloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg" },
-        bg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "BlinkDocNormal", attr = "bg", alter = 0.1 },
+        bg = { from = "NormalFloat", attr = "bg", alter = 0.15 },
       },
     },
 
@@ -668,15 +658,15 @@ local plugins_overrides = function()
       },
     },
     { BlinkCmpLabelMatch = { fg = { from = "constant", attr = "fg", alter = 0.4 } } },
-    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "fg", alter = 0.01 } } },
+    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = 2.5 } } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  GITSIGNS                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { GitSignsAdd = { inherit = "diffAdded", bg = "NONE" } },
-    { GitSignsChange = { inherit = "diffChanged", bg = "NONE" } },
-    { GitSignsDelete = { inherit = "diffRemoved", bg = "NONE" } },
+    { GitSignsAdd = { fg = { from = "diffAdded", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
+    { GitSignsChange = { fg = { from = "diffChanged", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
+    { GitSignsDelete = { fg = { from = "diffRemoved", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
 
     { GitSignsAddInline = { link = "diffAdded" } },
     { GitSignsChangeInline = { link = "diffChanged" } },
@@ -723,6 +713,74 @@ local plugins_overrides = function()
     { NeogitHunkHeaderCursor = { inherit = "NeogitHunkHeaderHighlight" } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
+    -- ║                                  DIFFVIEW                                   ║
+    -- ╙─────────────────────────────────────────────────────────────────────────────╜
+
+    { DiffviewDiffAdd = { inherit = "diffAdded" } },
+    { DiffviewDiffChange = { inherit = "diffChanged" } },
+    { DiffViewDiffDelete = { inherit = "diffRemoved" } },
+
+    {
+      DiffviewDiffText = {
+        fg = { from = "diffChanged", attr = "fg", alter = 0.2, contrast = 0.1 },
+        bg = { from = "diffChanged", attr = "bg", alter = 0.2, contrast = 0.1 },
+      },
+    },
+
+    { DiffviewStatusAdded = { inherit = "GitSignsAdd", bg = "NONE" } },
+    { DiffviewStatusModified = { inherit = "GitSignsChange", bg = "NONE" } },
+    { DiffviewStatusRenamed = { inherit = "GitSignsDelete", bg = "NONE" } },
+    { DiffviewStatusUnmerged = { inherit = "DiffChangedChar" } },
+    { DiffviewStatusUntracked = { inherit = "GitSignsAdd", bg = "NONE" } },
+    { DiffviewStatusDeleted = { inherit = "GitSignsDelete", bg = "NONE" } },
+
+    { DiffviewHash = { fg = { from = "diffAdded", attr = "fg" } } },
+    { DiffviewNonText = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+
+    { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
+    { DiffviewFilePanelDeletions = { inherit = "DiffviewStatusDeleted" } },
+    { DiffviewFilePanelInsertions = { inherit = "DiffviewStatusAdded" } },
+
+    -- NOTE: Highlight group DiffviewDiffAddAsDelete ini gunanya buat ngasih warna merah (efek delete)
+    -- pada teks baru di panel kiri (versi lama), saya buat warna agak berbeda dengan diffRemoved.
+    -- Jadi, meskipun status aslinya "tambah teks" (add), di panel kiri bakal
+    -- kelihatan kayak teks yang hilang biar nggak membingungkan.
+    {
+      DiffviewDiffAddAsDelete = {
+        bg = {
+          from = "GitSignsDelete",
+          attr = "fg",
+          transparency = 0.2,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
+
+    {
+      DiffviewFilePanelPath = {
+        inherit = "String",
+        fg = { from = "String", attr = "fg", transparency = 0.7, color = { from = "Directory", attr = "fg" } },
+      },
+    },
+    { DiffviewFilePanelFileName = { fg = { from = "DiffviewFilePanelPath", attr = "fg", alter = 0.2 } } },
+
+    {
+      DiffviewReference = {
+        inherit = "diffRemoved",
+        fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 },
+        bold = true,
+      },
+    },
+
+    {
+      DiffviewFilePanelSelected = {
+        inherit = "type",
+        fg = { from = "type", attr = "fg", alter = 0.15 },
+        bg = { from = "type", attr = "fg", opacity = 0.15 },
+      },
+    },
+
+    -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  FUGITIVE                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
@@ -762,7 +820,7 @@ local plugins_overrides = function()
         },
       },
     },
-    { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+    { FzfLuaFzfMatchFuzzy = { fg = { from = "BlinkCmpLabelMatch", attr = "fg", alter = 0.1 }, bg = "NONE" } },
     {
       FzfLuaFzfMatch = {
         fg = { from = "BlinkCmpLabelMatch" },
@@ -770,11 +828,19 @@ local plugins_overrides = function()
         bold = true,
       },
     },
+
     {
       FzfLuaSel = {
         fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.4 },
-        bg = { from = "PmenuSel", attr = "bg" },
+        bg = { from = "Keyword", attr = "fg", transparency = 0.15, color = { from = "FzfLuaNormal", attr = "bg" } },
         bold = true,
+      },
+    },
+
+    { -- custom color untuk marker fzf
+      MarkerFzflua = {
+        fg = { from = "Error", attr = "fg", alter = 0.4 },
+        bg = "NONE",
       },
     },
 
@@ -788,12 +854,17 @@ local plugins_overrides = function()
     },
     { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder", bold = true } },
     { FzfLuaPreviewTitle = { inherit = "FzfLuaTitle" } },
-    { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
-
+    { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.3 } } },
     {
       FzfLuaCursorLine = {
         fg = "NONE",
-        bg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
+        bg = {
+          from = "FzfLuaNormal",
+          attr = "bg",
+          alter = 0.3,
+          transparency = 0.8,
+          color = { from = "FzfLuaNormal", bg = "attr" },
+        },
       },
     },
 
@@ -858,7 +929,7 @@ local plugins_overrides = function()
     { SnacksPickerListBorder = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
 
     -- Prompt
-    { SnacksPickerPrompt = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { SnacksPickerPrompt = { bg = { from = "Normal", attr = "bg" } } },
     { SnacksPickerListCursorLine = { inherit = "FzfLuaSel", bold = true } },
 
     { SnacksPickerBorder = { link = "FzfLuaBorder" } },
@@ -958,87 +1029,147 @@ local plugins_overrides = function()
 
     {
       ["@markup.heading.1.markdown"] = {
-        fg = { from = "heading1", attr = "fg", alter = 0.1 },
-        bg = { from = "heading1", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading1", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading1",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.1.markdown_ai"] = {
-        fg = { from = "heading1", attr = "fg", alter = 0.1 },
-        bg = { from = "heading1", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading1", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading1",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
 
     {
       ["@markup.heading.2.markdown"] = {
-        fg = { from = "heading2", attr = "fg", alter = 0.1 },
-        bg = { from = "heading2", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading2", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading2",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.2.markdown_ai"] = {
-        fg = { from = "heading2", attr = "fg", alter = 0.1 },
-        bg = { from = "heading2", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading2", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading2",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
 
     {
       ["@markup.heading.3.markdown"] = {
-        fg = { from = "heading3", attr = "fg", alter = 0.1 },
-        bg = { from = "heading3", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading3", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading3",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.3.markdown_ai"] = {
-        fg = { from = "heading3", attr = "fg", alter = 0.1 },
-        bg = { from = "heading3", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading3", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading3",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.4.markdown"] = {
-        fg = { from = "heading4", attr = "fg", alter = 0.1 },
-        bg = { from = "heading4", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading4", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading4",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.4.markdown_ai"] = {
-        fg = { from = "heading4", attr = "fg", alter = 0.1 },
-        bg = { from = "heading4", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading4", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading4",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.5.markdown"] = {
-        fg = { from = "heading5", attr = "fg", alter = 0.1 },
-        bg = { from = "heading5", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading5", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading5",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.5.markdown_ai"] = {
-        fg = { from = "heading5", attr = "fg", alter = 0.1 },
-        bg = { from = "heading5", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading5", attr = "fg", alter = 0.15 },
+        bg = {
+          from = "heading5",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.6.markdown"] = {
-        fg = { from = "heading6", attr = "fg", alter = 0.1 },
-        bg = { from = "heading6", attr = "fg", opacity = 0.15, is_note = true },
+        fg = { from = "heading6", attr = "fg", alter = 0.2 },
+        bg = {
+          from = "heading6",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
     {
       ["@markup.heading.6.markdown_ai"] = {
-        fg = { from = "heading6", attr = "fg", alter = 0.1 },
-        bg = { from = "heading6", attr = "fg", opacity = 0.15, is_aiprompt = true },
+        fg = { from = "heading6", attr = "fg", alter = 0.15 },
+        bg = {
+          from = "heading6",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
         bold = true,
       },
     },
@@ -1066,7 +1197,13 @@ local plugins_overrides = function()
 
     {
       ["@markup.quote.markdown"] = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.2, opacity = 0.3, is_note = true },
+        fg = {
+          from = "Keyword",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.7,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bg = { from = "NormalNote", attr = "bg" },
         italic = true,
         bold = false,
@@ -1114,7 +1251,7 @@ local plugins_overrides = function()
     },
     {
       RenderMarkdownCodeInline = {
-        fg = { from = "String", attr = "fg", alter = 0.5 },
+        fg = { from = "String", attr = "fg", alter = -0.05, contrast = 0.05 },
         bg = {
           from = "String",
           attr = "fg",
@@ -1241,7 +1378,7 @@ local plugins_overrides = function()
     {
       GrugFarResultsLineNr = {
         fg = { from = "LineNr", attr = "fg", alter = 0.6 },
-        bg = { from = "LineNr", attr = "fg", alter = 0.6, opacity = 0.2 },
+        bg = { from = "LineNr", attr = "fg", alter = 0.6, opacity = 0.1 },
       },
     },
     {
@@ -1278,48 +1415,6 @@ local plugins_overrides = function()
     { NotifyERRORBorder = { inherit = "SnacksNotifierBorderError" } },
     { NotifyERRORTitle = { inherit = "SnacksNotifierTitleError" } },
     { NotifyERRORIcon = { inherit = "SnacksNotifierBorderError" } },
-
-    -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                  DIFFVIEW                                   ║
-    -- ╙─────────────────────────────────────────────────────────────────────────────╜
-
-    { DiffviewStatusAdded = { inherit = "diffAdded", bg = "NONE" } },
-    { DiffviewStatusModified = { inherit = "diffChanged", bg = "NONE" } },
-    { DiffviewStatusRenamed = { inherit = "String" } },
-    { DiffviewStatusUnmerged = { inherit = "DiffChangedChar" } },
-    { DiffviewStatusUntracked = { inherit = "diffAdded", bg = "NONE" } },
-    { DiffviewStatusDeleted = { inherit = "diffRemoved", bg = "NONE" } },
-
-    { DiffviewHash = { fg = { from = "diffAdded", attr = "fg" } } },
-    { DiffviewNonText = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-
-    { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
-    { DiffviewFilePanelDeletions = { inherit = "DiffviewStatusDeleted" } },
-    { DiffviewFilePanelInsertions = { inherit = "DiffviewStatusAdded" } },
-
-    {
-      DiffviewFilePanelPath = {
-        inherit = "String",
-        fg = { from = "String", attr = "fg", transparency = 0.7, color = { from = "Directory", attr = "fg" } },
-      },
-    },
-    { DiffviewFilePanelFileName = { fg = { from = "DiffviewFilePanelPath", attr = "fg", alter = 0.2 } } },
-
-    {
-      DiffviewReference = {
-        inherit = "diffRemoved",
-        fg = { from = "diffRemoved", attr = "fg", alter = 0.1 },
-        bold = true,
-      },
-    },
-
-    {
-      DiffviewFilePanelSelected = {
-        inherit = "type",
-        fg = { from = "type", attr = "fg", alter = 0.15 },
-        bg = { from = "type", attr = "fg", opacity = 0.15 },
-      },
-    },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  COVERAGE                                   ║
@@ -1577,6 +1672,12 @@ local function set_panel_highlight()
     },
     { PanelBottomStNC = { link = "PanelBottomWinSeparator" } },
 
+    {
+      HoveredCursorline = {
+        bg = { from = "PanelSideBackground", attr = "bg", alter = 0.6 },
+      },
+    },
+
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  QUICKFIX                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
@@ -1753,16 +1854,9 @@ local function colorscheme_overrides()
   end
 end
 
----@return { filetype: string, buftype: string, is_float: boolean  }
-local __get_win_opts = function(buf)
-  local filetype, buftype = RUtils.buf.get_bo_buft(buf)
-  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-  return {
-    filetype = filetype,
-    buftype = buftype,
-    is_float = is_float,
-  }
-end
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                 WINDOW DIM                                  ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 local Win = {}
 
@@ -1799,69 +1893,231 @@ local winhighlight_note_panel = table.concat({
   "LineNr:LineNrNote",
   "WinSeparator:WinSeparatorNote",
   "Delimiter:DelimiterNote",
+  "RenderMarkdownH1Bg:@markup.heading.1.markdown",
+  "RenderMarkdownH2Bg:@markup.heading.2.markdown",
+  "RenderMarkdownH3Bg:@markup.heading.3.markdown",
+  "RenderMarkdownH4Bg:@markup.heading.4.markdown",
+  "RenderMarkdownH5Bg:@markup.heading.5.markdown",
+  "RenderMarkdownH6Bg:@markup.heading.6.markdown",
 }, ",")
+
+local winhighlight_ai_panel = table.concat({
+  "Normal:NormalAiPrompt",
+  "NormalNC:NormalAiPrompt",
+  "ColorColumn:NormalAiPrompt",
+  "EndOfBuffer:NormalAiPrompt",
+  "SignColumn:NormalAiPrompt",
+  "NormalFloat:NormalAiPrompt",
+  "FloatBorder:FloatBorderAiPrompt",
+  "FloatTitle:TitleFloatAiPrompt",
+  "CursorLine:CursorLineAiPrompt",
+  "CursorLineNr:CursorLineNrAiPrompt",
+  "Folded:FoldedAiPrompt",
+  "@markup.list.markdown:@markup.list.markdown",
+  "Comment:ErrorMsg",
+  "@Comment:CommentAiPrompt",
+  "Pmenu:PmenuAiPrompt",
+  "Visual:VisualAiPrompt",
+  "NonText:NonTextAiPrompt",
+  "LineNr:LineNrAiPrompt",
+  "WinSeparator:WinSeparatorAiPrompt",
+  "Delimiter:DelimiterAiPrompt",
+  "RenderMarkdownH1Bg:@markup.heading.1.markdown_ai",
+  "RenderMarkdownH2Bg:@markup.heading.2.markdown_ai",
+  "RenderMarkdownH3Bg:@markup.heading.3.markdown_ai",
+  "RenderMarkdownH4Bg:@markup.heading.4.markdown_ai",
+  "RenderMarkdownH5Bg:@markup.heading.5.markdown_ai",
+  "RenderMarkdownH6Bg:@markup.heading.6.markdown_ai",
+}, ",")
+
+Win.filetype_backlist_winhighlights = {
+  ["snacks_picker_input"] = true,
+  ["qfbookmark"] = true,
+  ["wayfinder"] = true,
+}
 
 Win.filetype_winhighlights = {
   ["qf"] = true,
   ["Outline"] = true,
   ["trouble"] = true,
-  -- ["qfbookmark"] = true,
+  ["grug-far"] = true,
+  ["dbui"] = true,
+  ["atone"] = true,
+  -- ["TelescopePrompt"] = true,
 
-  --   "packer",
   --   "flutterToolsOutline",
   --   "undotree",
-  --   "dbui",
   --   "neotest-summary",
   --   "pr",
-  --
-  --   "dapui_scopes",
-  --   "dapui_stacks",
-  --   "dapui_watches",
-  --   "dapui_breakpoints",
-  --   "dap-repl",
-  -- }
+
+  ["dap-repl"] = true,
+  ["dap-variables"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
+}
+
+Win.cursorline_backlist = {
+  ["orgagenda"] = true,
+  ["grug-far"] = true,
+  ["noice"] = true,
+  ["trouble"] = true,
+
+  ["DiffviewFileHistory"] = true,
+  ["DiffviewFiles"] = true,
+
+  ["codecompanion"] = true,
+  ["wayfinder"] = true,
+
+  ["lazy"] = true,
+
+  ["dap-repl"] = true,
+  ["dap-variables"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
 }
 
 Win.note_winhighlights = {
   ["org"] = true,
+  ["markdown"] = true,
+  ["octo"] = true,
 }
 
-local set_winhighlights = function(filetype)
-  if Win.filetype_winhighlights[filetype] then
-    wo.winhighlight = winhighlight_bottom_panel
-  end
+Win.aiprompt_winhighlights = {
+  ["codecompanion"] = true,
+}
 
+-- ├─────────────────────────────────┤ HELPER ├─────────────────────────────────┤
+
+---@return { filetype: string, buftype: string, is_float: boolean  }
+local __get_win_opts = function()
+  local filetype, buftype = RUtils.buf.get_bo_buft()
+  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+  return {
+    filetype = filetype,
+    buftype = buftype,
+    is_float = is_float,
+  }
+end
+
+local get_winhighlight_for_filetype = function(filetype)
+  if Win.filetype_winhighlights[filetype] then
+    return winhighlight_bottom_panel
+  end
   if Win.note_winhighlights[filetype] then
-    wo.winhighlight = winhighlight_note_panel
+    return winhighlight_note_panel
+  end
+  if Win.aiprompt_winhighlights[filetype] then
+    return winhighlight_ai_panel
+  end
+  return nil
+end
+
+local set_winhighlights = function(filetype)
+  local hl = get_winhighlight_for_filetype(filetype)
+  if hl then
+    wo.winhighlight = hl
+    vim.w.rutils_winhighlight_owner = filetype
+  else
+    if vim.w.rutils_winhighlight_owner ~= nil then
+      wo.winhighlight = ""
+      vim.w.rutils_winhighlight_owner = nil
+    end
   end
 end
 
+-- ├──────────────────────────────┤ FOCUS OR NOT ├──────────────────────────────┤
+
 local function focus(ctx)
   ctx = ctx or {}
-  local cur_winopts = __get_win_opts(ctx.buf and ctx.buf)
+  local cur_winopts = __get_win_opts()
   local filetype = cur_winopts.filetype
 
-  -- if filetype == "" and Win.filetype_winhighlights[filetype] ~= true then
-  --   wo.winhighlight = ""
-  -- end
+  if Win.filetype_backlist_winhighlights[filetype] then
+    return
+  end
 
-  -- if ctx.event then
-  --   RUtils.info("buf: " .. ctx.buf .. " event: " .. ctx.event .. " filetype: " .. vim.bo[ctx.buf].filetype)
-  -- end
+  if cur_winopts.is_float then
+    local hl = get_winhighlight_for_filetype(filetype)
+    if hl then
+      wo.winhighlight = hl
+      vim.w.rutils_winhighlight_owner = filetype
+      return
+    end
+    if not vim.w.is_overlook_popup then
+      wo.winhighlight = ""
+    end
+    return
+  end
 
   set_winhighlights(filetype)
 end
 
 local function blurred(ctx)
   ctx = ctx or {}
-  local cur_winopts = __get_win_opts(ctx.buf and ctx.buf)
+  local cur_winopts = __get_win_opts()
   local filetype = cur_winopts.filetype
 
-  -- if filetype == "" and Win.filetype_winhighlights[filetype] ~= true then
-  --   wo.winhighlight = ""
-  -- end
-
   set_winhighlights(filetype)
+end
+
+-- ├───────────────────────────────┤ SET CURSOR ├───────────────────────────────┤
+
+local function set_cursorline(ctx, active)
+  ctx = ctx or {}
+  local cur_winopts = __get_win_opts()
+  local filetype = cur_winopts.filetype
+
+  if Win.cursorline_backlist[filetype] then
+    active = false
+  end
+
+  if vim.w.is_overlook_popup then
+    active = false
+  end
+
+  wo.cursorline = active
+end
+
+-- ├───────────────────────────────┤ BUF EVENT ├────────────────────────────┤
+
+local function buf_enter(ctx)
+  focus(ctx)
+  set_cursorline(ctx, true)
+end
+
+local function buf_leave(ctx)
+  focus(ctx)
+  set_cursorline(ctx, false)
+end
+
+local function win_enter(ctx)
+  focus(ctx)
+  set_cursorline(ctx, true)
+end
+
+local function win_leave(ctx)
+  blurred(ctx)
+  set_cursorline(ctx, true)
+end
+
+local function insert_enter(ctx)
+  set_cursorline(ctx, false)
+end
+
+local function insert_leave(ctx)
+  set_cursorline(ctx, true)
+end
+
+local function focus_gain(ctx)
+  set_cursorline(ctx, true)
+end
+
+local function focus_lost(ctx)
+  blurred(ctx)
 end
 
 local function user_highlights()
@@ -1871,45 +2127,94 @@ local function user_highlights()
   colorscheme_overrides()
 end
 
-local function win_focus(ctx)
-  focus(ctx)
-end
-
-local function win_blurred(ctx)
-  blurred(ctx)
-end
+-- ├─────────────────────────────────┤ AUGRUP ├─────────────────────────────────┤
 
 RUtils.map.augroup("UserHighlights", {
   event = "ColorScheme",
   command = function()
     user_highlights()
   end,
-}, {
-  event = { "BufRead" },
+})
+
+RUtils.map.augroup("UserDimWindow", {
+  event = "InsertEnter",
   pattern = "*",
   command = function(ctx)
-    win_focus(ctx)
+    insert_enter(ctx)
   end,
 }, {
-  event = { "BufEnter" },
+  event = "InsertLeave",
   pattern = "*",
   command = function(ctx)
-    win_focus(ctx)
+    insert_leave(ctx)
   end,
 }, {
-  event = { "VimEnter", "FocusGained", "WinEnter" },
+  event = "BufRead",
   pattern = "*",
   command = function(ctx)
-    win_focus(ctx)
+    vim.defer_fn(function()
+      buf_enter(ctx)
+    end, 1)
   end,
 }, {
-  event = { "WinLeave", "FocusLost", "BufLeave" },
+  event = "BufEnter",
   pattern = "*",
   command = function(ctx)
-    win_blurred(ctx)
+    vim.defer_fn(function()
+      buf_enter(ctx)
+    end, 1)
   end,
 }, {
-  event = { "VimResized" },
+  event = "BufLeave",
+  pattern = "*",
+  command = function(ctx)
+    vim.defer_fn(function()
+      buf_leave(ctx)
+    end, 1)
+  end,
+}, {
+  event = "WinNew",
+  pattern = "*",
+  command = function()
+    wo.winhighlight = ""
+    vim.w.rutils_winhighlight_owner = nil
+  end,
+}, {
+  event = "WinEnter",
+  pattern = "*",
+  command = function(ctx)
+    vim.defer_fn(function()
+      win_enter(ctx)
+    end, 1)
+  end,
+}, {
+  event = "WinLeave",
+  pattern = "*",
+  command = function(ctx)
+    win_leave(ctx)
+  end,
+}, {
+  event = "VimEnter",
+  pattern = "*",
+  command = function(ctx)
+    vim.defer_fn(function()
+      win_enter(ctx)
+    end, 1)
+  end,
+}, {
+  event = "FocusGained",
+  pattern = "*",
+  command = function(ctx)
+    focus_gain(ctx)
+  end,
+}, {
+  event = "FocusLost",
+  pattern = "*",
+  command = function(ctx)
+    focus_lost(ctx)
+  end,
+}, {
+  event = "VimResized",
   pattern = "*",
   command = function()
     vim.cmd "wincmd ="

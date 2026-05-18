@@ -1,4 +1,5 @@
 local toggle_state = false
+local j = nil
 
 return {
   -- OIL.NVIM
@@ -404,7 +405,7 @@ return {
           end,
 
           open_terminal = function()
-            RUtils.terminal { cwd = RUtils.root() }
+            RUtils.terminal.open_terminal_in_filetree(RUtils.root())
           end,
 
           toggle_open_preview = function(state)
@@ -526,15 +527,13 @@ return {
             ["w"] = "noop",
             ["l"] = "noop",
 
-            ["<c-o>"] = "fzmark",
-            ["<a-t>"] = "open_terminal",
-            ["<a-g>"] = "open_lazygit",
-            ["<a-d>"] = "open_lazydocker",
+            ["<a-o>"] = "fzmark",
+            ["<a-T>"] = "open_terminal",
 
             ["K"] = "show_file_details",
 
             ["<2-LeftMouse>"] = "open",
-            ["<a-q>"] = "open_search_cd_and_grep",
+            ["<a-G>"] = "open_search_cd_and_grep",
             ["<BS>"] = "parent_or_close",
             ["P"] = {
               "toggle_open_preview",

@@ -17,6 +17,10 @@ local function is_in_terminal()
   return os.getenv "TERMINAL"
 end
 
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                               OPEN WITH TMUX                                ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
+
 local function open_with_tmux(cwd_bookmark)
   local echocwd = Command("cat"):arg(cwd_bookmark):stdout(Command.PIPED):spawn()
 
@@ -50,6 +54,10 @@ local function open_with_tmux(cwd_bookmark)
 
   return output
 end
+
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                              OPEN WITH WEZTERM                              ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 local function open_with_wezterm(cwd_bookmark)
   local echocwd = Command("cat"):arg(cwd_bookmark):stdout(Command.PIPED):spawn()

@@ -286,6 +286,7 @@ set_delta() {
 
   # Minus (deleted)
   sed -i -e "s/^minus-style.*/minus-style = \"$(theme_get delta_hunk_minus_fg)\" bold \"$(theme_get delta_hunk_minus_bg)\"/g" "$delta_path"
+  sed -i -e "s/^minus-emph-style.*/minus-emph-style = \"$(theme_get delta_hunk_emp_minus_fg)\" bold \"$(theme_get delta_hunk_emp_minus_bg)\"/g" "$delta_path"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -454,6 +455,7 @@ set_fzf() {
   replace_in "$fzf_config" "color_gutter" "$(theme_get fzf_gutter)"
   replace_in "$fzf_config" "color_pointer" "$(theme_get fzf_pointer)"
   replace_in "$fzf_config" "color_header" "$(theme_get fzf_header)"
+  replace_in "$fzf_config" "color_marker" "$(theme_get fzf_marker)"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────

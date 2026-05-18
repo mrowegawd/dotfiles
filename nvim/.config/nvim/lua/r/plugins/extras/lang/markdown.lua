@@ -131,26 +131,36 @@ return {
       },
     },
     opts = function()
-      local H = require "r.settings.highlights"
-      vim.schedule(function()
-        RUtils.map.augroup("HiMarkdownRender", {
-          event = "FileType",
-          pattern = "codecompanion",
-          command = function(ctx)
-            if vim.bo[ctx.buf].filetype == "codecompanion" then
-              H.plugin("RenderMarkdownH2", {
-                { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown_ai" } },
-                { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown_ai" } },
-                { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown_ai" } },
-                { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown_ai" } },
-                { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown_ai" } },
-                { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown_ai" } },
-              })
-              return
-            end
-          end,
-        })
-      end)
+      -- local H = require "r.settings.highlights"
+      -- RUtils.map.augroup("HiMarkdownRender", {
+      --   event = "FileType",
+      --   pattern = "codecompanion",
+      --   command = function(ctx)
+      --     if vim.bo[ctx.buf].filetype == "codecompanion" then
+      --       H.plugin("RenderMarkdownAi", {
+      --         { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown_ai" } },
+      --         { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown_ai" } },
+      --         { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown_ai" } },
+      --         { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown_ai" } },
+      --         { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown_ai" } },
+      --         { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown_ai" } },
+      --       })
+      --       return
+      --     end
+      --
+      --     if vim.bo.filetype == "markdown" then
+      --       RUtils.info "asdf"
+      --     end
+      --     H.plugin("RenderMarkdown", {
+      --       { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown" } },
+      --       { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown" } },
+      --       { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown" } },
+      --       { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown" } },
+      --       { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown" } },
+      --       { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown" } },
+      --     })
+      --   end,
+      -- })
 
       return {
         bullet = { icons = { "", "•", "", "-", "-" } },

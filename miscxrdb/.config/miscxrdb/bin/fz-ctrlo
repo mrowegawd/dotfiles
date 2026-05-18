@@ -772,6 +772,10 @@ tmux_rename_window() {
   tmux command-prompt -I "/#{window_name}/" "rename-window '%%'"
 }
 
+tmux_disable_auto_resize_workspaces() {
+  "$HOME/.config/miscxrdb/bin/tm-toggle-pane" "toggle_disable_auto_resize_pane"
+}
+
 # +----------------------------------------------------------+
 # |                         POMODORO                         |
 # +----------------------------------------------------------+
@@ -833,6 +837,7 @@ callme() {
  tmux: clear main pane id
  tmux: kill/clear other panes
  tmux: reset workspace pane size
+ tmux: disable auto resize
  Todo: show DUMMY and CLEAR project todo
  Todo: show PRIORITAS
  Todo: show PROGRESS
@@ -880,6 +885,7 @@ EOF
   "tmux: clear main pane id") tmux_clear_main_id_workspace ;;
   "tmux: kill/clear other panes") tmux_kill_others_pane ;;
   "tmux: reset workspace pane size") tmux_reset_workspaces ;;
+  "tmux: disable auto resize") tmux_disable_auto_resize_workspaces ;;
   "Todo: show DUMMY and CLEAR project todo") todo_set_dummy ;;
   "Todo: show PROGRESS") todo_show_progress ;;
   "pomodoro: 1 hour") pomodoro_1hour_mode ;;

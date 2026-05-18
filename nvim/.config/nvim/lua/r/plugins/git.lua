@@ -595,7 +595,15 @@ return {
   -- DIFFVIEW
   {
     "dlyongemallo/diffview.nvim",
-    event = "LazyFile",
+    cmd = {
+      "DiffviewToggleFiles",
+      "DiffviewOpen",
+      "DiffviewClose",
+      "DiffviewFileHistory",
+      "DiffviewFocusFiles",
+      "DiffviewLog",
+      "DiffviewRefresh",
+    },
     keys = {
       { "<LocalLeader>qc", "", desc = "conflict", ft = { "DiffviewFiles", "DiffviewFileHistory" } },
       {

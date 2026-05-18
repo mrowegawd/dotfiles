@@ -196,6 +196,7 @@ function M.smart_split()
 end
 
 local Terminal = require("toggleterm.terminal").Terminal
+local Ergoterm = require "ergoterm"
 
 local calcure = Terminal:new {
   cmd = "calcure",
@@ -221,82 +222,35 @@ local newsboat = Terminal:new {
   float_opts = { width = vim.o.columns - 5, height = vim.o.lines - 5 },
 }
 
-local btop = Terminal:new {
-  cmd = "btop",
-  hidden = true,
-  display_name = ("btop"):upper(),
-  direction = "float",
-  start_in_insert = true,
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
-}
+local current_term = nil
+local term_base = nil
+local toggle_term = function(cmds, direction)
+  direction = direction or "below"
 
-local resterm = Terminal:new {
-  cmd = "resterm",
-  hidden = true,
-  display_name = ("resterm"):upper(),
-  direction = "float",
-  start_in_insert = true,
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
-}
+  if not term_base or (cmds.name ~= current_term) then
+    local term_opts = vim.tbl_deep_extend("force", cmds, {
+      layout = direction,
+    })
+    term_base = Ergoterm:new(term_opts)
+    current_term = cmds.name
+  end
 
-local lazydocker = Terminal:new {
-  cmd = "lazydocker",
-  hidden = true,
-  display_name = ("lazydocker"):upper(),
-  direction = "float",
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
-}
+  RUtils.info(vim.inspect(cmds))
 
-local rkill = Terminal:new {
-  -- to run alias, must have `source` the zshrc file
-  cmd = "rkll",
-  hidden = true,
-  display_name = ("r_kill"):upper(),
-  direction = "float",
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
-  close_on_exit = false,
-}
+  return term_base
+end
 
 function M.float_calcure()
   return calcure:toggle()
 end
 
-local base_term = nil
-
-local open_term_with_singleton = function(is_new, direction)
-  direction = direction or "float"
-  is_new = is_new or false
-
-  if not base_term and not is_new then
-    local terms = require "ergoterm"
-    base_term = terms.Terminal:new {
-      name = "Notes Wiki",
-      cmd = "cd ~/Dropbox/neorg/; nvim",
-      layout = direction,
-    }
-  end
-
-  return base_term
-end
-
 function M.float_note()
-  local t = open_term_with_singleton()
+  local t = toggle_term({
+    name = "Notes Wiki",
+    dir = "~/Dropbox/neorg/",
+    cmd = " nvim",
+  }, "float")
+
   if t then
     t:toggle()
   end
@@ -307,19 +261,75 @@ function M.float_newsboat()
 end
 
 function M.float_btop()
-  return btop:toggle()
+  local t = toggle_term({
+    name = "btop",
+    cmd = "btop",
+  }, "float")
+
+  if t then
+    t:toggle()
+  end
 end
 
 function M.float_resterm()
-  return resterm:toggle()
+  local t = toggle_term({
+    name = "resterm",
+    cmd = "resterm",
+  }, "float")
+
+  if t then
+    t:toggle()
+  end
 end
 
 function M.float_rkill()
-  return rkill:toggle()
+  local t = toggle_term({
+    name = "Rkill",
+    cmd = [[bash -i -c "r_kill"]],
+  }, "float")
+
+  if t then
+    t:toggle()
+  end
 end
 
 function M.lazydocker()
-  return lazydocker:toggle()
+  local t = toggle_term({
+    name = "Lazydocker",
+    cmd = "lazydocker",
+  }, "float")
+
+  if t then
+    t:toggle()
+  end
+end
+
+function M.lazygit()
+  local t = toggle_term({
+    name = "Lazygit",
+    cmd = [[lazygit --use-config-file=$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml]],
+  }, "float")
+
+  if t then
+    t:toggle()
+  end
+end
+
+function M.open_terminal_in_filetree(cwd)
+  cwd = cwd or nil
+  local opts = {}
+
+  if cwd then
+    opts.cwd = cwd
+    opts.name = "Path: " .. vim.fn.fnamemodify(cwd, ":t")
+  end
+
+  vim.g.open_terminal_in_filetree = true
+
+  local t = toggle_term(opts, "float")
+  if t then
+    t:toggle()
+  end
 end
 
 return M

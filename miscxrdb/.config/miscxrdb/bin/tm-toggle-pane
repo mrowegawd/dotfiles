@@ -37,6 +37,7 @@ fi
 
 GET_TOTAL_ACTIVE_PANES=$(tmux list-panes -t "$ORIGIN_TARGET" | wc -l)
 PATH_PANE_COLLECT_JSON="/tmp/tmux-main-layout-workspaces.json"
+IS_AUTO_RESIZE_PANE="/tmp/disable-auto-resize-tmu"
 
 CURRENT_SESSION=""
 WINDOW_ID=""
@@ -304,8 +305,22 @@ open_split() {
 auto_resize_pane() {
   FILE_MANAGER_PANE_ID=$(__get_file_manager_pane_id "$ORIGIN_SESSION" "$ORIGIN_WINDOW")
   if __is_pane_id_exists "$FILE_MANAGER_PANE_ID"; then
-    tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
+    if [ ! -f "$IS_AUTO_RESIZE_PANE" ]; then
+      tmux resize-pane -t "$FILE_MANAGER_PANE_ID" -x "$FIXED_RESIZE_TMUX_LEFT_OR_RIGHT"
+    fi
   fi
+}
+
+toggle_disable_auto_resize_pane() {
+  local msg_notify
+  if [ ! -f "$IS_AUTO_RESIZE_PANE" ]; then
+    touch "$IS_AUTO_RESIZE_PANE"
+    msg_notify="Auto Resize Disabled"
+  else
+    rm "$IS_AUTO_RESIZE_PANE"
+    msg_notify="Auto Resize Enabled"
+  fi
+  __send_notify "workspaces_notify" "$msg_notify"
 }
 
 reset_pane_workspaces() {

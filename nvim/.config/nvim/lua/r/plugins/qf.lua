@@ -57,7 +57,7 @@ return {
   {
     dir = "~/.local/src/nvim_plugins/qfbookmark",
     -- "MadKuntilanak/qfbookmark",
-    event = "VeryLazy",
+    event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",

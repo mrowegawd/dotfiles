@@ -10,21 +10,21 @@ file-renamed-label = [R]
 # file-decoration-style = "#606018" overline
 file-style = syntax bold
 hunk-header-decoration-style = none
-hunk-header-style = "#cdbb95" bold "#34323b"
+hunk-header-style = "#bc8a4c" bold "#2a241c"
 line-numbers = true
 line-numbers-left-format = "▎{nm:>1} ▎"
 # line-numbers-left-style = green
-line-numbers-minus-style = "#a64a46"
-line-numbers-plus-style = "#18a175"
+line-numbers-minus-style = "#c34e46"
+line-numbers-plus-style = "#30bf82"
 line-numbers-right-format =  "▎{np:>1} ▎"
 # line-numbers-right-style = green
-line-numbers-zero-style = "#2d2d45"
+line-numbers-zero-style = "#202020"
 
-minus-emph-style = "#d17568" bold "#3d2c29"
-minus-style = "#a64a46" bold "#2c2230"
+minus-emph-style = "#ff8c7e" bold "#261b1a"
+minus-style = "#c34e46" bold "#261b1a"
 
-plus-emph-style = "#2bffd3" bold "#1d2b35"
-plus-style = "#18a175" bold "#1d2b35"
+plus-emph-style = "#56ffea" bold "#182620"
+plus-style = "#30bf82" bold "#182620"
 
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse

@@ -5,28 +5,28 @@
 [indicator]
 
 preview         = {}
-current         = { bg = "#27273c" }
-parent          = { bg = "#27273c" }
+current         = { bg = "#1d1d1d" }
+parent          = { bg = "#1d1d1d" }
 padding         = { open = "▐", close = "▌" }
 
 [mgr]
 
-cwd             = { fg = "#4e4e78" }
+cwd             = { fg = "#393939" }
 
 # Find
-find_keyword    = { fg = "#292434", bg = "#e991b6", italic = true, bold = true }
+find_keyword    = { fg = "#2a241c", bg = "#ffff99", italic = true, bold = true }
 find_position   = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_copied   = { fg = "#ffc215", bg = "#ffc215" }
-marker_cut      = { fg = "#d8ffd1", bg = "#d8ffd1" }
-marker_marked   = { fg = "#97c6ff", bg = "#455a7d" }
-marker_selected = { fg = "#8b4141", bg = "#8b4141" }
+marker_copied   = { fg = "#ffe03b", bg = "#ffe03b" }
+marker_cut      = { fg = "#c7e18a", bg = "#c7e18a" }
+marker_marked   = { fg = "#ffea95", bg = "#7e6b44" }
+marker_selected = { fg = "#a0433c", bg = "#a0433c" }
 
 # Count
-count_selected  = { fg = "#8b4141", bg = "#8b4141" }
-count_copied    = { fg = "#684b08", bg = "#ffc215" }
-count_cut       = { fg = "#537251", bg = "#d8ffd1" }
+count_selected  = { fg = "#a0433c", bg = "#a0433c" }
+count_copied    = { fg = "#6e5617", bg = "#ffe03b" }
+count_cut       = { fg = "#4d5735", bg = "#c7e18a" }
 
 # Border
 border_symbol   = "│"
@@ -34,8 +34,8 @@ border_style    = { fg = "#1c1c1c" }
 
 [tabs]
 
-active          = { fg = "#cba6f7", bg = "#1e1e2e", bold = true }
-inactive        = { fg = "#1e1e2e", bg = "#46466c", bold = true }
+active          = { fg = "#8fbfdc", bg = "#151515", bold = true }
+inactive        = { fg = "#151515", bg = "#323232", bold = true }
 # sep_inner     = { open = "", close = "" }
 # sep_outer     = { open = "", close = "" }
 sep_inner       = { open = "", close = "" }
@@ -45,14 +45,14 @@ sep_outer       = { open = "", close = "" }
 
 [mode]
 
-normal_main     = { fg = "#7e7ec1", bg = "#242437", bold = true }
-normal_alt      = { fg = "#616195", bg = "#222233" }
+normal_main     = { fg = "#585858", bg = "#191919", bold = true }
+normal_alt      = { fg = "#444444", bg = "#171717" }
 
-select_main     = { fg = "#bdb1c3", bg = "#58535b", bold = true }
-select_alt      = { fg = "#7e7682", bg = "#3f3b41" }
+select_main     = { fg = "#9c815d", bg = "#493c2b", bold = true }
+select_alt      = { fg = "#68563e", bg = "#342b1f" }
 
-unset_main      = { fg = "#455a7d", bg = "#c0fcff", bold = true }
-unset_alt       = { fg = "#1b2432", bg = "#89b4fa" }
+unset_main      = { fg = "#7e6b44", bg = "#ffffbd", bold = true }
+unset_alt       = { fg = "#322b1b", bg = "#fbd587" }
 
 # : Status {{{
 
@@ -113,7 +113,7 @@ hovered         = { underline = true }
 
 [which]
 
-mask            = { bg = "#1e1e2e" }
+mask            = { bg = "#151515" }
 cand            = { fg = "#83a598" }
 rest            = { fg = "#928374" }
 desc            = { fg = "#fe8019" }
@@ -130,7 +130,7 @@ separator_style = { fg = "#504945" }
 on              = { fg = "#fe8019" }
 exec            = { fg = "#83a598" }
 desc            = { fg = "#928374" }
-hovered         = { bg = "#4e4e78", bold = true }
+hovered         = { bg = "#393939", bold = true }
 footer          = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -158,12 +158,12 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#878ca5" },
-  { name = "*/", fg = "#89b4fa" },
+  { name = "*", fg = "#949487" },
+  { name = "*/", fg = "#8fbfdc" },
 
   # Fallback
-  { url = "*", fg = "#878ca5" },
-  { url = "*/", fg = "#89b4fa" },
+  { url = "*", fg = "#949487" },
+  { url = "*/", fg = "#8fbfdc" },
 ]
 
 # : }}}

@@ -21,6 +21,11 @@ return {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
+      triggers = {
+        -- { "<auto>", mode = "nxso" },
+        { "<Leader>", mode = "nxso" },
+        { "<Localleader>", mode = "nxso" },
+      },
       icons = {
         rules = {
           { plugin = "fzf-lua", icon = "💊", name = "fzf" },
@@ -30,7 +35,7 @@ return {
           -- { plugin = "overseer.nvim", "󰜎", color = "red" },
           { pattern = "note", icon = "📓" },
           { plugin = "todo-comments.nvim", cat = "filetype", name = "TODO" },
-          { pattern = "help", icon = " ", color = "gray" },
+          { pattern = "help", icon = " ", colorh = "gray" },
           { pattern = "insert", icon = "󰀧 ", color = "green" },
           { pattern = "picker", icon = "💊" },
           { pattern = "projects", icon = " ", color = "blue" },

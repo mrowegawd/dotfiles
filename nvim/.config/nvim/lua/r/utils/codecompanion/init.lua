@@ -62,7 +62,7 @@ local function setup_plugin()
     interactions = {
       -- Chat
       chat = {
-        adapter = "ollama_qwen3_8b",
+        adapter = "ollama_qwen25_7b",
         -- roles = {
         --   user = "Me",
         --   -- llm = ui.llm_role,

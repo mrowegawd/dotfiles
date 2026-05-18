@@ -230,7 +230,7 @@ return {
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
           ["pointer"] = { "fg", "Keyword" },
-          ["marker"] = { "fg", "KeywordMatch" },
+          ["marker"] = { "fg", "MarkerFzflua" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FzfLuaBorder" },

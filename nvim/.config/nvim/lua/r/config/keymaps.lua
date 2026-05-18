@@ -40,7 +40,7 @@ RUtils.map.vnoremap("<Esc>", function()
   return "<esc>"
 end, silent)
 
-RUtils.map.inoremap("hh", "<C-c>", silent)
+RUtils.map.inoremap("hh", "<Esc>", silent)
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                    FOLD                                     ╏
@@ -164,9 +164,9 @@ RUtils.map.nnoremap("<Leader>ob", function() RUtils.cmd.open_with "browser" end,
 RUtils.map.vnoremap("<Leader>ob", function() RUtils.cmd.open_with "browser" end, { desc = "Open: lookup in browser(visual)" })
 
 --stylua: ignore
-RUtils.map.nnoremap("<Leader>oB", function() RUtils.cmd.open_with "mpv or svix" end, { desc = "Open: media" })
+RUtils.map.nnoremap("<Leader>oB", function() RUtils.cmd.open_with "mpv or svix" end, { desc = "Open: open-with" })
 --stylua: ignore
-RUtils.map.vnoremap("<Leader>oB", function() RUtils.cmd.open_with "mpv or svix" end, { desc = "Open: media (visual)" })
+RUtils.map.vnoremap("<Leader>oB", function() RUtils.cmd.open_with "mpv or svix" end, { desc = "Open: open-with (visual)" })
 
 --stylua: ignore
 RUtils.map.nnoremap("<Leader>oe", function() RUtils.cmd.open_with "go to file" end, { desc = "Open: under cursor" })
@@ -391,11 +391,6 @@ RUtils.map.nmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
 
 Snacks.toggle.zoom():map "<Leader>mm"
-
---stylua: ignore
-RUtils.map.nnoremap("<a-W>", function() RUtils.terminal.float_note() end, { desc = "Misc: open notes" })
---stylua: ignore
-RUtils.map.tnoremap("<a-W>", function() RUtils.terminal.float_note() end, { desc = "Misc: open notes (terminal)" })
 
 RUtils.map.nnoremap("<Leader>n", function()
   -- convert into lua: "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
@@ -672,13 +667,27 @@ RUtils.map.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (vi
 --stylua: ignore
 RUtils.map.nnoremap("<a-B>", function() RUtils.terminal.float_btop() end, { desc = "CTRL_o: btop" })
 --stylua: ignore
+RUtils.map.tnoremap("<a-B>", function() RUtils.terminal.float_btop() end, { desc = "CTRL_o: btop (terminal)" })
+--stylua: ignore
 RUtils.map.nnoremap("<a-Z>", function() RUtils.terminal.float_resterm() end, { desc = "CTRL_o: resterm" })
 --stylua: ignore
-RUtils.map.xnoremap("<a-B>", function() RUtils.terminal.float_btop() end, { desc = "CTRL_o: btop" })
+RUtils.map.tnoremap("<a-Z>", function() RUtils.terminal.float_resterm() end, { desc = "CTRL_o: resterm (terminal)" })
 --stylua: ignore
 RUtils.map.nnoremap("<a-C>", function() RUtils.terminal.float_rkill() end, { desc = "CTRL_o: rkill" })
 --stylua: ignore
-RUtils.map.xnoremap("<a-C>", function() RUtils.terminal.float_rkill() end, { desc = "CTRL_o: rkill" })
+RUtils.map.tnoremap("<a-C>", function() RUtils.terminal.float_rkill() end, { desc = "CTRL_o: rkill (terminal)" })
+--stylua: ignore
+RUtils.map.nnoremap("<a-D>", function() RUtils.terminal.lazydocker() end, { desc = "CTRL_o: lazydocker" })
+--stylua: ignore
+RUtils.map.tnoremap("<a-D>", function() RUtils.terminal.lazydocker() end, { desc = "CTRL_o: lazydocker (terminal)" })
+--stylua: ignore
+RUtils.map.nnoremap("<a-G>", function() RUtils.terminal.lazygit() end, { desc = "CTRL_o: lazygit" })
+--stylua: ignore
+RUtils.map.tnoremap("<a-G>", function() RUtils.terminal.lazygit() end, { desc = "CTRL_o: lazygit (terminal)" })
+--stylua: ignore
+RUtils.map.nnoremap("<a-W>", function() RUtils.terminal.float_note() end, { desc = "CTRL_o: open notes" })
+--stylua: ignore
+RUtils.map.tnoremap("<a-W>", function() RUtils.terminal.float_note() end, { desc = "CTRL_o: open notes (terminal)" })
 
 local get_right_pane_id_wez = function()
   local result = vim.system({ "wezterm", "cli", "get-pane-direction", "right" }, { text = true }):wait()

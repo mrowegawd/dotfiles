@@ -266,9 +266,28 @@ return {
         end,
 
         providers = {
-          snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
-          path = { opts = { show_hidden_files_by_default = true } },
+          lsp = {
+            name = "lsp",
+            module = "blink.cmp.sources.lsp",
+            fallbacks = {},
+            score_offset = 5,
+            transform_items = function(_, items)
+              local cmp_kind = require("blink.cmp.types").CompletionItemKind
+              return vim.tbl_filter(function(item)
+                return item.kind ~= cmp_kind.Text and item.kind ~= cmp_kind.Snippet
+              end, items)
+            end,
+          },
+          snippets = {
+            score_offset = -5,
+            opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } },
+          },
+          path = {
+            score_offset = -3,
+            opts = { show_hidden_files_by_default = true },
+          },
           buffer = {
+            score_offset = -10,
             opts = {
               get_bufnrs = function()
                 if vim.tbl_contains({ "/", "?", ":", "@" }, vim.fn.getcmdtype()) then
@@ -287,18 +306,6 @@ return {
                   :totable()
               end,
             },
-          },
-          lsp = {
-            name = "lsp",
-            module = "blink.cmp.sources.lsp",
-            fallbacks = {},
-            transform_items = function(_, items)
-              local cmp_kind = require("blink.cmp.types").CompletionItemKind
-              return vim.tbl_filter(function(item)
-                -- Don't show lsp text and snippets
-                return item.kind ~= cmp_kind.Text and item.kind ~= cmp_kind.Snippet
-              end, items)
-            end,
           },
           git = {
             module = "blink-cmp-git",
@@ -322,8 +329,15 @@ return {
       },
       signature = {
         enabled = true,
-        -- window = { border = "rounded", winhighlight = "Normal:Normal,FloatBorder:BlinkDocFloatBorder" },
         window = { border = "rounded" },
+      },
+      fuzzy = {
+        implementation = "rust",
+        sorts = {
+          "exact",
+          "score",
+          "sort_text",
+        },
       },
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)

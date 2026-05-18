@@ -1,9 +1,9 @@
 local function fail(s, ...)
-  ya.notify { title = "Bookmark", content = string.format(s, ...), timeout = 5, level = "error" }
+  ya.notify { title = "Bookmark-Cycle", content = string.format(s, ...), timeout = 5, level = "error" }
 end
 
 local function notify(s, ...)
-  ya.notify { title = "Bookmark", content = string.format(s, ...), timeout = 2, level = "info" }
+  ya.notify { title = "Bookmark-Cycle", content = string.format(s, ...), timeout = 2, level = "info" }
 end
 
 local home = os.getenv "HOME"

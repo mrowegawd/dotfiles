@@ -351,7 +351,6 @@ local function get_extracted_cmds(fzf_lua_, opts, only_key, is_dock)
 end
 
 function M.open_cmd_bulk_key_only(commands, opts)
-  RUtils.info "oke lah bro"
   local fzf_lua_ = require "fzf-lua"
 
   local cmds = get_extracted_cmds(fzf_lua_, commands, true)

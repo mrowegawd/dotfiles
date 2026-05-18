@@ -366,22 +366,18 @@ return {
   {
     "XXiaoA/atone.nvim",
     cmd = { "Atone", "UndoTree" },
+    keys = { { "<Leader>oU", mode = { "n", "x", "o" } } },
     opts = {
       keymaps = {
         tree = {
-          quit = { "<C-c>", "q" },
+          quit = { "<C-c>", "q", "<Leader>bk" },
           next_node = "j", -- support v:count
           pre_node = "k", -- support v:count
           undo_to = "<CR>",
           help = { "g?" },
         },
-        auto_diff = {
-          quit = { "<C-c>", "q" },
-          help = { "g?" },
-        },
-        help = {
-          quit_help = { "<C-c>", "q" },
-        },
+        auto_diff = { quit = { "<C-c>", "q", "<Leader>bk" }, help = { "g?" } },
+        help = { quit_help = { "<C-c>", "q", "<Leader>bk" } },
       },
     },
     config = function(_, opts)
@@ -389,6 +385,10 @@ return {
 
       vim.api.nvim_create_user_command("UndoTree", function()
         vim.cmd "Atone toggle"
+      end, { desc = "Open: undo tree [atone.nvim]" })
+
+      RUtils.map.nnoremap("<Leader>oU", function()
+        vim.cmd "UndoTree"
       end, { desc = "Open: undo tree [atone.nvim]" })
     end,
   },

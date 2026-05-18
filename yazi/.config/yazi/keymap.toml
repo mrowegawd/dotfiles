@@ -31,6 +31,9 @@ prepend_keymap = [
     "O",
   ], run = "plugin opcurdir", desc = "Open current directory" },
   { on = [
+    "<a-G>",
+  ], run = "plugin search-cd-or-grep", desc = "Search cd or grep string" },
+  { on = [
     "<a-T>",
   ], run = "plugin opener -- terminal", desc = "Open terminal on target dir yazi" },
   { on = [

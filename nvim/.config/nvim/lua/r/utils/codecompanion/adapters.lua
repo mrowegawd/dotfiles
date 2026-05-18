@@ -24,7 +24,7 @@ local function get_ollama(model, num_ctx)
     })
   end
 
-  return Adapters.extend("ollama", {})
+  return Adapters.extend("ollama", opts)
 end
 
 function M.ollama_qwen25_7b()

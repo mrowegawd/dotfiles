@@ -239,10 +239,10 @@ local __colors = function()
 
     normal_bg = H.get("Normal", "bg") or "#000000",
 
-    qf_indicator_fg = H.get("Keyword", "fg"),
-    qf_indicator_bg = H.darken(H.get("Keyword", "fg"), 0.2, H.get("Normal", "bg")),
-    lf_indicator_fg = H.get("String", "fg"),
-    lf_indicator_bg = H.darken(H.get("String", "fg"), 0.2, H.get("Normal", "bg")),
+    qf_indicator_fg = H.tint(H.get("Keyword", "fg"), 0.5),
+    qf_indicator_bg = H.darken(H.get("Keyword", "fg"), 0.5, H.get("Normal", "bg")),
+    lf_indicator_fg = H.tint(H.get("String", "fg"), 0.5),
+    lf_indicator_bg = H.darken(H.get("String", "fg"), 0.5, H.get("Normal", "bg")),
 
     qf_keyword_fg = H.get("QuickFixWinbar", "fg"),
     qf_keyword_bg = H.get("QuickFixWinbar", "bg"),
@@ -1779,7 +1779,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     local hl_opts = set_winbar_hl()
-    return { fg = hl_opts.fg, bg = colors.normal_bg, bold = false }
+    return { fg = hl_opts.fg, bg = hl_opts.bg, bold = false }
   end,
 }
 
