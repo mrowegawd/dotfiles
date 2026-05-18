@@ -238,6 +238,7 @@ end
 --
 local exclude_ft_arrange = { "DiffviewFileHistory", "DiffviewFiles" }
 
+---@param direction "split" | "vsplit" | "tabe"
 M.window.arange_wins = function(direction)
   return function()
     if vim.wo.diff then
@@ -301,7 +302,7 @@ local function go_prev_window(ft_wins)
   return false
 end
 
-local function call_stack_peek()
+function M.window.call_stack_peek()
   local Stack = require "overlook.stack"
   local switch_to_winid = nil
   if vim.w.is_overlook_popup then
@@ -317,7 +318,7 @@ local function call_stack_peek()
 end
 
 function M.window.switch_focus_targeted_window()
-  local ok, switch_winid = call_stack_peek()
+  local ok, switch_winid = M.window.call_stack_peek()
   if ok then
     pcall(vim.api.nvim_set_current_win, switch_winid)
     return

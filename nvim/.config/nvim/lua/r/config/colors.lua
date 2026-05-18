@@ -2,339 +2,14 @@ local wo = vim.wo
 
 local base_colors = {
   Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" },
-  dapstopped_bg_alter = 0.25,
-  grugfar_result_linenr_bg_alter = -0.35,
-  grugfar_result_linenr_fg_alter = 0.65,
-  grugfar_result_number_fg_alter = 0.6,
-  hovered_cursorline_bg_alter = 0.3,
-  lsp_code_lens_bg_alter = 0.15,
-  lsp_code_lens_fg_alter = 1.5,
-  normal_float_fg_alter = -0.01,
-  pmenu_thumb_bg_alter = 0.4,
-  tmux_statusline_fg_alter = -0.2,
-  trouble_indent_fg_alter = 0.55,
-
-  normal_note_bg_alter = 5,
-  normal_note_fg_alter = 0.45,
-  cursorline_note_bg_alter = 0.1,
-  cursorlinenr_note_bg_alter = 0.25,
-  delimeter_note_fg_alter = 1,
-  floatborder_note_fg_alter = 0.4,
-  floattitle_note_fg_alter = 0.2,
-  fold_note_fg_alter = 0.1,
-  linenr_note_fg_alter = 0.4,
-  nontext_note_fg_alter = 0.35,
-  urllink_note_bg_alter = 0.6,
-  urllink_note_fg_alter = 0.2,
-  visual_note_bg_alter = 0.8,
-
-  panel_bottom_normal_bg_alter = 0.1,
 }
 
 local update_col_colorscheme = {
-  ["ashen"] = {
-    grugfar_result_linenr_bg_alter = -0.3,
-    grugfar_result_linenr_fg_alter = 0.65,
-    grugfar_result_number_fg_alter = 0.65,
-    lsp_code_lens_bg_alter = 0.5,
-    lsp_code_lens_fg_alter = 2.5,
-    trouble_indent_fg_alter = 0.8,
-
-    fold_note_fg_alter = 0.05,
-    linenr_note_fg_alter = 0.5,
-    nontext_note_fg_alter = 0.8,
-    normal_note_bg_alter = 15,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = -0.1,
-  },
-  ["intent"] = {
-    lsp_code_lens_bg_alter = 0.65,
-    lsp_code_lens_fg_alter = 3.5,
-    trouble_indent_fg_alter = 2.2,
-
-    floatborder_note_fg_alter = 0.3,
-    fold_note_fg_alter = 0.05,
-    linenr_note_fg_alter = 0.5,
-    nontext_note_fg_alter = 0.8,
-    normal_note_bg_alter = 4,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = -0.1,
-  },
-  ["darcubox"] = {
-    hovered_cursorline_bg_alter = 0.8,
-  },
-  ["base46-material-darker"] = {
-    dapstopped_bg_alter = 0.2,
-  },
-  ["base46-jellybeans"] = {
-    dapstopped_bg_alter = 0.2,
-    trouble_indent_fg_alter = 0.7,
-  },
-  ["base46-material-lighter"] = {
-    dapstopped_bg_alter = 0.2,
-    trouble_indent_fg_alter = 0.5,
-  },
-  ["base46-melange"] = {
-    dapstopped_bg_alter = 0.15,
-    trouble_indent_fg_alter = 0.6,
-  },
-  ["base46-everforest"] = {
-    dapstopped_bg_alter = 0.2,
-    lsp_code_lens_bg_alter = 0.1,
-    lsp_code_lens_fg_alter = 1,
-    trouble_indent_fg_alter = 0.7,
-
-    delimeter_note_fg_alter = 1.5,
-    floatborder_note_fg_alter = 0.25,
-    linenr_note_fg_alter = 0.5,
-    normal_note_bg_alter = 0.65,
-    normal_note_fg_alter = 0.4,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = 0.3,
-  },
-  ["catppuccin"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_linenr_fg_alter = 0.7,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1.5,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.4,
-    normal_note_bg_alter = 1,
-  },
-  ["habamax"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_linenr_fg_alter = 0.7,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1.5,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.4,
-    normal_note_bg_alter = 1,
-  },
-  ["github_dark"] = {
-    winbar_bg_alter = 0.8,
-  },
-  ["gruvbox-material"] = {
-    lsp_code_lens_bg_alter = -0.03,
-    lsp_code_lens_fg_alter = 0.5,
-    trouble_indent_fg_alter = 0.35,
-  },
-  ["night-owl"] = {},
-  ["techbase"] = {},
-  ["jellybeans"] = {
-    Directory = { fg = "#8fbfdc", bg = "NONE" },
-    dapstopped_bg_alter = 0.2,
-    lsp_code_lens_bg_alter = 0.4,
-    lsp_code_lens_fg_alter = 2.2,
-    panel_sidebar_bg_altcer = 4,
-    trouble_indent_fg_alter = 1,
-
-    floatborder_note_fg_alter = 0.25,
-    linenr_note_fg_alter = 0.45,
-    normal_note_bg_alter = 2,
-    normal_note_fg_alter = 0.6,
-  },
-  ["kanagawa"] = {
-    dapstopped_bg_alter = 0.2,
-    grugfar_result_linenr_fg_alter = 0.55,
-    grugfar_result_number_fg_alter = 0.55,
-    lsp_code_lens_bg_alter = 1,
-    lsp_code_lens_fg_alter = 4,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.55,
-  },
-  ["gruvbox"] = {
-    dapstopped_bg_alter = 0.2,
-    lsp_code_lens_bg_alter = 0.25,
-    lsp_code_lens_fg_alter = 1.5,
-    trouble_indent_fg_alter = 1,
-
-    delimeter_note_fg_alter = 1.5,
-    floatborder_note_fg_alter = 0.25,
-    linenr_note_fg_alter = 0.5,
-    normal_note_bg_alter = 1,
-    normal_note_fg_alter = 0.4,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = 0.3,
-  },
-  ["gruvbox-old"] = {
-    dapstopped_bg_alter = 0.2,
-    lsp_code_lens_bg_alter = 0.5,
-    lsp_code_lens_fg_alter = 2.8,
-    trouble_indent_fg_alter = 1.8,
-
-    delimeter_note_fg_alter = 1.5,
-    linenr_note_fg_alter = 0.6,
-    normal_note_bg_alter = 2.5,
-    normal_note_fg_alter = 0.4,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = 0.3,
-  },
-  ["lemons"] = {
-    lsp_code_lens_bg_alter = 3.5,
-    lsp_code_lens_fg_alter = 15,
-    trouble_indent_fg_alter = 3,
-
-    linenr_note_fg_alter = 1,
-    nontext_note_fg_alter = 0.45,
-    normal_note_bg_alter = 6.5,
-    normal_note_fg_alter = 0.4,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = 0.05,
-  },
-  ["lackluster"] = {
-    Directory = { fg = "#7788aa", bg = "NONE" },
-    lsp_code_lens_bg_alter = 2,
-    lsp_code_lens_fg_alter = 9,
-    trouble_indent_fg_alter = 1.8,
-
-    cursorlinenr_note_bg_alter = 0.3,
-    linenr_note_fg_alter = 0.7,
-    normal_note_bg_alter = 10,
-    normal_note_fg_alter = 0.2,
-  },
-  ["lackluster-mint"] = {
-    Directory = { fg = "#7788aa", bg = "NONE" },
-    trouble_indent_fg_alter = 0.5,
-  },
-  ["neogotham"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_number_fg_alter = 0.5,
-    lsp_code_lens_bg_alter = 0.45,
-    lsp_code_lens_fg_alter = 3,
-    trouble_indent_fg_alter = 1.2,
-
-    normal_note_bg_alter = 2.5,
-    normal_note_fg_alter = 0.45,
-    nontext_note_fg_alter = 0.45,
-  },
-  ["oxocarbon"] = {
-    dapstopped_bg_alter = 0.2,
-    hovered_cursorline_bg_alter = 0.6,
-    lsp_code_lens_bg_alter = 0.4,
-    lsp_code_lens_fg_alter = 2.5,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.6,
-    nontext_note_fg_alter = 0.5,
-    normal_note_bg_alter = 2,
-    normal_note_fg_alter = 0.3,
-    urllink_note_bg_alter = 0.35,
-    urllink_note_fg_alter = -0.15,
-  },
-  ["rose-pine"] = {
-    grugfar_result_linenr_fg_alter = 0.75,
-    grugfar_result_number_fg_alter = 0.5,
-    hovered_cursorline_bg_alter = 0.6,
-    lsp_code_lens_bg_alter = 0.35,
-    lsp_code_lens_fg_alter = 2,
-    trouble_indent_fg_alter = 1.8,
-
-    linenr_note_fg_alter = 0.5,
-    nontext_note_fg_alter = 0.95,
-    normal_note_bg_alter = 1.6,
-  },
-  ["rose-pine-moon"] = {
-    hovered_cursorline_bg_alter = 0.6,
-    trouble_indent_fg_alter = 1,
-  },
-  ["tokyonight"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_linenr_fg_alter = 0.7,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 2,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.5,
-    normal_note_bg_alter = 1,
-  },
-  ["tokyonight-night"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_linenr_fg_alter = 0.7,
-    lsp_code_lens_bg_alter = 0.8,
-    lsp_code_lens_fg_alter = 5,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.6,
-  },
-  ["tokyonight-storm"] = {
-    grugfar_result_linenr_bg_alter = -0.25,
-    grugfar_result_linenr_fg_alter = 0.4,
-    grugfar_result_number_fg_alter = 0.8,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1.2,
-    panel_bottom_normal_bg_alter = 0.05,
-    trouble_indent_fg_alter = 0.75,
-
-    floatborder_note_fg_alter = 0.2,
-    fold_note_fg_alter = 0.05,
-    linenr_note_fg_alter = 0.45,
-    nontext_note_fg_alter = 0.45,
-    normal_note_bg_alter = 0.8,
-    normal_note_fg_alter = 0.3,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = 0.1,
-  },
-  ["nightfox"] = {
-    dapstopped_bg_alter = 0.15,
-    grugfar_result_linenr_fg_alter = 0.55,
-    lsp_code_lens_bg_alter = 0.5,
-    lsp_code_lens_fg_alter = 4,
-    trouble_indent_fg_alter = 2,
-
-    fold_note_fg_alter = -0.1,
-    linenr_note_fg_alter = 0.6,
-    nontext_note_fg_alter = 0.5,
-    normal_note_bg_alter = 2.5,
-    normal_note_fg_alter = 0.2,
-  },
-  ["vscode"] = {
-    Directory = { fg = "#569cd6", bg = "NONE" },
-    dapstopped_bg_alter = 0.2,
-    grugfar_result_linenr_fg_alter = 0.3,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1.8,
-    tmux_statusline_fg_alter = -0.25,
-    trouble_indent_fg_alter = 1.5,
-
-    linenr_note_fg_alter = 0.6,
-    nontext_note_fg_alter = 0.5,
-    normal_note_bg_alter = 1.25,
-    normal_note_fg_alter = 0.3,
-  },
-  ["vscode_modern"] = {
-    Directory = { fg = "#569cd6", bg = "NONE" },
-    dapstopped_bg_alter = 0.2,
-    hovered_cursorline_bg_alter = 0.35,
-    lsp_code_lens_bg_alter = 0.3,
-    lsp_code_lens_fg_alter = 2,
-    trouble_indent_fg_alter = 1.2,
-  },
-  ["xenos"] = {
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1,
-    trouble_indent_fg_alter = 0.6,
-  },
-  ["y9nika"] = {},
-  ["zenburn"] = {
-    grugfar_result_linenr_bg_alter = -0.2,
-    grugfar_result_linenr_fg_alter = 0.5,
-    grugfar_result_number_fg_alter = 0.65,
-    hovered_cursorline_bg_alter = 0.1,
-    lsp_code_lens_bg_alter = 0.2,
-    lsp_code_lens_fg_alter = 1,
-    trouble_indent_fg_alter = 0.5,
-
-    linenr_note_fg_alter = 0.4,
-    fold_note_fg_alter = 0.05,
-    nontext_note_fg_alter = 0.4,
-    normal_note_bg_alter = 0.3,
-    floatborder_note_fg_alter = 0.15,
-    urllink_note_bg_alter = 0.4,
-    urllink_note_fg_alter = -0.1,
-  },
+  ["jellybeans"] = { Directory = { fg = "#8fbfdc", bg = "NONE" } },
+  ["lackluster"] = { Directory = { fg = "#7788aa", bg = "NONE" } },
+  ["lackluster-mint"] = { Directory = { fg = "#7788aa", bg = "NONE" }, trouble_indent_fg_alter = 0.5 },
+  ["vscode"] = { Directory = { fg = "#569cd6", bg = "NONE" } },
+  ["vscode_modern"] = { Directory = { fg = "#569cd6", bg = "NONE" } },
 }
 
 local function update_base_colors(theme)
@@ -344,12 +19,6 @@ end
 
 local general_overrides = function()
   local H = require "r.settings.highlights"
-  local UIPallette = require("r.utils").uisec
-
-  local dark_green = H.tint(UIPallette.palette.green, 0.3)
-  local dark_yellow = H.tint(UIPallette.palette.bright_yellow, 0.3)
-  local dark_red = H.tint(UIPallette.palette.dark_red, 0.3)
-  local dark_orange = H.tint(UIPallette.palette.light_red, 0.3)
 
   local colors = update_base_colors(RUtils.config.colorscheme)
 
@@ -436,15 +105,15 @@ local general_overrides = function()
     {
       NormalFloat = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = 0.55 },
+        bg = { from = "Normal", attr = "bg", alter = 0.25 },
         reverse = false,
       },
     },
 
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
-        bg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+        bg = { from = "Normal", attr = "bg" },
       },
     },
     { FloatTitle = { inherit = "FloatBorder", fg = { from = "FloatBorder", attr = "fg", alter = 2 } } },
@@ -468,13 +137,14 @@ local general_overrides = function()
     {
       Search = {
         inherit = "CurSearch",
+        fg = { from = "CurSearch", attr = "fg", alter = 0.5 },
         bg = { from = "CurSearch", attr = "bg", transparency = 0.8, color = { from = "Normal", attr = "bg" } },
         reverse = true,
       },
     },
     { IncSearch = { inherit = "CurSearch" } },
     { TermCursor = { inherit = "Cursor" } },
-    { Substitute = { inherit = "Search" } },
+    { Substitute = { inherit = "CurSearch" } },
 
     {
       Folded = {
@@ -676,12 +346,12 @@ local general_overrides = function()
       },
     },
 
-    {
-      LspCodeLens = {
-        fg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_bg_alter },
-      },
-    },
+    -- {
+    --   LspCodeLens = {
+    --     fg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_fg_alter },
+    --     bg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_bg_alter },
+    --   },
+    -- },
     {
       LspSignatureActiveParameter = {
         fg = { from = "Type", attr = "fg" },
@@ -718,14 +388,14 @@ local general_overrides = function()
     },
     {
       VisualBoxComment = {
-        fg = { from = "Normal", attr = "fg", alter = colors.normal_float_fg_alter },
+        fg = { from = "Normal", attr = "fg", alter = 0.5 },
         bg = { from = "Keyword", attr = "fg", alter = -0.2 },
       },
     },
     {
       Zshlines = {
         fg = { from = "LineNr", attr = "fg", alter = -0.05 }, --> line
-        bg = { from = "LineNr", attr = "fg", alter = 1 }, -- > foreground
+        bg = { from = "LineNr", attr = "fg", alter = 0.6 }, -- > foreground
       },
     },
 
@@ -851,7 +521,7 @@ local general_overrides = function()
 
     {
       WinBar = {
-        fg = { from = "StatusLine", attr = "fg", opacity = 0.5 },
+        fg = { from = "LineNr", attr = "fg", alter = 0.5 },
         bg = { from = "Normal", attr = "bg" },
         bold = true,
       },
@@ -1070,12 +740,11 @@ local plugins_overrides = function()
     {
       FzfLuaTitle = {
         inherit = "FloatTitle",
-        bg = { from = "FzfLuaNormal", attr = "bg" },
         reverse = false,
         bold = true,
       },
     },
-    { FzfLuaBorder = { inherit = "FloatBorder", bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { FzfLuaBorder = { inherit = "FloatBorder" } },
     {
       FzfLuaFilePart = {
         fg = { from = "Keyword", attr = "fg", opacity = 0.7 },
@@ -1225,7 +894,7 @@ local plugins_overrides = function()
     },
     {
       SnacksNotifierBorderInfo = {
-        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.4 },
+        fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.25 },
         bg = { from = "SnacksNotifierInfo", attr = "bg" },
       },
     },
@@ -1248,7 +917,7 @@ local plugins_overrides = function()
     },
     {
       SnacksNotifierBorderWarn = {
-        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.4 },
+        fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.25 },
         bg = { from = "SnacksNotifierWarn", attr = "bg" },
       },
     },
@@ -1271,7 +940,7 @@ local plugins_overrides = function()
     },
     {
       SnacksNotifierBorderError = {
-        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.4 },
+        fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.25 },
         bg = { from = "SnacksNotifierError", attr = "bg" },
       },
     },
@@ -1515,7 +1184,7 @@ local plugins_overrides = function()
     { ["@org.block.org"] = { fg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.5 } } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                   LAZYGIT                                   ║
+    -- ║                                   LAZYGIT    NONE                               ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
     { LazygitselectedLineBgColor = { bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -2051,7 +1720,6 @@ local function set_panel_highlight()
           transparency = 0.15,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
-        reverse = false,
         bold = true,
         reverse = false,
       },
@@ -2137,6 +1805,7 @@ Win.filetype_winhighlights = {
   ["qf"] = true,
   ["Outline"] = true,
   ["trouble"] = true,
+  -- ["qfbookmark"] = true,
 
   --   "packer",
   --   "flutterToolsOutline",
@@ -2172,9 +1841,9 @@ local function focus(ctx)
   local cur_winopts = __get_win_opts(ctx.buf and ctx.buf)
   local filetype = cur_winopts.filetype
 
-  if filetype == "" or not Win.filetype_winhighlights[filetype] then
-    wo.winhighlight = ""
-  end
+  -- if filetype == "" and Win.filetype_winhighlights[filetype] ~= true then
+  --   wo.winhighlight = ""
+  -- end
 
   -- if ctx.event then
   --   RUtils.info("buf: " .. ctx.buf .. " event: " .. ctx.event .. " filetype: " .. vim.bo[ctx.buf].filetype)
@@ -2188,9 +1857,9 @@ local function blurred(ctx)
   local cur_winopts = __get_win_opts(ctx.buf and ctx.buf)
   local filetype = cur_winopts.filetype
 
-  if filetype == "" or not Win.filetype_winhighlights[filetype] then
-    wo.winhighlight = ""
-  end
+  -- if filetype == "" and Win.filetype_winhighlights[filetype] ~= true then
+  --   wo.winhighlight = ""
+  -- end
 
   set_winhighlights(filetype)
 end
@@ -2244,13 +1913,5 @@ RUtils.map.augroup("UserHighlights", {
   pattern = "*",
   command = function()
     vim.cmd "wincmd ="
-  end,
-}, {
-  event = { "FileType" },
-  pattern = "qf",
-  command = function()
-    vim.fn.matchadd("Directory", [[^[^│]*]])
-    vim.fn.matchadd("QuickFixMiddleLineNr", [[\v\d+:\d+\s]])
-    vim.fn.matchadd("QuickFixWinDelimiter", [[│]])
   end,
 })

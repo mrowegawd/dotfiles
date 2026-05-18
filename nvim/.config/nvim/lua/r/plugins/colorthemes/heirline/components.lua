@@ -228,7 +228,7 @@ local __colors = function()
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
-    winbar_bright = H.tint(H.get("WinBar", "fg"), 0.6),
+    winbar_bright = H.tint(H.get("WinBar", "fg"), 0.45),
 
     bright = H.tint(H.get("StatusLine", "fg"), 0.65),
     -- bright_winbar = H.tint(H.get("StatusLine", "fg"), 0.65),
@@ -256,7 +256,7 @@ local __colors = function()
     task_fg = H.get("GitSignsAdd", "fg"),
     task_bg = H.darken(H.get("GitSignsAdd", "fg"), 0.2, H.get("Normal", "bg")),
 
-    modified_fg = H.get("GitSignsDelete", "fg") or "#000000",
+    modified_fg = H.get("Error", "fg") or "#000000",
     coldisorent = H.get("LineNr", "fg") or "#000000",
 
     -- Termasuk filetype: debug dap, dbui
@@ -1551,10 +1551,10 @@ M.status_active_left = {
     local fg = colors.statusline_fg
     local bg = colors.statusline_bg
 
-    if set_conditions.is_terminal_ft() then
-      fg = colors.mode_term_statusline_fg
-      bg = colors.mode_term_statusline_bg
-    end
+    -- if set_conditions.is_terminal_ft() then
+    --   fg = colors.mode_term_statusline_fg
+    --   bg = colors.mode_term_statusline_bg
+    -- end
 
     return { fg = fg, bg = bg }
   end,

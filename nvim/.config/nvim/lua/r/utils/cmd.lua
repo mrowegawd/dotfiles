@@ -625,11 +625,18 @@ function M.open_with(context_mode, mode_open)
   end
 
   if context_mode == "go to file" then
+    local ok, _ = RUtils.buf.window.call_stack_peek()
+    if ok then
+      RUtils.buf.window.arange_wins "vsplit"()
+      return
+    end
+
     -- if vim.bo.filetype == "markdown" then
     --   RUtils.info "oke lah"
     --   follow_link_markdown()
     --   return
     -- end
+
     local filepath, line_nr, col_nr = url:match "([^%s:]+):(%d+):(%d+)"
     if not filepath or not line_nr then
       filepath, line_nr = url:match "^(.+):(%d+)"
