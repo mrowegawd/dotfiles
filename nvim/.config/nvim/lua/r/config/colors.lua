@@ -1367,7 +1367,7 @@ local plugins_overrides = function()
       },
     },
     { ["@org.agenda.day"] = { fg = { from = "Statement", attr = "fg", alter = 0.1 } } },
-    { ["@org.agenda.today"] = { fg = { from = "@org.agenda.day", attr = "fg", alter = 0.5 }, bold = true } },
+    { ["@org.agenda.today"] = { fg = { from = "@org.agenda.day", attr = "fg", alter = 0.4 }, bold = true } },
     {
       ["@org.agenda.weekend"] = {
         fg = {
@@ -1379,6 +1379,7 @@ local plugins_overrides = function()
         },
       },
     },
+    { ["@org.agenda.weekend.today"] = { inherit = "@org.agenda.today" } },
 
     {
       ["@org.agenda.header"] = {

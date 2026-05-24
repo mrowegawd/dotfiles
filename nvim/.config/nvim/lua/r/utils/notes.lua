@@ -972,24 +972,83 @@ local function get_or_create_bufnr(filename)
   return bufnr
 end
 
+---NOTE: function ini work (hanya sebagai backup), tapi ter apply beda posisi cursor di headline nya, walaupun
+---sudah di set nvim_win_set_cursor
+-- local function __set_repeater_todo_bak(bufnr, repeater_dates, headline)
+--   local OrgMappings = Orgmode.org_mappings
+--
+--   vim.api.nvim_buf_call(bufnr, function()
+--     local range = headline:get_range()
+--     vim.api.nvim_win_set_cursor(0, { range.start_line, 0 })
+--
+--     -- Advance repeater dates
+--     for _, date in ipairs(repeater_dates) do
+--       OrgMappings:_replace_date(date:apply_repeater())
+--     end
+--
+--     -- Set LAST_REPEAT property
+--     local Date = require "orgmode.objects.date"
+--     headline:set_property("LAST_REPEAT", Date.now():to_wrapped_string(false))
+--
+--     -- Add state note manually
+--     local indent = headline:get_indent()
+--     local note = ("%s- State %-12s from %-12s [%s]"):format(indent, [["DONE"]], [["TODO"]], Date.now():to_string())
+--     headline:add_note { note }
+--
+--     -- Set todo keyword langsung tanpa trigger popup
+--     headline:set_todo "TODO"
+--
+--     vim.cmd "silent! write"
+--   end)
+-- end
+
 local function set_repeater_todo(bufnr, repeater_dates, headline)
   local OrgMappings = Orgmode.org_mappings
 
   vim.api.nvim_buf_call(bufnr, function()
+    local range = headline:get_range()
+    vim.api.nvim_win_set_cursor(0, { range.start_line, 0 })
+
+    -- Step 1: advance repeater dates dulu (ini pakai range dari date object sendiri)
     for _, date in ipairs(repeater_dates) do
       OrgMappings:_replace_date(date:apply_repeater())
     end
 
-    -- Add state note
-    local indent = headline:get_indent()
+    -- Step 2: setelah buffer berubah, reload file dan cari headline yang sama by line
+    vim.cmd "silent! write"
+
+    local file = require("orgmode").files:get(vim.api.nvim_buf_get_name(bufnr))
+    if not file then
+      return
+    end
+
+    -- Cari headline di range yang sama (start_line tidak bergeser karena _replace_date
+    -- hanya replace konten di baris yang sama, tidak menambah/kurang baris)
+    local target_line = range.start_line
+    local fresh_headline = nil
+    for _, h in ipairs(file:get_headlines()) do
+      if h:get_range().start_line == target_line then
+        fresh_headline = h
+        break
+      end
+    end
+
+    if not fresh_headline then
+      RUtils.warn("Cannot find headline at line " .. target_line)
+      return
+    end
+
     local Date = require "orgmode.objects.date"
+
+    -- Step 3: set LAST_REPEAT pada headline yang sudah fresh
+    fresh_headline:set_property("LAST_REPEAT", Date.now():to_wrapped_string(false))
+
+    -- Step 4: add state note
+    local indent = fresh_headline:get_indent()
     local note = ("%s- State %-12s from %-12s [%s]"):format(indent, [["DONE"]], [["TODO"]], Date.now():to_string())
+    fresh_headline:add_note { note }
 
-    -- Set LAST_REPEAT property
-    headline:set_property("LAST_REPEAT", require("orgmode.objects.date").now():to_wrapped_string(false))
-
-    -- Add to note
-    headline:add_note { note }
+    vim.cmd "silent! write"
   end)
 end
 
@@ -1025,55 +1084,86 @@ local function remove_todo_by_tag(tags)
     return
   end
 
-  local notity_once
+  local processed = {}
 
-  for _, item in ipairs(files:all()) do
-    for _, headline in ipairs(item:get_headlines()) do
+  for _, file in ipairs(files:all()) do
+    for _, headline in ipairs(file:get_headlines()) do
       local todos = headline:get_todo()
-      if todos and (todos == "TODO") then
-        for _, tag in ipairs(tags) do
-          if not headline:has_tag(tag) then
-            goto continue_headline_loop
-          end
+      -- local title = headline:get_title()
 
-          if notity_once then
-            RUtils.info("Found old TODO from tag: " .. tag)
-            notity_once = true
-          end
+      if not (todos and todos == "TODO") then
+        goto continue_headline_loop
+      end
 
-          local d = item:get_opened_unfinished_headlines()
-          local filename = d[1].file.filename
-          local bufnr = get_or_create_bufnr(filename)
-
-          if bufnr == nil then
-            RUtils.warn("Bufnr is nil when fetching TODO tag: " .. tag)
-            goto continue_headline_loop
-          end
-
-          local old_state = headline:get_todo()
-          local was_done = headline:is_done()
-
-          local range = headline:get_range()
-
-          local item_closest_headline = item:get_closest_headline()
-          EventManager.dispatch(events.TodoChanged:new(item_closest_headline, old_state, was_done))
-
-          schedule_fold_update(range)
-
-          local repeater_dates = headline:get_repeater_dates()
-          if #repeater_dates == 0 then
-            return
-          end
-
-          set_repeater_todo(bufnr, repeater_dates, headline)
-
-          ::continue_headline_loop::
+      local has_matching_tag = false
+      for _, tag in ipairs(tags) do
+        if headline:has_tag(tag) then
+          has_matching_tag = true
+          break
         end
       end
+      if not has_matching_tag then
+        goto continue_headline_loop
+      end
+
+      local todo_schedule = headline:get_scheduled_date()
+      if not todo_schedule or not todo_schedule.active then
+        goto continue_headline_loop
+      end
+
+      local raw_date = todo_schedule:without_adjustments()
+      local now = os.date "*t"
+      local is_past_or_today = (raw_date.year < now.year)
+        or (raw_date.year == now.year and raw_date.month < now.month)
+        or (raw_date.year == now.year and raw_date.month == now.month and raw_date.day <= now.day)
+
+      if not is_past_or_today then
+        goto continue_headline_loop
+      end
+
+      local repeater_dates = headline:get_repeater_dates()
+      -- RUtils.info("  repeater_dates count: " .. tostring(#repeater_dates))
+      if #repeater_dates == 0 then
+        goto continue_headline_loop
+      end
+
+      -- Eksekusi perubahan buffer
+      local filename = file.filename
+      local bufnr = get_or_create_bufnr(filename)
+      if bufnr == nil then
+        goto continue_headline_loop
+      end
+
+      local old_state = headline:get_todo()
+      local was_done = headline:is_done()
+      local range = headline:get_range()
+
+      EventManager.dispatch(events.TodoChanged:new(headline, old_state, was_done))
+
+      set_repeater_todo(bufnr, repeater_dates, headline)
+      schedule_fold_update(range)
+
+      table.insert(processed, {
+        title = headline:get_title(),
+        file = vim.fn.fnamemodify(filename, ":t"), -- hanya nama file, tanpa path penuh
+        old_date = todo_schedule:without_adjustments():to_string(),
+        new_date = repeater_dates[1]:apply_repeater():to_string(),
+      })
+
+      ::continue_headline_loop::
     end
   end
 
-  RUtils.info "All repeater dates TODO tags is `DONE`"
+  if #processed == 0 then
+    RUtils.info "No expired repeater tasks found"
+  else
+    local lines = { ("Processed %d repeater task(s):"):format(#processed) }
+    for _, item in ipairs(processed) do
+      table.insert(lines, ("  • [%s] %s"):format(item.file, item.title))
+      table.insert(lines, ("    %s → %s"):format(item.old_date, item.new_date))
+    end
+    RUtils.info(table.concat(lines, "\n"))
+  end
 end
 
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -1143,6 +1233,9 @@ M.open_item_heading_tab = function()
 end
 
 M.auto_remote_repeater_todo = function()
+  -- NOTE: disarankan menggunakan tag yang di set di `#+filetags`,
+  -- bukan pada heading TODO, jika menggunakan tag pada heading
+  -- hasilnya kurang optimal, string bakal di apply pada incorrect line
   local tags = { "working", "workout" }
   remove_todo_by_tag(tags)
 end

@@ -164,12 +164,12 @@ return {
         org_default_notes_file = RUtils.file.get_agenda_path "/orgmode/gtd/refile.org",
 
         org_todo_keywords = {
-          "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
           "PROGRESS(p)", -- task yang sedang dikerjakan
           "WAITING(n)", -- task yang akan dialankan setelah 'progress' task selesai
           "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
+          "TODO(t)",
           -- "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
           "|",
           "DONE(d)",
@@ -515,7 +515,7 @@ return {
   {
     "saghen/blink.cmp",
     optional = true,
-    dependencies = { "MadKuntilanak/orgmode", "saghen/blink.compat" },
+    dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
     opts = {
       sources = {
         per_filetype = {
