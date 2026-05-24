@@ -430,12 +430,13 @@ end
 ---@param group     string   highlight group name
 ---@param attribute string?  attribute key ("fg", "bg", "sp", …)
 ---@param fallback  string?  returned when the attribute is missing
+---@return string
 function M.get(group, attribute, fallback)
   assert(type(group) == "string", "get: 'group' must be a string, got: " .. type(group))
 
   local data = get_hl_as_hex_strict { name = group }
   if not attribute then
-    return data
+    return tostring(data)
   end
 
   assert(

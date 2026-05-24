@@ -1,4 +1,4 @@
-local keymap, opt_local = vim.keymap, vim.opt_local
+local opt_local = vim.opt_local
 
 opt_local.number = false
 opt_local.relativenumber = false
@@ -7,33 +7,52 @@ opt_local.buflisted = false
 opt_local.conceallevel = 2
 opt_local.list = false
 
--- open help buffers in new tabs by default
--- vim.cmd.wincmd "L"
+vim.cmd.wincmd "L"
 
-keymap.set("n", "gd", "<c-]>", {
-  buffer = true,
-  desc = "Help: go to definition",
-})
+local function get_text(wrapper)
+  -- local escaped = vim.pesc(wrapper)
+  local escaped = "\\" .. wrapper
+  return vim.fn.matchstr(vim.fn.expand "<cWORD>", ([[\v%s\zs.{-}\ze%s]]):format(escaped, escaped))
+end
 
-keymap.set("n", "<Leader>ld", "<c-]>", {
-  buffer = true,
-  desc = "Help: go to definition",
-})
+RUtils.map.nnoremap("s", function()
+  local text = get_text "|"
+  if text ~= "" then
+    vim.cmd "normal! m'"
+    local result = vim.fn.search([[\V\<]] .. vim.fn.escape(text, [[\]]) .. [[\>]])
+    if result == 0 then
+      RUtils.warn("Tag |" .. text .. "| not found in this document!")
+    end
+  end
+end, { desc = "Help: search |tag|", buffer = true }, true)
+RUtils.map.nnoremap("S", function()
+  local text = get_text "*"
+  if text ~= "" then
+    vim.cmd "normal! m'"
+    local result = vim.fn.search([[\V\<]] .. vim.fn.escape(text, [[\]]) .. [[\>]])
+    if result == 0 then
+      RUtils.warn("Word *" .. text .. "* not found in this document!")
+    end
+  end
+end, { desc = "Help: search *word*", buffer = true }, true)
 
-keymap.set("n", "<BS>", "<c-t>", {
-  buffer = true,
-  desc = "Help: go back last definition",
-})
+RUtils.map.nnoremap("<Leader>ld", "<C-]>", { desc = "Help: goto definition", buffer = true }, true)
+RUtils.map.nnoremap("<BS>", "<C-t>", { desc = "Help: goback last definition", buffer = true }, true)
 
--- " if this a vim help file rather than one I'm creating
--- " add mappings otherwise do not
--- if &l:buftype == 'help' || expand('%') =~# '^'.$VIMRUNTIME
---   nnoremap <buffer> q :<c-u>q<cr>
---   " nnoremap <silent><buffer> <c-p> :Helptags<cr>
---   " keymap: [help] easy to jump on help filetype
---   nnoremap <silent><buffer> o /'\l\{2,\}'<CR>
---   nnoremap <silent><buffer> O ?'\l\{2,\}'<CR>
---   nnoremap <silent><buffer> s /\|\zs\S\+\ze\|<CR>
---   nnoremap <silent><buffer> S ?\|\zs\S\+\ze\|<CR>
---   finish
--- endif
+RUtils.map.nnoremap("o", function()
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local success = pcall(vim.cmd, "normal! /'\\l\\{2,\\}'\r")
+  if not success then
+    -- RUtils.warn "Next Vim option not found!"
+    return
+  end
+end, { buffer = true, silent = true }, true)
+
+RUtils.map.nnoremap("O", function()
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local success = pcall(vim.cmd, "normal! ?'\\l\\{2,\\}'\r")
+  if not success then
+    -- RUtils.warn "Previous Vim option not found!"
+    return
+  end
+end, { buffer = true, silent = true }, true)

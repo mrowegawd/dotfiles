@@ -21,17 +21,17 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "TODOCOMMENTS: search local TODO in notes [fzflua]",
       },
-      ["<LocalLeader>qft"] = {
+      ["<Leader>fs"] = {
         function()
-          RUtils.notes.insert_title_local()
+          RUtils.notes.jump_heading_local()
         end,
-        "Note: jump local title",
+        "Note: jump to local heading",
       },
-      ["<LocalLeader>qfT"] = {
+      ["<Leader>fS"] = {
         function()
-          RUtils.notes.insert_title_global()
+          RUtils.notes.jump_heading_global()
         end,
-        "Note: jump global title",
+        "Note: jump to global heading",
       },
       ["<Leader>lr"] = {
         function()

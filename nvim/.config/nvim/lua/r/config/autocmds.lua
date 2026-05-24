@@ -236,14 +236,6 @@ RUtils.map.augroup("WrapFiletype", {
       vim.diagnostic.config { virtual_lines = new_value }
     end
   end,
-}, {
-  event = { "FileType" },
-  pattern = "qf",
-  command = function()
-    vim.fn.matchadd("Directory", [[^[^│]*]])
-    vim.fn.matchadd("QuickFixMiddleLineNr", [[\v\d+:\d+\s]])
-    vim.fn.matchadd("QuickFixWinDelimiter", [[│]])
-  end,
 })
 
 RUtils.map.augroup("DisableJsonConceal", {
@@ -257,11 +249,7 @@ RUtils.map.augroup("DisableJsonConceal", {
 RUtils.map.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
-    (vim.hl or vim.highlight).on_yank {
-      timeout = 200,
-      on_visual = true,
-      higroup = "IncSearch",
-    }
+    vim.hl.hl_op { higroup = "IncSearch", timeout = 200 }
   end,
 })
 

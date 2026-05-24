@@ -119,7 +119,14 @@ pkill sxhkd
 run_disowned sxhkd
 run_once xsettingsd
 
-setxkbmap -option caps:backspace # switch capslock to backspace
+# Remap CapsLock to act as Backspace
+setxkbmap -option caps:backspace
+
+# Set key repeat: 200ms delay before repeat starts, 25 chars/sec repeat rate
+# This ensures remapped keys (like CapsLock -> Backspace) repeat properly
+xset r rate 200 25
+xset r 66 # force enable repeat for CapsLock key
+
 # export _JAVA_AWT_WM_NONREPARENTING=1
 
 # ~/.config/miscxrdb/bin/fix-broken-monitor &

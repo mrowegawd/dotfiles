@@ -3,26 +3,16 @@ return {
   {
     "folke/which-key.nvim",
     event = "LazyFile",
-    -- keys = {
-    --   {
-    --     "<leader>?",
-    --     function()
-    --       require("which-key").show { global = false }
-    --     end,
-    --     desc = "Buffer Local Keymaps (which-key)",
-    --   },
-    -- },
     opts = {
-      -- preset = "helix",
       defaults = {},
-      plugins = { registers = false }, -- registers disabled
-      sort = { "group", "order", "alphanum", "local", "mod" },
+      plugins = { registers = false },
+      sort = { "desc", "alphanum", "local", "group", "group", "mod" },
+      -- sort = { "local", "order", "group", "alphanum", "mod" },
       keys = {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
       triggers = {
-        -- { "<auto>", mode = "nxso" },
         { "<Leader>", mode = "nxso" },
         { "<Localleader>", mode = "nxso" },
       },
@@ -32,7 +22,6 @@ return {
           { plugin = "orgmode", cat = "filetype", icon = "📓", name = "org" },
           { plugin = "diffview", cat = "filetype", icon = " ", name = "diffview" },
 
-          -- { plugin = "overseer.nvim", "󰜎", color = "red" },
           { pattern = "note", icon = "📓" },
           { plugin = "todo-comments.nvim", cat = "filetype", name = "TODO" },
           { pattern = "help", icon = " ", colorh = "gray" },
@@ -50,12 +39,7 @@ return {
         {
           mode = { "n", "x" },
           { "<Leader>a", group = "mark" },
-
-          { "<Leader>q", group = "quit/session" },
-          -- { "<Leader>q", group = "quickfix" },
-
-          { "<Leader>A", group = "projectionist" },
-
+          { "<Leader>q", group = "session/quickfix" },
           { "<Leader>c", group = "code/action" },
 
           { "<Leader>d", group = "debug" },
@@ -83,11 +67,9 @@ return {
 
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "search" },
+          { "<Leader>m", group = "zoom" },
 
-          -- { "<Leader>s", group = "session" },
-
-          -- { "<Leader>z", group = "fold" },
-          { "<Leader>x", group = "exec:diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
+          { "<Leader>x", group = "exec:diagnostics/quickfix/trouble/cmd", icon = { icon = "󱖫 ", color = "green" } },
 
           {
             "<leader>w",
@@ -106,18 +88,15 @@ return {
           },
 
           { "<Localleader>g", group = "grug-far" },
-          -- { "<Localleader>q", group = "qfbookmarks" },
 
-          { "<Localleader>n", group = "note" },
-          { "<Localleader>a", group = "ai" },
+          { "<Localleader>a", group = "note" },
+          { "<Localleader>c", group = "ai" },
+          { "<Localleader>n", group = "noice-notification" },
 
           { "<Localleader>d", group = "database" },
           { "<Localleader>f", group = "telescope" },
           { "<Localleader>d", group = "notification" },
           { "<Localleader>o", group = "open/misc" },
-
-          -- { "<Localleader>r", group = "refactoring" },
-          -- { "<Localleader>re", group = "extract" },
 
           { "<Localleader>s", group = "snacks" },
           { "<Localleader>w", group = "swap" },

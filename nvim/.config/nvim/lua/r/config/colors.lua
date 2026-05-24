@@ -59,6 +59,8 @@ local general_overrides = function()
     { ["@comment"] = { inherit = "Comment" } },
 
     { CursorLine = { bg = { from = "Normal", attr = "bg" } } },
+    { CursorLineBright = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
@@ -148,7 +150,13 @@ local general_overrides = function()
 
     {
       Folded = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.2, opacity = 0.8 },
+        fg = {
+          from = "Normal",
+          attr = "bg",
+          alter = 1.5,
+          transparency = 0.9,
+          color = { from = "Normal", attr = "bg" },
+        },
         bg = "NONE",
       },
     },
@@ -225,13 +233,13 @@ local general_overrides = function()
     { DiagnosticSignHint = { bg = "NONE" } },
 
     { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsErrorNumHl = { fg = { from = "LineNr", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticsErrorNumHl = { fg = "NONE", bg = "NONE" } },
     { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsWarnNumHl = { fg = { from = "LineNr", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticsWarnNumHl = { fg = "NONE", bg = "NONE" } },
     { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsHintNumHl = { fg = { from = "LineNr", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticsHintNumHl = { fg = "NONE", bg = "NONE" } },
     { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
-    { DiagnosticsInfoNumHl = { fg = { from = "LineNr", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticsInfoNumHl = { fg = "NONE", bg = "NONE" } },
 
     { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
     { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
@@ -316,7 +324,7 @@ local general_overrides = function()
     -- Lain-lain
     { LspKindKeyword = { inherit = "@keyword" } },
     { LspKindOperator = { inherit = "@operator" } },
-    { LspKindSnippet = { inherit = "@comment" } },
+    { LspKindSnippet = { inherit = "@comment", fg = { from = "@comment", alter = 0.5 } } },
     { LspKindFile = { inherit = "Tag" } },
     { LspKindFolder = { inherit = "Directory" } },
     { LspKindUnit = { inherit = "@type" } },
@@ -407,23 +415,29 @@ local general_overrides = function()
       },
     },
     { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.5, opacity = 0.9, is_note = true } } },
-    { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = colors.nontext_note_fg_alter } } },
+    { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = 0.8 } } },
     {
       LineNrNote = {
         fg = { from = "NormalNote", attr = "bg", alter = 0.6 },
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
-    { DelimiterNote = { fg = { from = "NormalNote", attr = "bg", alter = colors.delimeter_note_fg_alter } } },
-    { CursorLineNote = { bg = { from = "NormalNote", attr = "bg", alter = colors.cursorline_note_bg_alter } } },
+    { DelimiterNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.2 } } },
+    { CursorLineNote = { bg = { from = "NormalNote", attr = "bg" } } },
     {
       CursorLineNrNote = {
         fg = { from = "Keyword", attr = "fg", alter = 0.5 },
-        bg = { from = "CursorLineNote", attr = "bg", alter = colors.cursorlinenr_note_bg_alter },
+        bg = {
+          from = "Keyword",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.1,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bold = true,
       },
     },
-    { FoldedNote = { fg = { from = "LineNrNote", attr = "fg", alter = colors.fold_note_fg_alter } } },
+    { FoldedNote = { fg = { from = "LineNrNote", attr = "fg" } } },
     {
       FloatBorderNote = {
         fg = { from = "NormalNote", attr = "bg", alter = 0.5 },
@@ -432,14 +446,25 @@ local general_overrides = function()
     },
     {
       TitleFloatNote = {
-        fg = { from = "FloatTitle", attr = "fg", alter = colors.floattitle_note_fg_alter },
+        fg = { from = "FloatTitle", attr = "fg" },
         bg = { from = "NormalNote", attr = "bg" },
         bold = true,
       },
     },
 
-    { VisualNote = { bg = { from = "Visual", attr = "bg", alter = colors.visual_note_bg_alter } } },
+    { VisualNote = { bg = { from = "Visual", attr = "bg", alter = 0.5 } } },
     { PmenuNote = { bg = { from = "NormalNote", attr = "bg" } } },
+    {
+      PmenuSelNote = {
+        bg = {
+          from = "NormalNote",
+          attr = "bg",
+          alter = 1,
+          transparency = 0.5,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
     {
       WinSeparatorNote = {
         fg = { from = "NormalNote", attr = "bg", alter = 0.15 },
@@ -455,24 +480,24 @@ local general_overrides = function()
         bg = { from = "Normal", attr = "bg", alter = -0.15 },
       },
     },
-    { CommentAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.7, opacity = 0.8 } } },
-    { NonTextAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = colors.nontext_note_fg_alter } } },
+    { CommentAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 5 } } },
+    { NonTextAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.8 } } },
     {
       LineNrAiPrompt = {
-        fg = { from = "NormalAiPrompt", attr = "bg", alter = colors.linenr_note_fg_alter },
+        fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.5 },
         bg = { from = "NormalAiPrompt", attr = "bg" },
       },
     },
-    { DelimiterAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = colors.delimeter_note_fg_alter } } },
-    { CursorLineAiPrompt = { bg = { from = "NormalAiPrompt", attr = "bg", alter = colors.cursorline_note_bg_alter } } },
+    { DelimiterAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg" } } },
+    { CursorLineAiPrompt = { bg = { from = "NormalAiPrompt", attr = "bg" } } },
     {
       CursorLineNrAiPrompt = {
         fg = { from = "Keyword", attr = "fg", alter = 0.5 },
-        bg = { from = "CursorLineAiPrompt", attr = "bg", alter = colors.cursorlinenr_note_bg_alter },
+        bg = { from = "CursorLineAiPrompt", attr = "bg" },
         bold = true,
       },
     },
-    { FoldedAiPrompt = { fg = { from = "LineNrAiPrompt", attr = "fg", alter = colors.fold_note_fg_alter } } },
+    { FoldedAiPrompt = { fg = { from = "LineNrAiPrompt", attr = "fg" } } },
     {
       FloatBorderAiPrompt = {
         fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.5 },
@@ -481,14 +506,25 @@ local general_overrides = function()
     },
     {
       TitleFloatAiPrompt = {
-        fg = { from = "FloatTitle", attr = "fg", alter = colors.floattitle_note_fg_alter },
+        fg = { from = "FloatTitle", attr = "fg" },
         bg = { from = "NormalAiPrompt", attr = "bg" },
         bold = true,
       },
     },
 
-    { VisualAiPrompt = { bg = { from = "Visual", attr = "bg", alter = colors.visual_note_bg_alter } } },
-    { PmenuAiPrompt = { bg = { from = "NormalNote", attr = "bg" } } },
+    { VisualAiPrompt = { bg = { from = "Visual", attr = "bg" } } },
+    { PmenuAiPrompt = { bg = { from = "NormalAiPrompt", attr = "bg" } } },
+    {
+      PmenuSelAiPrompt = {
+        bg = {
+          from = "NormalAiPrompt",
+          attr = "bg",
+          alter = 1,
+          transparency = 0.5,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
+      },
+    },
     {
       WinSeparatorAiPrompt = {
         fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.8 },
@@ -551,7 +587,7 @@ local general_overrides = function()
     -- ├──────────────────────────────────┤ TMUX ├──────────────────────────────────┤
     {
       TmuxStatusline = {
-        fg = { from = "WinBar", attr = "fg", alter = colors.tmux_statusline_fg_alter },
+        fg = { from = "WinBar", attr = "fg", alter = 0.5 },
         bg = { from = "WinBar", attr = "fg", alter = 0.15 },
       },
     },
@@ -621,13 +657,21 @@ local plugins_overrides = function()
     {
       BlinkDocNormal = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "NormalFloat", attr = "bg", alter = 0.25 },
+        bg = { from = "NormalFloat", attr = "bg", alter = 0.15 },
       },
     },
     {
       BlinkDocFloatBorder = {
         fg = { from = "BlinkDocNormal", attr = "bg", alter = 0.1 },
         bg = { from = "NormalFloat", attr = "bg", alter = 0.15 },
+      },
+    },
+
+    { BlinkCmpSignatureHelp = { bg = { from = "Normal", attr = "bg", alter = 0.45 } } },
+    {
+      BlinkCmpSignatureHelpBorder = {
+        bg = { from = "BlinkCmpSignatureHelp", attr = "bg" },
+        fg = { from = "BlinkCmpSignatureHelp", attr = "bg" },
       },
     },
 
@@ -837,6 +881,19 @@ local plugins_overrides = function()
       },
     },
 
+    {
+      FzfLuaBufLineNr = {
+        fg = { from = "FzfLuaNormal", attr = "bg", alter = 1.5 },
+        bg = {
+          from = "FzfLuaNormal",
+          attr = "bg",
+          alter = 0.5,
+          transparency = 0.2,
+          color = { from = "FzfLuaNormal", attr = "bg" },
+        },
+      },
+    },
+
     { -- custom color untuk marker fzf
       MarkerFzflua = {
         fg = { from = "Error", attr = "fg", alter = 0.4 },
@@ -861,8 +918,8 @@ local plugins_overrides = function()
         bg = {
           from = "FzfLuaNormal",
           attr = "bg",
-          alter = 0.3,
-          transparency = 0.8,
+          alter = 0.5,
+          transparency = 1,
           color = { from = "FzfLuaNormal", bg = "attr" },
         },
       },
@@ -959,8 +1016,8 @@ local plugins_overrides = function()
     -- ╰──────╯
     {
       SnacksNotifierInfo = {
-        fg = { from = "Normal", attr = "bg", alter = 5 },
-        bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        fg = { from = "String", attr = "fg", alter = 0.1 },
+        bg = { from = "String", attr = "fg", alter = 0.1, transparency = 0.2, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
@@ -1210,8 +1267,29 @@ local plugins_overrides = function()
       },
     },
     {
+      ["@markup.quote.markdown.AiPrompt"] = {
+        fg = {
+          from = "Keyword",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.7,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
+        bg = { from = "NormalAiPrompt", attr = "bg" },
+        italic = true,
+        bold = false,
+      },
+    },
+
+    {
       ["@markup.strong.markdown_inline"] = {
-        fg = H.tint(H.darken(H.get("Normal", "fg"), 0.1, H.get("Keyword", "fg")), 0.9),
+        fg = {
+          from = "Statement",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.9,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bg = "NONE",
         bold = true,
       },
@@ -1243,12 +1321,17 @@ local plugins_overrides = function()
       },
     },
 
+    -- Code block
     {
       RenderMarkdownCode = {
         bg = { from = "NormalNote", attr = "bg", alter = -0.25, is_note = true },
         italic = false,
       },
     },
+    { RenderMarkdownCodeBorder = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.05 } } },
+    { RenderMarkdownCodeBorder = { fg = { from = "RenderMarkdownCodeBorder", attr = "bg", alter = 0.8 } } },
+
+    -- Code inline
     {
       RenderMarkdownCodeInline = {
         fg = { from = "String", attr = "fg", alter = -0.05, contrast = 0.05 },
@@ -1260,46 +1343,80 @@ local plugins_overrides = function()
         },
       },
     },
-
-    { RenderMarkdownCodeBorder = { bg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.05 } } },
-    { RenderMarkdownCodeBorder = { fg = { from = "RenderMarkdownCodeBorder", attr = "bg", alter = 0.8 } } },
+    {
+      RenderMarkdownCodeInlineAiPrompt = {
+        fg = { from = "String", attr = "fg", alter = -0.05, contrast = 0.05 },
+        bg = {
+          from = "String",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
+      },
+    },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                   ORGMODE                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
+    -- ├─────────────────────────────────┤ Agenda ├─────────────────────────────────┤
     { ["@org.agenda.scheduled"] = { fg = { from = "String", attr = "fg", contrast = 0.2 } } },
     {
       ["@org.agenda.scheduled_past"] = {
-        fg = { from = "String", attr = "fg", transparency = 0.5, color = { from = "diffChanged", attr = "fg" } },
+        fg = { from = "String", attr = "fg", transparency = 0.2, color = { from = "diffChanged", attr = "fg" } },
       },
     },
-    { ["@org.agenda.day"] = { fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
-    { ["@org.agenda.weekend"] = { fg = { from = "Directory", attr = "fg", alter = 0.4 } } },
+    { ["@org.agenda.day"] = { fg = { from = "Statement", attr = "fg", alter = 0.1 } } },
+    { ["@org.agenda.today"] = { fg = { from = "@org.agenda.day", attr = "fg", alter = 0.5 }, bold = true } },
+    {
+      ["@org.agenda.weekend"] = {
+        fg = {
+          from = "@org.agenda.day",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.3,
+          color = { from = "Error", attr = "fg" },
+        },
+      },
+    },
 
-    { ["@org.agenda.header"] = { fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
+    {
+      ["@org.agenda.header"] = {
+        fg = {
+          from = "StatusLine",
+          attr = "fg",
+          alter = 0.1,
+        },
+        bg = { from = "StatusLine", attr = "bg" },
+      },
+    },
 
+    -- ├────────────────────────────────┤ Headline ├────────────────────────────────┤
     { ["Headline1"] = { inherit = "@markup.heading.1.markdown" } },
+    { ["@org.headline.level1"] = { inherit = "@markup.heading.1.markdown" } },
     { ["Headline2"] = { inherit = "@markup.heading.2.markdown" } },
+    { ["@org.headline.level2"] = { inherit = "@markup.heading.2.markdown" } },
     { ["Headline3"] = { inherit = "@markup.heading.3.markdown" } },
+    { ["@org.headline.level3"] = { inherit = "@markup.heading.3.markdown" } },
     { ["Headline4"] = { inherit = "@markup.heading.4.markdown" } },
+    { ["@org.headline.level4"] = { inherit = "@markup.heading.4.markdown" } },
     { ["Headline5"] = { inherit = "@markup.heading.5.markdown" } },
+    { ["@org.headline.level5"] = { inherit = "@markup.heading.5.markdown" } },
     { ["Headline6"] = { inherit = "@markup.heading.6.markdown" } },
+    { ["@org.headline.level6"] = { inherit = "@markup.heading.6.markdown" } },
 
+    -- ├──────────────────────────────────┤ Misc ├──────────────────────────────────┤
     { ["@org.timestamp.active"] = { inherit = "PreProc" } },
     { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
     { ["@org.properties"] = { inherit = "Constant" } },
     { ["@org.drawer"] = { inherit = "Constant" } },
-    {
-      ["@org.plan.org"] = {
-        inherit = "Constant",
-        -- bg = { from = "Constant", attr = "fg", transparency = 0.1, color = { from = "NormalNote", attr = "bg" } },
-      },
-    },
+    { ["@org.plan.org"] = { inherit = "Constant" } },
     { ["@org.latex"] = { inherit = "Statement" } },
-    -- { ["@org.hyperlink.org"] = { fg = { from = "Error", attr = "fg" } } },
-    { ["@org.code"] = { inherit = "RenderMarkdownCodeInline" } },
-
+    { ["@org.checkbox.org"] = { inherit = "Error" } },
+    { ["@org.checkbox.checked"] = { inherit = "org.comment.org" } },
+    { ["@org.directive"] = { fg = { from = "NormalNote", attr = "bg", alter = 1.5 } } },
+    { ["@org.tag.org"] = { fg = { from = "@org.directive", attr = "fg", alter = 0.5 } } },
+    { OrgBulletsDash = { inherit = "Special", bg = "NONE" } },
     { ["@org.bold"] = { inherit = "@markup.strong.markdown_inline" } },
     { ["@org.italic"] = { inherit = "@markup.italic.markdown_inline" } },
     {
@@ -1309,19 +1426,13 @@ local plugins_overrides = function()
       },
     },
 
-    -- { ["@org.block"] = { inherit = "CommentNote" } },
-    { ["@org.checkbox.org"] = { inherit = "ErrorMsg", fg = { from = "NormalNote", attr = "bg", alter = 2 } } },
-    { ["@org.checkbox.checked"] = { inherit = "org.comment.org" } },
-    { ["@org.directive"] = { fg = { from = "NormalNote", attr = "bg", alter = 1 } } },
-    { ["@org.tag.org"] = { fg = { from = "@org.directive", attr = "fg", alter = 0.5 } } },
-    { ["@org.timestamp.inactive"] = { fg = { from = "NormalNote", attr = "bg", alter = 0.8 } } },
+    { ["@org.code"] = { inherit = "RenderMarkdownCodeInline" } },
 
-    { OrgBulletDash = { inherit = "Special" } },
     { CodeBlock = { inherit = "RenderMarkdownCode", reverse = false } },
     { ["@org.block.org"] = { fg = { from = "RenderMarkdownCode", attr = "bg", alter = 0.5 } } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                   LAZYGIT    NONE                               ║
+    -- ║                                   LAZYGIT                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
     { LazygitselectedLineBgColor = { bg = { from = "Keyword", attr = "fg", alter = -0.6 } } },
@@ -1655,12 +1766,12 @@ local function set_panel_highlight()
         bold = true,
       },
     },
-    { PanelBottomCursorLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 4.5 } } },
+    { PanelBottomCursorLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 8, bold = true } } },
 
     { PanelBottomDarkBackground = { bg = { from = "PanelBottomBackground", attr = "bg", alter = -0.1 } } },
     { PanelBottomDarkHeading = { inherit = "PanelBottomDarkBackground", bold = true } },
 
-    { PanelBottomLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 3 } } },
+    { PanelBottomLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 2 } } },
 
     { PanelBottomSt = { bg = { from = "Visual", alter = -0.2 } } },
     { PanelBottomStusLine = { bg = { from = "PanelBottomBackground" }, fg = { from = "Normal", attr = "fg" } } },
@@ -1719,6 +1830,21 @@ local function set_panel_highlight()
     },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
+    -- ║                                 QFBOOKMARK                                  ║
+    -- ╙─────────────────────────────────────────────────────────────────────────────╜
+
+    {
+      QFBookmarkQfLineNr = {
+        inherit = "QuickFixMiddleLineNr",
+        fg = {
+          from = "QuickFixMiddleLineNr",
+          attr = "fg",
+          alter = -0.05,
+        },
+      },
+    },
+
+    -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                   TROUBLE                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
@@ -1748,30 +1874,61 @@ local function set_panel_highlight()
 
     -- ├───────────────────────────────┤ DIRECTORY ├────────────────────────────┤
 
-    { TroubleDirectory = { bg = "NONE" } },
+    {
+      TroubleDirectory = {
+        inherit = "Directory",
+        bg = {
+          from = "Directory",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+      },
+    },
     { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
     {
       TroubleFsCount = {
         fg = { from = "Directory", attr = "fg", alter = -0.13 },
-        bg = { from = "Directory", attr = "fg", alter = -0.6 },
+        bg = { from = "StatusLine", attr = "bg" },
       },
     },
 
     -- ├──────────────────────────────────┤ LSP ├───────────────────────────────┤
 
-    { TroubleLspFilename = { bg = "NONE" } },
+    {
+      TroubleLspFilename = {
+        inherit = "Directory",
+        bg = {
+          from = "Directory",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+      },
+    },
     { TroubleLspPos = { link = "TroubleFsPos" } },
     { TroubleLspCount = { link = "TroubleFsCount" } },
-    { TroubleLspItemClient = { link = "TroubleLspCount" } },
+    { TroubleLspItemClient = { inherit = "Comment", bg = "NONE" } },
 
     -- ├──────────────────────────────┤ DIAGNOSTICS ├───────────────────────────┤
 
-    { TroubleDiagnosticsBasename = { bg = "NONE" } },
+    {
+      TroubleDiagnosticsBasename = {
+        inherit = "DiagnosticWarn",
+        bg = {
+          from = "DiagnosticWarn",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+        italic = false,
+      },
+    },
     { TroubleDiagnosticsPos = { link = "TroubleFsPos" } },
     {
       TroubleDiagnosticsCount = {
         fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.13 },
-        bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.6 },
+        bg = { from = "StatusLine", attr = "bg" },
       },
     },
 
@@ -1785,6 +1942,7 @@ local function set_panel_highlight()
 
     {
       TroubleQfFilename = {
+        inherit = "Directory",
         bg = {
           from = "Directory",
           attr = "fg",
@@ -1869,6 +2027,7 @@ local winhighlight_bottom_panel = table.concat({
   "LineNr:PanelBottomLineNr",
   "WinSeparator:PanelBottomWinSeparator",
   "Delimiter:QuickFixWinDelimiter",
+  "NonText:QuickFixWinDelimiter",
   "EndOfBuffer:PanelBottomNormal",
 }, ",")
 
@@ -1885,20 +2044,21 @@ local winhighlight_note_panel = table.concat({
   "CursorLineNr:CursorLineNrNote",
   "Folded:FoldedNote",
   "@markup.list.markdown:@markup.list.markdown",
-  "Comment:ErrorMsg",
+  "Comment:CommentNote",
   "@Comment:CommentNote",
-  "Pmenu:PmenuNote",
   "Visual:VisualNote",
   "NonText:NonTextNote",
   "LineNr:LineNrNote",
   "WinSeparator:WinSeparatorNote",
   "Delimiter:DelimiterNote",
+
   "RenderMarkdownH1Bg:@markup.heading.1.markdown",
   "RenderMarkdownH2Bg:@markup.heading.2.markdown",
   "RenderMarkdownH3Bg:@markup.heading.3.markdown",
   "RenderMarkdownH4Bg:@markup.heading.4.markdown",
   "RenderMarkdownH5Bg:@markup.heading.5.markdown",
   "RenderMarkdownH6Bg:@markup.heading.6.markdown",
+  "RenderMarkdownCodeInline:RenderMarkdownCodeInline",
 }, ",")
 
 local winhighlight_ai_panel = table.concat({
@@ -1913,24 +2073,27 @@ local winhighlight_ai_panel = table.concat({
   "CursorLine:CursorLineAiPrompt",
   "CursorLineNr:CursorLineNrAiPrompt",
   "Folded:FoldedAiPrompt",
-  "@markup.list.markdown:@markup.list.markdown",
-  "Comment:ErrorMsg",
+  "Comment:CommentAiPrompt",
   "@Comment:CommentAiPrompt",
-  "Pmenu:PmenuAiPrompt",
   "Visual:VisualAiPrompt",
   "NonText:NonTextAiPrompt",
   "LineNr:LineNrAiPrompt",
   "WinSeparator:WinSeparatorAiPrompt",
+  "@markup.list.markdown:@markup.list.markdown",
   "Delimiter:DelimiterAiPrompt",
+
+  --
   "RenderMarkdownH1Bg:@markup.heading.1.markdown_ai",
   "RenderMarkdownH2Bg:@markup.heading.2.markdown_ai",
   "RenderMarkdownH3Bg:@markup.heading.3.markdown_ai",
   "RenderMarkdownH4Bg:@markup.heading.4.markdown_ai",
   "RenderMarkdownH5Bg:@markup.heading.5.markdown_ai",
   "RenderMarkdownH6Bg:@markup.heading.6.markdown_ai",
+  "RenderMarkdownCodeInline:RenderMarkdownCodeInlineAiPrompt",
+  "@markup.quote.markdown:@markup.quote.markdown.AiPrompt",
 }, ",")
 
-Win.filetype_backlist_winhighlights = {
+Win.filetype_blacklist_winhighlights = {
   ["snacks_picker_input"] = true,
   ["qfbookmark"] = true,
   ["wayfinder"] = true,
@@ -1958,11 +2121,11 @@ Win.filetype_winhighlights = {
   ["dapui_watches"] = true,
 }
 
-Win.cursorline_backlist = {
+Win.cursorline_blacklist = {
   ["orgagenda"] = true,
   ["grug-far"] = true,
   ["noice"] = true,
-  ["trouble"] = true,
+  -- ["trouble"] = true,
 
   ["DiffviewFileHistory"] = true,
   ["DiffviewFiles"] = true,
@@ -1978,6 +2141,11 @@ Win.cursorline_backlist = {
   ["dapui_scopes"] = true,
   ["dapui_stacks"] = true,
   ["dapui_watches"] = true,
+}
+
+Win.cursorline_bright = {
+  ["qf"] = true,
+  ["trouble"] = true,
 }
 
 Win.note_winhighlights = {
@@ -2029,6 +2197,69 @@ local set_winhighlights = function(filetype)
   end
 end
 
+local hl_note = {
+  ["Pmenu"] = "PmenuNote",
+  ["PmenuSel"] = "PmenuSelNote",
+}
+
+local hl_aiprompt = {
+  ["Pmenu"] = "PmenuAiPrompt",
+  ["PmenuSel"] = "PmenuSelAiPrompt",
+}
+
+local hl_cursorline = {
+  ["CursorLine"] = "CursorLineBright",
+}
+
+local pmenu_original = nil
+local cursorline_original = nil
+
+---@param ft string
+---@param is_color_restore? boolean
+---@param is_cursorline_restore? boolean
+local function set_hl(ft, is_color_restore, is_cursorline_restore)
+  is_color_restore = is_color_restore or false
+  is_cursorline_restore = is_cursorline_restore or false
+
+  local function __set(tbl)
+    for key, val in pairs(tbl) do
+      vim.api.nvim_set_hl(0, key, { link = val })
+    end
+  end
+
+  if is_color_restore then
+    if not pmenu_original then
+      return
+    end
+    vim.api.nvim_set_hl(0, "Pmenu", pmenu_original.pmenu)
+    vim.api.nvim_set_hl(0, "PmenuSel", pmenu_original.pmenusel)
+
+    pmenu_original = nil
+    return
+  end
+
+  if is_cursorline_restore then
+    if cursorline_original then
+      __set { ["CursorLine"] = "CursorLine" }
+      cursorline_original = nil
+      return
+    end
+
+    if Win.cursorline_bright[ft] then
+      __set(hl_cursorline)
+    end
+    return
+  end
+
+  if Win.aiprompt_winhighlights[ft] then
+    __set(hl_aiprompt)
+  end
+
+  if Win.note_winhighlights[ft] then
+    __set(hl_note)
+  end
+end
+
 -- ├──────────────────────────────┤ FOCUS OR NOT ├──────────────────────────────┤
 
 local function focus(ctx)
@@ -2036,7 +2267,7 @@ local function focus(ctx)
   local cur_winopts = __get_win_opts()
   local filetype = cur_winopts.filetype
 
-  if Win.filetype_backlist_winhighlights[filetype] then
+  if Win.filetype_blacklist_winhighlights[filetype] then
     return
   end
 
@@ -2071,7 +2302,7 @@ local function set_cursorline(ctx, active)
   local cur_winopts = __get_win_opts()
   local filetype = cur_winopts.filetype
 
-  if Win.cursorline_backlist[filetype] then
+  if Win.cursorline_blacklist[filetype] then
     active = false
   end
 
@@ -2080,6 +2311,9 @@ local function set_cursorline(ctx, active)
   end
 
   wo.cursorline = active
+
+  local ft = vim.bo.filetype
+  set_hl(ft, false, true)
 end
 
 -- ├───────────────────────────────┤ BUF EVENT ├────────────────────────────┤
@@ -2168,6 +2402,10 @@ RUtils.map.augroup("UserDimWindow", {
   event = "BufLeave",
   pattern = "*",
   command = function(ctx)
+    if not cursorline_original then
+      cursorline_original = true
+    end
+
     vim.defer_fn(function()
       buf_leave(ctx)
     end, 1)
@@ -2191,6 +2429,9 @@ RUtils.map.augroup("UserDimWindow", {
   event = "WinLeave",
   pattern = "*",
   command = function(ctx)
+    if not cursorline_original then
+      cursorline_original = true
+    end
     win_leave(ctx)
   end,
 }, {
@@ -2218,5 +2459,88 @@ RUtils.map.augroup("UserDimWindow", {
   pattern = "*",
   command = function()
     vim.cmd "wincmd ="
+  end,
+})
+
+-- Store original Pmenu colors before overriding
+local function save_pmenu_colors()
+  local pmenu = vim.api.nvim_get_hl(0, { name = "Pmenu", link = false })
+  local pmenusel = vim.api.nvim_get_hl(0, { name = "PmenuSel", link = false })
+  return { pmenu = pmenu, pmenusel = pmenusel }
+end
+
+local get_note_filetype = function(win_highlights)
+  local tbl = {}
+  for key, _ in pairs(win_highlights) do
+    tbl[#tbl + 1] = key
+  end
+  return tbl
+end
+
+local note_filetypes = get_note_filetype(Win.note_winhighlights)
+local ai_prompt_filetypes = get_note_filetype(Win.aiprompt_winhighlights)
+
+local all_special = vim.tbl_extend("force", {}, Win.note_winhighlights, Win.aiprompt_winhighlights)
+
+RUtils.map.augroup("UserHighlightsCustom", {
+  event = "FileType",
+  pattern = note_filetypes,
+  command = function(ctx)
+    if not pmenu_original then
+      pmenu_original = save_pmenu_colors()
+    end
+    local ft = vim.bo[ctx.buf].filetype
+    set_hl(ft)
+  end,
+}, {
+  event = "FileType",
+  pattern = ai_prompt_filetypes,
+  command = function(ctx)
+    if not pmenu_original then
+      pmenu_original = save_pmenu_colors()
+    end
+    local ft = vim.bo[ctx.buf].filetype
+    set_hl(ft)
+  end,
+}, {
+  event = { "BufEnter", "WinEnter" },
+  pattern = "*",
+  command = function(ctx)
+    if not pmenu_original then
+      pmenu_original = save_pmenu_colors()
+    end
+
+    local ft = vim.bo[ctx.buf].filetype
+    if all_special[ft] then
+      set_hl(ft)
+    end
+  end,
+}, {
+  event = { "BufLeave", "WinLeave" },
+  pattern = "*",
+  command = function(ctx)
+    local ft = vim.bo[ctx.buf].filetype
+    if all_special[ft] then
+      set_hl(ft, true)
+    end
+  end,
+}, {
+  event = "WinClosed",
+  pattern = "*",
+  command = function(ctx)
+    -- Check if closed window was a float
+    local win = tonumber(ctx.match)
+    if not win or not vim.api.nvim_win_is_valid(win) then
+      return
+    end
+
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative ~= "" then
+      -- Float was closed, check current window filetype
+      local cur_ft = vim.bo.filetype
+      if not all_special[cur_ft] then
+        set_hl(cur_ft, true)
+      end
+    end
   end,
 })

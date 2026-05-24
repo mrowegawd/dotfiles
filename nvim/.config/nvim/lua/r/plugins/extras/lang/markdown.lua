@@ -130,143 +130,110 @@ return {
         desc = "ActionLSP: toggle render markdown [render-markdown]",
       },
     },
-    opts = function()
-      -- local H = require "r.settings.highlights"
-      -- RUtils.map.augroup("HiMarkdownRender", {
-      --   event = "FileType",
-      --   pattern = "codecompanion",
-      --   command = function(ctx)
-      --     if vim.bo[ctx.buf].filetype == "codecompanion" then
-      --       H.plugin("RenderMarkdownAi", {
-      --         { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown_ai" } },
-      --         { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown_ai" } },
-      --         { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown_ai" } },
-      --         { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown_ai" } },
-      --         { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown_ai" } },
-      --         { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown_ai" } },
-      --       })
-      --       return
-      --     end
-      --
-      --     if vim.bo.filetype == "markdown" then
-      --       RUtils.info "asdf"
-      --     end
-      --     H.plugin("RenderMarkdown", {
-      --       { RenderMarkdownH1Bg = { inherit = "@markup.heading.1.markdown" } },
-      --       { RenderMarkdownH2Bg = { inherit = "@markup.heading.2.markdown" } },
-      --       { RenderMarkdownH3Bg = { inherit = "@markup.heading.3.markdown" } },
-      --       { RenderMarkdownH4Bg = { inherit = "@markup.heading.4.markdown" } },
-      --       { RenderMarkdownH5Bg = { inherit = "@markup.heading.5.markdown" } },
-      --       { RenderMarkdownH6Bg = { inherit = "@markup.heading.6.markdown" } },
-      --     })
-      --   end,
-      -- })
-
-      return {
-        bullet = { icons = { "", "•", "", "-", "-" } },
-        code = {
-          sign = false,
-          border = "thin",
-          position = "right",
-          width = "block",
-          above = "▁",
-          below = "▔",
-          language_left = "█",
-          language_right = "█",
-          language_border = "▁",
-          left_pad = 1,
-          right_pad = 1,
+    opts = {
+      bullet = { icons = { "", "•", "", "-", "-" } },
+      code = {
+        sign = false,
+        border = "thin",
+        position = "right",
+        width = "block",
+        above = "▁",
+        below = "▔",
+        language_left = "█",
+        language_right = "█",
+        language_border = "▁",
+        left_pad = 1,
+        right_pad = 1,
+      },
+      render_modes = true,
+      anti_conceal = {
+        ignore = {
+          bullet = { "n" },
+          callout = { "n" },
+          check_icon = { "n" },
+          check_scope = { "n" },
+          code_language = { "n" },
+          dash = { "n" },
+          head_icon = { "n" },
+          link = { "n" },
+          quote = { "n" },
+          table_border = { "n" },
         },
-        render_modes = true,
-        anti_conceal = {
-          ignore = {
-            bullet = { "n" },
-            callout = { "n" },
-            check_icon = { "n" },
-            check_scope = { "n" },
-            code_language = { "n" },
-            dash = { "n" },
-            head_icon = { "n" },
-            link = { "n" },
-            quote = { "n" },
-            table_border = { "n" },
-          },
+      },
+      dash = {
+        width = 80,
+      },
+      heading = {
+        enabled = true,
+        sign = false,
+        width = "full", -- full, block
+        left_pad = 1,
+        right_pad = 0,
+        position = "inline",
+        -- icons = {
+        --   "",
+        --   "",
+        --   "",
+        --   "",
+        --   "",
+        --   "",
+        -- },
+        icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+        -- icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
+        -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        signs = {
+          "󰉫 ", -- H1
+          "󰉬 ", -- H2
+          "󰉭 ", -- H3
+          "󰉮 ", -- H4
+          "󰉯 ", -- H5
+          "󰉰 ", -- H6
+          "󰉱 ", -- H7
         },
-        dash = {
-          width = 80,
-        },
-        heading = {
-          enabled = true,
-          sign = false,
-          width = "full", -- full, block
-          left_pad = 1,
-          right_pad = 0,
-          position = "inline",
-          -- icons = {
-          --   "",
-          --   "",
-          --   "",
-          --   "",
-          --   "",
-          --   "",
-          -- },
-          icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-          -- icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
-          -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-          signs = {
-            "󰉫 ", -- H1
-            "󰉬 ", -- H2
-            "󰉭 ", -- H3
-            "󰉮 ", -- H4
-            "󰉯 ", -- H5
-            "󰉰 ", -- H6
-            "󰉱 ", -- H7
-          },
-        },
-        quote = { icon = "▐" },
-        pipe_table = { cell = "raw" },
-        latex = { enabled = false },
-        html = { comment = { conceal = false } },
-        overrides = {
-          filetype = {
-            noice = {},
-            -- CodeCompanion
-            codecompanion = {
-              heading = {
-                icons = { "󰪥 ", "  ", " ", " ", " ", "" },
-                custom = {
-                  codecompanion_input = {
-                    pattern = "^## Me$",
-                    icon = " ",
-                    background = "CodeCompanionInputHeader",
-                  },
+      },
+      quote = { icon = "▐" },
+      pipe_table = { cell = "raw" },
+      latex = { enabled = false },
+      html = { comment = { conceal = false } },
+      overrides = {
+        filetype = {
+          noice = {},
+          -- CodeCompanion
+          codecompanion = {
+            heading = {
+              icons = { "󰪥 ", "  ", " ", " ", " ", "" },
+              custom = {
+                codecompanion_input = {
+                  pattern = "^## Me$",
+                  icon = " ",
+                  background = "CodeCompanionInputHeader",
                 },
               },
-              html = {
-                tag = {
-                  buf = {
-                    icon = "󰌹 ",
-                    highlight = "Comment",
-                  },
-                  image = {
-                    icon = "󰥶 ",
-                    highlight = "Comment",
-                  },
-                  file = {
-                    icon = "󰨸 ",
-                    highlight = "Comment",
-                  },
-                  url = {
-                    icon = " ",
-                    highlight = "Comment",
-                  },
+            },
+            html = {
+              tag = {
+                buf = {
+                  icon = "󰌹 ",
+                  highlight = "Comment",
+                },
+                image = {
+                  icon = "󰥶 ",
+                  highlight = "Comment",
+                },
+                file = {
+                  icon = "󰨸 ",
+                  highlight = "Comment",
+                },
+                url = {
+                  icon = " ",
+                  highlight = "Comment",
                 },
               },
             },
           },
         },
-      }
-    end,
+      },
+    },
   },
   -- Reset priority outline for markdown
   {

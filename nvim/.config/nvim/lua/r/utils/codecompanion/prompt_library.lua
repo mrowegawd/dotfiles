@@ -23,6 +23,7 @@ local PROMPT_LIBRARY_CONFIG = {
     "slides_generator",
     "translator_spa_eng",
     "note_writer",
+    "note_writer_org",
     "translator_ind_eng",
     "writer_at_work",
   },
@@ -158,6 +159,22 @@ local function note_readable_ind()
   )
 end
 
+local function note_readable_ind_org()
+  return build_prompt(
+    "chat",
+    "Tulis dan perbaiki kalimat, structure kalimat agar mudah dibaca.",
+    "writer_and_reformat_note_id_org",
+    M.prompt "note_writer_org",
+    {
+      opts = {
+        adapter = {
+          name = "gemini_flash_35",
+        },
+      },
+    }
+  )
+end
+
 local function meeting_copilot_prompt()
   return build_prompt(
     "chat",
@@ -201,6 +218,7 @@ function M.build()
     ["󰐨 Debug test memory"] = slides_generator_prompt(), -- Assuming a new function or update for this
 
     [" Note readable"] = note_readable_ind(),
+    [" Note readable org"] = note_readable_ind_org(),
     [" Note helper"] = writer_at_work_prompt(),
     [" Note generate tag and time"] = writer_at_work_prompt(),
 

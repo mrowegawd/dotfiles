@@ -41,7 +41,7 @@ tree() {
 }
 
 l() {
-  eza -l -snew
+  eza --icons --all --color=always -T
 }
 
 ll() {

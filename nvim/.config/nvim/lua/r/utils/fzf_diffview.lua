@@ -666,7 +666,7 @@ function M.opts_diffview_log(is_repo, title, bufnr)
       ["ctrl-s"] = M.git_open "split",
       ["ctrl-v"] = M.git_open "vsplit",
       ["ctrl-t"] = M.git_open "tabe",
-      ["default"] = M.git_open_default(bufnr),
+      ["default"] = M.git_open "vsplit",
 
       ["ctrl-b"] = M.git_open_with_browser(),
       ["ctrl-o"] = M.git_open_with_diffview(),

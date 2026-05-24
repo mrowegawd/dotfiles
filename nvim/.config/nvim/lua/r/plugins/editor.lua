@@ -131,20 +131,22 @@ return {
   },
   -- TROUBLE.NVIM
   {
-    "folke/trouble.nvim",
+    -- "folke/trouble.nvim",
+    dir = "~/.local/src/nvim_plugins/trouble.nvim",
     cmd = "Trouble",
     keys = {
       {
         "<Leader>xr",
-        "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
-        desc = "Exec: references LSP [trouble]",
+        "<CMD>Trouble resume<CR>",
+        desc = "Exec: resume [trouble]",
       },
+
       {
         "<Leader>xx",
         function()
           vim.cmd [[Trouble]]
         end,
-        desc = "Exec: trouble [trouble]",
+        desc = "Exec: open list trouble builtin [trouble]",
       },
       {
         "<Leader>xt",
@@ -220,7 +222,15 @@ return {
       local icons_lsp = RUtils.config.icons.kinds
       return {
         focus = true,
+        auto_refresh = false, -- use `R` to toggle it
         win = { position = "bottom", relative = "win" },
+        preview = {
+          type = "main",
+          -- when a buffer is not yet loaded, the preview window will be created
+          -- in a scratch buffer with only syntax highlighting enabled.
+          -- Set to false, if you want the preview to always be a real loaded buffer.
+          scratch = false,
+        },
         icons = {
           kinds = {
             Array = icons_lsp.Array,
@@ -253,16 +263,24 @@ return {
         },
         keys = {
           ["<esc>"] = "cancel",
+
           q = "close",
+          ["<Leader>bk"] = "close",
+
+          r = "refresh",
+          R = "toggle_refresh",
+
           o = "jump",
-          zh = "fold_toggle",
+
+          P = "toggle_preview",
+
           ["<C-a>"] = "fold_toggle",
-          ["<a-n>"] = "next",
-          ["<a-p>"] = "prev",
-          ["<c-n>"] = "next",
-          ["<c-p>"] = "prev",
           ["<TAB>"] = "fold_toggle",
-          zc = "fold_close_all",
+
+          ["<a-n>"] = "next",
+          ["<c-n>"] = "next",
+          ["<a-p>"] = "prev",
+          ["<c-p>"] = "prev",
         },
       }
     end,

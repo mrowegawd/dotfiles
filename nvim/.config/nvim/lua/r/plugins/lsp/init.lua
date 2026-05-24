@@ -99,44 +99,38 @@ return {
               --  +----------------------------------------------------------+
               {
                 "<Leader>ld",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition),
+                "<CMD>Trouble lsp_definitions toggle focus=true auto_refresh=false<CR>",
                 has = "definition",
-                desc = "LSP: definitions",
+                desc = "LSP: definitions [trouble]",
               },
               {
                 "<Leader>lv",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "vsplit"),
+                "<CMD>Trouble lsp_definitions toggle focus=true auto_refresh=false open_mode=vsplit<CR>",
                 has = "definition",
-                desc = "LSP: definitions in vsplit",
-              },
-              {
-                "<Leader>ls",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "split"),
-                has = "definition",
-                desc = "LSP: definitions in split",
+                desc = "LSP: definitions vsplit [trouble]",
               },
               {
                 "<Leader>lt",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.definition, "tabnew"),
+                "<CMD>Trouble lsp_type_definitions toggle focus=true auto_refresh=false<CR>",
                 has = "definition",
-                desc = "LSP: definitions in tabnew",
+                desc = "LSP: type definitions [trouble]",
               },
               {
                 "<Leader>lD",
                 RUtils.map.lsp.wrap_location_method(vim.lsp.buf.declaration),
                 desc = "LSP: goto declaration",
               },
-              { "<Leader>lR", vim.lsp.buf.references, desc = "LSP: references", nowait = true },
               {
-                "<Leader>lr",
-                RUtils.map.lsp.wrap_references_to_send_qf,
-                desc = "LSP: references but send to quickfix",
+                "<Leader>lR",
+                require("fzf-lua").lsp_references,
+                desc = "LSP: references with picker [fzflua]",
                 nowait = true,
               },
               {
-                "<Leader>ly",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.type_definition, "vsplit"),
-                desc = "LSP: goto type Definition",
+                "<Leader>lr",
+                "<CMD>Trouble lsp_references toggle focus=true auto_refresh=false<CR>",
+                desc = "LSP: references [trouble]",
+                nowait = true,
               },
               {
                 "<Leader>lh",
@@ -148,7 +142,7 @@ return {
                   end
                   vim.g.snacks_jump_scope = true
                 end,
-                desc = "LSP: toggle enabled words references",
+                desc = "LSP: toggle word references",
               },
 
               --  +----------------------------------------------------------+
@@ -198,7 +192,7 @@ return {
                 desc = "Action: source action",
               },
               {
-                "<Leader>cc",
+                "<Leader>luc",
                 function()
                   local code_lens_enabled = not vim.lsp.codelens.is_enabled()
                   vim.lsp.codelens.enable(code_lens_enabled)

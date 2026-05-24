@@ -60,18 +60,28 @@ return {
       local resession = require "resession"
       resession.setup(opts)
 
-      if is_setup_mapping_session then
+      if not is_setup_mapping_session then
+        is_setup_mapping_session = true
+
         RUtils.map.nnoremap("<Leader>qS", function()
           vim.ui.input({ prompt = "Session name" }, function(selected)
             if selected then
               resession.save(selected, {})
             end
           end)
-        end, { desc = "Session: save with session name [resession.nvim]" })
+        end, { desc = "Session: save session with name [resession.nvim]" })
+
         RUtils.map.nnoremap("<Leader>qs", function()
           resession.save(RUtils.sessions.last_session_name())
-        end, { desc = "Session: save session with current name [resession.nvim]" })
-        RUtils.map.nnoremap("<Leader>qL", function()
+        end, { desc = "Session: save last session (per CWD) [resession.nvim]" })
+
+        RUtils.map.nnoremap("<Leader>qw", function()
+          local last_session_name = RUtils.sessions.last_session_name()
+          RUtils.info("Load session: `" .. last_session_name .. "`")
+          resession.load(last_session_name, { silence_errors = true })
+        end, { desc = "Session: load last session (per CWD) [resession.nvim]" })
+
+        RUtils.map.nnoremap("<Leader>qW", function()
           local home = os.getenv "HOME"
           local session_path = vim.fs.joinpath(home, ".local", "share", "nvim", "session")
 
@@ -93,17 +103,13 @@ return {
               ["ctrl-x"] = RUtils.sessions.fzf.mappings.delete(session_path),
             },
           })
-        end, { desc = "Session: load from list sessions [resession.nvim]" })
-        RUtils.map.nnoremap("<Leader>ql", function()
-          resession.load(RUtils.sessions.last_session_name(), { silence_errors = true })
-        end, { desc = "Session: load last (per CWD) [resession.nvim]" })
+        end, { desc = "Session: load session from lists [resession.nvim]" })
+
         RUtils.map.nnoremap("<Leader>qD", function()
           resession.detach()
-          RUtils.info "Session detach now"
+          RUtils.warn "Session detach now!"
         end, { desc = "Session: detach [resession.nvim]" })
       end
-
-      is_setup_mapping_session = true
 
       if vim.tbl_contains(resession.list(), "__quicksave__") then
         vim.defer_fn(function()
@@ -127,7 +133,6 @@ return {
       }, {
         event = { "VimLeavePre" },
         command = function()
-          -- resession.save "last"
           resession.save(RUtils.sessions.last_session_name()) -- per-CWD
         end,
       })
@@ -143,8 +148,8 @@ return {
     cmd = { "Project" },
     keys = {
       { "<Leader>pf", "<CMD>Project fzf-lua<CR>", desc = "Project: find files in projects [project.nvim]" },
-      { "<Leader>pp", "<CMD>Project Recents<CR>", desc = "Project: switch project [project.nvim]" },
-      { "<Leader>ph", "<CMD>Project Config<CR>", desc = "Project: show configs [project.nvim]" },
+      { "<Leader>pp", "<CMD>Project recents<CR>", desc = "Project: switch project [project.nvim]" },
+      { "<Leader>p?", "<CMD>Project! config<CR>", desc = "Project: show configs [project.nvim]" },
       {
         "<Leader>ps",
         function()

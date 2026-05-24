@@ -250,7 +250,8 @@ local function select_custom_prompt_and_commands()
     ["Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
 
     -- Note
-    ["Note - Perbaiki note, structure, rapikan"] = { cmd = "CodeCompanion /writer_and_reformat_note_id" },
+    ["Note - Perbaiki note global"] = { cmd = "CodeCompanion /writer_and_reformat_note_id" },
+    ["Note - Perbaiki note Org"] = { cmd = "CodeCompanion /writer_and_reformat_note_id_org" },
 
     -- Write doc
     ["Doc - write for inline doc codes"] = { cmd = "CodeCompanion /inline_doc", ft = {} },
@@ -433,18 +434,18 @@ end
 
 -- CodeCompanion global mappings
 local function setup_global_mappings()
-  RUtils.map.nnoremap("<Localleader>af", function()
+  RUtils.map.nnoremap("<Localleader>ca", function()
     vim.cmd.CodeCompanionActions()
   end, { desc = "Codecompanion: open CodeCompanionActions" })
 
-  RUtils.map.nnoremap("<Localleader>ar", function()
+  RUtils.map.nnoremap("<Localleader>cr", function()
     vim.api.nvim_input ":CodeCompanion "
   end, { desc = "Codecompanion: run :CodeCompanion command" })
-  RUtils.map.xnoremap("<Localleader>ar", function()
+  RUtils.map.xnoremap("<Localleader>cr", function()
     vim.api.nvim_input ":CodeCompanion "
   end, { desc = "Codecompanion: run :CodeCompanion command (visual)" })
 
-  RUtils.map.nnoremap("<Localleader>aF", function()
+  RUtils.map.nnoremap("<Localleader>cF", function()
     local function select_file_codecompanion_history()
       local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
       return require("fzf-lua").files {
@@ -493,24 +494,24 @@ local function setup_global_mappings()
   end, { desc = "Codecompanion: select file saved previous chats" })
 
   RUtils.map.nnoremap(
-    "<Localleader>aa",
+    "<Localleader>cc",
     select_custom_prompt_and_commands,
-    { desc = "Codecompanion: select custom prompt and commands" }
+    { desc = "Codecompanion: select or edit prompts" }
   )
   RUtils.map.xnoremap(
-    "<Localleader>aa",
+    "<Localleader>cc",
     select_custom_prompt_and_commands,
     { desc = "Codecompanion: select custom prompt and commands (visual)" }
   )
 
-  RUtils.map.nnoremap("<Localleader>ab", vim.cmd.CodeCompanionHistory, { desc = "Codecompanion: history" })
+  RUtils.map.nnoremap("<Localleader>ch", vim.cmd.CodeCompanionHistory, { desc = "Codecompanion: history" })
 
   -- Selection and context mappings
-  RUtils.map.nnoremap("<Localleader>ac", function()
+  RUtils.map.nnoremap("<Localleader>cC", function()
     chat_helpers.add_context { vim.api.nvim_buf_get_name(0) }
   end, { desc = "Codecompanion: add current file" })
 
-  RUtils.map.vnoremap("<Localleader>ap", paste_selection_to_chat, { desc = "Codecompanion: paste selection to chat" })
+  RUtils.map.vnoremap("<Localleader>cC", paste_selection_to_chat, { desc = "Codecompanion: paste selection to chat" })
 end
 
 function M.setup(group)

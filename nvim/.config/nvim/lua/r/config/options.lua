@@ -39,7 +39,7 @@ vim.g.loaded_matchparen = 1
 -- {{{ Generals
 -- opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
 opt.breakindent = true -- start wrapped lines indented
-opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard, but its slow
 opt.cmdheight = 0 -- cmdline height: 0 1 2
 opt.completeopt = "menuone,noinsert"
 opt.concealcursor = "nc"

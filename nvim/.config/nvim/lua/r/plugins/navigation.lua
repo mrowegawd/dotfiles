@@ -767,7 +767,7 @@ return {
       local kind = RUtils.config.icons.kinds
       return {
         outline_window = {
-          position = "right",
+          position = "left",
           winhl = "Normal:Normal,EndOfBuffer:None,NonText:Normal,CursorLine:FloatCursorline",
           focus_on_open = false,
           show_cursorline = true,

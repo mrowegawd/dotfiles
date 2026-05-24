@@ -41,28 +41,10 @@ return {
 
       { "tf", function() require("fzf-lua").tabs() end, desc = "Tab: select tabs [fzflua]" },
 
-      -- {
-      --  "<c-g>",
-      --  function()
-      --     require("fzf-lua").complete_path()
-      --  end,
-      --  desc = "Insert: complete path [fzflua]",
-      --  mode = "i",
-      -- },
-      -- { -- WARN: ini ga work
-      --  "<c-v>",
-      --  function()
-      --     require("fzf-lua").complete_file()
-      --  end,
-      --  desc = "Insert: complete line buffers [fzflua]",
-      --  mode = "i",
-      -- },
-
-      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
       { "<Leader><Leader>", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
       { "<Leader>fh", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
+      { "<Leader>fH", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
       { "<Leader>fc", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
-      { "<Leader>f:", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
       { "<Leader>fA", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
       { "<Leader>fr", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
@@ -86,7 +68,7 @@ return {
             },
           }))
         end,
-        desc = "Picker: select themes [fzflua]",
+        desc = "Picker: select colorschemes [fzflua]",
       },
 
       { "<Leader>hh", function() require("fzf-lua").help_tags() end, desc = "Help: nvim [fzflua]" },
@@ -133,7 +115,6 @@ return {
       -- Search
       { "<Leader>sB", function() require("fzf-lua").lines() end, desc = "Search: all buffers [fzflua]", mode = { "n", "x" } },
       { "<Leader>sb", function() require("fzf-lua").blines() end, desc = "Search: buffers [fzflua]" },
-      { "<Leader>ss", function() require("fzf-lua").blines() end, desc = "Search: buffers [fzflua]" },
       {
         "<Leader>sb",
         function()
@@ -193,26 +174,12 @@ return {
       { "<c-c>gf", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
       { "<c-c>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
 
-      { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Search: symbols [fzflua]" },
-      { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Search: workspaces symbols [fzflua]" },
+      { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Picker: symbols [fzflua]" },
+      { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Picker: workspaces symbols [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
       local extend_title = RUtils.fzflua.extend_title_fzf { cwd = "" }
-
-      local img_previewer ---@type string[]?
-      for _, v in ipairs {
-        { cmd = "chafa", args = { "{file}", "--format=symbols" } },
-        { cmd = "ueberzug", args = {} },
-        { cmd = "viu", args = { "-b" } },
-        -- local pdf_preview_command = vim.fn.executable "pdftotext" == 1
-        --     and { "pdftotext", "-l", "10", "-nopgbrk", "-nodiag", "-q", "<file>", "-" }
-      } do
-        if vim.fn.executable(v.cmd) == 1 then
-          img_previewer = vim.list_extend({ v.cmd }, v.args)
-          break
-        end
-      end
 
       ---@diagnostic disable: missing-fields
       ---@type fzf-lua.config.Base
@@ -220,34 +187,26 @@ return {
         __HLS = {
           cursor = "CurSearch",
         },
-        fzf_colors = {
-          ["fg"] = { "fg", "FzfLuaFilePart" },
-          ["bg"] = { "bg", "FzfLuaNormal" },
-          ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
-          ["fg+"] = { "fg", "FzfLuaSel" },
-          ["bg+"] = { "bg", "FzfLuaSel" },
-          ["hl+"] = { "fg", "FzfLuaFzfMatch" },
-          ["info"] = { "fg", "FzfLuaHeaderText" },
-          ["prompt"] = { "fg", "Conditional" },
-          ["pointer"] = { "fg", "Keyword" },
-          ["marker"] = { "fg", "MarkerFzflua" },
-          ["spinner"] = { "fg", "Label" },
-          ["header"] = { "fg", "FzfLuaHeaderText" },
-          ["gutter"] = { "bg", "FzfLuaBorder" },
-          ["border"] = { "fg", "FzfLuaBorder" },
-        },
+        -- fzf_colors = {
+        --   ["fg"] = { "fg", "FzfLuaFilePart" },
+        --   ["bg"] = { "bg", "FzfLuaNormal" },
+        --   ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
+        --   ["fg+"] = { "fg", "FzfLuaSel" },
+        --   ["bg+"] = { "bg", "FzfLuaSel" },
+        --   ["hl+"] = { "fg", "FzfLuaFzfMatch" },
+        --   ["info"] = { "fg", "FzfLuaHeaderText" },
+        --   ["prompt"] = { "fg", "Conditional" },
+        --   ["pointer"] = { "fg", "Keyword" },
+        --   ["marker"] = { "fg", "MarkerFzflua" },
+        --   ["spinner"] = { "fg", "Label" },
+        --   ["header"] = { "fg", "FzfLuaHeaderText" },
+        --   ["gutter"] = { "bg", "FzfLuaBorder" },
+        --   ["border"] = { "fg", "FzfLuaBorder" },
+        -- },
         previewers = {
           builtin = {
-            snacks_image = { enabled = false },
+            snacks_image = { enabled = true },
             treesitter = { enabled = true, context = false }, -- disable treesitter-context
-            extensions = {
-              ["png"] = img_previewer,
-              ["jpg"] = img_previewer,
-              ["jpeg"] = img_previewer,
-              ["gif"] = img_previewer,
-              ["webp"] = img_previewer,
-            },
-            ueberzug_scaler = "fit_contain",
           },
         },
         keymap = {
@@ -1030,14 +989,6 @@ return {
       servers = {
         ["*"] = {
           keys = {
-            {
-              "<Leader>lR",
-              function()
-                require("fzf-lua").lsp_references()
-              end,
-              has = "references",
-              desc = "LSP: references [fzflua]",
-            },
             {
               "<Leader>lF",
               function()

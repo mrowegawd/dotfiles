@@ -1,6 +1,9 @@
 local Adapters = require "codecompanion.adapters"
+local Extend = Adapters.extend
 
 local M = {}
+
+local GEMINI_API_KEY = "cmd:pass show google/ai/gemini/apikey"
 
 ---@param model string
 local function get_ollama(model, num_ctx)
@@ -24,7 +27,7 @@ local function get_ollama(model, num_ctx)
     })
   end
 
-  return Adapters.extend("ollama", opts)
+  return Extend("ollama", opts)
 end
 
 function M.ollama_qwen25_7b()
@@ -37,6 +40,26 @@ end
 
 function M.ollama_qwen3_8b()
   return get_ollama("qwen3:8b", 32768)
+end
+
+function M.gemini_flash_35()
+  return Extend("gemini", {
+    name = "gemini_flash_3",
+    env = { api_key = GEMINI_API_KEY },
+    schema = {
+      model = {
+        default = "gemini-3.5-flash",
+        choices = {
+          ["gemini-3.5-flash"] = {
+            meta = {
+              context_window = 1048576,
+            },
+          },
+        },
+      },
+      reasoning_effort = { default = "none" },
+    },
+  })
 end
 
 return M

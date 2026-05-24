@@ -1,11 +1,10 @@
 return {
   -- VIM-HIGHLIGHTER
   {
-    "azabiong/vim-highlighter",
-    -- https://github.com/t9md/vim-quickhl (alternatif??)
+    "azabiong/vim-highlighter", -- https://github.com/t9md/vim-quickhl (alternatif)
     keys = {
       {
-        "<leader>uh",
+        "<Leader>uh",
         function()
           local mode = vim.api.nvim_get_mode().mode
           if mode == "v" or mode == "V" then
@@ -17,20 +16,15 @@ return {
           end
           vim.cmd ":Hi + "
         end,
-        desc = "Misc: highlight word on cursor [vim-highlighter]",
+        desc = "Toggle: highlight word/selection [vim-highlighter]",
         mode = { "n", "v" },
       },
       {
         "<Leader>uH",
         "<CMD>Hi clear<CR>",
-        desc = "Misc: clear all highlights [vim-highlighter]",
+        desc = "Toggle: clear all highlights [vim-highlighter]",
       },
     },
-  },
-  -- BLOAT
-  {
-    "dundalek/bloat.nvim",
-    cmd = "Bloat",
   },
   -- STARTUPTIME
   {
@@ -46,12 +40,16 @@ return {
     event = "InsertEnter",
     keys = {
       { "<Leader>cb", "", desc = "comment-box" },
-      { "<Leader>cbb", "<cmd>CBlcbox5<cr>", desc = "Misc: comment box no 5" },
-      { "<Leader>cbB", "<cmd>CBlcbox9<cr>", desc = "Misc: comment box no 9" },
-      { "<Leader>cbe", "<cmd>CBlcbox10<cr>", desc = "Misc: comment box garis tips 10" },
-      { "<Leader>cbl", "<cmd>CBlcbox21<cr>", desc = "Misc: comment box no 21" },
+
+      { "<Leader>cbb", "<cmd>CBlcbox5<cr>", desc = "Misc: comment box no 5", mode = { "n", "x" } },
+      { "<Leader>cbB", "<cmd>CBlcbox9<cr>", desc = "Misc: comment box no 9", mode = { "n", "x" } },
+      { "<Leader>cbl", "<cmd>CBlcbox21<cr>", desc = "Misc: comment box no 21", mode = { "n", "x" } },
+      { "<Leader>cbe", "<cmd>CBllbox10<cr>", desc = "Misc: comment box garis tips 10 left", mode = { "n", "x" } },
+      { "<Leader>cbE", "<cmd>CBlcbox10<cr>", desc = "Misc: comment box garis tips 10 center", mode = { "n", "x" } },
+
       { "<Leader>cba", "<cmd>CBlcline10<cr>", desc = "Misc: comment line no 10" },
       { "<Leader>cbA", "<cmd>CBlcline13<cr>", desc = "Misc: comment line no 13" },
+
       { "<Leader>cbg", "<cmd>CBcatalog<cr>", desc = "Misc: CBcatalog" },
     },
     opts = {

@@ -66,52 +66,50 @@ return {
       },
     },
     keys = {
-      { "<LocalLeader>qv", "", desc = "view", ft = { "orgagenda" } },
+      { "<LocalLeader>qv", "", desc = "view/jump to date", ft = { "orgagenda" } },
       { "<LocalLeader>qs", "", desc = "set edit date/schedule/note/codeblock", ft = { "orgagenda", "org" } },
       { "<LocalLeader>qsp", "", desc = "priority", ft = { "orgagenda", "org" } },
       { "<LocalLeader>qsc", "", desc = "clock", ft = { "orgagenda", "org" } },
       { "<LocalLeader>qx", "", desc = "export", ft = { "org" } },
 
-      -- { "<Leader>br", "", desc = "remove/redo", ft = "org" },
-      -- { "<Leader>bu", "", desc = "toggle", ft = "org" },
-      -- { "<Leader>bb", "", desc = "buffer", ft = "org" },
-      -- { "<Leader>bf", "", desc = "find/title/links", ft = "org" },
-
-      { "<LocalLeader>nd", "", desc = "date/navigate by date" },
-      { "<LocalLeader>nf", "", desc = "find/grep" },
-      { "<LocalLeader>nc", "", desc = "create note/capture" },
+      { "<LocalLeader>af", "", desc = "find/grep" },
+      { "<LocalLeader>ac", "", desc = "create note/capture" },
 
       {
-        "<LocalLeader>nft",
+        "<LocalLeader>aft",
         function()
-          -- if agenda_mode == AgendaMode.SLOW then
-          --   refresh_agenda_files()
-          --   require("orgmode").agenda:agenda()
-          --   return
-          -- end
-
           RUtils.notes.filter_by_tags()
         end,
-        desc = "Note: find notes by tags",
+        desc = "Note: find notes by tag",
       },
       {
-        "<LocalLeader>nfl",
+        "<LocalLeader>afl",
         RUtils.notes.last_filter_by_tags,
-        desc = "Note: last find notes by tags",
+        desc = "Note: last find notes by tag",
       },
 
       {
-        "<LocalLeader>nff",
+        "<LocalLeader>aff",
         RUtils.notes.find_files_notes,
         desc = "Note: find notes files",
       },
 
       {
-        "<LocalLeader>nfg",
+        "<LocalLeader>afg",
         RUtils.notes.live_grep,
         desc = "Note: live grep",
       },
 
+      {
+        "<LocalLeader>aa",
+        function()
+          refresh_agenda_files(true)
+          require("orgmode").action "agenda.prompt"
+        end,
+        desc = "Note: open agenda orgmode [orgmode]",
+      },
+
+      -- Open item in orgagenda
       {
         "<c-v>",
         RUtils.notes.open_item_heading_vsplit,
@@ -130,25 +128,13 @@ return {
         desc = "Note: open item heading in tab",
         ft = "orgagenda",
       },
+
+      -- TEST Command
       {
-        "<LocalLeader>na",
-        function()
-          refresh_agenda_files(true)
-          require("orgmode").action "agenda.prompt"
-        end,
-        desc = "Note: open agenda orgmode [orgmode]",
-      },
-
-      {
-        "<LocalLeader>nR",
-        function()
-          local is_fast = refresh_agenda_files()
-
-          RUtils.info("Agenda mode: " .. (is_fast and "Fast" or "Slow"))
-
-          require("orgmode").agenda:agenda()
-        end,
-        desc = "Note: refresh agenda files Fast or Slow [orgmode]",
+        "<Leader>oo",
+        RUtils.notes.auto_remote_repeater_todo,
+        desc = "Note: open item heading in tab",
+        ft = "orgagenda",
       },
     },
     opts = function()
@@ -199,6 +185,7 @@ return {
           PROGRESS = ":foreground white :background red :weight bold :slant italic",
           LEARNING = ":foreground black :background darkyellow :weight bold :slant normal",
         },
+        org_indent_mode_turns_off_org_adapt_indentation = false,
         org_agenda_skip_scheduled_if_done = true,
         org_hide_emphasis_markers = true,
         org_agenda_use_time_grid = false,
@@ -330,10 +317,10 @@ return {
         },
         mappings = {
           disable_all = false,
-          prefix = "<LocalLeader>q",
+          prefix = "<LocalLeader>a",
           global = {
-            org_capture = "<LocalLeader>ncc",
-            org_agenda = "<LocalLeader>nC",
+            org_capture = "<LocalLeader>ac",
+            org_agenda = "<LocalLeader>aa",
           },
           agenda = {
             -- Views
@@ -347,7 +334,7 @@ return {
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "<Leader>oe" },
-            org_agenda_goto_date = "<Leader>oD",
+            org_agenda_goto_date = "<LocalLeader>qvD",
             org_agenda_open_at_point = "<Leader>oe",
 
             org_agenda_switch_to = "<TAB>",
@@ -362,7 +349,7 @@ return {
             org_agenda_clock_goto = "<LocalLeader>qscg",
             org_agenda_clock_cancel = "<LocalLeader>qscc",
 
-            org_agenda_clockreport_mode = "<LocalLeader>qscr", -- buat report clock
+            org_agenda_clockreport_mode = "<LocalLeader>qscR", -- buat report clock
 
             -- Priority
             org_agenda_priority = "<LocalLeader>qspP",
@@ -550,7 +537,7 @@ return {
     ft = { "org" },
     keys = {
       {
-        "<Localleader>nA",
+        "<Localleader>aA",
         function()
           -- fix error "buffer name already exists"
           for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -615,9 +602,9 @@ return {
       keymaps = {
         filter_reset = "<Leader>sR", -- reset all filters
         toggle_other = "<Leader>qvo", -- toggle catch-all "Other" section
-        filter = "<LocalLeader>qc", -- live filter (exact text)
+        filter = "<LocalLeader>qf", -- live filter (exact text)
         filter_fuzzy = "<LocalLeader>qF", -- live filter (fuzzy)
-        filter_query = "<LocalLeader>qf", -- advanced query input
+        filter_query = "<LocalLeader>qQ", -- advanced query input
         undo = "u", -- undo last change
         reschedule = "<Leader>qss", -- set/change SCHEDULED
         set_deadline = "<Leader>qsd", -- set/change DEADLINE
@@ -629,7 +616,7 @@ return {
         preview = "P", -- preview headline content
         reset_hidden = "X", -- clear hidden list
         toggle_duplicates = "D", -- duplicate items may appear in multiple groups
-        cycle_view = "<Leader>qvv", -- switch view (classic/compact)
+        cycle_view = "<LocalLeader>qvv", -- switch view (classic/compact)
       },
 
       -- Window/appearance

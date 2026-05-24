@@ -225,6 +225,25 @@ function M.reqcall(require_path)
   })
 end
 
+---@param prefix string
+---@param mode? "info" | "warn" | "error"
+local function notifysend(prefix, msg, mode)
+  local title = "Open With " .. (#prefix > 0 and prefix:sub(1, 1):upper()) .. (#prefix > 0 and prefix:sub(2):lower())
+  mode = mode or "info"
+
+  if mode == "info" then
+    RUtils.info(msg, { title = title })
+  end
+
+  if mode == "error" then
+    RUtils.error(msg, { title = title })
+  end
+
+  if mode == "warn" then
+    RUtils.error(msg, { title = title })
+  end
+end
+
 ---@param line_str string
 ---@return boolean
 local function open_image_with_sxiv(line_str)
@@ -244,7 +263,11 @@ local function open_image_with_sxiv(line_str)
 end
 
 ---@param line_str string
-local function open_mpv_sxiv_or_git(line_str)
+local function open_media_or_git(line_str)
+  if vim.bo.filetype == "git" then
+    line_str = line_str:match "([a-f0-9]+)$" or line_str
+  end
+
   local git_ft_relatives = { "NeogitCommitView", "git" }
 
   local sel_open_with = {
@@ -334,6 +357,7 @@ local function open_mpv_sxiv_or_git(line_str)
   end
 
   local contents = sel_fzf()
+  local prefix_notify = "Media or Git"
 
   local width = tonumber("0." .. width_all_text)
   if not width then
@@ -377,7 +401,7 @@ local function open_mpv_sxiv_or_git(line_str)
               open.prefix_cmd[#open.prefix_cmd + 1] = line_str
               cmds = open.prefix_cmd
 
-              key_open = vim.split(key_open, "-")
+              key_open = vim.split(tostring(key_open), "-")
 
               local msg = RUtils.strip_whitespaces(key_open[1])
               notif_msg = msg .. ": " .. line_str
@@ -395,19 +419,19 @@ local function open_mpv_sxiv_or_git(line_str)
           local outputs = vim.system(cmds, { text = true }):wait()
           if outputs.code ~= 0 then
             ---@diagnostic disable-next-line: undefined-field
-            RUtils.error("Failed to run cmd:'" .. table.concat(cmds, " ") .. "'", { title = "Open With" })
+            notifysend(prefix_notify, "Failed run command: `" .. table.concat(cmds, " ") .. "`", "error")
             return
           end
         end
 
         if notif_msg then
           ---@diagnostic disable-next-line: undefined-field
-          RUtils.info(notif_msg, { title = "Open With" })
+          notifysend(prefix_notify, notif_msg)
         end
 
         if warn_msg then
           ---@diagnostic disable-next-line: undefined-field
-          RUtils.warn(warn_msg, { title = "Open With" })
+          notifysend(prefix_notify, warn_msg, "warn")
         end
       end,
     },
@@ -417,249 +441,130 @@ local function open_mpv_sxiv_or_git(line_str)
 end
 
 ---@param line_str string
-local function open_browser(line_str)
+local function open_in_browser(line_str)
+  local uri = vim.fn.matchstr(line_str, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+  local search_msg = "Search: "
+
+  local url
+  if #uri > 0 then
+    search_msg = "Open: "
+    url = uri
+  else
+    url = string.format("https://google.com/search?q=%s", line_str)
+  end
+
   -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
   local browser = os.getenv "NUBROWSER"
-  local notif_msg = "Open with browser: "
-  local cmds = { browser, line_str }
+  local cmds = { browser, url }
 
   local outputs_cmd = vim.system(cmds, { text = true }):wait()
   if outputs_cmd.code ~= 0 then
     ---@diagnostic disable-next-line: undefined-field
-    RUtils.error("Failed to run command: '" .. table.concat(cmds, " ") .. "'", { title = "Open With" })
+    notifysend("browser", "Failed search command: `" .. table.concat(cmds, " ") .. "`", "error")
     return
   end
   ---@diagnostic disable-next-line: undefined-field
-  RUtils.info(notif_msg .. line_str, { title = "Open With" })
+  notifysend("browser", search_msg .. "`" .. line_str .. "`")
 end
 
----@alias LinkOrTagOrNil  "link" | "tag" | nil
+---@param url string
+---@param mode_open string
+local function goto_file(url, mode_open)
+  local ok = RUtils.buf.window.call_stack_peek()
 
----@param line string
----@param col integer
----@param opts? table
----@return LinkOrTagOrNil, number | nil
-local function is_tag_or_link(line, col, opts)
-  opts = opts or {}
-  local initial_col = col
-
-  local char
-  local is_tagline = opts.tag_notation == "yaml-bare" and line:sub(1, 4) == "tags"
-
-  local seen_bracket = false
-  local seen_parenthesis = false
-  local seen_hashtag = false
-  local cannot_be_tag = false
-
-  -- Solves [[Link]]
-  --     at ^
-  -- In this case we try to move col forward to match the link.
-  if "[" == line:sub(col, col) then
-    col = math.max(col + 1, string.len(line))
-  end
-
-  while col >= 1 do
-    char = line:sub(col, col)
-
-    if seen_bracket then
-      if char == "[" then
-        return "link", col + 2
-      end
-    end
-
-    if seen_parenthesis then
-      -- Media link, currently identified by not link nor tag
-      if char == "]" then
-        return nil, nil
-      end
-    end
-
-    if char == "[" then
-      seen_bracket = true
-    elseif char == "(" then
-      seen_parenthesis = true
-    end
-
-    if is_tagline == true then
-      if char == " " or char == "\t" or char == "," or char == ":" then
-        if col ~= initial_col then
-          return "tag", col + 1
-        end
-      end
-    else
-      if char == "#" then
-        seen_hashtag = true
-      end
-      if char == "@" then
-        seen_hashtag = true
-      end
-      -- Tags should have a space before #, if not we are likely in a link
-      if char == " " and seen_hashtag and opts.tag_notation == "#tag" then
-        if not cannot_be_tag then
-          return "tag", col
-        end
-      end
-
-      if char == ":" and opts.tag_notation == ":tag:" then
-        if not cannot_be_tag then
-          return "tag", col
-        end
-      end
-    end
-
-    if char == " " or char == "\t" then
-      cannot_be_tag = true
-    end
-    col = col - 1
-  end
-  return nil, nil
-end
-
----@return LinkOrTagOrNil, number | nil
-local function check_for_link_or_tag()
-  local line = vim.api.nvim_get_current_line()
-  local col = vim.fn.col "."
-  return is_tag_or_link(line, col)
-end
-
-local function follow_link_markdown()
-  local saved_reg = vim.fn.getreg '"0'
-  local kind, _ = check_for_link_or_tag()
-  if not kind then
+  if ok then
+    RUtils.buf.window.arange_wins "vsplit"()
     return
   end
 
-  local title
+  local filepath, line_nr, col_nr = url:match "([^%s:]+):(%d+):(%d+)"
 
-  if kind == "link" then
-    vim.cmd "normal yi]"
-    title = vim.fn.getreg '"0'
-    title = title:gsub("^(%[)(.+)(%])$", "%2")
-    title = remove_alias(title)
+  if not filepath or not line_nr then
+    filepath, line_nr = url:match "^(.+):(%d+)"
   end
 
-  vim.fn.setreg('"0', saved_reg)
+  if not filepath then
+    notifysend("Go To File", "use fallback `gf` key")
 
-  local parts
-  if title then
-    parts = vim.split(title, "#")
-  end
+    vim.cmd(mode_open)
 
-  -- if there is a #
-  if parts and #parts ~= 1 then
-    title = parts[2]
-    parts = vim.split(title, "%^")
-    if #parts ~= 1 then
-      title = parts[2]
+    local success, err = pcall(vim.cmd.normal, {
+      "gf",
+      bang = true,
+    })
+
+    if not success then
+      RUtils.error(err)
     end
-    local rg_opts =
-      [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
 
-    local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-    fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     return
   end
 
-  if require("obsidian.api").cursor_link() then
-    vim.cmd "ObsidianFollowLink"
-  end
+  filepath = vim.fn.expand(filepath)
+
+  local target_line = tonumber(line_nr) or 1
+  local target_col = tonumber(col_nr) or 0
+
+  vim.cmd(mode_open .. " " .. filepath)
+
+  vim.defer_fn(function()
+    vim.api.nvim_win_set_cursor(0, {
+      target_line,
+      target_col,
+    })
+  end, 1)
 end
 
----@param context_mode "mpv or svix" | "browser" | "go to file"
----@param mode_open?  "vsplit" | "split" | "edit"
-function M.open_with(context_mode, mode_open)
-  mode_open = mode_open or "edit"
-
-  local debug_context_mode = { "mpv or svix", "browser", "go to file" }
-  if not vim.tbl_contains(debug_context_mode, context_mode) then
-    ---@diagnostic disable-next-line: undefined-field
-    RUtils.warn("Available mode: " .. table.concat(debug_context_mode, ", "))
-    return
-  end
-
-  local url
-
+---@param context_mode string
+---@return string?
+local function get_target_from_selection(context_mode)
   local mode = vim.fn.mode()
 
   if mode == "v" or mode == "V" then
-    local is_exit_visual_mode = false
-    if context_mode == "mpv or svix" then
-      is_exit_visual_mode = true
-    end
-    local line_str = RUtils.get_visual_selection { exit_from_visual = is_exit_visual_mode }
-    if line_str then
-      url = line_str.selection
-    end
-  else
-    url = RUtils.get_lines_under_cusor()
+    local exit_visual = context_mode == "mpv or svix"
+
+    local line = RUtils.get_visual_selection {
+      exit_from_visual = exit_visual,
+    }
+
+    return line and line.selection or nil
   end
 
-  if not url or url == "" then
-    RUtils.warn "Failed to extract string under cursor, abort."
+  return RUtils.get_lines_under_cusor()
+end
+
+---@param context_mode "mpv or svix" | "browser" | "go to file"
+---@param mode_open? "vsplit" | "split" | "edit"
+function M.open_with(context_mode, mode_open)
+  mode_open = mode_open or "edit"
+
+  local available_modes = { "mpv or svix", "browser", "go to file" }
+
+  if not vim.tbl_contains(available_modes, context_mode) then
+    ---@diagnostic disable-next-line: undefined-field
+    notifysend("", "Available mode: " .. table.concat(available_modes, ", "))
     return
   end
 
-  -- Check jika terdapat `https` pada `url`
-  local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
-  -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
+  local url = get_target_from_selection(context_mode)
+
+  if not url or url == "" then
+    notifysend("", "Failed to extract string under cursor, abort")
+    return
+  end
 
   if context_mode == "browser" then
-    if #uri > 0 then
-      url = uri
-    else
-      url = string.format("https://google.com/search?q=%s", url)
-    end
-
-    open_browser(url)
+    open_in_browser(url)
     return
   end
 
   if context_mode == "mpv or svix" then
-    if vim.bo.filetype == "git" then
-      -- local sha = line:match "^parent%s+([a-f0-9]+)$"
-      url = url:match "([a-f0-9]+)$"
-    end
-
-    open_mpv_sxiv_or_git(url)
+    open_media_or_git(url)
     return
   end
 
   if context_mode == "go to file" then
-    local ok, _ = RUtils.buf.window.call_stack_peek()
-    if ok then
-      RUtils.buf.window.arange_wins "vsplit"()
-      return
-    end
-
-    -- if vim.bo.filetype == "markdown" then
-    --   RUtils.info "oke lah"
-    --   follow_link_markdown()
-    --   return
-    -- end
-
-    local filepath, line_nr, col_nr = url:match "([^%s:]+):(%d+):(%d+)"
-    if not filepath or not line_nr then
-      filepath, line_nr = url:match "^(.+):(%d+)"
-    end
-
-    if filepath then
-      filepath = vim.fn.expand(filepath)
-      local target_line = tonumber(line_nr) or 1
-      local target_col = tonumber(col_nr) or 0
-
-      vim.cmd(mode_open .. " " .. filepath)
-
-      vim.defer_fn(function()
-        vim.api.nvim_win_set_cursor(0, { target_line, target_col })
-      end, 1)
-    else
-      RUtils.info "use fallback `gf` key"
-      vim.cmd(mode_open)
-      local ok, err = pcall(vim.cmd.normal, { "gf", bang = true })
-      if not ok then
-        RUtils.error(err)
-      end
-    end
+    goto_file(url, mode_open)
   end
 end
 

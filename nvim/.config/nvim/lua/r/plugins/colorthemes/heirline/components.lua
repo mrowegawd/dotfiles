@@ -228,7 +228,7 @@ local __colors = function()
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
-    winbar_bright = H.tint(H.get("WinBar", "fg"), 0.45),
+    winbar_bright = H.tint(H.get("WinBar", "fg"), 1.25),
 
     bright = H.tint(H.get("StatusLine", "fg"), 0.65),
     -- bright_winbar = H.tint(H.get("StatusLine", "fg"), 0.65),
@@ -457,6 +457,10 @@ local mode_colors = {
   ["!"] = "green",
   t = colors.mode_term_bg,
 }
+
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                              PARTS STATUSLINE                               ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 M.Mode = {
   init = function(self)
@@ -1514,9 +1518,10 @@ M.Separator = {
   { provider = " " },
 }
 
--- ╓
--- ║ STATUSLINE
--- ╙
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                 STATUSLINE                                  ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
+
 M.status_active_left = {
   condition = Conditions.is_active,
   M.Mode,
@@ -1560,9 +1565,10 @@ M.status_active_left = {
   end,
 }
 
--- ╓
--- ║ WINBAR
--- ╙
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                   WINBAR                                    ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
+
 M.WinbarSeparator = {
   { provider = " " },
 }
@@ -1690,6 +1696,29 @@ M.WinbarFilePath = {
     end,
   },
 }
+
+local function format_part(item, is_color) -- function helper to add highlights group
+  is_color = is_color or false
+
+  local hl_group = "LspKind" .. item.type
+
+  if is_color then
+    return string.format("%%#%s#%s%s%%*", hl_group, item.icon, item.name)
+  end
+  return string.format("%%#%s#%s%%#WinBar#%s%%*", hl_group, item.icon, item.name)
+end
+local function build_full_location(data_items)
+  local parts = {}
+  for idx, d in ipairs(data_items) do
+    local set_color = false
+    if idx == 1 then
+      set_color = true
+    end
+    parts[#parts + 1] = format_part(d, set_color)
+  end
+  return table.concat(parts, "%#NavicSeparator# > %*")
+end
+
 M.WinbarNavic = {
   init = function(self)
     self.req_navic = get_navic()
@@ -1714,19 +1743,13 @@ M.WinbarNavic = {
         return
       end
 
-      local location = self.req_navic.get_location()
       local parts = {}
       for _, d in ipairs(data) do
         table.insert(parts, d.icon .. d.name)
       end
 
-      local function format_part(item) -- function helper to add highlights group
-        local hl_group = "LspKind" .. item.type
-        return string.format("%%#%s#%s%%#WinBar#%s%%*", hl_group, item.icon, item.name)
-      end
-
       local sep = " "
-      local first = format_part(data[1])
+      local first = format_part(data[1], true)
 
       local fmt_navic
 
@@ -1736,7 +1759,8 @@ M.WinbarNavic = {
         local last = format_part(data[#data])
         fmt_navic = string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", sep, first, last)
       else
-        fmt_navic = sep .. "%#NavicSeparator# " .. location
+        local full = build_full_location(data)
+        fmt_navic = sep .. "%#NavicSeparator# " .. full
 
         local function get_display_width(str)
           local clean_str = str:gsub("%%#.-#", "") -- Hapus kode highlight %#GroupName#
@@ -1744,6 +1768,7 @@ M.WinbarNavic = {
           clean_str = clean_str:gsub("%%.", "") -- Hapus item statusline lainnya->  %l, %c, dsb
           return vim.fn.strdisplaywidth(clean_str)
         end
+
         local display_width = get_display_width(fmt_navic)
 
         if not Conditions.width_percent_below(display_width, 0.50) then

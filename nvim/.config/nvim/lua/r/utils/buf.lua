@@ -238,7 +238,7 @@ end
 --
 local exclude_ft_arrange = { "DiffviewFileHistory", "DiffviewFiles" }
 
----@param direction "split" | "vsplit" | "tabe"
+---@param direction "split" | "vsplit" | "tabe" | "J" | "K" | "H" | "L"
 M.window.arange_wins = function(direction)
   return function()
     if vim.wo.diff then

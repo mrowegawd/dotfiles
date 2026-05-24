@@ -47,7 +47,6 @@ end
 ---@field ft? string|string[] Filetype(s) to set the keymap for.
 ---@field lsp? vim.lsp.get_clients.Filter Set for buffers with LSP clients matching this filter.
 ---@field enabled? boolean|fun(buf?:number): boolean condition to enable the keymap.
-
 ---@param filter vim.lsp.get_clients.Filter
 ---@param spec LazyKeysLspSpec[]
 function M.set(filter, spec)

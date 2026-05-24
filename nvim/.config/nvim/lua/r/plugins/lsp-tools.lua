@@ -1,7 +1,8 @@
 return {
-  -- WAYFINDER
+  -- WAYFINDER (disabled)
   {
     "error311/wayfinder.nvim",
+    enabled = false,
     keys = {
       {
         "<Leader>cP",
@@ -44,7 +45,7 @@ return {
         desc = "Peek: note file [overlook.nvim]",
       },
       {
-        "<Leader>cp",
+        "<Leader>cP",
         function()
           require("overlook.api").peek_definition()
         end,

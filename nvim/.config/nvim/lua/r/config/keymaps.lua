@@ -142,17 +142,17 @@ RUtils.map.nnoremap("<Leader>bN", vim.cmd.E, { desc = "Buffer: new empty" })
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 --stylua: ignore
-RUtils.map.nnoremap("<Leader>hR", function() vim.cmd [[wall!]] vim.cmd [[restart]] end, { desc = "Buffer: restart nvim" })
+RUtils.map.nnoremap("<Leader>hR", function() vim.cmd [[wall!]] vim.cmd [[restart]] end, { desc = "Help: restart nvim" })
 --stylua: ignore
-RUtils.map.nnoremap( "<Leader>hb", RUtils.map.show_help_buf_keymap, { desc = "Help: show keymaps curbuf", silent = true })
+RUtils.map.nnoremap( "<Leader>hb", RUtils.map.show_help_buf_keymap, { desc = "Help: show keymaps buffer", silent = true })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              SEARCH <leader>s                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local replace_keymap = RUtils.buf.window.replace_keymap
-RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Search: replace under cursor" })
-RUtils.map.xnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: replace under cursor (visual)" })
+RUtils.map.nnoremap("<Leader>xR", replace_keymap, { desc = "Cmd: replace string under cursor" })
+RUtils.map.xnoremap("<Leader>xR", [["zy:%s/<C-r><C-o>"/]], { desc = "Cmd: replace string under cursor" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               OPEN <leader>o                                ╏
@@ -224,19 +224,6 @@ end, { expr = true })
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.treesitter():map "<Leader>us"
-RUtils.map.nnoremap("<Leader>ul", function()
-  local msg_notify
-  local quickfix_cursorline_active = vim.g.is_quickfix_cursorline_active
-  if quickfix_cursorline_active then
-    vim.g.is_quickfix_cursorline_active = false
-    msg_notify = "Turn Off"
-  else
-    vim.g.is_quickfix_cursorline_active = true
-    msg_notify = "Turn On"
-  end
-
-  RUtils.warn("Cursorline -> " .. msg_notify, { title = "Toggle: Cursorline" })
-end, { desc = "Toggle: cursorline" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  TERMINAL                                   ╏
@@ -424,15 +411,15 @@ RUtils.map.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
 
 --stylua: ignore
-RUtils.map.nnoremap("<Leader>cd", function() local filepath = fn.expand "%:p:h" vim.cmd(fmt("cd %s", filepath)) vim.notify(fmt("ROOT CHANGED: %s", filepath)) end, { desc = "Misc: cd to file" })
+RUtils.map.nnoremap("<Leader>cd", function() local filepath = fn.expand "%:p:h" vim.cmd(fmt("cd %s", filepath)) vim.notify(fmt("ROOT CHANGED: %s", filepath)) end, { desc = "Action: cd to file" })
 --stylua: ignore
-RUtils.map.nnoremap("<Leader>py", function() local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or "" vim.fn.setreg("+", path) vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" }) end, { silent = true, desc = "Misc: copy path buffer" })
-RUtils.map.nnoremap("<Leader>pP", function()
+RUtils.map.nnoremap("<Leader>cy", function() local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or "" vim.fn.setreg("+", path) vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" }) end, { silent = true, desc = "Action: copy path buffer" })
+RUtils.map.nnoremap("<Leader>xP", function()
   local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
-end, { desc = "Misc: printout current path" })
+end, { desc = "Cmd: printout current path" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  COMMANDS                                   ╏
@@ -442,7 +429,9 @@ RUtils.create_command("Snippets", RUtils.cmd.edit_snippet, { desc = "Misc: edit 
 RUtils.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 
 --stylua: ignore
-RUtils.create_command("InfoOption", function() vim.cmd "options" end, { desc = "Misc: echo options" }) RUtils.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
+RUtils.create_command("InfoOption", function() vim.cmd "options" end, { desc = "Misc: echo options" })
+--stylua: ignore
+RUtils.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
 --stylua: ignore
 RUtils.create_command("E", function() return cmd [[ vnew ]] end, { desc = "Misc: vnew" })
 
