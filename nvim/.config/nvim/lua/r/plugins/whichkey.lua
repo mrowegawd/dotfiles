@@ -12,10 +12,10 @@ return {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
-      triggers = {
-        { "<Leader>", mode = "nxso" },
-        { "<Localleader>", mode = "nxso" },
-      },
+      -- triggers = {
+      --   { "<Leader>", mode = "nxso" },
+      --   { "<Localleader>", mode = "nxso" },
+      -- },
       icons = {
         rules = {
           { plugin = "fzf-lua", icon = "💊", name = "fzf" },
@@ -71,21 +71,8 @@ return {
 
           { "<Leader>x", group = "exec:diagnostics/quickfix/trouble/cmd", icon = { icon = "󱖫 ", color = "green" } },
 
-          {
-            "<leader>w",
-            group = "windows",
-            proxy = "<c-w>",
-            expand = function()
-              return require("which-key.extras").expand.win()
-            end,
-          },
-          {
-            "<leader>b",
-            group = "buffer",
-            expand = function()
-              return require("which-key.extras").expand.buf()
-            end,
-          },
+          { "<Leader>w", group = "windows" },
+          { "<leader>b", group = "buffer" },
 
           { "<Localleader>g", group = "grug-far" },
 

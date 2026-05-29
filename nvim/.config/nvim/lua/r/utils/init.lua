@@ -4,8 +4,8 @@ local LazyUtil = require "lazy.core.util"
 ---@field buf r.utils.buf
 ---@field cmd r.utils.cmd
 ---@field cmp r.utils.cmp
----@field codecompanion_fidget r.utils.codecompanion_fidget
 ---@field codecompanion r.utils.codecompanion
+---@field codecompanion_fidget r.utils.codecompanion_fidget
 ---@field config LazyVimConfig
 ---@field deprecated r.utils.deprecated
 ---@field extras r.utils.extras
@@ -15,8 +15,11 @@ local LazyUtil = require "lazy.core.util"
 ---@field fzf_diffview r.utils.fzf_diffview
 ---@field fzflua r.utils.fzflua
 ---@field git r.utils.git
+---@field hover_eldoc r.utils.hover_eldoc
 ---@field inject r.utils.inject
 ---@field json r.utils.json
+---@field layout r.utils.layout
+---@field logo r.utils.logo
 ---@field lsp r.utils.lsp
 ---@field maim r.utils.maim
 ---@field map r.utils.map
@@ -32,14 +35,11 @@ local LazyUtil = require "lazy.core.util"
 ---@field sessions r.utils.sessions
 ---@field statuscolumn r.utils.statuscolumn
 ---@field terminal r.utils.terminal
----@field tiling r.utils.tiling
+---@field tmux r.utils.tmux
 ---@field todocomments r.utils.todocomments
 ---@field treesitter r.utils.treesitter
 ---@field uisec r.utils.uisec
----@field windowdim r.utils.windowdim
----@field hover_eldoc r.utils.hover_eldoc
 ---@field winui r.utils.winui
----@field logo r.utils.logo
 local M = {}
 M.deprecated = require "r.utils.depcreated"
 

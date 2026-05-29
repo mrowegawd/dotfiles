@@ -235,8 +235,6 @@ local toggle_term = function(cmds, direction)
     current_term = cmds.name
   end
 
-  RUtils.info(vim.inspect(cmds))
-
   return term_base
 end
 

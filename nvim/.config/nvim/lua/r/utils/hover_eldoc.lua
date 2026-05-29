@@ -121,6 +121,10 @@ end
 
 function M.hover_in_split()
   local params = vim.lsp.util.make_position_params(0, "utf-32")
+
+  -- simpan current win sebelum request
+  local caller_win = vim.api.nvim_get_current_win()
+
   vim.lsp.buf_request(0, "textDocument/hover", params, function(err, result, ctx, _)
     if err or not result or not result.contents then
       return
@@ -135,12 +139,15 @@ function M.hover_in_split()
       close_eldoc_window()
     end
 
+    local saved = RUtils.layout.save_wins_current_tab and RUtils.layout.save_wins_current_tab(caller_win)
+
     local symbol_name = nil
     eldoc_buf_id = vim.api.nvim_create_buf(false, true)
     eldoc_win_id = vim.api.nvim_open_win(eldoc_buf_id, false, {
       split = "above", -- "below"
       win = -1,
-      height = math.min(#lines, 10), -- or math.floor(vim.o.lines * vim.lsp.autohover.opts.ratio),
+      -- win = 0,
+      height = math.min(#lines, 8), -- or math.floor(vim.o.lines * vim.lsp.autohover.opts.ratio),
       style = "minimal",
     })
 
@@ -164,10 +171,12 @@ function M.hover_in_split()
       symbol_name = line:match("[_%w%.]+", col)
     end
 
-    vim.api.nvim_buf_set_name(eldoc_buf_id, "LSP Hover --> '" .. symbol_name .. "'")
+    vim.treesitter.language.register("markdown", "eldochover")
+
+    vim.api.nvim_buf_set_name(eldoc_buf_id, "LSP Hover --> `" .. symbol_name .. "`")
     vim.api.nvim_buf_set_lines(eldoc_buf_id, 0, -1, false, lines)
     vim.api.nvim_set_option_value("modifiable", false, { buf = eldoc_buf_id })
-    vim.api.nvim_set_option_value("filetype", "markdown", { buf = eldoc_buf_id })
+    vim.api.nvim_set_option_value("filetype", "eldochover", { buf = eldoc_buf_id })
     vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = eldoc_buf_id })
     vim.api.nvim_set_option_value(
       "winhighlight",
@@ -178,6 +187,20 @@ function M.hover_in_split()
     -- Non-editable, temporary
     vim.api.nvim_set_option_value("buftype", "nofile", { buf = eldoc_buf_id })
     vim.api.nvim_set_option_value("swapfile", false, { buf = eldoc_buf_id })
+    vim.api.nvim_set_option_value("winfixheight", true, { win = eldoc_win_id, scope = "local" })
+
+    -- ensure treesitter running on ft eldochover
+    vim.schedule(function()
+      if vim.api.nvim_buf_is_valid(eldoc_buf_id) then
+        vim.treesitter.start(eldoc_buf_id, "markdown")
+      end
+    end)
+
+    vim.schedule(function()
+      if saved then
+        RUtils.layout.restore_wins(saved)
+      end
+    end)
 
     -- Some mappings
     vim.keymap.set("n", "q", function()
@@ -186,21 +209,23 @@ function M.hover_in_split()
   end)
 end
 
--- function M.toggle_auto_hover()
---   if vim.lsp.autohover == nil then
---     vim.notify("`vim.lsp.autohover` doesn't exists!", vim.log.levels.WARN, { title = "LSP" })
---     return
---   end
---   if vim.lsp.autohover.enabled == nil then
---     vim.notify("`vim.lsp.autohover.enabled` doesn't exists!", vim.log.levels.WARN, { title = "LSP" })
---     return
---   end
---   vim.lsp.autohover.enabled = not vim.lsp.autohover.enabled
---   if vim.lsp.autohover.enabled then
---     vim.notify("Auto Hover enabled", vim.log.levels.INFO, { title = "LSP" })
---   else
---     vim.notify("Auto Hover disabled", vim.log.levels.INFO, { title = "LSP" })
---   end
--- end
+function M.toggle_auto_hover()
+  if vim.lsp.autohover == nil then
+    return
+  end
+  if vim.lsp.autohover.enabled == nil then
+    return
+  end
+  vim.lsp.autohover.enabled = not vim.lsp.autohover.enabled
+  if vim.lsp.autohover.enabled then
+    RUtils.layout.open_window_safely(function()
+      M.hover_in_split()
+    end)
+    -- vim.notify("Auto Hover enabled", vim.log.levels.INFO, { title = "LSP" })
+  else
+    close_eldoc_window()
+    -- vim.notify("Auto Hover disabled", vim.log.levels.INFO, { title = "LSP" })
+  end
+end
 
 return M

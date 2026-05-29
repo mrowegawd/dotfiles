@@ -20,9 +20,19 @@ return {
 
   {
     "kristijanhusak/vim-dadbod-ui",
-    cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
+    -- cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
     dependencies = "vim-dadbod",
-    keys = { { "<Leader>oD", "<cmd>DBUIToggle<CR>", desc = "Open: toggle DBUI" } },
+    keys = {
+      {
+        "<Leader>od",
+        function()
+          RUtils.layout.toggle_sidebar("dbui", function()
+            vim.cmd "DBUIToggle"
+          end)
+        end,
+        desc = "Open: toggle DBUI",
+      },
+    },
     init = function()
       local data_path = vim.fn.stdpath "data"
 

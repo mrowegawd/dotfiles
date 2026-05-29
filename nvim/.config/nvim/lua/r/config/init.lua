@@ -32,6 +32,7 @@ local base_options = {
     autoformat = true,
     processing_ai = false,
     colorscheme = colorscheme,
+    main_layout = "default", -- "default, tmux"
     inlay_hints = true,
     snacks_jump_scope = false,
     -- lightthemes = { "dawnfox", "rose-pine-dawn", "rose-pine", "base46-seoul256_dark", "base46-zenburn" },

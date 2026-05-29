@@ -69,8 +69,8 @@ return {
   },
   -- QFBOOKMARK
   {
-    -- dir = "~/.local/src/nvim_plugins/qfbookmark",
-    "MadKuntilanak/qfbookmark",
+    dir = "~/.local/src/nvim_plugins/qfbookmark",
+    -- "MadKuntilanak/qfbookmark",
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
@@ -81,6 +81,10 @@ return {
       },
       keymaps = {
         disable_all = false,
+        actions = {
+          mark_win_open = "go",
+          buffers = "gb",
+        },
         open_item = {
           default = {
             keys = { "o", "<CR>" },
@@ -90,6 +94,12 @@ return {
         note = {
           toggle_local_note = "<LocalLeader>an",
           toggle_global_note = "<LocalLeader>aN",
+        },
+        navigation = {
+          mark = {
+            next = "gn",
+            prev = "gp",
+          },
         },
         integrations = {
           cmdline_strings = {

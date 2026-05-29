@@ -24,10 +24,12 @@ function M.get_total_wins()
 end
 
 ---@param wins string|string[]
+---@param is_tab? boolean
 ---@return { found: boolean, winbufnr: integer, winnr: integer, winid: integer, ft: string }
-function M.windows_is_opened(wins)
+function M.windows_is_opened(wins, is_tab)
+  is_tab = is_tab or false
   local QfbookmarkUtils = require "qfbookmark.utils"
-  local qf_wins = QfbookmarkUtils.windows_is_opened(wins)
+  local qf_wins = QfbookmarkUtils.windows_is_opened(wins, is_tab)
   return qf_wins
 end
 
@@ -268,7 +270,7 @@ local function open_media_or_git(line_str)
     line_str = line_str:match "([a-f0-9]+)$" or line_str
   end
 
-  local git_ft_relatives = { "NeogitCommitView", "git" }
+  local git_ft_relatives = { "NeogitCommitView", "git", "DiffviewFiles", "DiffviewFileHistory" }
 
   local sel_open_with = {
     ["Open MPV - Download/Open local/http video"] = {

@@ -61,6 +61,8 @@ local general_overrides = function()
     { CursorLine = { bg = { from = "Normal", attr = "bg" } } },
     { CursorLineBright = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
 
+    { SpecialKey = { bg = "NONE" } },
+
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg" },
@@ -153,18 +155,13 @@ local general_overrides = function()
         fg = {
           from = "Normal",
           attr = "bg",
-          alter = 1.5,
+          alter = 2,
           transparency = 0.9,
           color = { from = "Normal", attr = "bg" },
         },
         bg = "NONE",
       },
     },
-
-    -- Disable the Folded background using the `FoldedMarkdown` group.
-    -- Check `windowdim.lua` for details.
-    { FoldedMarkdown = { fg = { from = "Normal", attr = "bg" }, bg = "NONE" } },
-    { FoldedSign = { inherit = "Folded", bg = "NONE" } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    SPELL                                    ║
@@ -467,7 +464,7 @@ local general_overrides = function()
     },
     {
       WinSeparatorNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = 0.15 },
+        fg = { from = "NormalNote", attr = "bg", alter = 0.35 },
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
@@ -562,19 +559,19 @@ local general_overrides = function()
     {
       WinBarGreen = {
         fg = { from = "diffAdded", attr = "fg", alter = 0.1 },
-        bg = { from = "diffAdded", attr = "fg", opacity = 0.2 },
+        bg = { from = "diffAdded", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
       WinBarRed = {
         fg = { from = "diffRemoved", attr = "fg", alter = 0.1 },
-        bg = { from = "diffRemoved", attr = "fg", opacity = 0.2 },
+        bg = { from = "diffRemoved", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
       WinBarYellow = {
-        fg = { from = "StatusLine", attr = "fg" },
-        bg = { from = "StatusLine", attr = "bg" },
+        fg = { from = "diffChanged", attr = "fg", alter = 0.1 },
+        bg = { from = "diffChanged", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
@@ -774,7 +771,7 @@ local plugins_overrides = function()
     { DiffviewStatusAdded = { inherit = "GitSignsAdd", bg = "NONE" } },
     { DiffviewStatusModified = { inherit = "GitSignsChange", bg = "NONE" } },
     { DiffviewStatusRenamed = { inherit = "GitSignsDelete", bg = "NONE" } },
-    { DiffviewStatusUnmerged = { inherit = "DiffChangedChar" } },
+    { DiffviewStatusUnmerged = { inherit = "GitSignsDelete", bg = "NONE" } },
     { DiffviewStatusUntracked = { inherit = "GitSignsAdd", bg = "NONE" } },
     { DiffviewStatusDeleted = { inherit = "GitSignsDelete", bg = "NONE" } },
 
@@ -1583,97 +1580,6 @@ local plugins_overrides = function()
     { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                   AERIALS                                   ║
-    -- ╙─────────────────────────────────────────────────────────────────────────────╜
-
-    { AerialGuide = { link = "OutlineGuides" } },
-    { AerialLine = { link = "OutlineCurrent" } },
-
-    { AerialBoolean = { link = "LspKindBoolean" } },
-    { AerialBooleanIcon = { link = "LspKindBoolean" } },
-
-    { AerialVariable = { link = "LspKindVariable" } },
-    { AerialVariableIcon = { link = "LspKindVariable" } },
-
-    { AerialInterface = { link = "LspKindInterface" } },
-    { AerialInterfaceIcon = { link = "LspKindInterface" } },
-
-    { AerialKey = { link = "LspKindKey" } },
-    { AerialKeyIcon = { link = "LspKindKey" } },
-
-    { AerialMethod = { link = "LspKindMethod" } },
-    { AerialMethodIcon = { link = "LspKindMethod" } },
-
-    { AerialModule = { link = "LspKindModule" } },
-    { AerialModuleIcon = { link = "LspKindModule" } },
-
-    { AerialNamespace = { link = "LspKindNamespace" } },
-    { AerialNamespaceIcon = { link = "LspKindNamespace" } },
-
-    { AerialText = { link = "LspKindText" } },
-    { AerialTextIcon = { link = "LspKindText" } },
-
-    { AerialFunction = { link = "LspKindFunction" } },
-    { AerialFunctionIcon = { link = "LspKindFunction" } },
-
-    { AerialArray = { link = "LspKindArray" } },
-    { AerialArrayIcon = { link = "LspKindArray" } },
-
-    { AerialObject = { link = "LspKindObject" } },
-    { AerialObjectIcon = { link = "LspKindObject" } },
-
-    { AerialString = { link = "LspKindString" } },
-    { AerialStringIcon = { link = "LspKindString" } },
-
-    { AerialNumber = { link = "LspKindNumber" } },
-    { AerialNumberIcon = { link = "LspKindNumber" } },
-
-    { AerialField = { link = "LspKindField" } },
-    { AerialFieldIcon = { link = "LspKindField" } },
-
-    { AerialConstant = { link = "LspKindConstant" } },
-    { AerialConstantIcon = { link = "LspKindConstant" } },
-
-    { AerialPackage = { link = "LspKindPackage" } },
-    { AerialPackageIcon = { link = "LspKindPackage" } },
-
-    { AerialProperty = { link = "LspKindProperty" } },
-    { AerialPropertyIcon = { link = "LspKindProperty" } },
-
-    { AerialNull = { link = "LspKindNull" } },
-    { AerialNullIcon = { link = "LspKindNull" } },
-
-    { AerialOperator = { link = "LspKindOperator" } },
-    { AerialOperatorIcon = { link = "LspKindOperator" } },
-
-    { AerialReference = { link = "LspKindReference" } },
-    { AerialReferenceIcon = { link = "LspKindReference" } },
-
-    { AerialSnippet = { link = "LspKindSnippet" } },
-    { AerialSnippetIcon = { link = "LspKindSnippet" } },
-
-    { AerialStruct = { link = "LspKindStruct" } },
-    { AerialStructIcon = { link = "LspKindStruct" } },
-
-    { AerialTypeParameter = { link = "LspKindTypeParameter" } },
-    { AerialTypeParameterIcon = { link = "LspKindTypeParameter" } },
-
-    { AerialUnit = { link = "LspKindUnit" } },
-    { AerialUnitIcon = { link = "LspKindUnit" } },
-
-    { AerialValue = { link = "LspKindValue" } },
-    { AerialValueIcon = { link = "LspKindValue" } },
-
-    { AerialEnum = { link = "LspKindEnum" } },
-    { AerialEnumIcon = { link = "LspKindEnum" } },
-
-    { AerialEnumMember = { link = "LspKindEnumMember" } },
-    { AerialEnumMemberIcon = { link = "LspKindEnumMember" } },
-
-    { AerialConstructor = { link = "LspKindConstructor" } },
-    { AerialConstructorIcon = { link = "LspKindConstructor" } },
-
-    -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    NAVIC                                    ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
@@ -1963,32 +1869,124 @@ local function set_panel_highlight()
 
     {
       OutlineGuides = {
-        fg = { from = "TroubleIndent", attr = "fg", alter = -0.1 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.4 },
         bg = "NONE",
       },
     },
     {
       OutlineCurrent = {
-        fg = { from = "Error", attr = "fg", alter = 0.5 },
+        fg = { from = "String", attr = "fg" },
+        bg = "NONE",
       },
     },
-    {
-      OutlineCurrent = {
-        bg = {
-          from = "OutlineCurrent",
-          attr = "fg",
-          transparency = 0.15,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
-        bold = true,
-        reverse = false,
-      },
-    },
+    -- {
+    --   OutlineCurrent = {
+    --     bg = {
+    --       from = "OutlineCurrent",
+    --       attr = "fg",
+    --       transparency = 0.15,
+    --       color = { from = "PanelBottomNormal", attr = "bg" },
+    --     },
+    --     bold = true,
+    --     reverse = false,
+    --   },
+    -- },
     { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
 
-    { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.1 }, bg = "NONE", italic = true } },
+    { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.5 }, bg = "NONE", italic = true } },
     { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
     { OutlineLineno = { bg = "NONE" } },
+
+    -- ╓─────────────────────────────────────────────────────────────────────────────╖
+    -- ║                                   AERIALS                                   ║
+    -- ╙─────────────────────────────────────────────────────────────────────────────╜
+
+    { AerialGuide = { link = "OutlineGuides" } },
+    { AerialLine = { link = "OutlineCurrent" } },
+
+    { AerialBoolean = { link = "LspKindBoolean" } },
+    { AerialBooleanIcon = { link = "LspKindBoolean" } },
+
+    { AerialVariable = { link = "LspKindVariable" } },
+    { AerialVariableIcon = { link = "LspKindVariable" } },
+
+    { AerialInterface = { link = "LspKindInterface" } },
+    { AerialInterfaceIcon = { link = "LspKindInterface" } },
+
+    { AerialKey = { link = "LspKindKey" } },
+    { AerialKeyIcon = { link = "LspKindKey" } },
+
+    { AerialMethod = { link = "LspKindMethod" } },
+    { AerialMethodIcon = { link = "LspKindMethod" } },
+
+    { AerialModule = { link = "LspKindModule" } },
+    { AerialModuleIcon = { link = "LspKindModule" } },
+
+    { AerialNamespace = { link = "LspKindNamespace" } },
+    { AerialNamespaceIcon = { link = "LspKindNamespace" } },
+
+    { AerialText = { link = "LspKindText" } },
+    { AerialTextIcon = { link = "LspKindText" } },
+
+    { AerialFunction = { link = "LspKindFunction" } },
+    { AerialFunctionIcon = { link = "LspKindFunction" } },
+
+    { AerialArray = { link = "LspKindArray" } },
+    { AerialArrayIcon = { link = "LspKindArray" } },
+
+    { AerialObject = { link = "LspKindObject" } },
+    { AerialObjectIcon = { link = "LspKindObject" } },
+
+    { AerialString = { link = "LspKindString" } },
+    { AerialStringIcon = { link = "LspKindString" } },
+
+    { AerialNumber = { link = "LspKindNumber" } },
+    { AerialNumberIcon = { link = "LspKindNumber" } },
+
+    { AerialField = { link = "LspKindField" } },
+    { AerialFieldIcon = { link = "LspKindField" } },
+
+    { AerialConstant = { link = "LspKindConstant" } },
+    { AerialConstantIcon = { link = "LspKindConstant" } },
+
+    { AerialPackage = { link = "LspKindPackage" } },
+    { AerialPackageIcon = { link = "LspKindPackage" } },
+
+    { AerialProperty = { link = "LspKindProperty" } },
+    { AerialPropertyIcon = { link = "LspKindProperty" } },
+
+    { AerialNull = { link = "LspKindNull" } },
+    { AerialNullIcon = { link = "LspKindNull" } },
+
+    { AerialOperator = { link = "LspKindOperator" } },
+    { AerialOperatorIcon = { link = "LspKindOperator" } },
+
+    { AerialReference = { link = "LspKindReference" } },
+    { AerialReferenceIcon = { link = "LspKindReference" } },
+
+    { AerialSnippet = { link = "LspKindSnippet" } },
+    { AerialSnippetIcon = { link = "LspKindSnippet" } },
+
+    { AerialStruct = { link = "LspKindStruct" } },
+    { AerialStructIcon = { link = "LspKindStruct" } },
+
+    { AerialTypeParameter = { link = "LspKindTypeParameter" } },
+    { AerialTypeParameterIcon = { link = "LspKindTypeParameter" } },
+
+    { AerialUnit = { link = "LspKindUnit" } },
+    { AerialUnitIcon = { link = "LspKindUnit" } },
+
+    { AerialValue = { link = "LspKindValue" } },
+    { AerialValueIcon = { link = "LspKindValue" } },
+
+    { AerialEnum = { link = "LspKindEnum" } },
+    { AerialEnumIcon = { link = "LspKindEnum" } },
+
+    { AerialEnumMember = { link = "LspKindEnumMember" } },
+    { AerialEnumMemberIcon = { link = "LspKindEnumMember" } },
+
+    { AerialConstructor = { link = "LspKindConstructor" } },
+    { AerialConstructorIcon = { link = "LspKindConstructor" } },
   }
 end
 
@@ -2103,6 +2101,7 @@ Win.filetype_blacklist_winhighlights = {
 Win.filetype_winhighlights = {
   ["qf"] = true,
   ["Outline"] = true,
+  ["aerial"] = true,
   ["trouble"] = true,
   ["grug-far"] = true,
   ["dbui"] = true,
@@ -2126,10 +2125,7 @@ Win.cursorline_blacklist = {
   ["orgagenda"] = true,
   ["grug-far"] = true,
   ["noice"] = true,
-  -- ["trouble"] = true,
-
-  ["DiffviewFileHistory"] = true,
-  ["DiffviewFiles"] = true,
+  ["main_layout"] = true,
 
   ["codecompanion"] = true,
   ["wayfinder"] = true,
@@ -2147,6 +2143,9 @@ Win.cursorline_blacklist = {
 Win.cursorline_bright = {
   ["qf"] = true,
   ["trouble"] = true,
+
+  ["DiffviewFiles"] = true,
+  ["DiffviewFileHistory"] = true,
 }
 
 Win.note_winhighlights = {
@@ -2371,97 +2370,111 @@ RUtils.map.augroup("UserHighlights", {
   end,
 })
 
-RUtils.map.augroup("UserDimWindow", {
-  event = "InsertEnter",
-  pattern = "*",
-  command = function(ctx)
-    insert_enter(ctx)
-  end,
-}, {
-  event = "InsertLeave",
-  pattern = "*",
-  command = function(ctx)
-    insert_leave(ctx)
-  end,
-}, {
-  event = "BufRead",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      buf_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "BufEnter",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      buf_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "BufLeave",
-  pattern = "*",
-  command = function(ctx)
-    if not cursorline_original then
-      cursorline_original = true
-    end
+RUtils.map.augroup(
+  "UserDimWindow",
+  {
+    event = "InsertEnter",
+    pattern = "*",
+    command = function(ctx)
+      insert_enter(ctx)
+    end,
+  },
+  {
+    event = "InsertLeave",
+    pattern = "*",
+    command = function(ctx)
+      insert_leave(ctx)
+    end,
+  },
+  {
+    event = "BufRead",
+    pattern = "*",
+    command = function(ctx)
+      vim.defer_fn(function()
+        buf_enter(ctx)
+      end, 1)
+    end,
+  },
+  {
+    event = "BufEnter",
+    pattern = "*",
+    command = function(ctx)
+      vim.defer_fn(function()
+        buf_enter(ctx)
+      end, 1)
+    end,
+  },
+  {
+    event = "BufLeave",
+    pattern = "*",
+    command = function(ctx)
+      if not cursorline_original then
+        cursorline_original = true
+      end
 
-    vim.defer_fn(function()
-      buf_leave(ctx)
-    end, 1)
-  end,
-}, {
-  event = "WinNew",
-  pattern = "*",
-  command = function()
-    wo.winhighlight = ""
-    vim.w.rutils_winhighlight_owner = nil
-  end,
-}, {
-  event = "WinEnter",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      win_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "WinLeave",
-  pattern = "*",
-  command = function(ctx)
-    if not cursorline_original then
-      cursorline_original = true
-    end
-    win_leave(ctx)
-  end,
-}, {
-  event = "VimEnter",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      win_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "FocusGained",
-  pattern = "*",
-  command = function(ctx)
-    focus_gain(ctx)
-  end,
-}, {
-  event = "FocusLost",
-  pattern = "*",
-  command = function(ctx)
-    focus_lost(ctx)
-  end,
-}, {
-  event = "VimResized",
-  pattern = "*",
-  command = function()
-    vim.cmd "wincmd ="
-  end,
-})
+      vim.defer_fn(function()
+        buf_leave(ctx)
+      end, 1)
+    end,
+  },
+  {
+    event = "WinNew",
+    pattern = "*",
+    command = function()
+      wo.winhighlight = ""
+      vim.w.rutils_winhighlight_owner = nil
+    end,
+  },
+  {
+    event = "WinEnter",
+    pattern = "*",
+    command = function(ctx)
+      vim.defer_fn(function()
+        win_enter(ctx)
+      end, 1)
+    end,
+  },
+  {
+    event = "WinLeave",
+    pattern = "*",
+    command = function(ctx)
+      if not cursorline_original then
+        cursorline_original = true
+      end
+      win_leave(ctx)
+    end,
+  },
+  {
+    event = "VimEnter",
+    pattern = "*",
+    command = function(ctx)
+      vim.defer_fn(function()
+        win_enter(ctx)
+      end, 1)
+    end,
+  },
+  {
+    event = "FocusGained",
+    pattern = "*",
+    command = function(ctx)
+      focus_gain(ctx)
+    end,
+  },
+  {
+    event = "FocusLost",
+    pattern = "*",
+    command = function(ctx)
+      focus_lost(ctx)
+    end,
+  }
+  --   ,{
+  --   event = "VimResized",
+  --   pattern = "*",
+  --   command = function()
+  --     vim.cmd "wincmd ="
+  --   end,
+  -- }
+)
 
 -- Store original Pmenu colors before overriding
 local function save_pmenu_colors()

@@ -103,13 +103,15 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move ← (v
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
+RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable" })
+
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                   TAB t..                                   ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 RUtils.map.nnoremap("tn", function()
   if vim.bo.filetype == "neo-tree" then
-    return
+    vim.cmd "wincmd p"
   end
   vim.cmd "tabedit %"
 end, { desc = "Tab: new tab", silent = true })
@@ -253,7 +255,7 @@ RUtils.map.tnoremap("<a-l>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l
 -- ╏                                 COMMANDLINE                                 ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
+RUtils.map.cnoremap("hh", "<Esc>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: left" })
@@ -697,15 +699,20 @@ end
 ---@field direct_command TmuxDirectCmds
 
 RUtils.map.nnoremap("<a-E>", function()
+  if vim.g.main_layout == "default" then
+    RUtils.layout.toggle_sidebar("neo-tree", function()
+      vim.cmd "Neotree reveal focus"
+    end)
+    return
+  end
+
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
-  local PATH_PANE_COLLECT_JSON = "/tmp/tmux-main-layout-workspaces.json"
-  local tmux = os.getenv "TMUX"
-  local terminal = os.getenv "TERMINAL"
-
-  -- ─[ Wezterm ]──────────────────────────────────────────────────────
-  if not tmux then
-    if terminal ~= "wezterm" then
+  -- +-----------------------------------------------------------------------------+
+  -- |                                   WEZTERM                                   |
+  -- +-----------------------------------------------------------------------------+
+  if not RUtils.tmux.is_tmux then
+    if RUtils.tmux.is_terminal ~= "wezterm" then
       if RUtils.has "neo-tree.nvim" then
         vim.cmd "Neotree focus reveal right"
         return
@@ -737,115 +744,37 @@ RUtils.map.nnoremap("<a-E>", function()
     return
   end
 
-  -- ─[ Tmux helpers ]─────────────────────────────────────────────────
-
-  local function tmux_cmd(io_cmd)
-    local handle = io.popen(io_cmd)
-    if not handle then
-      RUtils.warn("Something went wrong when running `" .. io_cmd .. "`")
-      return nil
-    end
-    local out = handle:read "*a"
-    handle:close()
-    if not out or out == "" then
-      return nil
-    end
-    return out:gsub("%s+$", "")
-  end
-
-  local function get_json_field(session_name, window_id, field)
-    if not RUtils.file.exists(PATH_PANE_COLLECT_JSON) then
-      RUtils.warn("JSON not found: " .. PATH_PANE_COLLECT_JSON)
-      return nil
-    end
-
-    local result = tmux_cmd(
-      string.format(
-        "jq -r --arg s %q --arg w %q --arg f %q '.[$s][$w][$f] // empty' %s",
-        session_name,
-        window_id,
-        field,
-        PATH_PANE_COLLECT_JSON
-      )
-    )
-
-    if not result or result == "" or result == "null" then
-      return nil
-    end
-    return result
-  end
-
-  local function is_pane_alive(pane_id)
-    if not pane_id or pane_id == "" then
-      return false
-    end
-    local result = vim.system({ "tmux", "list-panes", "-a", "-F", "#{pane_id}" }, { text = true }):wait()
-    if result.code ~= 0 then
-      return false
-    end
-    for line in result.stdout:gmatch "[^\n]+" do
-      if vim.trim(line) == pane_id then
-        return true
-      end
-    end
-    return false
-  end
-
-  local function get_pane_process(pane_id)
-    local result = vim
-      .system({ "tmux", "display-message", "-p", "-t", pane_id, "#{pane_current_command}" }, { text = true })
-      :wait()
-    if result.code ~= 0 then
-      return ""
-    end
-    return vim.trim(result.stdout)
-  end
-
-  -- Tunggu sampai proses di pane BUKAN target_proc lagi (mode close)
-  -- atau SUDAH menjadi target_proc (mode jump)
-  local function wait_for_process(pane_id, target_proc, is_close)
-    for _ = 1, 20 do
-      local proc = get_pane_process(pane_id)
-      if is_close then
-        if proc ~= target_proc then
-          return
-        end
-      else
-        if proc == target_proc then
-          return
-        end
-      end
-      os.execute "sleep 0.15"
-    end
-  end
+  -- +-----------------------------------------------------------------------------+
+  -- |                                    TMUX                                     |
+  -- +-----------------------------------------------------------------------------+
 
   -- ─[ Resolve pane IDs ]─────────────────────────────────────────────
 
-  local current_session = tmux_cmd "tmux display-message -p '#S'"
-  local current_window = tmux_cmd "tmux display-message -p '#I'"
+  local current_session = RUtils.tmux.tmux_cmd "tmux display-message -p '#S'"
+  local current_window = RUtils.tmux.tmux_cmd "tmux display-message -p '#I'"
   if not current_session or not current_window then
     return
   end
 
-  local file_manager_pane_id = get_json_field(current_session, current_window, "file_manager_pane_id")
+  local file_manager_pane_id = RUtils.tmux.get_json_field(current_session, current_window, "file_manager_pane_id")
 
-  if not file_manager_pane_id or not is_pane_alive(file_manager_pane_id) then
+  if not file_manager_pane_id or not RUtils.tmux.is_pane_alive(file_manager_pane_id) then
     RUtils.warn "<a-E>: file_manager_pane_id not found or pane dead.\nRun tm-toggle-pane first to create the layout."
     return
   end
 
   -- ─[ Execute ]──────────────────────────────────────────────────────
 
-  local proc = get_pane_process(file_manager_pane_id)
+  local proc = RUtils.tmux.get_pane_process(file_manager_pane_id)
   if proc == fm_manager then
     vim.system { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " 'q' Enter" }
-    wait_for_process(file_manager_pane_id, fm_manager, true) -- tunggu sampai bukan fm_manager
+    RUtils.tmux.wait_for_process(file_manager_pane_id, fm_manager, true) -- tunggu sampai bukan fm_manager
   end
 
-  proc = get_pane_process(file_manager_pane_id)
+  proc = RUtils.tmux.get_pane_process(file_manager_pane_id)
   if proc == "nvim" then
     vim.system { "sh", "-c", "tmux send-keys -t " .. file_manager_pane_id .. " Escape ':qa!' Enter" }
-    wait_for_process(file_manager_pane_id, "nvim", true) -- tunggu sampai bukan nvim
+    RUtils.tmux.wait_for_process(file_manager_pane_id, "nvim", true) -- tunggu sampai bukan nvim
   end
 
   vim.system {
@@ -854,6 +783,6 @@ RUtils.map.nnoremap("<a-E>", function()
     "tmux send-keys -t " .. file_manager_pane_id .. " '" .. fm_manager .. " " .. dirname .. "' Enter",
   }
 
-  wait_for_process(file_manager_pane_id, fm_manager, false)
+  RUtils.tmux.wait_for_process(file_manager_pane_id, fm_manager, false)
   vim.system { "tmux", "select-pane", "-t", file_manager_pane_id }
 end)

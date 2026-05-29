@@ -266,7 +266,7 @@ local __colors = function()
 
     -- Termasuk filetype: note
     mode_note_fg = H.get("WinBarNote", "fg"),
-    mode_note_fg_bright = H.tint(H.get("WinBarNote", "fg"), 0.25),
+    mode_note_fg_bright = H.tint(H.get("WinBarNote", "fg"), 0.5),
     mode_note_bg = H.get("WinBarNote", "bg"),
 
     -- Termasuk filetype: readonly, commit

@@ -57,15 +57,15 @@ set -g pane-scrollbars-style "fg=$TMUX_KEYWORD,bg=$SESSION_BG"
 set -g mode-style "fg=$TMUX_BG,bg=$TMUX_VISUAL_BG"
 
 # Display the border name for debugging purposes:
-# setw -g pane-border-format "\
-# #{?pane_active,#[fg=$RED] ,}\
-# #{?#{==:#{window_panes},1},#[fg=$STATUSLINE_FG]\
-# #{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id},\
-# #[fg=$STATUSLINE_FG]#{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id}} \
-# #{?pane_active,#{pane_current_command} ,}"
+setw -g pane-border-format "\
+#{?pane_active,#[fg=$RED] ,}\
+#{?#{==:#{window_panes},1},#[fg=$STATUSLINE_FG]\
+#{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id},\
+#[fg=$STATUSLINE_FG]#{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id}} \
+#{?pane_active,#{pane_current_command} ,}"
 
 # Border display name disabled
-setw -g pane-border-format ""
+# setw -g pane-border-format ""
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                        STATUSLINE                        ╎

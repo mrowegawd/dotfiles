@@ -217,55 +217,55 @@ local function setup_buffer_or_file_fzflua(fn)
   return Previewer
 end
 
-local load_plenary_plugin = function()
-  local scan = require "plenary.scandir"
-  local Path = require "plenary.path"
-  return Path, scan
-end
-
-local load_opts_orgmode = function()
-  local plugin = require("lazy.core.config").plugins["orgmode"]
-  local Plugin = require "lazy.core.plugin"
-  local opts_plugin = Plugin.values(plugin, "opts", false)
-  return opts_plugin
-end
-
-local get_tbl_backup_and_todos = function(scan, is_ignore_file)
-  is_ignore_file = is_ignore_file or false
-
-  local opts_plugin = load_opts_orgmode()
-
-  local org_backup = {}
-  local org_todos = {}
-  for _, x in pairs(opts_plugin.org_agenda_files) do
-    local path
-    if string.match(x, [[%*%*]], 1) then
-      path = string.gsub(x, [[%/%*%*/%*$]], "")
-    else
-      path = string.gsub(x, [[%/%*$]], "")
-    end
-    local dirs = scan.scan_dir(path)
-    for _, file_path in pairs(dirs) do
-      if is_ignore_file and (not string.match(file_path, "org_archive")) then
-        local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org$")
-        if check_org_ext then
-          local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
-          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
-          table.insert(org_todos, basename_file)
-        end
-      else
-        local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org")
-        if check_org_ext then
-          local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
-          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
-          table.insert(org_todos, basename_file)
-        end
-      end
-    end
-  end
-
-  return org_backup, org_todos
-end
+-- local load_plenary_plugin = function()
+--   local scan = require "plenary.scandir"
+--   local Path = require "plenary.path"
+--   return Path, scan
+-- end
+--
+-- local load_opts_orgmode = function()
+--   local plugin = require("lazy.core.config").plugins["orgmode"]
+--   local Plugin = require "lazy.core.plugin"
+--   local opts_plugin = Plugin.values(plugin, "opts", false)
+--   return opts_plugin
+-- end
+--
+-- local get_tbl_backup_and_todos = function(scan, is_ignore_file)
+--   is_ignore_file = is_ignore_file or false
+--
+--   local opts_plugin = load_opts_orgmode()
+--
+--   local org_backup = {}
+--   local org_todos = {}
+--   for _, x in pairs(opts_plugin.org_agenda_files) do
+--     local path
+--     if string.match(x, [[%*%*]], 1) then
+--       path = string.gsub(x, [[%/%*%*/%*$]], "")
+--     else
+--       path = string.gsub(x, [[%/%*$]], "")
+--     end
+--     local dirs = scan.scan_dir(path)
+--     for _, file_path in pairs(dirs) do
+--       if is_ignore_file and (not string.match(file_path, "org_archive")) then
+--         local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org$")
+--         if check_org_ext then
+--           local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
+--           table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+--           table.insert(org_todos, basename_file)
+--         end
+--       else
+--         local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org")
+--         if check_org_ext then
+--           local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
+--           table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+--           table.insert(org_todos, basename_file)
+--         end
+--       end
+--     end
+--   end
+--
+--   return org_backup, org_todos
+-- end
 
 ---@param opts {}
 local function opts_fzf(opts)
@@ -1055,7 +1055,6 @@ end
 ---TAKEN from: orgmode.nvim
 ---Schedule a fold update for the given range. Call after buffer edits.
 ---OrgRange is 1-indexed; vim._foldupdate expects 0-indexed lines.
----@param range OrgRange
 local function schedule_fold_update(range)
   local bufnr = vim.api.nvim_get_current_buf()
   vim.schedule(function()

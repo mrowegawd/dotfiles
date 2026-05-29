@@ -131,8 +131,8 @@ return {
   },
   -- TROUBLE.NVIM
   {
-    -- "folke/trouble.nvim",
-    dir = "~/.local/src/nvim_plugins/trouble.nvim",
+    -- dir = "~/.local/src/nvim_plugins/trouble.nvim",
+    "MadKuntilanak/trouble.nvim",
     cmd = "Trouble",
     keys = {
       {

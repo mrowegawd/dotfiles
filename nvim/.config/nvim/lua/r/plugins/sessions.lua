@@ -147,9 +147,42 @@ return {
     "DrKJeff16/project.nvim",
     cmd = { "Project" },
     keys = {
-      { "<Leader>pf", "<CMD>Project fzf-lua<CR>", desc = "Project: find files in projects [project.nvim]" },
-      { "<Leader>pp", "<CMD>Project recents<CR>", desc = "Project: switch project [project.nvim]" },
-      { "<Leader>p?", "<CMD>Project! config<CR>", desc = "Project: show configs [project.nvim]" },
+      {
+        "<Leader>pp",
+        function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+          local history = require "project.util.history"
+          fzf_lua.fzf_exec(
+            function(cb)
+              local results = history.get_recent_projects()
+              for _, e in ipairs(results) do
+                cb(e.path)
+              end
+              cb()
+            end,
+            RUtils.fzflua.open_dock_bottom {
+              fzf_opts = { ["--header"] = [[^x:delete  ^o:show config]] },
+              winopts = { title = RUtils.fzflua.format_title("Project.nvim Lists", RUtils.config.icons.misc.bookmark) },
+              actions = {
+                ["default"] = function(selected)
+                  fzf_lua.files { cwd = selected[1] }
+                end,
+                ["ctrl-o"] = function()
+                  vim.cmd "Project! config"
+                end,
+                ["ctrl-x"] = {
+                  function(selected)
+                    history.delete_project { value = selected[1] }
+
+                    require("fzf-lua").actions.resume()
+                  end,
+                },
+              },
+            }
+          )
+        end,
+        desc = "Project: select/delete and show config projects [project.nvim]",
+      },
       {
         "<Leader>ps",
         function()
@@ -164,62 +197,13 @@ return {
         end,
         desc = "Project: save [project.nvim]",
       },
-      { "<Leader>pd", "<CMD>Project delete<CR>", desc = "Project: delete [project.nvim]" },
     },
     opts = {
       show_hidden = true,
-      fzf_lua = {
-        enabled = true,
-        disable_file_picker = false,
-        mappings = {
-          n = {
-            R = "rename_project",
-            b = "browse_project_files",
-            -- d = "delete_project",
-            f = "find_project_files",
-            r = "recent_project_files",
-            s = "search_in_project_files",
-            w = "change_working_directory",
-          },
-          i = {
-            ["<C-b>"] = "browse_project_files",
-            -- ["<C-d>"] = "delete_project",
-            ["<C-f>"] = "find_project_files",
-            -- ["<C-n>"] = "rename_project",
-            ["<C-r>"] = "recent_project_files",
-            ["<C-s>"] = "search_in_project_files",
-            ["<C-w>"] = "change_working_directory",
-          },
-        },
-      },
-      history = {
-        save_dir = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path),
-      },
+      history = { save_dir = string.format("%s/data.programming.forprivate", RUtils.config.path.dropbox_path) },
       telescope = {
-        disable_file_picker = false,
-        mappings = {
-          n = {
-            R = "rename_project",
-            b = "browse_project_files",
-            -- d = "delete_project",
-            f = "find_project_files",
-            r = "recent_project_files",
-            s = "search_in_project_files",
-            w = "change_working_directory",
-          },
-          i = {
-            ["<C-b>"] = "browse_project_files",
-            -- ["<C-d>"] = "delete_project",
-            ["<C-f>"] = "find_project_files",
-            -- ["<C-n>"] = "rename_project",
-            ["<C-r>"] = "recent_project_files",
-            ["<C-s>"] = "search_in_project_files",
-            ["<C-w>"] = "change_working_directory",
-          },
-        },
-        prefer_file_browser = false,
-        sort = "newest", ---@type 'oldest'|'newest'
-        tilde = false,
+        disable_file_picker = true,
+        prefer_file_browser = true,
       },
     },
   },

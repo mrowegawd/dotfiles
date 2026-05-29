@@ -156,9 +156,9 @@ return {
                 desc = "LSP: Hover",
               },
               {
-                "gK",
+                "<Leader>ll",
                 function()
-                  RUtils.hover_eldoc.hover_in_split()
+                  RUtils.hover_eldoc.toggle_auto_hover()
                 end,
                 desc = "LSP: show hover (split) [hover_eglot]",
               },

@@ -1,5 +1,77 @@
 local toggle_state = false
-local j = nil
+
+local home = os.getenv "HOME"
+local bookmark_file = home .. "/.cache/yazi/bookmarks"
+local index_file = home .. "/.cache/yazi/bookmark-index"
+
+local function ensure_files()
+  os.execute("mkdir -p " .. home .. "/.cache/yazi")
+  local f = io.open(bookmark_file, "a")
+  if f then
+    f:close()
+  end
+  local g = io.open(index_file, "a")
+  if g then
+    g:close()
+  end
+end
+
+local function read_bookmarks()
+  local list = {}
+  local f = io.open(bookmark_file, "r")
+  if not f then
+    return list
+  end
+  for line in f:lines() do
+    local trimmed = line:match "^%s*(.-)%s*$"
+    if trimmed and trimmed ~= "" then
+      table.insert(list, trimmed)
+    end
+  end
+  f:close()
+  return list
+end
+
+local function normalize_path(path)
+  if home and path:sub(1, #home) == home then
+    return "~" .. path:sub(#home + 1)
+  end
+  return path
+end
+
+local function write_bookmarks(list)
+  local f = io.open(bookmark_file, "w")
+  if not f then
+    return
+  end
+  for _, v in ipairs(list) do
+    f:write(v .. "\n")
+  end
+  f:close()
+end
+
+local function read_index()
+  local f = io.open(index_file, "r")
+  if not f then
+    return 0
+  end
+  local n = tonumber(f:read "*l") or 0
+  f:close()
+  return n
+end
+
+local function write_index(n)
+  local f = io.open(index_file, "w")
+  if not f then
+    return
+  end
+  f:write(tostring(n) .. "\n")
+  f:close()
+end
+
+local function jump_to(path)
+  vim.cmd("Neotree " .. path)
+end
 
 return {
   -- OIL.NVIM
@@ -172,16 +244,19 @@ return {
     -- cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
     keys = {
-      -- sidebar left (neotree)
       {
         "<a-e>",
         function()
-          local tmux = os.getenv "TMUX"
-          if not tmux then
-            vim.cmd "Neotree toggle left"
-          else
-            vim.cmd "Neotree toggle right"
-          end
+          RUtils.layout.toggle_sidebar("neo-tree", function()
+            vim.cmd "Neotree toggle"
+          end)
+        end,
+        desc = "Misc: open file explore [neotree]",
+      },
+      {
+        "<Leader>OO",
+        function()
+          RUtils.info(vim.inspect(RUtils.layout.debug()))
         end,
         desc = "Misc: open file explore [neotree]",
       },
@@ -371,6 +446,50 @@ return {
             })
           end,
 
+          bookmark_cycle_save = function(state)
+            ensure_files()
+
+            local cwd = state.path
+            local list = read_bookmarks()
+
+            for _, v in ipairs(list) do
+              local normalize_path_v = normalize_path(v)
+              local normalize_path_cwd = normalize_path(cwd)
+              if normalize_path_v == normalize_path_cwd then
+                RUtils.warn(string.format("Already bookmarked:\n%s", normalize_path_cwd))
+                return
+              end
+            end
+
+            local normalize_cwd = normalize_path(cwd)
+            table.insert(list, normalize_cwd)
+            write_bookmarks(list)
+            RUtils.warn(string.format("Bookmark saved (%d total):\n%s", #list, normalize_cwd))
+          end,
+
+          bookmark_cycle_pick = function()
+            RUtils.info "not implemented yet: pick"
+          end,
+
+          bookmark_cycle_cycle = function()
+            ensure_files()
+            local list = read_bookmarks()
+
+            if #list == 0 then
+              RUtils.warn "No bookmarks yet. Use save to add one."
+              return
+            end
+
+            local idx = read_index()
+            idx = (idx % #list) + 1 -- next, wrap around
+            write_index(idx)
+
+            local target = list[idx]
+            local basename_target = normalize_path(target)
+            RUtils.info(string.format("[%d/%d] %s", idx, #list, basename_target))
+            jump_to(target)
+          end,
+
           child_or_open = function(state)
             local node = state.tree:get_node()
             if node.type == "directory" or node:has_children() then
@@ -527,9 +646,11 @@ return {
             ["w"] = "noop",
             ["l"] = "noop",
 
-            ["<a-o>"] = "fzmark",
-            ["<a-T>"] = "open_terminal",
+            ["<a-B>"] = "bookmark_cycle_pick",
+            ["b"] = "bookmark_cycle_save",
+            ["B"] = "bookmark_cycle_cycle",
 
+            ["<a-o>"] = "fzmark",
             ["K"] = "show_file_details",
 
             ["<2-LeftMouse>"] = "open",
@@ -551,8 +672,6 @@ return {
             ["m"] = "",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
-            ["th"] = "prev_source",
-            ["tl"] = "next_source",
             ["gh"] = "prev_source",
             ["gl"] = "next_source",
 
@@ -604,7 +723,9 @@ return {
       {
         "<Leader>oa",
         function()
-          vim.cmd.AerialToggle()
+          RUtils.layout.open_outline_safely("aerial", function()
+            vim.cmd.AerialToggle()
+          end, true)
         end,
         desc = "Open: aerial window [aerial]",
       },
@@ -757,7 +878,9 @@ return {
       {
         "<Leader>oa",
         function()
-          vim.cmd.Outline()
+          RUtils.layout.open_outline_safely("Outline", function()
+            vim.cmd.Outline()
+          end, true)
         end,
         desc = "Open: outline window [outline]",
       },
@@ -845,7 +968,7 @@ return {
           down_and_jump = { "<a-n>" },
           up_and_jump = { "<a-p>" },
 
-          filter_symbols = { "<Leader>ff", "<Leader><Leader>" },
+          filter_symbols = "<space><space>",
         },
       }
     end,

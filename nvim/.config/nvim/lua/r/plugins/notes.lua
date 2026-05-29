@@ -610,7 +610,7 @@ return {
         set_deadline = "<Leader>qsd", -- set/change DEADLINE
         cycle_todo = "t", -- cycle TODO state
         set_state = "<Leader>qst", -- set state directly (st, sd, etc.) or show menu
-        reload = "R", -- refresh agenda
+        reload = "<Leader>R", -- refresh agenda
         refile = "<Leader>qR", -- refile via Telescope/org-telescope
         hide_item = "x", -- hide current item
         preview = "P", -- preview headline content
