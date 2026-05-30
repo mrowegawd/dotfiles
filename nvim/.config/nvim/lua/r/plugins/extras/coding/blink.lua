@@ -12,7 +12,6 @@ return {
   -- BLINK
   {
     "saghen/blink.cmp",
-    version = "^1", -- make sure to always set version to v1 even on development
     event = { "InsertEnter", "CmdlineEnter" },
     opts_extend = {
       "sources.completion.enabled_providers",
@@ -20,23 +19,15 @@ return {
       "sources.default",
       "disable_ft",
     },
+    build = function()
+      require("blink.cmp").build():pwait()
+    end,
     dependencies = {
-      -- "saghen/filler-begone.nvim",
-      -- add blink.compat to dependencies
-      {
-        "mikavilpas/blink-ripgrep.nvim",
-        version = "*",
-      },
-      {
-        "saghen/blink.compat",
-        optional = true, -- make optional so it's only enabled if any extras need it
-        opts = {},
-        version = not vim.g.lazyvim_blink_main and "*",
-      },
-      {
-        "Kaiser-Yang/blink-cmp-git",
-        dependencies = { "nvim-lua/plenary.nvim" },
-      },
+      "saghen/blink.lib",
+      "saghen/blink.compat",
+      "mikavilpas/blink-ripgrep.nvim",
+      "Kaiser-Yang/blink-cmp-git",
+      { "MattiasMTS/cmp-dbee", branch = "ms/v2" },
     },
     opts = {
       -- custom props to disable blink in certain filetypes
@@ -331,14 +322,15 @@ return {
         enabled = true,
         window = { border = "rounded" },
       },
-      fuzzy = {
-        implementation = "rust",
-        sorts = {
-          "exact",
-          "score",
-          "sort_text",
-        },
-      },
+      fuzzy = { implementation = "rust" },
+      -- fuzzy = {
+      --   -- implementation = "rust",
+      --   sorts = {
+      --     "exact",
+      --     "score",
+      --     "sort_text",
+      --   },
+      -- },
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)
         -- How to disable keymap? -> ["<C-e>"] = {},
