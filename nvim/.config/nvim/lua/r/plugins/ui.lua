@@ -13,7 +13,7 @@ return {
     branch = "feat/update-actions-fzflua",
     event = "VeryLazy",
     dependencies = {
-      "MunifTanjim/nui.nvim",
+      "MadKuntilanak/nui.nvim",
       {
         "rcarriga/nvim-notify",
         opts = {
@@ -45,7 +45,7 @@ return {
         desc = "Noice: show all messages",
       },
       {
-        "<Localleader>nd",
+        "<Localleader>nn",
         function()
           require("noice").cmd "dismiss"
         end,
@@ -87,7 +87,7 @@ return {
           name = "circleFull",
         },
       },
-      cmdline = { view = "cmdline" },
+      cmdline = { enabled = false, view = "cmdline" },
       redirect = { view = "popup", filter = { event = "msg_show" } },
       views = {
         cmdline_popup = { position = { row = -2, col = "1%" } },

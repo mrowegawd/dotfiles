@@ -164,56 +164,56 @@ return {
         function()
           local neotest = require "neotest"
           RUtils.fzflua.open_cmd_bulk_center({
-            ["Test - Attach to test"] = function()
+            ["Test - attach to test"] = function()
               neotest.run.attach()
             end,
-            ["Test - Run test on current file"] = function()
+            ["Test - run test on current file"] = function()
               neotest.run.run(vim.fn.expand "%")
             end,
-            ["Test - Run all test files"] = function()
+            ["Test - run all test files"] = function()
               neotest.run.run(vim.uv.cwd())
             end,
-            ["Test - Run last test"] = function()
+            ["Test - run last test"] = function()
               neotest.run.run_last()
             end,
-            ["Test - Run test nearest"] = function()
+            ["Test - run test nearest"] = function()
               neotest.run.run()
             end,
-            ["Test - Run suit"] = function()
+            ["Test - run suit"] = function()
               vim.cmd [[lua for _, adapter_id in ipairs(require("neotest").state.adapter_ids()) do require("neotest").run.run { suite = true, adapter = adapter_id, } end]]
             end,
-            ["Test - Stop / Quit"] = function()
+            ["Test - stop / quit"] = function()
               neotest.run.stop { interactive = true }
             end,
-            ["Test - Run test with strategy Dap"] = function()
+            ["Test - run test with strategy Dap"] = function()
               neotest.run.run { strategy = "dap" }
             end,
-            ["Test - Toggle summery test"] = function()
+            ["Test - toggle summery test"] = function()
               neotest.summary.toggle()
             end,
-            ["Test - Run toggle watch"] = function()
+            ["Test - run toggle watch"] = function()
               neotest.watch.toggle(vim.fn.expand "%")
             end,
-            ["Coverage - Run"] = function()
+            ["Coverage - run"] = function()
               vim.cmd [[CoverageLoad]]
               vim.cmd [[Coverage]]
             end,
-            ["Coverage - Summary"] = function()
+            ["Coverage - summary"] = function()
               vim.cmd [[CoverageSummary]]
             end,
-            ["Coverage - Load"] = function()
+            ["Coverage - load"] = function()
               vim.cmd [[CoverageLoad]]
             end,
-            ["Coverage - Show"] = function()
+            ["Coverage - show"] = function()
               vim.cmd [[CoverageShow]]
             end,
-            ["Coverage - Hide"] = function()
+            ["Coverage - hide"] = function()
               vim.cmd [[CoverageHide]]
             end,
-            ["Coverage - Clear"] = function()
+            ["Coverage - clear"] = function()
               vim.cmd [[CoverageClear]]
             end,
-            ["Coverage - Toggle"] = function()
+            ["Coverage - toggle"] = function()
               vim.cmd [[CoverageToggle]]
             end,
           }, {

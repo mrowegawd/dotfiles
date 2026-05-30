@@ -329,7 +329,7 @@ return {
   -- MEOWYARN
   {
     "retran/meow.yarn.nvim",
-    dependencies = { "MunifTanjim/nui.nvim" },
+    dependencies = { "MadKuntilanak/nui.nvim" },
     cmd = { "PeekWHOCallers", "PeekWHATCallees", "PeekSUBTYPE", "PeekSUPERTYPE" },
     opts = {
       mappings = {

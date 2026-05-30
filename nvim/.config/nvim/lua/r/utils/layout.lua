@@ -251,7 +251,10 @@ function Win.open_empty_blank_buffer(position)
   vim.cmd "wincmd p"
 end
 
-local __cmd_win_call = function(cur_winid, winid, fn)
+---@param cur_winid integer
+---@param main_layout_winid integer
+---@param fn function
+local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
   local saved_before_fn, saved_cmdheight
 
   if is_all_window then
@@ -259,8 +262,8 @@ local __cmd_win_call = function(cur_winid, winid, fn)
     saved_cmdheight = vim.o.cmdheight
   end
 
-  vim.api.nvim_win_call(winid, function()
-    local saved = save_wins_current_tab(winid)
+  vim.api.nvim_win_call(main_layout_winid, function()
+    local saved = save_wins_current_tab(main_layout_winid)
 
     fn()
 
@@ -271,8 +274,8 @@ local __cmd_win_call = function(cur_winid, winid, fn)
       vim.o.cmdheight = saved_cmdheight
     end
 
-    vim.wo[winid].winfixwidth = true
-    vim.api.nvim_win_set_width(winid, Win.main_size)
+    vim.wo[main_layout_winid].winfixwidth = true
+    vim.api.nvim_win_set_width(main_layout_winid, Win.main_size)
   end)
 end
 
@@ -328,13 +331,13 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
 
         vim.api.nvim_win_call(main_layout.win, function()
           vim.cmd "wincmd H"
+          if master_saved_layout then
+            restore_wins(master_saved_layout)
+          end
+
           vim.wo[main_layout.win].winfixwidth = true
           vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
         end)
-
-        if master_saved_layout then
-          restore_wins(master_saved_layout)
-        end
 
         stop_timer(timer)
         return
@@ -352,6 +355,10 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
 end
 
 function Win.keep_sidebar_left()
+  if vim.fn.getcmdwintype() ~= "" then
+    return
+  end
+
   local main_layout = Win.get_current_layout()
 
   if not is_valid_layout_window(main_layout) then
@@ -365,7 +372,6 @@ function Win.keep_sidebar_left()
   local cur_winid = vim.api.nvim_get_current_win()
 
   if is_ft_skip_resize(cur_winid) then
-    is_processing_layout = false
     return
   end
 
@@ -382,8 +388,7 @@ function Win.keep_sidebar_left()
 
     -- note: kenapa diset is_all_window = true,
     -- karena open window eldochover itu filetye nya ==  ""
-    -- jadi mesti di set is_all_window = false
-    -- check bagian M.open_window_safely
+    -- jadi mesti di set is_all_window = false, check bagian M.open_window_safely
     -- ini guna mencegah winbar terhapus setelah `wincmd H`
     if vim.bo.filetype ~= "" then
       is_all_window = true
@@ -424,34 +429,42 @@ local function setup_autocmd()
   is_autocmd_registered = true
 
   --FIX:  augroup WinClosed works, but make sure the toggle toggle_sidebar logic is correct
-  -- RUtils.map.augroup("LayoutClosed", {
-  --   event = { "WinClosed" },
-  --   pattern = "*",
-  --   command = function(args)
-  --     local closed_winid = tonumber(args.match)
-  --     if closed_winid ~= Win.layout.main.win then
-  --       return
-  --     end
-  --
-  --     vim.schedule(function()
-  --       -- Cleanup state
-  --       -- Win.layout.main.win = nil
-  --       -- Win.layout.main.buf = nil
-  --       is_processing_layout = false
-  --       is_autocmd_registered = false
-  --       -- Win.slot_win.fts = {}
-  --       -- Win.slot_win.last_open = nil
-  --       -- is_toggle = false
-  --
-  --       -- Hapus semua autocmd layout
-  --       pcall(vim.api.nvim_del_augroup_by_name, "FixSizeLayout")
-  --       pcall(vim.api.nvim_del_augroup_by_name, "FixSizeLayoutWidth")
-  --       pcall(vim.api.nvim_del_augroup_by_name, "LayoutDisableCmdline")
-  --       pcall(vim.api.nvim_del_augroup_by_name, "LayoutDisableWinLeave")
-  --       pcall(vim.api.nvim_del_augroup_by_name, "LayoutClosed")
-  --     end)
-  --   end,
-  -- })
+  RUtils.map.augroup(group_name "Closed", {
+    event = { "WinClosed" },
+    pattern = "*",
+    command = function()
+      local found = false
+      for _, layout in pairs(Win.layout) do
+        if layout.win and vim.api.nvim_win_is_valid(layout.win) then
+          found = true
+        end
+      end
+
+      if found then
+        return
+      end
+
+      vim.schedule(function()
+        -- Cleanup state
+        Win.layout = {}
+        Win.slot_win = {
+          last_open = nil,
+          fts = {},
+        }
+        is_processing_layout = false
+        is_autocmd_registered = false
+        is_toggle = false
+
+        -- Clear all augroups
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "FixSize")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "FileType")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "DisableCmdline")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "DisableWinLeave")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "FixSizeWinEnter")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "Closed")
+      end)
+    end,
+  })
 
   RUtils.map.augroup(group_name "FixSize", {
     event = { "BufWinEnter", "WinResized" },
@@ -501,7 +514,7 @@ local function setup_autocmd()
     end,
   })
 
-  RUtils.map.augroup(group_name "FixSizeLayoutWidth", {
+  RUtils.map.augroup(group_name "FixSizeWinEnter", {
     event = { "WinEnter", "BufEnter" },
     pattern = "*",
     command = function()
@@ -585,11 +598,6 @@ function M.toggle_sidebar(ft, fn, is_force)
     end)
   end
 
-  -- Check whether current tab sidebar `main_layout` is already registered
-  if not main_layout.win then
-    is_toggle = false
-  end
-
   if not is_toggle then
     Win.open_empty_blank_buffer "topleft"
     if not is_force then
@@ -650,6 +658,7 @@ function M.debug()
   if cfg.relative == "" then
     info(tostring(get_layout_type(winid)) .. " ft:" .. ft)
   end
+
   return Win
 end
 
@@ -661,7 +670,14 @@ end
 ---@param ft string
 ---@param fn function The original open/toggle outline function
 function M.open_outline_safely(ft, fn, is_force)
-  local is_ready, msg = check_lsp_symbol_readiness()
+  local is_org = vim.tbl_contains({ "org", "markdown", "norg", "help" }, vim.bo.filetype)
+
+  local is_ready, msg
+  if not is_org and ft ~= "Outline" then
+    is_ready, msg = check_lsp_symbol_readiness()
+  else
+    is_ready = true
+  end
 
   if not is_ready then
     ---@diagnostic disable-next-line: undefined-field
@@ -678,12 +694,6 @@ end
 
 ---@param fn function
 function M.open_window_safely(fn)
-  -- local is_ready, msg = check_lsp_symbol_readiness()
-  -- if not is_ready then
-  --   warn(msg or "LSP is not ready.")
-  --   return
-  -- end
-
   is_processing_layout = true
   is_all_window = false
   local winid = vim.api.nvim_get_current_win()

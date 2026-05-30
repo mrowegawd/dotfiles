@@ -113,7 +113,7 @@ local function open_deleted_files(mode, deleted_files)
   end
 end
 
-local function open_file_under_specific_branch(mode)
+local function open_current_file_from_branch(mode)
   return function(selected, _)
     if not selected then
       return
@@ -152,7 +152,7 @@ local function copy_branch()
   end
 end
 
-local function default_select_file_branch()
+local function select_branch()
   return function(selected, _)
     if not selected then
       return
@@ -299,17 +299,22 @@ function M.trace_file_event()
 end
 
 function M.select_file_different_branch()
-  local branches = vim.fn.systemlist "git branch --all --format='%(refname:short)'"
+  local branches = vim.fn.systemlist {
+    "git",
+    "branch",
+    "--all",
+    "--format=%(refname:short)",
+  }
   fzf_lua.fzf_exec(
     branches,
     RUtils.fzflua.open_dock_bottom {
       prompt = RUtils.fzflua.padding_prompt(),
       winopts = { title = RUtils.fzflua.format_title "Select Branch" },
-      fzf_opts = { ["--header"] = [[a-c:copybranch  ^o:open_file_from_branch]] },
+      fzf_opts = { ["--header"] = [[a-c:copybranch  ^o:open current file from this branch]] },
       actions = {
-        ["default"] = default_select_file_branch(),
+        ["default"] = select_branch(),
         ["alt-c"] = copy_branch(),
-        ["ctrl-o"] = open_file_under_specific_branch "vsplit",
+        ["ctrl-o"] = open_current_file_from_branch "vsplit",
       },
     }
   )

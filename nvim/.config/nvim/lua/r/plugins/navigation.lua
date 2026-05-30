@@ -1,3 +1,5 @@
+local _outline_follow_state = nil
+
 local toggle_state = false
 
 local home = os.getenv "HOME"
@@ -92,14 +94,14 @@ return {
 
           vim.cmd "Oil"
         end,
-        desc = "Open: fucus filemanager [oil]",
+        desc = "Open: focus file explorer [oil]",
       },
       {
         "<Leader>oO",
         function()
           require("oil").open(vim.fn.getcwd())
         end,
-        desc = "Open: filemanager or file explore [oil]",
+        desc = "Open: file explorer [oil]",
       },
     },
     dependencies = {
@@ -263,7 +265,7 @@ return {
     },
 
     dependencies = {
-      "MunifTanjim/nui.nvim",
+      "MadKuntilanak/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
     },
@@ -392,8 +394,6 @@ return {
           window = {
             mappings = {
               ["H"] = "toggle_hidden",
-              ["gp"] = "prev_git_modified",
-              ["gn"] = "next_git_modified",
               ["<C-n>"] = "next_git_modified",
               ["<C-p>"] = "prev_git_modified",
             },
@@ -623,13 +623,14 @@ return {
         git_status = {
           window = {
             mappings = {
+              ["gg"] = "noop",
+              ["w"] = "noop",
+
               ["<Leader>gsa"] = "git_add_file",
               ["<Leader>gsA"] = "git_add_all",
               ["<Leader>gsu"] = "git_unstage_file",
               ["<Leader>gsr"] = "git_revert_file",
-              ["w"] = "noop",
 
-              ["gg"] = "noop",
               ["e"] = "child_or_open",
 
               [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
@@ -645,6 +646,9 @@ return {
             ["<space>"] = "noop",
             ["w"] = "noop",
             ["l"] = "noop",
+            ["e"] = "noop",
+            ["t"] = "noop", -- disabled open tab
+            ["m"] = "noop",
 
             ["<a-B>"] = "bookmark_cycle_pick",
             ["b"] = "bookmark_cycle_save",
@@ -652,35 +656,40 @@ return {
 
             ["<a-o>"] = "fzmark",
             ["K"] = "show_file_details",
+            ["<a-G>"] = "open_search_cd_and_grep",
 
             ["<2-LeftMouse>"] = "open",
-            ["<a-G>"] = "open_search_cd_and_grep",
             ["<BS>"] = "parent_or_close",
+            ["o"] = "child_or_open",
             ["P"] = {
               "toggle_open_preview",
               config = { use_float = true, use_image_nvim = true },
             },
-            ["o"] = "child_or_open",
-            ["e"] = "child_or_open",
-            ["t"] = "", -- disabled open tab
-            ["z"] = "",
-            ["<Tab>"] = "toggle_node",
-            ["<S-Tab>"] = "close_all_nodes",
+
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
-            ["<esc>"] = "revert_preview",
-            ["m"] = "",
+            ["<c-t>"] = "open_tabnew",
+
+            ["<ESC>"] = "revert_preview",
+
+            ["<Tab>"] = "toggle_node",
+            ["<S-Tab>"] = "close_node",
+
             ["zM"] = "close_all_nodes",
+            ["zc"] = "close_node",
+            ["zR"] = "expand_all_subnodes",
             ["zO"] = "expand_all_nodes",
+
             ["gh"] = "prev_source",
             ["gl"] = "next_source",
 
-            [",c"] = { "order_by_created", nowait = false },
-            [",d"] = { "order_by_diagnostics", nowait = false },
-            [",m"] = { "order_by_modified", nowait = false },
-            [",n"] = { "order_by_name", nowait = false },
-            [",s"] = { "order_by_size", nowait = false },
-            [",t"] = { "order_by_type", nowait = false },
+            ["mc"] = { "order_by_created", nowait = false },
+            ["mg"] = { "order_by_git_status", nowait = false },
+            ["md"] = { "order_by_diagnostics", nowait = false },
+            ["mm"] = { "order_by_modified", nowait = false },
+            ["mn"] = { "order_by_name", nowait = false },
+            ["ms"] = { "order_by_size", nowait = false },
+            ["mt"] = { "order_by_type", nowait = false },
 
             [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
 
@@ -873,21 +882,64 @@ return {
   {
     "MadKuntilanak/outline.nvim",
     -- dir = "~/.local/src/nvim_plugins/outline.nvim",
-    branch = "feat/big-updates",
     keys = {
       {
         "<Leader>oa",
         function()
           RUtils.layout.open_outline_safely("Outline", function()
             vim.cmd.Outline()
-          end, true)
+          end)
         end,
         desc = "Open: outline window [outline]",
+      },
+      {
+        "<a-n>",
+        function()
+          RUtils.map.feedkey "<Down>"
+        end,
+        ft = "Outline",
+        desc = "Open: go next [outline]",
+      },
+      {
+        "<a-p>",
+        function()
+          RUtils.map.feedkey "<Up>"
+        end,
+        ft = "Outline",
+        desc = "Open: go down [outline]",
       },
     },
     opts = function()
       RUtils.map.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       local kind = RUtils.config.icons.kinds
+
+      vim.api.nvim_create_user_command("OutlineToggleFollow", function()
+        local cfg = require "outline.config"
+        local o = cfg.o
+
+        if _outline_follow_state == nil then
+          -- Save state dan disable
+          _outline_follow_state = {
+            highlight_hovered_item = o.outline_items.highlight_hovered_item,
+            auto_set_cursor = o.outline_items.auto_set_cursor,
+            auto_unfold_hovered = o.symbol_folding.auto_unfold.hovered,
+            auto_unfold_hover = o.symbol_folding.auto_unfold_hover,
+          }
+          o.outline_items.highlight_hovered_item = false
+          o.outline_items.auto_set_cursor = false
+          o.symbol_folding.auto_unfold.hovered = false
+          o.symbol_folding.auto_unfold_hover = false
+          RUtils.info "Outline: follow disabled"
+        else
+          -- Restore state
+          o.outline_items.highlight_hovered_item = _outline_follow_state.highlight_hovered_item
+          o.outline_items.auto_set_cursor = _outline_follow_state.auto_set_cursor
+          o.symbol_folding.auto_unfold.hovered = _outline_follow_state.auto_unfold_hovered
+          o.symbol_folding.auto_unfold_hover = _outline_follow_state.auto_unfold_hover
+          _outline_follow_state = nil
+          RUtils.info "Outline: follow enabled"
+        end
+      end, {})
       return {
         outline_window = {
           position = "left",
@@ -940,35 +992,31 @@ return {
           auto_preview = false,
           winhl = "NormalFloat:NormalFloat",
         },
-        providers = {
-          priority = { "lsp", "markdown", "norg" },
-        },
         picker = "fzf-lua", -- fzf-lua, telescope
         -- These keymaps can be a string or a table for multiple keys.
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
           show_help = "g?",
           close = { "q", "<Leader><Tab>" },
-          goto_location = { "<Cr>", "o" },
+          goto_location = { "<CR>", "o" },
           peek_location = {},
           goto_and_close = {},
-          restore_location = {},
+          restore_location = "~",
           hover_symbol = {},
           toggle_preview = { "P" },
           rename_symbol = {},
           code_actions = {},
-          fold = "h",
-          unfold = "l",
-          fold_toggle = { "<Tab>", "<c-a>", "zf", "zb", "za" },
-          fold_toggle_all = "<S-Tab>",
-          fold_all = { "zm", "zM", "zc" },
+          unfold = "zo",
+          fold_toggle = { "<S-tab>", "<Tab>", "za" },
+          fold = "zc",
+          fold_all = "zM",
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
 
-          down_and_jump = { "<a-n>" },
-          up_and_jump = { "<a-p>" },
+          down_and_jump = { "<c-n>" },
+          up_and_jump = { "<c-p>" },
 
-          filter_symbols = "<space><space>",
+          -- filter_symbols = "<space><space>",
         },
       }
     end,

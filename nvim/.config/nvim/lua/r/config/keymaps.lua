@@ -103,7 +103,7 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move ← (v
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
-RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable" })
+RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable layout" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                   TAB t..                                   ╏
@@ -184,9 +184,6 @@ RUtils.map.nnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) 
 --stylua: ignore
 RUtils.map.xnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
 
---stylua: ignore
-RUtils.map.nnoremap("<Leader>oI", function() vim.treesitter.inspect_tree() vim.api.nvim_input "I" end, { desc = "Open: inspect htreesitter" })
-
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
 RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
@@ -225,7 +222,6 @@ end, { expr = true })
 
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.zen():map "<Leader>uz"
-Snacks.toggle.treesitter():map "<Leader>us"
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  TERMINAL                                   ╏
@@ -535,7 +531,7 @@ local bulk_cmd_misc = function()
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
     end,
-    ["TestNotify - Run to test notification display"] = function()
+    ["TestNotify - runt tess notification"] = function()
       -- to replace an existing notification just use the same id.
       -- you can also use the return value of the notify function as id.
       for i = 1, 10 do
@@ -555,10 +551,14 @@ local bulk_cmd_misc = function()
         os.execute(encodedURL)
       end
     end,
+    ["Treesitter - open inspert tree under cursor"] = function()
+      vim.treesitter.inspect_tree()
+      vim.api.nvim_input "I"
+    end,
   }
 
   if RUtils.has "candela.nvim" then
-    cmds["Candela - Add color for log highlights"] = function()
+    cmds["Candela - add color for log highlights"] = function()
       if not vim.tbl_contains({ "log", "bigfile" }, vim.bo.filetype) then
         RUtils.warn "Not log file!"
         return
@@ -581,66 +581,66 @@ RUtils.map.xnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands (
 
 local bulk_cmd_git = function()
   RUtils.fzflua.open_cmd_bulk_center({
-    ["Diffview - DiffviewOpen"] = function()
+    ["Diffview - open DiffviewOpen"] = function()
       vim.cmd [[DiffviewOpen]]
     end,
-    ["Diffview - DiffviewFileHistory Repo"] = function()
+    ["Diffview - open DiffviewFileHistory repo"] = function()
       vim.cmd [[DiffviewFileHistory]]
     end,
-    ["Diffview - DiffviewFileHistory Curbuf"] = function()
+    ["Diffview - open DiffviewFileHistory curbuf"] = function()
       vim.cmd [[DiffviewFileHistory --follow %]]
     end,
-    ["Diffview - DiffviewFileHistory Line"] = function()
+    ["Diffview - open DiffviewFileHistory line"] = function()
       vim.cmd [[DiffviewFileHistory --follow]]
     end,
-    ["Codediff - VscodeDiff"] = function()
+    ["Codediff - open VscodeDiff"] = function()
       vim.cmd [[VscodeDiff]]
     end,
-    ["Diff - Windo this"] = function()
+    ["Diff - windo this"] = function()
       vim.cmd [[windo diffthis]]
     end,
-    ["GH - Open PR"] = function()
+    ["GH - open PR"] = function()
       vim.cmd [[GHOpenPR]]
     end,
-    ["GH - Open Issue"] = function()
+    ["GH - open issue"] = function()
       vim.cmd [[GHOpenIssue]]
     end,
-    ["GitWorktree - Create"] = function()
+    ["GitWorktree - create"] = function()
       vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
     end,
-    ["GitWorktree - Manage"] = function()
+    ["GitWorktree - manage"] = function()
       vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
     end,
-    ["GitConflict - Refresh"] = function()
+    ["GitConflict - refresh"] = function()
       vim.cmd [[GitConflictRefresh]]
     end,
-    ["GitConflict - Send list to qf"] = function()
+    ["GitConflict - send list to qf"] = function()
       vim.cmd [[GitConflictListQf]]
     end,
-    ["GitConflict - Choosing ours (current)"] = function()
+    ["GitConflict - choosing ours (current)"] = function()
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info("Choosing ours (current)", { title = "GitConflict" })
       vim.cmd [[GitConflictChooseOurs]]
     end,
-    ["GitConflict - Choosing theirs (incoming)"] = function()
+    ["GitConflict - choosing theirs (incoming)"] = function()
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
       vim.cmd [[GitConflictChooseTheirs]]
     end,
-    ["GitConflict - Choosing none of them (deleted)"] = function()
+    ["GitConflict - choosing none of them (deleted)"] = function()
       ---@diagnostic disable-next-line: undefined-field
       RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
       vim.cmd [[GitConflictChooseNone]]
     end,
-    ["GitSigns - Show blame"] = function()
+    ["GitSigns - show blame"] = function()
       local gs = package.loaded.gitsigns
       gs.blame()
     end,
-    ["GitSigns - Toggle diff changes"] = function()
+    ["GitSigns - toggle diff changes"] = function()
       local gs = package.loaded.gitsigns
       gs.toggle_deleted()
     end,
-    ["GitSigns - Toggle word diff"] = function()
+    ["GitSigns - toggle word diff"] = function()
       local gs = package.loaded.gitsigns
       gs.toggle_word_diff()
     end,
@@ -650,6 +650,30 @@ end
 RUtils.map.nnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
 RUtils.map.tnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
 RUtils.map.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (visual)" })
+
+local bulk_cmd_toggle = function()
+  RUtils.fzflua.open_cmd_bulk_center({
+    ["Layout - disable/enable layout sidebar size"] = function()
+      RUtils.layout.disable()
+    end,
+    ["CCC - highlighter from ccc"] = function()
+      vim.cmd.CccHighlighterToggle()
+    end,
+    ["Outline - disable/enable auto follow"] = function()
+      vim.cmd.OutlineToggleFollow()
+    end,
+    ["highlighter - clear all"] = function()
+      vim.cmd "Hi clear"
+    end,
+    ["Tresitter - disable/enable highlight"] = function()
+      Snacks.toggle.treesitter()
+    end,
+  }, { winopts = { title = RUtils.fzflua.format_title("Toggle Commands", RUtils.config.icons.misc.tools) } })
+end
+
+RUtils.map.nnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands" })
+RUtils.map.tnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands" })
+RUtils.map.xnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands (visual)" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              TMUX INTEGRATION                               ╏

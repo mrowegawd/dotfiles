@@ -972,36 +972,6 @@ local function get_or_create_bufnr(filename)
   return bufnr
 end
 
----NOTE: function ini work (hanya sebagai backup), tapi ter apply beda posisi cursor di headline nya, walaupun
----sudah di set nvim_win_set_cursor
--- local function __set_repeater_todo_bak(bufnr, repeater_dates, headline)
---   local OrgMappings = Orgmode.org_mappings
---
---   vim.api.nvim_buf_call(bufnr, function()
---     local range = headline:get_range()
---     vim.api.nvim_win_set_cursor(0, { range.start_line, 0 })
---
---     -- Advance repeater dates
---     for _, date in ipairs(repeater_dates) do
---       OrgMappings:_replace_date(date:apply_repeater())
---     end
---
---     -- Set LAST_REPEAT property
---     local Date = require "orgmode.objects.date"
---     headline:set_property("LAST_REPEAT", Date.now():to_wrapped_string(false))
---
---     -- Add state note manually
---     local indent = headline:get_indent()
---     local note = ("%s- State %-12s from %-12s [%s]"):format(indent, [["DONE"]], [["TODO"]], Date.now():to_string())
---     headline:add_note { note }
---
---     -- Set todo keyword langsung tanpa trigger popup
---     headline:set_todo "TODO"
---
---     vim.cmd "silent! write"
---   end)
--- end
-
 local function set_repeater_todo(bufnr, repeater_dates, headline)
   local OrgMappings = Orgmode.org_mappings
 
@@ -1112,9 +1082,22 @@ local function remove_todo_by_tag(tags)
 
       local raw_date = todo_schedule:without_adjustments()
       local now = os.date "*t"
-      local is_past_or_today = (raw_date.year < now.year)
+
+      local is_past = (raw_date.year < now.year)
         or (raw_date.year == now.year and raw_date.month < now.month)
-        or (raw_date.year == now.year and raw_date.month == now.month and raw_date.day <= now.day)
+        or (raw_date.year == now.year and raw_date.month == now.month and raw_date.day < now.day)
+
+      local is_today = (raw_date.year == now.year) and (raw_date.month == now.month) and (raw_date.day == now.day)
+
+      -- Ignore todo today if the scheduled time has not been reached yet
+      local today_is_due = is_today
+        and (
+          not raw_date.hour -- tidak ada jam → anggap due
+          or (raw_date.hour < now.hour)
+          or (raw_date.hour == now.hour and (raw_date.min or 0) <= now.min)
+        )
+
+      local is_past_or_today = is_past or today_is_due
 
       if not is_past_or_today then
         goto continue_headline_loop
@@ -1126,7 +1109,6 @@ local function remove_todo_by_tag(tags)
         goto continue_headline_loop
       end
 
-      -- Eksekusi perubahan buffer
       local filename = file.filename
       local bufnr = get_or_create_bufnr(filename)
       if bufnr == nil then

@@ -79,7 +79,7 @@ return {
         },
       },
       "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
+      "MadKuntilanak/nui.nvim",
       "nvim-mini/mini.pick",
       "ibhagwan/fzf-lua",
       "nvim-mini/mini.icons",

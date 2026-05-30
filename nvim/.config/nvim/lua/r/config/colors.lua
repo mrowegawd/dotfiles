@@ -1642,7 +1642,9 @@ local function set_panel_highlight()
     { PanelSideDarkHeading = { inherit = "PanelSideDarkBackground", bold = true } },
     { PanelSideHeading = { inherit = "PanelSideBackground", bold = true } },
 
-    { PanelSideRootName = { fg = { from = "WinBar", attr = "fg" } } },
+    {
+      PanelSideRootName = { bg = { from = "PanelSideNormal", attr = "bg" }, fg = { from = "StatusLine", attr = "fg" } },
+    },
 
     { PanelSideStNC = { link = "PanelSideWinSeparator" } },
     { PanelSideSt = { bg = { from = "Visual", alter = -0.2 } } },
@@ -1766,15 +1768,37 @@ local function set_panel_highlight()
     { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
 
     {
+      TroublePreview = {
+        fg = {
+          from = "Error",
+          attr = "fg",
+          alter = 0.8,
+        },
+        bg = {
+          from = "Error",
+          attr = "fg",
+          alter = 0.3,
+          transparency = 0.25,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+      },
+    },
+
+    {
       TroubleIndent = {
-        fg = { from = "TroubleNormal", attr = "bg", alter = 1 },
+        fg = {
+          from = "Constant",
+          attr = "fg",
+          transparency = 0.15,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
         bg = "NONE",
       },
     },
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 },
+        fg = { from = "TroubleNormal", attr = "bg", alter = 2 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
@@ -1784,12 +1808,7 @@ local function set_panel_highlight()
     {
       TroubleDirectory = {
         inherit = "Directory",
-        bg = {
-          from = "Directory",
-          attr = "fg",
-          transparency = 0.1,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
+        bg = "NONE",
       },
     },
     { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
@@ -1805,12 +1824,7 @@ local function set_panel_highlight()
     {
       TroubleLspFilename = {
         inherit = "Directory",
-        bg = {
-          from = "Directory",
-          attr = "fg",
-          transparency = 0.1,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
+        bg = "NONE",
       },
     },
     { TroubleLspPos = { link = "TroubleFsPos" } },
@@ -1822,12 +1836,7 @@ local function set_panel_highlight()
     {
       TroubleDiagnosticsBasename = {
         inherit = "DiagnosticWarn",
-        bg = {
-          from = "DiagnosticWarn",
-          attr = "fg",
-          transparency = 0.1,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
+        bg = "NONE",
         italic = false,
       },
     },
@@ -1850,12 +1859,7 @@ local function set_panel_highlight()
     {
       TroubleQfFilename = {
         inherit = "Directory",
-        bg = {
-          from = "Directory",
-          attr = "fg",
-          transparency = 0.1,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
+        bg = "NONE",
       },
     },
     { TroubleQfPos = { link = "TroubleFsPos" } },
@@ -1875,22 +1879,26 @@ local function set_panel_highlight()
     },
     {
       OutlineCurrent = {
-        fg = { from = "String", attr = "fg" },
-        bg = "NONE",
+        fg = { from = "TroublePreview", attr = "fg", alter = 0.5 },
+        bg = {
+          from = "TroublePreview",
+          attr = "fg",
+          transparency = 0.5,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
       },
     },
-    -- {
-    --   OutlineCurrent = {
-    --     bg = {
-    --       from = "OutlineCurrent",
-    --       attr = "fg",
-    --       transparency = 0.15,
-    --       color = { from = "PanelBottomNormal", attr = "bg" },
-    --     },
-    --     bold = true,
-    --     reverse = false,
-    --   },
-    -- },
+    {
+      OutlineCurrentParent = {
+        fg = { from = "OutlineCurrent", attr = "fg" },
+        bg = {
+          from = "OutlineCurrent",
+          attr = "fg",
+          transparency = 0.2,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+      },
+    },
     { OutlineFoldMarker = { fg = { from = "TroubleIndentFoldClosed", attr = "fg" }, bg = "NONE" } },
 
     { OutlineDetails = { fg = { from = "OutlineGuides", attr = "fg", alter = 0.5 }, bg = "NONE", italic = true } },

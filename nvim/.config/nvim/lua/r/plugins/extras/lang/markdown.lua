@@ -235,14 +235,4 @@ return {
       },
     },
   },
-  -- Reset priority outline for markdown
-  {
-    "MadKuntilanak/outline.nvim",
-    ft = "markdown",
-    opts = {
-      providers = {
-        priority = { "markdown", "lsp", "norg" },
-      },
-    },
-  },
 }

@@ -117,8 +117,8 @@ return {
               },
               {
                 "<Leader>lD",
-                RUtils.map.lsp.wrap_location_method(vim.lsp.buf.declaration),
-                desc = "LSP: goto declaration",
+                "<CMD>Trouble lsp toggle focus=true auto_refresh=false<CR>",
+                desc = "LSP: lsp stuff [trouble]]",
               },
               {
                 "<Leader>lR",

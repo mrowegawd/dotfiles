@@ -516,7 +516,7 @@ return {
         map("n", "<Leader>gS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
         map("n", "<Leader>gR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
 
-        map("n", "<Leader>gb", gs.blame_line, "Git: blame line [gitsigns]")
+        -- map("n", "<Leader>gb", gs.blame_line, "Git: blame line [gitsigns]")
         map("n", "<Leader>gB", gs.blame, "Git: blame [gitsigns]")
 
         -- Hunk preview
@@ -941,7 +941,7 @@ return {
   {
     "esmuellert/codediff.nvim",
     cmd = "VscodeDiff",
-    dependencies = { "MunifTanjim/nui.nvim" },
+    dependencies = { "MadKuntilanak/nui.nvim" },
     keys = {
       {
         "<Leader>goc",

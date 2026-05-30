@@ -19,11 +19,6 @@ return {
         desc = "Toggle: highlight word/selection [vim-highlighter]",
         mode = { "n", "v" },
       },
-      {
-        "<Leader>uH",
-        "<CMD>Hi clear<CR>",
-        desc = "Toggle: clear all highlights [vim-highlighter]",
-      },
     },
   },
   -- STARTUPTIME

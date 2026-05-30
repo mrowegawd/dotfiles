@@ -168,11 +168,14 @@ return {
       -- Git
       { "<c-c>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
       { "<c-c>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
-      { "<c-c>gd", "<CMD>DFile<CR>", desc = "Git: check diff [fzflua]" },
+
+      { "<c-c>gd", "<CMD>DFile<CR>", desc = "Git: diff [fzflua]" },
+
       { "<c-c>gl", function() require("fzf-lua").git_bcommits() end, desc = "Git: commit buffer [fzflua]" },
       { "<c-c>gL", function() require("fzf-lua").git_commits() end, desc = "Git: commit repo [fzflua]" },
-      { "<c-c>gf", function() RUtils.git.trace_file_event() end, desc = "Git: search file or commit in repo [fzflua]" },
-      { "<c-c>gF", function() RUtils.git.select_file_different_branch() end, desc = "Git: select file from another branch [fzflua]" },
+
+      { "<c-c>gD", function() RUtils.git.trace_file_event() end, desc = "Git: track commit for renamed or file deleted [fzflua]" },
+      { "<c-c>gf", function() RUtils.git.select_file_different_branch() end, desc = "Git: find files branch [fzflua]" },
 
       { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Picker: symbols [fzflua]" },
       { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Picker: workspaces symbols [fzflua]" },
@@ -1047,29 +1050,28 @@ return {
                 end
 
                 local lsp_cmds = vim.tbl_deep_extend("force", {
-                  ["Lazy - Show format info"] = function()
+                  ["Lazy - show format info"] = function()
                     vim.cmd [[LazyFormatInfo]]
                   end,
-                  ["LSP - Open Mason"] = function()
+                  ["LSP - open Mason"] = function()
                     vim.cmd [[Mason]]
                   end,
-                  ["LSP - Show LSP Info (LspInfo)"] = function()
+                  ["LSP - show LSP info (LspInfo)"] = function()
                     vim.cmd [[LspInfo]]
                   end,
-                  ["LSP - Show LSP Log (LspLog)"] = function()
+                  ["LSP - show LSP log (LspLog)"] = function()
                     vim.cmd [[LspLog]]
                   end,
-                  ["LSP - Disable LSP Client"] = function()
+                  ["LSP - disable LSP client"] = function()
                     vim.cmd [[lsp stop]]
                   end,
-                  ["LSP - Show LSP's configs"] = function()
+                  ["LSP - show LSP's configs"] = function()
                     Snacks.picker.lsp_config()
                   end,
-
-                  ["Diagnostics - Disable diagnostics"] = function()
-                    Snacks.toggle.diagnostics()
+                  ["Diagnostics - disable diagnostics"] = function()
+                    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
                   end,
-                  ["Diagnostics - Toggle virtual_lines"] = function()
+                  ["Diagnostics - toggle diagnostics virtual lines"] = function()
                     local new_value = not vim.diagnostic.config().virtual_lines
                     ---@diagnostic disable-next-line: undefined-field
                     RUtils.info(tostring(new_value), { title = "Diagnostic: virtual_lines" })

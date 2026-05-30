@@ -230,7 +230,9 @@ end
 ---@param prefix string
 ---@param mode? "info" | "warn" | "error"
 local function notifysend(prefix, msg, mode)
-  local title = "Open With " .. (#prefix > 0 and prefix:sub(1, 1):upper()) .. (#prefix > 0 and prefix:sub(2):lower())
+  local title = "Open With "
+    .. (prefix and type(prefix) == "string" and #prefix > 0 and prefix:sub(1, 1):upper())
+    .. (prefix and type(prefix) == "string" and #prefix > 0 and prefix:sub(2):lower())
   mode = mode or "info"
 
   if mode == "info" then
@@ -242,7 +244,7 @@ local function notifysend(prefix, msg, mode)
   end
 
   if mode == "warn" then
-    RUtils.error(msg, { title = title })
+    RUtils.warn(msg, { title = title })
   end
 end
 
@@ -486,17 +488,13 @@ local function goto_file(url, mode_open)
   end
 
   if not filepath then
-    notifysend("Go To File", "use fallback `gf` key")
-
-    vim.cmd(mode_open)
-
     local success, err = pcall(vim.cmd.normal, {
       "gf",
       bang = true,
     })
 
     if not success then
-      RUtils.error(err)
+      notifysend("Use fallback `qf` Go to file", err, "warn")
     end
 
     return

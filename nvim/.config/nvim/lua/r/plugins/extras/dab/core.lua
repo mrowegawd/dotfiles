@@ -182,7 +182,7 @@ return {
         "<Leader>dF",
         function()
           local debug_cmds = {
-            ["Breakpoint - Add breakpoint with conditions"] = function()
+            ["Breakpoint - breakpoint with conditions"] = function()
               local dap = require "dap"
 
               -- Search for an existing breakpoint on this line in this buffer
@@ -243,61 +243,61 @@ return {
 
               customize_bp(find_bp())
             end,
-            ["Breakpoint - Clear all breakpoints"] = function()
+            ["Breakpoint - breakpoint clear all"] = function()
               return require("dap").clear_breakpoints()
             end,
-            ["Breakpoint - Send all breakpoints to qf"] = function()
+            ["Breakpoint - breakpoints send to qf"] = function()
               return require("dap").list_breakpoints(true)
             end,
-            ["Cursor - Go to line"] = function()
+            ["Cursor - go to line"] = function()
               return require("dap").goto_()
             end,
-            ["Run - Run at cursor"] = function()
+            ["Run - run at cursor"] = function()
               return require("dap").run_to_cursor()
             end,
-            ["Run - Run last"] = function()
+            ["Run - run last"] = function()
               return require("dap").run_last()
             end,
-            ["Run - Run with arguments"] = function()
+            ["Run - run with arguments"] = function()
               return require("dap").continue { before = get_args }
             end,
-            ["Run - Run / Start / Continue"] = function()
+            ["Run - run / start / continue"] = function()
               return require("dap").continue()
             end,
             -- ["Run -  Start session or debug"] = function()
             --   return require("dap").session()
             -- end,
-            ["Run - Quit / Close / Terminate the debug session"] = function()
+            ["Run - quit / close / terminate the debug session"] = function()
               require("dap").terminate()
               require("dapui").close()
             end,
-            ["Run - Printout or Show the session"] = function()
+            ["Run - printout or show the session"] = function()
               ---@diagnostic disable-next-line: undefined-field
               return RUtils.info(vim.inspect(require("dap").session()))
             end,
-            ["GUI - Toggle GUI"] = function()
+            ["GUI - toggle GUI"] = function()
               return require("dapui").toggle()
             end,
-            ["GUI - Reset GUI"] = function()
+            ["GUI - reset GUI"] = function()
               return require("dapui").open { reset = true }
             end,
-            ["REPL - Toggle Dap REPL"] = function()
+            ["REPL - toggle dap REPL"] = function()
               return require("dap").repl.toggle()
             end,
           }
 
           if vim.bo.filetype == "lua" then
-            debug_cmds["DebugLSP - Run launch attach debug PORT 8086 [Nlua]"] = function()
+            debug_cmds["DebugLSP - run launch attach debug PORT 8086 [Nlua]"] = function()
               require("osv").launch { port = 8086 }
             end
           end
 
           if vim.bo.filetype == "python" then
-            debug_cmds["DebugLSP - Run debug Python Method"] = function()
+            debug_cmds["DebugLSP - run debug python method"] = function()
               require("dap-python").test_method()
             end
 
-            debug_cmds["DebugLSP - Run debug Python Class"] = function()
+            debug_cmds["DebugLSP - run debug python class"] = function()
               require("dap-python").test_class()
             end
           end
