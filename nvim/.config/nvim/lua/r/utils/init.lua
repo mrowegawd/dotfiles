@@ -21,6 +21,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field layout r.utils.layout
 ---@field logo r.utils.logo
 ---@field lsp r.utils.lsp
+---@field fileexplorer r.utils.fileexplorer
 ---@field maim r.utils.maim
 ---@field map r.utils.map
 ---@field markdown r.utils.markdown

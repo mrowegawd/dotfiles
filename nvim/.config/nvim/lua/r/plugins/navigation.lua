@@ -1,79 +1,5 @@
 local _outline_follow_state = nil
-
 local toggle_state = false
-
-local home = os.getenv "HOME"
-local bookmark_file = home .. "/.cache/yazi/bookmarks"
-local index_file = home .. "/.cache/yazi/bookmark-index"
-
-local function ensure_files()
-  os.execute("mkdir -p " .. home .. "/.cache/yazi")
-  local f = io.open(bookmark_file, "a")
-  if f then
-    f:close()
-  end
-  local g = io.open(index_file, "a")
-  if g then
-    g:close()
-  end
-end
-
-local function read_bookmarks()
-  local list = {}
-  local f = io.open(bookmark_file, "r")
-  if not f then
-    return list
-  end
-  for line in f:lines() do
-    local trimmed = line:match "^%s*(.-)%s*$"
-    if trimmed and trimmed ~= "" then
-      table.insert(list, trimmed)
-    end
-  end
-  f:close()
-  return list
-end
-
-local function normalize_path(path)
-  if home and path:sub(1, #home) == home then
-    return "~" .. path:sub(#home + 1)
-  end
-  return path
-end
-
-local function write_bookmarks(list)
-  local f = io.open(bookmark_file, "w")
-  if not f then
-    return
-  end
-  for _, v in ipairs(list) do
-    f:write(v .. "\n")
-  end
-  f:close()
-end
-
-local function read_index()
-  local f = io.open(index_file, "r")
-  if not f then
-    return 0
-  end
-  local n = tonumber(f:read "*l") or 0
-  f:close()
-  return n
-end
-
-local function write_index(n)
-  local f = io.open(index_file, "w")
-  if not f then
-    return
-  end
-  f:write(tostring(n) .. "\n")
-  f:close()
-end
-
-local function jump_to(path)
-  vim.cmd("Neotree " .. path)
-end
 
 return {
   -- OIL.NVIM
@@ -88,6 +14,7 @@ return {
         function()
           local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
           if vim.tbl_contains(right_win, vim.bo.filetype) then
+            ---@diagnostic disable-next-line: undefined-field
             RUtils.warn "This filetype is excluded and cannot be opened in oil.nvim"
             return
           end
@@ -169,6 +96,7 @@ return {
         },
         ["<a-g>"] = {
           function()
+            ---@diagnostic disable-next-line: undefined-global
             Snacks.lazygit()
           end,
         },
@@ -258,6 +186,7 @@ return {
       {
         "<Leader>OO",
         function()
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.info(vim.inspect(RUtils.layout.debug()))
         end,
         desc = "Misc: open file explore [neotree]",
@@ -273,7 +202,6 @@ return {
       RUtils.map.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
 
       local Preview = require "neo-tree.sources.common.preview"
-      local log = require "neo-tree.log"
 
       local H = require "r.settings.highlights"
       H.plugin("NeoTreeHi", {
@@ -447,47 +375,84 @@ return {
           end,
 
           bookmark_cycle_save = function(state)
-            ensure_files()
+            RUtils.fileexplorer.ensure_files()
 
             local cwd = state.path
-            local list = read_bookmarks()
+            local list = RUtils.fileexplorer.read_bookmarks()
 
             for _, v in ipairs(list) do
-              local normalize_path_v = normalize_path(v)
-              local normalize_path_cwd = normalize_path(cwd)
+              local normalize_path_v = RUtils.fileexplorer.normalize_path(v)
+              local normalize_path_cwd = RUtils.fileexplorer.normalize_path(cwd)
               if normalize_path_v == normalize_path_cwd then
+                ---@diagnostic disable-next-line: undefined-field
                 RUtils.warn(string.format("Already bookmarked:\n%s", normalize_path_cwd))
                 return
               end
             end
 
-            local normalize_cwd = normalize_path(cwd)
+            local normalize_cwd = RUtils.fileexplorer.normalize_path(cwd)
             table.insert(list, normalize_cwd)
-            write_bookmarks(list)
+            RUtils.fileexplorer.write_bookmarks(list)
             RUtils.warn(string.format("Bookmark saved (%d total):\n%s", #list, normalize_cwd))
           end,
 
           bookmark_cycle_pick = function()
-            RUtils.info "not implemented yet: pick"
+            RUtils.fileexplorer.ensure_files()
+
+            local list_bookmarks = RUtils.fileexplorer.read_bookmarks()
+
+            local opts = {
+              winopts = { title = RUtils.fzflua.format_title("Pick/Delete Bookmark", "") },
+              fzf_opts = { ["--header"] = [[^x:delete]] },
+              actions = {
+                ["default"] = function(selection)
+                  if not selection then
+                    return
+                  end
+                  RUtils.fileexplorer.jump_to(selection[1])
+                end,
+                ["ctrl-x"] = function(selection)
+                  if not selection then
+                    return
+                  end
+                  list_bookmarks = RUtils.fileexplorer.read_bookmarks()
+
+                  local newlist = {}
+                  for _, list in pairs(list_bookmarks) do
+                    if list ~= selection[1] then
+                      table.insert(newlist, list)
+                    end
+                  end
+
+                  RUtils.fileexplorer.write_bookmarks(newlist)
+                  ---@diagnostic disable-next-line: undefined-field
+                  RUtils.info("delete `" .. selection[1] .. "`, reload this pick")
+                  require("fzf-lua").actions.resume()
+                end,
+              },
+            }
+            require("fzf-lua").fzf_exec(list_bookmarks, RUtils.fzflua.open_dock_bottom(opts))
           end,
 
           bookmark_cycle_cycle = function()
-            ensure_files()
-            local list = read_bookmarks()
+            RUtils.fileexplorer.ensure_files()
+            local list = RUtils.fileexplorer.read_bookmarks()
 
             if #list == 0 then
+              ---@diagnostic disable-next-line: undefined-field
               RUtils.warn "No bookmarks yet. Use save to add one."
               return
             end
 
-            local idx = read_index()
+            local idx = RUtils.fileexplorer.read_index()
             idx = (idx % #list) + 1 -- next, wrap around
-            write_index(idx)
+            RUtils.fileexplorer.write_index(idx)
 
             local target = list[idx]
-            local basename_target = normalize_path(target)
+            local basename_target = RUtils.fileexplorer.normalize_path(target)
+            ---@diagnostic disable-next-line: undefined-field
             RUtils.info(string.format("[%d/%d] %s", idx, #list, basename_target))
-            jump_to(target)
+            RUtils.fileexplorer.jump_to(target)
           end,
 
           child_or_open = function(state)
@@ -516,6 +481,7 @@ return {
           end,
 
           open_lazygit = function()
+            ---@diagnostic disable-next-line: undefined-global
             Snacks.lazygit()
           end,
 
@@ -535,15 +501,42 @@ return {
             end
             local node = state.tree:get_node()
 
+            ---@param process_name string
+            local function kill_process_by_name(process_name)
+              os.execute(
+                "pkill -15 -x "
+                  .. process_name
+                  .. " >/dev/null 2>&1 || true\n"
+                  .. "sleep 0.15\n"
+                  .. "pkill -9 -x "
+                  .. process_name
+                  .. " >/dev/null 2>&1 || true"
+              )
+            end
+
+            if vim.tbl_contains({ "mp3", "mp4", "gif", "mkv", "avi" }, node.ext) and node.path then
+              kill_process_by_name "mpv"
+              os.execute(
+                "nohup mpv --really-quiet --autofit=600x600 --geometry=-15-60 '" .. node.path .. "' >/dev/null 2>&1 &"
+              )
+              return
+            end
+
+            if vim.tbl_contains({ "pdf" }, node.ext) and node.path then
+              kill_process_by_name "zathura"
+              os.execute("nohup zathura '" .. node.path .. "' >/dev/null 2>&1 &")
+              return
+            end
+
+            if vim.tbl_contains({ "jpg", "jpeg", "png" }, node.ext) and node.path then
+              kill_process_by_name "sxiv"
+              os.execute('nohup sxiv "' .. node.path .. '" >/dev/null 2>&1 &')
+              return
+            end
+
             if not toggle_state then
-              if node.ext == "mp4" then
-                log.warn(string.format("not allowed to preview ext file: %s", node.ext))
-                Preview.hide()
-                return
-              else
-                Preview.show(state)
-              end
               toggle_state = true
+              Preview.show(state)
             else
               toggle_state = false
               Preview.hide()
@@ -700,6 +693,7 @@ return {
     end,
     config = function(_, opts)
       local function on_move(data)
+        ---@diagnostic disable-next-line: undefined-global
         Snacks.rename.on_rename_file(data.source, data.destination)
       end
 
@@ -929,6 +923,7 @@ return {
           o.outline_items.auto_set_cursor = false
           o.symbol_folding.auto_unfold.hovered = false
           o.symbol_folding.auto_unfold_hover = false
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.info "Outline: follow disabled"
         else
           -- Restore state
@@ -937,6 +932,7 @@ return {
           o.symbol_folding.auto_unfold.hovered = _outline_follow_state.auto_unfold_hovered
           o.symbol_folding.auto_unfold_hover = _outline_follow_state.auto_unfold_hover
           _outline_follow_state = nil
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.info "Outline: follow enabled"
         end
       end, {})
