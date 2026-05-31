@@ -368,7 +368,7 @@ return {
             org_agenda_deadline = "<LocalLeader>qsd",
             org_agenda_schedule = "<LocalLeader>qss",
 
-            org_agenda_preview = { "K", "P" },
+            org_agenda_preview = { "K" },
 
             -- Misc
             org_agenda_filter = "<LocalLeader>qf",

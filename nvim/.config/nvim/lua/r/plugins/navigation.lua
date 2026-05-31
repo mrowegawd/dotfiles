@@ -904,7 +904,7 @@ return {
       },
     },
     opts = function()
-      RUtils.map.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      -- RUtils.map.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       local kind = RUtils.config.icons.kinds
 
       vim.api.nvim_create_user_command("OutlineToggleFollow", function()
@@ -944,6 +944,11 @@ return {
           show_cursorline = true,
           hide_cursor = false,
           width = 20,
+        },
+        frozen_indicator = {
+          -- icon = "🔒",
+          row_offset = 1,
+          winhl = "Normal:PanelBottomNormal,FloatBorder:PanelBottomNormal",
         },
         symbols = {
           filter = nil,

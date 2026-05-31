@@ -15,7 +15,7 @@ local function get_text(wrapper)
   return vim.fn.matchstr(vim.fn.expand "<cWORD>", ([[\v%s\zs.{-}\ze%s]]):format(escaped, escaped))
 end
 
-RUtils.map.nnoremap("s", function()
+RUtils.map.nnoremap("gs", function()
   local text = get_text "|"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -25,7 +25,7 @@ RUtils.map.nnoremap("s", function()
     end
   end
 end, { desc = "Help: search |tag|", buffer = true }, true)
-RUtils.map.nnoremap("S", function()
+RUtils.map.nnoremap("gS", function()
   local text = get_text "*"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -39,7 +39,7 @@ end, { desc = "Help: search *word*", buffer = true }, true)
 RUtils.map.nnoremap("<Leader>ld", "<C-]>", { desc = "Help: goto definition", buffer = true }, true)
 RUtils.map.nnoremap("<BS>", "<C-t>", { desc = "Help: goback last definition", buffer = true }, true)
 
-RUtils.map.nnoremap("o", function()
+RUtils.map.nnoremap("go", function()
   ---@diagnostic disable-next-line: param-type-mismatch
   local success = pcall(vim.cmd, "normal! /'\\l\\{2,\\}'\r")
   if not success then
@@ -48,7 +48,7 @@ RUtils.map.nnoremap("o", function()
   end
 end, { buffer = true, silent = true }, true)
 
-RUtils.map.nnoremap("O", function()
+RUtils.map.nnoremap("gO", function()
   ---@diagnostic disable-next-line: param-type-mismatch
   local success = pcall(vim.cmd, "normal! ?'\\l\\{2,\\}'\r")
   if not success then

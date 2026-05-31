@@ -270,6 +270,9 @@ return {
           r = "refresh",
           R = "toggle_refresh",
 
+          ["<c-s>"] = "jump_split_aboveleft_close",
+          -- ["<c-v>"] = "jump_vsplit",
+
           o = "jump",
 
           P = "toggle_preview",

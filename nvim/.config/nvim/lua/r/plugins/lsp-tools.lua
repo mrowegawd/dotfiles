@@ -15,13 +15,11 @@ return {
   -- OVERLOOK.NVIM
   {
     "MadKuntilanak/overlook.nvim",
-    branch = "feat/allow-customize-ui-adapter",
     keys = {
       {
         "K",
         function()
-          local P = require "overlook.peek"
-          P.peek_qf()
+          require("overlook.peek").peek_qf()
         end,
         ft = "qf",
         desc = "Peek: peek on qf item [overlook.nvim]",
@@ -29,8 +27,7 @@ return {
       {
         "P",
         function()
-          local P = require "overlook.peek"
-          P.peek_qf()
+          require("overlook.peek").peek_qf()
         end,
         ft = "qf",
         desc = "Peek: peek on qf item (alternatif) [overlook.nvim]",
@@ -38,8 +35,7 @@ return {
       {
         "P",
         function()
-          local P = require "overlook.peek"
-          P.peek_file_source()
+          require("overlook.peek").peek_file_source()
         end,
         ft = "orgagenda",
         desc = "Peek: note file [overlook.nvim]",
@@ -66,30 +62,17 @@ return {
               return
             end
 
-            local lnum = 1
-            local col = 1
+            local lnum, col = 1, 1
 
             if path:match ":" then
-              path = vim.split(path, ":")
-
-              local str_path = path[1]
-              local _lnum = tonumber(path[2])
-              local _col = tonumber(path[3])
-
-              path = str_path
-
-              if _lnum then
-                lnum = _lnum
-              end
-
-              if _col then
-                col = _col
-              end
+              local parts = vim.split(path, ":")
+              path = parts[1]
+              lnum = tonumber(parts[2]) or lnum
+              col = tonumber(parts[3]) or col
             end
 
             if path:match "~" then
-              path = path:gsub("~", "")
-              path = RUtils.config.path.home .. path
+              path = RUtils.config.path.home .. path:gsub("~", "")
             end
 
             local bufnr = vim.fn.bufadd(path)
@@ -97,62 +80,65 @@ return {
               vim.fn.bufload(bufnr)
             end
 
-            local opts = {
+            return {
               target_bufnr = bufnr,
               lnum = lnum,
               col = col,
               title = path,
-
               win_col = 50,
               win_row = 5,
-
               win_width = 80,
               win_height = 25,
             }
-
-            return opts
           end,
         },
+
         peek_qf = {
           get = function()
-            local lnum = vim.api.nvim_win_get_cursor(0)[1]
+            local function win_height()
+              return vim.fn.winheight(0)
+            end
+
+            local function is_qf_window_at_bottom()
+              local editor_last_row = vim.o.lines - vim.o.cmdheight - 1
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                local info = vim.fn.getwininfo(win)[1]
+                if info.quickfix == 1 or info.loclist == 1 then
+                  local pos = vim.api.nvim_win_get_position(win)
+                  local height = vim.api.nvim_win_get_height(win)
+                  return (pos[1] + height - 1) >= editor_last_row - 1
+                end
+              end
+              return false
+            end
+
+            local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
             local is_loc = RUtils.qf.is_loclist()
             local qflist = RUtils.qf.get_list_qf(is_loc)
-            local item = qflist.items[lnum]
+            local item = qflist.items[cursor_lnum]
 
-            local opts = {}
+            local opts = {
+              col = item.col or nil,
+              lnum = item.lnum or nil,
+              win_height = 20,
+              win_width = 100,
+              win_col = 0,
+              win_row = is_qf_window_at_bottom() and -win_height() - 15 or win_height(),
+              win_relative = "win",
+            }
 
             if item.bufnr then
               opts.target_bufnr = item.bufnr
 
               if item.text then
                 if #item.text == 0 then
-                  local QfbookmarkUtils = require "qfbookmark.utils"
-                  local path = QfbookmarkUtils.nvim_buf_get_name(item.bufnr)
-                  if path == nil then
-                    opts.title = item.text
-                  else
-                    opts.title = vim.fn.fnamemodify(path, ":~:.")
-                  end
+                  local path = require("qfbookmark.utils").nvim_buf_get_name(item.bufnr)
+                  opts.title = path and vim.fn.fnamemodify(path, ":~:.") or item.text
                 else
                   opts.title = item.text
                 end
               end
             end
-
-            if item.col then
-              opts.col = item.col
-            end
-
-            if item.lnum then
-              opts.lnum = item.lnum
-            end
-
-            opts.win_height = 20
-            opts.win_width = 80
-
-            opts.win_col = 1
-            opts.win_row = -24
 
             return opts
           end,
@@ -163,30 +149,20 @@ return {
               return
             end
 
-            local item_headline
-
-            local Orgmode = require "orgmode.api.agenda"
-
-            ---@type any
-            item_headline = Orgmode.get_headline_at_cursor()
-
+            local item_headline = require("orgmode.api.agenda").get_headline_at_cursor()
             if not item_headline then
               return
             end
 
-            local opts = {
-              lnum = 0,
-              col = 0,
-            }
+            local opts = { lnum = 0, col = 0 }
 
+            ---@diagnostic disable-next-line: invisible
             local item_section = item_headline._section
-
             if item_section and item_section.file then
               local path = item_section.file.filename
 
               if path:match "~" then
-                path = path:gsub("~", "")
-                path = RUtils.config.path.home .. path
+                path = RUtils.config.path.home .. path:gsub("~", "")
               end
 
               local bufnr = vim.fn.bufadd(path)
@@ -196,20 +172,18 @@ return {
 
               opts.target_bufnr = bufnr
               opts.title = path
-
               opts.lnum = item_headline.position.start_line
               opts.col = item_headline.position.end_col
             end
 
             local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
             local win_width = math.ceil(columns / 2)
-
+            local win_height = math.floor(vim.o.lines * 0.3)
             local ui = vim.api.nvim_list_uis()[1]
-            local col = math.floor((ui.width - win_width) / 2)
 
-            opts.win_row = -10
-            opts.win_col = col
-
+            opts.win_relative = "editor"
+            opts.win_row = math.floor((ui.height - win_height) / 2)
+            opts.win_col = math.floor((ui.width - win_width) / 2)
             opts.win_width = 80
             opts.win_height = 30
 
@@ -218,26 +192,23 @@ return {
         },
       },
     },
+
     config = function(_, opts)
-      local p = require "overlook"
+      require("overlook").setup(opts)
 
-      p.setup(opts)
+      local api = require "overlook.api"
+      local cmds = {
+        { "PeekCloseAll", api.close_all, "peek close all" },
+        { "PeekCursor", api.peek_cursor, "peek cursor" },
+        { "PeekRestorePopup", api.restore_popup, "restore popup" },
+        { "PeekRestoreAllPopup", api.restore_all_popups, "restore all popup" },
+      }
 
-      vim.api.nvim_create_user_command("PeekCloseAll", function()
-        require("overlook.api").close_all()
-      end, { desc = "Peek: peek close all [overlook.nvim]" })
-
-      vim.api.nvim_create_user_command("PeekCursor", function()
-        require("overlook.api").peek_cursor()
-      end, { desc = "Peek: peek cursor [overlook.nvim]" })
-
-      vim.api.nvim_create_user_command("PeekRestorePopup", function()
-        require("overlook.api").restore_popup()
-      end, { desc = "Peek: restore popup [overlook.nvim]" })
-
-      vim.api.nvim_create_user_command("PeekRestoreAllPopup", function()
-        require("overlook.api").restore_all_popups()
-      end, { desc = "Peek: restore all popup [overlook.nvim]" })
+      for _, cmd in ipairs(cmds) do
+        vim.api.nvim_create_user_command(cmd[1], cmd[2], {
+          desc = ("Peek: %s [overlook.nvim]"):format(cmd[3]),
+        })
+      end
     end,
   },
   -- INCRENAME

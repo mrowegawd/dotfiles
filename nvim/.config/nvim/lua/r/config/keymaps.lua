@@ -86,12 +86,18 @@ local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_win
 
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
-RUtils.map.nnoremap("<Leader>wo", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.nnoremap("<Leader>O", switch_focus_targeted_window, { desc = "Window: switch focus" })
 
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alternative)" })
 RUtils.map.nnoremap("<c-w>v", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
 RUtils.map.nnoremap("<c-w>l", arange_wins "vsplit", { desc = "Window: vsplit (alternative)" })
+RUtils.map.nnoremap("<c-w>L", function()
+  if vim.w.is_overlook_popup then
+    arange_wins "vsplit"()
+  end
+  RUtils.map.feedkey "<C-w>L"
+end, { desc = "Window: vsplit (alternative)" })
 RUtils.map.nnoremap("<c-w>t", arange_wins "tabe", { desc = "Window: move new tab", silent = true })
 
 RUtils.map.nnoremap("<Leader>wJ", arange_wins "J", { desc = "Window: move ↓" })

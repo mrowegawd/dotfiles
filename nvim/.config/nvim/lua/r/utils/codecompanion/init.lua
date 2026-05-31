@@ -13,9 +13,6 @@ local ui = require "r.utils.codecompanion.ui"
 
 local function setup_plugin()
   return {
-    opts = {
-      log_level = "DEBUG", -- tambahkan ini
-    },
     -- Adapters
     adapters = {
       http = {
@@ -63,10 +60,10 @@ local function setup_plugin()
       -- Chat
       chat = {
         adapter = "ollama_qwen25_7b",
-        -- roles = {
-        --   user = "Me",
-        --   -- llm = ui.llm_role,
-        -- },
+        roles = {
+          user = "Me",
+          llm = ui.llm_role,
+        },
         action_palette = {
           prompt = "> ",
           opts = {
