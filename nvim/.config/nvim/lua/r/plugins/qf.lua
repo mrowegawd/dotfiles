@@ -107,7 +107,7 @@ return {
             commands = {
               -- 🔧 Filter & Update (Quickfix)
               {
-                key = "<LocalLeader>qc",
+                key = "<LocalLeader>qf",
                 cmd = function()
                   local str_cmd = call_func { qf = "Cfilter", lf = "Lfilter" }
                   if str_cmd then
@@ -132,7 +132,7 @@ return {
               },
 
               {
-                key = "<Localleader>qf",
+                key = "<Localleader>qD",
                 cmd = function()
                   local str_cmd = call_func { qf = "cfdo", lf = "lfdo" }
                   if str_cmd then

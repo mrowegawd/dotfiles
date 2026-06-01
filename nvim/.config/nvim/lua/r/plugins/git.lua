@@ -606,7 +606,7 @@ return {
           -- |                                 NAVIGATION                                  |
           -- +-----------------------------------------------------------------------------+
           --stylua: ignore
-          RUtils.map.nnoremap( "<C-n>", "]m", { buffer = e.buf, remap = true, desc = "Fugitive: next item and close diff" }, true)
+          RUtils.map.nnoremap("<C-n>", "]m", { buffer = e.buf, remap = true, desc = "Fugitive: next item and close diff" }, true)
           --stylua: ignore
           RUtils.map.nnoremap("<C-p>", "[m", { buffer = e.buf, remap = true, desc = "Fugitive: prev item and close diff" }, true)
           RUtils.map.nnoremap("<Tab>", "=zt", { buffer = e.buf, remap = true, desc = "Fugitive: unfold/fold" }, true)
@@ -1060,19 +1060,23 @@ return {
           ["q"] = false,
           ["<Esc>"] = false,
         },
-        status = {
+        status = { -- NeogitStatus
           ["<Esc>"] = false,
           ["q"] = false,
-          ["<c-v>"] = false,
           ["<c-x>"] = false,
-          ["<c-t>"] = false,
           ["Y"] = false,
           ["o"] = false,
+
+          -- ["<C-n>"] = false,
+          -- ["<c-p>"] = false,
 
           ["<Leader>oe"] = "GoToFile",
           ["<Leader>ov"] = "VSplitOpen",
           ["<Leader>os"] = "SplitOpen",
           ["<Leader>ot"] = "TabOpen",
+          ["<c-s>"] = "SplitOpen", -- alternative to open
+          ["<c-v>"] = "VSplitOpen",
+          ["<c-t>"] = "TabOpen",
 
           ["<LocalLeader>qP"] = "PeekFile",
           ["<LocalLeader>qy"] = "YankSelected",

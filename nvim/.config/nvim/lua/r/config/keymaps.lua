@@ -86,7 +86,7 @@ local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_win
 
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
-RUtils.map.nnoremap("<Leader>O", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.nnoremap("<Leader>ww", switch_focus_targeted_window, { desc = "Window: switch focus" })
 
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alternative)" })
@@ -160,7 +160,7 @@ RUtils.map.nnoremap( "<Leader>hb", RUtils.map.show_help_buf_keymap, { desc = "He
 
 local replace_keymap = RUtils.buf.window.replace_keymap
 RUtils.map.nnoremap("<Leader>xR", replace_keymap, { desc = "Cmd: replace string under cursor" })
-RUtils.map.xnoremap("<Leader>xR", [["zy:%s/<C-r><C-o>"/]], { desc = "Cmd: replace string under cursor" })
+RUtils.map.xnoremap("<Leader>xR", [["zy:%s/\v\V<C-r><C-o>z/]], { desc = "Cmd: replace string under cursor" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               OPEN <leader>o                                ╏
@@ -404,8 +404,8 @@ end, { desc = "Misc: redraw / clear hlsearch / diff update" })
 RUtils.map.nnoremap("*", function() local word = vim.fn.expand "<cword>" vim.fn.setreg("/", "\\v" .. word) vim.o.hlsearch = true end, { remap = true, desc = "Misc: search word under cursor (no jump)" })
 --stylua: ignore
 RUtils.map.nnoremap("dd", function() if vim.fn.getline "." == "" then return '"_dd' end return "dd" end, { expr = true })
-RUtils.map.xnoremap("<C-g>", "<Esc>/\\%V") --search within visual selection - this is magic
-RUtils.map.nnoremap("<C-g>", "/", nosilent)
+RUtils.map.xnoremap("<C-g>", [[<Esc>/\v%V]]) --search within visual selection - `very magic`
+RUtils.map.nnoremap("<C-g>", "/\\v", nosilent) -- with `very magic`
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit

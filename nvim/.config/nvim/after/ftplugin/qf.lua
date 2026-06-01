@@ -41,7 +41,7 @@ local get_items_list = function()
   return results.quickfix.items
 end
 
-keymap.set("n", "<Leader>ff", function()
+keymap.set("n", "<Leader><Leader>", function()
   local actions = require "fzf-lua.actions"
   local opts = {
     winopts = {
@@ -119,7 +119,7 @@ end, {
   desc = "QF: live grep list of items [fzflua]",
 })
 
-keymap.set("n", "<Leader>fw", function()
+keymap.set("n", "<Leader>fG", function()
   local items = get_items_list()
   local title = RUtils.qf.is_loclist() and RUtils.qf.get_title_qf(true) or RUtils.qf.get_title_qf()
 

@@ -348,7 +348,7 @@ end
 function M.window.replace_keymap(confirmation, visual)
   confirmation = confirmation or false
   visual = visual or false
-  local key = [[:%s/]]
+  local key = [[:%s/\v]]
   local search_string = ""
   if visual then
     local selection_str = RUtils.get_visual_selection()
@@ -356,12 +356,12 @@ function M.window.replace_keymap(confirmation, visual)
       search_string = selection_str.selection
     end
   else
-    key = key .. [[\<]]
+    key = key .. [[<]]
     search_string = vim.fn.expand "<cword>"
   end
   key = key .. RUtils.map.escape(search_string, "[]")
   if not visual then
-    key = key .. [[\>]]
+    key = key .. [[>]]
   end
   key = key .. "/" .. RUtils.map.escape(search_string, "&")
   if confirmation then

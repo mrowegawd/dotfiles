@@ -145,10 +145,10 @@ return {
 
       -- Grep
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
-      { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Picker: grep [fzflua]" },
       { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "x" } },
+      { "<Leader>fw", function() require("fzf-lua").grep() end, desc = "Picker: grep string [fzflua]" },
       {
-        "<Leader>fw",
+        "<Leader>fG",
         function()
           local fzf_cword = require("fzf-lua.utils").rg_escape(vim.fn.expand "<cword>")
           require("fzf-lua").grep_cword { winopts = { title = string.format("Grep cword >> %s", fzf_cword) } }
@@ -156,7 +156,7 @@ return {
         desc = "Picker: grep word [fzflua]",
       },
       {
-        "<Leader>fw",
+        "<Leader>fG",
         function()
           local fzf_visual = require("fzf-lua.utils").get_visual_selection()
           require("fzf-lua").grep_visual { winopts = { title = string.format("Grep word visual >> %s", fzf_visual) } }

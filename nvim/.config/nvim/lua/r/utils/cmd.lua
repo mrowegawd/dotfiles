@@ -272,7 +272,15 @@ local function open_media_or_git(line_str)
     line_str = line_str:match "([a-f0-9]+)$" or line_str
   end
 
-  local git_ft_relatives = { "NeogitCommitView", "git", "DiffviewFiles", "DiffviewFileHistory" }
+  local git_ft_relatives = {
+    "NeogitStatus",
+    "NeogitCommitView",
+    --
+    "git",
+    --
+    "DiffviewFiles",
+    "DiffviewFileHistory",
+  }
 
   local sel_open_with = {
     ["Open MPV - Download/Open local/http video"] = {
@@ -309,7 +317,7 @@ local function open_media_or_git(line_str)
   }
 
   if vim.tbl_contains(git_ft_relatives, vim.bo.filetype) then
-    sel_open_with = {
+    local git_stuff = {
       ["Diffview - Open specific commit"] = {
         prefix_cmd = { "DiffviewOpen" },
         end_cmd = { "^!" },
@@ -325,6 +333,8 @@ local function open_media_or_git(line_str)
       ["Octo - Open this PR"] = { prefix_cmd = { "Octo pr edit " } },
       ["Octo - Open this Issue"] = { prefix_cmd = { "Octo issue edit " } },
     }
+
+    sel_open_with = vim.tbl_extend("force", {}, sel_open_with, git_stuff)
   end
 
   if vim.bo.filetype == "octo" then
