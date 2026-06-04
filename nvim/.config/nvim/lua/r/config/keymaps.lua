@@ -10,7 +10,6 @@ local fm_manager = vim.env.TERM_FILEMANAGER
 
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
 RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
-RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
 
@@ -40,7 +39,20 @@ RUtils.map.vnoremap("<Esc>", function()
   return "<esc>"
 end, silent)
 
-RUtils.map.inoremap("hh", "<Esc>", silent)
+RUtils.map.inoremap("hh", function()
+  vim.schedule(function()
+    vim.cmd "nohlsearch"
+    RUtils.cmp.actions.snippet_stop()
+    RUtils.map.feedkey "<Esc>"
+  end)
+end, silent)
+RUtils.map.snoremap("hh", function()
+  vim.schedule(function()
+    vim.cmd "nohlsearch"
+    RUtils.cmp.actions.snippet_stop()
+    RUtils.map.feedkey "<Esc>"
+  end)
+end, silent)
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                    FOLD                                     ╏

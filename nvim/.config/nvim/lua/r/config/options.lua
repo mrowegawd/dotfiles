@@ -167,7 +167,7 @@ opt.fillchars = {
 }
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
-opt.foldmethod = "indent"
+opt.foldmethod = "expr"
 -- opt.foldexpr = "v:lua.require'r.utils'.treesitter.foldexpr()"
 -- opt.indentexpr = "v:lua.require'r.utils'.treesitter.indentexpr()" -- treesitter indents
 opt.foldtext = ""

@@ -31,7 +31,7 @@ return {
     },
     opts = {
       -- custom props to disable blink in certain filetypes
-      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select", "qfbookmark" },
+      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select", "qfbookmark", "fzf" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
@@ -173,23 +173,22 @@ return {
           ["<Right>"] = false,
           ["<Left>"] = false,
 
-          -- ["<C-y>"] = { "select_and_accept" },
-          ["<C-y>"] = {
-            function(cmp)
-              local type = vim.fn.getcmdtype()
-              if type == "/" or type == "?" then
-                local item = cmp.get_selected_item()
-                if item then
-                  local current = vim.fn.getcmdline()
-                  local magic_prefix = current:match "^(\\[vVmM]?)" or ""
-                  vim.fn.setcmdline(magic_prefix .. item.label)
-                  cmp.hide()
-                  return true
-                end
-              end
-              return cmp.select_and_accept()
-            end,
-          },
+          ["<C-y>"] = { "select_and_accept" },
+
+          --     local type = vim.fn.getcmdtype()
+          --     if type == "/" or type == "?" then
+          --       local item = cmp.get_selected_item()
+          --       if item then
+          --         local current = vim.fn.getcmdline()
+          --         local magic_prefix = current:match "^(\\[vVmM]?)" or ""
+          --         vim.fn.setcmdline(magic_prefix .. item.label)
+          --         cmp.hide()
+          --         return true
+          --       end
+          --     end
+          --     return cmp.select_and_accept()
+          --   end,
+          -- },
 
           ["<C-j>"] = {
             function()
@@ -224,12 +223,12 @@ return {
                   return RUtils.map.feedkey "<C-Down>"
                 end
               else
-                local type = vim.fn.getcmdtype()
-                if type == "/" or type == "?" then
-                  cmp.select_next { auto_insert = false }
-                else
-                  cmp.select_next()
-                end
+                -- local type = vim.fn.getcmdtype()
+                -- if type == "/" or type == "?" then
+                --   cmp.select_next { auto_insert = false }
+                -- else
+                cmp.select_next()
+                -- end
               end
             end,
           },
@@ -244,12 +243,12 @@ return {
                   return RUtils.map.feedkey "<C-Up>"
                 end
               else
-                local type = vim.fn.getcmdtype()
-                if type == "/" or type == "?" then
-                  cmp.select_prev { auto_insert = false }
-                else
-                  cmp.select_prev()
-                end
+                -- local type = vim.fn.getcmdtype()
+                -- if type == "/" or type == "?" then
+                --   cmp.select_prev { auto_insert = false }
+                -- else
+                cmp.select_prev()
+                -- end
               end
             end,
           },
@@ -295,10 +294,10 @@ return {
               end, items)
             end,
           },
-          snippets = {
-            score_offset = -5,
-            opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } },
-          },
+          -- snippets = {
+          --   score_offset = -5,
+          --   opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } },
+          -- },
           path = {
             score_offset = -3,
             opts = { show_hidden_files_by_default = true },
@@ -360,8 +359,6 @@ return {
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)
         -- How to disable keymap? -> ["<C-e>"] = {},
-        ["<C-y>"] = { "select_and_accept" },
-
         ["<C-f>"] = {},
         ["<C-e>"] = {},
         ["<C-b>"] = {},
@@ -374,20 +371,6 @@ return {
             return cmp.show { providers = { "ripgrep" } }
           end,
         },
-
-        ["<Tab>"] = {
-          function(cmp)
-            if cmp.snippet_active() then
-              return cmp.accept()
-            else
-              return cmp.select_and_accept()
-            end
-          end,
-          "snippet_forward",
-          "fallback",
-        },
-        ["<S-Tab>"] = { "snippet_backward", "fallback" },
-
         ["<C-r>"] = {
           function(cmp)
             local current_provider = providers[idx]
