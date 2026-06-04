@@ -15,8 +15,10 @@ vim.lsp.autohover = {
 }
 vim.o.updatetime = vim.lsp.autohover.delay
 
-local lsp_hover_augroup = vim.api.nvim_create_augroup("LspHoverOnHold", { clear = true })
-local eldoc_close_augroup = vim.api.nvim_create_augroup("LspEldocAutoClose", { clear = true })
+local height = 0
+
+-- local lsp_hover_augroup = vim.api.nvim_create_augroup("LspHoverOnHold", { clear = true })
+-- local eldoc_close_augroup = vim.api.nvim_create_augroup("LspEldocAutoClose", { clear = true })
 
 local eldoc_win_id = nil
 local eldoc_buf_id = nil
@@ -142,12 +144,15 @@ function M.hover_in_split()
     local saved = RUtils.layout.save_wins_current_tab and RUtils.layout.save_wins_current_tab(caller_win)
 
     local symbol_name = nil
+
+    height = math.min(#lines, 8) -- or math.floor(vim.o.lines * vim.lsp.autohover.opts.ratio),
+
     eldoc_buf_id = vim.api.nvim_create_buf(false, true)
     eldoc_win_id = vim.api.nvim_open_win(eldoc_buf_id, false, {
       split = "above", -- "below"
       win = -1,
       -- win = 0,
-      height = math.min(#lines, 8), -- or math.floor(vim.o.lines * vim.lsp.autohover.opts.ratio),
+      height = height,
       style = "minimal",
     })
 
@@ -220,8 +225,7 @@ function M.toggle_auto_hover()
   if vim.lsp.autohover.enabled then
     RUtils.layout.open_window_safely(function()
       M.hover_in_split()
-    end)
-    -- vim.notify("Auto Hover enabled", vim.log.levels.INFO, { title = "LSP" })
+    end, { height = height, win = eldoc_win_id or 0, width = 0 })
   else
     close_eldoc_window()
     -- vim.notify("Auto Hover disabled", vim.log.levels.INFO, { title = "LSP" })

@@ -237,7 +237,8 @@ local select_layout_terminal_cmd = {
     get = function()
       local t = M.wrap_open_cmd({
         name = "STerm Tclock",
-        cmd = "tclock clock -S",
+        -- cmd = "tclock clock -S",
+        cmd = "timr-tui",
         layout = "window",
       }, true)
       if t then
@@ -249,7 +250,8 @@ local select_layout_terminal_cmd = {
     get = function(timer)
       local t = M.wrap_open_cmd({
         name = "STerm Tclock Pomodor",
-        cmd = "tclock -c red timer -d " .. timer .. " -M",
+        -- cmd = "tclock -c red timer -d " .. timer .. " -M",
+        cmd = "timr-tui",
         layout = "window",
       }, true)
       if t then
@@ -260,7 +262,7 @@ local select_layout_terminal_cmd = {
 }
 
 ---Helper to open clock mode in terminal
----@param select_command {pomodoro: {timer: string}} | "clock"
+---@param select_command string
 ---@param main_win integer
 ---@param curwin integer
 ---@param clock_win? integer
@@ -296,51 +298,66 @@ local function open_clock(select_command, main_win, curwin, clock_win)
         select_layout_terminal_cmd["clock"].get()
       end
 
-      if curwin and vim.api.nvim_win_is_valid(curwin) then
-        vim.api.nvim_set_current_win(curwin) -- after toggle term, focus curwin now
-
-        -- Needed because many terminal plugins use scheduled callbacks.
-        -- Even after leaving the terminal window, they may still restore
-        -- or keep terminal/insert mode active.
-        vim.defer_fn(function()
-          vim.api.nvim_set_current_win(curwin) -- make sure again the current win is `curwin`
+      -- Needed because many terminal plugins use scheduled callbacks.
+      -- Even after leaving the terminal window, they may still restore
+      -- or keep terminal/insert mode active.
+      vim.defer_fn(function()
+        if curwin and vim.api.nvim_win_is_valid(curwin) then
+          vim.api.nvim_set_current_win(curwin) -- after toggle term, focus curwin now
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
-        end, 250)
+        end
+      end, 100)
 
-        -- always renew clock win
-        RUtils.layout.update_win_layout(mode_clock_name, clock_win)
-      end
+      vim.schedule(function()
+        vim.cmd "stopinsert"
+      end)
+
+      -- always renew clock win
+      RUtils.layout.update_win_layout(mode_clock_name, clock_win)
     end)
   end)
 end
 
----@param select_command? {pomodoro: {timer: string}} | "clock"
-function M.clock_mode(select_command)
+---@param select_command string
+---@param is_toggle? boolean
+function M.clock_mode(select_command, is_toggle)
+  is_toggle = is_toggle or false
   select_command = select_command or "clock"
 
   local main_layout = RUtils.layout.get_Win()
   if not main_layout.layout then
-    RUtils.warn "field `layout` is missing or get renewed, check file`layout.lua`"
+    RUtils.warn "fieldj `layout` is missing or get renewed, check file`layout.lua`"
     return
   end
 
-  local clock_win = RUtils.layout.get_win_clock_layout()
-
+  local clock_win = RUtils.layout.get_support_win_layout()
   local curwin = vim.api.nvim_get_current_win()
 
-  if clock_win and vim.api.nvim_win_is_valid(clock_win) then
-    open_clock(main_layout.win, curwin, clock_win)
-    return
+  if is_toggle then
+    if clock_win[select_command] then
+      RUtils.layout.close_support_window(select_command)
+      return
+    end
   end
+
+  -- if clock_win and vim.api.nvim_win_is_valid(clock_win) then
+  --   open_clock(main_layout.win, curwin, clock_win)
+  --   return
+  -- end
 
   local current_tab = vim.fn.tabpagenr()
   local main = main_layout.layout[current_tab]
 
-  if not main.win or not vim.api.nvim_win_is_valid(main.win) then
+  if not main or not main.win or not vim.api.nvim_win_is_valid(main.win) then
     RUtils.warn "`main.win` is invalid or dead, create a new one!"
     return
   end
   open_clock(select_command, main.win, curwin)
+end
+
+--- For layout caller command --> check layout.lua
+function M.open_clock()
+  M.clock_mode "clock"
 end
 
 function M.open_smart_split()

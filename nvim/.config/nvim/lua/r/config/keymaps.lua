@@ -562,7 +562,7 @@ end, {})
 local ctrl_o_nvim = function()
   RUtils.fzflua.open_cmd_bulk_key_only({
     ["Clock mode"] = function()
-      RUtils.terminal.clock_mode()
+      RUtils.terminal.clock_mode("clock", true)
     end,
     ["Pomodoro 1h"] = function()
       RUtils.terminal.clock_mode { pomodoro = { timer = "1h" } }
@@ -572,6 +572,9 @@ local ctrl_o_nvim = function()
     end,
     ["Pomodoro 10m"] = function()
       RUtils.terminal.clock_mode { pomodoro = { timer = "10m" } }
+    end,
+    ["Layout width toggle"] = function()
+      RUtils.layout.disable()
     end,
     ["News"] = function()
       RUtils.terminal.float_newsboat()

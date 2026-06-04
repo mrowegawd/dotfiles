@@ -557,7 +557,6 @@ handle_split_term() {
     fi
 
     __update_pane_toggle_term "$CURRENT_SESSION" "$WINDOW_ID" "$TOGGLE_TERM_PANE_ID"
-    return
   fi
 
   # Cek posisi pane saat ini (dari origin pane)

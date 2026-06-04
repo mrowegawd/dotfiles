@@ -4,9 +4,16 @@ local M = {}
 local Win = {}
 Win.layout = {}
 
+local is_autocmd_registered = false
 local is_processing_layout = false
 local is_all_window = true
 local is_toggle
+
+---@type {height: integer, width: integer, win:integer}
+local opts_external_window = {}
+
+---Helper to prevent multiple respawns in autocmd callbacks.
+local respawn = 0
 
 vim.o.equalalways = false -- this motherfucker is driving me insane!! hadeeeh
 
@@ -103,24 +110,13 @@ end
 
 ---@param main_layout {win: integer}
 ---@param buf? integer
-local function is_valid_layout_window(main_layout, buf)
+local function is_valid_main_layout(main_layout, buf)
   buf = buf or vim.api.nvim_get_current_buf()
   local winid = main_layout.win
   if not is_valid_window(winid, buf) then
     return false
   end
   return true
-end
-
-local timer_closed = false
-
----@param timer uv.uv_timer_t
-local function stop_timer(timer)
-  if not timer_closed then
-    timer_closed = true
-    timer:stop()
-    timer:close()
-  end
 end
 
 ---@param name string
@@ -166,6 +162,66 @@ local function debounce(f, delay)
   end
 end
 
+---@param winid integer
+---@param node? table
+---@return "leaf"|"row"|"col"|nil
+local function get_layout_type(winid, node)
+  node = node or vim.fn.winlayout()
+
+  local typ = node[1]
+
+  -- leaf node
+  if typ == "leaf" then
+    if node[2] == winid then
+      return "leaf"
+    end
+    return nil
+  end
+
+  -- row / col node
+  ---@diagnostic disable-next-line: param-type-mismatch
+  for _, child in ipairs(node[2]) do
+    local found = get_layout_type(winid, child)
+
+    if found then
+      return typ
+    end
+  end
+
+  return nil
+end
+
+---Checks if the LSP on the current buffer is ready and supports Document Symbols
+---@return boolean is_ready, string? message
+local function check_lsp_symbol_readiness()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients { bufnr = bufnr }
+
+  if #clients == 0 then
+    return false, "No active LSP clients found in this buffer."
+  end
+
+  local has_symbol_support = false
+  for _, client in ipairs(clients) do
+    -- 1. Check if the LSP supports documentSymbol (required for Outline)
+    ---@diagnostic disable-next-line: param-type-mismatch, missing-parameter
+    if client.supports_method "textDocument/documentSymbol" then
+      has_symbol_support = true
+    end
+
+    -- 2. Check if the LSP is currently busy indexing or loading progress
+    if vim.lsp.status and vim.lsp.status() ~= "" then
+      return false, "LSP is busy running progress/indexing..."
+    end
+  end
+
+  if not has_symbol_support then
+    return false, "The active LSP in this buffer does not support the Outline feature (Document Symbol)."
+  end
+
+  return true
+end
+
 -- +-----------------------------------------------------------------------------+
 -- |                                 WIN LAYOUT                                  |
 -- +-----------------------------------------------------------------------------+
@@ -178,11 +234,13 @@ Win.slot_win = {
 Win.filetype_blacklist_jump_cursor = {
   ["Outline"] = true,
   ["aerial"] = true,
+  ["nvim-undotree"] = true,
 }
 
 Win.filetype_skip_resize_layout = {
   ["grug-far"] = true,
-  ["oil"] = true,
+  -- ["oil"] = true,
+  -- ["NeogitStatus"] = true,
   -- ["eldochover"] = true,
   ["wk"] = true, -- whichkey ft
   -- ["qf"] = true,
@@ -230,7 +288,7 @@ end
 
 ---@param tab? integer
 ---@return {win: integer}
-function Win.get_current_layout(tab)
+function Win.get_main_layout(tab)
   tab = tab or vim.fn.tabpagenr()
 
   if not Win.layout[tab] then
@@ -246,33 +304,34 @@ end
 function Win.open_empty_blank_buffer(position)
   vim.cmd(position .. " vsplit")
 
-  local winid = vim.api.nvim_get_current_win()
-  local buf = vim.api.nvim_get_current_buf()
+  vim.schedule(function()
+    local winid = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
 
-  local tab = vim.fn.tabpagenr()
-  Win.update_layout(winid, buf, tab)
+    local tab = vim.fn.tabpagenr()
+    Win.update_layout(winid, buf, tab)
 
-  local main_layout = Win.get_current_layout(tab)
-  local empty_buf = vim.api.nvim_create_buf(false, true)
+    local main_layout = Win.get_main_layout(tab)
+    local empty_buf = vim.api.nvim_create_buf(false, true)
 
-  if not is_valid_layout_window(main_layout, buf) then
-    ---@diagnostic disable-next-line: undefined-field
-    warn "open_empty_blank_buffer: cannot continue, main_layout or buf is invalid "
-    return
-  end
+    if not is_valid_main_layout(main_layout, buf) then
+      ---@diagnostic disable-next-line: undefined-field
+      warn "open_empty_blank_buffer: cannot continue, main_layout or buf is invalid "
+      return
+    end
 
-  vim.api.nvim_win_set_buf(main_layout.win, empty_buf)
-  vim.api.nvim_set_option_value("cursorline", false, { win = main_layout.win, scope = "local" })
-  vim.api.nvim_set_option_value("number", false, { win = main_layout.win, scope = "local" })
-  vim.api.nvim_set_option_value("modifiable", true, { buf = empty_buf })
-  vim.api.nvim_set_option_value("readonly", false, { buf = empty_buf })
-  vim.api.nvim_set_option_value("filetype", Win.main_ft_name, { buf = empty_buf })
+    vim.api.nvim_win_set_buf(main_layout.win, empty_buf)
+    vim.api.nvim_set_option_value("cursorline", false, { win = main_layout.win, scope = "local" })
+    vim.api.nvim_set_option_value("number", false, { win = main_layout.win, scope = "local" })
+    vim.api.nvim_set_option_value("modifiable", true, { buf = empty_buf })
+    vim.api.nvim_set_option_value("readonly", false, { buf = empty_buf })
+    vim.api.nvim_set_option_value("filetype", Win.main_ft_name, { buf = empty_buf })
 
-  vim.wo[main_layout.win].winfixwidth = true
-  vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
+    vim.wo[main_layout.win].winfixwidth = true
+    vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
 
-  is_toggle = true
-  vim.cmd "wincmd p"
+    vim.cmd "wincmd p"
+  end)
 end
 
 ---@param cur_winid integer
@@ -281,7 +340,7 @@ end
 local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
   local saved_before_fn, saved_cmdheight
 
-  Win.close_win_target "clock"
+  RUtils.info(tostring(is_all_window))
 
   if is_all_window then
     saved_before_fn = save_wins_current_tab(cur_winid)
@@ -304,80 +363,43 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
     vim.api.nvim_win_set_width(main_layout_winid, Win.main_size)
   end)
 
-  vim.schedule(function()
-    Win.reopen_win "clock"
-  end)
-end
-
----@param winid integer
----@param node? table
----@return "leaf"|"row"|"col"|nil
-local function get_layout_type(winid, node)
-  node = node or vim.fn.winlayout()
-
-  local typ = node[1]
-
-  -- leaf node
-  if typ == "leaf" then
-    if node[2] == winid then
-      return "leaf"
-    end
-    return nil
+  if is_all_window and opts_external_window and opts_external_window.height then
+    vim.api.nvim_win_call(cur_winid, function()
+      vim.api.nvim_win_set_height(cur_winid, opts_external_window.height)
+      -- The external window opts must be cleared because they will interfere
+      -- if `opts_external_window.height` is still present
+      opts_external_window = {}
+    end)
   end
-
-  -- row / col node
-  ---@diagnostic disable-next-line: param-type-mismatch
-  for _, child in ipairs(node[2]) do
-    local found = get_layout_type(winid, child)
-
-    if found then
-      return typ
-    end
-  end
-
-  return nil
 end
 
 ---@param master_saved_layout table
 function Win.ensure_main_sidebar_is_left(master_saved_layout)
-  local timer = vim.uv.new_timer()
-  if not timer then
+  local layouts_win = RUtils.cmd.windows_is_opened(Win.slot_win.fts, true)
+  Win.update_layout(layouts_win.winid)
+
+  if not layouts_win.found then
     return
   end
 
-  local attempts = 0
-  local max_attempts = 300
-  timer_closed = false
-  timer:start(
-    20,
-    20,
-    vim.schedule_wrap(function()
-      attempts = attempts + 1
-
-      local layouts_win = RUtils.cmd.windows_is_opened(Win.slot_win.fts, true)
-      if layouts_win.found then
-        Win.update_layout(layouts_win.winid)
-        local main_layout = Win.get_current_layout()
-
-        vim.api.nvim_win_call(main_layout.win, function()
-          vim.cmd "wincmd H"
-          if master_saved_layout then
-            restore_wins(master_saved_layout)
-          end
-
-          vim.wo[main_layout.win].winfixwidth = true
-          vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
-        end)
-
-        stop_timer(timer)
-        return
+  debounce(function()
+    local main_layout = Win.get_main_layout()
+    if
+      (main_layout and not main_layout.win)
+      or (main_layout.win and not vim.api.nvim_win_is_valid(main_layout.win))
+    then
+      return
+    end
+    vim.api.nvim_win_call(main_layout.win, function()
+      vim.cmd "wincmd H"
+      if master_saved_layout then
+        restore_wins(master_saved_layout)
       end
 
-      if attempts >= max_attempts then
-        stop_timer(timer)
-      end
+      vim.wo[main_layout.win].winfixwidth = true
+      vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
     end)
-  )
+  end, 100)()
 
   if Win.filetype_blacklist_jump_cursor[vim.bo.filetype] then
     vim.cmd "wincmd p"
@@ -389,9 +411,9 @@ function Win.keep_sidebar_left()
     return
   end
 
-  local main_layout = Win.get_current_layout()
+  local main_layout = Win.get_main_layout()
 
-  if not is_valid_layout_window(main_layout) then
+  if not is_valid_main_layout(main_layout) then
     return
   end
 
@@ -402,10 +424,6 @@ function Win.keep_sidebar_left()
   local cur_winid = vim.api.nvim_get_current_win()
 
   if is_ft_skip_resize(cur_winid) then
-    return
-  end
-
-  if is_float_win(cur_winid) then
     return
   end
 
@@ -434,9 +452,13 @@ function Win.keep_sidebar_left()
 
   if is_processing_layout then
     debounce(function()
+      Win.handle_close_support_win()
+
       __cmd_win_call(cur_winid, winid, function()
         vim.cmd "wincmd H"
       end)
+
+      Win.reopen_win(true)
     end, 100)()
     is_processing_layout = false
   end
@@ -446,25 +468,58 @@ function Win.update_sidebar()
   Win.keep_sidebar_left()
 end
 
----@param name_win "clock"
-function Win.reopen_win(name_win)
-  if name_win == "clock" and Win.need_reopen[name_win] then
-    local win_clock = M.get_win_clock_layout()
-    if not win_clock or not vim.api.nvim_win_is_valid(win_clock) then
-      RUtils.terminal.clock_mode()
+function Win.reopen_win(is_autocmd)
+  is_autocmd = is_autocmd or false
+  if #Win.need_reopen == 1 then -- ini table dict bukan list
+    return
+  end
+
+  if is_processing_layout then
+    return
+  end
+
+  for name_win, win in pairs(Win.need_reopen) do
+    if is_autocmd and respawn > 0 then
+      break
+    end
+    local name_cmd = "open_" .. name_win
+    if RUtils.terminal[name_cmd] and not vim.api.nvim_win_is_valid(win) then
+      RUtils.terminal[name_cmd]()
+      if is_autocmd then
+        respawn = 1
+      end
+    else
+      warn("Try to call this command but something went wrong: `" .. name_cmd .. "` is nil?")
     end
   end
 end
 
----@param name_win "clock"
-function Win.close_win_target(name_win)
-  if name_win == "clock" then
-    local win_clock = M.get_win_clock_layout()
-    if win_clock and vim.api.nvim_win_is_valid(win_clock) then
-      vim.api.nvim_win_close(win_clock, true)
-      Win.need_reopen.clock = true
-    else
-      Win.need_reopen.clock = false
+--- This will close other windows that are not the main window.
+--- This is needed because we need to close the support windows before
+--- re-layouting the Neovim windows.
+---@param target_win? string
+function Win.handle_close_support_win(target_win)
+  target_win = target_win or ""
+  local support_wins = M.get_support_win_layout()
+
+  if #target_win > 0 then
+    for key_win, win in pairs(support_wins) do
+      if key_win == target_win then
+        if win and vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_close(win, true)
+          -- After closing the window
+          -- ensure that window is removed from current main layout
+          Win.need_reopen[key_win] = nil
+        end
+      end
+    end
+    return
+  end
+  for key_win, win in pairs(support_wins) do
+    if win and vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+      Win.need_reopen[key_win] = win
+      respawn = 0
     end
   end
 end
@@ -472,8 +527,6 @@ end
 -- +-----------------------------------------------------------------------------+
 -- |                                   AUTOCMD                                   |
 -- +-----------------------------------------------------------------------------+
-
-local is_autocmd_registered = false -- false = belum di-setup
 
 local function setup_autocmd()
   if is_autocmd_registered then
@@ -515,7 +568,7 @@ local function setup_autocmd()
         pcall(vim.api.nvim_del_augroup_by_name, group_name "DisableWinLeave")
         pcall(vim.api.nvim_del_augroup_by_name, group_name "FixSizeWinEnter")
         pcall(vim.api.nvim_del_augroup_by_name, group_name "Closed")
-      end)
+      end, 100)()
     end,
   })
 
@@ -526,7 +579,41 @@ local function setup_autocmd()
       if not Win.is_set_layout_width then
         return
       end
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
+        return
+      end
       Win.update_sidebar()
+    end,
+  })
+
+  RUtils.map.augroup(group_name "FocusGaindAndLost", {
+    event = { "FocusGained", "FocusLost" },
+    pattern = "*",
+    command = function()
+      if not Win.is_set_layout_width then
+        return
+      end
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
+        return
+      end
+
+      if is_all_window then
+        is_all_window = true
+      end
+
+      if not is_processing_layout then
+        is_processing_layout = true
+      end
+
+      local master_saved_layout = save_wins_current_tab(vim.api.nvim_get_current_win())
+
+      Win.update_sidebar()
+
+      vim.schedule(function()
+        restore_wins(master_saved_layout)
+      end)
     end,
   })
 
@@ -535,6 +622,10 @@ local function setup_autocmd()
     pattern = "*",
     command = function()
       if not Win.is_set_layout_width then
+        return
+      end
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
         return
       end
       Win.update_sidebar()
@@ -571,12 +662,17 @@ local function setup_autocmd()
         return
       end
 
-      local main_layout = Win.get_current_layout()
-      if not is_valid_layout_window(main_layout) then
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
         return
       end
 
       debounce(function()
+        local main_layout = Win.get_main_layout()
+        if not is_valid_main_layout(main_layout) then
+          return
+        end
+
         local buf = vim.api.nvim_get_current_buf()
         local winid = main_layout.win
 
@@ -613,8 +709,6 @@ function M.toggle_sidebar(ft, fn, is_force)
     setup_autocmd()
   end
 
-  Win.close_win_target "clock"
-
   if #Win.slot_win.fts == 0 then
     Win.slot_win.fts = { ft }
     Win.slot_win.last_open = ft
@@ -635,15 +729,18 @@ function M.toggle_sidebar(ft, fn, is_force)
     end
   end
 
-  local tab = vim.fn.tabpagenr()
-  local main_layout = Win.get_current_layout(tab)
+  -- Close support window first e.g clock window
+  Win.handle_close_support_win()
 
-  local current_sidebar = RUtils.cmd.windows_is_opened(Win.slot_win.fts, true)
-  local target_skip_win = current_sidebar.found and current_sidebar.winid or main_layout.win
+  local tab = vim.fn.tabpagenr()
+  local main_layout = Win.get_main_layout(tab)
+  local target_skip_win = (main_layout.win and vim.api.nvim_win_is_valid(main_layout.win)) and main_layout.win
+    or vim.api.nvim_get_current_win()
   local master_saved_layout = save_wins_current_tab(target_skip_win)
 
-  if current_sidebar.found then
-    vim.api.nvim_win_close(current_sidebar.winid, true)
+  -- Close the sidebar window before opening a new blank window
+  if is_valid_main_layout(main_layout) then
+    vim.api.nvim_win_close(main_layout.win, true)
     vim.schedule(function()
       restore_wins(master_saved_layout)
     end)
@@ -651,18 +748,11 @@ function M.toggle_sidebar(ft, fn, is_force)
 
   if not is_toggle then
     Win.open_empty_blank_buffer "topleft"
+    is_toggle = true
 
-    Win.reopen_win "clock"
     if not is_force then
       return
     end
-  end
-
-  if is_valid_layout_window(main_layout) then
-    vim.api.nvim_win_close(main_layout.win, true)
-    vim.schedule(function()
-      restore_wins(master_saved_layout)
-    end)
   end
 
   fn()
@@ -672,39 +762,8 @@ function M.toggle_sidebar(ft, fn, is_force)
   is_toggle = false
 
   debounce(function()
-    Win.reopen_win "clock"
-  end, 200)()
-end
-
----Checks if the LSP on the current buffer is ready and supports Document Symbols
----@return boolean is_ready, string? message
-local function check_lsp_symbol_readiness()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_clients { bufnr = bufnr }
-
-  if #clients == 0 then
-    return false, "No active LSP clients found in this buffer."
-  end
-
-  local has_symbol_support = false
-  for _, client in ipairs(clients) do
-    -- 1. Check if the LSP supports documentSymbol (required for Outline)
-    ---@diagnostic disable-next-line: param-type-mismatch, missing-parameter
-    if client.supports_method "textDocument/documentSymbol" then
-      has_symbol_support = true
-    end
-
-    -- 2. Check if the LSP is currently busy indexing or loading progress
-    if vim.lsp.status and vim.lsp.status() ~= "" then
-      return false, "LSP is busy running progress/indexing..."
-    end
-  end
-
-  if not has_symbol_support then
-    return false, "The active LSP in this buffer does not support the Outline feature (Document Symbol)."
-  end
-
-  return true
+    Win.reopen_win()
+  end, 100)()
 end
 
 function M.debug()
@@ -723,13 +782,23 @@ function M.get_Win()
   return Win
 end
 
----@return integer|nil
-function M.get_win_clock_layout()
+M.close_support_window = Win.handle_close_support_win
+
+---@return table
+function M.get_support_win_layout()
+  local support_wins = {}
+
   local tab = vim.api.nvim_get_current_tabpage()
-  if Win.layout[tab] and Win.layout[tab].clock then
-    return Win.layout[tab] and Win.layout[tab].clock
+  local main_layout = Win.get_main_layout(tab)
+
+  for key_winid, winid in pairs(Win.layout[tab]) do
+    if main_layout.win ~= winid then
+      if winid and vim.api.nvim_win_is_valid(winid) then
+        support_wins[key_winid] = winid
+      end
+    end
   end
-  return nil
+  return support_wins
 end
 
 ---@param name_win string
@@ -770,11 +839,26 @@ function M.open_outline_safely(ft, fn, is_force)
 end
 
 ---@param fn function
-function M.open_window_safely(fn)
+function M.toggle_sidebar_with_clear(fn)
+  -- If LSP is fully synchronized, proceed with our layout-safe handler
+  ---@diagnostic disable-next-line: undefined-field
+  info "LSP Ready. Opening Outline..."
+
+  M.toggle_sidebar("clear", fn, false)
+end
+
+---Handle external window with specific parameter, e.g eldochover window
+---this parameter is needed to configure with main layout
+---@param fn function
+---@param external_opts {height: integer, width: integer, win:integer}
+function M.open_external_window_safely(fn, external_opts)
   is_processing_layout = true
   is_all_window = false
   local winid = vim.api.nvim_get_current_win()
   local saved = save_wins_current_tab(winid)
+
+  opts_external_window = external_opts
+
   fn()
   vim.schedule(function()
     restore_wins(saved)
