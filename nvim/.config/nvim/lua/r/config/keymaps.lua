@@ -86,6 +86,7 @@ local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_win
 
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
+
 RUtils.map.nnoremap("<Leader>ww", switch_focus_targeted_window, { desc = "Window: switch focus" })
 
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
@@ -110,6 +111,9 @@ RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" }
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
 RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable layout" })
+
+-- stylua: ignore
+RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layout.debug())) end, { desc = "Test: debug layout" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                   TAB t..                                   ╏
@@ -241,17 +245,55 @@ RUtils.map.tnoremap("<a-x>", function() local buf = vim.api.nvim_get_current_buf
 RUtils.map.tnoremap("<C-a-l>", function() RUtils.map.feedkey("<C-\\><C-n><C-a-l>", "t") end, { desc = "Terminal: next tab" })
 --stylua: ignore
 RUtils.map.tnoremap("<C-a-h>", function() RUtils.map.feedkey("<C-\\><C-n><C-a-h>", "t") end, { desc = "Terminal: prev tab" })
---stylua: ignore
-RUtils.map.tnoremap("<A-N>", function() RUtils.map.feedkey("<C-\\><C-n><A-N>", "t") end, { desc = "Terminal: new tab", silent = true })
 
 -- stylua: ignore
-RUtils.map.tnoremap("<a-h>", function() RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t") end, { desc = "Terminal: move left" })
+RUtils.map.tnoremap("<c-w>h", function() RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t") end, { desc = "Terminal: move left" })
 -- stylua: ignore
-RUtils.map.tnoremap("<a-j>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd j<CR>", "t") end, { desc = "Terminal: move down" })
+RUtils.map.tnoremap("<c-w>j", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd j<CR>", "t") end, { desc = "Terminal: move down" })
 -- stylua: ignore
-RUtils.map.tnoremap("<a-k>", function() RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t") end, { desc = "Terminal: move up" })
+RUtils.map.tnoremap("<c-w>k", function() RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t") end, { desc = "Terminal: move up" })
 -- stylua: ignore
-RUtils.map.tnoremap("<a-l>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t") end, { desc = "Terminal: move right" })
+RUtils.map.tnoremap("<c-w>l", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t") end, { desc = "Terminal: move right" })
+
+-- ├──────────────────────────────────┤ OPEN ├──────────────────────────────────┤
+
+-- ════════════════════════════════ TOGGLE TERM ═════════════════════════════
+-- stylua: ignore
+RUtils.map.nnoremap("<a-f>",RUtils.terminal.toggle_term, { desc = "Terminal: toggle [ergoterm]" })
+-- stylua: ignore
+RUtils.map.xnoremap("<a-f>",RUtils.terminal.toggle_term, { desc = "Terminal: toggle (visual) [ergoterm]" })
+-- stylua: ignore
+RUtils.map.tnoremap("<a-f>",RUtils.terminal.toggle_term, { desc = "Terminal: toggle (terminal) [ergoterm]" })
+
+-- ══════════════════════════════════ TAB TERM ══════════════════════════════════
+-- stylua: ignore
+RUtils.map.nnoremap("<a-N>",RUtils.terminal.tab_term, { desc = "Terminal: tab [ergoterm]" })
+-- stylua: ignore
+RUtils.map.xnoremap("<a-N>",RUtils.terminal.tab_term, { desc = "Terminal: tab (visual) [ergoterm]" })
+-- stylua: ignore
+RUtils.map.tnoremap("<a-N>",RUtils.terminal.tab_term, { desc = "Terminal: tab (terminal) [ergoterm]" })
+
+-- stylua: ignore
+RUtils.map.nnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right [ergoterm]" })
+-- stylua: ignore
+RUtils.map.tnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right (terminal) [ergoterm]" })
+-- stylua: ignore
+RUtils.map.xnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right (visual) [ergoterm]" })
+
+-- stylua: ignore
+RUtils.map.nnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below [ergoterm]" })
+-- stylua: ignore
+RUtils.map.tnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below (terminal) [ergoterm]" })
+-- stylua: ignore
+RUtils.map.xnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below (visual) [ergoterm]" })
+
+-- ═════════════════════════════════ FLOAT TERM ═════════════════════════════════
+-- stylua: ignore
+RUtils.map.xnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float (visual) [ergoterm]" })
+-- stylua: ignore
+RUtils.map.nnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float [ergoterm]" })
+-- stylua: ignore
+RUtils.map.tnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float [ergoterm]" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                 COMMANDLINE                                 ╏
@@ -497,6 +539,15 @@ local ctrl_o_nvim = function()
   RUtils.fzflua.open_cmd_bulk_key_only({
     ["Clock mode"] = function()
       RUtils.terminal.clock_mode()
+    end,
+    ["Pomodoro 1h"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "1h" } }
+    end,
+    ["Pomodoro 25m"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "25m" } }
+    end,
+    ["Pomodoro 10m"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "10m" } }
     end,
     ["News"] = function()
       RUtils.terminal.float_newsboat()

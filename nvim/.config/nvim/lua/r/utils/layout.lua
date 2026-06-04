@@ -128,18 +128,41 @@ local group_name = function(name)
   return Win.prefix_group_name .. name
 end
 
----@generic F: fun()
----@param fn F
----@return F
-local function noautocmd(fn)
+-----@generic F: fun()
+-----@param fn F
+-----@return F
+-- local function noautocmd(fn)
+--   return function(...)
+--     vim.o.eventignore = "all"
+--     local ok, ret = pcall(fn, ...)
+--     vim.o.eventignore = ""
+--     if not ok then
+--       error(ret)
+--     end
+--     return ret
+--   end
+-- end
+
+--- @param  f function
+--- @param  delay number
+--- @return function
+local function debounce(f, delay)
+  local timer = vim.loop.new_timer()
+  if not timer then
+    return f
+  end
+
   return function(...)
-    vim.o.eventignore = "all"
-    local ok, ret = pcall(fn, ...)
-    vim.o.eventignore = ""
-    if not ok then
-      error(ret)
-    end
-    return ret
+    local args = { ... }
+
+    timer:start(
+      delay,
+      0,
+      vim.schedule_wrap(function()
+        timer:stop()
+        f(unpack(args))
+      end)
+    )
   end
 end
 
@@ -171,6 +194,7 @@ Win.main_size = _get_width_size()
 Win.main_ft_name = "main_layout"
 Win.prefix_group_name = "Layout_"
 Win.is_set_layout_width = true
+Win.need_reopen = {}
 
 function Win.disable()
   local msg
@@ -257,6 +281,8 @@ end
 local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
   local saved_before_fn, saved_cmdheight
 
+  Win.close_win_target "clock"
+
   if is_all_window then
     saved_before_fn = save_wins_current_tab(cur_winid)
     saved_cmdheight = vim.o.cmdheight
@@ -276,6 +302,10 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
 
     vim.wo[main_layout_winid].winfixwidth = true
     vim.api.nvim_win_set_width(main_layout_winid, Win.main_size)
+  end)
+
+  vim.schedule(function()
+    Win.reopen_win "clock"
   end)
 end
 
@@ -403,17 +433,40 @@ function Win.keep_sidebar_left()
   end
 
   if is_processing_layout then
-    __cmd_win_call(cur_winid, winid, function()
-      vim.cmd "wincmd H"
-    end)
+    debounce(function()
+      __cmd_win_call(cur_winid, winid, function()
+        vim.cmd "wincmd H"
+      end)
+    end, 100)()
     is_processing_layout = false
   end
 end
 
 function Win.update_sidebar()
-  noautocmd(function()
-    Win.keep_sidebar_left()
-  end)()
+  Win.keep_sidebar_left()
+end
+
+---@param name_win "clock"
+function Win.reopen_win(name_win)
+  if name_win == "clock" and Win.need_reopen[name_win] then
+    local win_clock = M.get_win_clock_layout()
+    if not win_clock or not vim.api.nvim_win_is_valid(win_clock) then
+      RUtils.terminal.clock_mode()
+    end
+  end
+end
+
+---@param name_win "clock"
+function Win.close_win_target(name_win)
+  if name_win == "clock" then
+    local win_clock = M.get_win_clock_layout()
+    if win_clock and vim.api.nvim_win_is_valid(win_clock) then
+      vim.api.nvim_win_close(win_clock, true)
+      Win.need_reopen.clock = true
+    else
+      Win.need_reopen.clock = false
+    end
+  end
 end
 
 -- +-----------------------------------------------------------------------------+
@@ -433,18 +486,18 @@ local function setup_autocmd()
     event = { "WinClosed" },
     pattern = "*",
     command = function()
-      local found = false
-      for _, layout in pairs(Win.layout) do
-        if layout.win and vim.api.nvim_win_is_valid(layout.win) then
-          found = true
+      debounce(function()
+        local found = false
+        for _, layout in pairs(Win.layout) do
+          if layout.win and vim.api.nvim_win_is_valid(layout.win) then
+            found = true
+          end
         end
-      end
 
-      if found then
-        return
-      end
+        if found then
+          return
+        end
 
-      vim.schedule(function()
         -- Cleanup state
         Win.layout = {}
         Win.slot_win = {
@@ -484,9 +537,7 @@ local function setup_autocmd()
       if not Win.is_set_layout_width then
         return
       end
-      vim.schedule(function()
-        Win.update_sidebar()
-      end)
+      Win.update_sidebar()
     end,
   })
 
@@ -508,9 +559,7 @@ local function setup_autocmd()
       if not Win.is_set_layout_width then
         return
       end
-      vim.schedule(function()
-        is_processing_layout = false
-      end)
+      is_processing_layout = false
     end,
   })
 
@@ -527,7 +576,7 @@ local function setup_autocmd()
         return
       end
 
-      vim.schedule(function()
+      debounce(function()
         local buf = vim.api.nvim_get_current_buf()
         local winid = main_layout.win
 
@@ -541,7 +590,7 @@ local function setup_autocmd()
         vim.api.nvim_win_set_width(winid, Win.main_size)
 
         is_processing_layout = false
-      end)
+      end, 100)()
     end,
   })
 end
@@ -563,6 +612,8 @@ function M.toggle_sidebar(ft, fn, is_force)
   if not is_autocmd_registered then
     setup_autocmd()
   end
+
+  Win.close_win_target "clock"
 
   if #Win.slot_win.fts == 0 then
     Win.slot_win.fts = { ft }
@@ -600,6 +651,8 @@ function M.toggle_sidebar(ft, fn, is_force)
 
   if not is_toggle then
     Win.open_empty_blank_buffer "topleft"
+
+    Win.reopen_win "clock"
     if not is_force then
       return
     end
@@ -617,6 +670,10 @@ function M.toggle_sidebar(ft, fn, is_force)
   Win.ensure_main_sidebar_is_left(master_saved_layout)
 
   is_toggle = false
+
+  debounce(function()
+    Win.reopen_win "clock"
+  end, 200)()
 end
 
 ---Checks if the LSP on the current buffer is ready and supports Document Symbols
@@ -660,6 +717,26 @@ function M.debug()
   end
 
   return Win
+end
+
+function M.get_Win()
+  return Win
+end
+
+---@return integer|nil
+function M.get_win_clock_layout()
+  local tab = vim.api.nvim_get_current_tabpage()
+  if Win.layout[tab] and Win.layout[tab].clock then
+    return Win.layout[tab] and Win.layout[tab].clock
+  end
+  return nil
+end
+
+---@param name_win string
+---@param winid integer
+function M.update_win_layout(name_win, winid)
+  local tab = vim.api.nvim_get_current_tabpage()
+  Win.layout[tab][name_win] = winid
 end
 
 -- ╓─────────────────────────────────────────────────────────────────────────────╖

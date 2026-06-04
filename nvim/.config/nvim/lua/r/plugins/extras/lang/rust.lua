@@ -28,9 +28,9 @@ return {
     },
   },
 
-  -- Add Rust & related to treesitter
+  -- Add Rust & related to arborist.
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "rust", "ron" } },
   },
 

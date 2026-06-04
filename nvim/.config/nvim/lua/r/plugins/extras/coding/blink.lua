@@ -173,7 +173,23 @@ return {
           ["<Right>"] = false,
           ["<Left>"] = false,
 
-          ["<C-y>"] = { "select_and_accept" },
+          -- ["<C-y>"] = { "select_and_accept" },
+          ["<C-y>"] = {
+            function(cmp)
+              local type = vim.fn.getcmdtype()
+              if type == "/" or type == "?" then
+                local item = cmp.get_selected_item()
+                if item then
+                  local current = vim.fn.getcmdline()
+                  local magic_prefix = current:match "^(\\[vVmM]?)" or ""
+                  vim.fn.setcmdline(magic_prefix .. item.label)
+                  cmp.hide()
+                  return true
+                end
+              end
+              return cmp.select_and_accept()
+            end,
+          },
 
           ["<C-j>"] = {
             function()
@@ -208,7 +224,12 @@ return {
                   return RUtils.map.feedkey "<C-Down>"
                 end
               else
-                cmp.select_next()
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  cmp.select_next { auto_insert = false }
+                else
+                  cmp.select_next()
+                end
               end
             end,
           },
@@ -223,7 +244,12 @@ return {
                   return RUtils.map.feedkey "<C-Up>"
                 end
               else
-                cmp.select_prev()
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  cmp.select_prev { auto_insert = false }
+                else
+                  cmp.select_prev()
+                end
               end
             end,
           },

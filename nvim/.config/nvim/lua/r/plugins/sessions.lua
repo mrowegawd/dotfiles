@@ -27,6 +27,11 @@ return {
 
         -- save terminal
         if vim.bo[bufnr].buftype == "terminal" then
+          --- ignore tclock
+          local bufname = vim.api.nvim_buf_get_name(bufnr)
+          if bufname:match ":tclock" then
+            return false
+          end
           return true
         end
 

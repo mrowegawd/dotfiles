@@ -5,10 +5,10 @@ return {
       root = { "CMakePresets.json", "CTestConfig.cmake", "cmake" },
     }
   end,
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = { ensure_installed = { "cmake", "make" } },
-  },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   opts = { ensure_installed = { "cmake", "make" } },
+  -- },
   {
     "mfussenegger/nvim-lint",
     optional = true,

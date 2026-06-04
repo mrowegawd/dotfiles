@@ -18,15 +18,4 @@ return {
     ft = { "markdown", "codecompanion" },
     opts = { file_types = { "markdown", "codecompanion" } },
   },
-  -- NVIM-TREESITTER
-  { -- disable fold for codecompanion
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      fold = {
-        disable = {
-          "codecompanion",
-        },
-      },
-    },
-  },
 }

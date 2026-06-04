@@ -1580,6 +1580,8 @@ M.WinbarFilePath = {
       or self.bufname:match "^diffview://" and "diffview"
       or self.bufname:match "^fugitive://" and "fugitive"
       or nil
+
+    self.tclock_type = self.bufname:match ":tclock" and "tclock"
   end,
   condition = function()
     return vim.bo.filetype ~= "qf"
@@ -1648,6 +1650,10 @@ M.WinbarFilePath = {
         local parts = vim.split(path, "[\\/]")
         parts = { "…", unpack(parts, #parts - opts.length + 1, #parts) }
         return parts[#parts - 1] .. "/" .. parts[#parts]
+      end
+
+      if self.tclock_type then
+        path = "Jangan lupa minum hari ini!"
       end
 
       if self.git_type then

@@ -15,9 +15,9 @@ return {
     }
   end,
 
-  -- Add C/C++ to treesitter
+  -- Add C/C++ to arborist
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "cpp" } },
   },
 

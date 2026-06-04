@@ -106,30 +106,35 @@ source_if_exists "$ZSH_PLUGINS/autoenv/autoenv.plugin.zsh"
 if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
 
-  if [[ -n "$TMUX" ]]; then
-    zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%" --no-border
-  else
-    zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%" --border
-  fi
-
   zstyle ':completion:*' menu no
   zstyle ':fzf-tab:*' use-fzf-default-opts yes
   zstyle ':fzf-tab:*' continuous-trigger 'ctrl-y'
 
-  if [[ $TMUX ]]; then
+  if [[ -n "$TMUX" ]]; then
     zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-    zstyle ':fzf-tab:*' popup-min-size 80 20
-    zstyle ':fzf-tab:*' popup-pad 0 0
+    zstyle ':fzf-tab:*' popup-min-size 100 30
+    zstyle ':fzf-tab:*' popup-pad 2 1
     zstyle ':fzf-tab:*' popup-fit-preview yes
+    zstyle ':fzf-tab:*' fzf-flags \
+      --preview-window "right:nohidden:50%" \
+      --no-border \
+      --min-height 20
+  else
+    zstyle ':fzf-tab:*' fzf-flags \
+      --preview-window "right:nohidden:50%" \
+      --border \
+      --min-height 20
   fi
 
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-  zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
-  zstyle ':fzf-tab:complete:sxiv:*' fzf-command fzf
   icat() { kitten icat $@ }
+  zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
   zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
+
+  zstyle ':fzf-tab:complete:sxiv:*' fzf-command fzf
   zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
+  zstyle ':fzf-tab:complete:sxiv:*' fzf-flags --height 60% --min-height 20 --border --preview-window "right:50%"
 
   zstyle ':fzf-tab:complete:zathura:*' fzf-preview 'pdftotext $realpath - | head -n 20'
   zstyle ':fzf-tab:complete:tdf:*' fzf-preview 'pdftotext $realpath - | head -n 20'

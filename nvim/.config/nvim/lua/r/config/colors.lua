@@ -412,7 +412,7 @@ local general_overrides = function()
       },
     },
     { CommentNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.5, opacity = 0.9, is_note = true } } },
-    { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = 0.8 } } },
+    { NonTextNote = { fg = { from = "NormalNote", attr = "bg", alter = 1.2 } } },
     {
       LineNrNote = {
         fg = { from = "NormalNote", attr = "bg", alter = 0.6 },
@@ -478,7 +478,7 @@ local general_overrides = function()
       },
     },
     { CommentAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 5 } } },
-    { NonTextAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.8 } } },
+    { NonTextAiPrompt = { fg = { from = "NormalAiPrompt", attr = "bg", alter = 1.2 } } },
     {
       LineNrAiPrompt = {
         fg = { from = "NormalAiPrompt", attr = "bg", alter = 0.5 },

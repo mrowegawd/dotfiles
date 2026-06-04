@@ -1,7 +1,7 @@
 return {
-  -- TREESITTER
+  -- ARBORIST
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "css", "html", "http", "scss", "nginx", "htmldjango" } },
   },
 

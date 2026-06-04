@@ -126,9 +126,9 @@ return {
     end,
   },
 
-  -- Treesitter
+  -- Arborist
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     optional = true,
     opts = { ensure_installed = { "sql" } },
   },

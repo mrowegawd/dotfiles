@@ -55,28 +55,28 @@ return {
     opts = { ensure_installed = { "shellcheck" } },
   },
   -- add some stuff to treesitter
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      local function add(lang)
-        if type(opts.ensure_installed) == "table" then
-          table.insert(opts.ensure_installed, lang)
-        end
-      end
-
-      add "git_config"
-
-      if have "hypr" then
-        add "hyprlang"
-      end
-
-      if have "fish" then
-        add "fish"
-      end
-
-      if have "rofi" or have "wofi" then
-        add "rasi"
-      end
-    end,
-  },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   opts = function(_, opts)
+  --     local function add(lang)
+  --       if type(opts.ensure_installed) == "table" then
+  --         table.insert(opts.ensure_installed, lang)
+  --       end
+  --     end
+  --
+  --     add "git_config"
+  --
+  --     if have "hypr" then
+  --       add "hyprlang"
+  --     end
+  --
+  --     if have "fish" then
+  --       add "fish"
+  --     end
+  --
+  --     if have "rofi" or have "wofi" then
+  --       add "rasi"
+  --     end
+  --   end,
+  -- },
 }

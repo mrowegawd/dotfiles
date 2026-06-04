@@ -480,20 +480,11 @@ return {
             end
           end,
 
-          open_lazygit = function()
-            ---@diagnostic disable-next-line: undefined-global
-            Snacks.lazygit()
-          end,
-
-          open_lazydocker = function()
-            RUtils.terminal.lazydocker()
-          end,
-
-          open_terminal = function()
+          open_cwd_in_terminal = function()
             RUtils.terminal.open_terminal_in_filetree(RUtils.root())
           end,
 
-          toggle_open_preview = function(state)
+          toggle_previewer = function(state)
             if state.use_image_nvim then
               if vim.g.neovide then
                 state.use_image_nvim = false
@@ -655,13 +646,14 @@ return {
             ["<BS>"] = "parent_or_close",
             ["o"] = "child_or_open",
             ["P"] = {
-              "toggle_open_preview",
+              "toggle_previewer",
               config = { use_float = true, use_image_nvim = true },
             },
 
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
-            ["<c-t>"] = "open_tabnew",
+
+            ["<a-T>"] = "open_cwd_in_terminal",
 
             ["<ESC>"] = "revert_preview",
 
@@ -874,8 +866,8 @@ return {
   },
   -- OUTLINE.NVIM
   {
-    "MadKuntilanak/outline.nvim",
-    -- dir = "~/.local/src/nvim_plugins/outline.nvim",
+    -- "MadKuntilanak/outline.nvim",
+    dir = "~/.local/src/nvim_plugins/outline.nvim",
     keys = {
       {
         "<Leader>oa",

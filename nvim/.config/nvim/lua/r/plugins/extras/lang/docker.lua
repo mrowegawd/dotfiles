@@ -13,7 +13,7 @@ return {
     }
   end,
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "dockerfile" } },
   },
   {

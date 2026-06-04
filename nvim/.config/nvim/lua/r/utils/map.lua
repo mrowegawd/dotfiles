@@ -313,120 +313,129 @@ function M.go_prev_or_next_buffer(is_next)
   end
 end
 
----@param winid number
----@param f fun(): any
----@return any
-local function win_call(winid, f)
-  if winid == 0 or winid == vim.api.nvim_get_current_win() then
-    return f()
-  else
-    return vim.api.nvim_win_call(winid, f)
-  end
-end
-
 local ft_disabled = { "neo-tree", "aerial" }
 
 ---@param winid number
+---@param f fun(): any
+local function win_call(winid, f)
+  if winid == 0 or winid == vim.api.nvim_get_current_win() then
+    return f()
+  end
+  return vim.api.nvim_win_call(winid, f)
+end
+
+---@param winid number
 ---@param lnum number
----@return number
-local function fold_closed(winid, lnum)
+local function is_fold_start(winid, lnum)
   return win_call(winid, function()
-    return vim.fn.foldclosed(lnum)
+    return vim.fn.foldclosed(lnum) == lnum
   end)
 end
 
----@param is_jump_prev boolean
----@param is_toggle boolean
-local function go_next_or_prev_folded_line(is_jump_prev, is_toggle)
-  is_toggle = is_toggle or false
-  local count = vim.v.count1
-  local cnt = 0
-  local lnum
-  if is_jump_prev then
-    local curLnum = vim.api.nvim_win_get_cursor(0)[1]
-    for i = curLnum - 1, 1, -1 do
-      if fold_closed(0, i) == i then
+---@param winid number
+---@param dir number -- -1 prev, +1 next
+---@param count number
+---@return number?
+local function find_fold(winid, dir, count)
+  local cur = win_call(winid, function()
+    return vim.api.nvim_win_get_cursor(winid)[1]
+  end)
+
+  local last = win_call(winid, function()
+    return vim.api.nvim_buf_line_count(0)
+  end)
+
+  local found, cnt = nil, 0
+
+  if dir < 0 then
+    for i = cur - 1, 1, -1 do
+      if is_fold_start(winid, i) then
         cnt = cnt + 1
-        lnum = i
         if cnt == count then
+          found = i
           break
         end
       end
-    end
-
-    if lnum then
-      vim.cmd "norm! m`"
-      vim.api.nvim_win_set_cursor(0, { lnum, 0 })
-
-      if is_toggle then
-        if vim.fn.foldclosed(vim.fn.line ".") ~= -1 then
-          vim.cmd "normal! zMzvzz"
-        end
-      end
-    else
-      vim.cmd "norm! zk"
     end
   else
-    local curLnum = vim.api.nvim_win_get_cursor(0)[1]
-    local lineCount = vim.api.nvim_buf_line_count(0)
-    for i = curLnum + 1, lineCount do
-      if fold_closed(0, i) == i then
+    for i = cur + 1, last do
+      if is_fold_start(winid, i) then
         cnt = cnt + 1
-        lnum = i
         if cnt == count then
+          found = i
           break
         end
       end
     end
+  end
 
-    if lnum then
-      vim.cmd "norm! m`"
-      vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+  return found
+end
 
-      if is_toggle then
-        if vim.fn.foldclosed(vim.fn.line ".") ~= -1 then
-          vim.cmd "normal! zMzvzz"
-        end
-      end
-    else
-      vim.cmd "norm! zj"
-    end
+---@param winid number
+---@param lnum number?
+local function goto_line(winid, lnum)
+  if not lnum then
+    return false
+  end
+
+  win_call(winid, function()
+    vim.cmd "normal! m`"
+    vim.api.nvim_win_set_cursor(winid, { lnum, 0 })
+
+    -- Uncomment this line if needed
+    -- if vim.fn.foldclosed(lnum) ~= -1 then
+    --   vim.cmd "normal! zMzvzz"
+    -- end
+  end)
+
+  return true
+end
+
+---@param winid number
+---@param dir number
+---@param count number
+local function jump_fold(winid, dir, count)
+  local lnum = find_fold(winid, dir, count)
+
+  if goto_line(winid, lnum) then
+    return
+  end
+
+  if dir < 0 then
+    vim.cmd "normal! zk"
+  else
+    vim.cmd "normal! zj"
   end
 end
 
 ---@param is_jump_prev? boolean
 function M.magic_jump(is_jump_prev)
   is_jump_prev = is_jump_prev or false
+  local winid = vim.api.nvim_get_current_win()
+  local ft = vim.bo[0].filetype
 
-  if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
-    if is_jump_prev then
-      return M.feedkey "<c-p>"
-    end
-    return M.feedkey "<c-n>"
+  -- disabled filetypes
+  if vim.tbl_contains(ft_disabled, ft) then
+    return M.feedkey(is_jump_prev and "<c-p>" or "<c-n>")
   end
 
-  if vim.bo.filetype == "http" then
+  -- http (kulala)
+  if ft == "http" then
     local ok, kulala = pcall(require, "kulala")
     if not ok then
       return
     end
-
-    if is_jump_prev then
-      return kulala.jump_prev()
-    end
-
-    return kulala.jump_next()
+    return is_jump_prev and kulala.jump_prev() or kulala.jump_next()
   end
 
-  if vim.bo[0].filetype == "markdown" then
-    if is_jump_prev then
-      return RUtils.markdown.go_to_heading(nil, {})
-    end
-    return RUtils.markdown.go_to_heading(nil)
+  -- markdown
+  if ft == "markdown" then
+    return RUtils.markdown.go_to_heading(nil, is_jump_prev and {} or nil)
   end
 
-  -- Execute next/prev fold
-  go_next_or_prev_folded_line(is_jump_prev, false)
+  -- fold jump (default)
+  jump_fold(winid, is_jump_prev and -1 or 1, vim.v.count1)
 end
 
 -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐

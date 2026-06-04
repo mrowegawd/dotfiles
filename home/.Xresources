@@ -14,13 +14,11 @@
 ! --------------
 ! XFT SETTINGS
 ! --------------
-Xft.dpi:                    96
-! Xft.antialias:              true
-! Xft.rgba:                   rgb
-! Xft.hinting:                true
-! Xft.hintstyle:              hintmedium
-! Xft.lcdfilter:              lcddefault
-Xft.autohint:               0
+Xft.dpi: 96
+Xft.antialias: 1
+Xft.hinting: 1
+Xft.hintstyle: hintfull
+Xft.rgba: rgb
 
 ! Transparancy (0 - 255)
 ! sudah dihandle sama compton

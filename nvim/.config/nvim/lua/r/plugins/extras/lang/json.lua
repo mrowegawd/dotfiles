@@ -1,7 +1,7 @@
 return {
-  -- add json to treesitter
+  -- add json to arborist.
   {
-    "nvim-treesitter/nvim-treesitter",
+    "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "json5" } },
   },
 

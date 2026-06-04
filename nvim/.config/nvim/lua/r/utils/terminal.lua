@@ -84,170 +84,76 @@ function M.open(cmd, opts)
   return terminals[termkey]
 end
 
-local function win_width_term()
-  return vim.fn.winwidth(0)
-end
+local base_term = nil
 
-local function win_height_term()
-  return vim.fn.winheight(0)
-end
-
-local term_win = {
-  main_toggle = {
-    bufnr = 0,
-    winnr = 0,
+local term_package = {
+  ["ergoterm"] = {
+    get = function(opts)
+      local terms = require "ergoterm"
+      return terms.Terminal:new(opts)
+    end,
   },
-  misc_toggle = {},
-  clock_mode = {
-    bufnr = 0,
-    winnr = 0,
+  ["toggleterm"] = {
+    get = function(opts)
+      local terms = require "toggleterm"
+      return terms.Terminal:new(opts)
+    end,
   },
 }
 
-local function __open_term()
-  local term = RUtils.cmd.windows_is_opened { "terminal" }
-  if not term.found then
-    local wins_togal = RUtils.cmd.get_total_wins()
+---@param opts? {cmd?: string, name?:string, layout?:string}
+---@param is_new? boolean
+function M.wrap_open_cmd(opts, is_new)
+  is_new = is_new or false
+  opts = opts or {}
 
-    if #wins_togal == 1 then
-      if RUtils.has "termim.nvim" then
-        vim.cmd.Vterm()
-      end
-      if RUtils.has "nvim-toggleterm.lua" then
-        vim.cmd.ToggleTerm()
-      end
-      vim.cmd.startinsert()
-      vim.api.nvim_win_set_width(0, 50)
-    elseif #wins_togal > 1 then
-      if RUtils.has "termim.nvim" then
-        vim.cmd.Vterm()
-      end
-      if RUtils.has "nvim-toggleterm.lua" then
-        vim.cmd.ToggleTerm()
-      end
-      vim.cmd.startinsert()
-      vim.cmd [[wincmd L]]
-      vim.api.nvim_win_set_width(0, 50)
-    end
+  local has_ergoterm = RUtils.has "ergoterm.nvim"
+  -- local has_toggleterm = RUtils.has "nvim-toggleterm.lua"
 
-    term_win.main_toggle.bufnr = vim.api.nvim_get_current_buf()
-    term_win.main_toggle.winnr = vim.api.nvim_win_get_number(vim.api.nvim_get_current_win())
-  end
-end
-
-function M.toggle_right_term()
-  if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
-    if win_width_term() < 50 then
-      vim.api.nvim_win_set_width(0, 50)
-    end
-    vim.cmd [[wincmd h]]
-    return
+  local base_term_opts = {}
+  if has_ergoterm then
+    base_term_opts = { cmd = "zsh" }
   end
 
-  __open_term()
+  local term_opts = vim.tbl_deep_extend("force", base_term_opts, opts)
+  if is_new then
+    term_opts = opts
+  end
 
-  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local winbufnr = vim.fn.winbufnr(vim.api.nvim_win_get_number(winid))
-    if winbufnr == term_win.main_toggle.bufnr then
-      vim.api.nvim_set_current_win(winid)
-      break
+  if is_new then
+    if has_ergoterm then
+      return term_package["ergoterm"].get(term_opts)
     end
   end
 
-  if win_width_term() > 50 then
-    vim.api.nvim_win_set_width(0, 50)
-  end
-
-  if win_height_term() < 50 then
-    vim.api.nvim_win_set_height(0, 45)
-  end
-end
-
-function M.clock_mode()
-  M.toggle_right_term()
-  local sterm_ok, _ = pcall(require, "sterm")
-  if sterm_ok then
-    vim.cmd [[STerm tclock clock -S]]
-  end
-
-  local toggleterm_ok, _ = pcall(require, "toggleterm")
-  if toggleterm_ok then
-    vim.cmd [[TermExec dir=vertical size=50 cmd="tclock clock -S"]]
-  end
-
-  if win_height_term() > 10 then
-    vim.api.nvim_win_set_height(0, 10)
-    vim.cmd [[wincmd k]]
-    vim.cmd [[wincmd h]]
-    RUtils.map.feedkey "<esc>"
-  end
-end
-
-function M.smart_split()
-  if win_width_term() > win_height_term() then
-    if win_width_term() > win_height_term() then
-      vim.cmd [[ToggleTerm direction=horizontal]]
-    else
-      vim.cmd [[ToggleTerm direction=vertical]]
+  if not base_term and not is_new then
+    if has_ergoterm then
+      base_term = term_package["ergoterm"].get(term_opts)
     end
-  else
-    vim.cmd [[ToggleTerm direction=float]]
-  end
-end
-
-local Terminal = require("toggleterm.terminal").Terminal
-local Ergoterm = require "ergoterm"
-
-local calcure = Terminal:new {
-  cmd = "calcure",
-  hidden = true,
-  display_name = ("calcure"):upper(),
-  direction = "float",
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
-}
-
-local newsboat = Terminal:new {
-  cmd = "proxychains -q newsboat",
-  display_name = ("proxychains"):upper(),
-  hidden = true,
-  direction = "float",
-  on_open = function()
-    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.cmd [[startinsert]]
-  end,
-  float_opts = { width = vim.o.columns - 5, height = vim.o.lines - 5 },
-}
-
-local current_term = nil
-local term_base = nil
-local toggle_term = function(cmds, direction)
-  direction = direction or "below"
-
-  if not term_base or (cmds.name ~= current_term) then
-    local term_opts = vim.tbl_deep_extend("force", cmds, {
-      layout = direction,
-    })
-    term_base = Ergoterm:new(term_opts)
-    current_term = cmds.name
   end
 
-  return term_base
+  return base_term
 end
 
 function M.float_calcure()
-  return calcure:toggle()
+  local t = M.wrap_open_cmd({
+    name = "calcure",
+    cmd = " calcure",
+    layout = "float",
+  }, true)
+
+  if t then
+    t:toggle()
+  end
 end
 
 function M.float_note()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "Notes Wiki",
     dir = "~/Dropbox/neorg/",
     cmd = " nvim",
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
@@ -255,14 +161,23 @@ function M.float_note()
 end
 
 function M.float_newsboat()
-  return newsboat:toggle()
+  local t = M.wrap_open_cmd({
+    name = "newsboat",
+    cmd = "newsboat",
+    layout = "float",
+  }, true)
+
+  if t then
+    t:toggle()
+  end
 end
 
 function M.float_btop()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "btop",
     cmd = "btop",
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
@@ -270,10 +185,11 @@ function M.float_btop()
 end
 
 function M.float_resterm()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "resterm",
     cmd = "resterm",
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
@@ -281,10 +197,11 @@ function M.float_resterm()
 end
 
 function M.float_rkill()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "Rkill",
     cmd = [[bash -i -c "r_kill"]],
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
@@ -292,10 +209,11 @@ function M.float_rkill()
 end
 
 function M.lazydocker()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "Lazydocker",
     cmd = "lazydocker",
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
@@ -303,28 +221,209 @@ function M.lazydocker()
 end
 
 function M.lazygit()
-  local t = toggle_term({
+  local t = M.wrap_open_cmd({
     name = "Lazygit",
     cmd = [[lazygit --use-config-file=$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml]],
-  }, "float")
+    layout = "float",
+  }, true)
 
   if t then
     t:toggle()
   end
 end
 
+local select_layout_terminal_cmd = {
+  ["clock"] = {
+    get = function()
+      local t = M.wrap_open_cmd({
+        name = "STerm Tclock",
+        cmd = "tclock clock -S",
+        layout = "window",
+      }, true)
+      if t then
+        t:toggle()
+      end
+    end,
+  },
+  ["pomodoro"] = {
+    get = function(timer)
+      local t = M.wrap_open_cmd({
+        name = "STerm Tclock Pomodor",
+        cmd = "tclock -c red timer -d " .. timer .. " -M",
+        layout = "window",
+      }, true)
+      if t then
+        t:toggle()
+      end
+    end,
+  },
+}
+
+---Helper to open clock mode in terminal
+---@param select_command {pomodoro: {timer: string}} | "clock"
+---@param main_win integer
+---@param curwin integer
+---@param clock_win? integer
+local function open_clock(select_command, main_win, curwin, clock_win)
+  clock_win = clock_win or nil
+
+  if not main_win or not vim.api.nvim_win_is_valid(main_win) then
+    return
+  end
+
+  if not curwin or not vim.api.nvim_win_is_valid(curwin) then
+    return
+  end
+
+  vim.schedule(function()
+    vim.api.nvim_win_call(main_win, function()
+      vim.api.nvim_set_current_win(main_win)
+
+      vim.cmd "split"
+
+      if clock_win == nil then
+        clock_win = vim.api.nvim_get_current_win()
+      end
+
+      vim.api.nvim_win_set_height(clock_win, 10)
+
+      local mode_clock_name
+      if type(select_command) == "table" then
+        mode_clock_name = "pomodoro"
+        select_layout_terminal_cmd["pomodoro"].get(select_command.pomodoro.timer)
+      else
+        mode_clock_name = "clock"
+        select_layout_terminal_cmd["clock"].get()
+      end
+
+      if curwin and vim.api.nvim_win_is_valid(curwin) then
+        vim.api.nvim_set_current_win(curwin) -- after toggle term, focus curwin now
+
+        -- Needed because many terminal plugins use scheduled callbacks.
+        -- Even after leaving the terminal window, they may still restore
+        -- or keep terminal/insert mode active.
+        vim.defer_fn(function()
+          vim.api.nvim_set_current_win(curwin) -- make sure again the current win is `curwin`
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+        end, 250)
+
+        -- always renew clock win
+        RUtils.layout.update_win_layout(mode_clock_name, clock_win)
+      end
+    end)
+  end)
+end
+
+---@param select_command? {pomodoro: {timer: string}} | "clock"
+function M.clock_mode(select_command)
+  select_command = select_command or "clock"
+
+  local main_layout = RUtils.layout.get_Win()
+  if not main_layout.layout then
+    RUtils.warn "field `layout` is missing or get renewed, check file`layout.lua`"
+    return
+  end
+
+  local clock_win = RUtils.layout.get_win_clock_layout()
+
+  local curwin = vim.api.nvim_get_current_win()
+
+  if clock_win and vim.api.nvim_win_is_valid(clock_win) then
+    open_clock(main_layout.win, curwin, clock_win)
+    return
+  end
+
+  local current_tab = vim.fn.tabpagenr()
+  local main = main_layout.layout[current_tab]
+
+  if not main.win or not vim.api.nvim_win_is_valid(main.win) then
+    RUtils.warn "`main.win` is invalid or dead, create a new one!"
+    return
+  end
+  open_clock(select_command, main.win, curwin)
+end
+
+function M.open_smart_split()
+  RUtils.warn "not implemented yet"
+end
+
+---@param cwd string
 function M.open_terminal_in_filetree(cwd)
   cwd = cwd or nil
   local opts = {}
 
   if cwd then
-    opts.cwd = cwd
     opts.name = "Path: " .. vim.fn.fnamemodify(cwd, ":t")
+    opts.cwd = cwd
+    opts.layout = "float"
   end
 
   vim.g.open_terminal_in_filetree = true
 
-  local t = toggle_term(opts, "float")
+  local t = M.wrap_open_cmd(opts, true)
+  if t then
+    t:toggle()
+  end
+end
+
+function M.open_float()
+  local function __open_term_wrapper()
+    if vim.g.open_terminal_in_filetree == nil or not vim.g.open_terminal_in_filetree then
+      local t = M.wrap_open_cmd {
+        name = "Float Term",
+        layout = "float",
+      }
+      if t then
+        t:toggle()
+      end
+    end
+  end
+
+  if vim.g.open_terminal_in_filetree then
+    vim.ui.input({
+      prompt = "Terminal filetree is opened, kill anyway? (y/n) ",
+    }, function(input)
+      if input == "y" then
+        vim.g.open_terminal_in_filetree = false
+        __open_term_wrapper()
+      end
+    end)
+  end
+
+  __open_term_wrapper()
+end
+
+function M.open_right()
+  local t = M.wrap_open_cmd({
+    layout = "right",
+  }, true)
+  if t then
+    t:toggle()
+  end
+end
+
+function M.open_below()
+  local t = M.wrap_open_cmd({
+    layout = "below",
+  }, true)
+  if t then
+    t:toggle()
+  end
+end
+
+function M.tab_term()
+  local t = M.wrap_open_cmd({
+    layout = "tab",
+  }, true)
+  if t then
+    t:toggle()
+  end
+end
+
+function M.toggle_term()
+  local t = M.wrap_open_cmd {
+    layout = "below",
+  }
   if t then
     t:toggle()
   end
