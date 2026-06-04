@@ -207,11 +207,6 @@ return {
             end
           end
 
-          if vim.tbl_contains({ "NeogitStatus" }, vim.bo.filetype) then
-            require("neogit.buffers.status.actions"):n_go_to_next_hunk_header()
-            return
-          end
-
           if vim.g.snacks_jump_scope then
             Snacks.words.jump(vim.v.count1, true)
             return
@@ -237,11 +232,6 @@ return {
             if hilist and #hilist > 0 then
               return vim.cmd "Hi{"
             end
-          end
-
-          if vim.tbl_contains({ "NeogitStatus" }, vim.bo.filetype) then
-            require("neogit.buffers.status.actions"):n_go_to_previous_hunk_header()
-            return
           end
 
           if vim.g.snacks_jump_scope then

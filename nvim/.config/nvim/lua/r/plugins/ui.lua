@@ -45,7 +45,7 @@ return {
         desc = "Noice: show all messages",
       },
       {
-        "<Localleader>nn",
+        "<Localleader>nd",
         function()
           require("noice").cmd "dismiss"
         end,

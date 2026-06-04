@@ -2113,7 +2113,6 @@ Win.filetype_winhighlights = {
   ["trouble"] = true,
   ["grug-far"] = true,
   ["dbui"] = true,
-  ["atone"] = true,
   -- ["TelescopePrompt"] = true,
 
   --   "flutterToolsOutline",

@@ -942,6 +942,12 @@ return {
           row_offset = 1,
           winhl = "Normal:PanelBottomNormal,FloatBorder:PanelBottomNormal",
         },
+        references = {
+          marker = " 󰆽",
+          marker_hl = "DiagnosticWarn",
+          icon = "󰌹 ",
+          icon_hl = "Error",
+        },
         symbols = {
           filter = nil,
           icons = {
@@ -995,16 +1001,20 @@ return {
           peek_location = {},
           goto_and_close = {},
           restore_location = "~",
-          hover_symbol = {},
-          toggle_preview = { "P" },
-          rename_symbol = {},
-          code_actions = {},
           unfold = "zo",
           fold_toggle = { "<S-tab>", "<Tab>", "za" },
           fold = "zc",
           fold_all = "zM",
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
+
+          toggle_preview = "P",
+
+          rename_symbol = {},
+          code_actions = {},
+          hover_symbol = "K",
+          next_ref_node = "<a-n>",
+          prev_ref_node = "<a-p>",
 
           down_and_jump = { "<c-n>" },
           up_and_jump = { "<c-p>" },

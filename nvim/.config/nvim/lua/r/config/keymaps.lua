@@ -77,17 +77,9 @@ RUtils.map.nnoremap("<C-a>", function()
   end
 end, { desc = "Fold: focus current" })
 --stylua: ignore
-RUtils.map.nnoremap("zf", function() RUtils.map.wrap_fold_cmd "normal! zMzv" end, { desc = "Fold: focus current (alternativ)" })
+RUtils.map.nnoremap("zf", function() RUtils.map.wrap_fold_cmd "normal! zMzvzz" end, { desc = "Fold: focus current (alternativ)" })
 --stylua: ignore
 RUtils.map.nnoremap("zb", function() RUtils.fold.cycle_fold_level() end, { desc = "Fold: cycle fold level (util)" })
-
--- Navigate magic fold
-RUtils.map.nnoremap("<a-n>", function()
-  RUtils.map.magic_jump()
-end, { desc = "View: magic jump" })
-RUtils.map.nnoremap("<a-p>", function()
-  RUtils.map.magic_jump(true)
-end, { desc = "View: magic jump" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              WINDOW <leader>w                               ╏
@@ -99,7 +91,7 @@ local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_win
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
 
-RUtils.map.nnoremap("<Leader>ww", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.nnoremap("<Leader>wo", switch_focus_targeted_window, { desc = "Window: switch focus" })
 
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alternative)" })
@@ -206,37 +198,14 @@ RUtils.map.nnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) 
 --stylua: ignore
 RUtils.map.xnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
 
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
-RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
-RUtils.map.onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
-RUtils.map.nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-RUtils.map.xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-
--- Allow moving the cursor through wrapped lines using j and k,
--- note that I have line wrapping turned off but turned on only for Markdown
-RUtils.map.nnoremap("k", function()
-  local count = vim.v.count
-  local mode = vim.api.nvim_get_mode().mode
-  local use_gk = count == 0 and not mode:match "no"
-
-  local move = use_gk and "gk" or "k"
-  -- Jadi setiap kamu jump memakai `10j` atau `6j`, akan di automatis mark
-  local mark = tonumber(count) > 5 and "m'" .. count or ""
-
-  return mark .. move
-end, { expr = true })
-RUtils.map.nnoremap("j", function()
-  local count = vim.v.count
-  local mode = vim.api.nvim_get_mode().mode
-  local use_gj = count == 0 and not mode:match "no"
-
-  local move = use_gj and "gj" or "j"
-  local mark = tonumber(count) > 5 and "m'" .. count or ""
-
-  return mark .. move
-end, { expr = true })
+RUtils.map.nnoremap("<Leader>oU", function()
+  if not package.loaded["undotree"] then
+    vim.cmd "packadd nvim.undotree "
+  end
+  RUtils.layout.toggle_sidebar("nvim-undotree", function()
+    require("undotree").open()
+  end, true)
+end, { desc = "Open: undotree" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              TOGGLE <leader>u                               ╏
@@ -288,14 +257,14 @@ RUtils.map.tnoremap("<a-N>",RUtils.terminal.tab_term, { desc = "Terminal: tab (t
 -- stylua: ignore
 RUtils.map.nnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right [ergoterm]" })
 -- stylua: ignore
-RUtils.map.tnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right (terminal) [ergoterm]" })
+-- RUtils.map.tnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right (terminal) [ergoterm]" })
 -- stylua: ignore
 RUtils.map.xnoremap("<C-Space>l",RUtils.terminal.open_right, { desc = "Terminal: right (visual) [ergoterm]" })
 
 -- stylua: ignore
 RUtils.map.nnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below [ergoterm]" })
 -- stylua: ignore
-RUtils.map.tnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below (terminal) [ergoterm]" })
+-- RUtils.map.tnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below (terminal) [ergoterm]" })
 -- stylua: ignore
 RUtils.map.xnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal: below (visual) [ergoterm]" })
 
@@ -303,7 +272,7 @@ RUtils.map.xnoremap("<C-Space>j", RUtils.terminal.open_below, { desc = "Terminal
 -- stylua: ignore
 RUtils.map.xnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float (visual) [ergoterm]" })
 -- stylua: ignore
-RUtils.map.nnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float [ergoterm]" })
+-- RUtils.map.nnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float [ergoterm]" })
 -- stylua: ignore
 RUtils.map.tnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: float [ergoterm]" })
 
@@ -343,10 +312,16 @@ RUtils.map.cabbrev("w;", "update!")
 -- ╏                                   SCROLL                                    ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
+-- Scroll with magic jump
+--stylua: ignore
+RUtils.map.nnoremap("<a-n>", function() RUtils.map.magic_jump() end, { desc = "Scroll: magic jump" })
+--stylua: ignore
+RUtils.map.nnoremap("<a-p>", function() RUtils.map.magic_jump(true) end, { desc = "Scroll: magic jump" })
+
 RUtils.map.nnoremap(
   "zz",
   [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
-  { expr = true, desc = "View: center cursor window" }
+  { expr = true, desc = "Scroll: center cursor window" }
 )
 
 -- Scroll step sideways
@@ -376,6 +351,30 @@ RUtils.map.nnoremap(
   [[(line("w0") <= 1 ? "2k" : "2<C-y>")]],
   { expr = true, desc = "Scroll: up windows without moving the cursor" }
 )
+
+-- Allow moving the cursor through wrapped lines using j and k,
+-- note that I have line wrapping turned off but turned on only for Markdown
+RUtils.map.nnoremap("k", function()
+  local count = vim.v.count
+  local mode = vim.api.nvim_get_mode().mode
+  local use_gk = count == 0 and not mode:match "no"
+
+  local move = use_gk and "gk" or "k"
+  -- Jadi setiap jump memakai `10j` atau `6j`, akan automatis di mark
+  local mark = tonumber(count) > 5 and "m'" .. count or ""
+
+  return mark .. move
+end, { expr = true })
+RUtils.map.nnoremap("j", function()
+  local count = vim.v.count
+  local mode = vim.api.nvim_get_mode().mode
+  local use_gj = count == 0 and not mode:match "no"
+
+  local move = use_gj and "gj" or "j"
+  local mark = tonumber(count) > 5 and "m'" .. count or ""
+
+  return mark .. move
+end, { expr = true })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                    DIFF                                     ╏
@@ -458,8 +457,13 @@ end, { desc = "Misc: redraw / clear hlsearch / diff update" })
 RUtils.map.nnoremap("*", function() local word = vim.fn.expand "<cword>" vim.fn.setreg("/", "\\v" .. word) vim.o.hlsearch = true end, { remap = true, desc = "Misc: search word under cursor (no jump)" })
 --stylua: ignore
 RUtils.map.nnoremap("dd", function() if vim.fn.getline "." == "" then return '"_dd' end return "dd" end, { expr = true })
-RUtils.map.xnoremap("<C-g>", [[<Esc>/\v%V]]) --search within visual selection - `very magic`
-RUtils.map.nnoremap("<C-g>", "/\\v", nosilent) -- with `very magic`
+
+-- It works better with "Very Magic", but it still doesn't work well with blink.
+-- [[<Esc>/\v%V]])
+--  "/\\v")
+RUtils.map.xnoremap("<C-g>", [[<Esc>/%V]]) --search within visual selection
+RUtils.map.nnoremap("<C-g>", "/", nosilent)
+
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
@@ -478,6 +482,14 @@ RUtils.map.nnoremap("<Leader>xP", function()
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
 end, { desc = "Cmd: printout current path" })
+
+-- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
+RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
+RUtils.map.onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+RUtils.map.nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+RUtils.map.xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  COMMANDS                                   ╏
@@ -705,7 +717,7 @@ local bulk_cmd_git = function()
       local gs = package.loaded.gitsigns
       gs.blame()
     end,
-    ["GitSigns - toggle diff changes"] = function()
+    ["GitSigns - toggle diff deleted"] = function()
       local gs = package.loaded.gitsigns
       gs.toggle_deleted()
     end,

@@ -152,6 +152,10 @@ M.tnoremap = function(...)
   local key, key_alt, opts = detect_duplicate_map(...)
   map("t", key, key_alt, opts)
 end
+M.snoremap = function(...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("s", key, key_alt, opts)
+end
 
 M.cabbrev = function(short, long)
   vim.cmd.cnoreabbrev(short, long)

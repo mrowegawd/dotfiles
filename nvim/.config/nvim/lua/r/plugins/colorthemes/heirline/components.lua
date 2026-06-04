@@ -1581,7 +1581,7 @@ M.WinbarFilePath = {
       or self.bufname:match "^fugitive://" and "fugitive"
       or nil
 
-    self.tclock_type = self.bufname:match ":tclock" and "tclock"
+    self.tclock_type = self.bufname:match ":tclock" and "tclock" or self.bufname:match ":timr" and "timr"
   end,
   condition = function()
     return vim.bo.filetype ~= "qf"
@@ -1653,7 +1653,11 @@ M.WinbarFilePath = {
       end
 
       if self.tclock_type then
-        path = "Jangan lupa minum hari ini!"
+        if self.tclock_type == "tclock" then
+          path = "Jangan lupa minum!"
+        elseif self.tclock_type == "timr" then
+          path = "21 TODO menunggu!"
+        end
       end
 
       if self.git_type then

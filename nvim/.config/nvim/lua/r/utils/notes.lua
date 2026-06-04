@@ -1022,25 +1022,6 @@ local function set_repeater_todo(bufnr, repeater_dates, headline)
   end)
 end
 
----TAKEN from: orgmode.nvim
----Schedule a fold update for the given range. Call after buffer edits.
----OrgRange is 1-indexed; vim._foldupdate expects 0-indexed lines.
-local function schedule_fold_update(range)
-  local bufnr = vim.api.nvim_get_current_buf()
-  vim.schedule(function()
-    if not vim.api.nvim_buf_is_valid(bufnr) then
-      return
-    end
-    local start_line = range.start_line - 1
-    local end_line = math.min(range.end_line, vim.api.nvim_buf_line_count(bufnr))
-    for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
-      if vim.wo[win].foldmethod == "expr" then
-        vim._foldupdate(win, start_line, end_line)
-      end
-    end
-  end)
-end
-
 ---@param tags string[]
 local function remove_todo_by_tag(tags)
   Orgmode = setup_orgmode()
@@ -1117,12 +1098,9 @@ local function remove_todo_by_tag(tags)
 
       local old_state = headline:get_todo()
       local was_done = headline:is_done()
-      local range = headline:get_range()
 
       EventManager.dispatch(events.TodoChanged:new(headline, old_state, was_done))
-
       set_repeater_todo(bufnr, repeater_dates, headline)
-      schedule_fold_update(range)
 
       table.insert(processed, {
         title = headline:get_title(),

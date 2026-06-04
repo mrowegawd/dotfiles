@@ -1083,6 +1083,11 @@ return {
           ["<LocalLeader>qO"] = "OpenTree",
 
           ["<LocalLeader>qY"] = "OpenTree",
+
+          ["<c-n>"] = "GoToNextHunkHeader",
+          ["<c-p>"] = "GoToPreviousHunkHeader",
+
+          ["R"] = "RefreshBuffer",
         },
         finder = {
           ["<Esc>"] = false,

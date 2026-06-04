@@ -162,15 +162,6 @@ return {
                 end,
                 desc = "LSP: show hover (split) [hover_eglot]",
               },
-              {
-                "<c-k>",
-                function()
-                  return vim.lsp.buf.signature_help()
-                end,
-                mode = "i",
-                desc = "LSP: signature help (insert)",
-                has = "signatureHelp",
-              },
 
               --  +----------------------------------------------------------+
               --  Code Actions
@@ -297,6 +288,7 @@ return {
         vim.keymap.del("n", bind)
       end
       vim.keymap.del("s", "<C-s>")
+      vim.keymap.del("i", "<C-s>")
 
       -- setup keymaps
       local names = vim.tbl_keys(opts.servers) ---@type string[]
