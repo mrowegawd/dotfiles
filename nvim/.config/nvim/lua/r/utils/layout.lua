@@ -392,6 +392,7 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
     end
     vim.api.nvim_win_call(main_layout.win, function()
       vim.cmd "wincmd H"
+      -- help text
       if master_saved_layout then
         restore_wins(master_saved_layout)
       end
