@@ -239,6 +239,7 @@ Win.filetype_blacklist_jump_cursor = {
 
 Win.filetype_skip_resize_layout = {
   ["grug-far"] = true,
+  -- ["fugitive"] = true,
   -- ["oil"] = true,
   -- ["NeogitStatus"] = true,
   -- ["eldochover"] = true,
@@ -340,8 +341,6 @@ end
 local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
   local saved_before_fn, saved_cmdheight
 
-  RUtils.info(tostring(is_all_window))
-
   if is_all_window then
     saved_before_fn = save_wins_current_tab(cur_winid)
     saved_cmdheight = vim.o.cmdheight
@@ -349,7 +348,6 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
 
   vim.api.nvim_win_call(main_layout_winid, function()
     local saved = save_wins_current_tab(main_layout_winid)
-
     fn()
 
     restore_wins(saved)
@@ -363,11 +361,17 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
     vim.api.nvim_win_set_width(main_layout_winid, Win.main_size)
   end)
 
+  --- More restore: again? idk but it works
+  vim.schedule(function()
+    restore_wins(saved_before_fn)
+    vim.o.cmdheight = saved_cmdheight
+  end)
+
   if is_all_window and opts_external_window and opts_external_window.height then
     vim.api.nvim_win_call(cur_winid, function()
       vim.api.nvim_win_set_height(cur_winid, opts_external_window.height)
-      -- The external window opts must be cleared because they will interfere
-      -- if `opts_external_window.height` is still present
+      -- The external window options must be cleared, otherwise they may interfere
+      -- with subsequent layout operations if `opts_external_window.height` remains set.
       opts_external_window = {}
     end)
   end
@@ -390,15 +394,26 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
     then
       return
     end
+
     vim.api.nvim_win_call(main_layout.win, function()
+      local saved = save_wins_current_tab(vim.api.nvim_get_current_win())
+
       vim.cmd "wincmd H"
-      -- help text
+
       if master_saved_layout then
         restore_wins(master_saved_layout)
       end
 
+      restore_wins(saved)
+    end)
+
+    if vim.api.nvim_win_is_valid(main_layout.win) then
       vim.wo[main_layout.win].winfixwidth = true
       vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
+    end
+
+    vim.schedule(function()
+      restore_wins(master_saved_layout)
     end)
   end, 100)()
 
@@ -452,6 +467,7 @@ function Win.keep_sidebar_left()
   end
 
   if is_processing_layout then
+    is_processing_layout = false
     debounce(function()
       Win.handle_close_support_win()
 
@@ -459,9 +475,10 @@ function Win.keep_sidebar_left()
         vim.cmd "wincmd H"
       end)
 
-      Win.reopen_win(true)
+      vim.schedule(function()
+        Win.reopen_win(true)
+      end)
     end, 100)()
-    is_processing_layout = false
   end
 end
 
@@ -569,6 +586,7 @@ local function setup_autocmd()
         pcall(vim.api.nvim_del_augroup_by_name, group_name "DisableWinLeave")
         pcall(vim.api.nvim_del_augroup_by_name, group_name "FixSizeWinEnter")
         pcall(vim.api.nvim_del_augroup_by_name, group_name "Closed")
+        pcall(vim.api.nvim_del_augroup_by_name, group_name "FocusGaindAndLost")
       end, 100)()
     end,
   })

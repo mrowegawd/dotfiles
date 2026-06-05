@@ -223,7 +223,7 @@ function M.toggle_auto_hover()
   end
   vim.lsp.autohover.enabled = not vim.lsp.autohover.enabled
   if vim.lsp.autohover.enabled then
-    RUtils.layout.open_window_safely(function()
+    RUtils.layout.open_external_window_safely(function()
       M.hover_in_split()
     end, { height = height, win = eldoc_win_id or 0, width = 0 })
   else
