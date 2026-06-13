@@ -17,6 +17,9 @@ keymap.set("n", "<Tab>", function()
   end)
 end, { buffer = api.nvim_get_current_buf() })
 
-keymap.set("n", "<Leader>oe", "o", { buffer = api.nvim_get_current_buf(), remap = true })
-keymap.set("n", "<Leader>ot", "O", { buffer = api.nvim_get_current_buf(), remap = true })
-keymap.set("n", "<Leader>ov", "gO", { buffer = api.nvim_get_current_buf(), remap = true })
+RUtils.map.nnoremap("<Leader>oe", "o", { buffer = api.nvim_get_current_buf(), remap = true }, true)
+RUtils.map.nnoremap("<Leader>ot", "O", { buffer = api.nvim_get_current_buf(), remap = true }, true)
+RUtils.map.nnoremap("<Leader>ov", "gO", { buffer = api.nvim_get_current_buf(), remap = true }, true)
+
+RUtils.map.nnoremap("<C-n>", ")", { buffer = api.nvim_get_current_buf(), remap = true }, true)
+RUtils.map.nnoremap("<C-p>", "(", { buffer = api.nvim_get_current_buf(), remap = true }, true)

@@ -277,11 +277,11 @@ M.window.arange_wins = function(direction)
   end
 end
 
----@param tbl_wins table
+---@param fts table
 ---@return boolean
-local function go_back_to_window(tbl_wins)
-  for _, win in pairs(tbl_wins) do
-    local win_checked = RUtils.cmd.windows_is_opened { win }
+local function go_back_to_window(fts)
+  for _, ft in pairs(fts) do
+    local win_checked = RUtils.cmd.windows_is_opened { ft }
     if win_checked.found then
       -- pcall(vim.api.nvim_set_current_win, win_checked.winid)
       vim.api.nvim_set_current_win(win_checked.winid)

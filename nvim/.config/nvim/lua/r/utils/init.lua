@@ -38,7 +38,6 @@ local LazyUtil = require "lazy.core.util"
 ---@field terminal r.utils.terminal
 ---@field tmux r.utils.tmux
 ---@field todocomments r.utils.todocomments
----@field treesitter r.utils.treesitter
 ---@field uisec r.utils.uisec
 ---@field winui r.utils.winui
 local M = {}

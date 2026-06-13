@@ -48,7 +48,7 @@ local general_overrides = function()
     {
       LineNr = {
         bg = "NONE",
-        fg = { from = "Normal", attr = "bg", alter = 0.8 },
+        fg = { from = "Normal", attr = "bg", alter = 1 },
         bold = false,
       },
     },
@@ -544,7 +544,7 @@ local general_overrides = function()
 
     {
       WinBar = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+        fg = { from = "LineNr", attr = "fg", alter = 0.8 },
         bg = { from = "Normal", attr = "bg" },
         bold = true,
       },

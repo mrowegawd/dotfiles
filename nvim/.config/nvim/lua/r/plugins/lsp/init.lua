@@ -116,14 +116,9 @@ return {
                 desc = "LSP: type definitions [trouble]",
               },
               {
-                "<Leader>lD",
+                "<Leader>lR",
                 "<CMD>Trouble lsp toggle focus=true auto_refresh=false<CR>",
                 desc = "LSP: lsp stuff [trouble]]",
-              },
-              {
-                "<Leader>lR",
-                require("fzf-lua").lsp_references,
-                desc = "LSP: references with picker [fzflua]",
                 nowait = true,
               },
               {
@@ -156,7 +151,7 @@ return {
                 desc = "LSP: Hover",
               },
               {
-                "<Leader>ll",
+                "<Leader>la",
                 function()
                   RUtils.hover_eldoc.toggle_auto_hover()
                 end,

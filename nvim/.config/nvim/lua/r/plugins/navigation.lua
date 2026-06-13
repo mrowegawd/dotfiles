@@ -184,10 +184,11 @@ return {
         desc = "Misc: open file explore [neotree]",
       },
       {
-        "<Leader>OO",
+        "<Leader>oE",
         function()
-          ---@diagnostic disable-next-line: undefined-field
-          RUtils.info(vim.inspect(RUtils.layout.debug()))
+          RUtils.layout.toggle_sidebar("neo-tree", function()
+            vim.cmd "Neotree reveal toggle"
+          end)
         end,
         desc = "Misc: open file explore [neotree]",
       },
@@ -665,8 +666,8 @@ return {
             ["zR"] = "expand_all_subnodes",
             ["zO"] = "expand_all_nodes",
 
-            ["gh"] = "prev_source",
-            ["gl"] = "next_source",
+            ["th"] = "prev_source",
+            ["tl"] = "next_source",
 
             ["mc"] = { "order_by_created", nowait = false },
             ["mg"] = { "order_by_git_status", nowait = false },
@@ -879,6 +880,13 @@ return {
         desc = "Open: outline window [outline]",
       },
       {
+        "<Leader>oA",
+        function()
+          vim.cmd.OutlineFloat()
+        end,
+        desc = "Open: outline float window [outline]",
+      },
+      {
         "<a-n>",
         function()
           RUtils.map.feedkey "<Down>"
@@ -941,6 +949,7 @@ return {
           -- icon = "🔒",
           row_offset = 1,
           winhl = "Normal:PanelBottomNormal,FloatBorder:PanelBottomNormal",
+          anchor = "NE",
         },
         references = {
           marker = " 󰆽",
@@ -998,7 +1007,7 @@ return {
           show_help = "g?",
           close = { "q", "<Leader><Tab>" },
           goto_location = { "<CR>", "o" },
-          peek_location = {},
+          peek_location = "<a-k>",
           goto_and_close = {},
           restore_location = "~",
           unfold = "zo",

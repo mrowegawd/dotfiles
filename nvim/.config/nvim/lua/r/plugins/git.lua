@@ -606,12 +606,14 @@ return {
           -- |                                 NAVIGATION                                  |
           -- +-----------------------------------------------------------------------------+
           --stylua: ignore
-          RUtils.map.nnoremap("<C-n>", "]m", { buffer = e.buf, remap = true, desc = "Fugitive: next item and close diff" }, true)
+          RUtils.map.nnoremap("<a-n>", "]m", { buffer = e.buf, remap = true, desc = "Fugitive: next item and close diff" }, true)
           --stylua: ignore
-          RUtils.map.nnoremap("<C-p>", "[m", { buffer = e.buf, remap = true, desc = "Fugitive: prev item and close diff" }, true)
+          RUtils.map.nnoremap("<a-p>", "[m", { buffer = e.buf, remap = true, desc = "Fugitive: prev item and close diff" }, true)
+
           RUtils.map.nnoremap("<Tab>", "=zt", { buffer = e.buf, remap = true, desc = "Fugitive: unfold/fold" }, true)
-          RUtils.map.nnoremap("<a-n>", ")", { buffer = e.buf, remap = true, desc = "Fugitive: next item" }, true)
-          RUtils.map.nnoremap("<a-p>", "(", { buffer = e.buf, remap = true, desc = "Fugitive: prev item" }, true)
+
+          RUtils.map.nnoremap("<C-n>", ")", { buffer = e.buf, remap = true, desc = "Fugitive: next diff" }, true)
+          RUtils.map.nnoremap("<C-p>", "(", { buffer = e.buf, remap = true, desc = "Fugitive: prev diff" }, true)
 
           -- +-----------------------------------------------------------------------------+
           -- |                                    OPEN                                     |
@@ -1014,18 +1016,6 @@ return {
         desc = "Git: open neogit [neogit]",
         mode = { "n", "x" },
       },
-
-      -- { "<LocalLeader>qot", "", desc = "Tag Popup" },
-      -- { "<LocalLeader>qom", "", desc = "Merge Popup" },
-      -- { "<LocalLeader>qoM", "", desc = "Margin Popup" },
-      -- { "<LocalLeader>qor", "", desc = "Remote Popup" },
-      -- { "<LocalLeader>qow", "", desc = "Worktree Popup" },
-      -- { "<LocalLeader>qoR", "", desc = "Revert Popup" },
-      -- { "<LocalLeader>qod", "", desc = "Diff Popup" },
-      -- { "<LocalLeader>qob", "", desc = "Branch Popup" },
-      -- { "<LocalLeader>qoB", "", desc = "Bisect Popup" },
-      -- { "<LocalLeader>qos", "", desc = "Stash Popup" },
-      -- { "<LocalLeader>ql", "", desc = "Log Popup" },
     },
     opts = {
       kind = "vsplit",
@@ -1056,6 +1046,15 @@ return {
           ["g?"] = "HelpPopup",
         },
 
+        commit_editor = {
+          ["q"] = "Close",
+          ["<c-c><c-c>"] = "Submit",
+          ["<c-c><c-k>"] = "Abort",
+          ["<m-p>"] = "PrevMessage",
+          ["<m-n>"] = "NextMessage",
+          ["<m-r>"] = "ResetMessage",
+        },
+
         rebase_editor = {
           ["q"] = false,
           ["<Esc>"] = false,
@@ -1066,6 +1065,10 @@ return {
           ["<c-x>"] = false,
           ["Y"] = false,
           ["o"] = false,
+
+          -- equal to fold mapping
+          ["zM"] = "Depth1",
+          ["zR"] = "Depth4",
 
           -- ["<C-n>"] = false,
           -- ["<c-p>"] = false,

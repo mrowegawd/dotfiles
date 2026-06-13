@@ -6,7 +6,22 @@ return {
       { "nvim-treesitter/nvim-treesitter-textobjects" },
     },
     opts = {
-      ignore = { "orgagenda", "org", "snacks_input", "ergoterm" },
+      update_cadence = "manual",
+      ignore = {
+        "orgagenda",
+        "org",
+        "snacks_input",
+        "image",
+        "ergoterm",
+        "cfg",
+        "conf",
+        "zsh",
+        "tmux",
+        "dircolors",
+        "DiffviewFiles",
+        "octo",
+        "neo-tree",
+      },
       disable = {
         indent = { "tsx" },
       },
@@ -22,14 +37,6 @@ return {
       end)
       vim.keymap.set({ "x", "o" }, "if", function()
         require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-      end)
-
-      -- Swap
-      vim.keymap.set("n", "<leader>ak", function()
-        require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner"
-      end)
-      vim.keymap.set("n", "<leader>aK", function()
-        require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
       end)
     end,
   },

@@ -10,7 +10,7 @@ MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Ful
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
 mkdir -p "$PATH_VIDEOS"
 
-TIMESTAMP="$(date +%d_%B_%Y_%s)"
+TIMESTAMP="$(date '+%y%m%d-%H-%M-%S')"
 FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-${TIMESTAMP}.mp4"
 FILE_NAME_RECORD="ffmpeg-${TIMESTAMP}.mp4"
 FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
@@ -23,10 +23,11 @@ INFO_FILE="/tmp/ffmpeg-record.info"
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 send_notify() {
+  local time=${2:-1000}
   COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
 
   if command -v dunstify >/dev/null; then
-    dunstify -i "$HOME/.config/miscxrdb/icons/rec-button.png" \
+    dunstify -t "$time" -i "$HOME/.config/miscxrdb/icons/rec-button.png" \
       "RECORDING" "<b><span foreground='$COL_MSG_SUCCSS'>$1</span></b>"
   else
     notify-send "RECORDING" "$1"
@@ -205,7 +206,7 @@ _start_gif_record() {
   local offset="$2"
 
   local ts output_mkv output_gif output_mp4
-  ts="$(date '+%y%m%d-%H%M-%S')"
+  ts="$TIMESTAMP"
   output_mkv="$PATH_VIDEOS/${ts}.mkv"
   output_gif="$PATH_VIDEOS/${ts}.gif"
   output_mp4="$PATH_VIDEOS/${ts}-tg.mp4"
@@ -293,7 +294,7 @@ run_ffmpeg_stop() {
       make_gif_from_video "$output_mkv" "$output_gif" 15 800
       encode_for_telegram "$output_mkv" "$output_mp4"
       rm -f "$output_mkv"
-      send_notify "Saved gif: $(basename "$output_gif") ($(du -sh "$output_gif" | cut -f1)) | mp4: $(basename "$output_mp4") ($(du -sh "$output_mp4" | cut -f1))"
+      send_notify "Saved gif: $(basename "$output_gif") ($(du -sh "$output_gif" | cut -f1))\nmp4: $(basename "$output_mp4") ($(du -sh "$output_mp4" | cut -f1))" 5000
     fi
   else
     local bak="$field1"
@@ -334,7 +335,7 @@ run_screenkey() {
 
 sync_update() {
   if [[ ! -f ~/.config/polybar/scripts/sync-update ]]; then
-    notify-send "file 'sync-update' not found"
+    send_notify "file 'sync-update' not found"
     return
   fi
   ~/.config/polybar/scripts/sync-update --run

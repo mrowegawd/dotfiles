@@ -46,7 +46,7 @@ colorsuggest="fg=#3d3d3d"
 # ╏ COMPLETION                                               ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-autoload -Uz compinit
+autoload -Uz compinit && compinit
 
 # Fix bottleneck: compinit hanya rebuild dump kalau sudah > 24 jam
 # Tanpa ini, compinit scan semua fpath setiap shell start (~100-300ms)

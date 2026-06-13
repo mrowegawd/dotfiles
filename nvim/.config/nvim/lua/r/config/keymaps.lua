@@ -10,13 +10,11 @@ local fm_manager = vim.env.TERM_FILEMANAGER
 
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
 RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
+
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
-
-RUtils.map.inoremap("<a-l>", "<Right>", silent)
-RUtils.map.inoremap("<a-h>", "<Left>", silent)
-RUtils.map.inoremap("<a-j>", "<Down>", silent)
-RUtils.map.inoremap("<a-k>", "<Up>", silent)
+RUtils.map.inoremap("<C-j>", "<Down>", silent)
+RUtils.map.inoremap("<C-k>", "<Up>", silent)
 
 RUtils.map.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
 RUtils.map.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
@@ -91,7 +89,8 @@ local switch_focus_targeted_window = RUtils.buf.window.switch_focus_targeted_win
 RUtils.map.nnoremap("<Leader>wv", arange_wins "vsplit", { desc = "Window: vsplit" })
 RUtils.map.nnoremap("<Leader>ws", arange_wins "split", { desc = "Window: split" })
 
-RUtils.map.nnoremap("<Leader>wo", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.nnoremap("<Leader>ll", switch_focus_targeted_window, { desc = "Window: switch focus" })
+RUtils.map.vnoremap("<Leader>ll", switch_focus_targeted_window, { desc = "Window: switch focus" })
 
 RUtils.map.nnoremap("<c-w>s", arange_wins "split", { desc = "Window: split" })
 RUtils.map.nnoremap("<c-w>j", arange_wins "split", { desc = "Window: split (alternative)" })
@@ -116,7 +115,7 @@ RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (v
 
 RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable layout" })
 
--- stylua: ignore
+--stylua: ignore
 RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layout.debug())) end, { desc = "Test: debug layout" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -194,9 +193,9 @@ RUtils.map.nnoremap("<Leader>ov", function() RUtils.cmd.open_with("go to file", 
 RUtils.map.xnoremap("<Leader>ov", function() RUtils.cmd.open_with("go to file", "vsplit") end, { desc = "Open: under cursor (visual)" })
 
 --stylua: ignore
-RUtils.map.nnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online" })
+RUtils.map.nnoremap("<Leader>oR", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online" })
 --stylua: ignore
-RUtils.map.xnoremap("<Leader>oE", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
+RUtils.map.xnoremap("<Leader>oR", function() RUtils.cmd.browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
 
 RUtils.map.nnoremap("<Leader>oU", function()
   if not package.loaded["undotree"] then
@@ -228,13 +227,13 @@ RUtils.map.tnoremap("<C-a-l>", function() RUtils.map.feedkey("<C-\\><C-n><C-a-l>
 RUtils.map.tnoremap("<C-a-h>", function() RUtils.map.feedkey("<C-\\><C-n><C-a-h>", "t") end, { desc = "Terminal: prev tab" })
 
 -- stylua: ignore
-RUtils.map.tnoremap("<c-w>h", function() RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t") end, { desc = "Terminal: move left" })
+RUtils.map.tnoremap("<c-Left>", function() RUtils.map.feedkey("<C-\\><C-n><C-w>h", "t") end, { desc = "Terminal: move left" })
 -- stylua: ignore
-RUtils.map.tnoremap("<c-w>j", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd j<CR>", "t") end, { desc = "Terminal: move down" })
+RUtils.map.tnoremap("<c-Down>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd j<CR>", "t") end, { desc = "Terminal: move down" })
 -- stylua: ignore
-RUtils.map.tnoremap("<c-w>k", function() RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t") end, { desc = "Terminal: move up" })
+RUtils.map.tnoremap("<c-Up>", function() RUtils.map.feedkey("<C-\\><C-n><C-w>k", "t") end, { desc = "Terminal: move up" })
 -- stylua: ignore
-RUtils.map.tnoremap("<c-w>l", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t") end, { desc = "Terminal: move right" })
+RUtils.map.tnoremap("<c-Right>", function() RUtils.map.feedkey("<C-\\><C-n>:wincmd l<CR>", "t") end, { desc = "Terminal: move right" })
 
 -- ├──────────────────────────────────┤ OPEN ├──────────────────────────────────┤
 

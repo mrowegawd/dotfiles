@@ -21,6 +21,15 @@ return {
         notify = false,
       },
       buf_filter = function(bufnr)
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if name:match "^fugitive://" then
+          return false
+        end
+
+        if vim.bo.filetype == "git" then
+          return false
+        end
+
         if vim.bo.filetype == "help" then
           return true
         end
@@ -140,6 +149,13 @@ return {
       }, {
         event = { "VimLeavePre" },
         command = function()
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            local name = vim.api.nvim_buf_get_name(buf)
+
+            if name:match "^fugitive://" then
+              vim.api.nvim_buf_delete(buf, { force = true })
+            end
+          end
           resession.save(RUtils.sessions.last_session_name()) -- per-CWD
         end,
       })

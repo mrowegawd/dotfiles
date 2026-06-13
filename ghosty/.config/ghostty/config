@@ -37,9 +37,11 @@ custom-shader = shaders/cursor_wrap.glsl
 resize-overlay                  = never
 cursor-style                    = block
 cursor-style-blink              = false
-gtk-titlebar                    = false
 confirm-close-surface           = false
 shell-integration-features      = no-cursor
+
+gtk-titlebar                    = false
+gtk-single-instance             = true
 
 # unfocused-split-opacity         = 0.5
 # adjust-cell-width               = 0

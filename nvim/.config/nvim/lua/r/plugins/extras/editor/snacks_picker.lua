@@ -212,6 +212,11 @@ return {
             return
           end
 
+          if vim.bo.filetype == "NeogitDiffView" then
+            RUtils.map.feedkey("}", "m")
+            return
+          end
+
           if vim.wo.diff then
             vim.cmd.normal { "]c", bang = true }
           else
@@ -236,6 +241,11 @@ return {
 
           if vim.g.snacks_jump_scope then
             Snacks.words.jump(-vim.v.count1, true)
+            return
+          end
+
+          if vim.bo.filetype == "NeogitDiffView" then
+            RUtils.map.feedkey("{", "m")
             return
           end
 

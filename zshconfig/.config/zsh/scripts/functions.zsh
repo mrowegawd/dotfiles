@@ -4,16 +4,20 @@ build-nvim() {
   neovim_dir="$PROJECTS_DIR/contrib/neovim"
   [ ! -d $neovim_dir ] && git clone https://github.com/neovim/neovim.git $neovim_dir
   pushd $neovim_dir
+
   git checkout master
   git reset --hard origin/$(git rev-parse --abbrev-ref HEAD) && git clean -fdx
-  # git pull upstream master
   git fetch --tags -f
   git pull --rebase --prune
+
   git checkout nightly
-  # git checkout stable
-  [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
+
+  [ -d "$neovim_dir/build/" ] && rm -r ./build/
   rm -rf $HOME/neovim/*
-  make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+
+  make CMAKE_BUILD_TYPE=Release \
+       CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+
   make install
   popd
 }

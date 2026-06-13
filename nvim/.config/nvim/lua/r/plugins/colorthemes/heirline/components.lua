@@ -697,14 +697,7 @@ M.FilePath = {
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.statusline_bg
-      if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_statusline_bg
-      end
-
-      return { fg = fg }
-    end,
+    hl = { fg = colors.statusline_bg },
   },
 }
 M.FileIcon = {
@@ -1189,13 +1182,7 @@ M.RmuxTargetPane = {
       end
     end,
 
-    hl = function()
-      local fg = colors.statusline_bg
-      if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_statusline_bg
-      end
-      return { fg = fg, bg = colors.task_bg }
-    end,
+    hl = { fg = colors.statusline_bg, bg = colors.task_bg },
   },
   {
     provider = function(self)
@@ -1229,7 +1216,7 @@ M.RmuxTargetPane = {
     provider = function(self)
       local has_task = self.task > 0 or (self.watch and #self.watch > 0)
 
-      if has_task or set_conditions.is_terminal_ft() or self.has_overseer_task then
+      if has_task or self.has_overseer_task then
         return RUtils.config.icons.misc.separator_down .. " "
       end
     end,

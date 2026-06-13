@@ -45,8 +45,8 @@ _maimfullscreen() {
 # Main script
 
 (
-  NAME_PATH_PNG=$(date "+%d-%B-%Y_%H%S")
-  NAME_FILE="screenshot_$NAME_PATH_PNG.png"
+  NAME_PATH_PNG="$(date '+%y%m%d-%H-%M-%S')"
+  NAME_FILE="screenshot-$NAME_PATH_PNG.png"
   IMGTEMP="$HOME/Downloads/screenshot"
 
   dir="$HOME/.config/rofi/menu"

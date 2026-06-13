@@ -7,6 +7,15 @@ local M = {
 
 ---@alias ModeKey "n" | "i" | "x" | "o" | "v" | "t"
 
+--- | ---- | ------------------------------- |
+--- | `m`  | Remap keys (ikuti mapping)      |
+--- | `n`  | No remap                        |
+--- | `t`  | Handle sebagai typed input      |
+--- | `i`  | Insert di depan typeahead       |
+--- | `x`  | Execute sampai typeahead kosong |
+
+---@alias ModeFeedKey "m" | "n" | "t" | "x" | "mt"
+
 ---@param mode ModeKey
 ---@param lhs string
 ---@param rhs string | function
@@ -252,7 +261,7 @@ function M.escape(text, additional_char)
 end
 
 ---@param key string
----@param mode? ModeKey
+---@param mode? ModeFeedKey
 function M.feedkey(key, mode)
   mode = mode or "n"
   if mode == "" then

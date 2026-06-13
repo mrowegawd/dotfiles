@@ -401,6 +401,10 @@ function M.open_cmd_bulk_pojok_kanan(commands, opts)
           end
 
           local sel = selected[1]
+          if not sel then
+            return
+          end
+
           local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
           local display_str_split = vim.split(display_str, "-")
 

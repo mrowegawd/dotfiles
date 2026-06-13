@@ -270,17 +270,7 @@ return {
       },
       sources = {
         compat = {},
-        default = function()
-          local sources = { "lsp", "path", "snippets", "buffer" }
-
-          -- Workaround for git source not supporting per_filetype configuration
-          -- https://github.com/Kaiser-Yang/blink-cmp-git/issues/62#issuecomment-3062425218
-          if vim.tbl_contains({ "gitcommit", "octo" }, vim.bo.filetype) then
-            sources = { "buffer", "git" }
-          end
-          return sources
-        end,
-
+        default = { "lsp", "path", "snippets", "buffer", "git" },
         providers = {
           lsp = {
             name = "lsp",
@@ -327,7 +317,7 @@ return {
             module = "blink-cmp-git",
             name = "Git",
             enabled = function()
-              return vim.tbl_contains({ "octo", "gitcommit" }, vim.bo.filetype)
+              return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
             end,
           },
           ripgrep = {

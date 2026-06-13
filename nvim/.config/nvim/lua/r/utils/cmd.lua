@@ -23,14 +23,16 @@ function M.get_total_wins()
   return tbl_winsplits
 end
 
----@param wins string|string[]
+---@param filetypes string|string[]
 ---@param is_tab? boolean
+---@param is_more_guard? boolean
 ---@return { found: boolean, winbufnr: integer, winnr: integer, winid: integer, ft: string }
-function M.windows_is_opened(wins, is_tab)
+function M.windows_is_opened(filetypes, is_tab, is_more_guard)
   is_tab = is_tab or false
+  is_more_guard = is_more_guard or false
+
   local QfbookmarkUtils = require "qfbookmark.utils"
-  local qf_wins = QfbookmarkUtils.windows_is_opened(wins, is_tab)
-  return qf_wins
+  return QfbookmarkUtils.windows_is_opened(filetypes, is_tab, is_more_guard)
 end
 
 ---@param link string
