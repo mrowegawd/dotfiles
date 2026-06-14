@@ -39,8 +39,8 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
-colorline="#242424"
-colorsuggest="fg=#3d3d3d"
+colorline="#1d1d22"
+colorsuggest="fg=#32323a"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏

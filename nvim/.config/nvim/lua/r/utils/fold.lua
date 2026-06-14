@@ -65,6 +65,9 @@ function M.cycle_fold_level()
   end
 
   set_level(next_level)
+  vim.schedule(function()
+    vim.cmd "normal! zz"
+  end)
 
   -- Short feedback in cmdline
   local label = next_level == 99 and "ALL OPEN" or next_level == 0 and "ALL CLOSED" or ("LEVEL " .. next_level)
@@ -115,7 +118,7 @@ function M.close_all()
   M._level_before_zm = get_current_level()
   set_level(0)
   vim.cmd "normal! zM"
-  RUtils.echo("fold", "Fold: ALL CLOSED (level saved)")
+  -- RUtils.echo("fold", "Fold: ALL CLOSED (level saved)")
 end
 
 --- zR → open all TEMPORARILY, level state is not reset
@@ -124,7 +127,7 @@ function M.open_all()
   -- Open everything without changing _current_level
   -- so next cycle still continues from the same position
   vim.cmd "normal! zR"
-  RUtils.echo("fold", "Fold: ALL OPEN (level state preserved)")
+  -- RUtils.echo("fold", "Fold: ALL OPEN (level state preserved)")
 end
 
 --- (Optional) Restore level before zM

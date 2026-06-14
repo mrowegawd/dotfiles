@@ -110,7 +110,6 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move ← (v
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
-RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable layout" })
 
 --stylua: ignore
 RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layout.debug())) end, { desc = "Test: debug layout" })
@@ -209,6 +208,8 @@ end, { desc = "Open: undotree" })
 
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.zen():map "<Leader>uz"
+
+RUtils.map.nnoremap("<Leader>ul", RUtils.layout.disable, { desc = "Toggle: disable/enable layout" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  TERMINAL                                   ╏
@@ -414,49 +415,77 @@ RUtils.map.nnoremap("k", function() return smart_move "k" end, { expr = true })
 -- ╏                                    DIFF                                     ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
--- Create a new scratch buffer
-vim.api.nvim_create_user_command("Ns", function()
-  vim.cmd [[
-execute 'vsplit | enew'
-setlocal buftype=nofile
-setlocal bufhidden=hide
-setlocal noswapfile
-]]
-end, { nargs = 0 })
+-- =============================================================================
+-- Compare Clipboard vs Visual Selection
+--
+-- Workflow:
+--   1. Yank a function (from anywhere: file, git history, etc.)
+--   2. Visual-select the function you want to compare in the current file
+--   3. <Leader>gv
+--   4. A new tab opens with two scratch buffers side-by-side:
+--        left  = your visual selection
+--        right = your yanked clipboard
+--      Both buffers share the filetype of the original file so treesitter
+--      and syntax highlighting work correctly.
+--   5. Press <q> in either pane to close the whole tab.
+-- =============================================================================
 
--- Compare the clipboard to the current buffer
-vim.api.nvim_create_user_command("CompareClipboard", function()
-  local ftype = vim.api.nvim_eval "&filetype" -- original filetype
-  vim.cmd [[
-tabnew %
-Ns
-normal! P
-windo diffthis
-]]
-  vim.cmd("set filetype=" .. ftype)
-end, { nargs = 0 })
+-- Create a scratch buffer in the current window.
+-- Filetype is set BEFORE content is pasted so treesitter attaches properly.
+---@param ftype string   original filetype to apply
+---@param content string[] lines to paste into the buffer
+local function open_scratch(ftype, content)
+  vim.cmd "enew"
+  local buf = vim.api.nvim_get_current_buf()
 
--- Compare the clipboard to a visual selection
+  -- Set filetype first → treesitter parser attaches to an empty buffer,
+  -- then content arrives and highlighting is already active.
+  vim.bo[buf].filetype = ftype
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].bufhidden = "wipe"
+  vim.bo[buf].swapfile = false
+
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+
+  -- Close tab with <q>; map only for this buffer
+  vim.keymap.set("n", "q", "<cmd>tabclose<cr>", { buffer = buf, desc = "Diff: close compare tab" })
+
+  return buf
+end
+
 vim.api.nvim_create_user_command("CompareClipboardSelection", function()
-  vim.cmd [[
-" yank visual selection to z register
-normal! gv"zy
-" open new tab, set options to prevent save prompt when closing
-execute 'tabnew | setlocal buftype=nofile bufhidden=hide noswapfile'
-" paste z register into new buffer
-normal! V"zp
-Ns
-normal! Vp
-" alternative: diffview
-windo diffthis
-]]
+  local ftype = vim.bo.filetype -- capture before switching buffers
+
+  -- Yank the visual selection into register z
+  vim.cmd [[normal! gv"zy]]
+
+  local selection = vim.fn.getreg "z"
+  local clipboard = vim.fn.getreg "+"
+
+  local sel_lines = vim.split(selection, "\n", { plain = true })
+  local clip_lines = vim.split(clipboard, "\n", { plain = true })
+
+  -- Open a new tab for the diff view
+  vim.cmd "tabnew"
+
+  -- Left pane: visual selection
+  open_scratch(ftype, sel_lines)
+  vim.cmd "diffthis"
+
+  -- Right pane: clipboard (yanked function)
+  vim.cmd "vsplit"
+  open_scratch(ftype, clip_lines)
+  vim.cmd "diffthis"
+
+  -- Start on the left pane
+  vim.cmd "wincmd h"
 end, {
   nargs = 0,
   range = true,
 })
 
 --stylua: ignore
-RUtils.map.xnoremap( "<Leader>gv", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git: compare diff with selection (visual)" })
+RUtils.map.xnoremap("<Leader>gv", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git: compare selection vs clipboard" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                    MISC                                     ╏

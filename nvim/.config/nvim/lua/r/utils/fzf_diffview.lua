@@ -15,7 +15,7 @@ local status_cmd_git = {
   ["open commit only with gitsigns"] = function(commit_hash)
     return "Gedit " .. commit_hash
   end,
-  ["check all files changed"] = function(commit_hash)
+  ["compare commit diff to head"] = function(commit_hash)
     ---@diagnostic disable-next-line: undefined-field
     RUtils.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
     return "DiffviewOpen " .. commit_hash .. "~..HEAD"
@@ -740,11 +740,11 @@ function M.git_open_with_fugitive()
   end
 end
 
-function M.git_check_all_changed_by_commit()
+function M.git_open_diff_to_head()
   return function(selected, _)
     local commit_hash = extract_git_hash_single(selected)
     if commit_hash then
-      M.open_commit(commit_hash, "check all files changed")
+      M.open_commit(commit_hash, "compare commit diff to head")
     end
   end
 end

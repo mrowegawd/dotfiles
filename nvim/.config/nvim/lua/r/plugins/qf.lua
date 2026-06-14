@@ -69,8 +69,8 @@ return {
   },
   -- QFBOOKMARK
   {
-    -- dir = "~/.local/src/nvim_plugins/qfbookmark",
-    "MadKuntilanak/qfbookmark",
+    dir = "~/.local/src/nvim_plugins/qfbookmark",
+    -- "MadKuntilanak/qfbookmark",
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
@@ -78,11 +78,32 @@ return {
       picker = "fzf-lua",
       window = {
         theme = { qf = { enabled = true, limit = get_limit_qftf() } },
+        note = {
+          size = "40%",
+          open_cmd = {
+            mode = "float",
+            anchor = "NE",
+          },
+        },
+        mark = {
+          -- anchor = "NW",
+          on_send = function(selected_marks)
+            local lines = {}
+            for _, mark in ipairs(selected_marks) do
+              local note = mark.note and (#mark.note > 0 and table.concat(mark.note, " ") or mark.text or "")
+                or (mark.text or "")
+              lines[#lines + 1] =
+                string.format("%s:%d — %s", vim.fn.fnamemodify(mark.filename, ":~:."), mark.line, note)
+            end
+
+            RUtils.info(lines)
+          end,
+        },
       },
       keymaps = {
         disable_all = false,
         actions = {
-          mark_win_open = "go",
+          mark_win_open = "gl",
           buffers = "gb",
         },
         open_item = {
@@ -92,8 +113,8 @@ return {
           },
         },
         note = {
-          toggle_local_note = "<LocalLeader>an",
-          toggle_global_note = "<LocalLeader>aN",
+          toggle_local_note = "<LocalLeader><LocalLeader>",
+          toggle_global_note = ",<",
         },
         navigation = {
           mark = {

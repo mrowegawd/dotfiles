@@ -18,9 +18,12 @@ return {
         "zsh",
         "tmux",
         "dircolors",
-        "DiffviewFiles",
         "octo",
         "neo-tree",
+        "Diff",
+
+        "DiffviewFiles",
+        "DiffviewFileHistory",
       },
       disable = {
         indent = { "tsx" },

@@ -816,14 +816,8 @@ function M.change_colors()
   local tab_inactive_bg = H.get("Winbar", "bg")
 
   -- Border Pane
-  local border_active, border_inactive
-  if vim.g.colorscheme == "rose-pine" then
-    border_active = H.tint(H.get("WinSeparator", "fg"), -0.6)
-    border_inactive = H.tint(H.get("WinSeparator", "fg"), -0.1)
-  else
-    border_active = H.get("WinSeparator", "fg")
-    border_inactive = H.tint(H.get("Normal", "bg"), 0.2)
-  end
+  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.1)
+  local border_inactive = H.tint(H.get("Normal", "bg"), 0.15)
 
   -- ─< ZSH >────────────────────────────────────────────────────────────
   local zsh_lines = H.get("Zshlines", "fg")
@@ -890,7 +884,8 @@ function M.change_colors()
 
       border_active = border_active,
       border_inactive = border_inactive,
-      border_inactive_status_fg = H.tint(border_inactive, 0.8),
+      -- border_inactive_status_fg = H.tint(border_inactive, 0.8),
+      border_inactive_status_fg = border_inactive,
     },
     kitty = {
       tab_active_fg = tab_active_fg,

@@ -418,7 +418,7 @@ return {
             -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
+              ["--header"] = [[^g:grep  a-d:diff-compare  ^y:copyhash   ^b:browser  ^q:diff-to-head  ^o:diffviewopen  ^x:fugitive]],
               ["--no-multi"] = false,
             },
             actions = {
@@ -429,10 +429,10 @@ return {
               ["alt-v"] = RUtils.fzf_diffview.git_open_to_qf "Commits Hash",
               ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzf_diffview.git_open_to_qf "Commits Hash" },
 
-              ["ctrl-r"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-d"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
               ["ctrl-o"] = RUtils.fzf_diffview.git_open_with_diffview(),
-              ["ctrl-z"] = RUtils.fzf_diffview.git_open_with_fugitive(),
-              ["ctrl-q"] = RUtils.fzf_diffview.git_check_all_changed_by_commit(),
+              ["ctrl-x"] = RUtils.fzf_diffview.git_open_with_fugitive(),
+              ["ctrl-q"] = RUtils.fzf_diffview.git_open_diff_to_head(),
 
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
@@ -440,8 +440,6 @@ return {
 
               ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-
-              ["alt-c"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
           bcommits = RUtils.fzflua.git_open_fullscreen_vertical {
@@ -453,7 +451,7 @@ return {
             --   .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
-              ["--header"] = [[^g:grep  a-c:copyhash  ^b:browser  ^r:compare  ^q:checkall  ^o:diffviewopen  ^z:fugitive]],
+              ["--header"] = [[^g:grep  a-d:diff-compare  ^y:copyhash   ^b:browser  ^q:diff-to-head  ^o:diffviewopen  ^x:fugitive]],
               ["--no-multi"] = false,
             },
             actions = {
@@ -466,15 +464,13 @@ return {
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-v"] = actions.git_buf_vsplit,
 
-              ["ctrl-r"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
+              ["alt-d"] = RUtils.fzf_diffview.git_open_with_compare_hash(),
               ["ctrl-o"] = RUtils.fzf_diffview.git_open_with_diffview(),
-              ["ctrl-z"] = RUtils.fzf_diffview.git_open_with_fugitive(),
-              ["ctrl-q"] = RUtils.fzf_diffview.git_check_all_changed_by_commit(),
+              ["ctrl-x"] = RUtils.fzf_diffview.git_open_with_fugitive(),
+              ["ctrl-q"] = RUtils.fzf_diffview.git_open_diff_to_head(),
 
               ["ctrl-b"] = RUtils.fzf_diffview.git_open_with_browser(),
               ["ctrl-g"] = RUtils.fzf_diffview.git_grep_log(),
-
-              ["alt-c"] = RUtils.fzf_diffview.git_copy_to_clipboard_or_yank(),
             },
           },
           branches = RUtils.fzflua.open_center_small_wide {

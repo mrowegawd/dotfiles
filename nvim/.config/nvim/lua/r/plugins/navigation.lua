@@ -183,15 +183,6 @@ return {
         end,
         desc = "Misc: open file explore [neotree]",
       },
-      {
-        "<Leader>oE",
-        function()
-          RUtils.layout.toggle_sidebar("neo-tree", function()
-            vim.cmd "Neotree reveal toggle"
-          end)
-        end,
-        desc = "Misc: open file explore [neotree]",
-      },
     },
 
     dependencies = {

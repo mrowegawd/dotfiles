@@ -5,11 +5,39 @@ local base_colors = {
 }
 
 local update_col_colorscheme = {
-  ["jellybeans"] = { Directory = { fg = "#8fbfdc", bg = "NONE" } },
   ["lackluster"] = { Directory = { fg = "#7788aa", bg = "NONE" } },
-  ["lackluster-mint"] = { Directory = { fg = "#7788aa", bg = "NONE" }, trouble_indent_fg_alter = 0.5 },
-  ["vscode"] = { Directory = { fg = "#569cd6", bg = "NONE" } },
-  ["vscode_modern"] = { Directory = { fg = "#569cd6", bg = "NONE" } },
+  ["base46-everforest"] = {
+    Directory = { fg = "#a7c080", bg = "NONE" },
+    linenr_fg_alter = 0.6,
+    winseparator_fg_alter = 0.25,
+    statusline_fg_alter = 0.5,
+  },
+  ["lackluster-mint"] = {
+    Directory = { fg = "#7788aa", bg = "NONE" },
+    trouble_indent_fg_alter = 0.5,
+    winseparator_fg_alter = 0.1,
+  },
+  ["kanagawa"] = { winseparator_fg_alter = 0.7, linenr_fg_alter = 1.5 },
+  ["intent"] = { winseparator_fg_alter = 0.6, linenr_fg_alter = 1.6 },
+  ["jellybeans"] = { Directory = { fg = "#8fbfdc", bg = "NONE" }, winseparator_fg_alter = 0.45 },
+  ["neogotham"] = { linenr_fg_alter = 1.4, winseparator_fg_alter = 0.45 },
+  ["nightfox"] = { linenr_fg_alter = 1.4, winseparator_fg_alter = 0.45 },
+  ["oxocarbon"] = { linenr_fg_alter = 1.4, winseparator_fg_alter = 0.4 },
+  ["rose-pine"] = { linenr_fg_alter = 1.3, winseparator_fg_alter = 0.4 },
+  ["tokyonight"] = { linenr_fg_alter = 1, winseparator_fg_alter = 0.3 },
+  ["tokyonight-night"] = { linenr_fg_alter = 2, winseparator_fg_alter = 0.55 },
+  ["tokyonight-storm"] = { linenr_fg_alter = 0.85, winseparator_fg_alter = 0.2 },
+
+  ["vscode"] = {
+    linenr_fg_alter = 0.9,
+    winseparator_fg_alter = 0.3,
+    Directory = { fg = "#569cd6", bg = "NONE" },
+  },
+  ["zenburn"] = {
+    linenr_fg_alter = 0.55,
+    winseparator_fg_alter = 0.15,
+    normalfloat_bg_alter = 0.1,
+  },
 }
 
 local function update_base_colors(theme)
@@ -43,18 +71,23 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "NonText", attr = "fg", alter = 0.5, opacity = 0.5 }, bg = "NONE" } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5 }, bg = "NONE" } },
+    {
+      WinSeparator = {
+        fg = { from = "Normal", attr = "bg", alter = colors.winseparator_fg_alter or 0.6 },
+        bg = "NONE",
+      },
+    },
 
     {
       LineNr = {
         bg = "NONE",
-        fg = { from = "Normal", attr = "bg", alter = 1 },
+        fg = { from = "Normal", attr = "bg", alter = colors.linenr_fg_alter or 1.15 },
         bold = false,
       },
     },
     { LineNrAbove = { inherit = "LineNr" } },
     { LineNrBelow = { inherit = "LineNr" } },
-    { Comment = { fg = { from = "Normal", attr = "bg", alter = 3, opacity = 0.6 }, italic = true } },
+    { Comment = { fg = { from = "LineNr", attr = "fg", alter = 0.6, opacity = 0.7 }, italic = true } },
     { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
@@ -78,7 +111,12 @@ local general_overrides = function()
     },
 
     { StatusLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-    { StatusLine = { fg = { from = "StatusLine", attr = "bg", alter = 2.5 }, reverse = false } },
+    {
+      StatusLine = {
+        fg = { from = "LineNr", attr = "fg", alter = colors.statusline_fg_alter or 0.5 },
+        reverse = false,
+      },
+    },
     { StatusLineNC = { inherit = "StatusLine" } },
 
     {
@@ -109,14 +147,14 @@ local general_overrides = function()
     {
       NormalFloat = {
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = 0.25 },
+        bg = { from = "Normal", attr = "bg", alter = colors.normalfloat_bg_alter or 0.25 },
         reverse = false,
       },
     },
 
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.15 },
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -174,26 +212,24 @@ local general_overrides = function()
     -- ║                                 DIFF COLOR                                  ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
+    { diffAdded = { fg = git_diff_add } },
     {
       diffAdded = {
-        fg = git_diff_add,
-        bg = { from = "Normal", attr = "bg", transparency = 0.9, color = git_diff_add },
+        bg = { from = "diffAdded", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
-
+    { diffChanged = { fg = git_diff_change } },
     {
       diffChanged = {
-        fg = git_diff_change,
-        bg = { from = "Normal", attr = "bg", transparency = 0.9, color = git_diff_change },
+        bg = { from = "diffChanged", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
+    { diffRemoved = { fg = git_diff_delete } },
     {
       diffRemoved = {
-        fg = git_diff_delete,
-        bg = { from = "Normal", attr = "bg", transparency = 0.9, color = git_diff_delete },
+        bg = { from = "diffRemoved", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
-
     {
       diffLine = {
         fg = { from = "Type", attr = "fg" },
@@ -208,10 +244,21 @@ local general_overrides = function()
     },
 
     { DiffAdd = { link = "diffAdded" } },
-    { DiffChange = { link = "diffRemoved" } },
+    { DiffChange = { link = "diffChanged" } },
     { DiffDelete = { link = "diffRemoved" } },
 
-    { DiffText = { link = "diffChanged" } },
+    {
+      DiffText = {
+        fg = "NONE",
+        bg = {
+          from = "diffChanged",
+          attr = "fg",
+          contrast = 0.05,
+          transparency = 0.25,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    ERROR                                    ║
@@ -544,7 +591,7 @@ local general_overrides = function()
 
     {
       WinBar = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+        fg = { from = "LineNr", attr = "fg", alter = 0.2 },
         bg = { from = "Normal", attr = "bg" },
         bold = true,
       },
@@ -699,15 +746,15 @@ local plugins_overrides = function()
       },
     },
     { BlinkCmpLabelMatch = { fg = { from = "constant", attr = "fg", alter = 0.4 } } },
-    { BlinkCmpLabelKind = { fg = { from = "Pmenu", attr = "bg", alter = 2.5 } } },
+    { BlinkCmpLabelKind = { fg = { from = "LineNr", attr = "fg", alter = 0.25 } } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  GITSIGNS                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { GitSignsAdd = { fg = { from = "diffAdded", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
-    { GitSignsChange = { fg = { from = "diffChanged", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
-    { GitSignsDelete = { fg = { from = "diffRemoved", attr = "fg", alter = 0.5, contrast = 0.05 }, bg = "NONE" } },
+    { GitSignsAdd = { fg = { from = "diffAdded", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+    { GitSignsChange = { fg = { from = "diffChanged", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+    { GitSignsDelete = { fg = { from = "diffRemoved", attr = "fg", alter = 0.3 }, bg = "NONE" } },
 
     { GitSignsAddInline = { link = "diffAdded" } },
     { GitSignsChangeInline = { link = "diffChanged" } },
@@ -754,74 +801,6 @@ local plugins_overrides = function()
     { NeogitHunkHeaderCursor = { inherit = "NeogitHunkHeaderHighlight" } },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                  DIFFVIEW                                   ║
-    -- ╙─────────────────────────────────────────────────────────────────────────────╜
-
-    { DiffviewDiffAdd = { inherit = "diffAdded" } },
-    { DiffviewDiffChange = { inherit = "diffChanged" } },
-    { DiffViewDiffDelete = { inherit = "diffRemoved" } },
-
-    {
-      DiffviewDiffText = {
-        fg = { from = "diffChanged", attr = "fg", alter = 0.2, contrast = 0.1 },
-        bg = { from = "diffChanged", attr = "bg", alter = 0.2, contrast = 0.1 },
-      },
-    },
-
-    { DiffviewStatusAdded = { inherit = "GitSignsAdd", bg = "NONE" } },
-    { DiffviewStatusModified = { inherit = "GitSignsChange", bg = "NONE" } },
-    { DiffviewStatusRenamed = { inherit = "GitSignsDelete", bg = "NONE" } },
-    { DiffviewStatusUnmerged = { inherit = "GitSignsDelete", bg = "NONE" } },
-    { DiffviewStatusUntracked = { inherit = "GitSignsAdd", bg = "NONE" } },
-    { DiffviewStatusDeleted = { inherit = "GitSignsDelete", bg = "NONE" } },
-
-    { DiffviewHash = { fg = { from = "diffAdded", attr = "fg" } } },
-    { DiffviewNonText = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-
-    { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
-    { DiffviewFilePanelDeletions = { inherit = "DiffviewStatusDeleted" } },
-    { DiffviewFilePanelInsertions = { inherit = "DiffviewStatusAdded" } },
-
-    -- NOTE: Highlight group DiffviewDiffAddAsDelete ini gunanya buat ngasih warna merah (efek delete)
-    -- pada teks baru di panel kiri (versi lama), saya buat warna agak berbeda dengan diffRemoved.
-    -- Jadi, meskipun status aslinya "tambah teks" (add), di panel kiri bakal
-    -- kelihatan kayak teks yang hilang biar nggak membingungkan.
-    {
-      DiffviewDiffAddAsDelete = {
-        bg = {
-          from = "GitSignsDelete",
-          attr = "fg",
-          transparency = 0.2,
-          color = { from = "Normal", attr = "bg" },
-        },
-      },
-    },
-
-    {
-      DiffviewFilePanelPath = {
-        inherit = "String",
-        fg = { from = "String", attr = "fg", transparency = 0.7, color = { from = "Directory", attr = "fg" } },
-      },
-    },
-    { DiffviewFilePanelFileName = { fg = { from = "DiffviewFilePanelPath", attr = "fg", alter = 0.2 } } },
-
-    {
-      DiffviewReference = {
-        inherit = "diffRemoved",
-        fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 },
-        bold = true,
-      },
-    },
-
-    {
-      DiffviewFilePanelSelected = {
-        inherit = "type",
-        fg = { from = "type", attr = "fg", alter = 0.15 },
-        bg = { from = "type", attr = "fg", opacity = 0.15 },
-      },
-    },
-
-    -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  FUGITIVE                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
@@ -846,18 +825,21 @@ local plugins_overrides = function()
     { FzfLuaBorder = { inherit = "FloatBorder" } },
     {
       FzfLuaFilePart = {
-        fg = { from = "Keyword", attr = "fg", opacity = 0.7 },
+        fg = { from = "Keyword", attr = "fg", contrast = 0.15 },
         bg = { from = "FzfLuaNormal", attr = "bg" },
+        bold = false,
       },
     },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
     {
       FzfLuaHeaderText = {
         fg = {
-          from = "FzfLuaFilePart",
+          from = "type",
           attr = "fg",
-          transparency = 0.7,
-          color = { from = "type", attr = "fg" },
+          opacity = 0.8,
+          contrast = 0.1,
+          transparency = 0.8,
+          color = { from = "FzfLuaFilePart", attr = "bg" },
         },
       },
     },
@@ -872,7 +854,7 @@ local plugins_overrides = function()
 
     {
       FzfLuaSel = {
-        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.4 },
+        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.25 },
         bg = { from = "Keyword", attr = "fg", transparency = 0.15, color = { from = "FzfLuaNormal", attr = "bg" } },
         bold = true,
       },

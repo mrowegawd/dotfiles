@@ -730,6 +730,80 @@ return {
       local actions = require "diffview.actions"
       RUtils.map.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
 
+      local H = require "r.settings.highlights"
+
+      H.plugin("DiffviewHiCol", {
+        theme = {
+          ["*"] = {
+            { DiffviewDiffAdd = { inherit = "diffAdded", fg = "NONE" } },
+            { DiffviewDiffChange = { inherit = "diffChanged", fg = "NONE" } },
+            { DiffViewDiffDelete = { inherit = "diffRemoved", fg = "NONE" } },
+
+            { DiffviewDiffText = { inherit = "DiffText" } },
+
+            { DiffviewStatusAdded = { inherit = "GitSignsAdd", bg = "NONE" } },
+            { DiffviewStatusModified = { inherit = "GitSignsChange", bg = "NONE" } },
+            { DiffviewStatusRenamed = { inherit = "GitSignsDelete", bg = "NONE" } },
+            { DiffviewStatusUnmerged = { inherit = "GitSignsDelete", bg = "NONE" } },
+            { DiffviewStatusUntracked = { inherit = "GitSignsAdd", bg = "NONE" } },
+            { DiffviewStatusDeleted = { inherit = "GitSignsDelete", bg = "NONE" } },
+
+            { DiffviewHash = { fg = { from = "diffAdded", attr = "fg" } } },
+            { DiffviewNonText = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+
+            { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
+            { DiffviewFilePanelDeletions = { inherit = "DiffviewStatusDeleted" } },
+            { DiffviewFilePanelInsertions = { inherit = "DiffviewStatusAdded" } },
+
+            -- NOTE: DiffviewDiffAddAsDelete gives the left panel (old version) a red
+            -- tint even when the underlying git status is "added". This makes it clear
+            -- that the content is absent in the old version without using diffRemoved
+            -- directly (which would make the two indistinguishable).
+            {
+              DiffviewDiffAddAsDelete = {
+                fg = {
+                  from = "diffRemoved",
+                  attr = "fg",
+                  alter = 0.5,
+                },
+                bg = {
+                  from = "diffRemoved",
+                  attr = "fg",
+                  alter = 0.1,
+                  transparency = 0.3,
+                  color = { from = "Normal", attr = "bg" },
+                },
+              },
+            },
+
+            {
+              DiffviewFilePanelPath = {
+                inherit = "String",
+                fg = { from = "String", attr = "fg", transparency = 0.7, color = { from = "Directory", attr = "fg" } },
+              },
+            },
+            { DiffviewFilePanelFileName = { fg = { from = "DiffviewFilePanelPath", attr = "fg", alter = 0.2 } } },
+
+            {
+              DiffviewReference = {
+                inherit = "diffRemoved",
+                fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 },
+                bold = true,
+              },
+            },
+
+            {
+              DiffviewFilePanelSelected = {
+                inherit = "Type",
+                fg = { from = "Type", attr = "fg", alter = 0.15 },
+                -- opacity: blend toward Normal.bg at 15% source visibility
+                bg = { from = "Type", attr = "fg", opacity = 0.15 },
+              },
+            },
+          },
+        },
+      })
+
       return {
         enhanced_diff_hl = true,
         diff_binaries = false, -- Show diffs for binaries
@@ -834,6 +908,8 @@ return {
 
             { "n", "<C-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
             { "n", "<C-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
+            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
+            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},
@@ -917,6 +993,9 @@ return {
 
             { "n", "<C-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
             { "n", "<C-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
+            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
+            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
+
 
             { "n", "gg", false },
             { "n", "G", false},

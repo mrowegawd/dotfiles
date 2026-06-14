@@ -750,43 +750,48 @@ end
 -- Git diff color helper
 -------------------------------------------------------------------------------
 
+-- Semantic base colors (source of truth for all diff hues)
+local DIFF_ADD = "#10B981"
+local DIFF_CHANGE = "#FAB005"
+local DIFF_DELETE = "#be5046"
+
+-- ---------------------------------------------------------------------------
+-- get_git_fg_or_bg  (fixed: no longer reads from DiffAdd/Change/Delete)
+--
+-- Previously this function called nvim_get_hl({ name = hl_group }) where
+-- hl_group was "DiffAdd" / "DiffChange" / "DiffDelete" — groups that are
+-- defined AFTER this function runs, causing a circular / empty read.
+--
+-- Now it blends directly from the fixed semantic hex above toward Normal.bg.
+-- ---------------------------------------------------------------------------
+
+---@param hl_group "DiffAdd"|"DiffChange"|"DiffDelete"
+---@return string blended hex color
 function M.get_git_fg_or_bg(hl_group)
-  local blend_map = {
-    DiffChange = "#FAB005",
-    DiffAdd = "#10B981",
-    DiffDelete = "#be5046",
+  local source_map = {
+    DiffAdd = DIFF_ADD,
+    DiffChange = DIFF_CHANGE,
+    DiffDelete = DIFF_DELETE,
   }
 
-  local blend_color = blend_map[hl_group]
-  if not blend_color then
+  local source = source_map[hl_group]
+  if not source then
     notify_warn(
       string.format(
-        "get_git_fg_or_bg: unknown hl_group '%s'.\n" .. "  Supported groups: %s\n" .. "  Falling back to #be5046.",
+        "get_git_fg_or_bg: unknown hl_group '%s'.\n" .. "  Supported groups: %s\n" .. "  Falling back to %s.",
         hl_group,
-        table.concat(vim.tbl_keys(blend_map), ", ")
+        table.concat(vim.tbl_keys(source_map), ", "),
+        DIFF_DELETE
       ),
       "Highlight: get_git_fg_or_bg"
     )
-    blend_color = "#be5046"
+    source = DIFF_DELETE
   end
 
-  local hl = vim.api.nvim_get_hl(0, { name = hl_group, link = false })
-  if hl.fg then
-    return M.blend(("#%06x"):format(hl.fg), blend_color, 0.2)
-  end
-  if hl.bg then
-    return M.blend(("#%06x"):format(hl.bg), blend_color, 0.2)
-  end
-
-  notify_warn(
-    string.format(
-      "get_git_fg_or_bg: group '%s' has neither fg nor bg.\n" .. "  Returning blend_color ('%s') directly.",
-      hl_group,
-      blend_color
-    ),
-    "Highlight: get_git_fg_or_bg"
-  )
-  return blend_color
+  -- Blend the semantic color toward Normal.bg at 20% opacity.
+  -- Using M.blend directly (no hl_group read) removes the circular dependency.
+  local normal_bg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = "Normal", link = false }).bg or 0)
+  return M.blend(source, normal_bg, 0.7)
 end
 
 return M
