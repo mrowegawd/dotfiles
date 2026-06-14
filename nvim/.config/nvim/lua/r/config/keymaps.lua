@@ -56,28 +56,25 @@ end, silent)
 -- ╏                                    FOLD                                     ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-RUtils.map.nnoremap("<C-a>", function()
-  local is_line_folded = RUtils.cmd.force_foldopen(true)
+RUtils.map.nnoremap("zb", function()
+  RUtils.fold.cycle_fold_level() -- cycle level (1 → 2 → 3 → all open → all closed → kembali)
+end, { desc = "Fold: cycle level (state-aware)" })
 
-  if is_line_folded then
-    RUtils.map.wrap_fold_cmd "normal! zMzv" -- "normal! zMzO"
+RUtils.map.nnoremap("zf", function()
+  RUtils.fold.focus_current()
+end, { desc = "Fold: focus current (respect cycle level)" })
 
-    local row = vim.fn.winline()
-    local height = vim.api.nvim_win_get_height(0)
+RUtils.map.nnoremap("zM", function()
+  RUtils.fold.close_all()
+end, { desc = "Fold: close all (level tersimpan)" })
 
-    if row > height * 0.7 then
-      vim.cmd "normal! zb"
-    else
-      vim.cmd "normal! zt"
-    end
-  else
-    RUtils.map.wrap_fold_cmd "normal! zc"
-  end
-end, { desc = "Fold: focus current" })
---stylua: ignore
-RUtils.map.nnoremap("zf", function() RUtils.map.wrap_fold_cmd "normal! zMzvzz" end, { desc = "Fold: focus current (alternativ)" })
---stylua: ignore
-RUtils.map.nnoremap("zb", function() RUtils.fold.cycle_fold_level() end, { desc = "Fold: cycle fold level (util)" })
+RUtils.map.nnoremap("zR", function()
+  RUtils.fold.open_all()
+end, { desc = "Fold: open all (state dipertahankan)" })
+
+RUtils.map.nnoremap("zx", function()
+  RUtils.fold.restore_level()
+end, { desc = "Fold: restore level sebelum zRUtils.fold" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              WINDOW <leader>w                               ╏
@@ -324,56 +321,94 @@ RUtils.map.nnoremap(
 )
 
 -- Scroll step sideways
-RUtils.map.nnoremap("zl", "z20l")
-RUtils.map.nnoremap("zh", "z20h") -- zh use for fold
-RUtils.map.nnoremap("zL", "z50l")
-RUtils.map.nnoremap("zH", "z50h")
+local scroll = {
+  horizontal_small = 20, -- columns moved by zl / zh
+  horizontal_large = 50, -- columns moved by zL / zH
+  nudge_lines = 2, -- lines moved by <C-e> / <C-y>  (nudge)
+}
 
--- Scroll Up/Down
-RUtils.map.nnoremap(
-  "<C-b>",
-  [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]],
-  { expr = true, desc = "Scroll: fast upwards" }
-)
-RUtils.map.nnoremap(
-  "<C-f>",
-  [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
-  { expr = true, desc = "Scroll: fast downwards" }
-)
-RUtils.map.nnoremap(
-  "<C-e>",
-  [[(line("w$") >= line('$') ? "2j" : "2<C-e>")]],
-  { expr = true, desc = "Scroll: down windows without moving the cursor" }
-)
-RUtils.map.nnoremap(
-  "<C-y>",
-  [[(line("w0") <= 1 ? "2k" : "2<C-y>")]],
-  { expr = true, desc = "Scroll: up windows without moving the cursor" }
-)
+RUtils.map.nnoremap("zl", scroll.horizontal_small .. "zl", { desc = "Scroll: right (small)" })
+RUtils.map.nnoremap("zh", scroll.horizontal_small .. "zh", { desc = "Scroll: left (small)" })
+RUtils.map.nnoremap("zL", scroll.horizontal_large .. "zl", { desc = "Scroll: right (large)" })
+RUtils.map.nnoremap("zH", scroll.horizontal_large .. "zh", { desc = "Scroll: left (large)" })
+
+-- ---------------------------------------------------------------------------
+-- Nudge  <C-e> / <C-y>
+-- Viewport shifts by `nudge_lines`; cursor does not move.
+-- Falls back to j/k when already at the buffer edge.
+-- ---------------------------------------------------------------------------
+
+RUtils.map.nnoremap("<C-e>", function()
+  local at_end = vim.fn.line "w$" >= vim.fn.line "$"
+  local motion = at_end and (scroll.nudge_lines .. "j") -- at buffer end: move cursor instead
+    or (scroll.nudge_lines .. "\5") -- \5 = <C-e>
+  vim.cmd("normal! " .. motion)
+end, { desc = "Scroll: nudge down (viewport)" })
+
+RUtils.map.nnoremap("<C-y>", function()
+  local at_top = vim.fn.line "w0" <= 1
+  local motion = at_top and (scroll.nudge_lines .. "k") -- at buffer top: move cursor instead
+    or (scroll.nudge_lines .. "\25") -- \25 = <C-y>
+  vim.cmd("normal! " .. motion)
+end, { desc = "Scroll: nudge up (viewport)" })
+
+-- ---------------------------------------------------------------------------
+-- Step  <C-d> / <C-u>
+-- Half-page scroll; cursor follows the viewport (standard vim behavior).
+-- Falls back to j/k when already at the buffer edge.
+-- ---------------------------------------------------------------------------
+
+RUtils.map.nnoremap("<C-d>", function()
+  local half = math.max(math.floor(vim.api.nvim_win_get_height(0) / 2), 1)
+  local at_end = vim.fn.line "w$" >= vim.fn.line "$"
+  local motion = at_end and (half .. "j") -- at buffer end: just move cursor down
+    or (half .. "\4") -- \4 = <C-d>
+  vim.cmd("normal! " .. motion)
+end, { desc = "Scroll: step down (half-page)" })
+
+RUtils.map.nnoremap("<C-u>", function()
+  local half = math.max(math.floor(vim.api.nvim_win_get_height(0) / 2), 1)
+  local at_top = vim.fn.line "w0" <= 1
+  local motion = at_top and (half .. "k") -- at buffer top: just move cursor up
+    or (half .. "\21") -- \21 = <C-u>
+  vim.cmd("normal! " .. motion)
+end, { desc = "Scroll: step up (half-page)" })
+
+-- ---------------------------------------------------------------------------
+-- Leap  <C-f> / <C-b>
+-- Full viewport scroll (winheight - 2 lines); cursor adjusts to H/M/L.
+-- At buffer edges the cursor snaps to L (bottom) or H (top) of window.
+-- ---------------------------------------------------------------------------
+
+RUtils.map.nnoremap("<C-f>", function()
+  local lines = math.max(vim.api.nvim_win_get_height(0) - 2, 1)
+  local at_end = vim.fn.line "w$" >= vim.fn.line "$"
+  -- \4 = <C-d>; repeat `lines` times to approximate a full-page leap
+  vim.cmd("normal! " .. lines .. "\4" .. (at_end and "L" or "M"))
+end, { desc = "Scroll: leap down (full-page)" })
+
+RUtils.map.nnoremap("<C-b>", function()
+  local lines = math.max(vim.api.nvim_win_get_height(0) - 2, 1)
+  local at_top = vim.fn.line "w0" <= 1
+  -- \21 = <C-u>; repeat `lines` times to approximate a full-page leap
+  vim.cmd("normal! " .. lines .. "\21" .. (at_top and "H" or "M"))
+end, { desc = "Scroll: leap up (full-page)" })
 
 -- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
-RUtils.map.nnoremap("k", function()
+local function smart_move(dir)
   local count = vim.v.count
   local mode = vim.api.nvim_get_mode().mode
-  local use_gk = count == 0 and not mode:match "no"
-
-  local move = use_gk and "gk" or "k"
-  -- Jadi setiap jump memakai `10j` atau `6j`, akan automatis di mark
-  local mark = tonumber(count) > 5 and "m'" .. count or ""
-
+  local is_op = mode:match "no"
+  local move = (count == 0 and not is_op) and ("g" .. dir) or dir
+  local mark = count > 5 and "m'" or ""
   return mark .. move
-end, { expr = true })
-RUtils.map.nnoremap("j", function()
-  local count = vim.v.count
-  local mode = vim.api.nvim_get_mode().mode
-  local use_gj = count == 0 and not mode:match "no"
+end
 
-  local move = use_gj and "gj" or "j"
-  local mark = tonumber(count) > 5 and "m'" .. count or ""
-
-  return mark .. move
-end, { expr = true })
+-- stylua: ignore
+RUtils.map.nnoremap("j", function() return smart_move "j" end, { expr = true })
+-- stylua: ignore
+RUtils.map.nnoremap("k", function() return smart_move "k" end, { expr = true })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                    DIFF                                     ╏
@@ -611,6 +646,9 @@ RUtils.map.xnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands (visu
 
 local bulk_cmd_misc = function()
   local cmds = {
+    ["Screenkey - open screenkey on nvim"] = function()
+      cmd "Screenkey"
+    end,
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
     end,

@@ -305,34 +305,34 @@ end
 function Win.open_empty_blank_buffer(position)
   vim.cmd(position .. " vsplit")
 
-  vim.schedule(function()
-    local winid = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_get_current_buf()
+  -- vim.schedule(function()
+  local winid = vim.api.nvim_get_current_win()
+  local buf = vim.api.nvim_get_current_buf()
 
-    local tab = vim.fn.tabpagenr()
-    Win.update_layout(winid, buf, tab)
+  local tab = vim.fn.tabpagenr()
+  Win.update_layout(winid, buf, tab)
 
-    local main_layout = Win.get_main_layout(tab)
-    local empty_buf = vim.api.nvim_create_buf(false, true)
+  local main_layout = Win.get_main_layout(tab)
+  local empty_buf = vim.api.nvim_create_buf(false, true)
 
-    if not is_valid_main_layout(main_layout, buf) then
-      ---@diagnostic disable-next-line: undefined-field
-      warn "open_empty_blank_buffer: cannot continue, main_layout or buf is invalid "
-      return
-    end
+  if not is_valid_main_layout(main_layout, buf) then
+    ---@diagnostic disable-next-line: undefined-field
+    warn "open_empty_blank_buffer: cannot continue, main_layout or buf is invalid "
+    return
+  end
 
-    vim.api.nvim_win_set_buf(main_layout.win, empty_buf)
-    vim.api.nvim_set_option_value("cursorline", false, { win = main_layout.win, scope = "local" })
-    vim.api.nvim_set_option_value("number", false, { win = main_layout.win, scope = "local" })
-    vim.api.nvim_set_option_value("modifiable", true, { buf = empty_buf })
-    vim.api.nvim_set_option_value("readonly", false, { buf = empty_buf })
-    vim.api.nvim_set_option_value("filetype", Win.main_ft_name, { buf = empty_buf })
+  vim.api.nvim_win_set_buf(main_layout.win, empty_buf)
+  vim.api.nvim_set_option_value("cursorline", false, { win = main_layout.win, scope = "local" })
+  vim.api.nvim_set_option_value("number", false, { win = main_layout.win, scope = "local" })
+  vim.api.nvim_set_option_value("modifiable", true, { buf = empty_buf })
+  vim.api.nvim_set_option_value("readonly", false, { buf = empty_buf })
+  vim.api.nvim_set_option_value("filetype", Win.main_ft_name, { buf = empty_buf })
 
-    vim.wo[main_layout.win].winfixwidth = true
-    vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
+  vim.wo[main_layout.win].winfixwidth = true
+  vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
 
-    vim.cmd "wincmd p"
-  end)
+  vim.cmd "wincmd p"
+  -- end)
 end
 
 ---@param cur_winid integer
@@ -350,6 +350,7 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
     local saved = save_wins_current_tab(main_layout_winid)
     fn()
 
+    restore_wins(saved_before_fn)
     restore_wins(saved)
 
     if is_all_window then
@@ -379,7 +380,7 @@ end
 
 ---@param master_saved_layout table
 function Win.ensure_main_sidebar_is_left(master_saved_layout)
-  local layouts_win = RUtils.cmd.windows_is_opened(Win.slot_win.fts, true)
+  local layouts_win = RUtils.cmd.windows_is_opened(Win.slot_win.fts, true, true)
   Win.update_layout(layouts_win.winid)
 
   if not layouts_win.found then
@@ -388,6 +389,12 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
 
   debounce(function()
     local main_layout = Win.get_main_layout()
+
+    -- (More) guard against the main layout being a floating window
+    if is_float_win(main_layout.win) then
+      return
+    end
+
     if
       (main_layout and not main_layout.win)
       or (main_layout.win and not vim.api.nvim_win_is_valid(main_layout.win))
@@ -423,12 +430,12 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
 end
 
 function Win.keep_sidebar_left()
-  if vim.fn.getcmdwintype() ~= "" then
+  local cur_winid = vim.api.nvim_get_current_win()
+  if is_ft_skip_resize(cur_winid) then
     return
   end
 
   local main_layout = Win.get_main_layout()
-
   if not is_valid_main_layout(main_layout) then
     return
   end
@@ -436,12 +443,6 @@ function Win.keep_sidebar_left()
   local buf = vim.api.nvim_get_current_buf()
   local winid = main_layout.win
   Win.main_size = _get_width_size()
-
-  local cur_winid = vim.api.nvim_get_current_win()
-
-  if is_ft_skip_resize(cur_winid) then
-    return
-  end
 
   --- Check window widths that are larger than the column width, such as Fugitive, Noice, etc.
   local win_col = vim.api.nvim_win_get_position(cur_winid)[2]
@@ -469,6 +470,11 @@ function Win.keep_sidebar_left()
   if is_processing_layout then
     is_processing_layout = false
     debounce(function()
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
+        return
+      end
+
       Win.handle_close_support_win()
 
       __cmd_win_call(cur_winid, winid, function()
@@ -482,7 +488,34 @@ function Win.keep_sidebar_left()
   end
 end
 
-function Win.update_sidebar()
+function Win.keep_sidebar_left_support()
+  local main_layout = Win.get_main_layout()
+  if not is_valid_main_layout(main_layout) then
+    return
+  end
+
+  local support_wins = M.get_support_win_layout()
+
+  for _, win in pairs(support_wins) do
+    if win and vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_call(win, function()
+        vim.wo[win].winfixwidth = true
+        vim.api.nvim_win_set_height(win, 10)
+      end)
+    end
+  end
+end
+
+---@param is_support_win? boolean
+function Win.update_sidebar(is_support_win)
+  if vim.fn.getcmdwintype() ~= "" then
+    return
+  end
+
+  if is_support_win then
+    Win.keep_sidebar_left_support()
+    return
+  end
   Win.keep_sidebar_left()
 end
 
@@ -603,6 +636,9 @@ local function setup_autocmd()
         return
       end
       Win.update_sidebar()
+
+      -- Update window height
+      Win.update_sidebar(true)
     end,
   })
 
@@ -658,6 +694,10 @@ local function setup_autocmd()
       if not Win.is_set_layout_width then
         return
       end
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
+        return
+      end
       is_processing_layout = false
     end,
   })
@@ -667,6 +707,10 @@ local function setup_autocmd()
     pattern = "*",
     command = function()
       if not Win.is_set_layout_width then
+        return
+      end
+      local curwin = vim.api.nvim_get_current_win()
+      if is_float_win(curwin) then
         return
       end
       is_processing_layout = false

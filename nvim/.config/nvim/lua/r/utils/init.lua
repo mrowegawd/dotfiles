@@ -637,4 +637,20 @@ function M.execute_io_open(command)
   return output
 end
 
+---@param module string   Used as message if second param omitted
+---@param message? string
+function M.echo(module, message)
+  if not message then
+    message = module
+    module = ""
+  end
+  local prefix = "RUtils"
+  if module ~= "" then
+    prefix = prefix .. "." .. module
+  end
+  local prefix_chunk = { "(" .. prefix .. ") ", "WarningMsg" }
+  -- For now we don't echo much, so add all to history
+  vim.api.nvim_echo({ prefix_chunk, { message } }, true, {})
+end
+
 return M

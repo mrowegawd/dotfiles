@@ -1,4 +1,10 @@
 return {
+  --- SCREENKEY
+  {
+    "NStefan002/screenkey.nvim",
+    version = "*", -- or branch = "main", to use the latest commit
+    cmd = "Screenkey",
+  },
   -- VIM-HIGHLIGHTER
   {
     "azabiong/vim-highlighter", -- https://github.com/t9md/vim-quickhl (alternatif)

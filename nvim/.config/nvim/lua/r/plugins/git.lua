@@ -832,8 +832,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-panel]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-panel]" } },
 
-            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
-            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
+            { "n", "<C-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-panel]" }, },
+            { "n", "<C-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-panel]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},
@@ -915,8 +915,8 @@ return {
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-history]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll view down [diffview-history]" } },
 
-            { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
-            { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
+            { "n", "<C-n>", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
+            { "n", "<C-p>", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
 
             { "n", "gg", false },
             { "n", "G", false},

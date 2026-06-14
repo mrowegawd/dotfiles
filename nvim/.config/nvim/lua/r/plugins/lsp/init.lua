@@ -131,8 +131,8 @@ return {
                 "<Leader>lh",
                 function()
                   RUtils.map.lsp.toggle_words()
-                  if vim.g.snacks_jump_scope then
-                    vim.g.snacks_jump_scope = false
+                  if vim.g.snacks_word_highlight then
+                    vim.g.snacks_word_highlight = false
                     return
                   end
                   vim.g.snacks_jump_scope = true

@@ -18,7 +18,7 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump (visual, operator)" },
+      { "<Leader>ss", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump (visual, operator)" },
       { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter (visual , operator)" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (operator)" },
       -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
@@ -131,8 +131,8 @@ return {
   },
   -- TROUBLE.NVIM
   {
-    -- dir = "~/.local/src/nvim_plugins/trouble.nvim",
-    "MadKuntilanak/trouble.nvim",
+    dir = "~/.local/src/nvim_plugins/trouble.nvim",
+    -- "MadKuntilanak/trouble.nvim",
     cmd = "Trouble",
     keys = {
       {

@@ -1017,6 +1017,8 @@ return {
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
 
+          cycle_fold_depth = "zb",
+
           toggle_preview = "P",
 
           rename_symbol = {},

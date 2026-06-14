@@ -192,6 +192,23 @@ return {
         desc = "Snackspicker: colorschemes [snackspicker]",
       },
 
+      {
+        "sj",
+        function()
+          vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
+          Snacks.scope.jump { bottom = true }
+        end,
+        desc = "Snack: jump scope next [snackspicker]",
+      },
+      {
+        "sk",
+        function()
+          vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
+          Snacks.scope.jump { bottom = false }
+        end,
+        desc = "Snack: jump scope false [snackspicker]",
+      },
+
       -- LSP
       --  +----------------------------------------------------------+
       --  Jump to Word References
@@ -207,7 +224,7 @@ return {
             end
           end
 
-          if vim.g.snacks_jump_scope then
+          if vim.g.snacks_word_highlight then
             Snacks.words.jump(vim.v.count1, true)
             return
           end
@@ -239,7 +256,7 @@ return {
             end
           end
 
-          if vim.g.snacks_jump_scope then
+          if vim.g.snacks_word_highlight then
             Snacks.words.jump(-vim.v.count1, true)
             return
           end

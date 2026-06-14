@@ -170,9 +170,9 @@ M.cabbrev = function(short, long)
   vim.cmd.cnoreabbrev(short, long)
 end
 
--- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
--- ╎ AUGROUP                                                 ╎
--- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                   AUGROUP                                   ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 ---@param callback function
 ---@param list table
@@ -249,9 +249,9 @@ function M.augroup(name, ...)
   return id
 end
 
--- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
--- ╎ MISC                                                    ╎
--- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                    MISC                                     ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 function M.escape(text, additional_char)
   if not additional_char then
@@ -276,16 +276,6 @@ end
 ---@param key string
 function M.feedkey_with_no_escape(key)
   vim.api.nvim_feedkeys(key, "n", false)
-end
-
----@param cmd string
-function M.wrap_fold_cmd(cmd)
-  local _, err = pcall(function()
-    vim.cmd(cmd)
-  end)
-  if err and (string.match(err, "E490") or string.match(err, "No fold found")) then
-    RUtils.warn "No fold found"
-  end
 end
 
 ---@param au_name string
@@ -326,7 +316,24 @@ function M.go_prev_or_next_buffer(is_next)
   end
 end
 
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                 MAGIC JUMP                                  ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
+
 local ft_disabled = { "neo-tree", "aerial" }
+local config = {
+  -- Number of lines to scan ahead/behind before deciding where to jump.
+  scan_size = 8,
+
+  -- Number of lines to move when nothing interesting is found in scan window.
+  fallback_lines = 6,
+
+  -- Center viewport after every jump (`zz`).
+  -- false = natural movement; viewport only nudges when cursor is near the edge.
+  center_on_jump = false,
+}
+
+-- ├────────────────────────────────┤ Helpers ├─────────────────────────────┤
 
 ---@param winid number
 ---@param f fun(): any
@@ -337,90 +344,199 @@ local function win_call(winid, f)
   return vim.api.nvim_win_call(winid, f)
 end
 
----@param winid number
+--- True when `lnum` is hidden inside a closed fold (NOT the fold header).
+--- foldclosed(header) == header; foldclosed(hidden) == header < hidden.
 ---@param lnum number
-local function is_fold_start(winid, lnum)
-  return win_call(winid, function()
-    return vim.fn.foldclosed(lnum) == lnum
-  end)
+---@return boolean
+local function is_hidden(lnum)
+  local fc = vim.fn.foldclosed(lnum)
+  return fc ~= -1 and fc ~= lnum
 end
 
----@param winid number
----@param dir number -- -1 prev, +1 next
----@param count number
+--- True when `lnum` is a fold header (first line of an open or closed fold).
+---@param lnum number
+---@return boolean
+local function is_fold_header(lnum)
+  if lnum <= 1 then
+    return vim.fn.foldlevel(lnum) > 0
+  end
+  return vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1)
+end
+
+--- True when `lnum` is the header of a CLOSED fold specifically.
+---@param lnum number
+---@return boolean
+local function is_closed_fold_header(lnum)
+  return vim.fn.foldclosed(lnum) == lnum
+end
+
+---@param lnum number
+---@return number
+local function fold_level_at(lnum)
+  return vim.fn.foldlevel(lnum)
+end
+
+-- ├────────────────┤ Scroll adjustment (no center by default) ├────────────────┤
+
+local function adjust_viewport()
+  if config.center_on_jump then
+    vim.cmd "normal! zz"
+    return
+  end
+  -- Nudge only when cursor lands very close to the window edge
+  local row = vim.fn.winline()
+  local height = vim.api.nvim_win_get_height(0)
+  if row <= 2 then
+    vim.cmd "normal! zt"
+  elseif row >= height - 2 then
+    vim.cmd "normal! zb"
+  end
+end
+
+-- ├───────────┤ Scan: normal case (cursor on a visible open line) ├────────┤
+
+--- Scan up to scan_size lines in `dir` direction.
+--- Returns the first line matching one of the three priorities, or nil.
+---@param cur  number
+---@param dir  number
+---@param last number
 ---@return number?
-local function find_fold(winid, dir, count)
+local function scan(cur, dir, last)
+  local cur_lvl = fold_level_at(cur)
+  local stop = dir > 0 and math.min(cur + config.scan_size, last) or math.max(cur - config.scan_size, 1)
+
+  -- Pass 1: any visible fold header (open or closed) in range
+  do
+    local i = cur + dir
+    while (dir > 0 and i <= stop) or (dir < 0 and i >= stop) do
+      if not is_hidden(i) and is_fold_header(i) then
+        return i
+      end
+      i = i + dir
+    end
+  end
+
+  -- Pass 2: foldlevel drops → exiting a nested block
+  do
+    local i = cur + dir
+    while (dir > 0 and i <= stop) or (dir < 0 and i >= stop) do
+      if not is_hidden(i) and fold_level_at(i) < cur_lvl then
+        return i
+      end
+      i = i + dir
+    end
+  end
+
+  -- Pass 3: foldlevel rises → entering a nested block (if, for, fn, etc.)
+  do
+    local i = cur + dir
+    while (dir > 0 and i <= stop) or (dir < 0 and i >= stop) do
+      if not is_hidden(i) and fold_level_at(i) > cur_lvl then
+        return i
+      end
+      i = i + dir
+    end
+  end
+
+  return nil
+end
+
+-- ├──────┤ Scan: closed-header case (cursor is ON a closed fold header) ├──────┤
+
+--- When sitting on a closed fold header, look for the next/prev visible
+--- fold header within scan_size lines. Skips hidden lines automatically.
+--- Returns nil if no header found within the window (caller does fallback).
+---@param cur  number
+---@param dir  number
+---@param last number
+---@return number?
+local function scan_next_header(cur, dir, last)
+  local stop = dir > 0 and math.min(cur + config.scan_size, last) or math.max(cur - config.scan_size, 1)
+
+  local i = cur + dir
+  while (dir > 0 and i <= stop) or (dir < 0 and i >= stop) do
+    -- Accept both open fold headers and closed fold headers;
+    -- reject lines hidden inside a closed fold.
+    if not is_hidden(i) and is_fold_header(i) then
+      return i
+    end
+    -- When scanning past a closed fold, skip its hidden interior
+    -- by jumping directly to the line after the fold's last line.
+    if is_closed_fold_header(i) then
+      local fe = vim.fn.foldclosedend(i)
+      if fe ~= -1 then
+        i = dir > 0 and fe + 1 or i - 1
+      else
+        i = i + dir
+      end
+    else
+      i = i + dir
+    end
+  end
+
+  return nil
+end
+
+-- ├───────────────────────────────┤ Core jump ├────────────────────────────┤
+
+---@param winid number
+---@param dir   number
+---@param count number
+local function jump_fold(winid, dir, count)
   local cur = win_call(winid, function()
     return vim.api.nvim_win_get_cursor(winid)[1]
-  end)
+  end) --[[@as number]]
 
   local last = win_call(winid, function()
     return vim.api.nvim_buf_line_count(0)
-  end)
-
-  local found, cnt = nil, 0
-
-  if dir < 0 then
-    for i = cur - 1, 1, -1 do
-      if is_fold_start(winid, i) then
-        cnt = cnt + 1
-        if cnt == count then
-          found = i
-          break
-        end
-      end
-    end
-  else
-    for i = cur + 1, last do
-      if is_fold_start(winid, i) then
-        cnt = cnt + 1
-        if cnt == count then
-          found = i
-          break
-        end
-      end
-    end
-  end
-
-  return found
-end
-
----@param winid number
----@param lnum number?
-local function goto_line(winid, lnum)
-  if not lnum then
-    return false
-  end
+  end) --[[@as number]]
 
   win_call(winid, function()
-    vim.cmd "normal! m`"
-    vim.api.nvim_win_set_cursor(winid, { lnum, 0 })
+    local pos = cur
 
-    -- Uncomment this line if needed
-    -- if vim.fn.foldclosed(lnum) ~= -1 then
-    --   vim.cmd "normal! zMzvzz"
-    -- end
+    for _ = 1, count do
+      local dest
+
+      if is_hidden(pos) then
+        -- Cursor somehow landed on a hidden line (edge case).
+        -- Escape upward to the fold header first.
+        local fc = vim.fn.foldclosed(pos)
+        if fc ~= -1 then
+          pos = fc
+        end
+      end
+
+      if is_closed_fold_header(pos) then
+        -- Cursor is ON a closed fold header → look for the next/prev header
+        -- within scan_size; do NOT enter the fold's hidden interior.
+        dest = scan_next_header(pos, dir, last)
+      else
+        -- Normal visible line → full priority scan
+        dest = scan(pos, dir, last)
+      end
+
+      if dest then
+        pos = dest
+      else
+        -- Nothing found in scan window → plain line move (fallback)
+        local fallback = pos + dir * config.fallback_lines
+        pos = math.max(1, math.min(fallback, last))
+        -- Make sure fallback doesn't land on a hidden line
+        while is_hidden(pos) and pos >= 1 and pos <= last do
+          pos = pos + dir
+        end
+      end
+    end
+
+    if pos ~= cur then
+      vim.cmd "normal! m`" -- save original position to jumplist
+      vim.api.nvim_win_set_cursor(winid, { pos, 0 })
+      adjust_viewport()
+    end
   end)
-
-  return true
 end
 
----@param winid number
----@param dir number
----@param count number
-local function jump_fold(winid, dir, count)
-  local lnum = find_fold(winid, dir, count)
-
-  if goto_line(winid, lnum) then
-    return
-  end
-
-  if dir < 0 then
-    vim.cmd "normal! zk"
-  else
-    vim.cmd "normal! zj"
-  end
-end
+-- ├───────────────────────────┤ Public: magic_jump ├───────────────────────────┤
 
 ---@param is_jump_prev? boolean
 function M.magic_jump(is_jump_prev)
@@ -428,12 +544,12 @@ function M.magic_jump(is_jump_prev)
   local winid = vim.api.nvim_get_current_win()
   local ft = vim.bo[0].filetype
 
-  -- disabled filetypes
+  -- Disabled filetypes: delegate to a simpler motion
   if vim.tbl_contains(ft_disabled, ft) then
     return M.feedkey(is_jump_prev and "<c-p>" or "<c-n>")
   end
 
-  -- http (kulala)
+  -- http (kulala plugin)
   if ft == "http" then
     local ok, kulala = pcall(require, "kulala")
     if not ok then
@@ -442,18 +558,18 @@ function M.magic_jump(is_jump_prev)
     return is_jump_prev and kulala.jump_prev() or kulala.jump_next()
   end
 
-  -- markdown
+  -- markdown: jump between headings
   if ft == "markdown" then
     return RUtils.markdown.go_to_heading(nil, is_jump_prev and {} or nil)
   end
 
-  -- fold jump (default)
+  -- default: scan-first fold jump
   jump_fold(winid, is_jump_prev and -1 or 1, vim.v.count1)
 end
 
--- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
--- ╎ LSP                                                     ╎
--- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+-- ╓─────────────────────────────────────────────────────────────────────────────╖
+-- ║                                     LSP                                     ║
+-- ╙─────────────────────────────────────────────────────────────────────────────╜
 
 ---@param method string|string[]
 function M.has(buffer, method)
