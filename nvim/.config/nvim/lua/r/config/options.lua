@@ -167,9 +167,8 @@ opt.fillchars = {
 }
 opt.foldlevelstart = 99 -- start with all code unfolded
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
-opt.foldmethod = "expr"
--- opt.foldexpr = "v:lua.require'r.utils'.treesitter.foldexpr()"
--- opt.indentexpr = "v:lua.require'r.utils'.treesitter.indentexpr()" -- treesitter indents
+opt.foldmethod = "expr" -- Uses treesitter as folding source.
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldtext = ""
 -- }}}
 -- {{{ Timings
@@ -185,7 +184,7 @@ opt.undolevels = 10000
 opt.wrap = false -- Disable wrapping of lines longer than the width of window.
 opt.mouse = "a" -- Enable mouse support.
 opt.autochdir = false -- Use current file dir as working dir (See project.nvim)
-opt.scrolloff = 10 -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
+opt.scrolloff = 3 -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
 -- opt.scrolloffpad = 1 -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
 opt.sidescrolloff = 3 -- Same but for side scrolling.
 opt.sidescroll = 1

@@ -119,6 +119,10 @@ RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layo
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 RUtils.map.nnoremap("tn", function()
+  if vim.bo.buftype == "nofile" then
+    vim.cmd "tabnew"
+    return
+  end
   if vim.bo.filetype == "neo-tree" then
     vim.cmd "wincmd p"
   end
@@ -677,6 +681,9 @@ local bulk_cmd_misc = function()
   local cmds = {
     ["Screenkey - open screenkey on nvim"] = function()
       cmd "Screenkey"
+    end,
+    ["PDFview - open pdf with nvim"] = function()
+      require("pdfview").open "/home/mr00x/Downloads/asyncio.pdf"
     end,
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
