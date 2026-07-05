@@ -1,6 +1,4 @@
 ---@class r.utils.sessions
----@field fzf {mappings: {default: table, delete: table}}
-
 local M = {
   fzf = {
     mappings = {

@@ -7,8 +7,6 @@ opt_local.buflisted = false
 opt_local.conceallevel = 2
 opt_local.list = false
 
-vim.cmd.wincmd "L"
-
 local function get_text(wrapper)
   -- local escaped = vim.pesc(wrapper)
   local escaped = "\\" .. wrapper

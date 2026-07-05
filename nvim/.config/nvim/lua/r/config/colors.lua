@@ -87,7 +87,7 @@ local general_overrides = function()
     },
     { LineNrAbove = { inherit = "LineNr" } },
     { LineNrBelow = { inherit = "LineNr" } },
-    { Comment = { fg = { from = "LineNr", attr = "fg", alter = 0.6, opacity = 0.7 }, italic = true } },
+    { Comment = { fg = { from = "LineNr", attr = "fg", alter = 0.6, opacity = 0.85 }, italic = true } },
     { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
@@ -191,11 +191,9 @@ local general_overrides = function()
     {
       Folded = {
         fg = {
-          from = "Normal",
-          attr = "bg",
-          alter = 2,
-          transparency = 0.9,
-          color = { from = "Normal", attr = "bg" },
+          from = "LineNr",
+          attr = "fg",
+          contrast = 0.1,
         },
         bg = "NONE",
       },
@@ -1730,7 +1728,17 @@ local function set_panel_highlight()
         fg = {
           from = "QuickFixMiddleLineNr",
           attr = "fg",
-          alter = -0.05,
+          alter = -0.25,
+        },
+      },
+    },
+
+    {
+      QFBookmarkQfFileBasename = {
+        fg = {
+          from = "Directory",
+          attr = "fg",
+          alter = 0.25,
         },
       },
     },
@@ -1872,9 +1880,9 @@ local function set_panel_highlight()
     },
     {
       OutlineCurrentParent = {
-        fg = { from = "OutlineCurrent", attr = "fg" },
+        fg = { from = "String", attr = "fg" },
         bg = {
-          from = "OutlineCurrent",
+          from = "String",
           attr = "fg",
           transparency = 0.2,
           color = { from = "PanelBottomNormal", attr = "bg" },

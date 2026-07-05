@@ -27,7 +27,7 @@ M._cycle_sequence = { 1, 2, 3, 99, 0 }
 --- Infer current level from vim if state does not exist
 local function get_current_level()
   if M._current_level == nil then
-    M._current_level = vim.wo.foldlevel
+    M._current_level = 0 -- vim.wo.foldlevel
   end
   return M._current_level
 end

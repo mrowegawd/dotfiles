@@ -281,7 +281,7 @@ end
 ---@return boolean
 local function go_back_to_window(fts)
   for _, ft in pairs(fts) do
-    local win_checked = RUtils.cmd.windows_is_opened { ft }
+    local win_checked = RUtils.cmd.windows_is_opened({ ft }, true)
     if win_checked.found then
       -- pcall(vim.api.nvim_set_current_win, win_checked.winid)
       vim.api.nvim_set_current_win(win_checked.winid)
