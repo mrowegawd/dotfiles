@@ -21,6 +21,10 @@ return {
         notify = false,
       },
       buf_filter = function(bufnr)
+        if vim.fn.getcmdwintype() ~= "" then
+          return false
+        end
+
         local name = vim.api.nvim_buf_get_name(bufnr)
         if name:match "^fugitive://" then
           return false

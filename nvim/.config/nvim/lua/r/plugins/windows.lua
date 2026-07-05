@@ -4,7 +4,7 @@ local function get_status_stacked()
     return true
   end
 
-  local ft_exclude = { "codecompanion" }
+  local ft_exclude = { "codecompanion", "org" }
   if vim.tbl_contains(ft_exclude, vim.bo.filetype) then
     return true
   end
@@ -161,87 +161,6 @@ return {
         },
 
         -- RESIZE WINDOW
-        -- {
-        --   "<a-H>",
-        --   function()
-        --     if get_status_stacked() then
-        --       vim.cmd "vertical resize -8"
-        --       return
-        --     end
-        --
-        --     local resize_win, is_resize = is_expand_win()
-        --     if is_resize then
-        --       if resize_win then
-        --         vim.cmd("vertical resize " .. resize_win)
-        --       end
-        --       return
-        --     end
-        --
-        --     require("smart-splits").resize_left()
-        --   end,
-        --   desc = "Window: resize window left [smart-splits]",
-        -- },
-        -- {
-        --   "<a-J>",
-        --   function()
-        --     if get_status_stacked() then
-        --       vim.cmd "resize +8"
-        --       return
-        --     end
-        --
-        --     local resize_win, is_resize = is_expand_win()
-        --     if is_resize then
-        --       if resize_win then
-        --         vim.cmd("horizontal resize " .. resize_win)
-        --       end
-        --       return
-        --     end
-        --
-        --     require("smart-splits").resize_down()
-        --   end,
-        --   desc = "Window: resize window down [smart-splits]",
-        -- },
-        -- {
-        --   "<a-K>",
-        --   function()
-        --     if get_status_stacked() then
-        --       vim.cmd "resize -8"
-        --       return
-        --     end
-        --
-        --     local resize_win, is_resize = is_expand_win(true)
-        --     if is_resize then
-        --       if resize_win then
-        --         vim.cmd("horizontal resize " .. resize_win)
-        --       end
-        --       return
-        --     end
-        --
-        --     require("smart-splits").resize_up()
-        --   end,
-        --   desc = "Window: resize window up [smart-splits]",
-        -- },
-        -- {
-        --   "<a-L>",
-        --   function()
-        --     if get_status_stacked() then
-        --       vim.cmd "vertical resize +8"
-        --       return
-        --     end
-        --
-        --     local resize_win, is_resize = is_expand_win(true)
-        --     if is_resize then
-        --       if resize_win then
-        --         vim.cmd("vertical resize " .. resize_win)
-        --       end
-        --       return
-        --     end
-        --
-        --     require("smart-splits").resize_right()
-        --   end,
-        --   desc = "Window: resize window right [smart-splits]",
-        -- },
-
         {
           "<a-H>",
           function()
@@ -249,7 +168,6 @@ return {
               vim.cmd "vertical resize +8"
               return
             end
-            --
             require("smart-splits").resize_left()
           end,
           desc = "Window: resize window left [smart-splits]",
@@ -261,7 +179,6 @@ return {
               vim.cmd "resize +8"
               return
             end
-
             require("smart-splits").resize_down()
           end,
           desc = "Window: resize window down [smart-splits]",

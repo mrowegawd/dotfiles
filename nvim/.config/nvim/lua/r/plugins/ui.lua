@@ -1,4 +1,14 @@
 return {
+  -- MSGAREA.NVIM (disabled)
+  {
+    "edisj/msgarea.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    config = function()
+      require("msgarea.blink_integration").enable()
+    end,
+  },
+
   -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
