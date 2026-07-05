@@ -333,11 +333,11 @@ return {
             org_agenda_later = "f",
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
-            org_agenda_goto = { "<CR>", "<Leader>oe" },
-            org_agenda_goto_date = "<LocalLeader>qvD",
+            org_agenda_goto = { "<CR>", "<TAB>" },
             org_agenda_open_at_point = "<Leader>oe",
+            org_agenda_goto_date = "<LocalLeader>qvD",
 
-            org_agenda_switch_to = "<TAB>",
+            org_agenda_switch_to = "<S-CR>",
 
             -- Todo Effort
             org_agenda_todo = "<LocalLeader>qst",
@@ -399,8 +399,8 @@ return {
             org_toggle_heading = "<LocalLeader>quh",
 
             -- Navigation
-            org_next_visible_heading = "<a-n>",
-            org_previous_visible_heading = "<a-p>",
+            org_next_visible_heading = "<c-n>",
+            org_previous_visible_heading = "<c-p>",
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
             outline_up_heading = "g{",

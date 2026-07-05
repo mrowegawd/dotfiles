@@ -996,7 +996,7 @@ return {
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
           show_help = "g?",
-          close = { "q", "<Leader><Tab>" },
+          close = { "q", "<Leader><Tab>", "<leader>bk" },
           goto_location = { "<CR>", "o" },
           peek_location = "<a-k>",
           goto_and_close = {},

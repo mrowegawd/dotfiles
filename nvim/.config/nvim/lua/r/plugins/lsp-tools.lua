@@ -7,7 +7,7 @@ return {
       {
         "<Leader>cP",
         "<Plug>(WayfinderOpen)",
-        desc = "Peek: peek with wayfinder [wayfinder.nvim]",
+        desc = "Action: peek with wayfinder [wayfinder.nvim]",
       },
     },
     opts = {},
@@ -22,7 +22,7 @@ return {
           require("overlook.peek").peek_qf()
         end,
         ft = "qf",
-        desc = "Peek: peek on qf item [overlook.nvim]",
+        desc = "Peek: qf item [overlook.nvim]",
       },
       {
         "P",
@@ -30,7 +30,7 @@ return {
           require("overlook.peek").peek_qf()
         end,
         ft = "qf",
-        desc = "Peek: peek on qf item (alternatif) [overlook.nvim]",
+        desc = "Peek: qf item (alternatif) [overlook.nvim]",
       },
       {
         "P",
@@ -38,14 +38,14 @@ return {
           require("overlook.peek").peek_file_source()
         end,
         ft = "orgagenda",
-        desc = "Peek: note file [overlook.nvim]",
+        desc = "Peek: note org item [overlook.nvim]",
       },
       {
         "<Leader>cP",
         function()
           require("overlook.api").peek_definition()
         end,
-        desc = "Peek: peek definition [overlook.nvim]",
+        desc = "Action: peek definition [overlook.nvim]",
       },
     },
     opts = {
@@ -250,10 +250,10 @@ return {
   },
   -- TINY-CODE-ACTION
   {
-    "rachartier/tiny-code-action.nvim",
+    -- "rachartier/tiny-code-action.nvim",
     -- dir = "~/.local/src/nvim_plugins/tiny-code-action.nvim",
-    -- "MadKuntilanak/tiny-code-action.nvim",
-    -- branch = "fix/fzflua",
+    "MadKuntilanak/tiny-code-action.nvim",
+    branch = "fix/fzflua",
     event = "LspAttach",
     opts = {
       backend = "delta", -- delta, vim
