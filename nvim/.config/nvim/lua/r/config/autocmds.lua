@@ -72,7 +72,7 @@ RUtils.map.augroup("SmartClose", {
     "neotest-summary",
     "noice",
     "notify",
-    "org",
+    -- "org",
     "qf",
     "query",
     "snacks_notif",
@@ -140,6 +140,9 @@ RUtils.map.augroup("WindowBehaviour", {
 }, {
   event = { "QuitPre", "BufDelete" },
   command = function()
+    if vim.fn.getcmdwintype() ~= "" then
+      return
+    end
     if vim.bo.filetype ~= "qf" then
       vim.cmd.lclose { mods = { silent = true } }
     end
