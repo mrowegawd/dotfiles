@@ -8,6 +8,30 @@ local alts = {
 }
 
 return {
+  --- PDFview
+  {
+    "basola21/PDFview",
+    lazy = false,
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    keys = {
+      {
+        "<a-n>",
+        function()
+          require("pdfview.renderer").next_page()
+        end,
+        desc = "pdf: next page",
+        ft = "pdfview",
+      },
+      {
+        "<a-p>",
+        function()
+          require("pdfview.renderer").previous_page()
+        end,
+        desc = "pdf: prev page",
+        ft = "pdfview",
+      },
+    },
+  },
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
@@ -23,18 +47,18 @@ return {
       { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (operator)" },
       -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search (visual, operator)" },
-      { "<c-s>",
-        function()
-          require("flash").treesitter({
-            actions = {
-              ["<c-j>"] = "next",
-              ["<c-k>"] = "prev"
-            }
-          })
-        end,
-        mode = { "n", "o", "x" },
-        desc = "Flash: treesitter incremental selection (visual, oprator)"
-      },
+      -- { "<c-s>",
+      --   function()
+      --     require("flash").treesitter({
+      --       actions = {
+      --         ["<c-j>"] = "next",
+      --         ["<c-k>"] = "prev"
+      --       }
+      --     })
+      --   end,
+      --   mode = { "n", "o", "x" },
+      --   desc = "Flash: treesitter incremental selection (visual, oprator)"
+      -- },
     },
   },
   -- CANDELA: HIGHLIGHTS FOR STRING REGEX IN LOG FILE
