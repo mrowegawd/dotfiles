@@ -127,11 +127,12 @@ return {
         end,
         ft = { "markdown", "neorg", "org", "rmd", "octo" },
         mode = { "n", "x" },
-        desc = "ActionLSP: toggle render markdown [render-markdown]",
+        desc = "Toggle: render markdown [render-markdown]",
       },
     },
     opts = {
       bullet = { icons = { "", "•", "", "-", "-" } },
+      file_types = { "markdown", "codecompanion" },
       code = {
         sign = false,
         border = "thin",

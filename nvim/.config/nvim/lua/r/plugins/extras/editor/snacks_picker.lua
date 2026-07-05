@@ -193,7 +193,7 @@ return {
       },
 
       {
-        "sj",
+        "<c-j>",
         function()
           vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
           Snacks.scope.jump { bottom = true }
@@ -201,7 +201,7 @@ return {
         desc = "Snack: jump scope next [snackspicker]",
       },
       {
-        "sk",
+        "<c-k>",
         function()
           vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
           Snacks.scope.jump { bottom = false }

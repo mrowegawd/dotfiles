@@ -21,6 +21,11 @@ return {
         "octo",
         "neo-tree",
         "Diff",
+        "lf",
+        "bigfile",
+        "log",
+        "parser",
+        "grug-far-history",
 
         "DiffviewFiles",
         "DiffviewFileHistory",
