@@ -48,8 +48,8 @@ function M.chat_keymaps()
   return {
     -- Chat lifecycle
     create_chat = {
-      modes = { n = "<A-c>", i = "<A-c>" },
-      description = "Create new chat",
+      modes = { n = "<A-c>" },
+      description = "Codecompanion: create new chat",
       callback = function()
         vim.cmd.CodeCompanionChat()
         -- Hack to make completions work immediately in a new chat
@@ -62,42 +62,76 @@ function M.chat_keymaps()
 
     hide_chats = {
       modes = { n = "<Leader>bk" },
-      description = "Hide chats",
+      description = "Codecompanion: hide chats",
       callback = hide_chats,
     },
 
     close = {
-      modes = { n = { "<Leader>bK", "<C-x>" } },
+      modes = { n = { "<Leader>bK", i = nil } },
+      description = "Codecompanion: kill or close chat buffer",
       callback = close,
     },
-    clear = { modes = { n = "<A-w>", i = "<A-w>" } },
+    clear = {
+      modes = { n = "<Leader>C" },
+      description = "Codecompanion: clear chat buffer",
+    },
 
     -- Stop the request
-    stop = { modes = { n = "q" } },
-    yank_code = { modes = { n = "<C-y>", i = "<C-y>" } },
+    stop = {
+      modes = { n = "q" },
+      description = "Codecompanion: stop request",
+    },
+    yank_code = {
+      modes = { n = "<C-y>", i = "<C-y>" },
+      description = "Codecompanion: yank code",
+    },
 
     -- Message actions
     send = {
       modes = { n = "<C-o>", i = "<C-o>" },
-      description = "Send message",
+      description = "Codecompanion: send message",
       callback = send_message,
     },
 
-    fold_code = { modes = { n = "zc" } },
+    fold_code = {
+      modes = { n = "zc" },
+      description = "Codecompanion: fold code",
+    },
 
     -- Navigations
-    next_chat = { modes = { n = "<A-n>", i = "<A-n>" } },
-    previous_chat = { modes = { n = "<A-p>", i = "<A-p>" } },
+    next_chat = {
+      modes = { n = "<C-n>" },
+      description = "Codecompanion: next chat",
+      callback = function()
+        RUtils.warn "there is no next_chat"
+      end,
+    },
+    previous_chat = {
+      modes = { n = "<C-p>" },
+      description = "Codecompanion: prev chat",
+      callback = function()
+        RUtils.warn "there is no previous_chat"
+      end,
+    },
 
-    previous_header = { modes = { n = "<C-p>", i = "<C-p>" } },
-    next_header = { modes = { n = "<C-n>", i = "<C-n>" } },
+    previous_header = {
+      modes = { n = "<A-p>" },
+      description = "Codecompanion: prev header",
+    },
+    next_header = {
+      modes = { n = "<A-n>" },
+      description = "Codecompanion: next header",
+    },
 
-    goto_file_under_cursor = { modes = { n = { "gf", "<Leader>oe" } } },
+    goto_file_under_cursor = {
+      modes = { n = { "gf", "<Leader>oe" } },
+      description = "Codecompanion: go to file under cursor",
+    },
 
     -- Chat tools
     action_palette = {
       modes = { n = "<Localleader>qf" },
-      description = "Action palette",
+      description = "Codecompanion: action palette",
       callback = function()
         vim.defer_fn(function()
           vim.cmd.CodeCompanionActions()
@@ -105,31 +139,48 @@ function M.chat_keymaps()
       end,
     },
 
-    change_adapter = { modes = { n = "<Localleader>qC" } },
+    change_adapter = {
+      modes = { n = "<Localleader>qC" },
+      description = "Codecompanion: change adapter",
+    },
 
     debug = {
       modes = { n = "<Localleader>qD" },
+      description = "Codecompanion: debug",
       callback = open_debug,
     },
 
-    clear_approvals = { modes = { n = "<Leader>ra" } },
+    clear_approvals = {
+      modes = { n = "<Localleader>qX" },
+      description = "Codecompanion: clear approvals",
+    },
 
     -- Chat modes
     _btw = {
       modes = { n = "<Localleader>qW" },
+      description = "Codecompanion: _bw",
     },
 
-    yolo_mode = { modes = { n = "<Localleader>qY" } },
+    yolo_mode = {
+      modes = { n = "<Localleader>qY" },
+      description = "Codecompanion: yolo mode",
+    },
 
     -- Buffer sync
-    buffer_sync_all = { modes = { n = "<Localleader>qp" } },
-    buffer_sync_diff = { modes = { n = "<Localleader>qw" } },
+    buffer_sync_all = {
+      modes = { n = "<Localleader>qp" },
+      description = "Codecompanion: buffer sync all",
+    },
+    buffer_sync_diff = {
+      modes = { n = "<Localleader>qw" },
+      description = "Codecompanion: buffer sync diff",
+    },
 
     -- Helps
     options = {
       modes = { n = { "g?", "?" } },
       callback = "keymaps.options",
-      description = "Options",
+      description = "Codecompanion: show help",
       hide = true,
     },
   }
@@ -200,9 +251,6 @@ local function setup_codecompanion_filetype_mappings(e)
       return
     end
     RUtils.info(system_role)
-    vim.schedule(function()
-      vim.cmd.normal { args = { "g<" }, bang = true }
-    end)
   end, { desc = "Show system role prompt in message window", buf = bufnr }, true)
 
   RUtils.map.nnoremap(
@@ -382,7 +430,9 @@ local function select_custom_prompt_and_commands()
 
   local opts = RUtils.fzflua.open_center_small_wide {
     winopts = {
-      title = RUtils.fzflua.format_title("Select Custom Prompt Ai [CodeCompanion]", RUtils.config.icons.misc.ai),
+      title = RUtils.fzflua.format_title("Select Prompt Ai [CodeCompanion]", RUtils.config.icons.misc.ai),
+      height = 0.4,
+      width = 0.5,
     },
     actions = {
       ["default"] = function(selected, _)
@@ -434,74 +484,23 @@ end
 
 -- CodeCompanion global mappings
 local function setup_global_mappings()
-  RUtils.map.nnoremap("<Localleader>ca", function()
-    vim.cmd.CodeCompanionActions()
-  end, { desc = "Codecompanion: open CodeCompanionActions" })
-
   RUtils.map.nnoremap("<Localleader>cr", function()
     vim.api.nvim_input ":CodeCompanion "
   end, { desc = "Codecompanion: run :CodeCompanion command" })
-  RUtils.map.xnoremap("<Localleader>cr", function()
-    vim.api.nvim_input ":CodeCompanion "
-  end, { desc = "Codecompanion: run :CodeCompanion command (visual)" })
 
-  RUtils.map.nnoremap("<Localleader>cF", function()
-    local function select_file_codecompanion_history()
-      local codecompanion_cwd = vim.fn.stdpath "data" .. "/codecompanion"
-      return require("fzf-lua").files {
-        prompt = RUtils.fzflua.padding_prompt(),
-        winopts = { title = RUtils.fzflua.format_title("Codecompanion Saved", "󰈙"), fullscreen = true },
-        cwd = codecompanion_cwd,
-        fzf_opts = { ["--header"] = [[^r:grugfar  ^g:grep  ^x:delete  a-c:yank  ^q:ignore  ^z:hidden]] },
-        actions = {
-          ["ctrl-g"] = function()
-            require("fzf-lua").live_grep_glob {
-              winopts = { title = RUtils.fzflua.format_title("Grep: Codecompanion Saved", "󰈙") },
-              cwd = codecompanion_cwd,
-            }
-          end,
-          ["ctrl-x"] = function(selected, _)
-            local del_tbl = {}
-            if #selected > 1 then
-              del_tbl = selected
-            else
-              del_tbl[#del_tbl + 1] = selected[1]
-            end
-
-            if #del_tbl > 0 then
-              for _, dir in pairs(del_tbl) do
-                local file_path = codecompanion_cwd .. "/" .. RUtils.fzflua.__strip_str(dir)
-                if vim.fn.filereadable(file_path) == 1 then
-                  local ok, err = os.remove(file_path)
-                  if ok then
-                    ---@diagnostic disable-next-line: undefined-field
-                    RUtils.info("File deleted: " .. file_path, { title = "Codecompanion File Saved" })
-                  else
-                    ---@diagnostic disable-next-line: undefined-field
-                    RUtils.error("Failed to delete file: " .. err, { title = "Codecompanion File Saved" })
-                  end
-                end
-              end
-            end
-
-            -- idk how to reload or open the picker, but it works
-            vim.schedule(select_file_codecompanion_history)
-          end,
-        },
-      }
-    end
-    select_file_codecompanion_history()
-  end, { desc = "Codecompanion: select file saved previous chats" })
+  RUtils.map.nnoremap("<Localleader>co", function()
+    vim.cmd.CodeCompanionActions()
+  end, { desc = "Codecompanion: open list CodeCompanionActions" })
 
   RUtils.map.nnoremap(
     "<Localleader>cc",
     select_custom_prompt_and_commands,
-    { desc = "Codecompanion: select or edit prompts" }
+    { desc = "Codecompanion: bulk codecompanion cmds" }
   )
   RUtils.map.xnoremap(
     "<Localleader>cc",
     select_custom_prompt_and_commands,
-    { desc = "Codecompanion: select custom prompt and commands (visual)" }
+    { desc = "Codecompanion: bulk codecompanion cmds (visual)" }
   )
 
   RUtils.map.nnoremap("<Localleader>ch", vim.cmd.CodeCompanionHistory, { desc = "Codecompanion: history" })

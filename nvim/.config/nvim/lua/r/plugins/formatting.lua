@@ -29,7 +29,7 @@ return {
     cmd = "ConformInfo",
     keys = {
       {
-        "<Leader>cF",
+        "<Leader>cf",
         function()
           ---@diagnostic disable-next-line: undefined-global
           RUtils.info "Manual formatting.."

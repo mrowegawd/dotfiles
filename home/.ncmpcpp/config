@@ -1,5 +1,6 @@
 # execute_on_song_change = `dunstify --replace=27072 -i ~/.config/miscxrdb/icons/music_play.png "Now Playing ♫" "$(mpc current)"`
-mpd_music_dir = "~/moxconf/media_and_tuts/mp3"
+mpd_music_dir = "$HOME/Music"
+mpd_host = "~/.config/mpd/socket"
 
 visualizer_output_name = "my_fifo"
 
