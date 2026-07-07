@@ -64,7 +64,6 @@ opt.magic = true --  use 'magic' chars in search patterns
 opt.modelines = 1 -- read a modeline at EOF
 opt.mousescroll = "ver:3,hor:6"
 opt.number = true -- show absolute line no. at the cursor pos
-opt.previewheight = 12
 opt.pumheight = 20
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.ruler = false -- disable default ruler, 'ruler' is -> show line,col at the cursor pos

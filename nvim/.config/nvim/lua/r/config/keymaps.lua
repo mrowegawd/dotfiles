@@ -281,6 +281,11 @@ RUtils.map.tnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: flo
 -- ╏                                 COMMANDLINE                                 ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
+RUtils.map.nnoremap("<Leader>xC", function()
+  vim.api.nvim_echo({ { "" } }, false, {})
+  RUtils.info "cmdline messages cleared"
+end, { desc = "Clear command line message" })
+
 RUtils.map.cnoremap("hh", "<Esc>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
