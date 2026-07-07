@@ -159,9 +159,15 @@ function M.conventional_commit(chat, opts)
 
   local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
 
-  chat:add_buf_message {
+  local contents = string.format(prompt_library.prompt "conventional_commits", commit_history, diff_output)
+
+  chat:add_buf_message({
     role = "user",
-    content = string.format(prompt_library.prompt "conventional_commits", commit_history, diff_output),
+    content = contents,
+  }, { type = chat.MESSAGE_TYPES.LLM_MESSAGE })
+  chat:add_message {
+    role = "user",
+    content = contents,
   }
   chat:submit()
 end

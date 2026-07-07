@@ -58,7 +58,7 @@ end
 function M.explain_code(chat, opts)
   local bufnr = opts and opts.bufnr
   local code = opts and opts.code
-  if not vim.api.nvim_buf_is_valid(bufnr) then
+  if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
     return RUtils.warn "not valid buffer"
   end
 
@@ -66,10 +66,16 @@ function M.explain_code(chat, opts)
 
   local ft = vim.bo[bufnr].filetype ~= "" and vim.bo[bufnr].filetype or "text"
 
+  local contents = string.format(prompt_library.prompt "explain_code", ft, code)
+
   chat_helpers.add_context { file }
-  chat:add_buf_message {
+  chat:add_buf_message({
     role = "user",
-    content = string.format(prompt_library.prompt "explain_code", ft, code),
+    content = contents,
+  }, { type = chat.MESSAGE_TYPES.LLM_MESSAGE })
+  chat:add_message {
+    role = "user",
+    content = contents,
   }
   chat:submit()
 end

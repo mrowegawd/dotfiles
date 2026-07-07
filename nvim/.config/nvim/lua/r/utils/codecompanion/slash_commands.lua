@@ -1,9 +1,21 @@
-local SLASH_COMMANDS = "r.utils.codecompanion.slash_commands."
+local chat_helpers = require("r.utils.codecompanion.helpers").chat
 
+local SLASH_COMMANDS = "r.utils.codecompanion.slash_commands."
 local git = require(SLASH_COMMANDS .. "git")
 local coding = require(SLASH_COMMANDS .. "coding")
 
 local M = {}
+
+local function explain_selection()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local sel = RUtils.get_visual_selection { strict = true }
+  if not sel then
+    return
+  end
+  local code = sel.selection
+  vim.cmd.normal { vim.keycode "<Esc>", bang = true }
+  chat_helpers.run_slash_command("explain_code", { bufnr = bufnr, code = code })
+end
 
 -- Slash command definitions
 local slash_commands = {
@@ -53,6 +65,11 @@ local slash_commands = {
   --   description = "Read a Google Slides presentation",
   --   callback = gslides.gslides_read,
   -- },
+  -- Reader
+  ["translate_eng_to_id"] = {
+    description = "Explain quickfix/loclist code diagnostics",
+    callback = coding.qfix,
+  },
   -- Git
   ["conventional_commit"] = {
     description = "Generate a conventional git commit message",
@@ -66,11 +83,11 @@ local slash_commands = {
   --   description = "Generate a changelog entry from selected commits",
   --   callback = git.changelog,
   -- },
-  -- -- Coding
-  -- ["qfix"] = {
-  --   description = "Explain quickfix/loclist code diagnostics",
-  --   callback = coding.qfix,
-  -- },
+  -- Coding
+  ["qfix"] = {
+    description = "Explain quickfix/loclist code diagnostics",
+    callback = coding.qfix,
+  },
   ["explain_code"] = {
     description = "Explain selected code",
     callback = coding.explain_code,
@@ -89,6 +106,13 @@ local slash_commands = {
 
 function M.build()
   return slash_commands
+end
+
+function M.setup_mappings(group)
+  -- Global
+  vim.keymap.set("v", "<Leader>ec", explain_selection, {
+    desc = "Explain selected code with CodeCompanion",
+  })
 end
 
 return M
