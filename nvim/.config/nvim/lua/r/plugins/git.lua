@@ -155,6 +155,8 @@ return {
           open_in_browser = { lhs = "<Leader>gob", desc = "open issue in browser [discussion]" },
           copy_url = { lhs = "<Leader>cy", desc = "copy url to system clipboard [discussion]" },
 
+          -- goto_issue = { lhs = "<Leader>oe", desc = "go to issue/pr/discussion under cursor [pull request]" },
+
           -- add_comment = { lhs = "<LocalLeader>qaca", desc = "add comment [discussion]" },
           -- add_reply = { lhs = "<LocalLeader>qacr", desc = "add reply [discussion]" },
           -- delete_comment = { lhs = "<LocalLeader>qacd", desc = "delete comment [discussion]" },
