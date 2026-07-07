@@ -305,7 +305,6 @@ end
 function Win.open_empty_blank_buffer(position)
   vim.cmd(position .. " vsplit")
 
-  -- vim.schedule(function()
   local winid = vim.api.nvim_get_current_win()
   local buf = vim.api.nvim_get_current_buf()
 
@@ -332,7 +331,6 @@ function Win.open_empty_blank_buffer(position)
   vim.api.nvim_win_set_width(main_layout.win, Win.main_size)
 
   vim.cmd "wincmd p"
-  -- end)
 end
 
 ---@param cur_winid integer
@@ -343,7 +341,7 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
 
   if is_all_window then
     saved_before_fn = save_wins_current_tab(cur_winid)
-    saved_cmdheight = vim.o.cmdheight
+    saved_cmdheight = 0
   end
 
   vim.api.nvim_win_call(main_layout_winid, function()

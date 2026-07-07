@@ -1,6 +1,48 @@
 ---@class r.utils.lsp
 local M = {}
 
+_G.LspConfig = {}
+
+-- Define higlights for markdown hover documentation
+local md_docs_ns = vim.api.nvim_create_namespace "markdown_docs_highlights"
+function _G.LspConfig.highlight_doc_patterns(bufnr)
+  vim.api.nvim_buf_clear_namespace(bufnr, md_docs_ns, 0, -1)
+  local patterns = {
+    ["─"] = "RenderMarkdownDash",
+    ["---"] = "RenderMarkdownDash",
+    -- Lua/vimdoc
+    ["@%S+"] = "@variable.parameter",
+    -- Python
+    ["^%s*(Parameters)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Returns)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Examples)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Notes)$"] = "@markup.heading.vimdoc",
+    ["^%s*(See Also)$"] = "@markup.heading.vimdoc",
+  }
+
+  for l, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
+    if vim.startswith(line, "``` man") then
+      vim.bo[bufnr].filetype = "man"
+      return
+    end
+
+    for pattern, hl_group in pairs(patterns) do
+      local from = 1
+      while true do
+        local s, e = line:find(pattern, from)
+        if not s then
+          break
+        end
+        vim.api.nvim_buf_set_extmark(bufnr, md_docs_ns, l - 1, s - 1, {
+          end_col = e,
+          hl_group = hl_group,
+        })
+        from = e + 1
+      end
+    end
+  end
+end
+
 ---@param opts? LazyFormatter| {filter?: (string|vim.lsp.get_clients.Filter)}
 function M.formatter(opts)
   opts = opts or {}

@@ -5,7 +5,6 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field cmp r.utils.cmp
 ---@field codecompanion r.utils.codecompanion
----@field codecompanion_fidget r.utils.codecompanion_fidget
 ---@field config LazyVimConfig
 ---@field deprecated r.utils.deprecated
 ---@field extras r.utils.extras

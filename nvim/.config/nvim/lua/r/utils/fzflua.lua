@@ -12,10 +12,6 @@ local dropdown = function(opts)
     opts.winopts.title = M.format_title(title)
   end
 
-  -- local v_backdrop = 60
-  -- if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-  --   v_backdrop = 90
-  -- end
   local fzf_tbl = {
     no_header = opts.no_header, -- disable default header
     prompt = M.padding_prompt(),
@@ -31,10 +27,8 @@ local dropdown = function(opts)
       height = 20,
       width = math.floor(vim.o.columns / 2 + 8),
       col = 0.50,
-      -- backdrop = v_backdrop,
       backdrop = 100,
       fullscreen = false,
-      treesitter = false,
       preview = {
         hidden = false,
         layout = "vertical",
