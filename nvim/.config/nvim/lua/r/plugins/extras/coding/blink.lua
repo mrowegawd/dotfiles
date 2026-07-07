@@ -4,11 +4,6 @@ local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local idx = 1
 
 return {
-  {
-    "iguanacucumber/magazine.nvim",
-    optional = true,
-    enabled = false,
-  },
   -- BLINK
   {
     "saghen/blink.cmp",
@@ -27,18 +22,16 @@ return {
       "saghen/blink.compat",
       "mikavilpas/blink-ripgrep.nvim",
       "Kaiser-Yang/blink-cmp-git",
-      { "MattiasMTS/cmp-dbee", branch = "ms/v2" },
     },
     opts = {
       -- custom props to disable blink in certain filetypes
-      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select", "qfbookmark", "fzf" },
+      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input", "org-roam-select", "fzf" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
         end,
       },
       completion = {
-        keyword = { range = "full" },
         accept = { auto_brackets = { enabled = true } },
         list = {
           selection = {
@@ -49,8 +42,10 @@ return {
               return ctx.mode == "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
             end,
           },
+          max_items = 50,
         },
         menu = {
+          max_height = 20,
           border = "none",
           winhighlight = "Normal:Pmenu,FloatBorder:PmenuFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
@@ -104,6 +99,8 @@ return {
 
                   if ctx.kind == "Commit" then
                     kind = RUtils.config.icons.git.unmerged
+                  elseif ctx.source_name == "codecompanion" then
+                    kind = ctx.kind_icon
                   else
                     kind = RUtils.config.icons.kinds[ctx.kind] or ""
                   end
@@ -158,9 +155,19 @@ return {
         documentation = {
           auto_show = true,
           window = {
-            border = RUtils.config.icons.border.rightsideonly, -- "none",
+            border = RUtils.config.icons.border.rightsideonly, -- or "none",
             winhighlight = "Normal:BlinkDocNormal,FloatBorder:BlinkDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
+          draw = function(opts)
+            opts.default_implementation()
+            vim.schedule(function()
+              _G.LspConfig.highlight_doc_patterns(opts.window.buf)
+              local win_id = opts.window:get_win()
+              if win_id then
+                require("render-markdown.core.ui").update(opts.window.buf, win_id, "BlinkDraw", true)
+              end
+            end)
+          end,
         },
         ghost_text = {
           enabled = false,
@@ -174,21 +181,6 @@ return {
           ["<Left>"] = false,
 
           ["<C-y>"] = { "select_and_accept" },
-
-          --     local type = vim.fn.getcmdtype()
-          --     if type == "/" or type == "?" then
-          --       local item = cmp.get_selected_item()
-          --       if item then
-          --         local current = vim.fn.getcmdline()
-          --         local magic_prefix = current:match "^(\\[vVmM]?)" or ""
-          --         vim.fn.setcmdline(magic_prefix .. item.label)
-          --         cmp.hide()
-          --         return true
-          --       end
-          --     end
-          --     return cmp.select_and_accept()
-          --   end,
-          -- },
 
           ["<C-j>"] = {
             function()
@@ -223,12 +215,7 @@ return {
                   return RUtils.map.feedkey "<C-Down>"
                 end
               else
-                -- local type = vim.fn.getcmdtype()
-                -- if type == "/" or type == "?" then
-                --   cmp.select_next { auto_insert = false }
-                -- else
                 cmp.select_next()
-                -- end
               end
             end,
           },
@@ -243,12 +230,7 @@ return {
                   return RUtils.map.feedkey "<C-Up>"
                 end
               else
-                -- local type = vim.fn.getcmdtype()
-                -- if type == "/" or type == "?" then
-                --   cmp.select_prev { auto_insert = false }
-                -- else
                 cmp.select_prev()
-                -- end
               end
             end,
           },
@@ -270,7 +252,14 @@ return {
       },
       sources = {
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer", "git" },
+        default = function()
+          if vim.bo.filetype == "codecompanion" then
+            RUtils.info "yes"
+            return { "buffer", "snippets" }
+          end
+
+          return { "lsp", "path", "snippets", "buffer", "git" }
+        end,
         providers = {
           lsp = {
             name = "lsp",
@@ -284,13 +273,22 @@ return {
               end, items)
             end,
           },
-          -- snippets = {
-          --   score_offset = -5,
-          --   opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } },
-          -- },
           path = {
             score_offset = -3,
             opts = { show_hidden_files_by_default = true },
+          },
+          codecompanion = {
+            name = "codecompanion",
+            module = "codecompanion.providers.completion.blink",
+            transform_items = function(_, items)
+              for _, item in ipairs(items) do
+                item.kind_icon = " "
+              end
+              return items
+            end,
+            score_offset = function()
+              return 100
+            end,
           },
           buffer = {
             score_offset = -10,
@@ -319,6 +317,9 @@ return {
             enabled = function()
               return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
             end,
+            opts = {
+              before_reload_cache = function() end,
+            },
           },
           ripgrep = {
             name = "RG",
@@ -338,14 +339,6 @@ return {
         window = { border = "rounded" },
       },
       fuzzy = { implementation = "rust" },
-      -- fuzzy = {
-      --   -- implementation = "rust",
-      --   sorts = {
-      --     "exact",
-      --     "score",
-      --     "sort_text",
-      --   },
-      -- },
       keymap = {
         preset = "none", -- 'enter', 'none' -> (disable all mappings)
         -- How to disable keymap? -> ["<C-e>"] = {},
@@ -514,62 +507,6 @@ return {
           },
         },
       },
-    },
-  },
-
-  -- blink.pairs - auto close and color brackets (disabled, too slow!)
-  {
-    "saghen/blink.pairs",
-    enabled = false,
-    version = "*", -- (recommended) only required with prebuilt binaries
-    event = { "BufReadPre", "BufNewFile" },
-    -- download prebuilt binaries from github releases
-    dependencies = "saghen/blink.download",
-    -- OR build from source, requires nightly:
-    -- https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    -- build = 'cargo build --release',
-    -- If you use nix, you can build from source using latest nightly rust with:
-    -- build = 'nix run .#build-plugin',
-
-    --- @module 'blink.pairs'
-    --- @type blink.pairs.Config
-    opts = {
-      mappings = {
-        -- you can call require("blink.pairs.mappings").enable()
-        -- and require("blink.pairs.mappings").disable()
-        -- to enable/disable mappings at runtime
-        enabled = true,
-        cmdline = true,
-        -- or disable with `vim.g.pairs = false` (global) and `vim.b.pairs = false` (per-buffer)
-        -- and/or with `vim.g.blink_pairs = false` and `vim.b.blink_pairs = false`
-        disabled_filetypes = {},
-        -- see the defaults:
-        -- https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L14
-        pairs = {},
-      },
-      highlights = {
-        enabled = true,
-        -- requires require('vim._extui').enable({}), otherwise has no effect
-        cmdline = true,
-        groups = {
-          "BlinkPairsOrange",
-          "BlinkPairsPurple",
-          "BlinkPairsBlue",
-        },
-        unmatched_group = "BlinkPairsUnmatched",
-
-        -- highlights matching pairs under the cursor
-        matchparen = {
-          enabled = true,
-          -- known issue where typing won't update matchparen highlight, disabled by default
-          cmdline = false,
-          -- also include pairs not on top of the cursor, but surrounding the cursor
-          include_surrounding = false,
-          group = "BlinkPairsMatchParen",
-          priority = 250,
-        },
-      },
-      debug = false,
     },
   },
 }
