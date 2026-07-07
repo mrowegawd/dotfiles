@@ -24,9 +24,9 @@ super + shift + F9
 super + shift + F10
         $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall set_win_state locked
 
-# state: toggle zoom-in-out
-# super + shift + F8
-#         $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall win_big_zoom_toggle
+# state: toggle center win
+super + F8
+        $HOME/.config/miscxrdb/bspwm/scripts/bspc-wincall win_center_toggle
 
 ########################################
 # WINDOW

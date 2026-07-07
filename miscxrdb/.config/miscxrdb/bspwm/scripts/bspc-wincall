@@ -83,7 +83,7 @@ set_win_state() {
 
 }
 
-win_big_zoom_toggle() {
+win_center_toggle() {
   TMP_DIR="/tmp/bspwm_window_states"
   mkdir -p "$TMP_DIR"
 

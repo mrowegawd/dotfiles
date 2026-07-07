@@ -1,6 +1,14 @@
 local img_from_terminal = true
 local set_number = 0 -- 0 means random number; 1–9 are fixed numbers
 
+---@param min_height? integer
+local function allow_height(min_height)
+  min_height = min_height or 40
+  local ui = vim.api.nvim_list_uis()[1]
+  local height = math.floor(ui.height * 20 / 100)
+  return (ui.height - height) > min_height
+end
+
 local function set_img_dashboard()
   local nvim_dashboard_path = vim.fs.joinpath(vim.env.HOME, "/moxconf/development/dotfiles/img/nvim-dashboard")
 
@@ -14,9 +22,8 @@ local function set_img_dashboard()
   local is_image = is_img()
   local fn_img = RUtils.logo.setup(is_image, set_number)
 
-  local align = vim.fn.winwidth(0) > 150 and "right" or "center"
-
-  local height = align == "center" and 20 or 25
+  local align = allow_height() and "right" or "center"
+  local height = align == "center" and 20 or 20
 
   if is_image then
     return {
@@ -286,17 +293,19 @@ return {
                 align = "left",
               },
               {
-                title = " RECENT FILES",
-                section = "recent_files",
-                limit = 5,
-                padding = 1,
-                hl = "Normal",
-                align = "left",
+                enabled = allow_height(),
+                align = "center",
+                {
+                  title = " RECENT FILES",
+                  section = "recent_files",
+                  limit = 5,
+                  padding = 1,
+                  hl = "Normal",
+                },
               },
               {
-                enabled = (vim.fn.winwidth(0) > 150),
+                enabled = allow_height(),
                 {
-
                   section = "terminal",
                   icon = " ",
                   title = "GIT STATUS",
@@ -308,8 +317,7 @@ return {
                 },
               },
               {
-
-                enabled = (vim.fn.winwidth(0) > 130),
+                enabled = allow_height(10),
                 {
                   section = "startup",
                   align = "left",
