@@ -8,7 +8,24 @@ return {
       require("msgarea.blink_integration").enable()
     end,
   },
-
+  -- HLARGS.NVIM
+  {
+    "m-demare/hlargs.nvim",
+    event = "VeryLazy",
+    opts = {
+      color = "#d19a66",
+      excluded_argnames = {
+        declarations = {
+          python = { "self", "cls" },
+          lua = { "self" },
+        },
+        usages = {
+          python = { "self", "cls" },
+          lua = { "self" },
+        },
+      },
+    },
+  },
   -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
@@ -253,18 +270,9 @@ return {
     "nanozuki/tabby.nvim",
     event = "BufReadPost",
     config = function()
-      local function get_hl_as_hex(opts, ns)
-        ns, opts = ns or 0, opts or {}
-        opts.link = opts.link ~= nil and opts.link or false
-        ---@return vim.api.keyset.get_hl_info
-        local hl = vim.api.nvim_get_hl(ns, opts)
-        hl.fg = hl.fg and ("#%06x"):format(hl.fg)
-        hl.bg = hl.bg and ("#%06x"):format(hl.bg)
-        return hl
-      end
-
+      local H = require "r.settings.highlights"
       local function h(name)
-        return get_hl_as_hex { name = name }
+        return H.get_hl_as_hex { name = name }
       end
 
       local theme = {

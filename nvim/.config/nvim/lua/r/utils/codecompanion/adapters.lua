@@ -42,6 +42,10 @@ function M.ollama_qwen3_8b()
   return get_ollama("qwen3:8b", 32768)
 end
 
+function M.llama3_1_8b()
+  return get_ollama("llama3.1:8b", 32768)
+end
+
 function M.gemini_flash_35()
   return Extend("gemini", {
     name = "gemini_flash_3",

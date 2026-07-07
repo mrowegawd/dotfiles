@@ -140,16 +140,17 @@ local attrs = {
 --- Silent variant — never emits warnings. Used by M.set() when inheriting from
 --- a group that may not exist yet (e.g. a brand-new group being defined for
 --- the first time). An empty result here is perfectly normal.
-local function get_hl_as_hex(opts, ns)
-  ns = ns or 0
-  opts = opts or {}
+---@param opts vim.api.keyset.get_highlight?
+---@return { fg:string?, bg:string?, sp:string? }
+function M.get_hl_as_hex(opts, ns)
+  ns, opts = ns or 0, opts or {}
   opts.link = opts.link ~= nil and opts.link or false
-
   local hl = vim.api.nvim_get_hl(ns, opts)
-  hl.fg = hl.fg and ("#%06x"):format(hl.fg)
-  hl.bg = hl.bg and ("#%06x"):format(hl.bg)
-  hl.sp = hl.sp and ("#%06x"):format(hl.sp)
-  return hl
+  return {
+    fg = hl.fg and ("#%06x"):format(hl.fg) or nil,
+    bg = hl.bg and ("#%06x"):format(hl.bg) or nil,
+    sp = hl.sp and ("#%06x"):format(hl.sp) or nil,
+  }
 end
 
 --- Strict variant of get_hl_as_hex — warns when the group does not exist.
@@ -157,7 +158,7 @@ end
 --- by name, so an empty result is most likely a bug (typo, colorscheme not
 --- loaded yet, etc.).
 local function get_hl_as_hex_strict(opts, ns)
-  local hl = get_hl_as_hex(opts, ns)
+  local hl = M.get_hl_as_hex(opts, ns)
 
   -- nvim_get_hl silently returns {} for unknown groups instead of erroring.
   -- Emit a warning so that typos and unloaded colorschemes are surfaced early.
@@ -678,7 +679,7 @@ function M.set(ns, name, opts)
     ns = { ns, "number" },
   }
 
-  local hl = opts.clear and {} or get_hl_as_hex { name = opts.inherit or name }
+  local hl = opts.clear and {} or M.get_hl_as_hex { name = opts.inherit or name }
 
   for attribute, hl_data in pairs(opts) do
     local new_data = resolve_from_attribute(hl_data, attribute)
@@ -716,7 +717,9 @@ local function add_theme_overrides(theme)
     if not seen[n] then
       res[#res + 1] = hl
     end
-    seen[n] = true
+    if n then
+      seen[n] = true
+    end
   end
   return res
 end

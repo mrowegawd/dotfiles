@@ -38,7 +38,7 @@ return {
       spec = {
         {
           mode = { "n", "x" },
-          { "<Leader>a", group = "mark" },
+          { "<Leader>a", group = "ai" },
           { "<Leader>q", group = "session/quickfix" },
           { "<Leader>c", group = "code/action" },
 

@@ -40,7 +40,7 @@ return {
           end
           if
             vim.tbl_contains(
-              { "Outline", "aerial", "trouble", "octo", "codecompanion", "eldochover", "main_layout" },
+              { "Outline", "aerial", "trouble", "codecompanion", "eldochover", "main_layout" },
               vim.bo[buf].filetype
             )
           then
