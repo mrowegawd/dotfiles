@@ -9,26 +9,6 @@ return {
     build = (not RUtils.is_win())
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
       or nil,
-    dependencies = {
-      { "chrisgrieser/nvim-scissors", opts = { snippetDir = RUtils.config.path.snippet_path } },
-    },
-    keys = {
-      {
-        "<Leader>fn",
-        function()
-          require("scissors").editSnippet()
-        end,
-        desc = "Misc: edit snippet [nvim-scissors]",
-      },
-      {
-        "<Leader>fN",
-        function()
-          require("scissors").addNewSnippet()
-        end,
-        mode = { "n", "x" },
-        desc = "Misc: add snippet [nvim-scissors]",
-      },
-    },
     opts = {
       history = false,
       delete_check_events = "TextChanged",

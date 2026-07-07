@@ -548,9 +548,9 @@ local general_overrides = function()
     },
     {
       TitleFloatAiPrompt = {
-        fg = { from = "FloatTitle", attr = "fg" },
-        bg = { from = "NormalAiPrompt", attr = "bg" },
-        bold = true,
+        fg = { from = "FloatBorderAiPrompt", attr = "fg", alter = 1.2 },
+        bg = { from = "FloatBorderAiPrompt", attr = "bg" },
+        bold = false,
       },
     },
 
@@ -1238,7 +1238,7 @@ local plugins_overrides = function()
           transparency = 0.7,
           color = { from = "NormalNote", attr = "bg" },
         },
-        bg = { from = "NormalNote", attr = "bg" },
+        bg = { from = "NormalNote", attr = "bg", alter = -0.1 },
         italic = true,
         bold = false,
       },
@@ -1252,7 +1252,7 @@ local plugins_overrides = function()
           transparency = 0.7,
           color = { from = "NormalAiPrompt", attr = "bg" },
         },
-        bg = { from = "NormalAiPrompt", attr = "bg" },
+        bg = { from = "NormalAiPrompt", attr = "bg", alter = 0.25 },
         italic = true,
         bold = false,
       },

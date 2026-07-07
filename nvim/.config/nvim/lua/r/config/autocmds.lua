@@ -169,7 +169,7 @@ RUtils.map.augroup("WindowBehaviour", {
     end
   end,
 }, {
-  -- Untuk handle color `cursorline` dan `signcolumn`  pada `toggleterm.nvim`
+  -- Handle `cursorline` and `signcolumn` colors for `toggleterm.nvim`.
   event = { "BufRead", "BufEnter" },
   pattern = { "*" },
   command = function()
@@ -193,6 +193,15 @@ RUtils.map.augroup("WrapFiletype", {
   pattern = { "typescriptreact", "typescript" },
   command = function()
     vim.opt_local.wrap = true
+  end,
+}, {
+  event = "FileType",
+  pattern = { "codecompanion", "markdown" },
+  command = function()
+    vim.treesitter.start()
+    vim.cmd [[
+      iabbrev <buffer> ``` ```<CR><CR>```<Esc>ki
+    ]]
   end,
 }, {
   event = "FileType",
@@ -248,8 +257,8 @@ RUtils.map.augroup("CheckOutsideTime", {
 }, {
   event = "BufEnter",
   pattern = "*",
-  -- command = "if &buftype == '' && !&modified && expand('%') != '' | exec 'checktime ' . expand('<abuf>') | endif",
   command = function()
+    -- command = "if &buftype == '' && !&modified && expand('%') != '' | exec 'checktime ' . expand('<abuf>') | endif",
     if vim.bo.buftype == "" and not vim.bo.modified and vim.fn.expand "%" ~= "" then
       vim.cmd("checktime " .. vim.fn.expand "<abuf>")
     end

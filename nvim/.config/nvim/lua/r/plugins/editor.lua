@@ -11,7 +11,6 @@ return {
   --- PDFview
   {
     "basola21/PDFview",
-    lazy = false,
     dependencies = { "nvim-telescope/telescope.nvim" },
     keys = {
       {
