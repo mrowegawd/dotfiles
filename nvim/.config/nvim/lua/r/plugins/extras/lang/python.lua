@@ -107,14 +107,6 @@ return {
     ft = "python",
     opts = { keymaps = false }, -- Keymaps to register (set to false to disable)
   },
-  {
-    "iguanacucumber/magazine.nvim",
-    optional = true,
-    opts = function(_, opts)
-      opts.auto_brackets = opts.auto_brackets or {}
-      table.insert(opts.auto_brackets, "python")
-    end,
-  },
 
   -- Don't mess up DAP adapters provided by nvim-dap-python
   {

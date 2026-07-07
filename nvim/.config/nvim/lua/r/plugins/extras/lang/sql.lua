@@ -7,9 +7,14 @@ return {
     }
   end,
 
+  -- NVIM-DBEE (disabled)
   {
     "kndndrj/nvim-dbee",
-    dependencies = { "MadKuntilanak/nui.nvim" },
+    enabled = false,
+    dependencies = {
+      "MadKuntilanak/nui.nvim",
+      { "MattiasMTS/cmp-dbee", branch = "ms/v2" },
+    },
     event = "VeryLazy",
     build = function()
       require("dbee").install()
@@ -82,11 +87,13 @@ return {
     },
   },
 
+  -- VIM-DADBOD
   {
     "tpope/vim-dadbod",
     cmd = "DB",
   },
 
+  -- VIM-DADBOD-COMPLETION
   {
     "kristijanhusak/vim-dadbod-completion",
     dependencies = "vim-dadbod",
@@ -126,41 +133,20 @@ return {
     end,
   },
 
-  -- Arborist
+  -- ARBORIST
   {
     "arborist-ts/arborist.nvim",
     optional = true,
     opts = { ensure_installed = { "sql" } },
   },
 
-  -- Edgy integration
-  {
-    "folke/edgy.nvim",
-    optional = true,
-    opts = function(_, opts)
-      opts.right = opts.right or {}
-      table.insert(opts.right, {
-        title = "Database",
-        ft = "dbui",
-        pinned = true,
-        width = 0.3,
-        open = function()
-          vim.cmd "DBUI"
-        end,
-      })
-
-      opts.bottom = opts.bottom or {}
-      table.insert(opts.bottom, {
-        title = "DB Query Result",
-        ft = "dbout",
-      })
-    end,
-  },
-
   -- blink.cmp integration
   {
     "saghen/blink.cmp",
     optional = true,
+    dependencies = {
+      "kristijanhusak/vim-dadbod-completion",
+    },
     opts = {
       sources = {
         per_filetype = {
@@ -170,9 +156,6 @@ return {
           dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
         },
       },
-    },
-    dependencies = {
-      "kristijanhusak/vim-dadbod-completion",
     },
   },
 

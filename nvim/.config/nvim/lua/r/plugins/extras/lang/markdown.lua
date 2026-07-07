@@ -132,7 +132,7 @@ return {
     },
     opts = {
       bullet = { icons = { "", "•", "", "-", "-" } },
-      file_types = { "markdown", "codecompanion" },
+      file_types = { "markdown", "codecompanion", "octo" },
       code = {
         sign = false,
         border = "thin",
@@ -205,7 +205,7 @@ return {
               icons = { "󰪥 ", "  ", " ", " ", " ", "" },
               custom = {
                 codecompanion_input = {
-                  pattern = "^## Me$",
+                  pattern = "##%s+Me",
                   icon = " ",
                   background = "CodeCompanionInputHeader",
                 },

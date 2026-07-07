@@ -1,18 +1,18 @@
 return {
-  recommended = function()
-    return RUtils.extras.wants {
-      root = {
-        "tailwind.config.js",
-        "tailwind.config.cjs",
-        "tailwind.config.mjs",
-        "tailwind.config.ts",
-        "postcss.config.js",
-        "postcss.config.cjs",
-        "postcss.config.mjs",
-        "postcss.config.ts",
-      },
-    }
-  end,
+  -- recommended = function()
+  --   return RUtils.extras.wants {
+  --     root = {
+  --       "tailwind.config.js",
+  --       "tailwind.config.cjs",
+  --       "tailwind.config.mjs",
+  --       "tailwind.config.ts",
+  --       "postcss.config.js",
+  --       "postcss.config.cjs",
+  --       "postcss.config.mjs",
+  --       "postcss.config.ts",
+  --     },
+  --   }
+  -- end,
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -58,20 +58,5 @@ return {
         end,
       },
     },
-  },
-  {
-    "iguanacucumber/magazine.nvim",
-    optional = true,
-    dependencies = {
-      { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
-    },
-    opts = function(_, opts)
-      -- original RUtils kind icon formatter
-      local format_kinds = opts.formatting.format
-      opts.formatting.format = function(entry, item)
-        format_kinds(entry, item) -- add icons
-        return require("tailwindcss-colorizer-cmp").formatter(entry, item)
-      end
-    end,
   },
 }
