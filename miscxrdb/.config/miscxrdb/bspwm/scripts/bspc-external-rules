@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # external_rules_command
 
@@ -29,6 +29,37 @@
 #
 # 	   -l, --list
 # 		   List the rules.
+
+ROW=0
+COL=0
+WINDOW_HEIGHT=0
+WINDOW_WIDTH=0
+
+get_screen_height() {
+  xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f2
+}
+
+get_screen_width() {
+  xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f1
+}
+
+set_row_col() {
+  # Nilai $1 dan $2 height diukur dalam persentase 10% -> 80%
+  percent_height=$1
+  percent_width=$2
+
+  padding_x=${3:-35}
+  padding_y=${4:-50}
+
+  screen_height=$(get_screen_height)
+  screen_width=$(get_screen_width)
+
+  WINDOW_HEIGHT=$((screen_height * percent_height / 100))
+  WINDOW_WIDTH=$((screen_width * percent_width / 100))
+
+  ROW=$((screen_width - WINDOW_WIDTH - padding_x))
+  COL=$((screen_height - WINDOW_HEIGHT - padding_y))
+}
 
 border= \
   center= \
@@ -132,8 +163,10 @@ libreoffice() {
 
 zathura() {
   state=floating
-  # rectangle=850x700+1030+350
-  rectangle=400x600+950+150 # --- broken-monitor
+
+  set_row_col 80 40
+
+  rectangle="${WINDOW_WIDTH}x${WINDOW_HEIGHT}+${ROW}+${COL}"
   focus=off
 }
 
@@ -148,8 +181,6 @@ mplayer() {
 }
 
 mpv() {
-  # state=tiled
-  # desktop=$desktop_misc
   state=floating
   focus=off
   sticky=off
@@ -174,9 +205,13 @@ signal() {
 
 svix() {
   state=floating
+
+  set_row_col 60 40
+
+  rectangle="${WINDOW_WIDTH}x${WINDOW_HEIGHT}+${ROW}+${COL}"
+
   layer=above
   focus=off
-  rectangle=400x600+950+150 # --- broken-monitor
 }
 
 file_manager() {

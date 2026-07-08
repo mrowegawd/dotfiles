@@ -24,6 +24,9 @@ local function setup_plugin()
         ollama_qwen25_14b = adapters.ollama_qwen25_14b(),
         ollama_qwen25_7b = adapters.ollama_qwen25_7b(),
         ollama_qwen3_8b = adapters.ollama_qwen3_8b(),
+        llama3_1_8b = adapters.llama3_1_8b(),
+        supa_ai_gemma2_9b_sahabatai = adapters.supa_ai_gemma2_9b_sahabatai(),
+        ollama_qwen2_5_7b_instruct_Q4_K_M = adapters.ollama_qwen2_5_7b_instruct_Q4_K_M(),
         -- openai_gpt_55 = adapters.openai_gpt_55,
         -- openai_gpt_54_nano = adapters.openai_gpt_54_nano,
         -- openai_gpt_54_nano_legacy = adapters.openai_gpt_54_nano_legacy,
@@ -51,36 +54,43 @@ local function setup_plugin()
         },
       },
       diff = {
-        layout = "vertical",
+        -- layout = "vertical",
+        enabled = true,
         threshold_for_chat = 15,
+        window = {
+          ---@return number|fun(): number
+          width = function()
+            return math.min(120, vim.o.columns - 10)
+          end,
+          ---@return number|fun(): number
+          height = function()
+            return vim.o.lines - 4
+          end,
+          opts = {
+            number = true,
+          },
+        },
       },
     },
     -- Interactions
     interactions = {
       -- Chat
       chat = {
-        adapter = "ollama_qwen25_7b",
+        adapter = "ollama_qwen2_5_7b_instruct_Q4_K_M",
         roles = {
           user = "Me",
           llm = ui.llm_role,
-        },
-        action_palette = {
-          prompt = "> ",
-          opts = {
-            show_preset_actions = true,
-            show_preset_prompts = false,
-          },
         },
         opts = {
           context_management = {
             enabled = false,
           },
-          -- system_prompt = function(ctx)
-          --   if ctx.adapter and ctx.adapter.type == "acp" then
-          --     return ""
-          --   end
-          --   return prompt_library.prompt "helpful_assistant"
-          -- end,
+          system_prompt = function(ctx)
+            if ctx.adapter and ctx.adapter.type == "acp" then
+              return ""
+            end
+            return "You are a helpful assistant."
+          end,
           prompt_decorator = function(message)
             return message
           end,
@@ -131,6 +141,7 @@ function M.setup()
 
   local setup_group = "CodeCompanion"
   mappings.setup(setup_group)
+  -- slash_commands.setup_mappings(setup_group)
 end
 
 return M
