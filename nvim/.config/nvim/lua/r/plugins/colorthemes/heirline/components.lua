@@ -79,8 +79,12 @@ local set_conditions = {
     local dont_show_at_ft = { "oil", "DiffviewFilePanel" }
     return vim.tbl_contains(dont_show_at_ft, vim.bo.filetype)
   end,
+  is_aiprompt_ft = function()
+    local dont_show_at_ft = { "codecompanion" }
+    return vim.tbl_contains(dont_show_at_ft, vim.bo.filetype)
+  end,
   is_note_ft = function()
-    local note_ft = { "org", "markdown", "octo", "codecompanion" }
+    local note_ft = { "org", "markdown", "octo" }
     return vim.tbl_contains(note_ft, vim.bo.filetype)
   end,
 }
@@ -269,6 +273,10 @@ local __colors = function()
     mode_note_fg_bright = H.tint(H.get("WinBarNote", "fg"), 0.5),
     mode_note_bg = H.get("WinBarNote", "bg"),
 
+    mode_aiprompt_fg = H.get("WinBarAiPrompt", "fg"),
+    mode_aiprompt_fg_bright = H.tint(H.get("WinBarAiPrompt", "fg"), 0.5),
+    mode_aiprompt_bg = H.get("WinBarAiPrompt", "bg"),
+
     -- Termasuk filetype: readonly, commit
     mode_red_fg = H.get("WinBarRed", "fg"),
     mode_red_fg_bright = H.tint(H.get("WinBarRed", "fg"), 0.3),
@@ -336,6 +344,14 @@ local set_winbar_hl = function(is_more_bright)
     hlWinbarOpts.bg = colors.mode_note_bg
     if is_more_bright then
       hlWinbarOpts.fg = colors.mode_note_fg_bright
+    end
+  end
+
+  if set_conditions.is_aiprompt_ft() then
+    hlWinbarOpts.fg = colors.mode_aiprompt_fg
+    hlWinbarOpts.bg = colors.mode_aiprompt_bg
+    if is_more_bright then
+      hlWinbarOpts.fg = colors.mode_aiprompt_fg_bright
     end
   end
 

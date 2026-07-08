@@ -625,6 +625,12 @@ local general_overrides = function()
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
+    {
+      WinBarAiPrompt = {
+        fg = { from = "NormalAiPrompt", attr = "bg", alter = 1 },
+        bg = { from = "NormalAiPrompt", attr = "bg", alter = 0.2 },
+      },
+    },
 
     -- ├──────────────────────────────────┤ TMUX ├──────────────────────────────────┤
     {
