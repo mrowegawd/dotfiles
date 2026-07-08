@@ -12,7 +12,16 @@ return {
       {
         "<Leader>oo",
         function()
-          local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+          local right_win = {
+            "trouble",
+            "aerial",
+            "Outline",
+            "neo-tree",
+            "snacks_notif_history",
+            "ErgoTerm",
+            "codecompanion",
+            "pdfview",
+          }
           if vim.tbl_contains(right_win, vim.bo.filetype) then
             ---@diagnostic disable-next-line: undefined-field
             RUtils.warn "This filetype is excluded and cannot be opened in oil.nvim"
