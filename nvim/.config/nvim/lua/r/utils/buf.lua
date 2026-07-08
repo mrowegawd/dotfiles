@@ -76,46 +76,46 @@ function M.magic_quit()
     ["octo"] = "q!",
     ["log"] = "bd",
     ["git"] = function()
-      local j = function()
+      local quit_cmd = function()
         return vim.cmd "close"
       end
-      return nil, j
+      return nil, quit_cmd
     end,
     ["Outline"] = function()
-      local j = function()
+      local quit_cmd = function()
         return vim.cmd "OutlineClose"
       end
-      return true, j
+      return true, quit_cmd
     end,
     ["DiffviewFileHistory"] = function()
-      local j = function()
+      local quit_cmd = function()
         return toggle_diffview "DiffviewClose"
       end
       if vim.t.diffview_view_initialized then
-        return true, j
+        return true, quit_cmd
       end
       return nil, nil
     end,
     ["DiffviewFiles"] = function()
-      local j = function()
+      local quit_cmd = function()
         return toggle_diffview "DiffviewClose"
       end
       if vim.t.diffview_view_initialized then
-        return true, j
+        return true, quit_cmd
       end
       return nil, nil
     end,
     ["feed"] = function()
-      local j = function()
+      local quit_cmd = function()
         return require("feed").quit()
       end
-      return true, j
+      return true, quit_cmd
     end,
     ["grug-far"] = function()
-      local j = function()
+      local quit_cmd = function()
         return vim.cmd "q"
       end
-      return true, j
+      return true, quit_cmd
     end,
   }
 
@@ -133,9 +133,17 @@ function M.magic_quit()
     end
   end
 
+  if vim.bo.buftype == "acwrite" then
+    if vim.bo.modified then
+      return vim.cmd "q!"
+    end
+    return vim.cmd "q"
+  end
+
   local filepath = vim.fn.fnamemodify(bufname, ":.")
   if filepath then
     if bufname:match "diffview://" then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.warn(
         RUtils.config.icons.misc.cross_sign .. " Switch to the Diffview window to quit or close",
         { title = "Magic Quit" }
@@ -188,6 +196,7 @@ function M.bufremove(buf)
       end
 
       -- Try using previous buffer
+      ---@diagnostic disable-next-line: param-type-mismatch
       local has_previous = pcall(vim.cmd, "bprevious")
       if has_previous and buf ~= vim.api.nvim_win_get_buf(win) then
         return
@@ -199,6 +208,7 @@ function M.bufremove(buf)
     end)
   end
   if vim.api.nvim_buf_is_valid(buf) then
+    ---@diagnostic disable-next-line: param-type-mismatch
     pcall(vim.cmd, "bdelete! " .. buf)
   end
 end
