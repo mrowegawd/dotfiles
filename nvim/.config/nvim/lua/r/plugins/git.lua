@@ -737,9 +737,9 @@ return {
       H.plugin("DiffviewHiCol", {
         theme = {
           ["*"] = {
-            { DiffviewDiffAdd = { inherit = "diffAdded", fg = "NONE" } },
-            { DiffviewDiffChange = { inherit = "diffChanged", fg = "NONE" } },
-            { DiffViewDiffDelete = { inherit = "diffRemoved", fg = "NONE" } },
+            { DiffviewDiffAdd = { inherit = "diffAdded" } },
+            { DiffviewDiffChange = { inherit = "diffChanged" } },
+            { DiffViewDiffDelete = { inherit = "diffRemoved" } },
 
             { DiffviewDiffText = { inherit = "DiffText" } },
 

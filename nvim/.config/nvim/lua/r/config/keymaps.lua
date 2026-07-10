@@ -689,6 +689,7 @@ local bulk_cmd_misc = function()
     end,
     ["PDFview - open pdf with nvim"] = function()
       require("pdfview").open "/home/mr00x/Downloads/asyncio.pdf"
+      vim.api.nvim_input ":CodeCompanion /translator_role <CR>"
     end,
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"

@@ -10,24 +10,22 @@ local alts = {
 return {
   --- PDFview
   {
-    "basola21/PDFview",
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    keys = {
-      {
-        "<a-n>",
-        function()
-          require("pdfview.renderer").next_page()
+    -- dir = "~/.local/src/nvim_plugins/PDFview",
+    "MadKuntilanak/PDFview",
+    event = "VeryLazy",
+    opts = {
+      path = os.getenv "HOME" .. "/Downloads/torrent",
+      picker = "fzf-lua",
+      open = {
+        cb = function()
+          vim.api.nvim_input ":CodeCompanion /translator_role <CR>"
         end,
-        desc = "pdf: next page",
-        ft = "pdfview",
       },
-      {
-        "<a-p>",
-        function()
-          require("pdfview.renderer").previous_page()
-        end,
-        desc = "pdf: prev page",
-        ft = "pdfview",
+      keymaps = {
+        go_to_page = "<Localleader>qf",
+        show_page_in_zathura = "<Localleader>qd",
+        next_page = "<a-n>",
+        prev_page = "<a-p>",
       },
     },
   },

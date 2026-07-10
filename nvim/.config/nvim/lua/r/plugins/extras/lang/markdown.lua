@@ -205,9 +205,9 @@ return {
               icons = { "󰪥 ", "  ", " ", " ", " ", "" },
               custom = {
                 codecompanion_input = {
-                  pattern = "##%s+Me",
+                  pattern = "^%#%#%sMe",
                   icon = " ",
-                  background = "CodeCompanionInputHeader",
+                  background = "@markup.heading.2.markdown_ai_person",
                 },
               },
             },
@@ -215,7 +215,7 @@ return {
               tag = {
                 buf = {
                   icon = "󰌹 ",
-                  highlight = "Comment",
+                  highlight = "Boolean",
                 },
                 image = {
                   icon = "󰥶 ",

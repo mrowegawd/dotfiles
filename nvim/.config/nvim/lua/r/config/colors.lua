@@ -213,24 +213,27 @@ local general_overrides = function()
     { diffAdded = { fg = git_diff_add } },
     {
       diffAdded = {
+        fg = { from = "diffAdded", attr = "fg", alter = 0.1 },
         bg = { from = "diffAdded", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     { diffChanged = { fg = git_diff_change } },
     {
       diffChanged = {
+        fg = { from = "diffChanged", attr = "fg", alter = 0.1 },
         bg = { from = "diffChanged", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     { diffRemoved = { fg = git_diff_delete } },
     {
       diffRemoved = {
+        fg = { from = "diffRemoved", attr = "fg", alter = 0.15 },
         bg = { from = "diffRemoved", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
       diffLine = {
-        fg = { from = "Type", attr = "fg" },
+        fg = { from = "Type", attr = "fg", alter = 0.1 },
         bg = { from = "Type", attr = "fg", transparency = 0.3, color = { from = "Normal", attr = "bg" } },
       },
     },
@@ -247,11 +250,11 @@ local general_overrides = function()
 
     {
       DiffText = {
-        fg = "NONE",
+        fg = { from = "diffChanged", attr = "fg", alter = 0.15 },
         bg = {
           from = "diffChanged",
           attr = "fg",
-          contrast = 0.05,
+          -- contrast = 0.05,
           transparency = 0.25,
           color = { from = "Normal", attr = "bg" },
         },
@@ -589,9 +592,8 @@ local general_overrides = function()
 
     {
       WinBar = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+        fg = { from = "Comment", attr = "fg", alter = 0.1 },
         bg = { from = "Normal", attr = "bg" },
-        bold = true,
       },
     },
     { WinBarNC = { inherit = "WinBar" } },
@@ -628,7 +630,13 @@ local general_overrides = function()
     {
       WinBarAiPrompt = {
         fg = { from = "NormalAiPrompt", attr = "bg", alter = 1 },
-        bg = { from = "NormalAiPrompt", attr = "bg", alter = 0.2 },
+        bg = {
+          from = "NormalAiPrompt",
+          attr = "bg",
+          alter = 1,
+          transparency = 0.1,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
       },
     },
 
@@ -1111,6 +1119,20 @@ local plugins_overrides = function()
           from = "heading2",
           attr = "fg",
           transparency = 0.05,
+          color = { from = "NormalAiPrompt", attr = "bg" },
+        },
+        bold = true,
+      },
+    },
+    -- Color untuk person `## Me` di codecompanion
+    {
+      ["@markup.heading.2.markdown_ai_person"] = {
+        fg = { from = "NormalAiPrompt", attr = "fg" },
+        bg = {
+          from = "NormalAiPrompt",
+          attr = "bg",
+          alter = 0.8,
+          transparency = 0.5,
           color = { from = "NormalAiPrompt", attr = "bg" },
         },
         bold = true,
