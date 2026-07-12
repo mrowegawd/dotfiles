@@ -1,19 +1,22 @@
 ---@class r.utils.maim
 local M = {}
 
--- Taken from: kiran94/maim.nvim
 local executable = "maim"
 local file_options = "-s"
 
 ---@param input_png string
 local build_dir_img = function(input_png)
   local image_subdir, filetype_label
+
   if vim.bo.filetype == "norg" then
     image_subdir = "img"
     filetype_label = "norg"
   elseif vim.bo.filetype == "markdown" then
     image_subdir = "assets"
     filetype_label = "markdown"
+  elseif vim.bo.filetype == "org" then
+    image_subdir = "assets"
+    filetype_label = "org"
   else
     RUtils.warn("unsupported filetype (" .. vim.bo.filetype .. ")", { title = "Maim: Insert Image" })
     return
@@ -35,6 +38,11 @@ local build_dir_img = function(input_png)
     maim_command = executable .. " " .. file_options .. " " .. absolute_image_path
     image_insert_syntax = "![" .. input_png .. "](" .. relative_image_path .. ")" -- markdown
   end
+  if filetype_label == "org" then
+    relative_image_path = "./" .. image_subdir .. "/" .. input_png
+    maim_command = executable .. " " .. file_options .. " " .. absolute_image_path
+    image_insert_syntax = "[[file:" .. input_png .. "]]"
+  end
 
   if RUtils.file.exists(absolute_image_path) then
     RUtils.warn "image name already exists"
@@ -51,7 +59,7 @@ end
 
 M.insert = function()
   vim.ui.input({
-    prompt = "Name Image: ",
+    prompt = "Name image: ",
   }, function(input)
     if input == nil or (input ~= nil and #input == 0) then
       return

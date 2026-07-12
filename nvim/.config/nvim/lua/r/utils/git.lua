@@ -3,8 +3,6 @@ local M = {}
 
 local outputs = {}
 
-local fzf_lua = require "fzf-lua"
-
 local function get_files_from_branch(branch)
   local cmd = string.format("git ls-tree -r --name-only %s", branch)
   local result = vim.fn.systemlist(cmd)
@@ -17,11 +15,12 @@ local function extracted_entry_str(selected, deleted_files)
     return
   end
 
-  local sel_str = fzf_lua.utils.strip_ansi_coloring(sel)
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  local sel_str = Fzflua.utils.strip_ansi_coloring(sel)
 
   local items = nil
   for _, item in ipairs(deleted_files) do
-    local display_str = fzf_lua.utils.strip_ansi_coloring(item.display)
+    local display_str = Fzflua.utils.strip_ansi_coloring(item.display)
     if display_str == sel_str then
       items = item
       break
@@ -61,6 +60,62 @@ end
 --   -- vim.b.source_branch = branch
 --   -- vim.b.source_path = filepath
 -- end
+
+local os_name = jit and jit.os or ""
+local function redirect_stderr_to_null(command)
+  if os_name == "Windows" then
+    return command .. " 2>NUL"
+  end
+  return command .. " 2>/dev/null"
+end
+
+local function shellescape(value)
+  return vim.fn.shellescape(value)
+end
+
+local function git_output(command)
+  local output = vim.fn.system(redirect_stderr_to_null("git " .. command))
+  if vim.v.shell_error ~= 0 then
+    return nil
+  end
+  return vim.fn.trim(output)
+end
+
+local function get_repo_name(remote_name)
+  remote_name = remote_name or "origin"
+  local remote_url = git_output("config --get " .. shellescape("remote." .. remote_name .. ".url"))
+  if not remote_url or remote_url == "" then
+    vim.notify(
+      string.format("No remote '%s' found. Run 'git remote -v' to check configured remotes", remote_name),
+      vim.log.levels.ERROR
+    )
+    return nil
+  end
+
+  -- Remove trailing ".git" kalau ada
+  remote_url = remote_url:gsub("%.git$", "")
+
+  -- Format SSH: git@github.com:owner/repo  atau ssh://git@github.com/owner/repo
+  local owner, repo = remote_url:match "^git@[^:/]+[:/](.+)/(.+)$"
+
+  -- Format HTTPS/SSH-URI: https://github.com/owner/repo  atau ssh://git@host/owner/repo
+  if not owner then
+    owner, repo = remote_url:match "^%a+://[^/]+/(.+)/(.+)$"
+  end
+
+  if not owner or not repo then
+    vim.notify(string.format("Could not parse owner/repo from remote URL: %s", remote_url), vim.log.levels.ERROR)
+    return nil
+  end
+
+  return owner .. "/" .. repo
+end
+
+local function copy_to_clipboard(text)
+  vim.fn.setreg("+", text)
+  ---@diagnostic disable-next-line: undefined-field
+  RUtils.info("Git `" .. text .. "` copied to clipboard")
+end
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 -- ┃ MAPPING                                                 ┃
@@ -161,7 +216,8 @@ local function select_branch()
     local branch = selected[1]
     local files = get_files_from_branch(branch)
 
-    fzf_lua.fzf_exec(
+    local Fzflua = RUtils.fzflua.setup_fzflua()
+    Fzflua.fzf_exec(
       files,
       RUtils.fzflua.open_dock_bottom {
         prompt = RUtils.fzflua.padding_prompt(),
@@ -278,7 +334,8 @@ function M.trace_file_event()
     fzf_contents[#fzf_contents + 1] = x.display
   end
 
-  require("fzf-lua").fzf_exec(
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  Fzflua.fzf_exec(
     fzf_contents,
     RUtils.fzflua.open_dock_bottom {
       winopts = { title = RUtils.fzflua.format_title("Track Commit for Renamed or Deleted File", "") },
@@ -305,7 +362,9 @@ function M.select_file_different_branch()
     "--all",
     "--format=%(refname:short)",
   }
-  fzf_lua.fzf_exec(
+
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  Fzflua.fzf_exec(
     branches,
     RUtils.fzflua.open_dock_bottom {
       prompt = RUtils.fzflua.padding_prompt(),
@@ -318,6 +377,13 @@ function M.select_file_different_branch()
       },
     }
   )
+end
+
+function M.copy_repo_name()
+  local repo_name = get_repo_name()
+  if repo_name then
+    copy_to_clipboard(repo_name)
+  end
 end
 
 return M

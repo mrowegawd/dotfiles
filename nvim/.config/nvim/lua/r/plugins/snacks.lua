@@ -180,7 +180,7 @@ return {
       },
       image = {
         enabled = true,
-        doc = { inline = false, float = true, max_width = 80, max_height = 60 },
+        doc = { inline = true, float = false, max_width = 80, max_height = 60 },
       },
       dashboard = {
         pane_gap = 5, -- empty columns between vertical panes
@@ -192,7 +192,7 @@ return {
               key = "<space>",
               desc = "Find File",
               action = function()
-                require("fzf-lua").files()
+                RUtils.fzflua.setup_fzflua().files()
               end,
             },
             { icon = " ", hidden = true, key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -201,7 +201,7 @@ return {
               key = "r",
               desc = "Recent Files",
               action = function()
-                require("fzf-lua").oldfiles()
+                RUtils.fzflua.setup_fzflua().oldfiles()
               end,
             },
             {

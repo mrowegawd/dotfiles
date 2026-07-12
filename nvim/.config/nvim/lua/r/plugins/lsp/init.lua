@@ -1,3 +1,15 @@
+-- Apply this override only once, e.g. during initial setup (not inside the keymap function)
+local builtin_open_float = vim.diagnostic.open_float
+---@diagnostic disable-next-line: duplicate-set-field
+vim.diagnostic.open_float = function(...)
+  local bufnr, winid = builtin_open_float(...)
+  if bufnr and winid then
+    vim.api.nvim_buf_clear_namespace(bufnr, -1, 0, -1)
+    vim.api.nvim_set_option_value("filetype", "markdown", { buf = bufnr })
+  end
+  return bufnr, winid
+end
+
 return {
   -- NVIM-LSPCONFIG
   {
@@ -44,12 +56,34 @@ return {
               [vim.diagnostic.severity.INFO] = "DiagnosticsInfoNumHl",
             },
           },
+
           float = {
-            header = "",
+            -- NOTE: i had some weird results using `format`, prefix & suffix work better
+            format = function()
+              return ""
+            end,
+
+            prefix = function(report)
+              local severity_to_md_quote = {
+                [vim.diagnostic.severity.ERROR] = "> [!ERROR]",
+                [vim.diagnostic.severity.WARN] = "> [!WARNING]",
+                [vim.diagnostic.severity.INFO] = "> [!INFO]",
+                [vim.diagnostic.severity.HINT] = "> [!HINT]",
+              }
+              return severity_to_md_quote[report.severity] .. string.format(" %s\n", report.code), "Normal"
+            end,
+
             title = {
               { "  ", "DiagnosticFloatTitleIcon" },
               { "Problems ", "DiagnosticFloatTitle" },
             },
+
+            suffix = function(report, i, total)
+              local message = vim.trim(report.user_data.lsp.message)
+              local md_quote = "> " .. table.concat(vim.split(message, "\n"), "\n> ")
+              local separator = "\n" .. (i < total and "---" or "")
+              return md_quote .. separator, "Normal"
+            end,
           },
         },
         -- Enable this to enable the builtin LSP inlay hints on Neovim.
@@ -99,13 +133,25 @@ return {
               --  +----------------------------------------------------------+
               {
                 "<Leader>ld",
-                "<CMD>Trouble lsp_definitions toggle focus=true auto_refresh=false<CR>",
+                function()
+                  if vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype) then
+                    RUtils.notes.open_item_heading_default()
+                  else
+                    vim.cmd "Trouble lsp_definitions toggle focus=true auto_refresh=false"
+                  end
+                end,
                 has = "definition",
                 desc = "LSP: definitions [trouble]",
               },
               {
                 "<Leader>lv",
-                "<CMD>Trouble lsp_definitions toggle focus=true auto_refresh=false open_mode=vsplit<CR>",
+                function()
+                  if vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype) then
+                    RUtils.notes.open_item_heading_vsplit()
+                  else
+                    vim.cmd "Trouble lsp_definitions toggle focus=true auto_refresh=false open_mode=vsplit"
+                  end
+                end,
                 has = "definition",
                 desc = "LSP: definitions vsplit [trouble]",
               },

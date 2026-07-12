@@ -38,6 +38,7 @@ return {
     ft = { "org" },
     dependencies = {
       "akinsho/org-bullets.nvim",
+      "folke/snacks.nvim", -- Required for image rendering.
       "danilshvalov/org-modern.nvim",
       {
         "lukas-reineke/headlines.nvim",
@@ -76,57 +77,12 @@ return {
       { "<LocalLeader>ac", "", desc = "create note/capture" },
 
       {
-        "<LocalLeader>aft",
-        function()
-          RUtils.notes.filter_by_tags()
-        end,
-        desc = "Note: find notes by tag",
-      },
-      {
-        "<LocalLeader>afl",
-        RUtils.notes.last_filter_by_tags,
-        desc = "Note: last find notes by tag",
-      },
-
-      {
-        "<LocalLeader>aff",
-        RUtils.notes.find_files_notes,
-        desc = "Note: find notes files",
-      },
-
-      {
-        "<LocalLeader>afg",
-        RUtils.notes.live_grep,
-        desc = "Note: live grep",
-      },
-
-      {
         "<LocalLeader>aa",
         function()
           refresh_agenda_files(true)
           require("orgmode").action "agenda.prompt"
         end,
         desc = "Note: open agenda orgmode [orgmode]",
-      },
-
-      -- Open item in orgagenda
-      {
-        "<c-v>",
-        RUtils.notes.open_item_heading_vsplit,
-        desc = "Note: open item heading in vsplit",
-        ft = "orgagenda",
-      },
-      {
-        "<c-s>",
-        RUtils.notes.open_item_heading_split,
-        desc = "Note: open item heading in split",
-        ft = "orgagenda",
-      },
-      {
-        "<c-t>",
-        RUtils.notes.open_item_heading_tab,
-        desc = "Note: open item heading in tab",
-        ft = "orgagenda",
       },
 
       -- TEST Command
@@ -323,54 +279,35 @@ return {
             org_agenda = "<LocalLeader>aa",
           },
           agenda = {
-            -- Views
             org_agenda_day_view = "<LocalLeader>qvd",
             org_agenda_week_view = "<LocalLeader>qvw",
             org_agenda_month_view = "<LocalLeader>qvm",
             org_agenda_year_view = "<LocalLeader>qvy",
-
-            -- Navigation
             org_agenda_later = "f",
             org_agenda_earlier = "b",
             org_agenda_goto_today = "~",
             org_agenda_goto = { "<CR>", "<TAB>" },
             org_agenda_open_at_point = "<Leader>oe",
             org_agenda_goto_date = "<LocalLeader>qvD",
-
             org_agenda_switch_to = "<S-CR>",
-
-            -- Todo Effort
             org_agenda_todo = "<LocalLeader>qst",
             org_agenda_set_effort = "<LocalLeader>qse",
-
-            -- Clock
             org_agenda_clock_in = "<LocalLeader>qsci",
             org_agenda_clock_out = "<LocalLeader>qsco",
             org_agenda_clock_goto = "<LocalLeader>qscg",
             org_agenda_clock_cancel = "<LocalLeader>qscc",
-
             org_agenda_clockreport_mode = "<LocalLeader>qscR", -- buat report clock
-
-            -- Priority
             org_agenda_priority = "<LocalLeader>qspP",
             org_agenda_priority_up = "g]",
             org_agenda_priority_down = "g[",
-
             org_agenda_archived = "<LocalLeader>qA",
-
-            --- Tags, Refile / Notes
             org_agenda_refile = "<LocalLeader>qR",
             org_agenda_add_note = "<LocalLeader>qsn",
-
             org_agenda_set_tags = "<LocalLeader>qsg",
             org_agenda_toggle_archive_tag = "<LocalLeader>qsG",
-
             org_agenda_deadline = "<LocalLeader>qsd",
             org_agenda_schedule = "<LocalLeader>qss",
-
-            org_agenda_preview = { "K" },
-
-            -- Misc
+            org_agenda_preview = "K",
             org_agenda_filter = "<LocalLeader>qf",
             org_agenda_redo = "R",
             org_agenda_quit = { "<Leader>bk", "<Leader><Tab>" },
@@ -387,91 +324,58 @@ return {
             org_note_kill = { "q", "<C-q>", "<Leader>bk" },
           },
           org = {
-            -- Timestamp
             org_timestamp_up_day = "<Up>",
             org_timestamp_down_day = "<Down>",
             org_timestamp_up = "<C-PageUp>",
             org_timestamp_down = "<C-PageDown>",
-
-            -- Todo / Heading
             org_todo = "<LocalLeader>qst",
             org_todo_prev = "<LocalLeader>qsT",
             org_toggle_heading = "<LocalLeader>quh",
-
-            -- Navigation
             org_next_visible_heading = "<c-n>",
             org_previous_visible_heading = "<c-p>",
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
             outline_up_heading = "g{",
-
-            -- Insert
             org_insert_heading_respect_content = "i<CR>",
             org_insert_todo_heading = "iT",
             org_insert_todo_heading_respect_content = "<C-t>",
-
-            -- Fold / Cycle
             org_cycle = "zr",
             org_global_cycle = "ZR",
-
-            -- Clock
             org_clock_in = "<LocalLeader>qsci",
             org_clock_out = "<LocalLeader>qsco",
             org_clock_cancel = "<LocalLeader>qscc",
             org_clock_goto = "<LocalLeader>qscg",
-
-            -- Priority
             org_priority = "<LocalLeader>qspP",
             org_priority_up = "g]",
             org_priority_down = "g[",
-
-            -- Promote / Demote
             org_do_promote = "<S-Left>",
             org_do_demote = "<S-Right>",
             org_promote_subtree = "<C-Left>",
             org_demote_subtree = "<C-Right>",
-
-            -- Move subtree
             org_move_subtree_up = "<S-Up>",
             org_move_subtree_down = "<S-Down>",
-
-            -- Tags / Refile / Notes
             org_set_tags_command = "<LocalLeader>qsg",
             org_refile = "<LocalLeader>qR",
-
-            -- Links
             org_insert_link = "<Leader>il",
             org_store_link = "<Leader>iL",
-
-            -- Timestamp Insert
             org_time_stamp = "<Leader>it",
             org_time_stamp_inactive = "<Leader>id",
             org_toggle_timestamp_type = "<LocalLeader>qut",
-
-            -- Insert Deadline or Schedule
             org_deadline = "<LocalLeader>qsd",
             org_schedule = "<LocalLeader>qss",
             org_set_effort = "<LocalLeader>qse",
             org_add_note = "<LocalLeader>qsn",
-
-            -- Export / Babel
             org_export = "<LocalLeader>qx",
             org_babel_tangle = "bt",
-
             -- Gunanya buat edit contents dalam block code di beda buffer,
             -- cara: ini work ketika cursor berada di dalam block code
             org_edit_special = "<LocalLeader>qsE",
-
-            -- set current node to archived
             org_archive_subtree = "<LocalLeader>qA",
             org_toggle_archive_tag = "<LocalLeader>qsG",
-
             org_toggle_checkbox = "<C-c>",
             org_open_at_point = { "<Leader>oe" },
-
             org_meta_return = "<s-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<a-w>",
-
             org_show_help = "g?",
           },
         },
@@ -493,13 +397,7 @@ return {
         },
       }
 
-      RUtils.map.augroup("ManageNoteMappingOrg", {
-        event = { "FileType" },
-        pattern = { "org" },
-        command = function()
-          require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
-        end,
-      }, {
+      RUtils.map.augroup("OrgmodeReloads", {
         event = { "BufWritePost" },
         pattern = { "*.org" },
         command = function()
@@ -743,126 +641,16 @@ return {
       debug = false,
     },
   },
-  -- OBSIDIAN.NVIM (disabled)
+  -- OBSIDIAN.NVIM
   {
     "obsidian-nvim/obsidian.nvim",
-    enabled = false,
     version = "*", -- recommended, use latest release instead of latest commit
     cmd = "Obsidian",
     ft = "markdown",
-    keys = {
-      -- {
-      --   "<Leader>nfg",
-      --   function()
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     return fzf_lua.live_grep_glob {
-      --       prompt = RUtils.fzflua.padding_prompt(),
-      --       cwd = RUtils.config.path.wiki_path,
-      --       rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
-      --       -- rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.org" ]],
-      --       winopts = {
-      --         title = RUtils.fzflua.format_title(
-      --           "Obsidian > Grep",
-      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-      --         ),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note: grep [obsidian]",
-      -- },
-      {
-        "<Leader>nfg",
-        function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-          local viz = RUtils.get_visual_selection { strict = true }
-          if viz then
-            return fzf_lua.grep {
-              prompt = RUtils.fzflua.padding_prompt(),
-              query = string.format("%s", viz.selection),
-              -- no_esc = true,
-              rg_glob = true,
-              cwd = RUtils.config.path.wiki_path,
-              rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
-              winopts = {
-                title = RUtils.fzflua.format_title(
-                  "Obsidian > Grep",
-                  RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope3)
-                ),
-              },
-            }
-          end
-        end,
-        desc = "Note: grep (visual) [obsidian]",
-        mode = "x",
-      },
-      -- {
-      --   "<Leader>nfe",
-      --   function()
-      --     local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-      --     return fzf_lua.files {
-      --       prompt = RUtils.fzflua.padding_prompt(),
-      --       cwd = RUtils.config.path.wiki_path,
-      --       file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
-      --       -- file_ignore_patterns = { "%.norg$", "%.json$", "%.md$", "%.png$" },
-      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
-      --
-      --       winopts = {
-      --         -- fullscreen = true,
-      --         title = RUtils.fzflua.format_title(
-      --           "Obsidian > Note files",
-      --           RUtils.strip_whitespaces(RUtils.config.icons.misc.bookmark)
-      --         ),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note: find note files [obsidian]",
-      -- },
-      -- {
-      --   "<Leader>nN",
-      --   ":ObsidianNew ",
-      --   desc = "Note: create new note [obsidian]",
-      -- },
-      -- {
-      --   "<Leader>nn",
-      --   ":ObsidianToday<CR>",
-      --   desc = "Note: add note today [obsidian]",
-      -- },
-      {
-        "<Leader>oe",
-        function()
-          RUtils.cmd.open_with "go to file"
-        end,
-        desc = "Note: follow link [obsidian]",
-        ft = "markdown",
-      },
-      -- {
-      --   "<Leader>nd",
-      --   "<CMD>ObsidianDailies<CR>",
-      --   desc = "Note: open and select daily note [obsidian]",
-      -- },
-      -- {
-      --   "<Leader>nft",
-      --   function()
-      --     RUtils.markdown.find_local_titles()
-      --     vim.cmd "normal! zRzz"
-      --   end,
-      --   desc = "Note: jump local title [obsidian]",
-      --   ft = "markdown",
-      -- },
-      {
-        "<Leader>nfT",
-        function()
-          RUtils.markdown.find_global_titles()
-          vim.cmd "normal! zRzz"
-        end,
-        desc = "Note: jump global title [obsidian]",
-        ft = "markdown",
-      },
-    },
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "ibhagwan/fzf-lua" },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
-      -- legacy_commands = false,
+      legacy_commands = false,
       link = { style = "markdown" },
       workspaces = {
         {
@@ -875,6 +663,9 @@ return {
           name = "work",
           path = "~/Dropbox/neorg/work",
         },
+      },
+      picker = {
+        name = "fzf-lua",
       },
       daily_notes = {
         folder = "Drafts",
@@ -909,13 +700,6 @@ return {
         local time = os.date("%Y-%m-%d", os.time() - 86400)
         return tostring(time) .. "_" .. suffix
       end,
-      picker = {
-        name = "fzf-lua",
-        mappings = {
-          new = "<C-x>",
-          insert_link = "<C-l>",
-        },
-      },
       frontmatter = {
         func = function(note)
           -- Add the title of the note as an alias.
@@ -951,11 +735,6 @@ return {
         end,
       },
       -- note_frontmatter_func = function(note) end,
-      completion = {
-        nvim_cmp = false,
-        blink = true,
-        min_chars = 2,
-      },
       ui = {
         enable = false, -- set to false to disable all additional syntax features
       },
@@ -1136,10 +915,55 @@ return {
       },
     },
   },
-  -- IMAGE FOR ORG
+  -- IMAGES.NVIM FOR ORG (disabled)
   {
     "3rd/image.nvim",
+    enabled = false,
     ft = { "norg", "syslang", "vimwiki", "html", "org", "image_nvim" },
+    keys = {
+      {
+        "<Leader>CR",
+        function()
+          local image = require "image"
+          image.clear()
+        end,
+        { desc = "Open image under cursor inline" },
+      },
+      {
+        "<Leader>CC",
+        function()
+          local function get_image_path()
+            local line = vim.api.nvim_get_current_line()
+            local img_path = line:match "!%[.*%]%((.+)%)" -- md image ![](path)
+            if not img_path then
+              img_path = line:match "%[.*%]%((.+)%)" -- md-like without !: [](path)
+            end
+            if not img_path then
+              img_path = line:match "<image>(.-)</image>" -- html-like: <image>path</image>
+            end
+            if not img_path then
+              -- Match the first filename-like word ending with an image extension
+              img_path = line:match "([%w%._%-:]+%.png)"
+                or line:match "([%w%._%-:]+%.jpg)"
+                or line:match "([%w%._%-:]+%.jpeg)"
+                or line:match "([%w%._%-:]+%.svg)"
+                or line:match "([%w%._%-:]+%.bmp)"
+            end
+            return img_path
+          end
+
+          local path = get_image_path()
+          if not path or path == "" then
+            vim.notify("No image path found on current line", vim.log.levels.WARN)
+            return
+          end
+
+          local image = require "image"
+          image.from_file(path, {}):render()
+        end,
+        { desc = "Open image under cursor inline" },
+      },
+    },
     opts = {
       debug = {
         enabled = false,
@@ -1147,18 +971,14 @@ return {
         file_path = "/tmp/image.nvim.log",
         format = "compact",
       },
-      -- backend = "kitty", -- atau "ueberzug"
-      -- backend = "ueberzug",
-      -- backend = "sixel",
-      -- processor = "magick_cli",
-      -- processor = "magick_rock",
-      tmux_show_only_in_active_window = true,
       integrations = {
         markdown = {
           enabled = false,
           clear_in_insert_mode = false,
-          -- only_render_image_at_cursor = true,
+          only_render_image_at_cursor = true,
           -- only_render_image_at_cursor_mode = "popup",
+          -- floating_windows = false,
+          filetypes = { "vimwiki", "markdown" }, -- markdown extensions (ie. quarto) can go here
         },
         html = {
           filetypes = { "html", "xhtml", "htm", "markdown" },
@@ -1171,20 +991,19 @@ return {
         },
         org = {
           enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          -- only_render_image_at_cursor_mode = "popup",
+          -- floating_windows = false,
+          filetypes = { "org" },
         },
       },
-      hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif", "*.svg" },
-      max_width_window_percentage = nil,
-      max_height_window_percentage = nil,
+      -- backend = "kitty",
+      -- tmux_show_only_in_active_window = true,
       window_overlap_clear_enabled = true,
-      window_overlap_clear_ft_ignore = {
-        "cmp_menu",
-        "cmp_docs",
-        "snacks_notif",
-        "scrollview",
-        "scrollview_sign",
-        "notify",
-      },
+      max_height_window_percentage = 30,
+      hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif", "*.svg" },
     },
   },
 }

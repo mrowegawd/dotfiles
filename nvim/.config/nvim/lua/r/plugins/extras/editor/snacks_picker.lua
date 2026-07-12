@@ -54,6 +54,7 @@ end
 --     scope = scope:parent()
 --   end
 -- end
+local exclude_win = { "codecompanion", "pdfview" }
 
 return {
   {
@@ -195,6 +196,10 @@ return {
       {
         "<c-j>",
         function()
+          if vim.tbl_contains(exclude_win, vim.bo.filetype) then
+            return
+          end
+
           vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
           Snacks.scope.jump { bottom = true }
         end,
@@ -203,6 +208,9 @@ return {
       {
         "<c-k>",
         function()
+          if vim.tbl_contains(exclude_win, vim.bo.filetype) then
+            return
+          end
           vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
           Snacks.scope.jump { bottom = false }
         end,

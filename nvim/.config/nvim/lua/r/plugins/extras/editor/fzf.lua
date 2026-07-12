@@ -39,22 +39,23 @@ return {
       { "<c-h>", "<Left>", ft = "fzf", mode = "t", nowait = true },
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
-      { "tf", function() require("fzf-lua").tabs() end, desc = "Tab: select tabs [fzflua]" },
+      { "tf", function() RUtils.fzflua.setup_fzflua().tabs() end, desc = "Tab: select tabs [fzflua]" },
 
-      { "<Leader><Leader>", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
-      { "<Leader>fh", function() require("fzf-lua").command_history() end, desc = "Picker: history commands [fzflua]" },
-      { "<Leader>fH", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
-      { "<Leader>fc", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
-      { "<Leader>fA", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
-      { "<Leader>fr", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
-      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
+      { "<Leader><Leader>", function() RUtils.fzflua.setup_fzflua().files() end, desc = "Picker: find files [fzflua]", mode = { "n", "x" } },
+      { "<Leader>fh", function() RUtils.fzflua.setup_fzflua().command_history() end, desc = "Picker: history commands [fzflua]" },
+      { "<Leader>fH", function() RUtils.fzflua.setup_fzflua().search_history() end, desc = "Picker: search history [fzflua]" },
+      { "<Leader>fc", function() RUtils.fzflua.setup_fzflua().commands() end, desc = "Picker: commands [fzflua]" },
+      { "<Leader>fA", function() RUtils.fzflua.setup_fzflua().autocmds() end, desc = "Picker: automcds [fzflua]" },
+      { "<Leader>fr", function() RUtils.fzflua.setup_fzflua().oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
+      { "<Leader>fl", function() RUtils.fzflua.setup_fzflua().resume() end, desc = "Picker: resume (last search) [fzfua]" },
 
-      { "<Leader>hm", function() require("fzf-lua").man_pages() end, desc = "Help: man pages [fzflua]" },
-      { "<Leader>hB", function() require("fzf-lua").keymaps() end, desc = "Help: show global keymaps [fzflua]" },
+      { "<Leader>hm", function() RUtils.fzflua.setup_fzflua().man_pages() end, desc = "Help: man pages [fzflua]" },
+      { "<Leader>hB", function() RUtils.fzflua.setup_fzflua().keymaps() end, desc = "Help: show global keymaps [fzflua]" },
       {
         "<Leader>fz",
         function()
-          require("fzf-lua").files( RUtils.fzflua.open_dock_bottom ({
+          local Fzflua = RUtils.fzflua.setup_fzflua()
+          Fzflua.files( RUtils.fzflua.open_dock_bottom ({
             winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙"), preview = { hidden = true } },
             no_header = false, -- disable default header
             cwd = "~/.config/miscxrdb/xresource-theme",
@@ -71,7 +72,7 @@ return {
         desc = "Picker: select colorschemes [fzflua]",
       },
 
-      { "<Leader>hh", function() require("fzf-lua").help_tags() end, desc = "Help: nvim [fzflua]" },
+      { "<Leader>hh", function() RUtils.fzflua.setup_fzflua().help_tags() end, desc = "Help: nvim [fzflua]" },
       {
         "<Leader>hh",
         function()
@@ -94,7 +95,7 @@ return {
       {
         "<Leader>fo",
         function()
-          return require("fzf-lua").files {
+          return RUtils.fzflua.setup_fzflua().files {
             winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
@@ -104,7 +105,7 @@ return {
       {
         "<Leader>fF",
         function()
-          return require("fzf-lua").files {
+          return RUtils.fzflua.setup_fzflua().files {
             winopts = { title = RUtils.fzflua.format_title("Plugin Files", "󰈙") },
             cwd = vim.fn.stdpath "data" .. "/lazy",
           }
@@ -113,8 +114,8 @@ return {
       },
 
       -- Search
-      { "<Leader>sB", function() require("fzf-lua").lines() end, desc = "Search: all buffers [fzflua]", mode = { "n", "x" } },
-      { "<Leader>sb", function() require("fzf-lua").blines() end, desc = "Search: buffers [fzflua]" },
+      { "<Leader>sB", function() RUtils.fzflua.setup_fzflua().lines() end, desc = "Search: all buffers [fzflua]", mode = { "n", "x" } },
+      { "<Leader>sb", function() RUtils.fzflua.setup_fzflua().blines() end, desc = "Search: buffers [fzflua]" },
       {
         "<Leader>sb",
         function()
@@ -126,7 +127,7 @@ return {
               RUtils.warn("cannot execute: an error occurred..?", { title = "Fzflua Blines" })
               return
             end
-            require("fzf-lua").blines {
+            RUtils.fzflua.setup_fzflua().blines {
               query = visual_selection.selection,
             }
           end)
@@ -135,23 +136,23 @@ return {
         mode = { "x" },
       },
 
-      { "<Leader>sm", function() require("fzf-lua").marks() end, desc = "Search: marks [fzflua]" },
-      { "<Leader>sj", function() require("fzf-lua").jumps() end, desc = "Search: jumps [fzflua]" },
+      { "<Leader>sm", function() RUtils.fzflua.setup_fzflua().marks() end, desc = "Search: marks [fzflua]" },
+      { "<Leader>sj", function() RUtils.fzflua.setup_fzflua().jumps() end, desc = "Search: jumps [fzflua]" },
 
-      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
+      { "z=", function() RUtils.fzflua.setup_fzflua().spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- Diagnostics
       { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
 
       -- Grep
-      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
-      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "x" } },
-      { "<Leader>fw", function() require("fzf-lua").grep() end, desc = "Picker: grep string [fzflua]" },
+      { "<Leader>fg", function() RUtils.fzflua.setup_fzflua().live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
+      { "<Leader>fg", function() RUtils.fzflua.setup_fzflua().grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "x" } },
+      { "<Leader>fw", function() RUtils.fzflua.setup_fzflua().grep() end, desc = "Picker: grep string [fzflua]" },
       {
         "<Leader>fG",
         function()
           local fzf_cword = require("fzf-lua.utils").rg_escape(vim.fn.expand "<cword>")
-          require("fzf-lua").grep_cword { winopts = { title = string.format("Grep cword >> %s", fzf_cword) } }
+          RUtils.fzflua.setup_fzflua().grep_cword { winopts = { title = string.format("Grep cword >> %s", fzf_cword) } }
         end,
         desc = "Picker: grep word [fzflua]",
       },
@@ -159,20 +160,20 @@ return {
         "<Leader>fG",
         function()
           local fzf_visual = require("fzf-lua.utils").get_visual_selection()
-          require("fzf-lua").grep_visual { winopts = { title = string.format("Grep word visual >> %s", fzf_visual) } }
+          RUtils.fzflua.setup_fzflua().grep_visual { winopts = { title = string.format("Grep word visual >> %s", fzf_visual) } }
         end,
         desc = "Picker: grep word visual [fzflua]",
         mode = { "x" },
       },
 
       -- Git
-      { "<c-c>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
-      { "<c-c>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<c-c>gs", function() RUtils.fzflua.setup_fzflua().git_status() end, desc = "Git: status [fzflua]" },
+      { "<c-c>gS", function() RUtils.fzflua.setup_fzflua().git_stash() end, desc = "Git: stash [fzflua]" },
 
       { "<c-c>gd", "<CMD>DFile<CR>", desc = "Git: diff [fzflua]" },
 
-      { "<c-c>gl", function() require("fzf-lua").git_bcommits() end, desc = "Git: commit buffer [fzflua]" },
-      { "<c-c>gL", function() require("fzf-lua").git_commits() end, desc = "Git: commit repo [fzflua]" },
+      { "<c-c>gl", function() RUtils.fzflua.setup_fzflua().git_bcommits() end, desc = "Git: commit buffer [fzflua]" },
+      { "<c-c>gL", function() RUtils.fzflua.setup_fzflua().git_commits() end, desc = "Git: commit repo [fzflua]" },
 
       { "<c-c>gD", function() RUtils.git.trace_file_event() end, desc = "Git: track commit for renamed or file deleted [fzflua]" },
       { "<c-c>gf", function() RUtils.git.select_file_different_branch() end, desc = "Git: find files branch [fzflua]" },
@@ -271,11 +272,12 @@ return {
 
               if entry.path ~= nil then
                 local file_or_dir = vim.uv.fs_stat(entry.path)
+                local Fzflua = RUtils.fzflua.setup_fzflua()
 
                 if file_or_dir and status and file_or_dir.type == "file" then
-                  require("fzf-lua").actions.file_edit(selected, opts)
+                  Fzflua.actions.file_edit(selected, opts)
                 else
-                  require("fzf-lua").live_grep {
+                  Fzflua.live_grep {
                     fzf_opts = { ["--reverse"] = false },
                     cwd = entry.path,
                   }
@@ -287,12 +289,12 @@ return {
             ["ctrl-q"] = actions.toggle_ignore,
 
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
 
             ["ctrl-x"] = function()
-              require("fzf-lua").files {
+              RUtils.fzflua.setup_fzflua().files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],
                 winopts = {
                   title = RUtils.fzflua.format_title(
@@ -335,7 +337,7 @@ return {
                     opts.rg_glob = false
                     opts.no_esc = true
 
-                    return require("fzf-lua").files(opts)
+                    return RUtils.fzflua.setup_fzflua().files(opts)
                   end,
                 },
               }
@@ -376,7 +378,7 @@ return {
               ---@diagnostic disable-next-line: undefined-field
               RUtils.info(pth .. " copied to clipboard", { title = "Path Copy" })
 
-              require("fzf-lua").actions.resume()
+              RUtils.fzflua.setup_fzflua().actions.resume()
             end,
           },
         },
@@ -399,9 +401,9 @@ return {
             fzf_opts = { ["--multi"] = true },
             actions = {
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
               ["alt-v"] = actions.file_sel_to_ll,
-              ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
 
               ["left"] = false,
               ["right"] = false,
@@ -480,9 +482,9 @@ return {
             actions = {
               ["default"] = actions.git_switch,
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
               ["alt-v"] = actions.file_sel_to_ll,
-              ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
             },
           },
           stash = RUtils.fzflua.open_dock_bottom {
@@ -515,18 +517,23 @@ return {
           multiprocess = true,
           winopts = {
             title = RUtils.fzflua.format_title("Grep", RUtils.strip_whitespaces(RUtils.config.icons.misc.telescope2)),
+            preview = {
+              winopts = { -- builtin previewer window options
+                number = true,
+              },
+            },
           },
           actions = {
             ["ctrl-z"] = actions.toggle_hidden,
             ["ctrl-q"] = actions.toggle_ignore,
 
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
 
             ["ctrl-x"] = function()
-              require("fzf-lua").files {
+              RUtils.fzflua.setup_fzflua().files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],
                 winopts = {
                   title = RUtils.fzflua.format_title(
@@ -579,7 +586,7 @@ return {
                     opts.rg_glob = false
                     opts.no_esc = true
 
-                    return require("fzf-lua").live_grep_glob(opts)
+                    return RUtils.fzflua.setup_fzflua().live_grep_glob(opts)
                   end,
                 },
               }
@@ -619,9 +626,9 @@ return {
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
           },
         },
         jumps = RUtils.fzflua.open_center_big_vertical {},
@@ -662,10 +669,10 @@ return {
                   preview = { hidden = false },
                 },
               }
-              require("fzf-lua").oldfiles(opts)
+              RUtils.fzflua.setup_fzflua().oldfiles(opts)
             end,
             ["ctrl-r"] = function()
-              require("fzf-lua").oldfiles { cwd_only = true }
+              RUtils.fzflua.setup_fzflua().oldfiles { cwd_only = true }
             end,
           },
         },
@@ -674,9 +681,9 @@ return {
           cwd = nil, -- buffers list for a given dir
           actions = {
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
             ["ctrl-o"] = function(...)
               local P = require "overlook.peek"
               P.peek_fzflua(...)
@@ -698,9 +705,9 @@ return {
             -- actions inherit from 'actions.buffers' and merge
             ["default"] = actions.buf_switch,
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
             ["ctrl-x"] = { actions.buf_del, actions.resume },
           },
           fzf_opts = {
@@ -724,9 +731,9 @@ return {
             ["default"] = actions.buf_edit_or_qf,
 
             ["alt-q"] = actions.buf_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -751,9 +758,9 @@ return {
             ["default"] = actions.buf_edit_or_qf,
 
             ["alt-q"] = actions.buf_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.buf_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
 
             ["ctrl-s"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
@@ -822,9 +829,9 @@ return {
           cwd_only = true,
           actions = {
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
 
             ["ctrl-v"] = actions.file_vsplit,
             ["ctrl-s"] = actions.file_split,
@@ -850,8 +857,8 @@ return {
             actions = {
               ["alt-v"] = actions.file_sel_to_ll,
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
-              ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
+              ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
               -- ["ctrl-g"] = actions.grep_lgrep,
               ["ctrl-x"] = function()
                 local opts = {
@@ -871,7 +878,7 @@ return {
                         end
                       end
 
-                      require("fzf-lua").lsp_document_symbols {
+                      RUtils.fzflua.setup_fzflua().lsp_document_symbols {
                         query = table.concat(contents, " "),
                       }
                     end,
@@ -883,12 +890,12 @@ return {
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 
-                require("fzf-lua").lsp_workspace_symbols {
+                RUtils.fzflua.setup_fzflua().lsp_workspace_symbols {
                   cwd = cwd,
                   winopts = { title = extend_title_cs.title, fullscreen = false },
                   actions = {
                     ["ctrl-e"] = function(...)
-                      require("fzf-lua").lsp_document_symbols(...)
+                      RUtils.fzflua.setup_fzflua().lsp_document_symbols(...)
                     end,
                   },
                 }
@@ -905,21 +912,12 @@ return {
           finder = RUtils.fzflua.open_lsp_references {
             async = true,
             silent = true,
-            -- providers = {
-            --   { "references", prefix = require("fzf-lua").utils.ansi_codes.blue "ref " },
-            --   { "definitions", prefix = require("fzf-lua").utils.ansi_codes.green "def " },
-            --   { "declarations", prefix = require("fzf-lua").utils.ansi_codes.magenta "decl" },
-            --   { "typedefs", prefix = require("fzf-lua").utils.ansi_codes.red "tdef" },
-            --   { "implementations", prefix = require("fzf-lua").utils.ansi_codes.green "impl" },
-            --   { "incoming_calls", prefix = require("fzf-lua").utils.ansi_codes.cyan "in  " },
-            --   { "outgoing_calls", prefix = require("fzf-lua").utils.ansi_codes.yellow "out " },
-            -- },
             winopts = { title = RUtils.fzflua.format_title("Finder", "") },
             actions = {
               ["alt-q"] = actions.file_sel_to_qf,
-              ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+              ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
               ["alt-v"] = actions.file_sel_to_ll,
-              ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+              ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
             },
           },
         },
@@ -932,9 +930,9 @@ return {
           icon_padding = "", -- add padding for wide diagnostics signs
           actions = {
             ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-Q"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_qf },
+            ["alt-Q"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_qf },
             ["alt-v"] = actions.file_sel_to_ll,
-            ["alt-V"] = { prefix = "toggle-all", fn = require("fzf-lua").actions.file_sel_to_ll },
+            ["alt-V"] = { prefix = "toggle-all", fn = RUtils.fzflua.setup_fzflua().actions.file_sel_to_ll },
           },
         },
         complete_path = RUtils.fzflua.open_lsp_code_action {
@@ -963,14 +961,14 @@ return {
         }
       end
 
-      require("fzf-lua").setup(opts)
+      RUtils.fzflua.setup_fzflua().setup(opts)
 
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("FzfSetMap", { clear = true }),
         desc = "Set terminal mappings in fzf buffer.",
         pattern = "fzf",
         callback = function(bufn)
-          vim.keymap.set("t", "<F2>", require("fzf-lua").builtin, { buffer = bufn.buf })
+          vim.keymap.set("t", "<F2>", RUtils.fzflua.setup_fzflua().builtin, { buffer = bufn.buf })
           vim.keymap.set("t", "<a-x>", "<a-x>", { buffer = bufn.buf })
 
           vim.keymap.set("t", "<a-l>", "", { buffer = bufn.buf })

@@ -221,12 +221,14 @@ keymap.set("n", "<Leader>fG", function()
           end
         end,
         ["alt-v"] = function(selected, _)
-          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
+          local Fzflua = RUtils.fzflua.setup_fzflua()
+          title = title .. "  " .. Fzflua.config.__resume_data.last_query
           local list_items = { items = send_data(selected), title = title }
           RUtils.qf.save_to_qf_and_auto_open_qf(list_items, true)
         end,
         ["alt-q"] = function(selected, _)
-          title = title .. "  " .. require("fzf-lua").config.__resume_data.last_query
+          local Fzflua = RUtils.fzflua.setup_fzflua()
+          title = title .. "  " .. Fzflua.config.__resume_data.last_query
           local list_items = { items = send_data(selected), title = title }
           RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
         end,

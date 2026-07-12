@@ -1,55 +1,139 @@
 ---@class r.utils.notes
-local M = {}
+local M = {
+  note_mode = "org",
+}
 
 ---@alias Mode_open "vsplit" | "split" | "tabe" | "default"
 ---@alias Opts_file {filename: string, col?: integer, lnum?: integer, title_str?: string }
 
 -- Initial definition for setting up the note mode,
 -- whether to use an org file or markdown
----@type "org" | "markdown"
-local note_mode = "org"
+---@type "org" | "markdown" | "orgagenda"
 
-local Orgmode, Fzflua, FzfluaBuiltin
-local file_ignores, title_picker, icon_note, regex_url_backlinks, regex_title
+local Orgmode, FzfluaBuiltin
+local file_ignores, title_picker, icon_note, regex_url_backlinks, regex_title, rg_opts
 
-local rg_opts = {
-  "--column",
-  "--hidden",
-  "--line-number",
-  "--no-heading",
-  "--ignore-case",
-  "--smart-case",
-  "--color=always",
-  "--max-columns=4096",
-  "--colors",
-  "'match:fg:178'",
-}
+-- ├─────────────────────────────────┤ SETUP ├──────────────────────────────┤
+local function setup_orgmode()
+  if Orgmode then
+    return Orgmode
+  end
+  Orgmode = require "orgmode"
+  return Orgmode
+end
 
-local icon_markdown = RUtils.config.icons.misc.markdown
-local title_picker_markdown = "Markdown"
-local file_ignore_pattern_markdown = { "%.norg$", "%.json$", "%.org$", "%.png$" }
+local function not_implement()
+  RUtils.warn "not implemented yet"
+end
 
-local icon_orgmode = RUtils.config.icons.misc.org
-local title_picker_orgmode = "Orgmode"
-local file_ignore_patterns_orgmode =
-  { "%.norg$", "%.json$", "%.md$", "%.png$", "%.txt$", "%.toml$", "%.css$", "%.sh$", "%.bak$", "%.lua$" }
+---@param tbl table
+local function clone_tbl(tbl)
+  local t = {}
+  for i, v in ipairs(tbl) do
+    t[i] = v
+  end
+  return t
+end
 
-if note_mode == "markdown" then
-  file_ignores = file_ignore_pattern_markdown
-  title_picker = title_picker_markdown
-  icon_note = icon_markdown
-  rg_opts[#rg_opts + 1] = "--type=md"
-  regex_title = [[^#{1,}\s\w.*$]]
-  regex_url_backlinks = [[http|\[\[]]
-else
-  file_ignores = file_ignore_patterns_orgmode
-  title_picker = title_picker_orgmode
-  icon_note = icon_orgmode
-  rg_opts[#rg_opts + 1] = "--type=org"
+---@param tbl table
+---@param element string
+local function check_duplicate_element_data_tags(tbl, element)
+  for _, x in pairs(tbl) do
+    if x["text"] == element then
+      return true
+    end
+  end
+  return false
+end
+
+---@param opts {}
+local function opts_fzf(opts)
+  return {
+    prompt = RUtils.fzflua.padding_prompt(),
+    winopts = opts.winopts,
+    actions = opts.actions,
+    fzf_opts = opts.fzf_opts,
+  }
+end
+
+-- ├─────────────────────────────────┤ RESET ├──────────────────────────────┤
+local function reset_vars()
+  if M.note_mode == "markdown" then
+    title_picker = "Markdown"
+    file_ignores = { "%.norg$", "%.json$", "%.org$", "%.png$" }
+    icon_note = RUtils.config.icons.misc.markdown
+    rg_opts = {
+      "--column",
+      "--hidden",
+      "--line-number",
+      "--no-heading",
+      "--ignore-case",
+      "--smart-case",
+      "--color=always",
+      "--max-columns=4096",
+      "--colors",
+      "'match:fg:178'",
+      "--type=md",
+    }
+    regex_title = [[^#{1,}\s\w.*$]]
+    regex_url_backlinks = [[http|\[\[]]
+    return
+  end
+
+  title_picker = "Orgmode"
+  file_ignores = { "%.norg$", "%.json$", "%.md$", "%.png$", "%.txt$", "%.toml$", "%.css$", "%.sh$", "%.bak$", "%.lua$" }
+  icon_note = RUtils.config.icons.misc.org
+  rg_opts = {
+    "--column",
+    "--hidden",
+    "--line-number",
+    "--no-heading",
+    "--ignore-case",
+    "--smart-case",
+    "--color=always",
+    "--max-columns=4096",
+    "--colors",
+    "'match:fg:178'",
+    "--type=org",
+  }
   regex_url_backlinks = [[http|\[\[]]
   regex_title = [[^\*\s|^\*+\s*[\w<`\?].*$]]
 end
 
+---@param force_set string
+---@return "markdown" | "org" |"orgagenda"
+local function swith_note_mode(force_set)
+  if M.note_mode == "markdown" then
+    M.note_mode = "org"
+  else
+    M.note_mode = "markdown"
+  end
+
+  if force_set then
+    M.note_mode = force_set
+  end
+
+  if M.note_mode ~= force_set then
+    RUtils.info("Note mode:`" .. M.note_mode .. "`")
+  end
+  return M.note_mode
+end
+
+-- ├──────────────────────────────────┤ TAGS ├──────────────────────────────────┤
+---@param tag_locations obsidian.TagLocation[]
+---@return string[]
+local list_tags = function(tag_locations)
+  local tags = {}
+  for _, tag_loc in ipairs(tag_locations) do
+    local tag = tag_loc.tag
+    if not tags[tag] then
+      tags[tag] = true
+    end
+  end
+  return vim.tbl_keys(tags)
+end
+
+-- ├──────────────────────────────────┤ FIND ├──────────────────────────────────┤
 ---@param title string?
 local function get_title_note(title)
   title = title or ""
@@ -59,27 +143,6 @@ local function get_title_note(title)
     return
   end
   return title_tbl
-end
-
-local function not_implement()
-  RUtils.warn "not implemented yet"
-end
-
-local function clone_tbl(tbl)
-  local t = {}
-  for i, v in ipairs(tbl) do
-    t[i] = v
-  end
-  return t
-end
-
-local function check_duplicate_element_data_tags(tbl, element)
-  for _, x in pairs(tbl) do
-    if x["text"] == element then
-      return true
-    end
-  end
-  return false
 end
 
 local function realpath(path)
@@ -139,23 +202,70 @@ local function relative_path(from_dir, to_path)
   return table.concat(parts, "/")
 end
 
--- ─────────────────────────────────────────────────────────────────────────────
-
-local function setup_orgmode()
-  if Orgmode then
-    return Orgmode
+-- ├───────────────────────────────┤ MODE OPEN ├────────────────────────────┤
+---@param mode_open Mode_open
+---@param opts_file Opts_file
+local function open(mode_open, opts_file)
+  local cmd_msg
+  if mode_open == "default" then
+    cmd_msg = "e " .. opts_file.filename
+  else
+    cmd_msg = mode_open .. " " .. opts_file.filename
+    if mode_open == "vsplit" then
+      cmd_msg = "botright " .. cmd_msg
+    end
   end
-  Orgmode = require "orgmode"
-  return Orgmode
+
+  vim.cmd(cmd_msg)
+
+  if opts_file.lnum and opts_file.col then
+    vim.api.nvim_win_set_cursor(0, { opts_file.lnum, opts_file.col })
+  else
+    local set_cursor_position = vim.api.nvim_buf_get_mark(0, '"')
+    pcall(vim.api.nvim_win_set_cursor, 0, set_cursor_position)
+  end
+
+  vim.schedule(function()
+    RUtils.cmd.force_foldopen()
+
+    local row = vim.fn.winline()
+    local height = vim.api.nvim_win_get_height(0)
+
+    if row > height * 0.8 then
+      vim.cmd "normal! zt"
+    end
+  end)
 end
 
-local function get_headline_at_cursor()
-  local orgapi = require "orgmode.api.agenda"
+---@param opts_file Opts_file
+local function open_vsplit(opts_file)
+  open("vsplit", opts_file)
+end
+
+---@param opts_file Opts_file
+local function open_split(opts_file)
+  open("split", opts_file)
+end
+
+---@param opts_file Opts_file
+local function open_tab(opts_file)
+  open("tabe", opts_file)
+end
+
+---@param opts_file Opts_file
+local function open_default(opts_file)
+  open("default", opts_file)
+end
+
+---@param mode_open? string
+local function get_headline_at_cursor(mode_open)
   local filename, headline_opts, lnum, col
 
-  if note_mode == "org" then
+  if M.note_mode == "orgagenda" then
+    local orgapi = require "orgmode.api.agenda"
     headline_opts = orgapi.get_headline_at_cursor()
     if not headline_opts then
+      RUtils.warn "orgagenda: `headline_opts` is nil. Something went wrong."
       return
     end
 
@@ -165,15 +275,89 @@ local function get_headline_at_cursor()
 
     lnum = headline_opts.position.start_line
     col = headline_opts.position.end_col
-  elseif note_mode == "markdown" then
-    headline_opts = {}
-    lnum = 0
-    col = 0
-    filename = ""
-  end
+  elseif M.note_mode == "org" then
+    local OrgHyperlink = require "orgmode.org.links.hyperlink"
+    local OrgLinkUrl = require "orgmode.org.links.url"
+    local link = OrgHyperlink.at_cursor()
+    if not link then
+      return
+    end
 
-  if not headline_opts then
-    RUtils.error "Failed error"
+    local file = link.url:to_string()
+    local org_link_url = OrgLinkUrl:new(file)
+    local file_path = org_link_url:get_file_path()
+    local type = file_path and "file" or "internal"
+
+    if type == "internal" then
+      if mode_open then
+        if mode_open == "tabe" then
+          vim.cmd "tabe %"
+        else
+          vim.cmd(mode_open)
+        end
+      end
+      Orgmode = setup_orgmode()
+      Orgmode.links:follow(file)
+      return
+    end
+
+    filename = org_link_url:get_real_path()
+  elseif M.note_mode == "markdown" then
+    ---@param items table[]
+    ---@return table[]
+    local function dedupe_items(items)
+      local seen = {}
+      local result = {}
+      for _, item in ipairs(items) do
+        local key = item.filename or item.uri
+        if key and not seen[key] then
+          seen[key] = true
+          result[#result + 1] = item
+        end
+      end
+      return result
+    end
+
+    vim.lsp.buf.definition {
+      on_list = function(t)
+        local items = dedupe_items(t.items)
+        if #items == 1 then
+          filename = items[1].filename
+
+          if vim.startswith(items[1].text, "#") then
+            local open_strategy = mode_open
+            if open_strategy == "default" then
+              open_strategy = "e"
+            elseif open_strategy == "tabe" then
+              vim.cmd "tabe %"
+              open_strategy = "e"
+            end
+
+            -- NOTE: It's not possible to open a heading with the desired `mode_open`
+            -- when the heading is located in the current file. This is caused by the
+            -- behavior of `api.open_note`, even if `mode_open` is called directly, like this:
+            -- local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
+            -- if bufname == filename then
+            --   if mode_open == "tabe" then
+            --     vim.cmd "tabe %"
+            --   else
+            --     vim.cmd(mode_open)
+            --   end
+            -- end
+
+            local obsidian = require "obsidian"
+            local api = obsidian.api
+            api.open_note(items[1], open_strategy)
+          else
+            if mode_open then
+              open(mode_open, { filename = filename, lnum = nil, col = nil })
+            end
+          end
+        else
+          require("obsidian").picker.pick(items, { prompt_title = "Resolve link" })
+        end
+      end,
+    }
     return
   end
 
@@ -181,99 +365,6 @@ local function get_headline_at_cursor()
     filename = filename,
     lnum = lnum,
     col = col,
-    opts = headline_opts,
-  }
-end
-
-local function setup_fzflua()
-  if Fzflua then
-    return Fzflua
-  end
-  Fzflua = require "fzf-lua"
-  return Fzflua
-end
-
-local function setup_buffer_or_file_fzflua(fn)
-  if not FzfluaBuiltin then
-    FzfluaBuiltin = require "fzf-lua.previewer.builtin"
-  end
-
-  local Previewer = FzfluaBuiltin.buffer_or_file:extend()
-
-  function Previewer:new(o, optsc, fzf_win)
-    Previewer.super.new(self, o, optsc, fzf_win)
-    setmetatable(self, Previewer)
-    return self
-  end
-
-  function Previewer:parse_entry(entry_str)
-    local dataparse = fn(entry_str)
-    if not dataparse then
-      return {}
-    end
-    return dataparse
-  end
-
-  return Previewer
-end
-
--- local load_plenary_plugin = function()
---   local scan = require "plenary.scandir"
---   local Path = require "plenary.path"
---   return Path, scan
--- end
---
--- local load_opts_orgmode = function()
---   local plugin = require("lazy.core.config").plugins["orgmode"]
---   local Plugin = require "lazy.core.plugin"
---   local opts_plugin = Plugin.values(plugin, "opts", false)
---   return opts_plugin
--- end
---
--- local get_tbl_backup_and_todos = function(scan, is_ignore_file)
---   is_ignore_file = is_ignore_file or false
---
---   local opts_plugin = load_opts_orgmode()
---
---   local org_backup = {}
---   local org_todos = {}
---   for _, x in pairs(opts_plugin.org_agenda_files) do
---     local path
---     if string.match(x, [[%*%*]], 1) then
---       path = string.gsub(x, [[%/%*%*/%*$]], "")
---     else
---       path = string.gsub(x, [[%/%*$]], "")
---     end
---     local dirs = scan.scan_dir(path)
---     for _, file_path in pairs(dirs) do
---       if is_ignore_file and (not string.match(file_path, "org_archive")) then
---         local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org$")
---         if check_org_ext then
---           local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
---           table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
---           table.insert(org_todos, basename_file)
---         end
---       else
---         local check_org_ext = string.match(RUtils.file.basename(file_path), "%.org")
---         if check_org_ext then
---           local basename_file = string.gsub(RUtils.file.basename(file_path), ".org$", "")
---           table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
---           table.insert(org_todos, basename_file)
---         end
---       end
---     end
---   end
---
---   return org_backup, org_todos
--- end
-
----@param opts {}
-local function opts_fzf(opts)
-  return {
-    prompt = RUtils.fzflua.padding_prompt(),
-    winopts = opts.winopts,
-    actions = opts.actions,
-    fzf_opts = opts.fzf_opts,
   }
 end
 
@@ -302,8 +393,10 @@ local function __define_tbl_paths(tbl_paths)
   }
 end
 
-local function find_files_org()
-  Fzflua = setup_fzflua()
+local function find_files()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  reset_vars()
+
   Fzflua.files {
     prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
@@ -313,8 +406,10 @@ local function find_files_org()
   }
 end
 
-local function live_grep_org()
-  Fzflua = setup_fzflua()
+local function live_grep()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  reset_vars()
+
   return Fzflua.live_grep_glob {
     prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
@@ -323,83 +418,66 @@ local function live_grep_org()
   }
 end
 
-local function insert_tag_org()
-  Orgmode = setup_orgmode()
-  local contents_tags = Orgmode.files:get_tags()
-  if #contents_tags == 0 then
+local function live_grep_visual()
+  reset_vars()
+
+  local viz = RUtils.get_visual_selection { strict = true }
+  if not viz then
     return
   end
 
-  local opts = {
-    winopts = { title = get_title_note "- Search note by tags" },
-    actions = {
-      ["default"] = function(selection)
-        if selection == nil then
-          return
-        end
-
-        local sel = selection[1]
-        if not sel then
-          return
-        end
-
-        vim.api.nvim_put({ sel }, "c", false, true)
-      end,
-    },
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  return Fzflua.grep {
+    prompt = RUtils.fzflua.padding_prompt(),
+    query = string.format("%s", viz.selection),
+    rg_glob = true,
+    cwd = RUtils.config.path.wiki_path,
+    rg_opts = table.concat(rg_opts, " "),
+    winopts = { title = get_title_note "- Live grep visual" },
   }
-  Fzflua = setup_fzflua()
-  Fzflua.fzf_exec(contents_tags, RUtils.fzflua.open_cursor_dropdown(opts_fzf(opts)))
 end
 
-local Mappicker = {}
+-- Stores the last state for each custom picker
+local last_state = {}
 
----@param mode_open Mode_open
----@param opts_file Opts_file
-local function open(mode_open, opts_file)
-  local cmd_msg
-  if mode_open == "default" then
-    cmd_msg = "e " .. opts_file.filename
-  else
-    cmd_msg = mode_open .. " " .. opts_file.filename
-    if mode_open == "vsplit" then
-      cmd_msg = "botright " .. cmd_msg
-    end
+local state_name = {
+  ["search tags"] = true,
+  ["insert tags"] = true,
+}
+
+---@param name string -- id picker with name
+---@param contents table
+---@param opts table
+local function picker(name, contents, opts)
+  opts = opts or {}
+  if not state_name[name] then
+    RUtils.warn("There is no state name for `" .. name .. "`")
+    return
   end
 
-  vim.cmd(cmd_msg)
+  last_state[name] = { contents = contents.tags, opts = vim.deepcopy(opts) }
 
-  vim.schedule(function()
-    vim.api.nvim_win_set_cursor(0, { opts_file.lnum, opts_file.col })
-    RUtils.cmd.force_foldopen()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
 
-    local row = vim.fn.winline()
-    local height = vim.api.nvim_win_get_height(0)
-
-    if row > height * 0.7 then
-      vim.cmd "normal! zt"
-    end
-  end)
+  if name == "search tags" then
+    Fzflua.fzf_exec(contents.tags, RUtils.fzflua.open_center_medium(opts_fzf(opts)))
+  else
+    Fzflua.fzf_exec(contents.tags, RUtils.fzflua.open_cursor_dropdown(opts_fzf(opts)))
+  end
 end
 
----@param target_file Opts_file
-local function open_vsplit(target_file)
-  open("vsplit", target_file)
+local function resume_picker(name)
+  local s = last_state[name]
+  if not s then
+    RUtils.warn("No cache for picker: `" .. name .. "`")
+    return
+  end
+  s.opts.resume = true
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  Fzflua.fzf_exec(s.contents, s.opts)
 end
 
----@param target_file Opts_file
-local function open_split(target_file)
-  open("split", target_file)
-end
-
----@param target_file Opts_file
-local function open_tab(target_file)
-  open("tabe", target_file)
-end
-
----@param target_file Opts_file
-local function open_default(target_file)
-  open("default", target_file)
-end
+local Mapping = {}
 
 ---@param selected table|string
 ---@param filename string
@@ -488,15 +566,17 @@ end
 
 ---@param filename string
 ---@param is_global boolean?
-function Mappicker.open_and_jump_to_file(filename, is_global)
+function Mapping.open_and_jump_to_file(filename, is_global)
   is_global = is_global or false
+  local Fzflua = RUtils.fzflua.setup_fzflua()
 
   return {
     ["default"] = function(selected, _)
       if is_global then
         local e = Fzflua.path.entry_to_file(selected[1])
-        if e.path then
-          filename = e.path
+        local path = e.path
+        if path then
+          filename = path
         end
       end
 
@@ -508,8 +588,9 @@ function Mappicker.open_and_jump_to_file(filename, is_global)
     ["ctrl-v"] = function(selected, _)
       if is_global then
         local e = Fzflua.path.entry_to_file(selected[1])
-        if e.path then
-          filename = e.path
+        local path = e.path
+        if path then
+          filename = path
         end
       end
 
@@ -521,8 +602,9 @@ function Mappicker.open_and_jump_to_file(filename, is_global)
     ["ctrl-s"] = function(selected, _)
       if is_global then
         local e = Fzflua.path.entry_to_file(selected[1])
-        if e.path then
-          filename = e.path
+        local path = e.path
+        if path then
+          filename = path
         end
       end
 
@@ -534,8 +616,9 @@ function Mappicker.open_and_jump_to_file(filename, is_global)
     ["ctrl-t"] = function(selected, _)
       if is_global then
         local e = Fzflua.path.entry_to_file(selected[1])
-        if e.path then
-          filename = e.path
+        local path = e.path
+        if path then
+          filename = path
         end
       end
 
@@ -602,8 +685,9 @@ end
 
 ---@param filename string
 ---@param is_global boolean?
-function Mappicker.insert_title(filename, is_global)
+function Mapping.insert_title(filename, is_global)
   is_global = is_global or false
+  local Fzflua = RUtils.fzflua.setup_fzflua()
 
   return {
     ["default"] = function(selected, _)
@@ -614,8 +698,19 @@ function Mappicker.insert_title(filename, is_global)
 
       local fmt_str
 
+      local title
+      if M.note_mode == "org" then
+        title = file_opts.title_str
+      elseif M.note_mode == "markdown" then
+        title = file_opts.title_str:gsub("^#+%s*", "")
+      end
+
       if not is_global then
-        fmt_str = "[[*" .. file_opts.title_str .. "][🔗" .. file_opts.title_str .. "]]"
+        if M.note_mode == "org" then
+          fmt_str = "[[*" .. title .. "][🔗" .. title .. "]]"
+        elseif M.note_mode == "markdown" then
+          fmt_str = "[[#" .. title .. "]]"
+        end
       else
         local e = Fzflua.path.entry_to_file(selected[1])
         local target_path = e and e.path or nil
@@ -631,9 +726,14 @@ function Mappicker.insert_title(filename, is_global)
             if vim.startswith(current_file, root) and vim.startswith(target_path, root) then
               local current_dir = vim.fs.dirname(current_file)
               local relative = relative_path(current_dir, target_path)
+              relative = M.note_mode == "org" and relative or vim.fn.fnamemodify(relative, ":t:r")
 
               if relative then
-                fmt_str = "[[./" .. relative .. "::*" .. file_opts.title_str .. "][🔗" .. file_opts.title_str .. "]]"
+                if M.note_mode == "org" then
+                  fmt_str = "[[./" .. relative .. "::*" .. title .. "][🔗" .. title .. "]]"
+                elseif M.note_mode == "markdown" then
+                  fmt_str = "[[" .. relative .. "#" .. title .. "]]"
+                end
               end
             end
           end
@@ -647,7 +747,8 @@ function Mappicker.insert_title(filename, is_global)
   }
 end
 
-function Mappicker.insert_backlinks()
+function Mapping.insert_backlinks()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
   return {
     ["default"] = function(selected, _)
       local e = Fzflua.path.entry_to_file(selected[1])
@@ -720,16 +821,24 @@ function Mappicker.insert_backlinks()
       local current_dir = vim.fs.dirname(current_file)
       local relative = relative_path(current_dir, target_path)
       local label = vim.fn.fnamemodify(target_path, ":t:r")
-      local link = string.format("[[%s][ %s]]", relative, label)
+
+      local link
+      if M.note_mode == "org" then
+        link = string.format("[[%s][ %s]]", relative, label)
+      elseif M.note_mode == "markdown" then
+        local fname = vim.fn.fnamemodify(target_path, ":t")
+        link = string.format("[%s](%s)", label, fname)
+      end
       vim.api.nvim_put({ link }, "c", false, true)
     end,
   }
 end
 
 local match_tags
+local set_global_agenda_files
 
-function Mappicker.open_tags()
-  Orgmode = setup_orgmode()
+---@param contents_tags table
+function Mapping.open_tags(contents_tags)
   return {
     ["default"] = function(selection)
       if selection == nil then
@@ -737,6 +846,7 @@ function Mappicker.open_tags()
       end
 
       local sel = {}
+
       if #selection > 1 then
         for _, x in pairs(selection) do
           table.insert(sel, x)
@@ -752,20 +862,62 @@ function Mappicker.open_tags()
         return
       end
 
-      -- Orgmode.agenda:tags {
-      --   match_query = match_tags,
-      -- }
-
       -- Temporarily swap ke full wiki path
-      local wiki_path = RUtils.config.path.wiki_path .. "/**/*.org"
-      require("orgmode").setup { org_agenda_files = wiki_path }
+      if M.note_mode == "org" then
+        Orgmode = setup_orgmode()
+        Orgmode.agenda:tags { match_query = match_tags }
+      elseif M.note_mode == "markdown" then
+        local function gather_tag_picker_list(tag_locations, tags)
+          local entries = {}
+          for _, tag_loc in ipairs(tag_locations) do
+            for _, tag in ipairs(tags) do
+              if tag_loc.tag:lower() == tag:lower() or vim.startswith(tag_loc.tag:lower(), tag:lower() .. "/") then
+                local display = string.format("%s [%s] %s", tag_loc.note:display_name(), tag_loc.line, tag_loc.text)
+                entries[#entries + 1] = {
+                  value = { path = tag_loc.path, line = tag_loc.line, col = tag_loc.tag_start },
+                  display = display,
+                  ordinal = display,
+                  filename = tostring(tag_loc.path),
+                  lnum = tag_loc.line,
+                  col = tag_loc.tag_start,
+                }
+                break
+              end
+            end
+          end
+          if vim.tbl_isempty(entries) then
+            return
+          end
 
-      require("orgmode").agenda:tags { match_query = match_tags }
+          vim.schedule(function()
+            Obsidian.picker.pick(entries, {
+              prompt_title = "#" .. table.concat(tags, ", #"),
+              actions = {
+                ["default"] = function(selected, fzf_opts)
+                  local entry_to_file = require("fzf-lua.path").entry_to_file
+                  local path = entry_to_file(selected[1], fzf_opts).path
+                  if not path then
+                    return
+                  end
 
-      -- Restore ke path original setelah agenda terbuka
-      -- vim.schedule(function()
-      --   Orgmode.setup { org_agenda_files = "~/Dropbox/neorg/orgmode/**/*.org" }
-      -- end)
+                  RUtils.info(path)
+
+                  -- if path_only then
+                  --   opts.callback(path)
+                  -- else
+                  --   opts.callback { filename = path }
+                  -- end
+                  -- elseif not opts.no_default_mappings then
+                  --   require("fzf-lua.actions").file_edit_or_qf(selected, fzf_opts)
+                  -- end
+                end,
+              },
+            })
+          end)
+        end
+
+        gather_tag_picker_list(contents_tags.val, sel)
+      end
     end,
   }
 end
@@ -806,30 +958,61 @@ end
 
 ---@param opts? {last: boolean }
 local function get_tags(opts)
+  reset_vars()
   opts = opts or {}
-  Orgmode = setup_orgmode()
 
-  if opts.last and match_tags then
-    RUtils.info("Last tags: " .. vim.inspect(match_tags))
-    Orgmode.agenda:tags { match_query = match_tags }
+  if M.note_mode == "orgagenda" then
+    M.note_mode = "org"
+  end
+
+  if opts.last then
+    if M.note_mode == "org" then
+      resume_picker "search tags"
+    elseif M.note_mode == "markdown" then
+      resume_picker "search tags"
+    end
     return
   end
 
-  local wiki_path = RUtils.config.path.wiki_path
-  local contents_tags = get_tags_from_path(wiki_path)
+  local contents_tags = { val = {}, tags = {} }
 
-  if #contents_tags == 0 then
-    RUtils.warn "No tags found."
-    return
+  if M.note_mode == "org" then
+    local wiki_path = RUtils.config.path.wiki_path
+
+    if not set_global_agenda_files then
+      local orgfiles = wiki_path .. "/**/*.org"
+      Orgmode = setup_orgmode()
+      Orgmode.setup { org_agenda_files = orgfiles }
+      set_global_agenda_files = true
+    end
+
+    contents_tags.tags = get_tags_from_path(wiki_path)
+    if #contents_tags.tags == 0 then
+      RUtils.warn "No tags found."
+      return
+    end
+
+    local fzfopts = {
+      winopts = { title = get_title_note "- Search note by tags" },
+      actions = Mapping.open_tags(contents_tags),
+    }
+    picker("search tags", contents_tags, fzfopts)
+  elseif M.note_mode == "markdown" then
+    local search = require "obsidian.search"
+    search.find_tags_async("", function(tag_locations)
+      contents_tags.tags = list_tags(tag_locations)
+      contents_tags.val = tag_locations
+      if #contents_tags.tags == 0 then
+        RUtils.warn "No tags found."
+        return
+      end
+      local fzfopts = {
+        winopts = { title = get_title_note "- Search note by tags", preview = { hidden = true } },
+        actions = Mapping.open_tags(contents_tags),
+      }
+      picker("search tags", contents_tags, fzfopts)
+    end)
   end
-
-  local fzopts = {
-    winopts = { title = get_title_note "- Search note by tags" },
-    actions = Mappicker.open_tags(),
-  }
-
-  Fzflua = setup_fzflua()
-  Fzflua.fzf_exec(contents_tags, RUtils.fzflua.open_center_medium(opts_fzf(fzopts)))
 end
 
 ---@param is_global boolean
@@ -846,14 +1029,38 @@ end
 ---@param is_global boolean
 ---@param target_file string
 ---@param opts table?
-local function call_fzf_grep(is_global, target_file, opts)
+local function grep(is_global, target_file, opts)
   opts = opts or {}
 
   local clone_rg_opts = clone_tbl(rg_opts)
   table.insert(clone_rg_opts, target_file)
   table.insert(clone_rg_opts, "-e")
 
-  local previewer = setup_buffer_or_file_fzflua(function(entry)
+  local function Preview_buffer_fzflua(fn)
+    if not FzfluaBuiltin then
+      FzfluaBuiltin = require "fzf-lua.previewer.builtin"
+    end
+
+    local Previewer = FzfluaBuiltin.buffer_or_file:extend()
+
+    function Previewer:new(o, optsc, fzf_win)
+      Previewer.super.new(self, o, optsc, fzf_win)
+      setmetatable(self, Previewer)
+      return self
+    end
+
+    function Previewer:parse_entry(entry_str)
+      local dataparse = fn(entry_str)
+      if not dataparse then
+        return {}
+      end
+      return dataparse
+    end
+
+    return Previewer
+  end
+
+  local previewer = Preview_buffer_fzflua(function(entry)
     local data = {}
 
     local entry_strip_ansi = RUtils.fzflua.__strip_str(entry)
@@ -898,13 +1105,14 @@ local function call_fzf_grep(is_global, target_file, opts)
     rg_opts = table.concat(clone_rg_opts, " "),
   }, opts)
 
-  Fzflua = setup_fzflua()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
   Fzflua.grep(fzfopts)
 end
 
 ---@param is_global boolean?
 local function insert_heading_title(is_global)
   is_global = is_global or false
+  reset_vars()
 
   local target_file = get_target_file(is_global)
 
@@ -914,23 +1122,95 @@ local function insert_heading_title(is_global)
   end
   local __title = "- Insert " .. title_a .. " Title"
 
-  call_fzf_grep(is_global, target_file, {
+  grep(is_global, target_file, {
     winopts = { title = get_title_note(__title) },
     search = regex_title,
-    actions = Mappicker.insert_title(target_file, is_global),
+    actions = Mapping.insert_title(target_file, is_global),
   })
+end
+
+---@param opts? {last: boolean }
+local function insert_tag(opts)
+  reset_vars()
+  opts = opts or {}
+
+  if M.note_mode == "orgagenda" then
+    M.note_mode = "org"
+  end
+
+  if opts.last then
+    if M.note_mode == "org" then
+      resume_picker "insert tags"
+    elseif M.note_mode == "markdown" then
+      resume_picker "insert tags"
+    end
+    return
+  end
+
+  local contents_tags = { val = {}, tags = {} }
+
+  local optsfzf = {
+    winopts = { title = get_title_note "- insert tag" },
+    actions = {
+      ["default"] = function(selection)
+        if selection == nil then
+          return
+        end
+
+        local sel = selection[1]
+        if not sel then
+          return
+        end
+
+        vim.api.nvim_put({ sel }, "c", false, true)
+      end,
+    },
+  }
+
+  if M.note_mode == "org" then
+    Orgmode = setup_orgmode()
+    contents_tags.tags = Orgmode.files:get_tags()
+    if not contents_tags.tags or #contents_tags.tags == 0 then
+      return
+    end
+    picker("insert tags", contents_tags, optsfzf)
+  elseif M.note_mode == "markdown" then
+    local search = require "obsidian.search"
+    search.find_tags_async("", function(tag_locations)
+      contents_tags.tags = list_tags(tag_locations)
+      contents_tags.val = tag_locations
+      if not contents_tags.tags or #contents_tags.tags == 0 then
+        return
+      end
+      picker("insert tags", contents_tags, optsfzf)
+    end)
+    return
+  end
 end
 
 ---@param is_global boolean?
 local function find_url_and_backlinks(is_global)
   is_global = is_global or false
+  reset_vars()
 
   local target_file = get_target_file(is_global)
-  call_fzf_grep(is_global, target_file, {
+  grep(is_global, target_file, {
     winopts = { title = get_title_note "- Backlinks / URLs" },
     search = regex_url_backlinks,
-    actions = Mappicker.open_and_jump_to_file(target_file, is_global),
+    actions = Mapping.open_and_jump_to_file(target_file, is_global),
   })
+end
+
+---@param is_global? boolean
+local function find_backlinks(is_global)
+  is_global = is_global or false
+  reset_vars()
+
+  if M.note_mode == "markdown" then
+    vim.cmd "Obsidian backlinks"
+  elseif M.note_mode == "org" then
+    not_implement()
+  end
 end
 
 ---@param is_global boolean?
@@ -944,24 +1224,117 @@ local function jump_to_heading(is_global)
   local __title = "- Jump " .. title_a .. " Title"
 
   local target_file = get_target_file(is_global)
-  call_fzf_grep(is_global, target_file, {
+  grep(is_global, target_file, {
     winopts = { title = get_title_note(__title) },
     search = regex_title,
-    actions = Mappicker.open_and_jump_to_file(target_file, is_global),
+    actions = Mapping.open_and_jump_to_file(target_file, is_global),
   })
 end
 
 local function insert_backlinks_files()
-  Fzflua = setup_fzflua()
+  local Fzflua = RUtils.fzflua.setup_fzflua()
   Fzflua.files {
     prompt = RUtils.fzflua.padding_prompt(),
     cwd = RUtils.config.path.wiki_path,
     file_ignore_patterns = file_ignores,
     winopts = { title = get_title_note "- Insert Backlinks" },
-    actions = Mappicker.insert_backlinks(),
+    actions = Mapping.insert_backlinks(),
   }
 end
 
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                     API                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+M.swith_note_mode = swith_note_mode
+M.get_note_mode = M.note_mode
+
+-- ═══════════════════════════════════ Picker ═══════════════════════════════════
+M.find_files_notes = find_files
+M.live_grep = live_grep
+M.live_grep_visual = live_grep_visual
+
+M.filter_by_tags = get_tags
+M.last_filter_by_tags = function()
+  get_tags { last = true }
+end
+
+-- ═══════════════════════════════════ Insert ═══════════════════════════════════
+M.insert_tag = insert_tag
+M.last_insert_tag = function()
+  insert_tag { last = true }
+end
+
+M.insert_backlinks = insert_backlinks_files
+M.insert_title_local = function()
+  insert_heading_title(false)
+end
+M.insert_title_global = function()
+  insert_heading_title(true)
+end
+
+-- ════════════════════════════════════ Jump ════════════════════════════════════
+M.jump_heading_local = function()
+  jump_to_heading(false)
+end
+M.jump_heading_global = function()
+  jump_to_heading(true)
+end
+
+-- ════════════════════════════════════ Find ════════════════════════════════════
+M.find_backlinks_local = function()
+  find_backlinks()
+end
+M.find_backlinks_global = function()
+  find_backlinks(true)
+end
+M.find_url_and_backlinks_local = function()
+  find_url_and_backlinks(false)
+end
+M.find_url_and_backlinks_global = function()
+  find_url_and_backlinks(true)
+end
+
+-- ════════════════════════════════════ Open ════════════════════════════════════
+M.open_item_heading_vsplit = function()
+  local mode_open = "vsplit"
+  local data = get_headline_at_cursor(mode_open)
+  if not data then
+    return
+  end
+  open(mode_open, data)
+end
+M.open_item_heading_split = function()
+  local mode_open = "split"
+  local data = get_headline_at_cursor(mode_open)
+  if not data then
+    return
+  end
+  open(mode_open, data)
+end
+M.open_item_heading_tab = function()
+  local mode_open = "tabe"
+  local data = get_headline_at_cursor(mode_open)
+  if not data then
+    return
+  end
+  open(mode_open, data)
+end
+M.open_item_heading_default = function()
+  local mode_open = "default"
+  local data = get_headline_at_cursor(mode_open)
+
+  if not data then
+    return
+  end
+
+  open(mode_open, data)
+end
+
+-- +-----------------------------------------------------------------------------+
+-- |                                SPECIFIC: ORG                                |
+-- +-----------------------------------------------------------------------------+
+
+---@param filename string
 local function get_or_create_bufnr(filename)
   local bufnr = vim.fn.bufnr(filename)
   if bufnr == -1 then
@@ -972,7 +1345,9 @@ local function get_or_create_bufnr(filename)
   return bufnr
 end
 
+---@param bufnr integer
 local function set_repeater_todo(bufnr, repeater_dates, headline)
+  Orgmode = setup_orgmode()
   local OrgMappings = Orgmode.org_mappings
 
   vim.api.nvim_buf_call(bufnr, function()
@@ -1039,7 +1414,6 @@ local function remove_todo_by_tag(tags)
   for _, file in ipairs(files:all()) do
     for _, headline in ipairs(file:get_headlines()) do
       local todos = headline:get_todo()
-      -- local title = headline:get_title()
 
       if not (todos and todos == "TODO") then
         goto continue_headline_loop
@@ -1085,7 +1459,6 @@ local function remove_todo_by_tag(tags)
       end
 
       local repeater_dates = headline:get_repeater_dates()
-      -- RUtils.info("  repeater_dates count: " .. tostring(#repeater_dates))
       if #repeater_dates == 0 then
         goto continue_headline_loop
       end
@@ -1123,72 +1496,6 @@ local function remove_todo_by_tag(tags)
     end
     RUtils.info(table.concat(lines, "\n"))
   end
-end
-
--- ─────────────────────────────────────────────────────────────────────────────
--- Public API
--- ─────────────────────────────────────────────────────────────────────────────
-
-M.not_implement = not_implement
-
-M.find_files_notes = find_files_org
-M.live_grep = live_grep_org
-
-M.filter_by_tags = get_tags
-M.last_filter_by_tags = function()
-  get_tags { last = true }
-end
-
-M.insert_tag = insert_tag_org
-
-M.insert_backlinks = insert_backlinks_files
-
-M.insert_title_local = function()
-  insert_heading_title(false)
-end
-
-M.insert_title_global = function()
-  insert_heading_title(true)
-end
-
-M.jump_heading_local = function()
-  jump_to_heading(false)
-end
-
-M.jump_heading_global = function()
-  jump_to_heading(true)
-end
-
-M.find_backlinks_local = function()
-  find_url_and_backlinks(false)
-end
-
-M.find_backlinks_global = function()
-  find_url_and_backlinks(true)
-end
-
-M.open_item_heading_vsplit = function()
-  local data = get_headline_at_cursor()
-  if not data then
-    return
-  end
-  open_vsplit { filename = data.filename, lnum = data.lnum, col = data.col }
-end
-
-M.open_item_heading_split = function()
-  local data = get_headline_at_cursor()
-  if not data then
-    return
-  end
-  open_split { filename = data.filename, lnum = data.lnum, col = data.col }
-end
-
-M.open_item_heading_tab = function()
-  local data = get_headline_at_cursor()
-  if not data then
-    return
-  end
-  open_tab { filename = data.filename, lnum = data.lnum, col = data.col }
 end
 
 M.auto_remote_repeater_todo = function()

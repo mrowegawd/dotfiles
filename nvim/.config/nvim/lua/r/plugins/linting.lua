@@ -83,7 +83,7 @@ return {
           if not linter then
             RUtils.warn("Linter not found: " .. name, { title = "nvim-lint" })
           end
-          return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
+          return linter and not (type(linter) == "table")
         end, names)
 
         -- Run linters.

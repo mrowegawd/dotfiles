@@ -24,8 +24,8 @@ keymap.set("n", "<Leader>rn", function()
   opts.actions = vim.tbl_extend("keep", {
     ["default"] = function(selected, _)
       local sel = selected[1]
-      if sel == "Sniprun" then
-        vim.cmd [[SnipRun]]
+      if sel then
+        vim.cmd(sel)
       end
     end,
   }, {})

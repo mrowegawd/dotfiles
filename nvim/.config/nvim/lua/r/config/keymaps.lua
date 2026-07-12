@@ -564,6 +564,19 @@ RUtils.map.xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: p
 RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                    NOTES                                    ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+RUtils.map.nnoremap("<Localleader>aft", RUtils.notes.filter_by_tags, { desc = "Note: find notes by tag" })
+RUtils.map.nnoremap("<Localleader>afl", RUtils.notes.last_filter_by_tags, { desc = "Note: repeat tag search" })
+RUtils.map.nnoremap("<Localleader>aff", RUtils.notes.find_files_notes, { desc = "Note: find note files" })
+RUtils.map.nnoremap("<Localleader>afg", RUtils.notes.live_grep, { desc = "Note: live grep" })
+RUtils.map.vnoremap("<Localleader>afg", RUtils.notes.live_grep_visual, { desc = "Note: live grep (visual)" })
+
+-- RUtils.map.nnoremap("<Localleader>a<F5>", RUtils.notes.get_note_mode, { desc = "Note: show note mode" })
+RUtils.map.nnoremap("<Localleader>aS", RUtils.notes.swith_note_mode, { desc = "Note: swith note mode org or markdown" })
+
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  COMMANDS                                   ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
@@ -688,8 +701,7 @@ local bulk_cmd_misc = function()
       cmd "Screenkey"
     end,
     ["PDFview - open pdf with nvim"] = function()
-      require("pdfview").open "/home/mr00x/Downloads/asyncio.pdf"
-      vim.api.nvim_input ":CodeCompanion /translator_role <CR>"
+      require("pdfview").menu()
     end,
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
@@ -816,19 +828,19 @@ RUtils.map.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (vi
 
 local bulk_cmd_toggle = function()
   RUtils.fzflua.open_cmd_bulk_center({
-    ["Layout - disable/enable layout sidebar size"] = function()
+    ["Layout - toggle sidebar size"] = function()
       RUtils.layout.disable()
     end,
-    ["CCC - highlighter from ccc"] = function()
+    ["Color highlight - toggle CccHighlighterToggle"] = function()
       vim.cmd.CccHighlighterToggle()
     end,
-    ["Outline - disable/enable auto follow"] = function()
+    ["Outline - toggle auto follow"] = function()
       vim.cmd.OutlineToggleFollow()
     end,
     ["highlighter - clear all"] = function()
       vim.cmd "Hi clear"
     end,
-    ["Tresitter - disable/enable highlight"] = function()
+    ["Treesitter - toggle highlight"] = function()
       Snacks.toggle.treesitter()
     end,
   }, { winopts = { title = RUtils.fzflua.format_title("Toggle Commands", RUtils.config.icons.misc.tools) } })

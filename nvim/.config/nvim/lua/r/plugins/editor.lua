@@ -10,8 +10,8 @@ local alts = {
 return {
   --- PDFview
   {
-    -- dir = "~/.local/src/nvim_plugins/PDFview",
-    "MadKuntilanak/PDFview",
+    dir = "~/.local/src/nvim_plugins/PDFview",
+    -- "MadKuntilanak/PDFview",
     event = "VeryLazy",
     opts = {
       path = os.getenv "HOME" .. "/Downloads/torrent",
@@ -317,7 +317,14 @@ return {
       {
         "<Leader>fT",
         function()
-          RUtils.todocomments.search_global { title = "Global" }
+          if vim.bo.filetype == "markdown" then
+            RUtils.todocomments.search_global_note("markdown", { title = "Todo Note Markdown Global" })
+          elseif vim.bo.filetype == "org" then
+            RUtils.todocomments.search_global_note("org", { title = "Todo Note org Global" })
+          else
+            RUtils.todocomments.search_global { title = "Global" }
+          end
+
           vim.cmd "normal! zz"
         end,
         desc = "Picker: todo global dir (fzflua) [todocomments]",

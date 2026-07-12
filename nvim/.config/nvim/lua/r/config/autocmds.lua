@@ -162,26 +162,44 @@ RUtils.map.augroup("WindowBehaviour", {
 }, {
   event = { "BufRead", "BufEnter" },
   pattern = "*",
-  command = function()
-    if vim.bo.filetype == "codecompanion" then
+  command = function(ctx)
+    local buf = ctx.buf
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+
+    if vim.bo[buf].filetype == "codecompanion" then
       vim.opt_local.relativenumber = false
       vim.opt_local.number = false
     end
-  end,
-}, {
-  -- Handle `cursorline` and `signcolumn` colors for `toggleterm.nvim`.
-  event = { "BufRead", "BufEnter" },
-  pattern = { "*" },
-  command = function()
+
+    -- Handle `cursorline` and `signcolumn` colors for specific fts
     vim.defer_fn(function()
+      if not buf or not vim.api.nvim_buf_is_valid(buf) then
+        return
+      end
       if
-        vim.tbl_contains({ "terminal" }, vim.bo.buftype)
-        or vim.tbl_contains({ "gitcommit", "OverseerList" }, vim.bo.filetype)
+        vim.tbl_contains({ "terminal" }, vim.bo[buf].buftype)
+        or vim.tbl_contains({ "gitcommit", "OverseerList" }, vim.bo[buf].filetype)
       then
         vim.opt_local.cursorline = false
         vim.opt_local.signcolumn = "no"
       end
     end, 100)
+  end,
+}, {
+  event = { "WinEnter", "BufEnter" },
+  pattern = "*",
+  command = function(ctx)
+    local buf = ctx.buf
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+
+    local ft = vim.bo[buf].filetype
+    if vim.tbl_contains({ "markdown", "org", "orgagenda" }, ft) then
+      RUtils.notes.swith_note_mode(ft)
+    end
   end,
 })
 
@@ -196,12 +214,16 @@ RUtils.map.augroup("WrapFiletype", {
   end,
 }, {
   event = "FileType",
-  pattern = { "codecompanion", "markdown" },
-  command = function()
-    vim.treesitter.start()
-    vim.cmd [[
-      iabbrev <buffer> ``` ```<CR><CR>```<Esc>ki
-    ]]
+  pattern = { "markdown", "orgagenda", "org" },
+  command = function(ctx)
+    vim.schedule(function()
+      local buf = ctx.buf
+      if not buf or not vim.api.nvim_buf_is_valid(buf) then
+        return
+      end
+      RUtils.notes.swith_note_mode(vim.bo[buf].filetype)
+      require("r.keymaps.note").neorg_mappings_ft(buf)
+    end)
   end,
 }, {
   event = "FileType",

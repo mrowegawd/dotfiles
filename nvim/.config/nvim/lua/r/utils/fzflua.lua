@@ -1,16 +1,20 @@
 ---@class r.utils.fzflua
 local M = {}
 
-local function fzf_lua()
-  return RUtils.cmd.reqcall "fzf-lua"
+local Fzflua
+
+local function setup_fzflua()
+  if Fzflua then
+    return Fzflua
+  end
+  Fzflua = require "fzf-lua"
+  return Fzflua
 end
+
+M.setup_fzflua = setup_fzflua
 
 local dropdown = function(opts)
   opts = opts or {}
-  local title = vim.tbl_get(opts, "winopts", "title") ---@type string?
-  if title and type(title) == "string" then
-    opts.winopts.title = M.format_title(title)
-  end
 
   local fzf_tbl = {
     no_header = opts.no_header, -- disable default header
@@ -33,6 +37,7 @@ local dropdown = function(opts)
         hidden = false,
         layout = "vertical",
         vertical = "up:50%",
+        winopts = { number = true },
       },
     },
   }
@@ -111,7 +116,7 @@ end
 ---@return string
 function M.format_title(str, icon)
   icon = icon and icon .. " " or ""
-  return icon .. str
+  return " " .. icon .. str .. " "
 end
 
 function M.open_cursor_dropdown(opts)
@@ -164,7 +169,6 @@ function M.open_center_big(opts)
         layout = "horizontal",
         vertical = "down:50%",
         horizontal = "up:45%",
-        winopts = { number = false },
       },
     },
   }
@@ -307,22 +311,27 @@ function M.open_lsp_code_action(opts)
   }, opts))
 end
 
-local function get_extracted_cmds(fzf_lua_, opts, only_key, is_dock)
+local function get_extracted_cmds(fzf_lua_, content_lines, only_key, is_dock)
   is_dock = is_dock or false
   only_key = only_key or false
 
-  local width_cmd = 1
-  for idx, _ in pairs(opts) do
-    local str_x = vim.split(idx, " ")
-    if width_cmd < #str_x[1] then
-      width_cmd = #str_x[1]
+  local pad = 1
+  local padding_line = 1
+  for idx, _ in pairs(content_lines) do
+    local split_idx = vim.split(idx, "-")
+    if pad < #split_idx[1] then
+      pad = #split_idx[1]
+    end
+    local len_str = vim.fn.strdisplaywidth(idx)
+    if padding_line < len_str then
+      padding_line = len_str
     end
   end
 
-  local cmds = {}
+  local lines = {}
 
   local str_cmds
-  for idx, _ in pairs(opts) do
+  for idx, _ in pairs(content_lines) do
     if only_key then
       local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", idx)
       str_cmds = string.format("%s", str_x_hl)
@@ -331,25 +340,25 @@ local function get_extracted_cmds(fzf_lua_, opts, only_key, is_dock)
       local str_x_hl = fzf_lua_.utils.ansi_from_hl("GitSignsAdd", str_x[1])
 
       if is_dock then
-        str_cmds = string.format("%-" .. (width_cmd + 25) .. "s        %s", str_x_hl, str_x[2])
+        str_cmds = string.format("%-" .. (pad + 25) .. "s        %s", str_x_hl, str_x[2])
       else
-        str_cmds = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
+        str_cmds = string.format("%-" .. (pad + 25) .. "s - %s", str_x_hl, str_x[2])
       end
     end
-    table.insert(cmds, str_cmds)
+    table.insert(lines, str_cmds)
   end
 
-  table.sort(cmds)
+  table.sort(lines)
 
-  return cmds
+  return lines, padding_line
 end
 
 function M.open_cmd_bulk_key_only(commands, opts)
-  local fzf_lua_ = require "fzf-lua"
+  Fzflua = setup_fzflua()
 
-  local cmds = get_extracted_cmds(fzf_lua_, commands, true)
+  local cmds = get_extracted_cmds(Fzflua, commands, true)
 
-  fzf_lua_.fzf_exec(
+  Fzflua.fzf_exec(
     cmds,
     layout_center(vim.tbl_deep_extend("force", {
       winopts = {
@@ -363,7 +372,11 @@ function M.open_cmd_bulk_key_only(commands, opts)
           end
 
           local sel = selected[1]
-          local sel_ansi = fzf_lua_.utils.strip_ansi_coloring(sel)
+          if not sel then
+            return
+          end
+
+          local sel_ansi = Fzflua.utils.strip_ansi_coloring(sel)
 
           local build_idx_cmd = RUtils.strip_whitespaces(sel_ansi)
 
@@ -380,11 +393,11 @@ function M.open_cmd_bulk_key_only(commands, opts)
 end
 
 function M.open_cmd_bulk_pojok_kanan(commands, opts)
-  local fzf_lua_ = require "fzf-lua"
+  Fzflua = setup_fzflua()
 
-  local cmds = get_extracted_cmds(fzf_lua_, commands)
+  local cmds = get_extracted_cmds(Fzflua, commands)
 
-  fzf_lua_.fzf_exec(
+  Fzflua.fzf_exec(
     cmds,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
       winopts = { title = opts.title and opts.title or "" },
@@ -399,7 +412,7 @@ function M.open_cmd_bulk_pojok_kanan(commands, opts)
             return
           end
 
-          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          local display_str = Fzflua.utils.strip_ansi_coloring(sel)
           local display_str_split = vim.split(display_str, "-")
 
           local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
@@ -419,20 +432,26 @@ function M.open_cmd_bulk_pojok_kanan(commands, opts)
 end
 
 function M.open_cmd_bulk_center(commands, opts)
-  local fzf_lua_ = require "fzf-lua"
+  Fzflua = setup_fzflua()
 
-  local cmds = get_extracted_cmds(fzf_lua_, commands)
+  local content_lines, padding_line = get_extracted_cmds(Fzflua, commands)
 
-  local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
-  local win_height = math.ceil(lines * 0.5)
+  local editor_cols = vim.o.columns
+  local editor_lines = vim.o.lines
 
-  fzf_lua_.fzf_exec(
-    cmds,
+  local width = math.min((padding_line + 20) / editor_cols, 0.7)
+  width = math.max(width, 0.25)
+
+  local height = math.min((#content_lines + 5) / editor_lines, 0.6)
+  height = math.max(height, 0.15)
+
+  Fzflua.fzf_exec(
+    content_lines,
     M.layout_pojokan(vim.tbl_deep_extend("force", {
       winopts = {
         title = opts.title and opts.title or "",
-        height = win_height - 10,
-        width = 0.60,
+        height = height,
+        width = width,
         col = 0.50,
         row = 0.50,
       },
@@ -443,7 +462,11 @@ function M.open_cmd_bulk_center(commands, opts)
           end
 
           local sel = selected[1]
-          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          if not sel then
+            return
+          end
+
+          local display_str = Fzflua.utils.strip_ansi_coloring(sel)
           local display_str_split = vim.split(display_str, "-")
 
           local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
@@ -463,11 +486,11 @@ function M.open_cmd_bulk_center(commands, opts)
 end
 
 function M.open_cmd_bulk_dock(commands, opts)
-  local fzf_lua_ = require "fzf-lua"
+  Fzflua = setup_fzflua()
 
-  local cmds = get_extracted_cmds(fzf_lua_, commands, false)
+  local cmds = get_extracted_cmds(Fzflua, commands, false)
 
-  fzf_lua_.fzf_exec(
+  Fzflua.fzf_exec(
     cmds,
     M.open_dock_bottom(vim.tbl_deep_extend("force", {
       winopts = { title = opts.title and opts.title or "" },
@@ -478,7 +501,11 @@ function M.open_cmd_bulk_dock(commands, opts)
           end
 
           local sel = selected[1]
-          local display_str = fzf_lua_.utils.strip_ansi_coloring(sel)
+          if not sel then
+            return
+          end
+
+          local display_str = Fzflua.utils.strip_ansi_coloring(sel)
           local display_str_split = vim.split(display_str, "-")
 
           local build_idx_cmd = RUtils.strip_whitespaces(display_str_split[1])
@@ -502,8 +529,9 @@ function M.open_cmd_filter_kind_lsp(opts)
   opts = opts or {}
 
   local selected_lsp = select_lsp()
+  Fzflua = setup_fzflua()
 
-  fzf_lua().fzf_exec(
+  Fzflua.fzf_exec(
     selected_lsp,
     layout_center(vim.tbl_deep_extend("force", {
       no_esc = true,
@@ -594,7 +622,8 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
       end)()
     end
 
-    fzf_lua().fzf_exec(contents, fzf_opts)
+    Fzflua = setup_fzflua()
+    Fzflua.fzf_exec(contents, fzf_opts)
   end
 end
 

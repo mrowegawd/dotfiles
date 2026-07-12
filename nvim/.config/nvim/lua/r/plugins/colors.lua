@@ -2,7 +2,7 @@ return {
   -- CCCPICK
   {
     "uga-rosa/ccc.nvim",
-    cmd = { "CccPick" },
+    cmd = { "CccPick", "CccHighlighterToggle" },
     keys = {
       { "<Leader>oP", "<cmd>CccPick<cr>", desc = "Open: pick color [ccc.nvim]" },
     },

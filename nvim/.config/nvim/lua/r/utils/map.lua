@@ -100,7 +100,7 @@ M.show_help_buf_keymap = function()
   -- sort alphabetically
   table.sort(col)
 
-  return require("fzf-lua").fzf_exec(col, opts)
+  return RUtils.fzflua.setup_fzflua().fzf_exec(col, opts)
 end
 
 M.nmap = function(...)

@@ -229,6 +229,7 @@ case $instance.$class in
 *.Gitk) misc ;;
 *.Pidgin) misc ;;
 *.[Ss]xiv) svix ;;
+*.[Ff]eh) svix ;;
 *.Gimp) misc ;;
 *.todoist-nativefier-6c11dd) todo ;;
 *.notiontheall-in-oneworkspaceforyournotestaskswikisanddatabases-nativefier-46aee8) todo ;;

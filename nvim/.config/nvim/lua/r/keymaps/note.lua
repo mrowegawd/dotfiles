@@ -8,19 +8,20 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<Leader>fT"] = {
+      ["<Leader>ld"] = {
         function()
-          RUtils.todocomments.search_global_note { title = "Todo Note Global" }
-          vim.cmd "normal! zRzz"
+          RUtils.notes.open_item_heading_default()
         end,
-        "TODOCOMMENTS: search global TODO in notes [fzflua]",
+        "Note: open under cursor",
       },
-      ["<Leader>ft"] = {
+      ["<Leader>lv"] = {
         function()
-          RUtils.todocomments.search_local { title = "Todo Note Curbuf" }
+          RUtils.notes.open_item_heading_vsplit()
         end,
-        "TODOCOMMENTS: search local TODO in notes [fzflua]",
+        "Note: open vsplit under cursor",
       },
+
+      -- ├────────────────────────────┤ JUMP TO HEADING ├─────────────────────────┤
       ["<Leader>fs"] = {
         function()
           RUtils.notes.jump_heading_local()
@@ -33,46 +34,66 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: jump to global heading",
       },
-      ["<Leader>lr"] = {
+
+      -- ├──────────────────────────────────┤ FIND ├──────────────────────────────────┤
+      ["<Leader>r"] = {
         function()
           RUtils.notes.find_backlinks_local()
         end,
         "Note: find local backlink",
       },
-      ["<Leader>lR"] = {
+      ["<Leader>R"] = {
         function()
           RUtils.notes.find_backlinks_global()
         end,
         "Note: find global backlink",
       },
-      ["<Leader>lv"] = {
+      ["<Leader>uu"] = {
         function()
-          if vim.bo.filetype == "org" then
-            vim.cmd "vsplit"
-            require("orgmode").action "org_mappings.open_at_point"
-          else
-            vim.cmd "vsplit | ObsidianFollowLink"
-          end
+          RUtils.notes.find_url_and_backlinks_local()
         end,
-        "Note: link follow (vsplit)",
+        "Note: find backlink and http in local",
       },
-      ["<Leader>ld"] = {
+      ["<Leader>uU"] = {
         function()
-          if vim.bo.filetype == "org" then
-            require("orgmode").action "org_mappings.open_at_point"
-          else
-            vim.cmd "ObsidianFollowLink"
-          end
+          RUtils.notes.find_url_and_backlinks_global()
         end,
-        "Note: link follow",
+        "Note: find backlink and http in global",
+      },
+
+      -- ├────────────────────────────────┤ OPEN IN ├─────────────────────────────┤
+      ["<c-s>"] = {
+        function()
+          RUtils.notes.open_item_heading_split()
+        end,
+        "Note: open in split",
+      },
+      ["<c-v>"] = {
+        function()
+          RUtils.notes.open_item_heading_vsplit()
+        end,
+        "Note: open in vsplit",
+      },
+      ["<c-t>"] = {
+        function()
+          RUtils.notes.open_item_heading_tab()
+        end,
+        "Note: open in tab",
       },
     },
     ["i"] = {
-      ["c<cr>"] = {
+      -- ├─────────────────────────────────┤ INSERT ├─────────────────────────────────┤
+      ["C<cr>"] = {
         function()
           RUtils.notes.insert_tag()
         end,
         "Note: insert tag",
+      },
+      ["c<cr>"] = {
+        function()
+          RUtils.notes.last_insert_tag()
+        end,
+        "Note: repeat insert tag",
       },
       ["b<cr>"] = {
         function()
@@ -99,13 +120,13 @@ function M.neorg_mappings_ft(bufnr)
     if mode == "i" then
       for key, key_func in pairs(x) do
         if vim.api.nvim_buf_is_valid(bufnr) then
-          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
         end
       end
     else
       for key, key_func in pairs(x) do
         if vim.api.nvim_buf_is_valid(bufnr) then
-          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr })
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
         end
       end
     end

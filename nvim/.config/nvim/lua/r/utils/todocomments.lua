@@ -3,11 +3,6 @@ local M = {}
 
 local tbl_dat_note = {}
 
-if not RUtils.has "fzf-lua" then
-  RUtils.warn("fzf-lua not found", { Title = "Todocomments" })
-  return
-end
-
 local builtin = require "fzf-lua.previewer.builtin"
 local Todopreviewer = builtin.buffer_or_file:extend()
 
@@ -108,11 +103,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
   end
 
   function Todopreviewer:gen_winopts()
-    local winopts = {
-      wrap = self.win.preview_wrap,
-      -- cursorline = false,
-      number = false,
-    }
+    local winopts = { wrap = self.win.preview_wrap }
     return vim.tbl_extend("keep", winopts, self.winopts)
   end
 
@@ -141,7 +132,8 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
     return {}
   end
 
-  require("fzf-lua").fzf_exec(
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  Fzflua.fzf_exec(
     contents,
     RUtils.fzflua.open_center_big {
       previewer = {
@@ -238,18 +230,35 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
   )
 end
 
-local function todocomments(path, is_global, is_note)
+---@param path string
+---@param is_global? boolean
+---@param set_note? string
+local function todocomments(path, is_global, set_note)
   vim.validate { path = { path, "string" } }
-  is_note = is_note or false
   is_global = is_global or false
 
   return function()
     local Search = require "todo-comments.search"
     local opts_todo_comments = RUtils.opts "todo-comments.nvim"
-    if is_note then
-      opts_todo_comments.search.args[#opts_todo_comments.search.args + 1] = "--type=md"
+
+    if set_note then
+      local add_type, remove_type
+      if set_note == "markdown" then
+        add_type = "--type=md"
+        remove_type = "--type=org"
+      elseif set_note == "org" then
+        add_type = "--type=org"
+        remove_type = "--type=md"
+      end
+
+      if opts_todo_comments.search.args[remove_type] then
+        opts_todo_comments.search.args[remove_type] = nil
+      end
+      opts_todo_comments.search.args[#opts_todo_comments.search.args + 1] = add_type
     end
+
     require("todo-comments").setup(opts_todo_comments)
+    local Fzflua = RUtils.fzflua.setup_fzflua()
 
     local contents = function(cb)
       Search.search(function(results)
@@ -270,7 +279,7 @@ local function todocomments(path, is_global, is_note)
 
         for _, item in pairs(tbl_dat_note) do
           cb(
-            require("fzf-lua").make_entry.file(
+            Fzflua.make_entry.file(
               item.basename
                 .. ":"
                 .. item.lnum
@@ -291,14 +300,19 @@ end
 function M.search_global(opts)
   opts = opts or {}
   tbl_dat_note = {}
-  local cts = todocomments(vim.uv.cwd(), true)
+  local path = vim.uv.cwd()
+  if not path then
+    return
+  end
+  local cts = todocomments(path, true)
   picker(cts(), tbl_dat_note, opts, true)
 end
 
-function M.search_global_note(opts)
+---@param set_note "markdown" |"org"
+function M.search_global_note(set_note, opts)
   opts = opts or {}
   tbl_dat_note = {}
-  local cts = todocomments(RUtils.config.path.wiki_path, true, true)
+  local cts = todocomments(RUtils.config.path.wiki_path, true, set_note)
   picker(cts(), tbl_dat_note, opts, true)
 end
 

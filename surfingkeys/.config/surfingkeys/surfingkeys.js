@@ -214,8 +214,7 @@ mapkey("M", "#3Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
-map("<Space>ff", "T");
-map("<Space>fF", "t"); // include bookmark search
+map("<Space><Space>", "T");
 map("<Alt-h>", "R");
 map("<Alt-l>", "E");
 

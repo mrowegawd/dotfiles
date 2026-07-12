@@ -85,7 +85,7 @@ return {
               end
             end
 
-            return require("fzf-lua").fzf_exec(reverse, {
+            return RUtils.fzflua.setup_fzflua().fzf_exec(reverse, {
               prompt = RUtils.fzflua.padding_prompt(),
               winopts = {
                 title = RUtils.fzflua.format_title("FzMark", "󰈙"),
@@ -362,7 +362,7 @@ return {
               end
             end
 
-            return require("fzf-lua").fzf_exec(reverse, {
+            return RUtils.fzflua.setup_fzflua().fzf_exec(reverse, {
               prompt = RUtils.fzflua.padding_prompt(),
               winopts = {
                 title = RUtils.fzflua.format_title("FzMark", "󰈙"),
@@ -428,11 +428,11 @@ return {
                   RUtils.fileexplorer.write_bookmarks(newlist)
                   ---@diagnostic disable-next-line: undefined-field
                   RUtils.info("delete `" .. selection[1] .. "`, reload this pick")
-                  require("fzf-lua").actions.resume()
+                  RUtils.fzflua.setup_fzflua().actions.resume()
                 end,
               },
             }
-            require("fzf-lua").fzf_exec(list_bookmarks, RUtils.fzflua.open_dock_bottom(opts))
+            RUtils.fzflua.setup_fzflua().fzf_exec(list_bookmarks, RUtils.fzflua.open_dock_bottom(opts))
           end,
 
           bookmark_cycle_cycle = function()
@@ -549,7 +549,7 @@ return {
               if choice == cmds[1] then
                 vim.cmd "wincmd l"
                 vim.schedule(function()
-                  require("fzf-lua").live_grep_glob {
+                  RUtils.fzflua.setup_fzflua().live_grep_glob {
                     winopts = {
                       title = RUtils.fzflua.format_title(choice, "󰈙"),
                     },
@@ -579,7 +579,7 @@ return {
 
               if choice == cmds[2] then
                 vim.cmd "wincmd l"
-                require("fzf-lua").files {
+                RUtils.fzflua.setup_fzflua().files {
                   winopts = {
                     title = RUtils.fzflua.format_title(choice, "󰈙"),
                   },

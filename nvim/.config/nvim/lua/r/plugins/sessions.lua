@@ -105,7 +105,7 @@ return {
           local home = os.getenv "HOME"
           local session_path = vim.fs.joinpath(home, ".local", "share", "nvim", "session")
 
-          require("fzf-lua").files(RUtils.fzflua.open_center_small_wide {
+          RUtils.fzflua.setup_fzflua().files(RUtils.fzflua.open_center_small_wide {
             cwd = session_path,
             prompt = RUtils.fzflua.padding_prompt(),
             no_header = true, -- disable default header
@@ -177,9 +177,9 @@ return {
       {
         "<Leader>pp",
         function()
-          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+          local Fzflua = RUtils.fzflua.setup_fzflua()
           local history = require "project.util.history"
-          fzf_lua.fzf_exec(
+          Fzflua.fzf_exec(
             function(cb)
               local results = history.get_recent_projects()
               for _, e in ipairs(results) do
@@ -192,7 +192,7 @@ return {
               winopts = { title = RUtils.fzflua.format_title("Project.nvim Lists", RUtils.config.icons.misc.bookmark) },
               actions = {
                 ["default"] = function(selected)
-                  fzf_lua.files { cwd = selected[1] }
+                  Fzflua.files { cwd = selected[1] }
                 end,
                 ["ctrl-o"] = function()
                   vim.cmd "Project! config"
@@ -201,7 +201,7 @@ return {
                   function(selected)
                     history.delete_project { value = selected[1] }
 
-                    require("fzf-lua").actions.resume()
+                    Fzflua.actions.resume()
                   end,
                 },
               },

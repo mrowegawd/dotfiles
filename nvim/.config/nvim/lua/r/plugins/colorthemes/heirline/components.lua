@@ -154,7 +154,7 @@ local overseer_tasks_for_status = function(status, colors)
   }
 end
 
-local rmux_pane, navic_mod, qfbookmark, pinnedbuffer, session_buf
+local rmux_pane, navic_mod, qfbookmark, pinnedbuffer, session_buf, pdfview
 
 ---@return {run_with: string, task: integer, watch: string}
 local get_rmux = function()
@@ -198,6 +198,15 @@ local get_session = function()
     end
   end
   return session_buf
+end
+local get_pdfview = function()
+  if not pdfview then
+    local ok, session = pcall(require, "pdfview.renderer")
+    if ok then
+      pdfview = session
+    end
+  end
+  return pdfview
 end
 
 local __colors = function()
@@ -585,7 +594,7 @@ M.FilePath = {
 
       local opts = { relative = "cwd", length = 3 }
 
-      if vim.bo.filetype == "codecompanion" then
+      if vim.tbl_contains({ "codecompanion", "pdfview" }, vim.bo.filetype) then
         return ""
       end
 
@@ -658,6 +667,17 @@ M.FilePath = {
       local opts = { relative = "cwd", length = 3 }
       local path = vim.fn.fnamemodify(self.bufname, ":t")
 
+      if vim.bo.filetype == "pdfview" then
+        if not pdfview then
+          pdfview = get_pdfview()
+        end
+
+        local pdf_render = pdfview.get()
+        if pdf_render and pdf_render.pdf_path then
+          return vim.fn.fnamemodify(pdf_render.pdf_path, ":~") .. " (Page " .. pdf_render.current_page .. ")"
+        end
+      end
+
       if #self.filename == 0 then
         return " " .. vim.api.nvim_get_option_value("filetype", { buf = 0 })
       end
@@ -723,6 +743,7 @@ M.FileIcon = {
     local extension = get_vars.extension(filename)
     self.path = get_vars.path()
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+    self.is_excluded = vim.tbl_contains({ "qf", "pdfview", "codecompanion" }, vim.bo.filetype)
   end,
   condition = function()
     return vim.bo.filetype ~= "qf"
@@ -731,11 +752,20 @@ M.FileIcon = {
     if self.path == "" then
       return ""
     end
+
+    if self.is_excluded then
+      return "  "
+    end
+
     return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
     local hl_opts = set_winbar_hl()
-    return { fg = self.icon_color, bg = hl_opts.bg }
+    local fg = self.icon_color
+    if self.is_excluded then
+      fg = hl_opts.bg
+    end
+    return { fg = fg, bg = hl_opts.bg }
   end,
 }
 M.Git = {
@@ -955,7 +985,7 @@ M.LSPActive = {
   {
     provider = function(self)
       local str = table.concat(self.names, ", ")
-      return Conditions.width_percent_below(#str, 0.33) and str or "~too many~"
+      return Conditions.width_percent_below(#str, 0.50) and str or "~too many~"
     end,
   },
 
@@ -1309,7 +1339,7 @@ M.Filetype = {
       -- end
 
       if self.filetype and #self.filetype > 0 then
-        return self.filetype .. " "
+        return "[" .. self.filetype .. "] "
       end
     end,
     hl = { fg = colors.statusline_fg },
@@ -1737,7 +1767,7 @@ M.WinbarNavic = {
     self.req_navic = get_navic()
   end,
   condition = function()
-    return get_navic() ~= nil
+    return get_navic() ~= nil and not set_conditions.is_note_ft()
   end,
   {
     condition = function(self)
@@ -1802,7 +1832,7 @@ M.WinbarNavic = {
       bg = colors.mode_note_bg
     end
 
-    return { fg = fg, bg = bg, bold = false }
+    return { fg = fg, bg = bg, bold = true }
   end,
 }
 

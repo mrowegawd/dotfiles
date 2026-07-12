@@ -780,14 +780,16 @@ function M.git_copy_to_clipboard_or_yank()
     local commit_hash = extract_git_hash_single(selected)
     if commit_hash then
       M.copy_to_clipboard(commit_hash)
-      require("fzf-lua").actions.resume()
+      local Fzflua = RUtils.fzflua.setup_fzflua()
+      Fzflua.actions.resume()
     end
   end
 end
 
 function M.git_grep_log()
   return function()
-    require("fzf-lua").fzf_live(function(query)
+    local Fzflua = RUtils.fzflua.setup_fzflua()
+    Fzflua.fzf_live(function(query)
       return M.git_log_content_finder(query, nil)
     end, RUtils.fzf_diffview.opts_diffview_log("repo", "Grep log history"))
   end

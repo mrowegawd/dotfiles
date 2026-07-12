@@ -181,7 +181,7 @@ function M.browse_this_error(is_selection)
     selection_str[#selection_str + 1] = idx
   end
 
-  require("fzf-lua").fzf_exec(selection_str, fzfopts)
+  RUtils.fzflua.setup_fzflua().fzf_exec(selection_str, fzfopts)
 end
 
 ---@param str string
@@ -453,7 +453,7 @@ local function open_media_or_git(line_str)
     },
   }
 
-  require("fzf-lua").fzf_exec(contents, opts)
+  RUtils.fzflua.setup_fzflua().fzf_exec(contents, opts)
 end
 
 ---@param line_str string

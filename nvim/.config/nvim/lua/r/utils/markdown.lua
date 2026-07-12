@@ -502,16 +502,14 @@ local function picker(contents, actions, opts)
         table.insert(insert_tags, sel[1])
         insert_tags = RUtils.remove_duplicates_table(insert_tags)
 
-        ---@diagnostic disable-next-line: undefined-field
-        -- RUtils.info("Add tag: " .. vim.inspect(insert_tags), { title = "Markdown" })
-        require("fzf-lua").actions.resume()
+        RUtils.fzflua.setup_fzflua().actions.resume()
       end,
 
       ["ctrl-x"] = function()
         if #insert_tags == 0 then
           ---@diagnostic disable-next-line: undefined-field
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
-          require("fzf-lua").actions.resume()
+          RUtils.fzflua.setup_fzflua().actions.resume()
           return
         end
         M.find_note_by_tag { fargs = insert_tags }
@@ -636,7 +634,7 @@ local function list_tags_async(all_tags, is_set)
             for _, entry in pairs(entries_data) do
               local fzf_str = string.format("%-57s %-4s |%s", entry.tag, "[" .. entry.line_number .. "]", entry.title)
 
-              cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+              cb(RUtils.fzflua.setup_fzflua().make_entry.file(fzf_str, {}), function()
                 coroutine.resume(co, 0)
               end)
             end

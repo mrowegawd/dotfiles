@@ -6,11 +6,14 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc", "injected" },
-        ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc", "injected" },
+        -- ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc", "cbfmt" },
+        -- ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc", "cbfmt" },
 
-        ["norg"] = { "trim_whitespace", "trim_newlines", "injected" },
-        ["org"] = { "trim_whitespace", "trim_newlines", "injected" },
+        ["markdown"] = { "prettier", "markdownlint-cli2", "cbfmt" },
+        ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "cbfmt" },
+
+        ["norg"] = { "trim_whitespace", "trim_newlines", "cbfmt" },
+        ["org"] = { "trim_whitespace", "trim_newlines", "cbfmt" },
       },
       formatters = {
         ["markdown-toc"] = {
@@ -22,17 +25,8 @@ return {
             end
           end,
         },
-        ["markdownlint-cli2"] = {
-          condition = function(_, ctx)
-            local diag = vim.tbl_filter(function(d)
-              return d.source == "markdownlint"
-            end, vim.diagnostic.get(ctx.buf))
-            return #diag > 0
-          end,
-        },
 
-        -- NOTE: cbfmt is no longer used
-        -- since we can use `injected` instead
+        -- NOTE: cbfmt is no longer used since we can use `injected` instead
         cbfmt = { -- use for markdown, org, norg
           cwd = require("conform.util").root_file {
             vim.env.HOME .. "/.config/linters/.cbfmt.toml",
@@ -63,7 +57,7 @@ return {
   },
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "markdownlint-cli2", "markdown-toc", "cspell" } },
+    opts = { ensure_installed = { "markdownlint-cli2", "markdown-toc", "cspell", "cbfmt" } },
   },
   {
     "mfussenegger/nvim-lint",
@@ -111,7 +105,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "rmd", "codecompanion", "octo", "noice" },
+    ft = { "markdown", "rmd", "codecompanion", "octo", "noice", "org" },
     keys = {
       {
         "<Leader>uR",
@@ -125,14 +119,18 @@ return {
             is_render_markdown = false
           end
         end,
-        ft = { "markdown", "neorg", "org", "rmd", "octo" },
         mode = { "n", "x" },
         desc = "Toggle: render markdown [render-markdown]",
       },
     },
     opts = {
+      custom_handlers = {
+        org = {
+          parse = RUtils.rendermarkdown.parse_org,
+        },
+      },
       bullet = { icons = { "", "•", "", "-", "-" } },
-      file_types = { "markdown", "codecompanion", "octo" },
+      file_types = { "markdown", "codecompanion", "octo", "org" },
       code = {
         sign = false,
         border = "thin",
@@ -147,18 +145,31 @@ return {
         right_pad = 1,
       },
       render_modes = true,
+      link = {
+        wiki = {
+          icon = " ",
+        },
+      },
       anti_conceal = {
         ignore = {
+          sign = { "n" },
+          virtual_lines = { "n" },
+
           bullet = { "n" },
           callout = { "n" },
           check_icon = { "n" },
           check_scope = { "n" },
           code_language = { "n" },
           dash = { "n" },
-          head_icon = { "n" },
+
           link = { "n" },
           quote = { "n" },
           table_border = { "n" },
+
+          -- for header
+          head_icon = { "n" }, -- hanya di Normal mode
+          head_background = { "n" },
+          head_border = { "n" },
         },
       },
       dash = {
@@ -166,40 +177,40 @@ return {
       },
       heading = {
         enabled = true,
-        sign = false,
+        sign = true,
         width = "full", -- full, block
-        left_pad = 1,
+        left_pad = 0,
         right_pad = 0,
         position = "inline",
-        -- icons = {
-        --   "",
-        --   "",
-        --   "",
-        --   "",
-        --   "",
-        --   "",
-        -- },
-        icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+        signs = { "1.", "2.", "3.", "4.", "5.", "6.", "7." },
+        -- signs = { "󰉫 ", "󰉬 ", "󰉭 ", "󰉮 ", "󰉯 ", "󰉰 ", "󰉱 " },
+        icons = { "", "", "", "", "", "", "" },
+        -- icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
         -- icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
         -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-        signs = {
-          "󰉫 ", -- H1
-          "󰉬 ", -- H2
-          "󰉭 ", -- H3
-          "󰉮 ", -- H4
-          "󰉯 ", -- H5
-          "󰉰 ", -- H6
-          "󰉱 ", -- H7
+        -- icons = { "", "", "", "", "", "", },
+      },
+      quote = {
+        icon = "▐",
+        highlight = {
+          "RenderMarkdownQuote1",
+          "RenderMarkdownQuote2",
+          "RenderMarkdownQuote3",
+          "RenderMarkdownQuote4",
+          "RenderMarkdownQuote5",
+          "RenderMarkdownQuote6",
         },
       },
-      quote = { icon = "▐" },
-      pipe_table = { cell = "raw" },
+      pipe_table = { cell = "padded" },
       latex = { enabled = false },
       html = { comment = { conceal = false } },
       overrides = {
         filetype = {
+          org = {
+            -- Disable anti_conceal to prevent sign flickering in org buffers
+            anti_conceal = { enabled = false },
+          },
           noice = {},
-          -- CodeCompanion
           codecompanion = {
             heading = {
               icons = { "󰪥 ", "  ", " ", " ", " ", "" },

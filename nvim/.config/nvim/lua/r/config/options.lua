@@ -124,6 +124,25 @@ opt.wildignore = {
   ".DS_Store",
   "tags.lock",
 }
+opt.wildignore:append {
+  ".git",
+  ".hg",
+  ".svn",
+  ".stversions",
+  "*.spl",
+  "%*",
+  "*.zip",
+  "**/tmp/**",
+  "**/node_modules/**",
+  "**/bower_modules/**",
+  "*/.sass-cache/*",
+  "application/vendor/**",
+  "**/vendor/ckeditor/**",
+  "media/vendor/**",
+  "__pycache__",
+  "*.egg-info",
+  "*vim/backups*",
+}
 opt.wildoptions = { "pum", "fuzzy" } --Show completion items using the pop-up-menu (pum)
 -- opt.pumblend = 0 -- Make popup window translucent
 
