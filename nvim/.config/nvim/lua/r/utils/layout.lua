@@ -70,8 +70,11 @@ end
 
 ---@param saved table
 local function restore_wins(saved)
+  if not saved then
+    return
+  end
   for win, size in pairs(saved) do
-    if vim.api.nvim_win_is_valid(win) then
+    if win and vim.api.nvim_win_is_valid(win) then
       vim.api.nvim_win_set_width(win, size.width)
       vim.api.nvim_win_set_height(win, size.height)
     end
