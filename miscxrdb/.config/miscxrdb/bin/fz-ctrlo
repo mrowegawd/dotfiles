@@ -37,7 +37,7 @@ not_in_tmux_2() {
     return 0
   fi
 }
-notifme_to_run_in_tmux() {
+notify_me_to_run_in_tmux() {
   if not_in_tmux; then
     echo "$1"
     exit
@@ -251,7 +251,7 @@ open_find_filepath_and_linenumber() {
   fi
 }
 open_calc() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_calculator"
   width_pane="50%"
   height_pane="50%"
@@ -276,7 +276,7 @@ open_calc() {
   fi
 }
 open_mutlilog() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
     if tmux list-window | grep logging >/dev/null; then
@@ -290,9 +290,15 @@ open_mutlilog() {
   fi
 }
 open_newsboat() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   session="tmp_newsboat"
+
+  if docker ps --format '{{.Names}}' | grep -q '^torproxy$'; then
+    RUN_NEWSBOAT="proxychains -q newsboat -u ~/Dropbox/data.programming.forprivate/newsboat-urls"
+  else
+    RUN_NEWSBOAT="newsboat -u ~/Dropbox/data.programming.forprivate/newsboat-urls"
+  fi
 
   if ! _is_session_exists "$session"; then
     set -gF '@last_session_name' '#S'
@@ -300,7 +306,7 @@ open_newsboat() {
       -E -d "#{pane_current_path}" \
       -S bg="$COL_BG",fg="$COL_TAB_ACTIVE_FG" \
       -b rounded \
-      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $RUN_NEWSBOAT;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
@@ -315,7 +321,7 @@ open_newsboat() {
 }
 
 open_eilmeldung() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   session="tmp_eilmeldung"
 
@@ -345,7 +351,7 @@ open_eilmeldung() {
   fi
 }
 open_rkill() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
   # pid=$(ps -ef | sed 1d | fzf-tmux -p 80% --color=border:"$COL_TAB_ACTIVE_FG" | awk '{print $2}')
   pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
@@ -355,7 +361,7 @@ open_rkill() {
   fi
 }
 open_calcure() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   session="tmp_calcure"
 
@@ -381,7 +387,7 @@ open_calcure() {
 
 }
 open_ps_btop() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_btop"
 
   if ! _is_session_exists "$session"; then
@@ -404,7 +410,7 @@ open_ps_btop() {
   fi
 }
 open_ps_lsof() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   session="tmp_lsof"
 
@@ -474,7 +480,7 @@ open_systemctl_ui() {
     -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
 }
 open_lazydocker() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   program_tool="lazydocker"
   session="tmp_$program_tool"
@@ -505,7 +511,7 @@ open_lazygit() {
     "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml" # Open Lazygit inside popup
 }
 open_resterm() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_resterm"
 
   if ! _is_session_exists "$session"; then
@@ -528,7 +534,7 @@ open_resterm() {
   fi
 }
 open_tock() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_tock"
 
   if ! _is_session_exists "$session"; then
@@ -552,7 +558,7 @@ open_tock() {
 }
 
 open_notes() {
-  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+  notify_me_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
   program_tool="nvim"
   session="tmp_notes_wiki"
@@ -894,7 +900,7 @@ EOF
   "pomodoro: 5 minute") pomodoro_5minute_mode ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
-  "News RSS") open_eilmeldung ;;
+  "News RSS") open_newsboat ;; # open_eilmeldung
   "Tock") open_tock ;;
   *) exit ;;
   esac

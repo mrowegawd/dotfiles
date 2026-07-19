@@ -163,7 +163,7 @@ end
 function M.float_newsboat()
   local t = M.wrap_open_cmd({
     name = "newsboat",
-    cmd = "newsboat",
+    cmd = [[newsboat -u ~/Dropbox/data.programming.forprivate/newsboat-urls]],
     layout = "float",
   }, true)
 
