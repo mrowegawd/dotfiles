@@ -14,7 +14,7 @@ typeset -A __DOTS
 __DOTS[ITALIC_ON]=$'\e[3m'
 __DOTS[ITALIC_OFF]=$'\e[23m'
 
-exists() { (( $+commands[$1] )); }
+exists() { (($+commands[$1])); }
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ OPTIONS                                                  ╏
@@ -55,9 +55,9 @@ autoload -Uz compinit && compinit
   local zcdc="$zcd.zwc"
   if [[ -f "$zcd"(#qN.mh+24) || ! -f "$zcd" ]]; then
     compinit -d "$zcd"
-    { zcompile "$zcd" } &!  # compile di background
+    { zcompile "$zcd"; } &| # compile di background
   else
-    compinit -C -d "$zcd"   # -C: skip security check, pakai cache
+    compinit -C -d "$zcd" # -C: skip security check, pakai cache
   fi
 }
 
@@ -97,7 +97,7 @@ fi
 # ╏ SOURCE PLUGINS                                           ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-source_if_exists() { [[ -f $1 ]] && source $1 }
+source_if_exists() { [[ -f $1 ]] && source $1; }
 
 source_if_exists "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source_if_exists "$ZSH_PLUGINS/autoenv/autoenv.plugin.zsh"
@@ -128,7 +128,7 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
 
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-  icat() { kitten icat $@ }
+  icat() { kitten icat $@; }
   zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
   zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
 
@@ -180,31 +180,37 @@ vim_insert_mode=""
 vim_normal_mode="%F{${colorline}}╰─%f%F{green} %f"
 vim_mode=$vim_insert_mode
 
-function zle-line-finish { vim_mode=$vim_insert_mode }
+function zle-line-finish { vim_mode=$vim_insert_mode; }
 zle -N zle-line-finish
 
 function TRAPINT() {
   vim_mode=$vim_insert_mode
-  return $(( 128 + $1 ))
+  return $((128 + $1))
 }
 
 cursor_mode() {
-  cursor_block='\e[1 q'
-  cursor_beam='\e[1 q'
+  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+  cursor_block='\e[2 q'
+  cursor_beam='\e[6 q'
 
   function zle-keymap-select {
     vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
     zle && zle reset-prompt
 
-    if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
+    if [[ ${KEYMAP} == vicmd ]] ||
+      [[ $1 = 'block' ]]; then
       echo -ne $cursor_block
-    elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] ||
-         [[ ${KEYMAP} = '' ]] || [[ $1 = 'beam' ]]; then
+    elif [[ ${KEYMAP} == main ]] ||
+      [[ ${KEYMAP} == viins ]] ||
+      [[ ${KEYMAP} = '' ]] ||
+      [[ $1 = 'beam' ]]; then
       echo -ne $cursor_beam
     fi
   }
 
-  zle-line-init() { echo -ne $cursor_beam }
+  zle-line-init() {
+    echo -ne $cursor_beam
+  }
 
   zle -N zle-keymap-select
   zle -N zle-line-init
@@ -220,20 +226,22 @@ autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' use-cache true
 zstyle ':vcs_info:*' max-exports 2
-zstyle ':vcs_info:*' check-for-changes false
+zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr "%F{green} ●%f"
 zstyle ':vcs_info:*' unstagedstr "%F{red} ●%f"
 zstyle ':vcs_info:*' use-simple true
-zstyle ':vcs_info:git+set-message:*' hooks git-stash git-compare git-remotebranch
+zstyle ':vcs_info:git+set-message:*' hooks git-untracked git-stash git-compare git-remotebranch
 zstyle ':vcs_info:git*:*' actionformats '(%B%F{red}%b|%a%c%u%%b%f) '
 zstyle ':vcs_info:git:*' formats "%F{249}(%f%F{blue}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%f%F{249})%f%c%u%m"
 
-__in_git() { git rev-parse --is-inside-work-tree &>/dev/null }
+__in_git() { [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; }
 
 function +vi-git-untracked() {
   emulate -L zsh
-  if __in_git && git status --porcelain=v1 -uno | grep -q '^??'; then
-    hook_com[unstaged]+="%F{blue}  %f"
+  if __in_git; then
+    if [[ -n $(git ls-files --directory --no-empty-directory --exclude-standard --others 2>/dev/null) ]]; then
+      hook_com[unstaged]+="%F{blue} %f" # alternatives ●
+    fi
   fi
 }
 
@@ -244,21 +252,55 @@ function +vi-git-stash() {
   fi
 }
 
-function +vi-git-compare() {
+function +vi-git-stash() {
+  local stash_icon=""
   emulate -L zsh
-  local ahead behind branch upstream
-  branch=${hook_com[branch]}
-  upstream=$(git rev-parse --abbrev-ref ${branch}@{upstream} 2>/dev/null) || return 0
-  local -a counts
-  counts=(${(s: :)$(git rev-list --left-right --count HEAD...${branch}@{upstream} 2>/dev/null)})
-  ahead=${counts[1]} behind=${counts[2]}
-  (( ahead )) && hook_com[misc]+="%F{red}⇡${ahead}%f "
-  (( behind )) && hook_com[misc]+="%F{cyan}⇣${behind}%f "
+  if __in_git; then
+    if [[ -n $(git rev-list --walk-reflogs --count refs/stash 2>/dev/null) ]]; then
+      hook_com[unstaged]+=" %F{yellow}$stash_icon%f "
+    fi
+  fi
+}
+
+function +vi-git-compare() {
+  local ahead behind
+  local -a gitstatus
+
+  # Exit early in case the worktree is on a detached HEAD
+  git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
+
+  local -a ahead_and_behind=(
+    $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
+  )
+
+  ahead=${ahead_and_behind[1]}
+  behind=${ahead_and_behind[2]}
+
+  local ahead_symbol="%{$fg[red]%}⇡%{$reset_color%}${ahead}"
+  local behind_symbol="%{$fg[cyan]%}⇣%{$reset_color%}${behind}"
+  (($ahead)) && gitstatus+=("${ahead_symbol}")
+  (($behind)) && gitstatus+=("${behind_symbol}")
+  # `(j:<char>:)` represents joining the items of a list with a character
+  # similar to a string.join type operation this can also be written as
+  # (j./.) the character representing each part is interchangeable, and the
+  # middle character represents the string to use to join the items
+  # https://zsh.sourceforge.io/Guide/zshguide05.html#l124
+  hook_com[misc]+="${(j: :)gitstatus}"
 }
 
 function +vi-git-remotebranch() {
   local remote
-  remote=${$(git rev-parse --symbolic-full-name ${hook_com[branch]}@{upstream} 2>/dev/null)/refs\/remotes\/}
+  # Are we on a remote-tracking branch?
+  remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
+    --symbolic-full-name 2>/dev/null)/refs\/remotes\//}
+
+  # The first test will show a tracking branch whenever there is one. The
+  # second test, however, will only show the remote branch's name if it
+  # differs from the local one.
+  # if [[ -n ${remote} ]] ; then
+  if [[ -n ${remote} && ${remote#*/} != ${hook_com[branch]} ]]; then
+    hook_com[branch]="${hook_com[branch]}→[${remote}]"
+  fi
 }
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -273,16 +315,19 @@ function __prompt_eval() {
     virtualenv_prompt="%F{green}($(basename "$VIRTUAL_ENV"))%f"
   fi
 
-  local dots_prompt_icon="%F{$colorline}╰─%f "
-  local dots_prompt_failure_icon="%F{$colorline}╰─%f%F{red}✘%f "
-  local top="%F{$colorline}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-}%F{$colorline}]%f %(1j.%F{cyan}job:%j✦%f .) %F{cyan}${virtualenv_prompt}"
+  local dots_prompt_icon="%F{$colorline}╰─ %f"
+  local dots_prompt_failure_icon="%F{$colorline}╰─%f%F{red}✘ %f"
+  local placeholder="(%F{blue}%{$__DOTS[ITALIC_ON]%}…%{$__DOTS[ITALIC_OFF]%}%f)"
+  local top="%F{$colorline}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{$colorline}]%f %(1j.%F{cyan}job:%j✦%f .) %F{cyan}${virtualenv_prompt}"
   local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
   echo $top$'\n'$bottom
 }
 
 export PROMPT='$(__prompt_eval)'
-export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%By%b/%Bn%b/%Be%b/%Ba%b]? "
+# Right prompt
+export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
+export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ EXECUTION TIME                                           ╏
@@ -290,23 +335,26 @@ export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%By%b/%Bn%b/%Be%b/%Ba%b]
 
 __human_time_to_var() {
   local total=$1 var=$2
-  local d=$(( total / 86400 )) h=$(( total / 3600 % 24 )) m=$(( total / 60 % 60 )) s=$(( total % 60 ))
+  local d=$((total / 86400)) h=$((total / 3600 % 24)) m=$((total / 60 % 60)) s=$((total % 60))
   local human=""
-  (( d )) && human+="${d}d "
-  (( h )) && human+="${h}h "
-  (( m )) && human+="${m}m "
+  ((d)) && human+="${d}d "
+  ((h)) && human+="${h}h "
+  ((m)) && human+="${m}m "
   human+="${s}s"
   typeset -g "${var}"="${human}"
 }
 
 __check_cmd_exec_time() {
-  integer elapsed=$(( EPOCHSECONDS - ${cmd_timestamp:-$EPOCHSECONDS} ))
+  integer elapsed=$((EPOCHSECONDS - ${cmd_timestamp:-$EPOCHSECONDS}))
   typeset -g cmd_exec_time=
-  (( elapsed > 1 )) && __human_time_to_var $elapsed cmd_exec_time
+  ((elapsed > 1)) && __human_time_to_var $elapsed cmd_exec_time
 }
 
-__timings_preexec() { typeset -g cmd_timestamp=$EPOCHSECONDS }
-__timings_precmd()  { __check_cmd_exec_time; unset cmd_timestamp }
+__timings_preexec() { typeset -g cmd_timestamp=$EPOCHSECONDS; }
+__timings_precmd() {
+  __check_cmd_exec_time
+  unset cmd_timestamp
+}
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ HOOKS                                                    ╏
@@ -315,35 +363,45 @@ __timings_precmd()  { __check_cmd_exec_time; unset cmd_timestamp }
 autoload -Uz add-zsh-hook
 
 __async_vcs_start() {
-  if [[ -n "$__prompt_async_fd" ]] && { true <&$__prompt_async_fd } 2>/dev/null; then
-    exec {__prompt_async_fd}<&-
+  # Close the last file descriptor to invalidate old requests
+  if [[ -n "$__prompt_async_fd" ]] && { true <&$__prompt_async_fd; } 2>/dev/null; then
+    exec 9<&-
     zle -F $__prompt_async_fd
   fi
-  exec {__prompt_async_fd}< <(__async_vcs_info "$PWD")
-  zle -F $__prompt_async_fd __async_vcs_info_done
+  # fork a process to fetch the vcs status and open a pipe to read from it
+  exec 9< <(
+    __async_vcs_info $PWD
+  )
+  __prompt_async_fd=9
+
+  # When the fd is readable, call the response handler
+  zle -F "$__prompt_async_fd" __async_vcs_info_done
 }
 
 __async_vcs_info() {
-  builtin cd -q "$1" || return
+  cd -q "$1"
   vcs_info
-  print -r -- "${vcs_info_msg_0_}"
+  print ${vcs_info_msg_0_}
 }
 
 __async_vcs_info_done() {
-  _git_status_prompt="$(<&$1)"
+  local fd=$1
+  local raw="$(<&$fd)"
+  _git_status_prompt="$raw"
   [[ -z $_git_status_prompt ]] && _git_status_prompt=" "
-  zle -F "$1"
-  exec {1}<&-
+  zle -F "$fd"
+  exec 9<&-
+  unset __prompt_async_fd
   zle && zle reset-prompt
 }
 
-function TRAPWINCH() { zle && zle reset-prompt }
+function TRAPWINCH() { zle && zle reset-prompt; }
 
 add-zsh-hook precmd __timings_precmd
 add-zsh-hook precmd __async_vcs_start
 add-zsh-hook preexec __timings_preexec
 
-__on_chpwd() { _git_status_prompt="" }
+__on_chpwd() { _git_status_prompt=""; }
 add-zsh-hook chpwd __on_chpwd
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -416,7 +474,7 @@ if [[ -f ~/.local/bin/uv ]]; then
   local _uv_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/uv-completion.zsh"
   if [[ ! -f "$_uv_comp_cache" || ~/.local/bin/uv -nt "$_uv_comp_cache" ]]; then
     mkdir -p "${_uv_comp_cache:h}"
-    ~/.local/bin/uv generate-shell-completion zsh >| "$_uv_comp_cache"
+    ~/.local/bin/uv generate-shell-completion zsh >|"$_uv_comp_cache"
   fi
   source_if_exists "$_uv_comp_cache"
 fi

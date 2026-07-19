@@ -1,4 +1,4 @@
-# vim: ft=zsh sw=2 ts=2 et
+#!/usr/bin/env zsh
 
 emulate -L zsh
 
@@ -6,7 +6,7 @@ setopt pipefail
 
 _fps() {
   local render
-  if (( $+commands[grcat] )); then
+  if (($+commands[grcat])); then
     render='grcat fps.grc'
   else
     render='cat'
@@ -32,4 +32,4 @@ fi
 local fzf_preview_cmd="ps -o pcpu,pmem,vsz,rss,$nlwp,start,time -p {2}"
 
 _fps | $FZF_CMD ${(z)fzf_opts} --preview=$fzf_preview_cmd |
-    awk -v sep=${FZF_MUL_DELIM:- } '{ printf "%s%c", $2, sep }' | sed -E "s/${FZF_MUL_DELIM:- }$//"
+  awk -v sep=${FZF_MUL_DELIM:- } '{ printf "%s%c", $2, sep }' | sed -E "s/${FZF_MUL_DELIM:- }$//"

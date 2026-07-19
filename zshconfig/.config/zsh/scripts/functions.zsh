@@ -16,7 +16,7 @@ build-nvim() {
   rm -rf $HOME/neovim/*
 
   make CMAKE_BUILD_TYPE=Release \
-       CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+    CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
 
   make install
   popd
@@ -43,7 +43,7 @@ build-install() {
 
   if ! command -v rg >/dev/null; then
     echo "Installing: rg"
-    sudo apt install  pamixer ripgrep -y
+    sudo apt install pamixer ripgrep -y
   fi
 
   if ! command -v sqlite3 >/dev/null; then
@@ -75,7 +75,7 @@ build-install() {
 
   if ! command -v newsboat >/dev/null; then
     echo "Installing: newsbato - Feed news"
-    chmod +x  "$HOME/.config/miscxrdb/exbin/install-newsboat"
+    chmod +x "$HOME/.config/miscxrdb/exbin/install-newsboat"
     bash "$HOME/.config/miscxrdb/exbin/install-newsboat"
   fi
 
@@ -156,74 +156,70 @@ build-install() {
     sudo install -m 0755 resterm /usr/local/bin/resterm
   fi
 
-
-
   # ──────────────────────────────────────────────────────────────────────
   # RUST, cargo
   # ──────────────────────────────────────────────────────────────────────
   # if ! command -v bat >/dev/null; then
-    echo "Installing: bat - we cat before bat"
-    # sudo apt install ydotool ydotool -y
-    cargo install bat
-    asdf reshim rust
+  echo "Installing: bat - we cat before bat"
+  # sudo apt install ydotool ydotool -y
+  cargo install bat
+  asdf reshim rust
   # fi
 
   # if ! command -v viu >/dev/null; then
-    echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
-    cargo install viu
-    asdf reshim rust
+  echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
+  cargo install viu
+  asdf reshim rust
   # fi
 
   # if ! command -v rmpc >/dev/null; then
-    echo "Installing: rmpc - Terminal mp3 (alternatif dari nncmpc)"
-    cargo install --git https://github.com/mierak/rmpc --locked   # install latest
-    asdf reshim rust
+  echo "Installing: rmpc - Terminal mp3 (alternatif dari nncmpc)"
+  cargo install --git https://github.com/mierak/rmpc --locked # install latest
+  asdf reshim rust
   # fi
 
   # if ! command -v gifski >/dev/null; then
-    # Install: gifski
-    # gihtub: https://github.com/sindresorhus/Gifski
-    # install binary langsung dari link https://gif.ski/
-    echo "Installing: gifski - Gif encoder"
-    cargo install gifski
-    asdf reshim rust
+  # Install: gifski
+  # gihtub: https://github.com/sindresorhus/Gifski
+  # install binary langsung dari link https://gif.ski/
+  echo "Installing: gifski - Gif encoder"
+  cargo install gifski
+  asdf reshim rust
   # fi
 
-
   # if ! command -v dua >/dev/null; then
-    echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
-    cargo install dua-cli
-    asdf reshim rust
+  echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
+  cargo install dua-cli
+  asdf reshim rust
   # fi
 
   # if ! command -v procs >/dev/null; then
-    echo "Installing: procs - Better than use 'ps' command"
-    cargo install procs
-    asdf reshim rust
+  echo "Installing: procs - Better than use 'ps' command"
+  cargo install procs
+  asdf reshim rust
   # fi
 
-
   # if ! command -v eza >/dev/null; then
-    echo "Installing: eza - ls colors"
-    cargo install eza
-    asdf reshim rust
+  echo "Installing: eza - ls colors"
+  cargo install eza
+  asdf reshim rust
   # fi
 
   # if ! command -v zoxide >/dev/null; then
-    echo "Installing: zoxide - A smarter cd commands"
-    cargo install zoxide --locked
-    asdf reshim rust
+  echo "Installing: zoxide - A smarter cd commands"
+  cargo install zoxide --locked
+  asdf reshim rust
   # fi
 
   # if ! command -v delta >/dev/null; then
-    echo "Installing: delta - Color for git hunk/chommits"
-    cargo install git-delta
-    asdf reshim rust
+  echo "Installing: delta - Color for git hunk/chommits"
+  cargo install git-delta
+  asdf reshim rust
   # fi
 
   if ! command -v eilmeldung >/dev/null; then
     echo "Installing: eilmeldung - Feed news (alternative newsboat) "
-    chmod +x  "$HOME/.config/miscxrdb/exbin/install-newsboat"
+    chmod +x "$HOME/.config/miscxrdb/exbin/install-newsboat"
     sudo apt install build-essential \
       perl libssl-dev pkg-config libxml2-dev \
       clang libsqlite3-dev
@@ -232,64 +228,64 @@ build-install() {
   fi
 
   # if ! command -v rg >/dev/null; then
-    # echo "Installing: rg - Grep drugs"
-    # cargo install ripgrep
-    # asdf reshim rust
+  # echo "Installing: rg - Grep drugs"
+  # cargo install ripgrep
+  # asdf reshim rust
   # fi
 
   # https://github.com/race604/clock-tui
   # if ! command -v tclock >/dev/null; then
-    echo "Installing: tclock - Clock tui"
-    cargo install clock-tui
-    asdf reshim rust
+  echo "Installing: tclock - Clock tui"
+  cargo install clock-tui
+  asdf reshim rust
   # fi
 
   # if ! command -v tree-sitter >/dev/null; then
-    echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
-    cargo install tree-sitter-cli
-    asdf reshim rust
+  echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
+  cargo install tree-sitter-cli
+  asdf reshim rust
   # fi
 
   # if ! command -v yazi >/dev/null; then
-    echo "Installing: yazi - File manager tui"
-    cargo install --force yazi-build --locked
-    asdf reshim rust
+  echo "Installing: yazi - File manager tui"
+  cargo install --force yazi-build --locked
+  asdf reshim rust
 
-    # yazi git integration
-    # ya pkg add yazi-rs/plugins:git
+  # yazi git integration
+  # ya pkg add yazi-rs/plugins:git
   # fi
 
   # if ! command -v rust-analyzer >/dev/null; then
-    echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
-    rustup component add rust-analyzer
-    asdf reshim rust
+  echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
+  rustup component add rust-analyzer
+  asdf reshim rust
   # fi
 
   # ──────────────────────────────────────────────────────────────────────
   # GO install
   # ──────────────────────────────────────────────────────────────────────
   # if ! command -v dive >/dev/null; then
-    echo "Installing: dive - Explore docker layer"
-    go install github.com/wagoodman/dive@latest
-    asdf reshim golang
+  echo "Installing: dive - Explore docker layer"
+  go install github.com/wagoodman/dive@latest
+  asdf reshim golang
   # fi
 
   # if ! command -v sesh >/dev/null; then
-    echo "Installing: sesh - Handle tmux session"
-    go install github.com/joshmedeski/sesh/v2@latest
-    asdf reshim golang
+  echo "Installing: sesh - Handle tmux session"
+  go install github.com/joshmedeski/sesh/v2@latest
+  asdf reshim golang
   # fi
 
   # if ! command -v tock >/dev/null; then
-    echo "Installing: tock - Tock is a powerful time tracking tool for the command line."
-    go install github.com/kriuchkov/tock/cmd/tock@latest
-    asdf reshim golang
+  echo "Installing: tock - Tock is a powerful time tracking tool for the command line."
+  go install github.com/kriuchkov/tock/cmd/tock@latest
+  asdf reshim golang
   # fi
 
   # if ! command -v lazydocker >/dev/null; then
-    echo "Installing: lazydocker - Docker TUI"
-    go install github.com/jesseduffield/lazydocker@latest
-    asdf reshim golang
+  echo "Installing: lazydocker - Docker TUI"
+  go install github.com/jesseduffield/lazydocker@latest
+  asdf reshim golang
   # fi
 
   if ! command -v gowall >/dev/null; then
@@ -313,51 +309,51 @@ build-install() {
   # Pip, pipx
   # ──────────────────────────────────────────────────────────────────────
   # if ! command -v pipx >/dev/null; then
-    echo "Installing: pipx"
-    pip install pipx
-    asdf reshim python
+  echo "Installing: pipx"
+  pip install pipx
+  asdf reshim python
   # fi
 
   # if ! command -v calcure >/dev/null; then
-    echo "Installing: calcure - Calendar TUI"
-    pipx install calcure
-    asdf reshim python
+  echo "Installing: calcure - Calendar TUI"
+  pipx install calcure
+  asdf reshim python
   # fi
 
   # if ! command -v img2art >/dev/null; then
-    # https://github.com/Asthestarsfalll/img2art
-    echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
-    pipx install img2art
-    asdf reshim python
+  # https://github.com/Asthestarsfalll/img2art
+  echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
+  pipx install img2art
+  asdf reshim python
   # fi
 
   # if ! command -v yt-dlp >/dev/null; then
-    echo "Installing: yt-dlp - A tool for download youtube video"
-    # To force an update, use the --force option, for example:
-    # 'pipx install yt-dlp --force'
-    pipx install yt-dlp
-    asdf reshim python
+  echo "Installing: yt-dlp - A tool for download youtube video"
+  # To force an update, use the --force option, for example:
+  # 'pipx install yt-dlp --force'
+  pipx install yt-dlp
+  asdf reshim python
   # fi
 
   # ──────────────────────────────────────────────────────────────────────
   # NPM
   # ──────────────────────────────────────────────────────────────────────
   # if ! command -v mmdc >/dev/null; then
-    echo "Installing: mmdc - A tool for the mermaid library nvim"
-    npm install -g @mermaid-js/mermaid-cli
-    asdf reshim nodejs
+  echo "Installing: mmdc - A tool for the mermaid library nvim"
+  npm install -g @mermaid-js/mermaid-cli
+  asdf reshim nodejs
   # fi
 
   # if ! command -v cronstrue >/dev/null; then
-    echo "Installing: cronstrue - parses a cron expression and outputs a human readable"
-    npm install -g cronstrue
-    asdf reshim nodejs
+  echo "Installing: cronstrue - parses a cron expression and outputs a human readable"
+  npm install -g cronstrue
+  asdf reshim nodejs
   # fi
 
   # if ! command -v yarn >/dev/null; then
-    echo "Installing: yarn - another package managers for JavaScript"
-    npm install -g yarn
-    asdf reshim nodejs
+  echo "Installing: yarn - another package managers for JavaScript"
+  npm install -g yarn
+  asdf reshim nodejs
   # fi
 }
 
@@ -447,9 +443,9 @@ zle -N exitme
 bindkey '^[x' exitme
 
 find-in-file() {
-  local _file="$(rg --color=always --line-number --hidden --no-heading --smart-case "${@:-^[^\n]}" \
-    | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
-    --preview-window='50%' --prompt='Grep In File> ' --height='50%' --with-nth 1,3.. --exact)"
+  local _file="$(rg --color=always --line-number --hidden --no-heading --smart-case "${@:-^[^\n]}" |
+    fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
+      --preview-window='50%' --prompt='Grep In File> ' --height='50%' --with-nth 1,3.. --exact)"
 
   _file="${_file%%:*}"
   if [[ -n $_file ]]; then
@@ -467,17 +463,17 @@ _fps() {
   ps -eo user,pid,ppid,pgid,stat,command | awk '
     BEGIN { "ps -p $$ -o pgid= | tr -d \"[:blank:]\"" | getline pgid } {
   if ($4 != pgid || $2 == pgid) print }' |
-  grcat fps.grc | fzf --header-lines=1 -m \
+    grcat fps.grc | fzf --header-lines=1 -m \
     ${commands[grcat]:+--ansi} --height=60% \
     --min-height=15 --tac --reverse \
     --preview-window=down:2,border-top |
-  awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
-  sed -E "s/${myflag:- }$//"
+    awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
+    sed -E "s/${myflag:- }$//"
 }
 
 _t_expand_alias_f() {
   # echo $functions
-  if (( $+functions[_t_expand_alias] )); then
+  if (($+functions[_t_expand_alias])); then
     print ${functions[_t_expand_alias]#$'\t'}
     unset -f _t_expand_alias
   else
@@ -491,7 +487,6 @@ show_alias() {
   local select
   local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
 
-
   local doc_con="doc_con_"
   local doc_im="doc_im_"
 
@@ -504,8 +499,8 @@ show_alias() {
     return
 
   elif [[ $myargs[-2] == "alias" ]]; then
-    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' \
-      | fzf -p 80% | cut -d" " -f1 | xargs)
+    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' |
+      fzf -p 80% | cut -d" " -f1 | xargs)
     if [[ -n $alias_sel ]]; then
       LBUFFER="git $alias_sel "
       zle reset-prompt
@@ -552,14 +547,14 @@ show_alias() {
   #     return
   #   fi
 
-  elif echo "${myargs[-1]}" | grep -q "^doc_con_[a-zA-Z0-9_]\+\S" ; then
+  elif echo "${myargs[-1]}" | grep -q "^doc_con_[a-zA-Z0-9_]\+\S"; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
     FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
     FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
-    local select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" \
-      | fzf --multi --height=40% --header-lines=1 | awk '{print $1}' )
+    local select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" |
+      fzf --multi --height=40% --header-lines=1 | awk '{print $1}')
     if [[ -n $select ]]; then
       LBUFFER="${LBUFFER}$select "
       zle reset-prompt
@@ -570,12 +565,12 @@ show_alias() {
       return
     fi
 
-  elif echo "${myargs[-1]}" | grep -q "^doc_im_[a-zA-Z0-9_]\+\S" ; then
+  elif echo "${myargs[-1]}" | grep -q "^doc_im_[a-zA-Z0-9_]\+\S"; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
-    local select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" \
-      | fzf --multi --height=40% --header-lines=1 | awk '{print $3}' )
+    local select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" |
+      fzf --multi --height=40% --header-lines=1 | awk '{print $3}')
 
     if [[ -n $select ]]; then
       LBUFFER="${LBUFFER}$select "
@@ -588,8 +583,8 @@ show_alias() {
 
   elif [[ $myargs[-1] == "" ]]; then
     local alias_selected=$(
-    awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf --exit-0 --ansi
+      awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
+        column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf --exit-0 --ansi
     )
 
     if [[ -n $alias_selected ]]; then
@@ -613,4 +608,4 @@ show_alias() {
   fi
 }
 zle -N show_alias
-bindkey '\t' show_alias  # <Tab>
+bindkey '\t' show_alias # <Tab>
