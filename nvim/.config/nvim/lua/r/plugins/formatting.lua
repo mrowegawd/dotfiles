@@ -80,6 +80,7 @@ return {
           lua = { "stylua" },
           fish = { "fish_indent" },
           sh = { "shfmt" },
+          zsh = { "shfmt" },
 
           ["_"] = { "trim_whitespace", "trim_newlines", lsp_format = "last" },
         },

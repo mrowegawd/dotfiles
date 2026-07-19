@@ -19,7 +19,8 @@ return {
     }
   end,
   {
-    "arborist-ts/arborist.nvim",
+    -- "arborist-ts/arborist.nvim",
+    "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "ninja", "rst" } },
   },
   {

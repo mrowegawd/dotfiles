@@ -721,6 +721,10 @@ local bulk_cmd_misc = function()
     end,
     ["Browser devdocs - with input"] = function()
       local query = vim.fn.input "Search DevDocs: "
+      if not query then
+        return
+      end
+
       if #query > 0 then
         local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
         os.execute(encodedURL)

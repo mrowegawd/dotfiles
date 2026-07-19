@@ -36,6 +36,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field sessions r.utils.sessions
 ---@field statuscolumn r.utils.statuscolumn
 ---@field terminal r.utils.terminal
+---@field treesitter r.utils.treesitter
 ---@field tmux r.utils.tmux
 ---@field todocomments r.utils.todocomments
 ---@field uisec r.utils.uisec

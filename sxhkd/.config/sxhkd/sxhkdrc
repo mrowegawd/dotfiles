@@ -125,11 +125,11 @@ super + b
 # MULTIMEDIA
 ########################################
 # media: increase volume audio
-super + shift + equal
+super + equal
         amixer -q sset Master 3%+
 
 # media: decrease volume audio
-super + shift + minus
+super + minus
         amixer -q sset Master 3%-
 
 # media: toggle mute audio

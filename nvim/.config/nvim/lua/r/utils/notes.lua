@@ -22,6 +22,8 @@ local function setup_orgmode()
   return Orgmode
 end
 
+M.setup_orgmode = setup_orgmode
+
 local function not_implement()
   RUtils.warn "not implemented yet"
 end
@@ -1362,7 +1364,7 @@ local function set_repeater_todo(bufnr, repeater_dates, headline)
     -- Step 2: setelah buffer berubah, reload file dan cari headline yang sama by line
     vim.cmd "silent! write"
 
-    local file = require("orgmode").files:get(vim.api.nvim_buf_get_name(bufnr))
+    local file = Orgmode.files:get(vim.api.nvim_buf_get_name(bufnr))
     if not file then
       return
     end

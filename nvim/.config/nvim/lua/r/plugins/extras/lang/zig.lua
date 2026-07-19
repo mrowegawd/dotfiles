@@ -6,7 +6,8 @@ return {
   --   }
   -- end,
   {
-    "arborist-ts/arborist.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    -- "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "zig" } },
   },
   {

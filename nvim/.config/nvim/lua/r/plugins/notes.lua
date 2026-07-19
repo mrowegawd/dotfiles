@@ -6,7 +6,8 @@ local AgendaMode = {
 local agenda_mode = AgendaMode.FAST
 
 local function setup_agenda(pattern)
-  require("orgmode").setup {
+  local Orgmode = RUtils.notes.setup_orgmode()
+  Orgmode.setup {
     org_agenda_files = pattern,
   }
 end
@@ -80,9 +81,9 @@ return {
         "<LocalLeader>aa",
         function()
           refresh_agenda_files(true)
-          require("orgmode").action "agenda.prompt"
+          RUtils.notes.setup_orgmode().action "agenda.prompt"
         end,
-        desc = "Note: open agenda orgmode [orgmode]",
+        desc = "Note: open agenda [orgmode]",
       },
 
       -- TEST Command
@@ -403,7 +404,7 @@ return {
         command = function()
           local bufnr = vim.fn.bufnr "orgagenda" or -1
           if bufnr > -1 then
-            require("orgmode").agenda:redo()
+            RUtils.notes.setup_orgmode().agenda:redo()
           end
         end,
       })
@@ -751,16 +752,6 @@ return {
 
     config = function(_, opts)
       require("obsidian").setup(opts)
-
-      RUtils.map.augroup("ManageNoteMappingMarkdown", {
-        event = { "FileType" },
-        pattern = { "markdown" },
-        command = function(ctx)
-          vim.defer_fn(function()
-            require("r.keymaps.note").neorg_mappings_ft(ctx.buf)
-          end, 500)
-        end,
-      })
     end,
   },
   -- KANBAN.NVIM (disabled)
@@ -913,97 +904,6 @@ return {
         ft = { "markdown", "neorg", "org" },
         desc = "Misc: close [sniprun]",
       },
-    },
-  },
-  -- IMAGES.NVIM FOR ORG (disabled)
-  {
-    "3rd/image.nvim",
-    enabled = false,
-    ft = { "norg", "syslang", "vimwiki", "html", "org", "image_nvim" },
-    keys = {
-      {
-        "<Leader>CR",
-        function()
-          local image = require "image"
-          image.clear()
-        end,
-        { desc = "Open image under cursor inline" },
-      },
-      {
-        "<Leader>CC",
-        function()
-          local function get_image_path()
-            local line = vim.api.nvim_get_current_line()
-            local img_path = line:match "!%[.*%]%((.+)%)" -- md image ![](path)
-            if not img_path then
-              img_path = line:match "%[.*%]%((.+)%)" -- md-like without !: [](path)
-            end
-            if not img_path then
-              img_path = line:match "<image>(.-)</image>" -- html-like: <image>path</image>
-            end
-            if not img_path then
-              -- Match the first filename-like word ending with an image extension
-              img_path = line:match "([%w%._%-:]+%.png)"
-                or line:match "([%w%._%-:]+%.jpg)"
-                or line:match "([%w%._%-:]+%.jpeg)"
-                or line:match "([%w%._%-:]+%.svg)"
-                or line:match "([%w%._%-:]+%.bmp)"
-            end
-            return img_path
-          end
-
-          local path = get_image_path()
-          if not path or path == "" then
-            vim.notify("No image path found on current line", vim.log.levels.WARN)
-            return
-          end
-
-          local image = require "image"
-          image.from_file(path, {}):render()
-        end,
-        { desc = "Open image under cursor inline" },
-      },
-    },
-    opts = {
-      debug = {
-        enabled = false,
-        level = "debug",
-        file_path = "/tmp/image.nvim.log",
-        format = "compact",
-      },
-      integrations = {
-        markdown = {
-          enabled = false,
-          clear_in_insert_mode = false,
-          only_render_image_at_cursor = true,
-          -- only_render_image_at_cursor_mode = "popup",
-          -- floating_windows = false,
-          filetypes = { "vimwiki", "markdown" }, -- markdown extensions (ie. quarto) can go here
-        },
-        html = {
-          filetypes = { "html", "xhtml", "htm", "markdown" },
-        },
-        typst = {
-          enabled = false,
-        },
-        neorg = {
-          enabled = true,
-        },
-        org = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          -- only_render_image_at_cursor_mode = "popup",
-          -- floating_windows = false,
-          filetypes = { "org" },
-        },
-      },
-      -- backend = "kitty",
-      -- tmux_show_only_in_active_window = true,
-      window_overlap_clear_enabled = true,
-      max_height_window_percentage = 30,
-      hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif", "*.svg" },
     },
   },
 }

@@ -130,7 +130,7 @@ return {
         },
       },
       bullet = { icons = { "", "•", "", "-", "-" } },
-      file_types = { "markdown", "codecompanion", "octo", "org" },
+      file_types = { "markdown", "codecompanion", "octo", "org", "eldochover" },
       code = {
         sign = false,
         border = "thin",

@@ -30,9 +30,10 @@ return {
     }
   end,
 
-  -- Add java to arborist.
+  -- Add java to nvim-treesitter.
   {
-    "arborist-ts/arborist.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    -- "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "java" } },
   },
 

@@ -20,7 +20,8 @@ return {
   },
   -- Add syntax highlighting
   {
-    "arborist-ts/arborist.nvim",
+    -- "arborist-ts/arborist.nvim",
+    "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "kotlin" } },
   },
   -- Add language server

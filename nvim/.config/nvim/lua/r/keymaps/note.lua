@@ -1,12 +1,32 @@
 local M = {}
 
+local _keys
+
+local function set_keymaps(mappings, bufnr)
+  for mode, x in pairs(mappings) do
+    if mode == "i" then
+      for key, key_func in pairs(x) do
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
+        end
+      end
+    else
+      for key, key_func in pairs(x) do
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
+        end
+      end
+    end
+  end
+end
+
 ---@param bufnr integer
 function M.neorg_mappings_ft(bufnr)
   RUtils.create_command("NotePrintOutTags", function()
     RUtils.markdown.find_note_by_tag({}, true, true)
   end, { desc = "Note: print out tags" })
 
-  local mappings = {
+  _keys = {
     ["n"] = {
       ["<Leader>ld"] = {
         function()
@@ -60,26 +80,6 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: find backlink and http in global",
       },
-
-      -- ├────────────────────────────────┤ OPEN IN ├─────────────────────────────┤
-      ["<c-s>"] = {
-        function()
-          RUtils.notes.open_item_heading_split()
-        end,
-        "Note: open in split",
-      },
-      ["<c-v>"] = {
-        function()
-          RUtils.notes.open_item_heading_vsplit()
-        end,
-        "Note: open in vsplit",
-      },
-      ["<c-t>"] = {
-        function()
-          RUtils.notes.open_item_heading_tab()
-        end,
-        "Note: open in tab",
-      },
     },
     ["i"] = {
       -- ├─────────────────────────────────┤ INSERT ├─────────────────────────────────┤
@@ -116,21 +116,31 @@ function M.neorg_mappings_ft(bufnr)
     },
   }
 
-  for mode, x in pairs(mappings) do
-    if mode == "i" then
-      for key, key_func in pairs(x) do
-        if vim.api.nvim_buf_is_valid(bufnr) then
-          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
-        end
-      end
-    else
-      for key, key_func in pairs(x) do
-        if vim.api.nvim_buf_is_valid(bufnr) then
-          vim.keymap.set(mode, key, key_func[1], { desc = key_func[2], buffer = bufnr, remap = true })
-        end
-      end
-    end
+  if vim.bo[bufnr].filetype == "orgagenda" then
+    _keys["n"] = {
+      -- ├────────────────────────────────┤ OPEN IN ├─────────────────────────────┤
+      ["<c-s>"] = {
+        function()
+          RUtils.notes.open_item_heading_split()
+        end,
+        "Note: open in split",
+      },
+      ["<c-v>"] = {
+        function()
+          RUtils.notes.open_item_heading_vsplit()
+        end,
+        "Note: open in vsplit",
+      },
+      ["<c-t>"] = {
+        function()
+          RUtils.notes.open_item_heading_tab()
+        end,
+        "Note: open in tab",
+      },
+    }
   end
+
+  set_keymaps(_keys, bufnr)
 end
 
 return M

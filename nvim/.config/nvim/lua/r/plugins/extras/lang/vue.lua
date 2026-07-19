@@ -10,7 +10,8 @@ return {
   { import = "r.plugins.extras.lang.typescript" },
 
   {
-    "arborist-ts/arborist.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    -- "arborist-ts/arborist.nvim",
     opts = { ensure_installed = { "vue", "css" } },
   },
 

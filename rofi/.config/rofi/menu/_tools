@@ -10,7 +10,7 @@ MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Ful
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
 mkdir -p "$PATH_VIDEOS"
 
-TIMESTAMP="$(date '+%y%m%d-%H-%M-%S')"
+TIMESTAMP="$(date '+%Y-%m-%d_%H-%M-%S')"
 FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-${TIMESTAMP}.mp4"
 FILE_NAME_RECORD="ffmpeg-${TIMESTAMP}.mp4"
 FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
