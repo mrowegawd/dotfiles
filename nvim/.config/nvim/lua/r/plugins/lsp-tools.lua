@@ -76,9 +76,6 @@ return {
             end
 
             local bufnr = vim.fn.bufadd(path)
-            if not vim.api.nvim_buf_is_loaded(bufnr) then
-              vim.fn.bufload(bufnr)
-            end
 
             return {
               target_bufnr = bufnr,
@@ -166,9 +163,6 @@ return {
               end
 
               local bufnr = vim.fn.bufadd(path)
-              if not vim.api.nvim_buf_is_loaded(bufnr) then
-                vim.fn.bufload(bufnr)
-              end
 
               opts.target_bufnr = bufnr
               opts.title = path
