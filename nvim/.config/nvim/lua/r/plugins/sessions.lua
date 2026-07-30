@@ -4,20 +4,14 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- RESSESSION.NVIM
+  -- RESSESSION.NVIM (disabled)
   {
     "stevearc/resession.nvim",
+    enabled = false,
     event = "VeryLazy",
-    keys = {
-      "<Leader>st",
-      "<Leader>sl",
-      "<Leader>sL",
-      "<Leader>sd",
-    },
     opts = {
       autosave = {
         enabled = true,
-        -- interval = 15, -- How often to save (in seconds)
         notify = false,
       },
       buf_filter = function(bufnr)
@@ -61,20 +55,6 @@ return {
         return true
       end,
       extensions = { qforlf = {} },
-      options = { -- remove `cmdheight` from this
-        "binary",
-        "bufhidden",
-        "buflisted",
-        "cmdheight",
-        "diff",
-        "filetype",
-        "modifiable",
-        "previewwindow",
-        "readonly",
-        "scrollbind",
-        "winfixheight",
-        "winfixwidth",
-      },
     },
     config = function(_, opts)
       local resession = require "resession"
@@ -97,6 +77,7 @@ return {
 
         RUtils.map.nnoremap("<Leader>qw", function()
           local last_session_name = RUtils.sessions.last_session_name()
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.info("Load session: `" .. last_session_name .. "`")
           resession.load(last_session_name, { silence_errors = true })
         end, { desc = "Session: load last session (per CWD) [resession.nvim]" })
@@ -127,6 +108,7 @@ return {
 
         RUtils.map.nnoremap("<Leader>qD", function()
           resession.detach()
+          ---@diagnostic disable-next-line: undefined-field
           RUtils.warn "Session detach now!"
         end, { desc = "Session: detach [resession.nvim]" })
       end
@@ -134,6 +116,11 @@ return {
       if vim.tbl_contains(resession.list(), "__quicksave__") then
         vim.defer_fn(function()
           resession.load("__quicksave__", { attach = false })
+          vim.schedule(function()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              RUtils.sessions.redetect_type(buf)
+            end
+          end)
           local ok, err = pcall(resession.delete, "__quicksave__")
           if not ok then
             vim.notify(string.format("Error deleting quicksave session: %s", err), vim.log.levels.WARN)
@@ -143,6 +130,7 @@ return {
 
       RUtils.map.augroup("AUResession", {
         event = "VimEnter",
+        once = true,
         command = function()
           -- Only load the session if nvim was started with no args
           if vim.fn.argc(-1) == 0 then
@@ -163,6 +151,110 @@ return {
           resession.save(RUtils.sessions.last_session_name()) -- per-CWD
         end,
       })
+    end,
+  },
+  -- MINI.SESSIONS
+  {
+    "nvim-mini/mini.sessions",
+    event = "VeryLazy",
+    opts = {
+      autoread = false, -- autoread only matches local/latest; cwd-keyed read below
+      autowrite = true, -- persist on exit only when a session was read/written
+      directory = vim.fn.stdpath "data" .. "/sessions",
+      file = "", -- disable local (Session.vim) sessions
+      hooks = {
+        pre = {
+          write = function()
+            RUtils.sessions._closed_ignored_wins = {}
+
+            local ignore_filetypes = {
+              ["neo-tree"] = true,
+              ["Outline"] = true,
+              ["qf"] = true,
+              ["help"] = true,
+              ["trouble"] = true,
+              ["main_layout"] = true,
+              ["git"] = true,
+            }
+
+            local ignore_buftype = {
+              ["terminal"] = true,
+            }
+
+            local insert_then = function(ft_or_buft, win)
+              table.insert(RUtils.sessions._closed_ignored_wins, ft_or_buft)
+              pcall(vim.api.nvim_win_close, win, true)
+            end
+
+            -- Close it before saving the buffer layout.
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              local ft = vim.bo[buf].filetype
+              local buft = vim.bo[buf].buftype
+
+              if ignore_filetypes[ft] then
+                insert_then(ft, win)
+              end
+              if ignore_buftype[buft] then
+                insert_then(buft, win)
+              end
+            end
+          end,
+        },
+      },
+    },
+
+    config = function(_, opts)
+      local sessions = require "mini.sessions"
+
+      sessions.setup(opts)
+
+      RUtils.map.augroup("AUMiniSession", {
+        event = "VimEnter",
+        once = true,
+        command = function()
+          -- Only load the session if nvim was started with no args
+          if vim.fn.argc(-1) == 0 then
+            -- Save these to a different directory, so our manual sessions don't get polluted
+            sessions.read(RUtils.sessions.last_session_name())
+          end
+        end,
+      }, {
+        event = { "VimLeavePre" },
+        command = function()
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            local name = vim.api.nvim_buf_get_name(buf)
+
+            if name:match "^fugitive://" then
+              vim.api.nvim_buf_delete(buf, { force = true })
+            end
+          end
+          sessions.write(RUtils.sessions.last_session_name()) -- per-CWD
+        end,
+      })
+
+      RUtils.map.nnoremap("<Leader>qS", function()
+        vim.ui.input({ prompt = "Session name" }, function(selected)
+          if selected then
+            sessions.write(selected, {})
+          end
+        end)
+      end, { desc = "Session: save session with name [mini.sessions]" })
+
+      RUtils.map.nnoremap("<Leader>qs", function()
+        sessions.write(RUtils.sessions.last_session_name())
+      end, { desc = "Session: save last [mini.session]" })
+
+      RUtils.map.nnoremap("<Leader>qw", function()
+        local last_session_name = RUtils.sessions.last_session_name()
+        sessions.read(last_session_name)
+        ---@diagnostic disable-next-line: undefined-field
+        RUtils.info("Load session: `" .. last_session_name .. "`")
+      end, { desc = "Session: load last session (per CWD) [mini.sessions]" })
+
+      RUtils.map.nnoremap("<Leader>qW", function()
+        sessions.select()
+      end, { desc = "Session: load session from lists [mini.sessions]" })
     end,
   },
 

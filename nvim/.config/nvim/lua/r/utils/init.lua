@@ -606,10 +606,10 @@ function M.get_visual_selection(opts)
     selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
   else
     selection = string.sub(lines[1], cscol)
-      .. "\n"
-      .. table.concat(lines, "\n", 2, n - 1)
-      .. "\n"
-      .. string.sub(lines[n], 1, cecol)
+        .. "\n"
+        .. table.concat(lines, "\n", 2, n - 1)
+        .. "\n"
+        .. string.sub(lines[n], 1, cecol)
   end
 
   return {

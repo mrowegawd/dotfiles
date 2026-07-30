@@ -6,6 +6,7 @@ local M = {
       delete = {},
     },
   },
+  _closed_ignored_wins = {},
 }
 
 -- ╭─────────────────────────────────────────────────────────╮
@@ -49,6 +50,22 @@ function M.last_session_name()
   return "last__" .. safe
 end
 
+function M.redetect_type(buf)
+  local name = vim.api.nvim_buf_get_name(buf)
+  if name == "" then
+    return
+  end
+
+  local ft = vim.filetype.match {
+    buf = buf,
+    filename = name,
+  }
+
+  if ft and ft ~= "" then
+    vim.bo[buf].filetype = ft
+  end
+end
+
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ CALLER                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
@@ -60,6 +77,7 @@ function M.load_session_from_dashboard(last)
   local has_persistent = RUtils.has "persistence.nvim"
   local has_resession = RUtils.has "resession.nvim"
   local has_auto_session = RUtils.has "auto-session"
+  local has_mini_session = RUtils.has "mini.sessions"
 
   if has_persistent then
     vim.schedule(function()
@@ -84,6 +102,12 @@ function M.load_session_from_dashboard(last)
       require("resession").load()
     end
 
+    vim.schedule(function()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        M.redetect_type(buf)
+      end
+    end)
+
     local qflist = RUtils.qf.get_list_qf()
     if #qflist.items > 0 then
       vim.cmd(RUtils.qf.copen)
@@ -101,7 +125,11 @@ function M.load_session_from_dashboard(last)
     end
   end
 
-  if not has_auto_session and not has_persistent and not has_resession then
+  if has_mini_session then
+    require("mini.sessions").read(M.last_session_name())
+  end
+
+  if not has_auto_session and not has_persistent and not has_resession and not has_mini_session then
     ---@diagnostic disable-next-line: undefined-field
     RUtils.warn("Unable to load the session. The required plugins may not be installed..", { title = "Sessions" })
   end
