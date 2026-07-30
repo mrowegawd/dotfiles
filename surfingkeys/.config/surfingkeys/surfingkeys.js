@@ -214,7 +214,7 @@ mapkey("M", "#3Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
-map("<Space><Space>", "T");
+map("<Space>ff", "T");
 map("<Alt-h>", "R");
 map("<Alt-l>", "E");
 
