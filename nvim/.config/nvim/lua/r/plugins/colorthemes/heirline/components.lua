@@ -241,10 +241,9 @@ local __colors = function()
     winbar_fg = H.get("WinBar", "fg"),
     winbar_bg = H.get("WinBar", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
-    winbar_bright = H.tint(H.get("WinBar", "fg"), 1.25),
+    winbar_bright = H.tint(H.get("WinBar", "fg"), 0.8),
 
     bright = H.tint(H.get("StatusLine", "fg"), 0.65),
-    -- bright_winbar = H.tint(H.get("StatusLine", "fg"), 0.65),
 
     keyword = H.darken(H.get("Keyword", "fg"), col_opts.keyword_fg, H.get("Normal", "bg")),
 

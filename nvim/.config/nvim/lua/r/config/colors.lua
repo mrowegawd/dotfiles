@@ -17,7 +17,7 @@ local update_col_colorscheme = {
     trouble_indent_fg_alter = 0.5,
     winseparator_fg_alter = 0.1,
   },
-  ["kanagawa"] = { winseparator_fg_alter = 0.7, linenr_fg_alter = 1.5 },
+  ["kanagawa"] = { winseparator_fg_alter = 0.7, linenr_fg_alter = 2 },
   ["intent"] = { winseparator_fg_alter = 0.6, linenr_fg_alter = 1.6 },
   ["jellybeans"] = { Directory = { fg = "#8fbfdc", bg = "NONE" }, winseparator_fg_alter = 0.45 },
   ["neogotham"] = { linenr_fg_alter = 1.4, winseparator_fg_alter = 0.45 },
@@ -39,6 +39,10 @@ local update_col_colorscheme = {
     normalfloat_bg_alter = 0.1,
   },
 }
+
+if os.getenv "TERMINAL" == "ghostty" then
+  update_col_colorscheme["gruvbox"] = { winseparator_fg_alter = 1, linenr_fg_alter = 1.3 }
+end
 
 local function update_base_colors(theme)
   local cols = vim.deepcopy(base_colors)
@@ -159,6 +163,12 @@ local general_overrides = function()
       },
     },
     { FloatTitle = { inherit = "FloatBorder", fg = { from = "FloatBorder", attr = "fg", alter = 2 } } },
+    {
+      FloatFooter = {
+        fg = { from = "FloatBorder", attr = "fg", alter = 1.5 },
+        bg = { from = "FloatBorder", attr = "bg" },
+      },
+    },
     {
       FloatCursorline = {
         fg = "NONE",
@@ -592,7 +602,7 @@ local general_overrides = function()
 
     {
       WinBar = {
-        fg = { from = "Comment", attr = "fg", alter = 0.1 },
+        fg = { from = "LineNr", attr = "fg", alter = 1 },
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -1601,7 +1611,7 @@ local plugins_overrides = function()
     { NavicIconsTypeParameter = { inherit = "LspKindTypeParameter" } },
     { NavicIconsValue = { inherit = "LspKindValue" } },
 
-    { NavicSeparator = { fg = { from = "Normal", attr = "bg", alter = 2.5, opacity = 0.5 } } },
+    { NavicSeparator = { fg = { from = "WinBar", attr = "fg", alter = -0.1 } } },
     { LspInlayHint = { inherit = "LspInlayHint" } },
   }
 end
@@ -1782,9 +1792,9 @@ local function set_panel_highlight()
     {
       TroubleIndent = {
         fg = {
-          from = "Constant",
+          from = "Directory",
           attr = "fg",
-          transparency = 0.15,
+          transparency = 0.18,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
         bg = "NONE",
@@ -1793,7 +1803,7 @@ local function set_panel_highlight()
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleNormal", attr = "bg", alter = 2 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 1.5 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
@@ -1802,8 +1812,14 @@ local function set_panel_highlight()
 
     {
       TroubleDirectory = {
-        inherit = "Directory",
-        bg = "NONE",
+        fg = { from = "Directory", attr = "fg" },
+        bg = {
+          from = "Directory",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+        bold = true,
       },
     },
     { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
@@ -1816,12 +1832,7 @@ local function set_panel_highlight()
 
     -- ├──────────────────────────────────┤ LSP ├───────────────────────────────┤
 
-    {
-      TroubleLspFilename = {
-        inherit = "Directory",
-        bg = "NONE",
-      },
-    },
+    { TroubleLspFilename = { link = "TroubleDirectory" } },
     { TroubleLspPos = { link = "TroubleFsPos" } },
     { TroubleLspCount = { link = "TroubleFsCount" } },
     { TroubleLspItemClient = { inherit = "Comment", bg = "NONE" } },
@@ -1851,12 +1862,7 @@ local function set_panel_highlight()
 
     -- ├────────────────────────────────┤ QUICKFIX ├────────────────────────────────┤
 
-    {
-      TroubleQfFilename = {
-        inherit = "Directory",
-        bg = "NONE",
-      },
-    },
+    { TroubleQfFilename = { link = "TroubleDirectory" } },
     { TroubleQfPos = { link = "TroubleFsPos" } },
     { TroubleQfCount = { link = "TroubleFsCount" } },
 
@@ -2003,7 +2009,7 @@ local function colorscheme_overrides()
     --   { Delimiter = { link = "qfSeparator1" } },
     -- },
     --
-    -- ["gruvbox-material"] = {
+    -- ["gruvbox"] = {
     --   { ErrorMsg = { underline = false } },
     -- },
   }
@@ -2105,6 +2111,7 @@ Win.filetype_blacklist_winhighlights = {
   ["snacks_picker_input"] = true,
   ["qfbookmark"] = true,
   ["wayfinder"] = true,
+  ["pdfview_menu"] = true,
 }
 
 Win.filetype_winhighlights = {
@@ -2160,6 +2167,7 @@ Win.note_winhighlights = {
   ["org"] = true,
   ["markdown"] = true,
   ["octo"] = true,
+  ["eldochover"] = true,
 }
 
 Win.aiprompt_winhighlights = {
@@ -2508,11 +2516,13 @@ RUtils.map.augroup("UserHighlightsCustom", {
   event = "FileType",
   pattern = note_filetypes,
   command = function(ctx)
-    if not pmenu_original then
-      pmenu_original = save_pmenu_colors()
-    end
-    local ft = vim.bo[ctx.buf].filetype
-    set_hl(ft)
+    vim.schedule(function()
+      if not pmenu_original then
+        pmenu_original = save_pmenu_colors()
+      end
+      local ft = vim.bo[ctx.buf].filetype
+      set_hl(ft)
+    end)
   end,
 }, {
   event = "FileType",

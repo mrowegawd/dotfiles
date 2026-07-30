@@ -872,8 +872,8 @@ function M.change_colors()
       tab_active_fg = tab_active_fg,
       tab_active_bg = tab_active_bg,
 
-      statusline_fg = H.get("Winbar", "fg"),
-      statusline_bg = H.get("Winbar", "bg"),
+      statusline_fg = H.get("Statusline", "fg"),
+      statusline_bg = H.get("Normal", "bg"),
 
       session_fg = tab_session_fg,
       session_bg = tab_session_bg,
