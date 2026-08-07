@@ -82,6 +82,7 @@ local function wrap_fold_cmd(cmd)
     vim.cmd(cmd)
   end)
   if err and (string.match(err, "E490") or string.match(err, "No fold found")) then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.warn "No fold found"
   end
 end

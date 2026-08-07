@@ -267,6 +267,7 @@ local function get_headline_at_cursor(mode_open)
     local orgapi = require "orgmode.api.agenda"
     headline_opts = orgapi.get_headline_at_cursor()
     if not headline_opts then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.warn "orgagenda: `headline_opts` is nil. Something went wrong."
       return
     end
@@ -287,19 +288,22 @@ local function get_headline_at_cursor(mode_open)
 
     local file = link.url:to_string()
     local org_link_url = OrgLinkUrl:new(file)
-    local file_path = org_link_url:get_file_path()
-    local type = file_path and "file" or "internal"
 
-    if type == "internal" then
+    -- To resolve the target heading in a link (e.g. 'path/to/org:*some heading'),
+    -- Orgmode exposes it via `.target`, so we can use that here.
+    if org_link_url.target and #org_link_url.target > 0 then
       if mode_open then
         if mode_open == "tabe" then
           vim.cmd "tabe %"
+        elseif mode_open == "default" then
+          vim.cmd "e %"
         else
           vim.cmd(mode_open)
         end
       end
+
       Orgmode = setup_orgmode()
-      Orgmode.links:follow(file)
+      Orgmode.action "org_mappings.open_at_point"
       return
     end
 
@@ -360,6 +364,11 @@ local function get_headline_at_cursor(mode_open)
         end
       end,
     }
+    return
+  end
+
+  if filename == nil then
+    RUtils.warn "Target filename not found. Aborting."
     return
   end
 
@@ -924,38 +933,55 @@ function Mapping.open_tags(contents_tags)
   }
 end
 
----@param path string
-local function get_tags_from_path(path)
-  local tags = {}
-  local seen = {}
+local scan = require "plenary.scandir"
 
-  local files = vim.fn.glob(path .. "/**/*.org", false, true)
+local function extract_tags(line)
+  local result = {}
+  local pos = 1
+  while true do
+    local s, e, tag = line:find(":([%a][%w_@]+):", pos)
+    if not s then
+      break
+    end
+    result[#result + 1] = tag
+    pos = e -- not e + 1! Reuse the closing ":" as the opening ":" for the next match.
+  end
+  return result
+end
 
-  for _, file in ipairs(files) do
-    local lines = vim.fn.readfile(file)
-    for _, line in ipairs(lines) do
-      -- Skip baris timestamp, schedule, deadline, property
-      if
-        not line:match "^%s*SCHEDULED:"
-        and not line:match "^%s*DEADLINE:"
-        and not line:match "^%s*CLOSED:"
-        and not line:match "^%s*:.*:$" -- property drawer
-        and not line:match "<%d%d%d%d%-%d%d%-%d%d" -- timestamp
-      then
-        -- Tag org harus diawali huruf, minimal 2 karakter
-        for tag in line:gmatch ":([%a][%w_@]+):" do
-          if not seen[tag] then
-            seen[tag] = true
-            -- tags[#tags + 1] = tag .. " > " .. line
-            tags[#tags + 1] = tag
+local function get_tags_from_path_async(path, callback)
+  scan.scan_dir_async(path, {
+    hidden = false,
+    add_dirs = false,
+    search_pattern = "%.org$",
+    on_exit = function(files)
+      vim.schedule(function()
+        local tags = {}
+        local seen = {}
+        for _, file in ipairs(files) do
+          local lines = vim.fn.readfile(file)
+          for _, line in ipairs(lines) do
+            if
+              not line:match "^%s*SCHEDULED:"
+              and not line:match "^%s*DEADLINE:"
+              and not line:match "^%s*CLOSED:"
+              and not line:match "^%s*:.*:$"
+              and not line:match "<%d%d%d%d%-%d%d%-%d%d"
+            then
+              for _, tag in ipairs(extract_tags(line)) do
+                if not seen[tag] then
+                  seen[tag] = true
+                  tags[#tags + 1] = tag
+                end
+              end
+            end
           end
         end
-      end
-    end
-  end
-
-  table.sort(tags)
-  return tags
+        table.sort(tags)
+        callback(tags)
+      end)
+    end,
+  })
 end
 
 ---@param opts? {last: boolean }
@@ -988,17 +1014,20 @@ local function get_tags(opts)
       set_global_agenda_files = true
     end
 
-    contents_tags.tags = get_tags_from_path(wiki_path)
-    if #contents_tags.tags == 0 then
-      RUtils.warn "No tags found."
-      return
-    end
+    get_tags_from_path_async(wiki_path, function(tags)
+      contents_tags.tags = tags
 
-    local fzfopts = {
-      winopts = { title = get_title_note "- Search note by tags" },
-      actions = Mapping.open_tags(contents_tags),
-    }
-    picker("search tags", contents_tags, fzfopts)
+      if #contents_tags.tags == 0 then
+        RUtils.warn "No tags found."
+        return
+      end
+
+      local fzfopts = {
+        winopts = { title = get_title_note "- Search note by tags" },
+        actions = Mapping.open_tags(contents_tags),
+      }
+      picker("search tags", contents_tags, fzfopts)
+    end)
   elseif M.note_mode == "markdown" then
     local search = require "obsidian.search"
     search.find_tags_async("", function(tag_locations)
@@ -1234,6 +1263,8 @@ local function jump_to_heading(is_global)
 end
 
 local function insert_backlinks_files()
+  reset_vars()
+
   local Fzflua = RUtils.fzflua.setup_fzflua()
   Fzflua.files {
     prompt = RUtils.fzflua.padding_prompt(),

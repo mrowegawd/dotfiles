@@ -146,7 +146,7 @@ element normal.active {
 
 element selected.normal {
     background-color: 		          @selected-alt;
-    text-color:       		          @keyword;
+    text-color:       		          @background;
 }
 element selected.urgent {
     background-color: 		          @red;

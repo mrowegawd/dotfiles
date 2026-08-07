@@ -658,7 +658,7 @@ return {
 
             ["<ESC>"] = "revert_preview",
 
-            ["<Tab>"] = "toggle_node",
+            ["<Tab>"] = "child_or_open",
             ["<S-Tab>"] = "close_node",
 
             ["zM"] = "close_all_nodes",

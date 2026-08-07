@@ -136,6 +136,13 @@ local attrs = {
   default = true,
 }
 
+-- Fallback highlight group mappings for colorscheme specific differences.
+local colorscheme_hl_fallbacks = {
+  ["vscode"] = {
+    ["@markup.link"] = "@markup.link.url",
+  },
+}
+
 --- Read a highlight group and convert numeric colors to hex strings (#rrggbb).
 --- Silent variant — never emits warnings. Used by M.set() when inheriting from
 --- a group that may not exist yet (e.g. a brand-new group being defined for
@@ -145,6 +152,12 @@ local attrs = {
 function M.get_hl_as_hex(opts, ns)
   ns, opts = ns or 0, opts or {}
   opts.link = opts.link ~= nil and opts.link or false
+
+  local colorscheme_map = colorscheme_hl_fallbacks[vim.g.colorscheme]
+  if colorscheme_map and colorscheme_map[opts.name] then
+    opts.name = colorscheme_map[opts.name]
+  end
+
   local hl = vim.api.nvim_get_hl(ns, opts)
   return {
     fg = hl.fg and ("#%06x"):format(hl.fg) or nil,

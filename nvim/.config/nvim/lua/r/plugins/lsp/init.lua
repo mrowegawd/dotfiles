@@ -28,11 +28,6 @@ return {
         diagnostics = {
           underline = true,
           update_in_insert = false,
-          -- virtual_text = {
-          --   spacing = 4,
-          --   source = "if_many",
-          --   prefix = "■", -- "●"
-          -- },
           virtual_text = false,
           severity_sort = true,
           virtual_lines = false,
@@ -42,12 +37,6 @@ return {
               [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
               [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
               [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
-
-              -- If you want to disable the sign column for diagnostics, uncomment these
-              -- [vim.diagnostic.severity.ERROR] = "",
-              -- [vim.diagnostic.severity.WARN] = "",
-              -- [vim.diagnostic.severity.HINT] = "",
-              -- [vim.diagnostic.severity.INFO] = "",
             },
             numhl = {
               [vim.diagnostic.severity.ERROR] = "DiagnosticsErrorNumHl",
@@ -181,7 +170,7 @@ return {
                     vim.g.snacks_word_highlight = false
                     return
                   end
-                  vim.g.snacks_jump_scope = true
+                  vim.g.snacks_word_highlight = true
                 end,
                 desc = "LSP: toggle word references",
               },
@@ -349,8 +338,6 @@ return {
             and vim.bo[buffer].buftype == ""
             and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
           then
-            -- vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
-
             -- Without the delay inlay hints aren't displayed at the very start, Idk why
             vim.defer_fn(function()
               local mode = vim.api.nvim_get_mode().mode

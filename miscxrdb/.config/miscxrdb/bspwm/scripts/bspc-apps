@@ -98,11 +98,16 @@ open_float() {
   ncmpcpp | rmpc)
     "$TERMINAL" -e "$1"
     ;;
-  kitty_note_telegram)
-    $TERMINAL --override font_size=16 -e bash -c "cd ~/Downloads && nvim $(mktemp)"
+  open_floating_scratch_note)
+    if [[ $TERMINAL == "kitty" ]]; then
+      $TERMINAL --override font_size=16 -e bash -c "cd ~/Downloads && nvim $(mktemp)"
+    fi
+    if [[ $TERMINAL == "ghostty" ]]; then
+      $TERMINAL --font-size=16 -e bash -c "cd ~/Downloads && nvim $(mktemp)"
+    fi
     ;;
   *)
-    kitty -e "$1"
+    $TERMINAL -e "$1"
     ;;
   esac
 }
@@ -196,6 +201,8 @@ toggle_hide_note_float() {
     touch $WINID_PATH
   fi
 
+  current_main_winid=$(bspc query -N -n focused)
+
   WINID=$(cat "$WINID_PATH")
 
   # check if winid exists
@@ -204,11 +211,18 @@ toggle_hide_note_float() {
   fi
 
   if [ -z "$WINID" ]; then
-    open_float "kitty_note_telegram" "br" &
-    sleep 0.4 # wait until open_float is ready
+    open_float "open_floating_scratch_note" "br" &
 
-    local winid
-    winid=$(bspc query -N -n focused)
+    while :; do
+      winid=$(bspc query -N -n focused)
+
+      if [[ "$winid" != "$current_main_winid" ]]; then
+        break
+      fi
+
+      sleep 0.05
+    done
+
     echo "$winid" >"$WINID_PATH"
   fi
 

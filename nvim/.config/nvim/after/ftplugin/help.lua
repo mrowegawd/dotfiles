@@ -13,7 +13,7 @@ local function get_text(wrapper)
   return vim.fn.matchstr(vim.fn.expand "<cWORD>", ([[\v%s\zs.{-}\ze%s]]):format(escaped, escaped))
 end
 
-RUtils.map.nnoremap("gs", function()
+RUtils.map.nnoremap("<Leader>ld", function()
   local text = get_text "|"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -23,7 +23,7 @@ RUtils.map.nnoremap("gs", function()
     end
   end
 end, { desc = "Help: search |tag|", buffer = true }, true)
-RUtils.map.nnoremap("gS", function()
+RUtils.map.nnoremap("<Leader>lD", function()
   local text = get_text "*"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -34,7 +34,7 @@ RUtils.map.nnoremap("gS", function()
   end
 end, { desc = "Help: search *word*", buffer = true }, true)
 
-RUtils.map.nnoremap("<Leader>ld", "<C-]>", { desc = "Help: goto definition", buffer = true }, true)
+RUtils.map.nnoremap("gd", "<C-]>", { desc = "Help: goto definition", buffer = true }, true)
 RUtils.map.nnoremap("<BS>", "<C-t>", { desc = "Help: goback last definition", buffer = true }, true)
 
 RUtils.map.nnoremap("go", function()

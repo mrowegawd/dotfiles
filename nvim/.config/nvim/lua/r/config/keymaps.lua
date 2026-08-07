@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-global
+
 local silent = { silent = true }
 local nosilent = { silent = false }
 
@@ -76,6 +78,10 @@ RUtils.map.nnoremap("zx", function()
   RUtils.fold.restore_level()
 end, { desc = "Fold: restore level sebelum zRUtils.fold" })
 
+-- This works on ghostty+tmux but failed on kitty+tmux,
+RUtils.map.nnoremap("<Tab>", "za", { desc = "Fold: toggle fold" })
+RUtils.map.nnoremap("<C-i>", "<C-i>")
+
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              WINDOW <leader>w                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
@@ -110,10 +116,6 @@ RUtils.map.xnoremap("<Leader>wH", arange_wins "H", { desc = "Window: move ← (v
 RUtils.map.nnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move →" })
 RUtils.map.xnoremap("<Leader>wL", arange_wins "L", { desc = "Window: move → (visual)" })
 
-
---stylua: ignore
-RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layout.debug())) end, { desc = "Test: debug layout" })
-
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                   TAB t..                                   ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
@@ -145,7 +147,9 @@ RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev (mod)
 RUtils.map.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: last buf (alternate)", silent = true })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize window size", silent = true })
 RUtils.map.nnoremap("<Leader>bQ", function()
+  ---@diagnostic disable-next-line: undefined-global
   Snacks.bufdelete.other()
+  ---@diagnostic disable-next-line: undefined-field
   RUtils.info(RUtils.config.icons.misc.checklist .. " Purge buffers", { title = "Buffers" })
 end, { desc = "Buffer: kill/purge other buffers" })
 RUtils.map.nnoremap("<Leader>bk", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
@@ -166,8 +170,8 @@ RUtils.map.nnoremap( "<Leader>hb", RUtils.map.show_help_buf_keymap, { desc = "He
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local replace_keymap = RUtils.buf.window.replace_keymap
-RUtils.map.nnoremap("<Leader>xR", replace_keymap, { desc = "Cmd: replace string under cursor" })
-RUtils.map.xnoremap("<Leader>xR", [["zy:%s/\v\V<C-r><C-o>z/]], { desc = "Cmd: replace string under cursor" })
+RUtils.map.nnoremap("<Leader>xR", replace_keymap, { desc = "Exec: replace string under cursor" })
+RUtils.map.xnoremap("<Leader>xR", [["zy:%s/\v\V<C-r><C-o>z/]], { desc = "Exec: replace string under cursor" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               OPEN <leader>o                                ╏
@@ -247,6 +251,13 @@ RUtils.map.xnoremap("<a-f>",RUtils.terminal.toggle_term, { desc = "Terminal: tog
 -- stylua: ignore
 RUtils.map.tnoremap("<a-f>",RUtils.terminal.toggle_term, { desc = "Terminal: toggle (terminal) [ergoterm]" })
 
+-- RUtils.map.nnoremap("<F2>", function()
+--   ---@diagnostic disable-next-line: undefined-field
+--   RUtils.info(vim.inspect(require("pdfview.renderer").get()))
+-- end, { desc = "Command test" })
+
+-- RUtils.map.nnoremap("<leader>JJ", function() RUtils.info(vim.inspect(RUtils.layout.debug())) end, { desc = "Test: debug layout" })
+
 -- ══════════════════════════════════ TAB TERM ══════════════════════════════════
 -- stylua: ignore
 RUtils.map.nnoremap("<a-N>",RUtils.terminal.tab_term, { desc = "Terminal: tab [ergoterm]" })
@@ -283,8 +294,9 @@ RUtils.map.tnoremap("<a-T>", RUtils.terminal.open_float, { desc = "Terminal: flo
 
 RUtils.map.nnoremap("<Leader>xC", function()
   vim.api.nvim_echo({ { "" } }, false, {})
+  ---@diagnostic disable-next-line: undefined-field
   RUtils.info "cmdline messages cleared"
-end, { desc = "Clear command line message" })
+end, { desc = "Exec: clear command line message" })
 
 RUtils.map.cnoremap("hh", "<Esc>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
@@ -553,7 +565,7 @@ RUtils.map.nnoremap("<Leader>xP", function()
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
   ---@diagnostic disable-next-line: undefined-field
   RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
-end, { desc = "Cmd: printout current path" })
+end, { desc = "Exec: printout current path" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -706,6 +718,18 @@ local bulk_cmd_misc = function()
     ["tailwindcss.com - open in browser"] = function()
       cmd "!open https://tailwindcss.com"
     end,
+    ["Clock mode - run clock"] = function()
+      RUtils.terminal.clock_mode("clock", true)
+    end,
+    ["Pomodoro 1h - work 1hour"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "1h" } }
+    end,
+    ["Pomodoro 25m - work 25minutes"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "25m" } }
+    end,
+    ["Pomodoro 10m - work 10minutes"] = function()
+      RUtils.terminal.clock_mode { pomodoro = { timer = "10m" } }
+    end,
     ["TestNotify - runt tess notification"] = function()
       -- to replace an existing notification just use the same id.
       -- you can also use the return value of the notify function as id.
@@ -730,7 +754,7 @@ local bulk_cmd_misc = function()
         os.execute(encodedURL)
       end
     end,
-    ["Treesitter - open inspert tree under cursor"] = function()
+    ["Treesitter - open inspect tree under cursor"] = function()
       vim.treesitter.inspect_tree()
       vim.api.nvim_input "I"
     end,
@@ -841,8 +865,16 @@ local bulk_cmd_toggle = function()
     ["Outline - toggle auto follow"] = function()
       vim.cmd.OutlineToggleFollow()
     end,
-    ["highlighter - clear all"] = function()
-      vim.cmd "Hi clear"
+    ["VimHighlighter - clear all"] = function()
+      local ok, _ = pcall(vim.fn.HiList)
+      if ok then
+        local Hilist = vim.fn.HiList()
+        if Hilist and #Hilist > 0 then
+          vim.cmd "Hi clear"
+          return
+        end
+      end
+      RUtils.info "No active highlights to clear"
     end,
     ["Treesitter - toggle highlight"] = function()
       Snacks.toggle.treesitter()

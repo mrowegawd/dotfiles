@@ -116,8 +116,8 @@ element-text {
 }
 
 element selected {
-    background-color:               @red;
-    text-color:                     @foreground;
+    background-color:               @selected-alt;
+    text-color:                     @background;
 	  border:							            0% 0% 0% 0%;
     border-radius:                  15px;
     border-color:                  	@red;

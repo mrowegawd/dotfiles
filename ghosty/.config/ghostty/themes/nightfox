@@ -2,7 +2,7 @@
 ## name: nightfox
 ## upstream: https://github.com/edeneast/nightfox.nvim/raw/main/extra/nightfox/nightfox.ghostty
 
-background = #192330
+background = #0c1219
 foreground = #cdcecf
 selection-background = #2b3b51
 selection-foreground = #cdcecf

@@ -126,7 +126,7 @@ return {
             (bufname and bufname:match "diffview://")
             or vim.t.diffview_view_initialized
             or (vim.bo[buf].filetype == "snacks_picker_preview")
-            or vim.tbl_contains({ "markdown" }, vim.bo.filetype)
+            or vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype)
           then
             return false
           end

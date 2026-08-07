@@ -4,10 +4,9 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- RESSESSION.NVIM (disabled)
+  -- RESSESSION.NVIM
   {
     "stevearc/resession.nvim",
-    enabled = false,
     event = "VeryLazy",
     opts = {
       autosave = {
@@ -116,11 +115,6 @@ return {
       if vim.tbl_contains(resession.list(), "__quicksave__") then
         vim.defer_fn(function()
           resession.load("__quicksave__", { attach = false })
-          vim.schedule(function()
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              RUtils.sessions.redetect_type(buf)
-            end
-          end)
           local ok, err = pcall(resession.delete, "__quicksave__")
           if not ok then
             vim.notify(string.format("Error deleting quicksave session: %s", err), vim.log.levels.WARN)
@@ -153,9 +147,10 @@ return {
       })
     end,
   },
-  -- MINI.SESSIONS
+  -- MINI.SESSIONS (disabled)
   {
     "nvim-mini/mini.sessions",
+    enabled = false,
     event = "VeryLazy",
     opts = {
       autoread = false, -- autoread only matches local/latest; cwd-keyed read below

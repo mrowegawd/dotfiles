@@ -40,25 +40,19 @@ setw -g pane-border-status top # bottom, top
 setw -g pane-active-border-style fg=$BORDER_ACTIVE
 setw -g pane-border-style fg=$BORDER_INACTIVE
 
-# TN_COLOR_ORANGE_1=#ff966c
-# TN_COLOR_BLUE_1=#82aaff
-#
-# set -g display-panes-active-colour $TN_COLOR_ORANGE_1
-# set -g display-panes-colour $TN_COLOR_BLUE_1
-
-set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
-
-
 set -g pane-border-format \
   "#[fg=#f6c177]#{pane_index} #[fg=#e0def4]#{pane_current_command}"
-
-set-window-option -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
 # Color untuk scrollbar
 set -g pane-scrollbars-style "fg=$TMUX_KEYWORD,bg=$SESSION_BG"
 
 # Color untuk mode visual tmux
 set -g mode-style "fg=$TMUX_BG,bg=$TMUX_VISUAL_BG"
+
+set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+set -g message-command-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+
+set -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
 # Display the border name for debugging purposes:
 # setw -g pane-border-format "\
@@ -75,15 +69,13 @@ setw -g pane-border-format ""
 # ╎                        STATUSLINE                        ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
-set -g status-fg $STATUSLINE_BG_MESSAGE
-set -g status-bg $TMUX_BG
 set -g status on
+
+set -g status-style "fg=$STATUSLINE_BG_MESSAGE,bg=$TMUX_BG"
 set -g status-interval 5
 set -g status-position top
 set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
-
-##[fg=$STATUSLINE_FG]#[bold]  #(LC_TIME=id_ID.UTF-8 date +\"%A %d-%b-%y\")  #[fg=$RED] #(date +"%H:%M") \
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎ STATUS RIGHT ╎
@@ -91,11 +83,11 @@ set -g status-left ""
 
 set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
-#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%y\") ,\
+#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%A %d-%b-%Y\") ,\
 #[fg=$GREEN]#{pomodoro_status}\
 #[fg=$RED]#{?@resize-locked,🔒 Resize Pane OFF,}#[default] \
 #[fg=$RED]#{?pane_input_off,🔒 Input OFF,}#[default] \
-#[fg=$STATUSLINE_FG]  #(date +\"%A %d-%b-%y\" | sed \
+#[fg=$STATUSLINE_FG]  #(date +\"%A %d-%b-%Y\" | sed \
 -e 's/Monday/Senin/' \
 -e 's/Tuesday/Selasa/' \
 -e 's/Wednesday/Rabu/' \

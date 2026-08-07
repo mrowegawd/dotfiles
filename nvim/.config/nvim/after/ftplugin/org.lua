@@ -30,5 +30,5 @@ keymap.set("n", "<Leader>rn", function()
     end,
   }, {})
 
-  fzf_lua.fzf_exec({ "Sniprun", "ImgInsert" }, opts)
+  fzf_lua.fzf_exec({ "SnipRun", "ImgInsert" }, opts)
 end, { buffer = true, desc = "Tasks: runner" })

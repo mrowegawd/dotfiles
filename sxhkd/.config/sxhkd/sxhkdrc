@@ -173,7 +173,7 @@ super + shift + F8
 super + Return
         $TERMINAL
 
-# misc: open terminal note
+# Misc: open a terminal for quick notes.
 super + shift + T
         $HOME/.config/miscxrdb/bspwm/scripts/bspc-apps toggle_hide_note_float
 

@@ -744,7 +744,7 @@ main() {
   }
 
   local theme
-  theme=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_cmd -dmenu -p "  ")
+  theme=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_cmd -dmenu -p " 󰖂 ")
   [[ -z "$theme" ]] && exit 1
 
   # Validate theme exists

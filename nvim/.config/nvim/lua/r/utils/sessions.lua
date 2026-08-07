@@ -50,22 +50,6 @@ function M.last_session_name()
   return "last__" .. safe
 end
 
-function M.redetect_type(buf)
-  local name = vim.api.nvim_buf_get_name(buf)
-  if name == "" then
-    return
-  end
-
-  local ft = vim.filetype.match {
-    buf = buf,
-    filename = name,
-  }
-
-  if ft and ft ~= "" then
-    vim.bo[buf].filetype = ft
-  end
-end
-
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ CALLER                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
@@ -101,12 +85,6 @@ function M.load_session_from_dashboard(last)
     else
       require("resession").load()
     end
-
-    vim.schedule(function()
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        M.redetect_type(buf)
-      end
-    end)
 
     local qflist = RUtils.qf.get_list_qf()
     if #qflist.items > 0 then

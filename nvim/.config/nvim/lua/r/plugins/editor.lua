@@ -8,14 +8,21 @@ local alts = {
 }
 
 return {
-  --- PDFview
+  -- IMLAZY.NVIM
+  {
+    dir = "~/.local/src/nvim_plugins/imlazy.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+  --- PDFVIEW
   {
     dir = "~/.local/src/nvim_plugins/PDFview",
     -- "MadKuntilanak/PDFview",
+    branch = "feature/update_pdfview",
     event = "VeryLazy",
     opts = {
       path = os.getenv "HOME" .. "/Downloads/torrent",
-      picker = "fzf-lua",
+      picker = "fzflua",
       open = {
         cb = function()
           vim.api.nvim_input ":CodeCompanion /translator_role <CR>"
@@ -31,19 +38,48 @@ return {
   },
   -- FLASH.NVIM
   {
-    "folke/flash.nvim",
+    "MadKuntilanak/flash.nvim",
+    -- dir = "~/.local/src/nvim_plugins/flash.nvim",
+    -- "folke/flash.nvim",
     opts = {
-      modes = { char = { keys = { "F", ";" } }, search = { enabled = false } },
+      modes = { char = { keys = { "f", "F", "t", "T", ";" } }, search = { enabled = false } },
       jump = { nohlsearch = true },
       highlight = { backdrop = false },
     },
-    -- stylua: ignore
     keys = {
-      { "<Leader>ss", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump (visual, operator)" },
-      { "gs", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash: treesiter (visual , operator)" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Flash: remote (operator)" },
+      {
+        "gs",
+        function()
+          require("flash").jump()
+        end,
+        mode = { "n", "x", "o" },
+        desc = "Flash: jump (visual, operator)",
+      },
+      {
+        "gS",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash: treesiter (visual , operator)",
+      },
       -- Kegunaan: ini akan menselect semua function, tekan v, lalu R
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash: treesitter search (visual, operator)" },
+      {
+        "R",
+        mode = { "o", "x" },
+        function()
+          require("flash").treesitter_search()
+        end,
+        desc = "Flash: treesitter search (visual, operator)",
+      },
+      -- {
+      --   "r",
+      --   mode = "o",
+      --   function()
+      --     require("flash").remote()
+      --   end,
+      --   desc = "Flash: remote (operator)",
+      -- },
       -- { "<c-s>",
       --   function()
       --     require("flash").treesitter({
@@ -152,6 +188,7 @@ return {
   },
   -- TROUBLE.NVIM
   {
+    -- "folke/trouble.nvim",
     dir = "~/.local/src/nvim_plugins/trouble.nvim",
     -- "MadKuntilanak/trouble.nvim",
     cmd = "Trouble",

@@ -205,9 +205,9 @@ function M.line_signs(win, buf, lnum, wanted)
     local info = fold_info(win, lnum)
     if info and info.level > 0 then
       if info.lines > 0 then
-        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded", type = "fold" }
+        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldedSign", type = "fold" }
       elseif config.folds.open and info.start == lnum then
-        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
+        signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", texthl = "FoldedSign", type = "fold" }
       end
     end
   end

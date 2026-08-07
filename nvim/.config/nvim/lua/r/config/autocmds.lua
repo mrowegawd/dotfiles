@@ -222,7 +222,7 @@ RUtils.map.augroup("WrapFiletype", {
         return
       end
       RUtils.notes.swith_note_mode(vim.bo[buf].filetype)
-      require("r.keymaps.note").neorg_mappings_ft(buf)
+      require("r.keymaps.note").note_mappings_ft(buf)
     end)
   end,
 }, {
@@ -247,7 +247,12 @@ RUtils.map.augroup("DisableJsonConceal", {
 RUtils.map.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
-    vim.hl.hl_op { higroup = "IncSearch", timeout = 200 }
+    if vim.fn.has "nvim-0.13" == 1 then
+      vim.hl.hl_op()
+    else
+      ---@diagnostic disable-next-line: deprecated
+      (vim.hl or vim.highlight).on_yank()
+    end
   end,
 })
 

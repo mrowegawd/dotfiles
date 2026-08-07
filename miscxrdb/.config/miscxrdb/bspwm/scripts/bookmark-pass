@@ -10,7 +10,7 @@ ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME_SNIPPETS"
 
 [ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
 
-OPTIONS="Open:Bookmarked\nOpen:Pass\nEdit:Bookmarked"
+OPTIONS="Open:Bookmarked\nOpen:Pass\nEdit:Bookmarked\nSetup:Pass"
 
 OBJ_MENU=$(echo -e "$OPTIONS" | $ROFI_COMMAND -dmenu -sorting-method fzf -p " WebSearch:")
 OBJ_SELECTED=$(echo "$OBJ_MENU" | xargs)
@@ -38,7 +38,7 @@ open_bookmark() {
     sub(/[[:space:]]+$/, "", url);
     gsub(/\]\]$/, "", url)
     printf "%s+ %s\n", name, url;
-}' | $ROFI_COMMAND -dmenu -i -p " Bookmark" | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
+}' | $ROFI_COMMAND -dmenu -i -p "🔖 " | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
   )
   [ -z "$SELECTIONOPS" ] && exit
   dunstify "(BOOKMARK) Open URL:" "$SELECTIONOPS"
@@ -99,6 +99,24 @@ bspwm_open_float() {
 
   fi
 }
+setup_pass() {
+  target_git="$HOME/pass"
+  target_key="$HOME/Dropbox/moxlight-2023-12-02_2025-12-01.asc"
+
+  if [[ ! -d $target_git ]]; then
+    git clone git@github.com:mrowegawd/pass.git "$target_git"
+  fi
+
+  if [[ ! -f "$target_key" ]]; then
+    gpg --import "$target_key"
+    rsync -av ~/pass/ ~/.password-store/
+    dunstify "Done!"
+    exit
+  fi
+
+  dunstify "nothing to add, you're good!"
+}
+
 open_pass() {
   tmp_mypass="/tmp/mypass"
   dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
@@ -106,7 +124,7 @@ open_pass() {
   copy_pasword_or_username() {
     if ! command -v ydotool >/dev/null; then
       dunstify "[!] install ydotool and ydotoold first!"
-      # Installation: `sudo apt install ydotool ydotoold`
+      dunstify "run at cmd: 'sudo apt install ydotool'"
       exit
     fi
 
@@ -187,6 +205,16 @@ Categories=GNOME;GTK;System;
         dunstify "[url] no url? something went wrong"
       fi
       ;;
+    "edit")
+      case "$WM_WINDOW" in
+      "bspwm")
+        bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $path_pass"
+        ;;
+      *)
+        dunstify "Edit pass: failed to define WM_WINDOW"
+        ;;
+      esac
+      ;;
     *)
       exit
       ;;
@@ -195,7 +223,7 @@ Categories=GNOME;GTK;System;
   }
 
   select_command() {
-    selection="$(echo -e "auto input\ninput username\ninput password\ncopy username\ncopy password\nopen url" |
+    selection="$(echo -e "auto input\ninput username\ninput password\ncopy username\ncopy password\nopen url\nedit" |
       $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p "$1")"
 
     if [[ -n "$selection" ]]; then
@@ -217,6 +245,9 @@ Categories=GNOME;GTK;System;
       if [[ $selection == "open url" ]]; then
         copy_pasword_or_username "url"
       fi
+      if [[ $selection == "edit" ]]; then
+        copy_pasword_or_username "edit"
+      fi
     else
       exit 1
     fi
@@ -234,10 +265,9 @@ Categories=GNOME;GTK;System;
       sed "s:$dir\(.*\):\1:" |
       grep "\/" |
       $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'select dir' -filter "$1"
-    # sed "s:$dir\(.*\)\.gpg$:\1:" |
   }
 
-  selection=$(echo -e "get pass\ninsert new pass\nedit pass" | $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1")
+  selection=$(echo -e "get pass\ninsert new pass" | $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1")
   [[ -z "$selection" ]] && exit
 
   case $selection in
@@ -269,22 +299,6 @@ Categories=GNOME;GTK;System;
       ;;
     esac
     ;;
-
-  "edit pass")
-    edit_selection="$(__select_password "$1")"
-    [[ -z "$edit_selection" ]] && exit
-    touch $tmp_mypass
-    echo "$edit_selection" >$tmp_mypass
-
-    case "$WM_WINDOW" in
-    "bspwm")
-      bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $edit_selection"
-      ;;
-    *)
-      dunstify "Edit pass: failed to define WM_WINDOW"
-      ;;
-    esac
-    ;;
   esac
 
   [[ -f $tmp_mypass ]] && rm $tmp_mypass
@@ -305,6 +319,10 @@ main() {
 
   if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
     edit_bookmark
+  fi
+
+  if [ "$OBJ_SELECTED" = "Setup:Pass" ]; then
+    setup_pass
   fi
 
   if [ "$OBJ_SELECTED" = "Open:Pass" ]; then

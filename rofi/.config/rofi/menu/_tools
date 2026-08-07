@@ -350,7 +350,7 @@ run_neovide() {
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 
 main() {
-  SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
+  SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
   [[ -z $SELECT ]] && exit
 
   case "$SELECT" in

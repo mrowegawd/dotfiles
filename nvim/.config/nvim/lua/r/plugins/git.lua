@@ -20,6 +20,7 @@ local normal_themes = {
   "neogotham",
   "nordfox",
   "rose-pine",
+  "catppuccin",
   "rose-pine-moon",
   "tokyonight-storm",
   "y9nika",

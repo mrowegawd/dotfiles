@@ -826,20 +826,54 @@ function M.change_colors()
   -- ─< YAZI >───────────────────────────────────────────────────────────
   local yazi_hovered = H.get("HoveredCursorline", "bg")
 
+  -- ─< DUNST >──────────────────────────────────────────────────────────
+  local low_fg = H.tint(H.get("WinSeparator", "fg"), 2.2)
+  local low_bg = H.tint(H.get("WinSeparator", "fg"), 0.1)
+  local low_frame = H.tint(H.get("WinSeparator", "fg"), 0.1)
+  local normal_title_fg = H.get("Normal", "fg")
+
+  local normal_fg = H.tint(H.get("WinSeparator", "fg"), 4)
+  local normal_fg_base = H.tint(H.get("WinSeparator", "fg"), 1)
+  local normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.7)
+
+  local normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.7)
+
+  local critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4)
+  local critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25)
+  local critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2)
+
+  if
+    vim.tbl_contains(
+      { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" },
+      vim.g.colorscheme
+    )
+  then
+    normal_fg = H.tint(H.get("WinSeparator", "fg"), 1.5)
+    normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.05)
+    normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.15)
+    critical_fg = H.tint(H.get("diffRemoved", "fg"), 1)
+  end
+  if vim.tbl_contains({ "tokyonight-storm", "tokyonight" }, vim.g.colorscheme) then
+    normal_fg = H.tint(H.get("WinSeparator", "fg"), 1)
+    normal_bg = H.tint(H.get("WinSeparator", "fg"), -0.1)
+    normal_frame = H.tint(H.get("WinSeparator", "fg"), -0.1)
+  end
+
+  if vim.tbl_contains({ "gruvbox", "base46-everforest" }, vim.g.colorscheme) then
+    normal_fg_base = H.tint(H.get("WinSeparator", "fg"), 0.4)
+  end
+
+  if vim.tbl_contains({ "zenburn" }, vim.g.colorscheme) then
+    normal_fg = H.tint(H.get("WinSeparator", "fg"), 0.9)
+    normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.02)
+    normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.15)
+    critical_fg = H.tint(H.get("diffRemoved", "fg"), 1)
+  end
+
   -- ─< LAZYGIT >────────────────────────────────────────────────────────
   local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.5)
   local lazygit_inactive_text = H.tint(H.get("WinSeparator", "fg"), 4)
   local lazygit_option_text = H.tint(H.get("Normal", "bg"), 4)
-
-  -- ─< EWW >────────────────────────────────────────────────────────────
-  local __eww_icon_fg = 1
-  if vim.g.colorscheme == "base46-jellybeans" then
-    __eww_icon_fg = 0.5
-  end
-  if vim.tbl_contains({ "base46-seoul256_dark", "base46-zenburn" }, vim.g.colorscheme) then
-    __eww_icon_fg = 0.5
-  end
-  local eww_icon_fg = H.tint(H.get("WinSeparator", "fg"), __eww_icon_fg)
 
   local defined_cols = {
     fzf = {
@@ -910,19 +944,19 @@ function M.change_colors()
       option_txt = lazygit_option_text,
     },
     dunst = {
-      low_fg = H.tint(H.get("WinSeparator", "fg"), 2.2),
-      low_bg = H.tint(H.get("WinSeparator", "fg"), 0.1),
-      low_frame = H.tint(H.get("WinSeparator", "fg"), 0.1),
+      low_fg = low_fg,
+      low_bg = low_bg,
+      low_frame = low_frame,
 
-      normal_title_fg = H.tint(H.get("Keyword", "fg"), 0.5),
+      normal_title_fg = normal_title_fg,
 
-      normal_fg = H.tint(H.get("WinSeparator", "fg"), 4),
-      normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.7),
-      normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.7),
+      normal_fg = normal_fg,
+      normal_bg = normal_bg,
+      normal_frame = normal_frame,
 
-      critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4),
-      critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25),
-      critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2),
+      critical_fg = critical_fg,
+      critical_bg = critical_bg,
+      critical_frame = critical_frame,
 
       bg = H.tint(H.get("Normal", "bg"), 0.25),
       fg = H.tint(H.get("Normal", "bg"), 0.25),
@@ -980,7 +1014,7 @@ function M.change_colors()
 
       red = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
 
-      icon_fg = eww_icon_fg,
+      icon_fg = normal_fg_base,
 
       keyword = H.get("Keyword", "fg"),
     },
@@ -1034,13 +1068,13 @@ function M.change_colors()
       menu_fg = H.get("Pmenu", "fg"),
     },
     rofi = {
-      foreground = H.get("Normal", "bg"),
+      foreground = normal_bg,
 
-      background = H.tint(H.get("Normal", "bg"), 0.25),
-      background_alt = H.tint(H.get("Keyword", "fg"), -0.4),
+      background = normal_bg,
+      background_alt = normal_fg,
 
-      selected = H.get("Normal", "bg"),
-      selected_alt = H.tint(H.get("Keyword", "fg"), -0.4),
+      selected = normal_fg,
+      selected_alt = H.tint(H.get("Keyword", "fg"), -0.25),
 
       keyword = H.get("Keyword", "fg"),
 

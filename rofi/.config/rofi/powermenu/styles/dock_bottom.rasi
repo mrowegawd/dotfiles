@@ -96,7 +96,7 @@ element alternate.active {
 
 element selected {
     background-color:               @selected-alt;
-    text-color:                     @keyword;
+    text-color:                     @background;
     border:                  		    0.2% 0% 0.2% 0%;
     border-radius:                  100px;
     border-color:                  	@background;

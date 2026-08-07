@@ -114,10 +114,10 @@ return {
       },
 
       -- Search
-      { "<Leader>sB", function() RUtils.fzflua.setup_fzflua().lines() end, desc = "Search: all buffers [fzflua]", mode = { "n", "x" } },
-      { "<Leader>sb", function() RUtils.fzflua.setup_fzflua().blines() end, desc = "Search: buffers [fzflua]" },
+      { "<Leader>fB", function() RUtils.fzflua.setup_fzflua().lines() end, desc = "Picker: all buffers [fzflua]", mode = { "n", "x" } },
+      { "<Leader>fb", function() RUtils.fzflua.setup_fzflua().blines() end, desc = "Picker: buffers [fzflua]" },
       {
-        "<Leader>sb",
+        "<Leader>fb",
         function()
           local visual_selection = RUtils.get_visual_selection { strict = true }
           RUtils.map.feedkey("<Esc>" )
@@ -132,19 +132,19 @@ return {
             }
           end)
         end,
-        desc = "Search: buffers (visual) [fzflua]",
+        desc = "Picker: buffers (visual) [fzflua]",
         mode = { "x" },
       },
 
-      { "<Leader>sm", function() RUtils.fzflua.setup_fzflua().marks() end, desc = "Search: marks [fzflua]" },
-      { "<Leader>sj", function() RUtils.fzflua.setup_fzflua().jumps() end, desc = "Search: jumps [fzflua]" },
+      { "<Leader>fm", function() RUtils.fzflua.setup_fzflua().marks() end, desc = "Picker: marks [fzflua]" },
+      { "<Leader>fj", function() RUtils.fzflua.setup_fzflua().jumps() end, desc = "Picker: jumps [fzflua]" },
 
       { "z=", function() RUtils.fzflua.setup_fzflua().spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- Diagnostics
       { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
 
-      -- Grep
+     -- Grep
       { "<Leader>fg", function() RUtils.fzflua.setup_fzflua().live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
       { "<Leader>fg", function() RUtils.fzflua.setup_fzflua().grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "x" } },
       { "<Leader>fw", function() RUtils.fzflua.setup_fzflua().grep() end, desc = "Picker: grep string [fzflua]" },
@@ -178,8 +178,8 @@ return {
       { "<c-c>gD", function() RUtils.git.trace_file_event() end, desc = "Git: track commit for renamed or file deleted [fzflua]" },
       { "<c-c>gf", function() RUtils.git.select_file_different_branch() end, desc = "Git: find files branch [fzflua]" },
 
-      { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "Picker: symbols [fzflua]" },
-      { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "Picker: workspaces symbols [fzflua]" },
+      { "<Leader>fs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: symbols [fzflua]" },
+      { "<Leader>fS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
@@ -188,6 +188,7 @@ return {
       ---@diagnostic disable: missing-fields
       ---@type fzf-lua.config.Base
       return {
+        -- ui_select = nil,
         __HLS = {
           cursor = "CurSearch",
         },

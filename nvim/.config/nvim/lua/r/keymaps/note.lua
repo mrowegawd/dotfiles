@@ -21,7 +21,7 @@ local function set_keymaps(mappings, bufnr)
 end
 
 ---@param bufnr integer
-function M.neorg_mappings_ft(bufnr)
+function M.note_mappings_ft(bufnr)
   RUtils.create_command("NotePrintOutTags", function()
     RUtils.markdown.find_note_by_tag({}, true, true)
   end, { desc = "Note: print out tags" })

@@ -7,6 +7,37 @@
 -- https://base2t.one
 
 return {
+  -- LUNA
+  {
+    "wtfox/luna.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local luna_themes = { "luna" }
+      if vim.tbl_contains(luna_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {},
+  },
+  -- CENDRE
+  {
+    "Aejkatappaja/cendre",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local candre_themes = { "cendre" }
+      if vim.tbl_contains(candre_themes, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      background = "hard", -- "hard" | "medium" | "soft"
+      italic = false,
+    },
+  },
   -- INTENT
   {
     "GasimGasimzada/intent.nvim",

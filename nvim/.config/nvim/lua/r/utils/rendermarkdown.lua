@@ -61,7 +61,7 @@ function M.parse_org(ctx)
   -- local bullets = { "", "", "", "", "", "", "" }
 
   -- Sign column, disamakan dengan `heading.signs` di config markdown kamu
-  local signs = { "1.", "2.", "3.", "4.", "5.", "6.", "7." }
+  local signs = { "1", "2", "3", "4", "5", "6", "7" }
 
   local headline_highlights = { "Headline" }
   local fat_headlines = false

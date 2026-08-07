@@ -1,9 +1,10 @@
+# vim: ft=ini
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-font-family                     = "SF Mono"
+font-family                     = "Liberation Mono"
 
-font-size                       = 9
+font-size                       = 9.5
 # font-feature                  = -calt
 # font-feature                  = -liga
 # font-feature                  = -dlig
@@ -16,14 +17,14 @@ mouse-hide-while-typing         = false
 # +-----------------------------------------------------------+
 # | THEME                                                     |
 # +-----------------------------------------------------------+
-theme = intent
+theme = cendre
 
 # +-----------------------------------------------------------+
 # | WINDOW                                                    |
 # +-----------------------------------------------------------+
 window-decoration               = none
 window-padding-x                = 5
-window-padding-y                = 0
+window-padding-y                = 5
 # window-colorspace               = display-p3
 window-padding-balance          = true
 window-step-resize              = false
@@ -69,11 +70,14 @@ keybind = clear
 keybind = ctrl+shift+c=copy_to_clipboard
 keybind = ctrl+shift+v=paste_from_clipboard
 keybind = ctrl+enter=unbind
+
 keybind = ctrl+equal=increase_font_size:1
 keybind = ctrl+minus=decrease_font_size:1
 keybind = ctrl+zero=reset_font_size
-# keybind = alt+m=toggle_split_zoom
-# keybind = ctrl+shift+comma=reload_config
+
+# keybind = performable:alt+m=toggle_split_zoom
+
+keybind = ctrl+shift+comma=reload_config
 # keybind = alt+shift+r=reload_config
 # keybind = global:alt+f=toggle_quick_terminal # (Mac only)
 
@@ -88,20 +92,16 @@ keybind = ctrl+zero=reset_font_size
 # ┏╍╍╍╍╍╍┓
 # ╏ PANE ╏
 # ┗╍╍╍╍╍╍┛
-# keybind = ctrl+shift+h=goto_split:left
-# keybind = ctrl+shift+j=goto_split:bottom
-# keybind = ctrl+shift+k=goto_split:top
-# keybind = ctrl+shift+l=goto_split:right
+# keybind = performable:alt+h=goto_split:left
+# keybind = performable:alt+j=goto_split:down
+# keybind = performable:alt+k=goto_split:up
+# keybind = performable:alt+l=goto_split:right
 
 # keybind = unconsumed:alt+enter=new_split:right
-# keybind = alt+l=new_split:right
-# keybind = ctrl+space,j=new_split:new_split:right
+# keybind = ctrl+space>j=new_split:down
+# keybind = ctrl+space>l=new_split:right
 
-# keybind = ctrl+shift+o=new_split:right
-# keybind = ctrl+shift+p=new_split:down
-# keybind = ctrl+shift+p=new_split:down
-
-# keybind = ctrl+alt+shift+k=resize_split:up,20
-# keybind = ctrl+alt+shift+h=resize_split:left,20
-# keybind = ctrl+alt+shift+j=resize_split:down,20
-# keybind = ctrl+alt+shift+l=resize_split:right,20
+keybind =performable:alt+shift+k=resize_split:up,20
+keybind =performable:alt+shift+h=resize_split:left,20
+keybind =performable:alt+shift+j=resize_split:down,20
+keybind =performable:alt+shift+l=resize_split:right,20

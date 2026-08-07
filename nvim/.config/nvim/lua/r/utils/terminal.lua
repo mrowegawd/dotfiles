@@ -318,7 +318,7 @@ local function open_clock(select_command, main_win, curwin, clock_win)
   end)
 end
 
----@param select_command string
+---@param select_command table|string
 ---@param is_toggle? boolean
 function M.clock_mode(select_command, is_toggle)
   is_toggle = is_toggle or false
@@ -326,7 +326,7 @@ function M.clock_mode(select_command, is_toggle)
 
   local main_layout = RUtils.layout.get_Win()
   if not main_layout.layout then
-    RUtils.warn "fieldj `layout` is missing or get renewed, check file`layout.lua`"
+    RUtils.warn "field `layout` is missing or get renewed, check file`layout.lua`"
     return
   end
 

@@ -114,7 +114,7 @@ return {
           name = "circleFull",
         },
       },
-      cmdline = { enabled = false, view = "cmdline" },
+      cmdline = { enabled = true, view = "cmdline" },
       redirect = { view = "popup", filter = { event = "msg_show" } },
       views = {
         cmdline_popup = { position = { row = -2, col = "1%" } },

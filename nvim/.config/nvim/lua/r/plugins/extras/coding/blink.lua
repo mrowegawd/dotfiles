@@ -14,9 +14,6 @@ return {
       "sources.default",
       "disable_ft",
     },
-    build = function()
-      require("blink.cmp").build():pwait()
-    end,
     dependencies = {
       "saghen/blink.lib",
       "saghen/blink.compat",

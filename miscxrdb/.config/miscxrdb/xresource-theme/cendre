@@ -1,0 +1,26 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+
+! Xresources for Intent-like theme
+*background: #171311
+*foreground: #e6d5c2
+*cursorColor: #ea9875
+
+! Standard ANSI
+*color0: #201b19
+*color1: #d1766e
+*color2: #99af6b
+*color3: #fcba81
+*color4: #58bdff
+*color5: #9480ba
+*color6: #4e89a2
+*color7: #a09384
+*color8: #73665b
+*color9: #d25780
+*color10: #43b16a
+*color11: #f4a21c
+*color12: #8bcfff
+*color13: #a692cd
+*color14: #20c9cb
+*color15: #e6d5c2
+
+*color16: #d1766e
