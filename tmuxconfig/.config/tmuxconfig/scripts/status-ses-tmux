@@ -1,0 +1,11 @@
+#!/bin/bash
+
+current="$1"
+total=$(tmux list-sessions -F "#S" 2>/dev/null | wc -l | tr -d ' ')
+
+if [[ "$total" -le 1 ]]; then
+  echo ""
+else
+  index=$(tmux list-sessions -F "#S" 2>/dev/null | nl -ba | grep -w "$current" | awk '{print $1}')
+  echo " ${index} / ${total} "
+fi

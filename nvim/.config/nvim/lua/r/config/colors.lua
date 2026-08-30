@@ -5,12 +5,24 @@ local base_colors = {
 }
 
 local update_col_colorscheme = {
+  ["ashen"] = {
+    winseparator_fg_alter = 0.5,
+    linenr_fg_alter = 1.3,
+    nonetext_opacity = 0.35,
+    quickfixwinbar_fg_alter = 0.5,
+    quickfixwinbar_bg_alter = 1,
+
+    trouble_indent_fg_alter = -0.85,
+    panelbottomlinenr_fg_alter = 2.5,
+
+    zshlines_fg_alter = -0.05,
+  },
   ["base46-everforest"] = {
     Directory = { fg = "#a7c080", bg = "NONE" },
     linenr_fg_alter = 0.5,
     winseparator_fg_alter = 0.25,
     statusline_fg_alter = 0.5,
-    hl_trouble_indent = "GitSignsChange",
+    hl_trouble_indent = "Function",
     trouble_indent_fg_alter = -0.55,
     trouble_fold_fg_alter = 0.5,
     outline_indent_fg_alter = -0.3,
@@ -29,8 +41,8 @@ local update_col_colorscheme = {
 
     comment_fg_alter = 0.45,
     outline_details_fg_alter = 0.15,
+    zshlines_fg_alter = -0.05,
     zshlines_bg_alter = 0.2,
-    zshlines_fg_alter = 0.05,
   },
   ["catppuccin"] = {
     panelbottomlinenr_fg_alter = 1.3,
@@ -56,9 +68,10 @@ local update_col_colorscheme = {
     winbar_fg_alter = 0.6,
 
     quickfixwinbar_fg_alter = 0.2,
+    normalnote_bg_alter = 1,
 
-    panelbottomlinenr_fg_alter = 2,
-    panelbottomcursorlinenr_fg_alter = 5,
+    panelbottomlinenr_fg_alter = 2.5,
+    panelbottomcursorlinenr_fg_alter = 5.5,
 
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
@@ -89,8 +102,11 @@ local update_col_colorscheme = {
     linenr_fg_alter = 1.6,
     linenrnote_fg_alter = 1.2,
     commentnote_fg_alter = 0.7,
+    codeblock_bg_alter = 0.4,
     panelsidenormal_bg_alter = 0.15,
     trouble_fold_fg_alter = 0.6,
+    normalnote_bg_alter = 0.8,
+    floatborderaiprompt_fg_alter = 1,
     quickfixwinbar_bg_alter = 1,
     quickfixwinbar_fg_alter = 0.75,
     trouble_indent_fg_alter = -0.75,
@@ -102,10 +118,10 @@ local update_col_colorscheme = {
   },
   ["jellybeans"] = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
-    orgdirective_fg_alter = 0.7,
     panelsidenormal_bg_alter = 0.1,
     quickfixwinbar_fg_alter = 0.35,
     trouble_indent_fg_alter = -0.8,
+    normalnote_bg_alter = 0.8,
     winseparator_fg_alter = 0.4,
     winbar_fg_alter = 0.7,
     linenr_fg_alter = 1.2,
@@ -118,20 +134,25 @@ local update_col_colorscheme = {
     floatborderaiprompt_fg_alter = 3,
 
     codeblock_bg_alter = 0.55,
-    nonetext_opacity = 0.25,
     comment_fg_alter = 0.8,
-    winbarnote_fg_alter = 5,
 
-    panelbottomlinenr_fg_alter = 6,
-    panelbottomcursorlinenr_fg_alter = 15,
+    nonetext_opacity = 0.3,
+    winbarnote_fg_alter = 2.5,
+    normalnote_bg_alter = 3.5,
+    linenrnote_fg_alter = 1.2,
+    commentnote_fg_alter = 0.8,
+
+    panelbottomlinenr_fg_alter = 12.5,
+    panelbottomcursorlinenr_fg_alter = 40,
     panelsidenormal_bg_alter = 0.5,
 
-    linenrnote_fg_alter = 2.5,
-    trouble_indent_fg_alter = -0.8,
+    statusline_bg_alter = -0.8,
+
+    trouble_indent_fg_alter = -0.85,
     linenr_fg_alter = 4.6,
-    winbar_fg_alter = 1.4,
+    winbar_fg_alter = 1.2,
     quickfixwinbar_fg_alter = 0.2,
-    quickfixwinbar_bg_alter = 1,
+    quickfixwinbar_bg_alter = 5,
   },
   ["lackluster-mint"] = {
     Directory = { fg = "#7788aa", bg = "NONE" },
@@ -142,15 +163,25 @@ local update_col_colorscheme = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
     orgdirective_fg_alter = 0.7,
     linenrnote_fg_alter = 1.2,
-    trouble_indent_fg_alter = -0.85,
+    trouble_indent_fg_alter = -0.88,
     winbar_fg_alter = 0.7,
     winseparator_fg_alter = 0.7,
     linenr_fg_alter = 2,
+
+    quickfixwinbar_fg_alter = 0.6,
+    quickfixwinbar_bg_alter = 1.5,
+
+    panelbottomlinenr_fg_alter = 4.5,
+    panelbottomcursorlinenr_fg_alter = 11,
+
+    panelsidenormal_bg_alter = 0.1,
+    statusline_bg_alter = -0.4,
   },
   ["neogotham"] = {
     linenr_fg_alter = 1.4,
     winseparator_fg_alter = 0.45,
     outline_details_fg_alter = 0.7,
+    floatborderaiprompt_fg_alter = 1,
     trouble_indent_fg_alter = -0.65,
     trouble_fold_fg_alter = 0.5,
     outline_indent_fg_alter = -0.45,
@@ -161,19 +192,22 @@ local update_col_colorscheme = {
   },
   ["nightfox"] = { linenr_fg_alter = 1.4, winseparator_fg_alter = 0.45 },
   ["oxocarbon"] = {
-    linenr_fg_alter = 1.4,
-    winbar_fg_alter = 0.1,
+    linenr_fg_alter = 1.35,
+    winbar_fg_alter = 0.4,
     winseparator_fg_alter = 0.4,
-    linenrnote_fg_alter = 0.6,
+    linenrnote_fg_alter = 0.8,
+    floatborderaiprompt_fg_alter = 0.8,
     normalnote_bg_alter = 0.8,
+    zshlines_fg_alter = -0.15,
+    zshlines_bg_alter = 0.3,
   },
   ["rose-pine"] = {
     linenr_fg_alter = 1.3,
-    winseparator_fg_alter = 0.4,
+    winseparator_fg_alter = 0.45,
     linenrnote_fg_alter = 0.85,
     winbar_fg_alter = 0.45,
     hl_trouble_indent = "Function",
-    trouble_indent_fg_alter = -0.75,
+    trouble_indent_fg_alter = -0.8,
     trouble_fold_fg_alter = 0.65,
     outline_details_fg_alter = 0.5,
     zshlines_fg_alter = -0.15,
@@ -183,9 +217,12 @@ local update_col_colorscheme = {
     linenr_fg_alter = 1,
     winseparator_fg_alter = 0.3,
     outline_details_fg_alter = 0.5,
+    quickfixwinbar_fg_alter = 0.3,
     linenrnote_fg_alter = 0.7,
     commentnote_fg_alter = 0.7,
     winbar_fg_alter = 0.6,
+    panelsidenormal_bg_alter = 0.1,
+    trouble_indent_fg_alter = -0.75,
     winbarnote_fg_alter = 1.4,
     outline_indent_fg_alter = -0.1,
     zshlines_fg_alter = -0.15,
@@ -194,24 +231,45 @@ local update_col_colorscheme = {
   ["tokyonight-night"] = {
     linenr_fg_alter = 2,
     linenrnote_fg_alter = 0.7,
-    winseparator_fg_alter = 0.55,
+    winseparator_fg_alter = 0.65,
     winbar_fg_alter = 0.85,
     normalnote_bg_alter = 3,
+
+    trouble_indent_fg_alter = -0.85,
+    quickfixwinbar_bg_alter = 1.5,
+    quickfixwinbar_fg_alter = 0.5,
+
+    panelsidenormal_bg_alter = 0.1,
+    panelbottomlinenr_fg_alter = 5,
+    panelbottomcursorlinenr_fg_alter = 15,
   },
   ["tokyonight-storm"] = {
-    linenr_fg_alter = 0.85,
-    winseparator_fg_alter = 0.2,
+    linenr_fg_alter = 0.9,
+    winseparator_fg_alter = 0.25,
     linenrnote_fg_alter = 0.5,
     winbarnote_fg_alter = 1,
+
+    commentnote_fg_alter = 0.6,
+    winbar_fg_alter = 0.4,
+    panelsidenormal_bg_alter = 0.1,
+    statusline_fg_alter = 0.3,
+
+    codeblock_bg_alter = 0.15,
+    trouble_indent_fg_alter = -0.75,
+    quickfixwinbar_fg_alter = 0.3,
+    panelbottomlinenr_fg_alter = 1.5,
+    panelbottomcursorlinenr_fg_alter = 4.5,
+
+    zshlines_fg_alter = -0.1,
+    zshlines_bg_alter = 0.3,
   },
   ["luna"] = {
     nontextnote_fg_alter = -0.2,
-    linenr_fg_alter = 2.8,
-    winseparator_fg_alter = 1.8,
+    linenr_fg_alter = 3.5,
+    winseparator_fg_alter = 1.7,
     linenrnote_fg_alter = 1.5,
     winbar_fg_alter = 1.5,
     winbarnote_fg_alter = 2,
-    quickfixwinbar_fg_alter = 4,
     comment_fg_alter = 1.2,
     commentnote_fg_alter = 2,
     codeblock_bg_alter = 0.6,
@@ -219,21 +277,27 @@ local update_col_colorscheme = {
 
     nontextaiprompt_fg_alter = 5,
 
-    floatbordernote_fg_alter = 1.5,
-    floatborderaiprompt_fg_alter = 4,
+    floatbordernote_fg_alter = 15,
+    floatborderaiprompt_fg_alter = 3,
 
-    panelsidenormal_bg_alter = 0.7,
-    panelbottomlinenr_fg_alter = 11,
+    quickfixwinbar_fg_alter = 0.3,
+    quickfixwinbar_bg_alter = 2.5,
+    normalnote_bg_alter = 2.5,
+
+    panelsidenormal_bg_alter = 1,
+    panelbottomlinenr_fg_alter = 9,
     panelbottomcursorlinenr_fg_alter = 30,
 
     orgdirective_fg_alter = 0.6,
 
-    trouble_indent_fg_alter = -0.9,
+    trouble_indent_fg_alter = -0.85,
     trouble_fold_fg_alter = 0.85,
     outline_indent_fg_alter = -0.3,
     outline_details_fg_alter = 0.7,
 
     statusline_bg_alter = -0.75,
+
+    zshlines_bg_alter = 0.7,
   },
 
   ["vscode"] = {
@@ -247,16 +311,27 @@ local update_col_colorscheme = {
   },
   ["zenburn"] = {
     linenr_fg_alter = 0.55,
-    winseparator_fg_alter = 0.15,
+    winseparator_fg_alter = 0.2,
     commentnote_fg_alter = 0.6,
     linenrnote_fg_alter = 0.4,
     trouble_indent_fg_alter = -0.6,
     trouble_fold_fg_alter = 0.4,
+    statusline_fg_alter = 0.15,
+    statusline_bg_alter = -0.2,
+    codeblock_bg_alter = 0.1,
+    orgdirective_fg_alter = 0.25,
+
+    panelbottomlinenr_fg_alter = 1,
+    panelbottomcursorlinenr_fg_alter = 5,
+    quickfixwinbar_fg_alter = 0.2,
+    panelsidenormal_bg_alter = 0.1,
+
     outline_details_fg_alter = 0.1,
     normalfloat_bg_alter = 0.1,
-    winbar_fg_alter = 0.4,
-    zshlines_bg_alter = 0.2,
+    winbar_fg_alter = 0.5,
+    winbarnote_fg_alter = 0.8,
     zshlines_fg_alter = -0.1,
+    zshlines_bg_alter = 0.2,
   },
 }
 
@@ -2345,11 +2420,16 @@ local function set_panel_highlight()
         bold = true,
       },
     },
-    { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 } } },
+    {
+      TroubleFsPos = {
+        inherit = "TroubleIndent",
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 },
+      },
+    },
     {
       TroubleFsCount = {
         fg = { from = "Directory", attr = "fg", alter = -0.13 },
-        bg = { from = "StatusLine", attr = "bg" },
+        bg = { from = "TroubleFsPos", attr = "fg" },
       },
     },
 
@@ -2373,7 +2453,7 @@ local function set_panel_highlight()
     {
       TroubleDiagnosticsCount = {
         fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.13 },
-        bg = { from = "StatusLine", attr = "bg" },
+        bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
       },
     },
 
@@ -2548,7 +2628,7 @@ local function colorscheme_overrides()
       { NonText = { fg = { from = "NonText", attr = "fg", alter = -0.35 } } },
       {
         SnacksIndentScope = {
-          fg = { from = "OutlineDetails", attr = "fg", alter = 0.65 },
+          fg = { from = "GitSignsChange", attr = "fg", alter = -0.55 },
           bg = "NONE",
         },
       },
@@ -2612,7 +2692,7 @@ local function colorscheme_overrides()
       { NonText = { fg = { from = "NonText", attr = "fg", alter = -0.2 } } },
       {
         SnacksIndentScope = {
-          fg = { from = "OutlineDetails", attr = "fg", opacity = 0.6 },
+          fg = { from = "GitSignsChange", attr = "fg", opacity = 0.35 },
           bg = "NONE",
         },
       },
@@ -2646,10 +2726,10 @@ local function colorscheme_overrides()
     },
 
     ["rose-pine"] = {
-      { NonText = { fg = { from = "NonText", attr = "fg", alter = -0.14 } } },
+      { NonText = { fg = { from = "NonText", attr = "fg", alter = -0.2 } } },
       {
         SnacksIndentScope = {
-          fg = { from = "GitSignsChange", attr = "fg", alter = -0.05 },
+          fg = { from = "GitSignsChange", attr = "fg", alter = -0.25 },
           bg = "NONE",
         },
       },
