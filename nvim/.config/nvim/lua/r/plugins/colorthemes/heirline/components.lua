@@ -1186,16 +1186,31 @@ M.Tasks = {
   rpad(overseer_tasks_for_status("RUNNING", colors)),
   rpad(overseer_tasks_for_status("SUCCESS", colors)),
   rpad(overseer_tasks_for_status("FAILURE", colors)),
-  {
-    provider = function(self)
-      for i, _ in pairs(symbols_overseer) do
-        if self.tasks[i] then
-          return RUtils.config.icons.misc.separator_down
-        end
-      end
-    end,
-    hl = { fg = colors.task_bg, bg = colors.task_bg },
-  },
+  -- {
+  --   provider = function(self)
+  --     for i, _ in pairs(symbols_overseer) do
+  --       if self.tasks[i] then
+  --         return RUtils.config.icons.misc.separator_down
+  --       end
+  --     end
+  --   end,
+  --   -- hl = { fg = colors.task_bg, bg = colors.task_bg },
+  --
+  --   hl = function(self)
+  --     local fg = colors.task_bg
+  --     -- local has_task = self.task > 0 or (self.watch and #self.watch > 0)
+  --
+  --     if set_conditions.is_terminal_ft() then
+  --       fg = colors.mode_term_statusline_bg
+  --     elseif not set_conditions.hide_in_col_width(120) then
+  --       fg = colors.statusline_bg
+  --       -- elseif has_task or self.has_overseer_task then
+  --       --   fg = colors.task_bg
+  --     end
+  --
+  --     return { fg = fg, bg = colors.statusline_bg }
+  --   end,
+  -- },
 }
 M.RmuxTargetPane = {
   init = function(self)
@@ -1226,8 +1241,15 @@ M.RmuxTargetPane = {
         return RUtils.config.icons.misc.separator_down
       end
     end,
-
     hl = { fg = colors.statusline_bg, bg = colors.task_bg },
+  },
+  {
+    provider = function(self)
+      if self.task > 0 or #self.watch > 0 then
+        return " Tmux:"
+      end
+    end,
+    hl = { fg = colors.statusline_bg, bg = colors.task_bg, bold = true },
   },
   {
     provider = function(self)

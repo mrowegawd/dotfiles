@@ -50,7 +50,7 @@ return {
 
   {
     "mrcjkb/rustaceanvim",
-    ft = { "rust" },
+    ft = { "rust", "org" },
     opts = {
       server = {
         on_attach = function(_, bufnr)

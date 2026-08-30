@@ -208,7 +208,7 @@ return {
         filetype = {
           org = {
             -- Disable anti_conceal to prevent sign flickering in org buffers
-            anti_conceal = { enabled = false },
+            anti_conceal = { enabled = true },
           },
           noice = {},
           codecompanion = {

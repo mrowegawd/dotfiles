@@ -75,6 +75,7 @@ RUtils.map.augroup("SmartClose", {
     -- "org",
     "qf",
     "query",
+    "OverseerOutput",
     "snacks_notif",
     "spectre_panel",
     "startuptime",

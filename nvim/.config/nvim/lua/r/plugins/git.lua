@@ -14,6 +14,7 @@ local normal_themes = {
   "base46-material-darker",
   "darcubox",
   "tokyonight",
+  "tokyonight-night",
   "jellybeans",
   "kanagawa",
   "lackluster",

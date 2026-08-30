@@ -13,7 +13,7 @@ COL_RED=$(xrdb -query | grep -i 'color9:' | cut -d':' -f2 | xargs)
 
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-  COL_BG=$(grep -i TMUX_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  COL_BG=$(grep -i STATUSLINE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
   COL_RED=$(grep -i RED <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 

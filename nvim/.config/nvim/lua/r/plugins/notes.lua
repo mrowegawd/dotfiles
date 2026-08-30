@@ -58,7 +58,7 @@ return {
             dash_string = "-",
             doubledash_highlight = "DoubleDash",
             doubledash_string = "=",
-            quote_highlight = "Quote",
+            quote_highlight = "@markup.quote.markdown",
             quote_string = "┃",
             fat_headlines = false,
             fat_headline_upper_string = "▃",

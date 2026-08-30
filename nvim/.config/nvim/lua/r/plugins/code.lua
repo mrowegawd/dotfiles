@@ -334,6 +334,8 @@ return {
 
           ["<C-u>"] = "keymap.scroll_output_up",
           ["<C-d>"] = "keymap.scroll_output_down",
+          -- ["<A-n>"] = "keymap.scroll_output_up",
+          -- ["<A-p>"] = "keymap.scroll_output_down",
 
           ["P"] = "keymap.toggle_preview",
           ["<A-p>"] = "keymap.prev_task",
@@ -420,7 +422,7 @@ return {
   },
   -- RUNMUX
   {
-    --"mrowegawd/rmux",
+    --"MadKuntilanak/rmux",
     -- enabled = false,
     dir = "~/.local/src/nvim_plugins/rmux",
     dependencies = { "stevearc/overseer.nvim" },

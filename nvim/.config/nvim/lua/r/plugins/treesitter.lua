@@ -248,7 +248,7 @@ return {
       H.plugin("treesitter-context", {
         theme = {
           ["*"] = {
-            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
                 fg = { from = "TreesitterContext", attr = "bg" },

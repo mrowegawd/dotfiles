@@ -637,9 +637,6 @@ local function setup_autocmd()
         return
       end
       Win.update_sidebar()
-
-      -- Update window height
-      Win.update_sidebar(true)
     end,
   })
 
@@ -683,6 +680,10 @@ local function setup_autocmd()
       local curwin = vim.api.nvim_get_current_win()
       if is_float_win(curwin) then
         return
+      end
+
+      if not is_processing_layout then
+        is_processing_layout = true
       end
       Win.update_sidebar()
     end,

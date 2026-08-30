@@ -77,7 +77,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local kanagawa_themes = { "kanagawa" }
+      local kanagawa_themes = { "kanagawa", "kanagawa-lotus" }
       if vim.tbl_contains(kanagawa_themes, vim.g.colorscheme) then
         return true
       end
@@ -91,7 +91,7 @@ return {
       },
       overrides = function()
         return {
-          Normal = { bg = "#0B0B0B" },
+          Normal = { bg = vim.g.colorscheme == "kanagawa-lotus" and "#C8C093" or "#0B0B0B" },
         }
       end,
     },

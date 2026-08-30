@@ -237,7 +237,7 @@ local select_layout_terminal_cmd = {
     get = function()
       local t = M.wrap_open_cmd({
         name = "STerm Tclock",
-        -- cmd = "tclock clock -S",
+        -- cmd = "tclock -c red timer -M",
         cmd = "timr-tui",
         layout = "window",
       }, true)
@@ -250,8 +250,8 @@ local select_layout_terminal_cmd = {
     get = function(timer)
       local t = M.wrap_open_cmd({
         name = "STerm Tclock Pomodor",
-        -- cmd = "tclock -c red timer -d " .. timer .. " -M",
-        cmd = "timr-tui",
+        cmd = "tclock -c red timer -d " .. timer .. " -M",
+        -- cmd = "timr-tui",
         layout = "window",
       }, true)
       if t then

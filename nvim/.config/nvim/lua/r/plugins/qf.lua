@@ -83,6 +83,15 @@ return {
         desc = "Qf: test",
         mode = { "n", "v" },
       },
+      -- {
+      --   "<F1>",
+      --   function()
+      --     local qf = require "qfbookmark.qf"
+      --     qf.debug_qf()
+      --   end,
+      --   desc = "Qf: test",
+      --   mode = { "n", "v" },
+      -- },
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
@@ -105,7 +114,7 @@ return {
           },
         },
         mark = {
-          preview_fullscreen = true,
+          preview_fullscreen = false,
           context_templates = {
             separator = nil, -- or "\n\n" .. string.rep("─", 60) .. "\n\n",
             default = "ask_ai",
@@ -115,12 +124,12 @@ return {
                 builder = function(ctx)
                   return string.format(
                     [[
-%s
+  %s
 
-```%s
-%s
-```
-]],
+  ```%s
+  %s
+  ```
+  ]],
                     ctx.text,
                     ctx.filetype,
                     table.concat(ctx.lines, "\n")
@@ -169,13 +178,13 @@ return {
                   return string.format(
 
                     [[
-* TODO check this later                                   :mytodo:
-  SCHEDULED: <%d-%s-%s %s 18:00>
+  * TODO check this later                                   :mytodo:
+    SCHEDULED: <%d-%s-%s %s 18:00>
 
-  #+begin_src %s
-  <TEXT_HERE>
-  #+end_src
-]],
+    #+begin_src %s
+    <TEXT_HERE>
+    #+end_src
+  ]],
                     scheduled_date.year,
                     #tostring(scheduled_date.month) == 1 and "0" .. scheduled_date.month or scheduled_date.month,
                     #tostring(scheduled_date.day) == 1 and "0" .. scheduled_date.day or scheduled_date.day,
@@ -189,10 +198,10 @@ return {
                 description = "Quick notice / reminder",
                 templates = string.format(
                   [[
-date: %s
-notice:
-<TEXT_HERE>
-]],
+  date: %s
+  notice:
+  <TEXT_HERE>
+  ]],
                   os.date "%Y-%m-%d %H:%M"
                 ),
               },
@@ -202,10 +211,10 @@ notice:
                 description = "Capture an error / bug for this project",
                 templates = string.format(
                   [[
-date: %s
-error:
-<TEXT_HERE>
-]],
+  date: %s
+  error:
+  <TEXT_HERE>
+  ]],
                   os.date "%Y-%m-%d %H:%M"
                 ),
               },
@@ -216,13 +225,13 @@ error:
                 templates = function()
                   return string.format(
                     [[
-  - [ ] error ..
+    - [ ] error ..
 
-    #+begin_src %s
-    <TEXT_HERE>
-    #+end_src
+      #+begin_src %s
+      <TEXT_HERE>
+      #+end_src
 
-      ]],
+        ]],
                     vim.bo.filetype
                   )
                 end,
@@ -232,6 +241,11 @@ error:
         },
       },
       keymaps = {
+        actions = { -- General actions
+          next_item = "<a-n>",
+          prev_item = "<a-p>",
+        },
+
         note = {
           toggle_open_global = ",<",
           toggle_open_local = "<LocalLeader><LocalLeader>",

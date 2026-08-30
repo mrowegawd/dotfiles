@@ -56,13 +56,13 @@ function M.note_mappings_ft(bufnr)
       },
 
       -- ├──────────────────────────────────┤ FIND ├──────────────────────────────────┤
-      ["<Leader>r"] = {
+      ["<Leader>rr"] = {
         function()
           RUtils.notes.find_backlinks_local()
         end,
         "Note: find local backlink",
       },
-      ["<Leader>R"] = {
+      ["<Leader>rR"] = {
         function()
           RUtils.notes.find_backlinks_global()
         end,

@@ -744,15 +744,13 @@ local bulk_cmd_misc = function()
       RUtils.error "this RUtils error"
     end,
     ["Browser devdocs - with input"] = function()
-      local query = vim.fn.input "Search DevDocs: "
-      if not query then
+      local ok, query = pcall(vim.fn.input, "Search DevDocs: ")
+      if not ok or not query or query == "" then
         return
       end
 
-      if #query > 0 then
-        local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
-        os.execute(encodedURL)
-      end
+      local encoded_url = string.format('open "https://devdocs.io/#q=%s"', query:gsub(" ", "%%20"))
+      os.execute(encoded_url)
     end,
     ["Treesitter - open inspect tree under cursor"] = function()
       vim.treesitter.inspect_tree()

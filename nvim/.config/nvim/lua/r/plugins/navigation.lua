@@ -225,7 +225,7 @@ return {
             {
               NeoTreeTabInActive = {
                 fg = { from = "PanelSideBackground", attr = "bg" },
-                bg = { from = "TabLine", attr = "bg", alter = 0.66 },
+                bg = { from = "Comment", attr = "fg", alter = -0.1 },
                 bold = true,
               },
             },

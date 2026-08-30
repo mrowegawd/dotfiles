@@ -1040,7 +1040,7 @@ function M.change_colors()
       tab_active_fg = H.get("Keyword", "fg"),
       tab_active_bg = H.get("NormalKeyword", "bg"),
       tab_inactive_fg = H.get("NormalKeyword", "bg"),
-      tab_inactive_bg = H.tint(H.get("TabLine", "bg"), 0.66),
+      tab_inactive_bg = H.tint(H.get("TabLine", "fg"), 0.2),
 
       -- statusline_normal_fg = H.get("StatusLineRightBlock", "fg"),
       -- statusline_normal_bg = H.get("StatusLineRightBlock", "bg"),

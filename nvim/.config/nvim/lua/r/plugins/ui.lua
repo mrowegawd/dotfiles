@@ -13,6 +13,7 @@ return {
     "m-demare/hlargs.nvim",
     event = "VeryLazy",
     opts = {
+      hl_priority = 200,
       color = "#d19a66",
       excluded_argnames = {
         declarations = {

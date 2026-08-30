@@ -17,12 +17,12 @@ return {
   --- PDFVIEW
   {
     dir = "~/.local/src/nvim_plugins/PDFview",
+    -- branch = "feature/update_pdfview",
     -- "MadKuntilanak/PDFview",
-    branch = "feature/update_pdfview",
     event = "VeryLazy",
     opts = {
       path = os.getenv "HOME" .. "/Downloads/torrent",
-      picker = "fzflua",
+      picker = "fzf-lua",
       open = {
         cb = function()
           vim.api.nvim_input ":CodeCompanion /translator_role <CR>"

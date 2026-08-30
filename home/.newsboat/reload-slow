@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# ~/.newsboat/reload-slow
+# Reload Newsboat feeds one at a time with a delay to avoid Reddit's 429 rate limit.
+
+# Usage example (crontab -e):
+#
+# */40 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.newsboat/reload-slow
+
+URLFILE="/home/mr00x/Dropbox/data.programming.forprivate/newsboat-urls"
+CACHE="$HOME/.newsboat/cache.db"
+CONFIG="$HOME/.newsboat/config"
+LOGFILE="$HOME/.newsboat/reload-slow.log"
+LOCKFILE="/tmp/newsboat-reload.lock"
+
+# --- Prevent multiple instances from running at the same time ---
+if [ -e "$LOCKFILE" ]; then
+  echo "$(date): A reload process is already running, skipping." >>"$LOGFILE"
+  exit 0
+fi
+
+touch "$LOCKFILE"
+trap 'rm -f "$LOCKFILE"; rm -rf "$TMPDIR"' EXIT
+
+# --- Make sure URLFILE exists and is not empty (e.g. Dropbox may not have synced yet) ---
+if [ ! -f "$URLFILE" ]; then
+  echo "$(date): URLFILE not found ($URLFILE). Dropbox may not have synced yet. Skipping." >>"$LOGFILE"
+  exit 1
+fi
+
+if [ ! -s "$URLFILE" ]; then
+  echo "$(date): URLFILE is empty ($URLFILE). Dropbox may still be syncing. Skipping." >>"$LOGFILE"
+  exit 1
+fi
+
+# --- Make sure there is at least one HTTP feed, so we don't report success for an empty file ---
+FEED_COUNT=$(grep -cE '^https?://' "$URLFILE")
+if [ "$FEED_COUNT" -eq 0 ]; then
+  echo "$(date): No HTTP feeds found in URLFILE. The file may not have synced completely. Skipping." >>"$LOGFILE"
+  exit 1
+fi
+
+TMPDIR=$(mktemp -d)
+
+echo "=== Reload started: $(date) — $FEED_COUNT feeds found ===" >>"$LOGFILE"
+
+# echo "PATH=$PATH" >>"$LOGFILE"
+# echo "USER=$(whoami)" >>"$LOGFILE"
+# echo "newsboat=$(/usr/local/bin/newsboat --version 2>&1)" >>"$LOGFILE"
+# echo "newsboat-path=$(command -v newsboat 2>&1)" >>"$LOGFILE"
+
+grep -E '^https?://' "$URLFILE" | while IFS= read -r line; do
+  url=$(echo "$line" | awk '{print $1}')
+  echo "Reloading: $url" >>"$LOGFILE"
+
+  echo "$line" >"$TMPDIR/single-url"
+
+  /usr/local/bin/newsboat -c "$CACHE" -C "$CONFIG" -u "$TMPDIR/single-url" -x reload >>"$LOGFILE" 2>&1
+
+  # Wait a random 10–14 seconds between requests to reduce the chance of hitting the rate limit.
+  sleep $(((RANDOM % 5) + 15))
+done
+
+echo "=== Reload finished: $(date) ===" >>"$LOGFILE"

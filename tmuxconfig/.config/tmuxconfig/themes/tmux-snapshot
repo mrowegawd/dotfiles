@@ -37,8 +37,8 @@ GREEN="#9ece6a"
 # setw -g window-active-style bg=$TMUX_BG
 
 setw -g pane-border-status top # bottom, top
-setw -g pane-active-border-style fg=$BORDER_ACTIVE
-setw -g pane-border-style fg=$BORDER_INACTIVE
+setw -g pane-active-border-style "fg=$BORDER_ACTIVE,bg=$STATUSLINE_BG"
+setw -g pane-border-style "fg=$BORDER_INACTIVE,bg=$STATUSLINE_BG"
 
 set -g pane-border-format \
   "#[fg=#f6c177]#{pane_index} #[fg=#e0def4]#{pane_current_command}"
@@ -147,5 +147,3 @@ set-option -g window-status-format "\
 set -g @fingers-hint-style 'fg=black,bg=yellow,bold'
 set -g @fingers-highlight-style 'fg=black,bg=green,bold'
 set -g @fingers-selected-hint-style 'fg=white,bg=blue,bold'
-
-# vim: foldmethod=marker foldlevel=0 ft=tmux

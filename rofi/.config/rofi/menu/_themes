@@ -204,7 +204,7 @@ set_tmux() {
 
   # General
   replace_var "$tmux_themes" "TMUX_FG" "$(theme_get tmux_fg)"
-  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_bg)"
+  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "FM_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "TMUX_KEYWORD" "$(theme_get tmux_keyword)"
 
@@ -218,7 +218,7 @@ set_tmux() {
   replace_var "$tmux_themes" "BORDER_INACTIVE_STATUS_FG" "$(theme_get tmux_border_inactive_status_fg)"
 
   # Session
-  replace_var "$tmux_themes" "SESSION_BG" "$(theme_get tmux_session_bg)"
+  replace_var "$tmux_themes" "SESSION_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "SESSION_FG" "$(theme_get tmux_session_fg)"
 
   # Statusline

@@ -307,6 +307,23 @@ local function get_headline_at_cursor(mode_open)
       return
     end
 
+    -- Resolve the target heading when targeting the current buffer.
+    if link then
+      if mode_open then
+        if mode_open == "tabe" then
+          vim.cmd "tabe %"
+        elseif mode_open == "default" then
+          vim.cmd "e %"
+        else
+          vim.cmd(mode_open)
+        end
+      end
+
+      Orgmode = setup_orgmode()
+      Orgmode.links:follow(link.url:to_string())
+      return
+    end
+
     filename = org_link_url:get_real_path()
   elseif M.note_mode == "markdown" then
     ---@param items table[]
@@ -700,6 +717,8 @@ function Mapping.insert_title(filename, is_global)
   is_global = is_global or false
   local Fzflua = RUtils.fzflua.setup_fzflua()
 
+  local icon_prefix = is_global and "🔗" or " "
+
   return {
     ["default"] = function(selected, _)
       local file_opts = extract_str_title(selected, filename, is_global)
@@ -718,7 +737,7 @@ function Mapping.insert_title(filename, is_global)
 
       if not is_global then
         if M.note_mode == "org" then
-          fmt_str = "[[*" .. title .. "][🔗" .. title .. "]]"
+          fmt_str = "[[*" .. title .. "][" .. icon_prefix .. title .. "]]"
         elseif M.note_mode == "markdown" then
           fmt_str = "[[#" .. title .. "]]"
         end
@@ -741,7 +760,7 @@ function Mapping.insert_title(filename, is_global)
 
               if relative then
                 if M.note_mode == "org" then
-                  fmt_str = "[[./" .. relative .. "::*" .. title .. "][🔗" .. title .. "]]"
+                  fmt_str = "[[./" .. relative .. "::*" .. title .. "][" .. icon_prefix .. title .. "]]"
                 elseif M.note_mode == "markdown" then
                   fmt_str = "[[" .. relative .. "#" .. title .. "]]"
                 end
