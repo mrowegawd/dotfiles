@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/intent"
+#include ".config/miscxrdb/xresource-theme/luna"
 
 ! --------------
 ! XFT SETTINGS

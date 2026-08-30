@@ -1,6 +1,6 @@
 local M = {}
 
-M.SYSTEM_ROLE = "󰮥 Helpful Assistant"
+-- M.SYSTEM_ROLE = "󰮥 Helpful Assistant"
 local NOTES_DIR = vim.fs.normalize "/home/pedro/git-repos/private/notes"
 local MEMOS_DIR = vim.fs.joinpath(NOTES_DIR, "mutt", "ops", "memos")
 local PROMPT_DIR = RUtils.config.path.prompt_dir
@@ -23,8 +23,10 @@ local PROMPT_LIBRARY_CONFIG = {
     "slides_generator",
     "translator_spa_eng",
     "note_writer",
+    "translate_this_line_to_ind",
     "note_writer_org",
-    "translator_ind_eng",
+    "translator_eng_to_ind",
+
     "writer_at_work",
   },
   user_prompts = {
@@ -117,7 +119,13 @@ local function python_developer_prompt()
 end
 
 local function git_commit()
-  return build_prompt("chat", "Act as an expert Git commit message specialist.", "git_role", M.prompt "git_expert")
+  return build_prompt("chat", "Act as an expert Git commit message specialist.", "git_role", M.prompt "git_expert", {
+    opts = {
+      adapter = {
+        name = "ollama_qwen2_5_7b_instruct_Q4_K_M",
+      },
+    },
+  })
 end
 
 local function pydocs_prompt()
@@ -128,9 +136,16 @@ end
 local function translator_prompt()
   return build_prompt(
     "chat",
-    "Act as a translator from English to Bahasa Indonesia.",
+    "Act as a translator from English to Bahasa.",
     "translator_role",
-    M.prompt "translator_ind_eng"
+    M.prompt "translator_eng_to_ind",
+    {
+      opts = {
+        adapter = {
+          name = "llama3_1_8b",
+        },
+      },
+    }
   )
 end
 
@@ -155,7 +170,14 @@ local function note_readable_ind()
     "chat",
     "Tulis dan perbaiki kalimat, structure kalimat agar mudah dibaca.",
     "writer_and_reformat_note_id",
-    M.prompt "note_writer"
+    M.prompt "note_writer",
+    {
+      opts = {
+        adapter = {
+          name = "llama3_1_8b",
+        },
+      },
+    }
   )
 end
 
@@ -192,11 +214,12 @@ end
 function M.build()
   return {
     -- General assistant
-    [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
+    -- [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
     -- Languages and expertise
     -- [" Python Developer"] = python_developer_prompt(),
-    -- [" PyDocs"] = pydocs_prompt(),
+    [" PyDocs"] = pydocs_prompt(),
     -- [" Git Commit"] = git_commit(),
+
     -- Work and communication
     -- ["󰗊 Translator"] = translator_prompt(),
     -- [" Writer at Work"] = writer_at_work_prompt(),
@@ -204,27 +227,27 @@ function M.build()
     -- ["󰐨 Slides Generator"] = slides_generator_prompt(),
 
     -- Languages and expertise
-    [" Rust docs"] = python_developer_prompt(),
-    [" Rustdocs"] = pydocs_prompt(),
-    [" Rust helper"] = python_developer_prompt(),
-    [" Rust analytic"] = python_developer_prompt(),
-    [" Big refactoring"] = python_developer_prompt(),
+    -- [" Rust docs"] = python_developer_prompt(),
+    -- [" Rustdocs"] = pydocs_prompt(),
+    -- [" Rust helper"] = python_developer_prompt(),
+    -- [" Rust analytic"] = python_developer_prompt(),
+    -- [" Big refactoring"] = python_developer_prompt(),
     [" Git commit"] = git_commit(),
-    [" Generate images"] = git_commit(),
+    -- [" Generate images"] = git_commit(),
 
     -- Work and communication
-    ["󰗊 Translator id eng"] = translator_prompt(),
-    ["󰦑 Debug tmux load"] = meeting_copilot_prompt(), -- Assuming a new function or update for this
-    ["󰐨 Debug test memory"] = slides_generator_prompt(), -- Assuming a new function or update for this
-
+    ["󰗊 Translator eng to id"] = translator_prompt(),
+    -- ["󰦑 Debug tmux load"] = meeting_copilot_prompt(), -- Assuming a new function or update for this
+    -- ["󰐨 Debug test memory"] = slides_generator_prompt(), -- Assuming a new function or update for this
+    --
     [" Note readable"] = note_readable_ind(),
     [" Note readable org"] = note_readable_ind_org(),
-    [" Note helper"] = writer_at_work_prompt(),
-    [" Note generate tag and time"] = writer_at_work_prompt(),
-
-    [" Workflow auto test"] = writer_at_work_prompt(),
-    [" Workflow compare git commit"] = writer_at_work_prompt(),
-    [" Workflow compare logs"] = writer_at_work_prompt(),
+    -- [" Note helper"] = writer_at_work_prompt(),
+    -- [" Note generate tag and time"] = writer_at_work_prompt(),
+    --
+    -- [" Workflow auto test"] = writer_at_work_prompt(),
+    -- [" Workflow compare git commit"] = writer_at_work_prompt(),
+    -- [" Workflow compare logs"] = writer_at_work_prompt(),
   }
 end
 

@@ -3,18 +3,23 @@ local chat_helpers = require("r.utils.codecompanion.helpers").chat
 local SLASH_COMMANDS = "r.utils.codecompanion.slash_commands."
 local git = require(SLASH_COMMANDS .. "git")
 local coding = require(SLASH_COMMANDS .. "coding")
+local translate = require(SLASH_COMMANDS .. "translate")
 
 local M = {}
 
-local function explain_selection()
+function M.explain_selection(prompt_src, is_strict)
+  is_strict = is_strict or false
+  prompt_src = prompt_src or "explain_code"
+
   local bufnr = vim.api.nvim_get_current_buf()
-  local sel = RUtils.get_visual_selection { strict = true }
+  local sel = RUtils.get_visual_selection { strict = is_strict }
   if not sel then
     return
   end
+
   local code = sel.selection
   vim.cmd.normal { vim.keycode "<Esc>", bang = true }
-  chat_helpers.run_slash_command("explain_code", { bufnr = bufnr, code = code })
+  chat_helpers.run_slash_command(prompt_src, { bufnr = bufnr, code = code })
 end
 
 -- Slash command definitions
@@ -65,11 +70,13 @@ local slash_commands = {
   --   description = "Read a Google Slides presentation",
   --   callback = gslides.gslides_read,
   -- },
+
   -- Reader
-  ["translate_eng_to_id"] = {
-    description = "Explain quickfix/loclist code diagnostics",
-    callback = coding.qfix,
+  ["translate_this_line_to_ind"] = {
+    description = "Translate from english to indonesian",
+    callback = translate.translate_this,
   },
+
   -- Git
   ["conventional_commit"] = {
     description = "Generate a conventional git commit message",
@@ -83,6 +90,7 @@ local slash_commands = {
   --   description = "Generate a changelog entry from selected commits",
   --   callback = git.changelog,
   -- },
+
   -- Coding
   ["qfix"] = {
     description = "Explain quickfix/loclist code diagnostics",
@@ -92,6 +100,7 @@ local slash_commands = {
     description = "Explain selected code",
     callback = coding.explain_code,
   },
+
   -- -- Skills
   -- ["skills"] = {
   --   description = "Pick a skill name from the skills directory",
@@ -106,13 +115,6 @@ local slash_commands = {
 
 function M.build()
   return slash_commands
-end
-
-function M.setup_mappings(group)
-  -- Global
-  vim.keymap.set("v", "<Leader>ec", explain_selection, {
-    desc = "Explain selected code with CodeCompanion",
-  })
 end
 
 return M

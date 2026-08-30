@@ -4,6 +4,8 @@ local keymaps = require "codecompanion.interactions.chat.keymaps"
 local chat_helpers = require("r.utils.codecompanion.helpers").chat
 local state_helpers = require("r.utils.codecompanion.helpers").state
 local window_helpers = require("r.utils.codecompanion.helpers").window
+local usage_helpers = require("r.utils.codecompanion.helpers").usage
+local slash_commands = require "r.utils.codecompanion.slash_commands"
 
 local M = {}
 
@@ -21,7 +23,6 @@ local function send_message(chat_obj)
 end
 
 local function close(chat_obj)
-  -- TODO: buatkan input yes or no, untuk close the chat window
   vim.ui.input({
     prompt = "Close this chat anyway? (y/n) ",
   }, function(input)
@@ -29,6 +30,10 @@ local function close(chat_obj)
       keymaps.close.callback(chat_obj)
     end
   end)
+end
+
+local function force_close(chat_obj)
+  keymaps.close.callback(chat_obj)
 end
 
 local function open_debug(chat_obj)
@@ -66,13 +71,20 @@ function M.chat_keymaps()
       callback = hide_chats,
     },
 
+    regenerate = {
+      modes = { n = "<localleader>qr" },
+      index = 3,
+      callback = "keymaps.regenerate",
+      description = "Codecompanion: regenerate the last response",
+    },
+
     close = {
-      modes = { n = { "<Leader>bK", i = nil } },
+      modes = { n = { "<Leader>bK", i = "<nope>" } },
       description = "Codecompanion: kill or close chat buffer",
-      callback = close,
+      callback = force_close,
     },
     clear = {
-      modes = { n = "<Leader>C" },
+      modes = { n = "dM" },
       description = "Codecompanion: clear chat buffer",
     },
 
@@ -82,7 +94,7 @@ function M.chat_keymaps()
       description = "Codecompanion: stop request",
     },
     yank_code = {
-      modes = { n = "<C-y>", i = "<C-y>" },
+      modes = { n = "Y", i = "<Nope>" },
       description = "Codecompanion: yank code",
     },
 
@@ -102,16 +114,10 @@ function M.chat_keymaps()
     next_chat = {
       modes = { n = "<C-n>" },
       description = "Codecompanion: next chat",
-      callback = function()
-        RUtils.warn "there is no next_chat"
-      end,
     },
     previous_chat = {
       modes = { n = "<C-p>" },
       description = "Codecompanion: prev chat",
-      callback = function()
-        RUtils.warn "there is no previous_chat"
-      end,
     },
 
     previous_header = {
@@ -145,7 +151,7 @@ function M.chat_keymaps()
     },
 
     debug = {
-      modes = { n = "<Localleader>qD" },
+      modes = { n = "<F5>" },
       description = "Codecompanion: debug",
       callback = open_debug,
     },
@@ -167,11 +173,11 @@ function M.chat_keymaps()
     },
 
     -- Buffer sync
-    buffer_sync_all = {
+    sync_all = {
       modes = { n = "<Localleader>qp" },
       description = "Codecompanion: buffer sync all",
     },
-    buffer_sync_diff = {
+    sync_diff = {
       modes = { n = "<Localleader>qw" },
       description = "Codecompanion: buffer sync diff",
     },
@@ -216,6 +222,7 @@ local function show_adapter_info(chat_obj)
       return string.format("%s = %s", item[1], vim.inspect(item[2]))
     end)
     :totable()
+  ---@diagnostic disable-next-line: undefined-field
   RUtils.info(string.format("Adapter Info\n%s", table.concat(lines, "\n")))
 end
 
@@ -236,88 +243,116 @@ local function toggle_chat_zoom()
   window_helpers.toggle_cc_zoom()
 end
 
-local function setup_codecompanion_filetype_mappings(e)
-  local bufnr = e.buf
-
-  RUtils.map.nnoremap("<Localleader>qsI", function()
-    local chat_obj = codecompanion.buf_get_chat(bufnr)
-    show_adapter_info(chat_obj)
-  end, { desc = "Show adapter info", buf = bufnr }, true)
-
-  RUtils.map.nnoremap("<Localleader>qsS", function()
-    vim.cmd.stopinsert()
-    local system_role = state_helpers.get_current_system_role_prompt()
-    if not system_role or system_role == "" then
-      return
-    end
-    RUtils.info(system_role)
-  end, { desc = "Show system role prompt in message window", buf = bufnr }, true)
-
-  RUtils.map.nnoremap(
-    "<Localleader>qP",
-    insert_last_user_prompt,
-    { desc = "Insert last user prompt", buf = bufnr },
-    true
-  )
-
-  RUtils.map.nnoremap("<Leader>mm", toggle_chat_zoom, { desc = "toggle zoom", buf = bufnr }, true)
-end
-
-local function setup_filetype_mappings(group_name)
-  RUtils.map.augroup(group_name, {
-    event = "FileType",
-    pattern = { "codecompanion" },
-    command = function(e)
-      setup_codecompanion_filetype_mappings(e)
-    end,
-  })
-end
-
 local function select_custom_prompt_and_commands()
   local fzf_lua = require "fzf-lua"
-  local git_ft_stuff = { "fugitive" }
+  local git_ft_stuff = { "fugitive", "NeogitCommitMessage", "gitcommit" }
   local prompt_cmds = {
-    -- Ask a question
-    ["Ask - ai"] = { cmd = "CodeCompanion /ai_chat", ft = {} },
+    -- +-----------------------------------------------------------------------------+
+    -- |                                  Ai STUFF                                   |
+    -- +-----------------------------------------------------------------------------+
 
-    -- Explain stuff
-    ["Code - Explain to me?"] = { cmd = "CodeCompanion /explain_to_me", ft = {} },
+    -- ├─────────────────────────────┤ EXPLAIN STUFF ├──────────────────────────┤
+    ["Code - explain to me"] = {
+      cmd = function()
+        slash_commands.explain_selection "explain_code"
+      end,
+      mode = "V",
+      ft = {},
+    },
 
-    -- Translate
-    ["Translator - indonesia english"] = { cmd = "CodeCompanion /translator_role", ft = {} },
-    ["Translator - japan english"] = { cmd = "CodeCompanion /translate_in_en", ft = {} },
+    -- ├─────────────┤ FIX, CORRECT, IMPROVE THE EN OR IDN SENTENCE. ├──────────┤
+    ["Correct - eng sentence"] = { cmd = "CodeCompanion /correct_sentence_en", ft = {} },
+    ["Correct - todo sentence"] = { cmd = "CodeCompanion /correct_todo_sentence", ft = {} },
+    ["Correct - wiki sentence"] = { cmd = "CodeCompanion /correct_wiki_sentence", ft = {} },
 
-    -- Fix, correct, improve the EN or IDN sentence.
-    ["Fix words - ENG sentence"] = { cmd = "CodeCompanion /correct_sentence_en", ft = {} },
-    ["Fix words - TODO sentence"] = { cmd = "CodeCompanion /correct_todo_sentence", ft = {} },
-    ["Fix words - WIKI sentence"] = { cmd = "CodeCompanion /correct_wiki_sentence", ft = {} },
+    -- ├──────────────────────────────────┤ GIT ├───────────────────────────────┤
+    ["_Git - commit"] = {
+      cmd = function()
+        chat_helpers.run_slash_command "conventional_commit"
+      end,
+      mode = "n",
+      ft = git_ft_stuff,
+    },
+    ["_Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
 
-    -- Git stuff
-    ["Git - commit"] = { cmd = "CodeCompanion /git_role", ft = git_ft_stuff },
-    -- git_commit_our = { cmd = "CodeCompanion /write_commit", ft = {} },
-    ["Git - fix or rewrote commit"] = { cmd = "CodeCompanion /commit", ft = {} },
-
-    -- Note
-    ["Note - Perbaiki note global"] = { cmd = "CodeCompanion /writer_and_reformat_note_id" },
-    ["Note - Perbaiki note Org"] = { cmd = "CodeCompanion /writer_and_reformat_note_id_org" },
-
-    -- Write doc
+    -- ├───────────────────────────────┤ WRITE DOC ├────────────────────────────┤
     ["Doc - write for inline doc codes"] = { cmd = "CodeCompanion /inline_doc", ft = {} },
     ["Doc - write for func docs"] = { cmd = "CodeCompanion /doc", ft = {} },
 
+    -- +-----------------------------------------------------------------------------+
+    -- |                                  TRANSLATE                                  |
+    -- +-----------------------------------------------------------------------------+
+    ["Translator - eng id"] = {
+      cmd = function()
+        slash_commands.explain_selection "translate_this_line_to_ind"
+      end,
+      mode = "V",
+      ft = {},
+    },
+
+    -- +-----------------------------------------------------------------------------+
+    -- |                                    SHOW                                     |
+    -- +-----------------------------------------------------------------------------+
+    ["ChatBuffer - info adapter"] = {
+      cmd = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local chat_obj = codecompanion.buf_get_chat(bufnr)
+        show_adapter_info(chat_obj)
+      end,
+      mode = "n",
+      ft = { "codecompanion" },
+    },
+
+    ["ChatBuffer - info system role"] = {
+      cmd = function()
+        vim.cmd.stopinsert()
+        local system_role = state_helpers.get_current_system_role_prompt()
+        if not system_role or system_role == "" then
+          return
+        end
+        ---@diagnostic disable-next-line: undefined-field
+        RUtils.info(system_role)
+      end,
+      mode = "n",
+      ft = { "codecompanion" },
+    },
+    ["ChatBuffer - zoom"] = {
+      cmd = function()
+        toggle_chat_zoom()
+      end,
+      mode = "n",
+      ft = { "codecompanion" },
+    },
+
+    -- +-----------------------------------------------------------------------------+
+    -- |                                    NOTE                                     |
+    -- +-----------------------------------------------------------------------------+
+    ["Note - fix note global"] = { cmd = "CodeCompanion /writer_and_reformat_note_id" },
+    ["Note - fix note Org"] = { cmd = "CodeCompanion /writer_and_reformat_note_id_org" },
+
+    -- +-----------------------------------------------------------------------------+
+    -- |                                   CODING                                    |
+    -- +-----------------------------------------------------------------------------+
     -- Programming stuff
-    ["Code - Review code"] = { cmd = "CodeCompanion /review", ft = {} },
     ["Refactor - Inline code"] = { cmd = "CodeCompanion /refactor", ft = {} },
     ["Refactor - Avoid side effect from code"] = { cmd = "CodeCompanion /refactor_side_effect", ft = {} },
     ["Refactor - Rewrite naming variable"] = { cmd = "CodeCompanion /naming", ft = {} },
     ["Refactor - Seggest better naming variable"] = { cmd = "CodeCompanion /better_naming", ft = {} },
 
-    -- Open or CodeCompanion commands stuff
-    ["Open - New CodeCompanionChat"] = { cmd = "CodeCompanionChat", ft = {} },
-    ["Open - CodeCompanionHistory"] = { cmd = "CodeCompanionHistory", ft = {} },
-    ["Open - CodeCompanionActions"] = { cmd = "CodeCompanionActions", ft = {} },
-    ["Open - CodeCompanionCmd"] = { cmd = "CodeCompanionCmd", ft = {} },
-    ["Open - Select edit prompts"] = {
+    -- +-----------------------------------------------------------------------------+
+    -- |                                COMMAND OPEN                                 |
+    -- +-----------------------------------------------------------------------------+
+    ["Chat - ask ai"] = {
+      cmd = function()
+        window_helpers.focus_or_toggle_chat { startinsert = false }
+      end,
+      mode = "n",
+      ft = {},
+    },
+    ["Chat - new"] = { cmd = "CodeCompanionChat", mode = "n", ft = {} },
+    ["Chat - history"] = { cmd = "CodeCompanionHistory", mode = "n", ft = {} },
+    ["Chat - actions"] = { cmd = "CodeCompanionActions", mode = "n", ft = {} },
+    ["Chat - edit prompts"] = {
       cmd = function()
         local FzfLua = require "fzf-lua"
         return FzfLua.files {
@@ -326,12 +361,13 @@ local function select_custom_prompt_and_commands()
           no_header_i = true, -- hide interactive header?
           fzf_opts = { ["--header"] = [[^x:delete  ^r:rename]] },
           cmd = "fd -d 1 -e md --exec stat --format '%Z %n' {} | sort -nr | cut -d' ' -f2- | sed 's/.json$//' | sed 's/\\.\\///'",
-          winopts = { title = "Edit Prompts", preview = { hidden = true } },
+          winopts = { title = "Edit Prompts", preview = { hidden = false } },
         }
       end,
+      mode = "n",
       ft = {},
     },
-    ["Open - CodeCompanionListChat"] = {
+    ["Chat - CodeCompanionListChat"] = {
       cmd = function()
         local function get_items()
           local registry = require "codecompanion.interactions.shared.registry"
@@ -361,39 +397,14 @@ local function select_custom_prompt_and_commands()
           title = "List actions",
         })
       end,
+      mode = "n",
       ft = {},
     },
   }
 
-  local function is_tables_are_equal(t1, t2)
-    if type(t1) ~= "table" or type(t2) ~= "table" then
-      return t1 == t2
-    end
-
-    -- Periksa jumlah elemen
-    local t1Length, t2Length = 0, 0
-    for _ in pairs(t1) do
-      t1Length = t1Length + 1
-    end
-    for _ in pairs(t2) do
-      t2Length = t2Length + 1
-    end
-    if t1Length ~= t2Length then
-      return false
-    end
-
-    -- Bandingkan tiap elemen
-    for key, value in pairs(t1) do
-      if not is_tables_are_equal(value, t2[key]) then
-        return false
-      end
-    end
-
-    return true
-  end
-
   local results_formats = function()
     local width_cmd = 1
+
     for idx, _ in pairs(prompt_cmds) do
       local str_x = vim.split(idx, " ")
       if width_cmd < #str_x[1] then
@@ -402,30 +413,36 @@ local function select_custom_prompt_and_commands()
     end
 
     local results = {}
+    local mode = vim.api.nvim_get_mode().mode
+
     for idx, x in pairs(prompt_cmds) do
-      if vim.tbl_contains(git_ft_stuff, vim.bo.filetype) then
-        if is_tables_are_equal(git_ft_stuff, x.ft) then
+      if x.ft and #x.ft > 0 and vim.tbl_contains(x.ft, vim.bo.filetype) then
+        if x.mode and x.mode == mode then
           local str_x = vim.split(idx, "-")
           local str_x_hl = fzf_lua.utils.ansi_from_hl("GitSignsAdd", str_x[1])
           results[#results + 1] = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
         end
-      else
-        local str_x = vim.split(idx, "-")
-        local str_x_hl = fzf_lua.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+        goto continue
+      end
+
+      -- An empty `x.ft` would be included in the results,
+      -- so we need to ensure length `x.ft` is `0`.
+      if x.ft and #x.ft > 0 then
+        goto continue
+      end
+
+      local str_x = vim.split(idx, "-")
+      local str_x_hl = fzf_lua.utils.ansi_from_hl("GitSignsAdd", str_x[1])
+      if x.mode and x.mode == mode then
         results[#results + 1] = string.format("%-" .. (width_cmd + 25) .. "s - %s", str_x_hl, str_x[2])
       end
+
+      ::continue::
     end
 
     table.sort(results)
 
     return results
-  end
-
-  local function is_get_lines()
-    local line = RUtils.get_visual_selection()
-    if line and line.selection then
-      vim.fn.setreg("+", line.selection)
-    end
   end
 
   local opts = RUtils.fzflua.open_center_small_wide {
@@ -450,67 +467,104 @@ local function select_custom_prompt_and_commands()
           .. RUtils.strip_whitespaces(display_str_split[2])
 
         local prompt = prompt_cmds[build_idx_cmd]
-        if prompt then
-          is_get_lines()
-
-          if type(prompt.cmd) == "string" then
-            vim.cmd(prompt.cmd)
-            return
-          end
-
-          if type(prompt.cmd) == "function" then
-            prompt.cmd()
-            return
-          end
+        if not prompt then
+          ---@diagnostic disable-next-line: undefined-field
+          RUtils.error(string.format("Prompt indexing failed for build_idx_cmd: %s", build_idx_cmd))
+          return
         end
 
-        ---@diagnostic disable-next-line: undefined-field
-        RUtils.info "Selection doesn't match!"
+        if type(prompt.cmd) == "string" then
+          vim.cmd(prompt.cmd)
+          return
+        end
+
+        if type(prompt.cmd) == "function" then
+          prompt.cmd()
+          return
+        end
       end,
     },
   }
 
   local results = results_formats()
-  require("fzf-lua").fzf_exec(results, opts)
+  local Fzflua = RUtils.fzflua.setup_fzflua()
+  Fzflua.fzf_exec(results, opts)
+end
+
+local function setup_codecompanion_filetype_mappings(e)
+  local bufnr = e.buf
+
+  RUtils.map.nnoremap(
+    "<Localleader>qP",
+    insert_last_user_prompt,
+    { desc = "Codecompanion: insert last user prompt", buf = bufnr },
+    true
+  )
+
+  RUtils.map.nnoremap("<Leader>mm", toggle_chat_zoom, { desc = "Codecompanion: toggle zoom", buf = bufnr }, true)
+
+  RUtils.map.nnoremap(
+    "<CR>",
+    select_custom_prompt_and_commands,
+    { desc = "Codecompanion: bulk codecompanion cmds", buf = bufnr },
+    true
+  )
+end
+
+---@param group_name string -- The name of the autogroup to which mappings will be added
+local function setup_filetype_mappings(group_name)
+  RUtils.map.augroup(group_name, {
+    event = "FileType",
+    pattern = { "codecompanion" },
+    command = function(e)
+      setup_codecompanion_filetype_mappings(e)
+    end,
+  })
+end
+
+local function show_ai_usage()
+  vim.api.nvim_echo({ { "Retrieving rate limits..." } }, false, {})
+  usage_helpers.run(nil, function(out)
+    vim.schedule(function()
+      if out == "" then
+        vim.api.nvim_echo({ { "" } }, false, {})
+        vim.notify("ai_session_usage: no output", vim.log.levels.WARN)
+      else
+        vim.api.nvim_echo({ { out } }, false, {})
+      end
+    end)
+  end)
 end
 
 local function paste_selection_to_chat()
   codecompanion.add()
-  if vim.bo.filetype ~= "codecompanion" then
-    window_helpers.try_focus_chat_float()
-    vim.api.nvim_feedkeys(vim.keycode "<Esc>", "n", false)
-  end
+  -- if vim.bo.filetype ~= "codecompanion" then
+  --   window_helpers.try_focus_chat_float()
+  --   vim.api.nvim_feedkeys(vim.keycode "<Esc>", "n", false)
+  -- end
 end
 
 -- CodeCompanion global mappings
 local function setup_global_mappings()
-  RUtils.map.nnoremap("<Localleader>cr", function()
-    vim.api.nvim_input ":CodeCompanion "
-  end, { desc = "Codecompanion: run :CodeCompanion command" })
+  -- AI rate limits
+  --stylua: ignore
+  RUtils.map.nnoremap("<Leader>ai", show_ai_usage, { desc = "Codecompanion: show AI usage (rate limits)", })
 
-  RUtils.map.nnoremap("<Localleader>co", function()
-    vim.cmd.CodeCompanionActions()
-  end, { desc = "Codecompanion: open list CodeCompanionActions" })
+  --stylua: ignore
+  RUtils.map.nnoremap("<Leader>ar", function() vim.api.nvim_input ":CodeCompanion " end, { desc = "Codecompanion: cmdline :CodeCompanion" })
+  --stylua: ignore
+  RUtils.map.xnoremap("<Leader>ar", function() vim.api.nvim_input ":CodeCompanion " end, { desc = "Codecompanion: cmdline :CodeCompanion" })
 
-  RUtils.map.nnoremap(
-    "<Localleader>cc",
-    select_custom_prompt_and_commands,
-    { desc = "Codecompanion: bulk codecompanion cmds" }
-  )
-  RUtils.map.xnoremap(
-    "<Localleader>cc",
-    select_custom_prompt_and_commands,
-    { desc = "Codecompanion: bulk codecompanion cmds (visual)" }
-  )
-
-  RUtils.map.nnoremap("<Localleader>ch", vim.cmd.CodeCompanionHistory, { desc = "Codecompanion: history" })
+  --stylua: ignore
+  RUtils.map.nnoremap("<Leader>af", select_custom_prompt_and_commands, { desc = "Codecompanion: bulk codecompanion cmds" })
+  --stylua: ignore
+  RUtils.map.xnoremap( "<Leader>af", select_custom_prompt_and_commands, { desc = "Codecompanion: bulk codecompanion cmds (visual)" })
 
   -- Selection and context mappings
-  RUtils.map.nnoremap("<Localleader>cC", function()
-    chat_helpers.add_context { vim.api.nvim_buf_get_name(0) }
-  end, { desc = "Codecompanion: add current file" })
-
-  RUtils.map.vnoremap("<Localleader>cC", paste_selection_to_chat, { desc = "Codecompanion: paste selection to chat" })
+  --stylua: ignore
+  RUtils.map.nnoremap("<Leader>ac", function() chat_helpers.add_context { vim.api.nvim_buf_get_name(0) } end, { desc = "Codecompanion: add current file" })
+  --stylua: ignore
+  RUtils.map.xnoremap("<Leader>ac", paste_selection_to_chat, { desc = "Codecompanion: paste selection to chat" })
 end
 
 function M.setup(group)

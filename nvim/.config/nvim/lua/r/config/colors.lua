@@ -271,8 +271,8 @@ local update_col_colorscheme = {
     winbar_fg_alter = 1.5,
     winbarnote_fg_alter = 2,
     comment_fg_alter = 1.2,
-    commentnote_fg_alter = 2,
-    codeblock_bg_alter = 0.6,
+    commentnote_fg_alter = 1.2,
+    codeblock_bg_alter = 0.5,
     nonetext_opacity = 0.3,
 
     nontextaiprompt_fg_alter = 5,

@@ -154,17 +154,17 @@ timeout_millis = 5000
 
 # Theme Configuration
 [theme.color_palette]
-background = "#1e1e1e"
-foreground = "#569cd6"
-muted = "#303030"
-highlight = "#fffffc"
-accent_primary = "#c678dd"
-accent_secondary = "#569cd6"
-accent_tertiary = "#56b6c2"
-accent_quaternary = "#608b4e"
-info = "#569cd6"
-warning = "#dcdcaa"
-error = "#f44747"
+background = "#060606"
+foreground = "#75a1c7"
+muted = "#121212"
+highlight = "#fff7b4"
+accent_primary = "#c4a8d6"
+accent_secondary = "#75a1c7"
+accent_tertiary = "#75a1c7"
+accent_quaternary = "#6fbe80"
+info = "#75a1c7"
+warning = "#c2916a"
+error = "#e08585"
 
 [theme.style_set]
 header = { fg = "accent_primary", bg = "background" }

@@ -146,7 +146,37 @@ function M.code_review(_, opts)
   chat:submit()
 end
 
+-- Describe the diff scope in prose for skill-based (ACP) slash commands
+local function acp_diff_scope_phrase(opts)
+  if opts and opts.base_branch then
+    return string.format(
+      "the changes on the current branch versus `%s` (git diff %s...HEAD)",
+      opts.base_branch,
+      opts.base_branch
+    )
+  elseif opts and opts.commit_sha then
+    return string.format("commit `%s`", opts.commit_sha)
+  end
+  return "the staged changes"
+end
+
 function M.conventional_commit(chat, opts)
+  if chat.adapter and chat.adapter.type == "acp" then
+    local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
+    if not git_root then
+      return
+    end
+    chat_helpers.submit_user_message(
+      chat,
+      string.format(
+        "Use your conventional-commit skill to generate a commit " .. "message for %s in the git repository at `%s`.",
+        acp_diff_scope_phrase(opts),
+        git_root
+      )
+    )
+    return
+  end
+
   local ctx = build_diff_context(opts)
   if not ctx then
     return
@@ -159,17 +189,13 @@ function M.conventional_commit(chat, opts)
 
   local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
 
-  local contents = string.format(prompt_library.prompt "conventional_commits", commit_history, diff_output)
+  local adapters = require "r.utils.codecompanion.adapters"
+  chat.adapter = adapters.ollama_qwen2_5_7b_instruct_Q4_K_M()
 
-  chat:add_buf_message({
-    role = "user",
-    content = contents,
-  }, { type = chat.MESSAGE_TYPES.LLM_MESSAGE })
-  chat:add_message {
-    role = "user",
-    content = contents,
-  }
-  chat:submit()
+  chat_helpers.submit_user_message(
+    chat,
+    string.format(prompt_library.prompt "conventional_commits", commit_history, diff_output)
+  )
 end
 
 return M

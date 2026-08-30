@@ -352,7 +352,7 @@ vim.g.undotree_WindowLayout = 2
 vim.g.undotree_SetFocusWhenToggle = 1
 vim.g.undotree_DiffCommand = "diff -u"
 
-require("vim._core.ui2").enable {} -- experimental new TUI message grid
+-- require("vim._core.ui2").enable {} -- experimental new TUI message grid
 
 -- if vim.env.PROF then
 --   -- example for lazy.nvim

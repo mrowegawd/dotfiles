@@ -93,6 +93,42 @@ return {
         desc = "Note: open item heading in tab",
         ft = "orgagenda",
       },
+      {
+        "<CR>",
+        function()
+          local imlazy = require "imlazy"
+
+          local ft_allowed = { "org", "orgagenda" }
+
+          if not vim.tbl_contains(ft_allowed, vim.bo.filetype) then
+            return
+          end
+          local orgagenda_tbl
+          if vim.bo.filetype == ft_allowed[2] then
+            orgagenda_tbl = require("orgmode.config.mappings").agenda
+          elseif vim.bo.filetype == ft_allowed[1] then
+            orgagenda_tbl = require("orgmode.config.mappings").org
+          end
+
+          local orgagenda_list_mappings = {}
+          for name, entry in pairs(orgagenda_tbl) do
+            local lua_code = entry.handler:match "^<[Cc]md>(.*)<[Cc][Rr]>$"
+
+            orgagenda_list_mappings[#orgagenda_list_mappings + 1] = {
+              fn_name = name,
+              fun = function()
+                if lua_code then
+                  vim.cmd(lua_code)
+                end
+              end,
+            }
+          end
+
+          imlazy.menu(orgagenda_list_mappings)
+        end,
+        desc = "Note: menu commands [orgmode]",
+        ft = { "orgagenda", "org" },
+      },
     },
     opts = function()
       local Menu = require "org-modern.menu"

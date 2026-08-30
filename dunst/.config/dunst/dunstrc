@@ -91,7 +91,7 @@ frame_width = 2
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#89b4fa"
+frame_color = "#75a1c7"
 
 # Define a color for the separator.
 # possible values are:
@@ -154,7 +154,7 @@ markup = full
 #   %%  Literal %
 # Markup is allowed
 # format = "<b>%s</b>\n%b"
-format = "<b><span foreground='#a1a1a1'>%s</span></b>\n%b"
+format = "<b><span foreground='#e4e4e8'>%s</span></b>\n%b"
 
 # Alignment of message text.
 # Possible values are "left", "center" and "right".
@@ -293,22 +293,22 @@ per_monitor_dpi = false
 # test
 
 [urgency_low]
-background = "#1c1c20"
-foreground = "#50505d"
-frame_color = "#1c1c20"
+background = "#121212"
+foreground = "#333333"
+frame_color = "#121212"
 timeout = 5
 default_icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_normal]
-background = "#2b2b31"
-foreground = "#7d7d91"
-frame_color = "#2b2b31"
+background = "#1b1b1b"
+foreground = "#505050"
+frame_color = "#1b1b1b"
 timeout = 10
 default_icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_critical]
-background = "#672d28"
-foreground = "#c0544a"
-frame_color = "#6e302a"
+background = "#74322c"
+foreground = "#d95e53"
+frame_color = "#7c362f"
 timeout = 20
 default_icon = ~/.config/miscxrdb/icons/warning.png

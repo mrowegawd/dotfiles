@@ -5,25 +5,15 @@ local extensions = {
   history = {
     enabled = true,
     opts = {
-      -- auto_generate_title = u.is_online(),
-      -- title_generation_opts = {
-      --   adapter = "openai_gpt_54_nano_legacy",
-      --   model = "gpt-5.4-nano",
-      --   refresh_every_n_prompts = 3,
-      --   max_refreshes = 10,
-      -- },
+      auto_generate_title = false,
       auto_save = true,
       expiration_days = 30,
-      keymap = { n = "<A-s>", i = "<A-s>" },
+      keymap = { n = "<nope>", i = "<nope>" },
       picker_keymaps = {
         rename = { n = "<C-r>", i = "<C-r>" },
         delete = { n = "<C-x>", i = "<C-x>" },
+        duplicate = { n = "<C-y>", i = "<C-y>" },
       },
-      -- picker_keymaps = {
-      --   rename = { n = "r", i = "<M-r>" },
-      --   delete = { n = "d", i = "<M-d>" },
-      --   duplicate = { n = "<C-y>", i = "<C-y>" },
-      -- },
       save_chat_keymap = { n = "<nop>", i = "<nop>" },
     },
   },

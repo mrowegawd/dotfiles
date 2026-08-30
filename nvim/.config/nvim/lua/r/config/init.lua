@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "tokyonight"
+local colorscheme = "luna"
 
 _G.base = {}
 

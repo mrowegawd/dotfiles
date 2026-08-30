@@ -38,12 +38,20 @@ function M.ollama_qwen25_14b()
   return get_ollama "qwen2.5-coder:14b"
 end
 
+function M.ollama_qwen2_5_7b_instruct_Q4_K_M()
+  return get_ollama "qcwind/qwen2.5-7B-instruct-Q4_K_M:latest"
+end
+
+function M.supa_ai_gemma2_9b_sahabatai()
+  return get_ollama "Supa-AI/gemma2-9b-cpt-sahabatai-v1-instruct:q3_k_s"
+end
+
 function M.ollama_qwen3_8b()
   return get_ollama("qwen3:8b", 32768)
 end
 
 function M.llama3_1_8b()
-  return get_ollama("llama3.1:8b", 32768)
+  return get_ollama "maternion/hy-mt2:1.8b"
 end
 
 function M.gemini_flash_35()

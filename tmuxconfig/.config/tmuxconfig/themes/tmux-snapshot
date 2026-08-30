@@ -1,33 +1,35 @@
-STATUSLINE_FG="#3e415b"
-STATUSLINE_BG="#1a1b26"
-STATUSLINE_BG_MESSAGE="#8fb8ff"
+# vim: foldmethod=marker foldlevel=0 ft=tmux
 
-TAB_ACTIVE_FG="#1a1b26"
-TAB_ACTIVE_BG="#3e415b"
+STATUSLINE_FG="#292929"
+STATUSLINE_BG="#060606"
+STATUSLINE_BG_MESSAGE="#7ca8cf"
+
+TAB_ACTIVE_FG="#060606"
+TAB_ACTIVE_BG="#444444"
 
 TAB_INACTIVE_FG="#7fa9cc"
 TAB_INACTIVE_BG="#374a59"
 
-SESSION_BG="#1a1b26"
-SESSION_FG="#3e415b"
+SESSION_BG="#040404"
+SESSION_FG="#444444"
 
-TMUX_BG="#1a1b26"
-TMUX_FG="#9aa2c4"
-TMUX_KEYWORD="#7dcfff"
+TMUX_BG="#040404"
+TMUX_FG="#b6b6ba"
+TMUX_KEYWORD="#e19067"
 
 # color untuk bg active pane saat command yazi running (khusus bg file manager)
 # agar sama dengan bg file-manager di nvim
-FM_BG="#161720"
-TMUX_VISUAL_BG="#ffffaa"
+FM_BG="#040404"
+TMUX_VISUAL_BG="#fff7b4"
 
-BORDER_ACTIVE="#1a1b26"
-BORDER_INACTIVE="#1a1b26"
-BORDER_INACTIVE_STATUS_FG="#1e1f2c"
+BORDER_ACTIVE="#121212"
+BORDER_INACTIVE="#070707"
+BORDER_INACTIVE_STATUS_FG="#070707"
 
-RED="#f7768e"
-BLUE="#7aa2f7"
-WHITE="#a9b1d6"
-GREEN="#9ece6a"
+RD="#e08585"
+BLUE="#75a1c7"
+WHITE="#c7c7c7"
+GREEN="#6fbe80"
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                      PANE & WINDOWS                      ╎

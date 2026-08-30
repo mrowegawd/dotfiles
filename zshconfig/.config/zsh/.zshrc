@@ -39,8 +39,8 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
-colorline="#313348"
-colorsuggest="fg=#53567a"
+colorline="#1c1c1c"
+colorsuggest="fg=#2e2e2e"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -246,18 +246,11 @@ function +vi-git-untracked() {
 }
 
 function +vi-git-stash() {
-  emulate -L zsh
-  if __in_git && git rev-list --walk-reflogs --count refs/stash &>/dev/null; then
-    hook_com[unstaged]+=" %F{yellow}%f "
-  fi
-}
-
-function +vi-git-stash() {
   local stash_icon=""
   emulate -L zsh
   if __in_git; then
     if [[ -n $(git rev-list --walk-reflogs --count refs/stash 2>/dev/null) ]]; then
-      hook_com[unstaged]+=" %F{yellow}$stash_icon%f "
+      hook_com[unstaged]+=" %F{yellow}$stash_icon%f"
     fi
   fi
 }
@@ -276,8 +269,8 @@ function +vi-git-compare() {
   ahead=${ahead_and_behind[1]}
   behind=${ahead_and_behind[2]}
 
-  local ahead_symbol="%{$fg[red]%}⇡%{$reset_color%}${ahead}"
-  local behind_symbol="%{$fg[cyan]%}⇣%{$reset_color%}${behind}"
+  local ahead_symbol="%{$fg[red]%} ⇡%{$reset_color%}${ahead}"
+  local behind_symbol="%{$fg[cyan]%} ⇣%{$reset_color%}${behind}"
   (($ahead)) && gitstatus+=("${ahead_symbol}")
   (($behind)) && gitstatus+=("${behind_symbol}")
   # `(j:<char>:)` represents joining the items of a list with a character

@@ -20,6 +20,7 @@ local normal_themes = {
   "lackluster",
   "neogotham",
   "nordfox",
+  "zenburn",
   "rose-pine",
   "catppuccin",
   "rose-pine-moon",
@@ -115,9 +116,41 @@ return {
       },
     },
   },
+  -- ATLAS.NVIM (disabled)
+  {
+    "emrearmagan/atlas.nvim",
+    enabled = false,
+    opts = {
+      pulls = {
+        providers = {
+          ---@type AtlasBitbucketConfig
+          bitbucket = {}, -- See configuration below
+          ---@type AtlasGitHubConfig
+          github = {}, -- See configuration below
+          ---@type AtlasGitLabPullsConfig
+          gitlab = {}, -- See configuration below
+        },
+      },
+      issues = {
+        providers = {
+          ---@type AtlasJiraIssuesConfig
+          jira = {}, -- See configuration below
+          ---@type AtlasGitHubIssuesConfig
+          github = {}, -- See configuration below
+          ---@type AtlasGitLabIssuesConfig
+          gitlab = {}, -- See configuration below
+        },
+      },
+    },
+  },
+  -- DIFFBANDIT
+  {
+    "CoreyKaylor/diffbandit.nvim",
+    opts = {},
+  },
   -- OCTO
   {
-    -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
+    -- Sebelum install: run command ini di cli "gh auth login --scopes read:project"
     -- "pwntester/octo.nvim",
     --"MadKuntilanak/octo.nvim",
     dir = "~/.local/src/nvim_plugins/octo.nvim",
@@ -125,9 +158,7 @@ return {
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = {
-      -- picker = "snacks",
-      picker = "fzf-lua",
-      -- picker = "telescope",
+      picker = "fzf-lua", -- "telescope", "snacks", "fzf-lua"
       picker_config = {
         use_emojis = true,
         mappings = {
@@ -172,8 +203,8 @@ return {
           -- add_label = { lhs = "<LocalLeader>qala", desc = "add label [discussion]" },
           -- remove_label = { lhs = "<LocalLeader>qald", desc = "remove label [discussion]" },
 
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [discussion]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [discussion]" },
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [discussion]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [discussion]" },
 
           -- react_hooray = { lhs = "<LocalLeader>qarp", desc = "add/remove 🎉 reaction [discussion]" },
           -- react_heart = { lhs = "<LocalLeader>qarh", desc = "add/remove ❤️ reaction [discussion]" },
@@ -221,8 +252,8 @@ return {
           -- delete_comment = { lhs = "<LocalLeader>qacd", desc = "delete comment [issue]" },
           -- reference_in_new_issue = { lhs = "<localleader>qaci", desc = "reference comment in new issue [issue]" },
 
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [issue]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [issue]" },
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [issue]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [issue]" },
 
           -- react_hooray = { lhs = "<LocalLeader>qaro", desc = "add/remove 🎉 reaction [issue]" },
           -- react_heart = { lhs = "<LocalLeader>qarh", desc = "add/remove ❤️ reaction [issue]" },
@@ -285,9 +316,8 @@ return {
           -- delete_comment = { lhs = "<LocalLeader>qacd", desc = "delete comment [pull request]" },
           -- reference_in_new_issue = { lhs = "<localleader>qaci", desc = "reference comment in new issue [pull request]" },
 
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [pull request]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [pull request]" },
-
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [pull request]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [pull request]" },
           -- add_reviewer = { lhs = "<LocalLeader>qRa", desc = "add reviewer [pull request]" },
           -- remove_reviewer = { lhs = "<LocalLeader>qRd", desc = "remove reviewer request [pull request]" },
           -- review_start = { lhs = "<LocalLeader>qRs", desc = "start a review for the current PR [pull request]" },
@@ -317,8 +347,8 @@ return {
           delete_comment = { lhs = "<LocalLeader>qacd", desc = "delete comment [review thread]" },
           reference_in_new_issue = { lhs = "<localleader>qaci", desc = "reference comment in new issue [pull request]" },
 
-          next_comment = { lhs = "<c-n>", desc = "go to next comment [review thread]" },
-          prev_comment = { lhs = "<c-p>", desc = "go to previous comment [review thread]" },
+          next_comment = { lhs = "<a-n>", desc = "go to next comment [review thread]" },
+          prev_comment = { lhs = "<a-p>", desc = "go to previous comment [review thread]" },
 
           select_next_entry = { lhs = "]q", desc = "move to next changed file [review thread]" },
           select_prev_entry = { lhs = "[q", desc = "move to previous changed file [review thread]" },
@@ -553,7 +583,7 @@ return {
               vim.api.nvim_set_current_win(is_qf_trouble.winid)
             end
           end)
-        end, "Exec: git hunks all quickfix (qf) [gitsigns] [trouble]")
+        end, "Exec: collect all git hunks in trouble (qf) [gitsigns] [trouble]")
         map("n", "<Leader>xg", function()
           gs.setqflist()
           vim.schedule(function()
@@ -562,7 +592,7 @@ return {
               vim.api.nvim_set_current_win(is_qf_trouble.winid)
             end
           end)
-        end, "Exec: git hunks quickfix (qf) [gitsigns] [trouble]")
+        end, "Exec: collect git hunks curbuf in trouble (qf) [gitsigns] [trouble]")
 
         -- Jump next/prev between hunks
         -- map("n", "gn", function()
