@@ -1,0 +1,340 @@
+return {
+  -- MSGAREA.NVIM (disabled)
+  {
+    "edisj/msgarea.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    config = function()
+      require("msgarea.blink_integration").enable()
+    end,
+  },
+  -- HLARGS.NVIM
+  {
+    "m-demare/hlargs.nvim",
+    event = "VeryLazy",
+    opts = {
+      hl_priority = 200,
+      color = "#d19a66",
+      excluded_argnames = {
+        declarations = {
+          python = { "self", "cls" },
+          lua = { "self" },
+        },
+        usages = {
+          python = { "self", "cls" },
+          lua = { "self" },
+        },
+      },
+    },
+  },
+  -- VIM-MATCHUP (disabled)
+  {
+    "andymass/vim-matchup",
+    enabled = false,
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end,
+  },
+  -- NOICE (disabled)
+  {
+    "MadKuntilanak/noice.nvim", -- folke/noice.nvim
+    branch = "feat/update-actions-fzflua",
+    event = "VeryLazy",
+    dependencies = {
+      "MadKuntilanak/nui.nvim",
+      {
+        "rcarriga/nvim-notify",
+        opts = {
+          timeout = 2000,
+          top_down = false,
+          icons = {
+            DEBUG = RUtils.config.icons.dap.Debug,
+            TRACE = RUtils.config.icons.dap.Trace,
+            ERROR = RUtils.config.icons.diagnostics.Error,
+            INFO = RUtils.config.icons.diagnostics.Info,
+            WARN = RUtils.config.icons.diagnostics.Warn,
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "<Localleader>nf",
+        function()
+          vim.cmd "Noice fzf"
+        end,
+        desc = "Noice: show list notifications",
+      },
+      {
+        "<Localleader>nl",
+        function()
+          require("noice").cmd "all"
+        end,
+        desc = "Noice: show all messages",
+      },
+      {
+        "<Localleader>nd",
+        function()
+          require("noice").cmd "dismiss"
+        end,
+        desc = "Noice: dismiss",
+      },
+    },
+    opts = {
+      -- debug = true,
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+          ["vim.lsp.util.stylize_markdown"] = false,
+          ["cmp.entry.get_documentation"] = false,
+        },
+        signature = { enabled = false },
+        progress = {
+          enabled = true,
+          spinner = "aesthetic",
+          -- format = "lsp_progress_done",
+          format = {
+            -- {
+            --   "{progress} ",
+            --   key = "progress.percentage",
+            --   contents = {
+            --     { "{data.progress.message} " },
+            --   },
+            -- },
+            "({data.progress.percentage}%) ",
+            { "{spinner} ", hl_group = "NoiceLspProgressSpinner" },
+            { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
+            { "{data.progress.client} ", hl_group = "NoiceLspProgressClient" },
+          },
+          view = "mini",
+        },
+      },
+      format = {
+        spinner = {
+          ---@type Spinner
+          name = "circleFull",
+        },
+      },
+      cmdline = { enabled = true, view = "cmdline" },
+      redirect = { view = "popup", filter = { event = "msg_show" } },
+      views = {
+        cmdline_popup = { position = { row = -2, col = "1%" } },
+        cmdline_popupmenu = {
+          position = { row = -2.1, col = "1%" },
+          size = { width = "auto", height = "auto" },
+          win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "FloatBorder" } },
+        },
+        mini = {
+          position = { row = "98%", col = "100%" },
+          -- position = { row = "2%", col = "100%" },
+          size = { height = "5%" },
+        },
+        popupmenu = {
+          border = {},
+          relative = "editor",
+          position = { row = "55%", col = "50%" },
+          size = { width = 60, height = 12 },
+          win_options = { winblend = 0, winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" } },
+        },
+        hover = {
+          win_options = {
+            winhighlight = { Normal = "BlinkDocNormal", FloatBorder = "BlinkDocFloatBorder" },
+          },
+        },
+        notify = {
+          render = "wrapped-compact",
+        },
+      },
+      notify = {
+        enabled = true,
+        view = "notify",
+      },
+      routes = {
+        {
+          view = "mini",
+          filter = {
+            event = "msg_show",
+            any = {
+              { find = "%d+ change" },
+              { find = "%d+ line" },
+              { find = "%d+ lines, %d+ bytes" },
+              { find = "%d+ more line" },
+              { find = "Outline updated for current buffer" },
+              -- { find = "%d+L, %d+B" },
+              { find = "; after #%d+" },
+              { find = "; before #%d+" },
+              { find = "^Hunk %d+ of %d" },
+              { find = "written" },
+              { find = "^E486:" },
+              { kind = "line %d+ of %d+" },
+              { kind = "search_count" },
+            },
+          },
+        },
+        {
+          opts = { skip = true },
+          filter = {
+            any = {
+              { event = "msg_show", find = "written" },
+              { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+              { event = "msg_show", find = "No response from provider when requesting symbols" },
+              { event = "msg_show", kind = "search_count" },
+              { event = "msg_show", find = "%d+L, %d+B" },
+              { event = "msg_show", find = "^Hunk %d+ of %d" },
+              { event = "msg_show", find = "%d+ change" },
+              { event = "msg_show", find = "%d+ line" },
+              { event = "msg_show", find = "%d+ more line" },
+            },
+          },
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+    },
+    config = function(_, opts)
+      -- HACK: noice shows messages from before it was enabled,
+      -- but this is not ideal when Lazy is installing plugins,
+      -- so clear the messages in this case.
+      if vim.o.filetype == "lazy" then
+        vim.cmd [[messages clear]]
+      end
+      require("noice").setup(opts)
+    end,
+  },
+  -- FOLD CYCLE
+  {
+    "jghauser/fold-cycle.nvim",
+    keys = {
+      {
+        "zr",
+        function()
+          require("fold-cycle").open()
+        end,
+        mode = { "n", "x" },
+        desc = "Fold: cycle fold level [fold-cycle.nvim]",
+      },
+    },
+    opts = true,
+  },
+  -- SMEAR-CURSOR (disabled)
+  {
+    "sphamba/smear-cursor.nvim", -- disabled karena slow
+    event = "LazyFile",
+    enabled = false,
+    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
+    opts = {},
+  },
+  -- BLOCK.NVIM (disabled)
+  {
+    "HampusHauffman/block.nvim",
+    enabled = false,
+    cmd = { "BlockOn", "BlockOff", "Block" },
+    keys = {
+      {
+        "<Leader>ub",
+        function()
+          vim.cmd [[Block]]
+        end,
+        desc = "Toggle: block color [block]",
+      },
+    },
+    opts = {},
+  },
+  -- NEOSCROLL (disabled)
+  {
+    "karb94/neoscroll.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = {
+      easing = "quadratic",
+      hide_cursor = false,
+      mappings = {
+        "<C-u>",
+        "<C-d>",
+        "zz",
+        -- "zt",
+        -- "zb",
+      },
+    },
+  },
+  -- BUFDELETE
+  {
+    "famiu/bufdelete.nvim",
+    event = "BufReadPost",
+  },
+  -- TABBY
+  {
+    "nanozuki/tabby.nvim",
+    event = "BufReadPost",
+    config = function()
+      local H = require "r.settings.highlights"
+      local function h(name)
+        return H.get_hl_as_hex { name = name }
+      end
+
+      local theme = {
+        fill = "Normal", -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+        head = "Normal",
+        separator = "Normal",
+
+        -- current_tab = { fg = h("Keyword").fg, bg = h("TabLine").bg },
+        -- tab = { fg = h("TabLine").fg, bg = h("TabLine").bg },
+        -- win = { fg = h("TabLine").fg, bg = h("TabLine").bg },
+
+        current_tab = { fg = h("Keyword").fg, bg = h("Normal").bg },
+        tab = { fg = h("TabLine").fg, bg = h("Normal").bg },
+        win = { fg = h("TabLine").fg, bg = h("Normal").bg },
+
+        tail = "TabLine",
+      }
+
+      require("tabby").setup {
+        justify = "right",
+        line = function(line)
+          return {
+            -- line.spacer(),
+
+            -- {
+            --   { "  ", hl = theme.head },
+            --   line.sep("", theme.head, theme.fill),
+            -- },
+            line.tabs().foreach(function(tab)
+              local hl = tab.is_current() and theme.current_tab or theme.tab
+              return {
+                -- line.sep("", hl, theme.separator),
+                -- tab.is_current() and "" or "󰆣",
+                -- tab.number(),
+                -- line.sep("", hl, theme.separator),
+                line.sep(" ", "Normal", "Normal"),
+                tab.is_current() and "" or "󰆣",
+                line.sep(" ", "Normal", "Normal"),
+                hl = hl,
+                margin = "",
+              }
+            end),
+            -- line.spacer(),
+            -- line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+            --   return {
+            --     line.sep("", theme.win, theme.separator),
+            --     win.is_current() and "" or "",
+            --     win.buf_name(),
+            --     line.sep("", theme.win, theme.separator),
+            --     hl = theme.win,
+            --     margin = " ",
+            --   }
+            -- end),
+            -- {
+            --   line.sep("", theme.tail, theme.fill),
+            --   { "  ", hl = theme.tail },
+            -- },
+            hl = theme.fill,
+          }
+        end,
+      }
+    end,
+  },
+}

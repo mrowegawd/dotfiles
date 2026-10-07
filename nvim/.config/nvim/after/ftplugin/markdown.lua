@@ -1,67 +1,101 @@
-local keymap, opt = vim.keymap, vim.opt_local
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
--- opt.foldlevel = 0 -- gets annoying when set to 0
-
-opt.wrap = false
-opt.list = false
-opt.textwidth = 70
-
+vim.opt_local.wrap = false
+vim.opt_local.list = false
+vim.opt_local.textwidth = 70
 local listchars = vim.deepcopy(vim.opt.listchars:get())
 listchars.tab = "  "
 vim.opt_local.listchars = listchars
 
-keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
+local UtilKey = require "utils.map"
+
+local Log = require "utils.log"
+
+local fzf_lua = function()
+  return require("utils.plugin").reqcall "fzf-lua"
+end
+
+UtilKey.nnoremap("<Leader>ri", function()
+  vim.cmd.ImgInsert()
+end, { desc = "Note: insert image", buffer = vim.api.nvim_get_current_buf(), remap = true }, true)
+
+local is_render_markdown
+
+UtilKey.noremap(
+  { "n", "x" },
+  "<Leader>uR",
+  function()
+    local m = require "render-markdown"
+    if not is_render_markdown then
+      m.enable()
+      is_render_markdown = true
+    else
+      m.disable()
+      is_render_markdown = false
+    end
+  end,
+  { desc = "Toggle: render markdown [render-markdown]", buffer = vim.api.nvim_get_current_buf(), remap = true },
+  true
+)
 
 local notif_msg = ""
-local command_markdown = {
+
+local markdown_cmds = {
   MarkdownPreviewToggle = { cmd = "MarkdownPreviewToggle" },
   SnipRun = { cmd = "SnipRun" },
   ImgInsert = { cmd = "ImgInsert" },
 }
 
-keymap.set("n", "<Leader>rn", function()
+UtilKey.nnoremap("<Leader>rn", function()
   local opts = {
     winopts = {
-      border = RUtils.config.icons.border.rectangle,
       col = 0.50,
       fullscreen = false,
       height = 0.25,
       row = 0.50,
-      title = RUtils.fzflua.format_title("Task Runner", "󰈙"),
       width = 0.60,
     },
   }
 
   opts.actions = vim.tbl_extend("keep", {
-    ["default"] = function(selected, _)
-      local sel = selected[1]
-      for i, x in pairs(command_markdown) do
-        if i == sel then
-          if sel == "MarkdownPreviewToggle" then
-            if vim.g.is_preview_markdown_off then
-              vim.g.is_preview_markdown_off = false
-              notif_msg = "turn ON the preview"
-            else
-              vim.g.is_preview_markdown_off = true
-              notif_msg = "turn OFF the preview"
-            end
-
-            ---@diagnostic disable-next-line: undefined-field
-            RUtils.info(notif_msg, { title = "Tasks" })
-          end
-          vim.cmd(x.cmd)
+    ["default"] = {
+      fn = function(selected, _)
+        if not selected or #selected == 0 then
+          return
         end
-      end
-    end,
+
+        local sel = selected[1]
+
+        for i, x in pairs(markdown_cmds) do
+          if i ~= sel then
+            goto continue
+          end
+
+          if sel ~= "MarkdownPreviewToggle" then
+            goto continue
+          end
+
+          if vim.g.is_preview_markdown_off then
+            vim.g.is_preview_markdown_off = false
+            notif_msg = "turn ON the preview"
+          else
+            vim.g.is_preview_markdown_off = true
+            notif_msg = "turn OFF the preview"
+          end
+
+          Log.info(notif_msg)
+          vim.cmd(x.cmd)
+
+          ::continue::
+        end
+      end,
+    },
   }, {})
 
   local tbl_cmds = {}
-  for i, _ in pairs(command_markdown) do
+  for i, _ in pairs(markdown_cmds) do
     tbl_cmds[#tbl_cmds + 1] = i
   end
 
-  fzf_lua.fzf_exec(tbl_cmds, opts)
+  fzf_lua().fzf_exec(tbl_cmds, opts)
 end, { buffer = true, desc = "Tasks: runner" })
 
 local function has_surrounding_fencemarks(lnum)

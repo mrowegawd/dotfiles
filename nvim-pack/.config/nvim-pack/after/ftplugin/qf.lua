@@ -1,0 +1,231 @@
+local keymap, api, opt, wo, bo = vim.keymap, vim.api, vim.opt_local, vim.wo, vim.bo
+
+wo.winfixheight = true
+wo.scrolloff = 2
+opt.listchars:append "trail: "
+bo.buflisted = false
+wo.list = false
+
+local UtilKey = require "utils.map"
+local UtilQf = require "utils.qf"
+local Log = require "utils.log"
+
+vim.cmd.packadd "cfilter"
+
+-- These keys are disabled
+keymap.set("n", "<C-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+keymap.set("n", "<C-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
+
+local fzf_lua = function()
+  return require("utils.plugin").reqcall "fzf-lua"
+end
+
+local __get_vars = {
+  title_list = function()
+    if UtilQf.is_loclist() then
+      return "LF"
+    end
+    return "QF"
+  end,
+  title_icon = function()
+    if UtilQf.is_loclist() then
+      return " "
+    end
+    return ""
+  end,
+}
+local get_items_list = function()
+  if UtilQf.is_loclist() then
+    local results = UtilQf.get_data_qf(true)
+    return results.location.items
+  end
+
+  local results = UtilQf.get_data_qf()
+  return results.quickfix.items
+end
+
+UtilKey.nnoremap("K", function()
+  require("overlook.peek").peek_qf()
+end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), remap = true }, true)
+
+UtilKey.nnoremap("<Leader><Leader>", function()
+  local actions = require "fzf-lua.actions"
+  local opts = {
+    actions = {
+      ["alt-l"] = actions.file_sel_to_ll,
+      ["alt-L"] = {
+        prefix = "toggle-all",
+        fn = actions.file_sel_to_ll,
+      },
+      ["alt-q"] = actions.file_sel_to_qf,
+      ["alt-Q"] = {
+        prefix = "toggle-all",
+        fn = actions.file_sel_to_qf,
+      },
+
+      ["ctrl-s"] = actions.buf_split,
+      ["ctrl-v"] = actions.buf_vsplit,
+      ["ctrl-t"] = actions.buf_tabedit,
+    },
+  }
+
+  if UtilQf.is_loclist() then
+    fzf_lua().loclist(opts)
+  else
+    fzf_lua().quickfix(opts)
+  end
+end, { desc = "QF: select items [fzflua]", buffer = api.nvim_get_current_buf(), remap = true }, true)
+
+UtilKey.nnoremap("<Leader>fg", function()
+  local path = require "fzf-lua.path"
+  local actions = require "fzf-lua.actions"
+
+  local qf_items = get_items_list()
+  -- local title_ = "Grep" .. __get_vars.title_list()
+
+  local qf_ntbl = {}
+  for _, qf_item in pairs(qf_items) do
+    local fname = qf_item.filename
+    if
+      not fname:match "%.png$"
+      and not fname:match "%.jpeg$"
+      and not fname:match "%.gif$"
+      and not fname:match "%.jpg$"
+      and not fname:match "%.spl$"
+      and not fname:match "%.csv$"
+      and not fname:match "%.add$"
+      and not fname:match "%.sug$"
+    then
+      table.insert(qf_ntbl, path.normalize(fname, vim.uv.cwd()))
+    end
+  end
+
+  qf_ntbl = require("utils.cmd").remove_duplicates_table(qf_ntbl)
+
+  local rg_opts_format = [[--column --line-number -i --hidden --no-heading --color=always --smart-case ]]
+    .. table.concat(qf_ntbl, " ")
+    .. " -e "
+
+  return fzf_lua().live_grep {
+    rg_opts = rg_opts_format,
+    actions = {
+      ["ctrl-s"] = actions.buf_split,
+      ["ctrl-v"] = actions.buf_vsplit,
+      ["ctrl-t"] = actions.buf_tabedit,
+    },
+  }
+end, { buffer = api.nvim_get_current_buf(), desc = "QF: live grep list of items [fzflua]", remap = true }, true)
+
+UtilKey.nnoremap("<Leader>fG", function()
+  local items = get_items_list()
+  local title = UtilQf.is_loclist() and UtilQf.get_title_qf(true) or UtilQf.get_title_qf()
+
+  local _tbl = {}
+  for _, x in pairs(items) do
+    if #x.text == 0 then
+      Log.warn "No text, abort"
+      return
+    end
+    _tbl[#_tbl + 1] = x.text
+  end
+
+  local builtin = require "fzf-lua.previewer.builtin"
+  local QFPreviewer = builtin.buffer_or_file:extend()
+
+  function QFPreviewer:new(o, opts, fzf_win)
+    QFPreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, QFPreviewer)
+    return self
+  end
+
+  function QFPreviewer:parse_entry(entry_str)
+    local data = {}
+    for _, x in pairs(items) do
+      if x.text == entry_str then
+        data = {
+          path = x.filename,
+          line = x.lnum,
+          col = x.col,
+        }
+      end
+    end
+
+    if data then
+      return data
+    end
+    return {}
+  end
+
+  local send_data = function(selected)
+    selected = selected or {}
+    local data = {}
+    for _, _sel in pairs(selected) do
+      for _, item in pairs(items) do
+        if item.text == _sel then
+          data[#data + 1] = item
+        end
+      end
+    end
+    return data
+  end
+
+  fzf_lua().fzf_exec(_tbl, {
+    previewer = QFPreviewer,
+    winopts = {
+      title = string.format("Grep%s Word >> %s", __get_vars.title_list(), title),
+    },
+    actions = {
+      ["default"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("e " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["ctrl-v"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("vsplit " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["ctrl-s"] = function(selected, _)
+        local sel
+        if #selected == 1 then
+          sel = selected[1]
+          for _, x in pairs(items) do
+            if x.text == sel then
+              vim.cmd("split " .. x.filename)
+              vim.api.nvim_win_set_cursor(0, { x.lnum, x.col })
+              vim.cmd "normal! zz"
+            end
+          end
+        end
+      end,
+      ["alt-v"] = function(selected, _)
+        local Fzflua = fzf_lua()
+        title = title .. "  " .. Fzflua().config.__resume_data.last_query
+        local list_items = { items = send_data(selected), title = title }
+        UtilQf.save_to_qf_and_auto_open_qf(list_items, true)
+      end,
+      ["alt-q"] = function(selected, _)
+        local Fzflua = fzf_lua()
+        title = title .. "  " .. Fzflua().config.__resume_data.last_query
+        local list_items = { items = send_data(selected), title = title }
+        UtilQf.save_to_qf_and_auto_open_qf(list_items)
+      end,
+    },
+  })
+end, { buffer = api.nvim_get_current_buf(), desc = "QF: grep text of items [fzflua]", remap = true }, true)

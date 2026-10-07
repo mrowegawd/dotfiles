@@ -1,0 +1,26 @@
+#!/bin/bash
+
+not_in_herdr() {
+  [ -z "$HERDR_ENV" ]
+}
+
+sesh_root=$(herdr plugin list --plugin fullerzz.sesh --json | jq -r '.result.plugins[0].plugin_root')
+
+# Run this pertama kali
+# "$sesh_root/bin/herdr-sesh" config migrate
+
+herdr_sesh="$sesh_root/bin/herdr-sesh"
+
+if not_in_herdr; then
+  session=$("$herdr_sesh" list --json | jq -r '.[].name' | fzf)
+
+  # User membatalkan fzf
+  if [ -z "$session" ]; then
+    exit 0
+  fi
+
+  "$sesh_root/bin/herdr-sesh" connect "$session"
+  herdr
+else
+  "$sesh_root/bin/herdr-sesh" picker
+fi

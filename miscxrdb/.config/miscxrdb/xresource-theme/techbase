@@ -1,0 +1,45 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! Techbase for Kitty
+! -------------------
+! Theme Author: mcauley-penney
+! Ported by:    vieitesss
+! Upstream:     https://github.com/mcauley-penney/techbase.nvim/blob/main/extras/kitty/techbase.conf
+
+*foreground: #CCD5E5
+*background: #191d23
+
+*cursorColor: #5DCD9A
+
+! black
+*color0: #191d23
+*color8: #474B65
+
+! red
+*color1: #F71735
+*color9: #FFC0C5
+
+! green
+*color2: #74BAA8
+*color10: #0EC256
+
+! yellow
+*color3: #E9B872
+*color11: #FFA630
+
+! blue
+*color4: #A9B9EF
+*color12: #6A8BE3
+
+! magenta
+*color5: #BCB6EC
+*color13: #D6DDEA
+
+! cyan
+*color6: #1A8C9B
+*color14: #5DCD9A
+
+! white
+*color7: #CCD5E5
+*color15: #D6DDEA
+
+*color16: #a9b9ef

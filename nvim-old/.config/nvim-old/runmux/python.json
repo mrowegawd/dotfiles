@@ -1,0 +1,27 @@
+{
+  "name": "python",
+  "run_file": {
+    "include_cwd": true,
+    "command": "python",
+    "regex": ""
+  },
+  "repl": {
+    "open_pane": "tmux split-window -hl 20%",
+    "command": "python",
+    "regex": ""
+  },
+  "tasks": {
+    "layout": [
+      {
+        "open_pane": "tmux split-window -vl 20%",
+        "command": "tail -f '$HOME/.local/state/nvim/log'",
+        "regex": ""
+      },
+      {
+        "open_pane": "tmux split-window -hl 40%",
+        "command": "",
+        "regex": ""
+      }
+    ]
+  }
+}

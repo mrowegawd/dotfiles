@@ -1,0 +1,175 @@
+onboarding = false
+
+[ui]
+# Pane frame borders use `accent`; dropped here so panes separate by gaps instead.
+# (The subtle divider lines are colored separately via [theme.custom] surface_dim.)
+pane_borders = true
+pane_gaps = false
+pane_scrollbars = false
+sidebar_collapsed_mode = "hidden"
+
+# active_pane_border = "plain"   # default: "thick" | "plain"
+
+tab_bar_right = [
+  { type = "zoom" },
+  { type = "command", command = "~/.config/herdr/scripts/status.sh", interval_seconds = 5, timeout_seconds = 2 },
+]
+
+tab_bar_right_separator = " · "
+
+# herdr 0.7.4 packs sidebar rows by default; row_gap = 1 restores the old (spaced)
+# look — separately for the agent panel and the spaces/workspace panel.
+[ui.sidebar.agents]
+row_gap = 1
+
+[ui.sidebar.spaces]
+row_gap = 1
+
+# ╒══════════════════════════════════════════════════════════════════════════════╕
+#                                   KEYBINDINGS
+# ╘══════════════════════════════════════════════════════════════════════════════╛
+
+[keys]
+prefix = "ctrl+space"  # default: "ctrl+b"
+copy_mode = "prefix+shift+v"
+# reload_config = "prefix+r"     # default: "prefix+shift+r"
+# resize_mode = "prefix+shift+r" # default: "prefix+r"
+
+# +------------------------------------------------------------------------------+
+# | WORKSPACES (aka session in tmux)                                             |
+# +------------------------------------------------------------------------------+
+
+new_workspace = "prefix+shift+n"  # tmux N        | default: "prefix+shift+n" (unchanged)
+previous_workspace = "prefix+ctrl+k"  # unified nav: Ctrl-a C-k = up (vertical)    | default: "" (unset)
+next_workspace = "prefix+ctrl+j"  # unified nav: Ctrl-a C-j = down (vertical)  | default: "" (unset)
+close_workspace = "prefix+shift+x"  # tmux X        | default: "prefix+shift+d"
+switch_workspace = "prefix+1..9"  # Ctrl-a 1..9 → workspace N (projects — reliable plain numbers)
+workspace_picker = "prefix+w"  # default: "prefix+w" (unchanged)
+
+# goto = "prefix+s"                  # tmux C-w (choose-tree) | default: "prefix+g"
+
+goto = ""
+
+navigate_workspace_up = ["k", "ctrl+p"]
+navigate_workspace_down = ["j", "ctrl+n"]
+
+new_worktree = ""  # tmux C-w (choose-tree) | default: "prefix+g"
+
+# +------------------------------------------------------------------------------+
+# | TABS (aka window in tmux)                                                    |
+# +------------------------------------------------------------------------------+
+
+new_tab = "alt+shift+n"
+
+next_tab = "alt+ctrl+l"
+previous_tab = "alt+ctrl+h"
+
+move_tab_previous = "alt+ctrl+Left"
+move_tab_next = "alt+ctrl+Right"
+
+# +------------------------------------------------------------------------------+
+# | PANE                                                                         |
+# +------------------------------------------------------------------------------+
+
+split_vertical = ["prefix+l", "prefix+enter"]
+split_horizontal = ["prefix+j", "prefix+shift+enter"]
+zoom = "alt+shift+m"
+last_pane = "prefix+;"  # tmux last-pane | default: "" (unset)
+
+# focus_pane_left = "alt+h"  # tmux h/j/k/l  | default: "prefix+h" (unchanged)
+# focus_pane_down = "alt+j"  #               | default: "prefix+j" (unchanged)
+# focus_pane_up = "alt+k"    #               | default: "prefix+k" (unchanged)
+# focus_pane_right = "alt+l" #               | default: "prefix+l" (unchanged)
+
+# ├──────────────────────────────┤ NAVIGATE PANE ├────────────────────────────┤
+
+[[keys.command]]
+key = "alt+h"
+type = "plugin_action"
+command = "smart-splits.nvim.left"
+description = "navigate left (vim/herdr)"
+
+[[keys.command]]
+key = "alt+j"
+type = "plugin_action"
+command = "smart-splits.nvim.down"
+description = "navigate down (vim/herdr)"
+
+[[keys.command]]
+key = "alt+k"
+type = "plugin_action"
+command = "smart-splits.nvim.up"
+description = "navigate up (vim/herdr)"
+
+[[keys.command]]
+key = "alt+l"
+type = "plugin_action"
+command = "smart-splits.nvim.right"
+description = "navigate right (vim/herdr)"
+
+# +------------------------------------------------------------------------------+
+# | MISC or CUSTOM BINDING                                                       |
+# +------------------------------------------------------------------------------+
+
+[[keys.command]]
+key = "alt+shift+b"
+type = "popup"
+command = "btop"
+description = "open float btop"
+width = "80%"
+height = "80%"
+
+# [[keys.command]] /// <--- ini salah, seharusnya di get dari fzctrl_o
+# key = "alt+shift+c"
+# type = "popup"
+# command = "rkill"
+# description = "open float rkill"
+# width = "80%"
+# height = "80%"
+
+[[keys.command]]
+key = "alt+shift+g"
+type = "popup"
+command = "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"
+description = "open float lazygit"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "alt+f"
+type = "shell"
+command = "bash $HOME/.config/miscxrdb/bin/tm-toggle-pane handle_split_term"
+description = "toggle split term"
+
+# ╒══════════════════════════════════════════════════════════════════════════════╕
+#                                      THEMES
+# ╘══════════════════════════════════════════════════════════════════════════════╛
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[theme.custom]
+# sidebar_bg="#0e0e0e"
+panel_bg = "#0e0e0e"
+surface_dim = "#060606"
+selection_bg = "#3b3b3b"
+
+surface0 = "#0e0e0e"
+surface1 = "#0e0e0e"
+
+overlay0 = "#121212"
+overlay1 = "#3b3b3b"
+
+text = "#7ca8cf"
+subtext0 = "#3b3b3b"
+
+accent = "#3b3b3b"
+
+blue = "#75a1c7"
+teal = "#00dfdb"
+mauve = "#fff7b4"
+green = "#6fbe80"
+red = "#e08585"
+peach = "#d98870"  # oxocarbon pink
+yellow = "#c2916a"

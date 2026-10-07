@@ -1,0 +1,44 @@
+{
+  "workspace.ignoredFolders": ["$HOME", "$HOME/.cargo/**", "$HOME/.rustup/**"],
+  "suggest.enablePreselect": false,
+  "hover.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "highlight": "FloatBorder"
+  },
+  "suggest.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "highlight": "FloatBorder"
+  },
+  "diagnostic.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "highlight": "FloatBorder"
+  },
+  "signature.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "highlight": "FloatBorder"
+  },
+  "Lua.completion.callSnippet": "Both",
+  "Lua.completion.postfix": ".",
+  "Lua.diagnostics.globals": ["vim", "jit"],
+  "Lua.runtime.version": "LuaJIT",
+  "Lua.workspace.checkThirdParty": false,
+  "tailwindCSS.jsLanguages": [
+    "javascript",
+    "javascriptreact",
+    "reason",
+    "typescriptreact"
+  ],
+  "stylua.styluaPath": null,
+  "html.filetypes": [
+    "html",
+    "handlebars",
+    "htmldjango",
+    "blade",
+    "typescriptreact",
+    "javascriptreact"
+  ]
+}
