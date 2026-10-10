@@ -77,14 +77,11 @@ UtilKey.vnoremap("<Localleader>gb", function()
 
   local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
   local grug = require "grug-far"
-  local _str = require("utils.cmd").get_visual_selection()
-  if not _str then
-    return
-  end
+  local _str = require("utils.cmd").get_selection()
 
   grug.open {
     prefills = {
-      search = _str.selection,
+      search = _str,
       replacement = "",
       filesFilter = "",
       paths = path,

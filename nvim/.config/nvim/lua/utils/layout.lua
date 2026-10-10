@@ -342,6 +342,10 @@ local __cmd_win_call = function(cur_winid, main_layout_winid, fn)
     saved_cmdheight = 0
   end
 
+  if not vim.api.nvim_win_is_valid(main_layout_winid) then
+    return
+  end
+
   vim.api.nvim_win_call(main_layout_winid, function()
     local saved = save_wins_current_tab(main_layout_winid)
     fn()
@@ -525,20 +529,20 @@ function Win.reopen_win(is_autocmd)
     return
   end
 
-  for name_win, win in pairs(Win.need_reopen) do
-    if is_autocmd and respawn > 0 then
-      break
-    end
-    local name_cmd = "open_" .. name_win
-    if require("utils.terminal")[name_cmd] and not vim.api.nvim_win_is_valid(win) then
-      require("utils.terminal")[name_cmd]()
-      if is_autocmd then
-        respawn = 1
-      end
-    else
-      Log.warn("Try to call this command but something went wrong: `" .. name_cmd .. "` is nil?")
-    end
-  end
+  -- for name_win, win in pairs(Win.need_reopen) do
+  --   if is_autocmd and respawn > 0 then
+  --     break
+  --   end
+  --   local name_cmd = "open_" .. name_win
+  --   if require("utils.terminal")[name_cmd] and not vim.api.nvim_win_is_valid(win) then
+  --     require("utils.terminal")[name_cmd]()
+  --     if is_autocmd then
+  --       respawn = 1
+  --     end
+  --   else
+  --     Log.warn("Try to call this command but something went wrong: `" .. name_cmd .. "` is nil?")
+  --   end
+  -- end
 end
 
 --- This will close other windows that are not the main window.

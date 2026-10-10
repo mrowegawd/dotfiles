@@ -2,6 +2,10 @@ local bo = vim.bo
 
 bo.textwidth = 60
 vim.opt_local.list = false
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.bo.smartindent = true
 
 local UtilKey = require "utils.map"
 

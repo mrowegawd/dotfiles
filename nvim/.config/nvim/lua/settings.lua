@@ -1,35 +1,6 @@
 -- vim: foldmethod=marker foldlevel=0
-local o, opt, fn, g, env, loop = vim.o, vim.opt, vim.fn, vim.g, vim.env, vim.uv
+local o, opt = vim.o, vim.opt
 
-g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
-g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
-g.os = loop.os_uname().sysname
-
--- Hide deprecation warnings
-vim.g.deprecation_warnings = false
-
--- LazyVim completion engine to use.
--- Can be one of: nvimcmp, blink.cmp
--- Leave it to "auto" to automatically use the completion engine
--- enabled with `:LazyExtras`
-vim.g.lazyvim_cmp = "auto"
-
--- LazyVim picker to use.
--- Can be one of: telescope, fzf
--- Leave it to "auto" to automatically use the picker
--- enabled with `:LazyExtras`
-vim.g.lazyvim_picker = "auto"
-
--- if the completion engine supports the AI source,
--- use that instead of inline suggestions
-vim.g.ai_cmp = true
-
-vim.g.is_preview_markdown_off = true
-vim.g.is_lsplines_off = false
-
-vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
-vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
-vim.g.work_dir = g.projects_dir .. "/work"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
@@ -159,7 +130,7 @@ o.shiftwidth = 2 -- Indent/outdent by two columns
 o.shiftround = true -- Always indent/outdent to nearest tabstop
 o.expandtab = true -- Convert all tabs that are typed into spaces
 o.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
-o.statuscolumn = [[%!v:lua.require'utils.statuscolumn'.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
+-- o.statuscolumn = [[%!v:lua.require'utils.statuscolumn'.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 -- opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 o.formatoptions = "tcqjn12" -- "cront",
 o.splitkeep = "cursor" -- cursor, screen
@@ -354,26 +325,6 @@ vim.g.markdown_recommended_style = 0
 
 vim.g.loaded_matchparen = 1
 
--- plugin: mbbill/undotree
-vim.g.undotree_WindowLayout = 2
 -- vim.g.undotree_HighlightChangedText = 0
 vim.g.undotree_SetFocusWhenToggle = 1
 vim.g.undotree_DiffCommand = "diff -u"
-
--- require("vim._core.ui2").enable {} -- experimental new TUI message grid
-
--- if vim.env.PROF then
---   -- example for lazy.nvim
---   -- change this to the correct path for your plugin manager
---   local snacks = vim.fn.stdpath "data" .. "/lazy/snacks.nvim"
---   vim.opt.rtp:append(snacks)
---   require("snacks.profiler").startup {
---     startup = {
---       event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
---       -- event = "UIEnter",
---       -- event = "VeryLazy",
---     },
---   }
--- end
-
--- }}}

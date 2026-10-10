@@ -125,6 +125,20 @@ add {
           fd_opts = fd_opts,
           actions = {
             ["alt-y"] = actions.file_edit_or_qf,
+            ["alt-q"] = {
+              prefix = "select-all",
+              fn = function(selected, opts)
+                actions.file_sel_to_qf(selected, opts)
+              end,
+            },
+            ["alt-Q"] = {
+              fn = function(selected, opts)
+                if not selected or #selected == 0 then
+                  return
+                end
+                actions.file_sel_to_ll(selected, opts)
+              end,
+            },
             ["ctrl-x"] = {
               fn = function()
                 require("fzf-lua").files {
@@ -208,33 +222,79 @@ add {
               ["--multi"] = true,
             },
             actions = {
-              ["alt-q"] = {
-                fn = UtilFzfDiffiew.git_open_to_qf "Commits Hash",
-                desc = "git-selection-to-qf",
+              ["enter"] = {
+                fn = function(selected, opts)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  if #selected > 1 then
+                    UtilFzfDiffiew.git_open_to_qf(selected, "Selected hash commit")
+                    return
+                  end
+                  actions.git_buf_edit(selected, opts)
+                end,
                 header = false,
+              },
+              ["alt-y"] = {
+                fn = function(selected, opts)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  if #selected > 1 then
+                    UtilFzfDiffiew.git_open_to_qf(selected, "Selected hash commit")
+                    return
+                  end
+                  actions.git_buf_edit(selected, opts)
+                end,
+                header = false,
+              },
+              ["alt-q"] = {
+                prefix = "select-all",
+                fn = function(selected, _)
+                  UtilFzfDiffiew.git_open_to_qf(selected, "Select all commits")
+                end,
               },
               ["alt-Q"] = {
-                prefix = "toggle-all",
-                fn = UtilFzfDiffiew.git_open_to_qf "Commits Hash All",
-                header = false,
+                fn = function(selected, _)
+                  Log.info "Sent to loclist; consider quickfix"
+                  UtilFzfDiffiew.git_open_to_loc(selected, "Selected hash commit")
+                end,
               },
-              ["alt-d"] = {
+              ["alt-c"] = {
                 fn = UtilFzfDiffiew.git_open_with_compare_hash(),
                 desc = "compare-diff-hash",
                 header = "compare-diff-hash",
               },
+              ["alt-o"] = {
+                fn = function(selected)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  for _, sel in ipairs(selected) do
+                    UtilFzfDiffiew.git_open_with_browser(sel)
+                  end
+                end,
+                desc = "open-in-browser",
+                header = "open-in-browser",
+              },
               ["ctrl-o"] = {
-                fn = UtilFzfDiffiew.git_open_with_diffview(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_with_diffview(selected)
+                end,
                 desc = "open-in-diffview",
                 header = "open-in-diffview",
               },
               ["ctrl-x"] = {
-                fn = UtilFzfDiffiew.git_open_with_fugitive(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_with_fugitive(selected)
+                end,
                 desc = "open-in-fugitive",
                 header = "open-in-fugitive",
               },
               ["ctrl-q"] = {
-                fn = UtilFzfDiffiew.git_open_diff_to_head(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_diff_to_head(selected)
+                end,
                 desc = "diff-to-the-head",
                 header = "diff-to-the-head",
               },
@@ -243,7 +303,18 @@ add {
                 desc = "grep-commit-log",
                 header = "grep-commit-log",
               },
-
+              ["ctrl-y"] = {
+                fn = function(selected)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  for _, sel in ipairs(selected) do
+                    UtilFzfDiffiew.git_copy_to_clipboard_or_yank(sel)
+                  end
+                end,
+                desc = "copy-commit",
+                header = "copy-commit",
+              },
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
@@ -255,33 +326,79 @@ add {
               ["--multi"] = true,
             },
             actions = {
-              ["alt-q"] = {
-                fn = UtilFzfDiffiew.git_open_to_qf "Commits Hash",
-                desc = "git-selection-to-qf",
+              ["enter"] = {
+                fn = function(selected, opts)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  if #selected > 1 then
+                    UtilFzfDiffiew.git_open_to_qf(selected, "Selected hash commit")
+                    return
+                  end
+                  actions.git_buf_edit(selected, opts)
+                end,
                 header = false,
+              },
+              ["alt-y"] = {
+                fn = function(selected, opts)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  if #selected > 1 then
+                    UtilFzfDiffiew.git_open_to_qf(selected, "Selected hash commit")
+                    return
+                  end
+                  actions.git_buf_edit(selected, opts)
+                end,
+                header = false,
+              },
+              ["alt-q"] = {
+                prefix = "select-all",
+                fn = function(selected, _)
+                  UtilFzfDiffiew.git_open_to_qf(selected, "Select all commits")
+                end,
               },
               ["alt-Q"] = {
-                prefix = "toggle-all",
-                fn = UtilFzfDiffiew.git_open_to_qf "Commits Hash All",
-                header = false,
+                fn = function(selected, _)
+                  Log.info "Sent to loclist; consider quickfix"
+                  UtilFzfDiffiew.git_open_to_loc(selected, "Selected hash commit")
+                end,
               },
-              ["alt-d"] = {
+              ["alt-c"] = {
                 fn = UtilFzfDiffiew.git_open_with_compare_hash(),
                 desc = "compare-diff-hash",
                 header = "compare-diff-hash",
               },
+              ["alt-o"] = {
+                fn = function(selected)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  for _, sel in ipairs(selected) do
+                    UtilFzfDiffiew.git_open_with_browser(sel)
+                  end
+                end,
+                desc = "open-in-browser",
+                header = "open-in-browser",
+              },
               ["ctrl-o"] = {
-                fn = UtilFzfDiffiew.git_open_with_diffview(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_with_diffview(selected)
+                end,
                 desc = "open-in-diffview",
                 header = "open-in-diffview",
               },
               ["ctrl-x"] = {
-                fn = UtilFzfDiffiew.git_open_with_fugitive(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_with_fugitive(selected)
+                end,
                 desc = "open-in-fugitive",
                 header = "open-in-fugitive",
               },
               ["ctrl-q"] = {
-                fn = UtilFzfDiffiew.git_open_diff_to_head(),
+                fn = function(selected)
+                  UtilFzfDiffiew.git_open_diff_to_head(selected)
+                end,
                 desc = "diff-to-the-head",
                 header = "diff-to-the-head",
               },
@@ -289,6 +406,18 @@ add {
                 fn = UtilFzfDiffiew.git_grep_log(),
                 desc = "grep-commit-log",
                 header = "grep-commit-log",
+              },
+              ["ctrl-y"] = {
+                fn = function(selected)
+                  if not selected or #selected == 0 then
+                    return
+                  end
+                  for _, sel in ipairs(selected) do
+                    UtilFzfDiffiew.git_copy_to_clipboard_or_yank(sel)
+                  end
+                end,
+                desc = "copy-commit",
+                header = "copy-commit",
               },
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
@@ -302,6 +431,12 @@ add {
           rg_opts = '--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -g "!.git" -e',
           actions = {
             ["alt-y"] = actions.file_edit_or_qf,
+            ["alt-q"] = {
+              prefix = "select-all",
+              fn = function(selected, opts)
+                actions.file_sel_to_qf(selected, opts)
+              end,
+            },
             ["ctrl-x"] = {
               fn = function()
                 require("fzf-lua").files {
@@ -437,6 +572,7 @@ add {
 }
 
 local function search_current_buf()
+  local actions = require "fzf-lua.actions"
   local opts = {
     winopts = {
       height = 0.6,
@@ -451,6 +587,15 @@ local function search_current_buf()
     fzf_opts = {
       ["--layout"] = "reverse",
     },
+    actions = {
+      ["alt-q"] = {
+        prefix = "select-all",
+        fn = function(selected, opts)
+          actions.file_sel_to_qf(selected, opts)
+        end,
+        header = false,
+      },
+    },
   }
 
   -- Use grep when in normal mode and blines in visual mode since the
@@ -460,6 +605,11 @@ local function search_current_buf()
   if vim.startswith(mode, "n") then
     require("fzf-lua").lgrep_curbuf(opts)
   else
+    local sel = require("utils.cmd").get_selection() or ""
+    sel = vim.trim((sel:gsub("\n.*", "")))
+    opts.query = sel
+
+    vim.api.nvim_feedkeys(vim.keycode "<Esc>", "nx", false)
     require("fzf-lua").blines(opts)
   end
 end
@@ -521,7 +671,8 @@ end, { desc = "Picker: marks [fzflua]" })
 UtilKey.nnoremap( "<Leader>fd", "<cmd>FzfLua lsp_document_diagnostics<cr>", { desc = "Diagnostics: document diagnostics" })
 
 -- Grep
-UtilKey.noremap({ "n", "x" }, "<Leader>fg", "<CMD>FzfLua live_grep<CR>", { desc = "Picker: live grep [fzflua]" })
+UtilKey.nnoremap("<Leader>fg", "<Cmd>FzfLua live_grep<CR>", { desc = "Picker: live grep [fzflua]" })
+UtilKey.xnoremap("<Leader>fg", "<Cmd>FzfLua grep_visual<CR>", { desc = "Picker: grep visual selection [fzflua]" })
 
 UtilKey.nnoremap("<Leader>fh", "<cmd>FzfLua command_history<cr>", { desc = "Picker: command history [fzflua]" })
 UtilKey.nnoremap("<Leader>fH", "<cmd>FzfLua search_history<cr>", { desc = "Picker: search history [fzflua]" })
@@ -535,9 +686,9 @@ UtilKey.nnoremap("<Leader>hB", "<cmd>FzfLua keymaps<cr>", { desc = "Help: show g
 UtilKey.nnoremap("<Leader>hm", "<cmd>FzfLua man_pages<cr>", { desc = "Help: man pages [fzflua]" })
 UtilKey.nnoremap("<Leader>hh", "<cmd>FzfLua help_tags<cr>", { desc = "Help: nvim [fzflua]" })
 UtilKey.xnoremap("<Leader>hh", function()
-  local sel = require("utils.cmd").get_visual_selection { strict = true }
+  local sel = require("utils.cmd").get_selection()
   if sel then
-    local selection = require("utils.cmd").strip_whitespaces(sel.selection)
+    local selection = require("utils.cmd").strip_whitespaces(sel)
     local _, err = pcall(function()
       vim.cmd("h " .. selection)
     end)

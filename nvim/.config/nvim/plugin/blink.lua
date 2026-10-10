@@ -394,7 +394,9 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
 
           return sources
         end,
+        per_filetype = { org = { inherit_defaults = true, "org" } },
         providers = {
+          org = { name = "Org", module = "org.completion.blink" },
           git = {
             module = "blink-cmp-git",
             name = "Git",

@@ -1,6 +1,7 @@
 local M = {}
 
 local Conditions
+local H = require "utils.highlights"
 
 local function get_conditions()
   if not Conditions then
@@ -10,7 +11,9 @@ local function get_conditions()
   return Conditions
 end
 
-local UtilQf = require "utils.qf"
+local UtilQf = function()
+  return require "utils.qf"
+end
 local Icons = require "icons"
 local ConfigPath = require("config").path
 
@@ -22,10 +25,6 @@ local dap_ft_include = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui
 
 local get_vars = {
   filetype = function()
-    if UtilQf.is_loclist() then
-      return "loclist"
-    end
-
     return vim.bo.filetype
   end,
 
@@ -443,8 +442,6 @@ end
 -- ├─────────────────────────────────┤ COLORS ├─────────────────────────────────┤
 
 local function __colors()
-  local H = require "utils.highlights"
-
   local light_themes = {}
 
   for _, name in ipairs(vim.g.lightthemes or {}) do
@@ -992,6 +989,9 @@ M.Filetype = {
   init = function(self)
     self.filetype = get_vars.filetype()
   end,
+  condition = function(self)
+    return self.filetype
+  end,
 
   {
     provider = function(self)
@@ -1071,28 +1071,31 @@ M.Git = {
 M.QuickfixStatus = {
   init = function(self)
     self.height = vim.api.nvim_buf_line_count(0)
+    local utilqf = UtilQf()
 
-    self.title_qflist = UtilQf.get_title_qf()
-    self.stack_qflists = #UtilQf.get_total_stack_qf()
+    self.title_qflist = utilqf.get_title_qf()
+    self.stack_qflists = #utilqf.get_total_stack_qf()
 
-    self.title_loclist = UtilQf.get_title_qf(true)
-    self.stack_loclists = #UtilQf.get_total_stack_qf(true)
+    self.title_loclist = utilqf.get_title_qf(true)
+    self.stack_loclists = #utilqf.get_total_stack_qf(true)
+
+    self.utilqf = utilqf
   end,
   condition = function()
     return vim.bo[0].filetype == "qf"
   end,
   {
-    provider = function()
-      if UtilQf.is_loclist() then
+    provider = function(self)
+      if self.utilqf.is_loclist() then
         return " LF "
       else
         return " QF "
       end
     end,
-    hl = function()
+    hl = function(self)
       local fg = colors.qf_indicator_fg
       local bg = colors.qf_indicator_bg
-      if UtilQf.is_loclist() then
+      if self.utilqf.is_loclist() then
         fg = colors.lf_indicator_fg
         bg = colors.lf_indicator_bg
       end
@@ -1101,9 +1104,9 @@ M.QuickfixStatus = {
   },
   {
     provider = Icons.misc.separator_up,
-    hl = function()
+    hl = function(self)
       local fg = colors.qf_indicator_bg
-      if UtilQf.is_loclist() then
+      if self.utilqf.is_loclist() then
         fg = colors.lf_indicator_bg
       end
       return { fg = fg, bg = colors.winbar_bg_bottom }
@@ -1116,9 +1119,9 @@ M.QuickfixStatus = {
   {
     provider = function(self)
       local parts = {}
-      local stacklists = #UtilQf.get_total_stack_qf(UtilQf.is_loclist())
-      local current_stacklists = UtilQf.get_current_history_qf(UtilQf.is_loclist())
-      local idx_lists = UtilQf.get_current_idx_qf(UtilQf.is_loclist())
+      local stacklists = #self.utilqf.get_total_stack_qf(self.utilqf.is_loclist())
+      local current_stacklists = self.utilqf.get_current_history_qf(self.utilqf.is_loclist())
+      local idx_lists = self.utilqf.get_current_idx_qf(self.utilqf.is_loclist())
       table.insert(
         parts,
         string.format("  %d/%d 󱗿 %d/%d ", idx_lists, self.height, current_stacklists, stacklists)
@@ -1138,7 +1141,7 @@ M.QuickfixStatus = {
   {
     provider = function(self)
       local parts = {}
-      if UtilQf.is_loclist() then
+      if self.utilqf.is_loclist() then
         table.insert(parts, string.format(" %s %s ", "LFtitle:", self.title_loclist))
       else
         table.insert(parts, string.format(" %s %s ", "QFtitle:", self.title_qflist))
@@ -1438,8 +1441,8 @@ M.PinnedBuffer = {
 }
 M.QFbookmark = {
   condition = function()
-    local qfbook = get_qfbookmark()
-    return qfbook and qfbook.status_mark() or false
+    Qfbookmark = get_qfbookmark()
+    return Qfbookmark and Qfbookmark.status_mark() or false
   end,
   {
     provider = function()
@@ -1482,104 +1485,6 @@ M.Tasks = {
   rpad(overseer_tasks_for_status("SUCCESS", colors)),
   rpad(overseer_tasks_for_status("FAILURE", colors)),
 }
--- M.RmuxTargetPane = {
---   init = function(self)
---     local status = get_rmux()
---
---     if not status then
---       self.status = nil
---     end
---     self.status = status
---
---     self.run_with = status.run_with
---     self.task = status.task
---     self.watch = status.watch
---
---     local overseer = require "overseer"
---     local tasks = overseer.list_tasks { unique = true }
---     self.tasks_overseer = require("overseer.util").tbl_group_by(tasks, "status")
---
---     self.has_overseer_task = false
---     for i, _ in pairs(symbols_overseer) do
---       if self.tasks_overseer[i] then
---         self.has_overseer_task = true
---         break
---       end
---     end
---   end,
---   condition = function()
---     return package.loaded.rmux and set_conditions.hide_in_col_width(120)
---   end,
---   {
---     provider = function(self)
---       if self.task > 0 or #self.watch > 0 then
---         return Icons.misc.separator_down
---       end
---     end,
---     hl = { fg = colors.statusline_bg, bg = colors.task_bg },
---   },
---   {
---     provider = function(self)
---       if self.task > 0 or #self.watch > 0 then
---         return " Tmux:"
---       end
---     end,
---     hl = { fg = colors.statusline_bg, bg = colors.task_bg, bold = true },
---   },
---   {
---     provider = function(self)
---       if self.task > 0 then
---         return "  " .. self.task
---       end
---     end,
---     hl = { fg = colors.task_fg, bg = colors.task_bg, bold = true },
---   },
---   {
---     provider = function(self)
---       if #self.watch > 0 then
---         return "  " .. self.watch
---       end
---     end,
---     hl = { fg = colors.task_fg, bg = colors.task_bg, bold = true },
---   },
---   {
---     provider = function(self)
---       if self.task > 0 then
---         return Icons.misc.separator_down
---       end
---
---       if #self.watch > 0 then
---         return Icons.misc.separator_down
---       end
---     end,
---     hl = { fg = colors.task_bg, bg = colors.task_bg },
---   },
---   {
---     provider = function(self)
---       local has_task = self.task > 0 or (self.watch and #self.watch > 0)
---
---       if has_task or self.has_overseer_task then
---         return Icons.misc.separator_down .. " "
---       end
---     end,
---     hl = function(self)
---       local fg = colors.statusline_bg
---
---       local has_task = self.task > 0 or (self.watch and #self.watch > 0)
---
---       if set_conditions.is_terminal_ft() then
---         fg = colors.mode_term_statusline_bg
---       elseif not set_conditions.hide_in_col_width(120) then
---         fg = colors.statusline_bg
---       elseif has_task or self.has_overseer_task then
---         fg = colors.task_bg
---       end
---
---       return { fg = fg, bg = colors.statusline_bg }
---     end,
---   },
--- }
-
 M.RmuxTargetPane = {
   init = function(self)
     local status = get_rmux()

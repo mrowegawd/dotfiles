@@ -8,29 +8,46 @@ local UtilQf = require "utils.qf"
 local Log = require "utils.log"
 
 local Fzflua
-
 local setup_fzflua = function()
-  if not Fzflua then
-    Fzflua = require "fzf-lua"
+  if Fzflua then
+    return Fzflua
   end
 
+  Fzflua = require "fzf-lua"
   return Fzflua
+end
+
+local Gitsigns
+local get_gitsigns = function()
+  if Gitsigns then
+    return Gitsigns
+  end
+
+  local ok, gitsigns = pcall(require, "gitsigns")
+  if not ok then
+    return nil
+  end
+
+  Gitsigns = gitsigns
+  return Gitsigns
 end
 
 local status_cmd_git = {
   ["open commit only"] = function(commit_hash)
+    require("vim-pack").load_now "diffview.nvim"
     -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
     -- return "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
     return "DiffviewOpen " .. commit_hash .. "^!"
   end,
   ["open commit only with fugitive"] = function(commit_hash)
+    require("vim-pack").load_now "vim-fugitive"
     return "Gedit " .. commit_hash
   end,
   ["open commit only with gitsigns"] = function(commit_hash)
+    require("vim-pack").load_now "vim-fugitive"
     return "Gedit " .. commit_hash
   end,
   ["compare commit diff to head"] = function(commit_hash)
-    ---@diagnostic disable-next-line: undefined-field
     Log.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
     return "DiffviewOpen " .. commit_hash .. "~..HEAD"
   end,
@@ -510,6 +527,7 @@ local function convert_path_hash_commit(short_hash)
   end
 
   -- Fugitive
+  require("vim-pack").load_now "vim-fugitive"
   local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
 
   -- Neogit
@@ -532,37 +550,38 @@ local function extract_git_hash(sel)
   return commit_hash, commit_msg
 end
 
----@return boolean , table|nil, string
-local function parse_selected_git_commits(selected)
-  if not selected or #selected == 0 then
-    return false, nil, ""
+---@return {commit_filename: string, commit: string, msg: string}|nil
+local function extract_git_full(item)
+  local commit_hash, commit_msg = extract_git_hash(item)
+  local fugitive_commit_filename, _ = convert_path_hash_commit(commit_hash)
+  if not fugitive_commit_filename then
+    return nil
   end
 
+  return {
+    commit_filename = fugitive_commit_filename,
+    commit = commit_hash,
+    msg = commit_msg,
+  }
+end
+
+---@return table
+local function parse_selected_git_commits(selected)
   local items = {}
 
   for _, item in pairs(selected) do
-    local commit_hash, commit_msg = extract_git_hash(item)
-    local fugitive_commit_filename, err_msg = convert_path_hash_commit(commit_hash)
-    if not fugitive_commit_filename then
-      return false, nil, err_msg
+    local _exgit_opts = extract_git_full(item)
+    if _exgit_opts then
+      items[#items + 1] = {
+        lnum = 1,
+        col = 1,
+        text = _exgit_opts.msg,
+        module = _exgit_opts.commit,
+        filename = _exgit_opts.commit_filename,
+      }
     end
-
-    items[#items + 1] = {
-      lnum = 1,
-      col = 1,
-      text = commit_msg,
-      module = commit_hash,
-      filename = fugitive_commit_filename,
-    }
   end
-  return true, items, ""
-end
-
-local open_single_with_cmd = function(selected, direction)
-  local commit_hash = extract_git_hash_single(selected)
-  if commit_hash then
-    vim.cmd(direction .. [[ | Gedit ]] .. commit_hash)
-  end
+  return items
 end
 
 function M.open_diff_view(commit, file_name, diff_plugin)
@@ -587,22 +606,11 @@ function M.open_diff_view(commit, file_name, diff_plugin)
   vim.cmd(cmds)
 end
 
-function M.open_commit(commit_hash, state_cmd)
-  local get_cmd = status_cmd_git[state_cmd]
-  if not get_cmd then
-    ---@diagnostic disable-next-line: undefined-field
-    Log.warn("'" .. state_cmd .. "' its unknown command")
-    return
-  end
+function M.open_commit(commit_hash, f)
+  local cmds = f(commit_hash)
 
-  local cmds = get_cmd(commit_hash)
-
-  if cmds then
-    ---@diagnostic disable-next-line: undefined-field
-    Log.info(cmds)
-    vsplit_layout()
-    vim.cmd(cmds)
-  end
+  vsplit_layout()
+  vim.cmd(cmds)
 end
 
 function M.copy_to_clipboard(commit_or_branch_name)
@@ -648,23 +656,50 @@ function M.opts_diffview_log(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[a-c:copyhash  ^b:browser  ^o:diffview]],
+      -- ["--header"] = [[a-c:copyhash  ^b:browser  ^o:diffview]],
     },
     actions = {
-      ["alt-l"] = M.git_open_to_loc "Fzf_diffview",
-      ["alt-L"] = M.git_open_to_loc "Fzf_diffview All",
-      ["alt-q"] = M.git_open_to_qf "Fzf_diffview",
-      ["alt-Q"] = M.git_open_to_qf "Fzf_diffview All",
-
-      ["alt-c"] = M.git_copy_to_clipboard_or_yank(),
-
+      ["enter"] = {
+        fn = function(selected, _)
+          if not selected or #selected == 0 then
+            return
+          end
+          if #selected > 1 then
+            M.git_open_to_qf(selected, "Selected hash commit")
+            return
+          end
+          M.git_open_with_fugitive(selected)
+        end,
+        header = false,
+      },
+      ["alt-y"] = {
+        fn = function(selected, _)
+          if not selected or #selected == 0 then
+            return
+          end
+          if #selected > 1 then
+            M.git_open_to_qf(selected, "Selected hash commit")
+            return
+          end
+          M.git_open_with_fugitive(selected)
+        end,
+        header = false,
+      },
+      ["alt-Q"] = {
+        fn = function(selected, _)
+          Log.info "Sent to loclist; consider quickfix"
+          M.git_open_to_loc(selected, "Selected grep hash commit")
+        end,
+      },
+      ["alt-q"] = {
+        prefix = "select-all",
+        fn = function(selected, _)
+          M.git_open_to_qf(selected, "Selected hash commit")
+        end,
+      },
       ["ctrl-s"] = M.git_open "split",
       ["ctrl-v"] = M.git_open "vsplit",
       ["ctrl-t"] = M.git_open "tabe",
-      ["default"] = M.git_open "vsplit",
-
-      ["ctrl-b"] = M.git_open_with_browser(),
-      ["ctrl-o"] = M.git_open_with_diffview(),
     },
   }
 end
@@ -673,103 +708,91 @@ end
 -- │                        MAPPINGS                         │
 -- ╰─────────────────────────────────────────────────────────╯
 
-function M.git_open_to_loc(title)
-  vim.validate { title = { title, "string" } }
-
-  return function(selected, _)
-    local items = parse_selected_git_commits(selected)
-    local list_items = { items = items, title = title }
-    UtilQf.save_to_qf_and_auto_open_qf(list_items, true)
+---@param selected table
+local function __open_single_commit(selected, state_cmd)
+  if not selected and #selected == 0 then
+    return nil, nil
   end
-end
 
-function M.git_open_to_qf(title)
-  vim.validate { title = { title, "string" } }
-
-  return function(selected, _)
-    local ok, items, err_msg = parse_selected_git_commits(selected)
-    if not ok then
-      Log.error(err_msg)
-      return
+  for _, sel in pairs(selected) do
+    local commit_hash, err_msg = extract_git_hash_single(sel)
+    if commit_hash then
+      local f = status_cmd_git[state_cmd]
+      if f then
+        M.open_commit(commit_hash, f)
+        return true, nil
+      end
+      err_msg = "'" .. state_cmd .. "' its unknown state_cmd"
     end
-
-    local list_items = { items = items, title = "fzf_diffview" }
-    UtilQf.save_to_qf_and_auto_open_qf(list_items)
+    return nil, err_msg
   end
 end
 
+local open_single_with_direction = function(selected, direction)
+  vim.cmd(direction)
+  __open_single_commit(selected, "open commit only with fugitive")
+end
+
+---@param selected table
+---@param title string
+---@param is_loc boolean?
+local function send_to_qf_or_loc(selected, title, is_loc)
+  is_loc = is_loc or false
+
+  local items = parse_selected_git_commits(selected)
+  if #items > 0 then
+    local list_items = { items = items, title = title }
+    UtilQf.save_to_qf_and_auto_open_qf(list_items, is_loc)
+  end
+end
+
+---@param selected table
+function M.git_open_to_loc(selected, title)
+  send_to_qf_or_loc(selected, title, true)
+end
+
+---@param selected table
+function M.git_open_to_qf(selected, title)
+  send_to_qf_or_loc(selected, title)
+end
+
+---@param direction string
 function M.git_open(direction)
   return function(selected, _)
-    open_single_with_cmd(selected, direction)
+    open_single_with_direction(selected, direction)
   end
 end
 
-function M.git_open_default(bufnr)
-  bufnr = bufnr or vim.fn.bufnr()
-
-  return function(selected, _)
-    local commit_hash = extract_git_hash_single(selected)
-    M.open_diff_view(commit_hash, M.git_relative_path(bufnr), "diffview")
+function M.git_open_with_browser(selected)
+  local commit_hash, _ = extract_git_hash_single(selected)
+  if commit_hash then
+    require("vim-pack").load_now "vim-rhubarb"
+    require("vim-pack").load_now "vim-fugitive"
+    vim.api.nvim_command(":" .. get_browse_command(commit_hash))
   end
 end
 
-function M.git_open_with_browser()
-  return function(selected, _)
-    local commit_hash = extract_git_hash_single(selected)
-    if commit_hash then
-      vim.api.nvim_command(":" .. get_browse_command(commit_hash))
-    end
+---@param selected table
+function M.git_open_with_diffview(selected)
+  local ok, e = __open_single_commit(selected, "open commit only")
+  if not ok then
+    Log.warn(e)
   end
 end
 
-function M.git_open_with_diffview()
-  return function(selected, _)
-    if not selected and #selected == 0 then
-      return
-    end
-
-    for _, sel in pairs(selected) do
-      local commit_hash, err_msg = extract_git_hash_single(sel)
-      if not commit_hash then
-        Log.warn(err_msg)
-        return
-      end
-      M.open_commit(commit_hash, "open commit only")
-    end
+---@param selected table
+function M.git_open_with_fugitive(selected)
+  local ok, e = __open_single_commit(selected, "open commit only with fugitive")
+  if not ok then
+    Log.warn(e)
   end
 end
 
-function M.git_open_with_fugitive()
-  return function(selected, _)
-    if not selected and #selected == 0 then
-      return
-    end
-
-    for _, sel in pairs(selected) do
-      local commit_hash, err_msg = extract_git_hash_single(sel)
-      if not commit_hash then
-        Log.warn(err_msg)
-        return
-      end
-      M.open_commit(commit_hash, "open commit only with fugitive")
-    end
-  end
-end
-
-function M.git_open_diff_to_head()
-  return function(selected, _)
-    if not selected and #selected == 0 then
-      return
-    end
-
-    for _, sel in pairs(selected) do
-      local commit_hash, err_msg = extract_git_hash_single(sel)
-      if not commit_hash then
-        Log.warn(err_msg)
-        return
-      end
-      M.open_commit(commit_hash, "compare commit diff to head")
-    end
+---@param selected table
+function M.git_open_diff_to_head(selected)
+  local ok, e = __open_single_commit(selected, "compare commit diff to head")
+  if not ok then
+    Log.warn(e)
   end
 end
 
@@ -785,7 +808,7 @@ function M.git_open_with_compare_hash()
       local commit_hash, err_msg = extract_git_hash_single(sel)
       if not commit_hash then
         Log.warn(err_msg)
-        return
+        goto continue
       end
 
       if not is_done then
@@ -794,12 +817,13 @@ function M.git_open_with_compare_hash()
       end
 
       -- With gitsigns
-      local gitsigns = require "gitsigns"
-      local ok, err = pcall(gitsigns.diffthis, commit_hash)
-      if not ok then
-        Log.info "kacau bro"
-        Log.error(err)
-        return
+      local gitsigns = get_gitsigns()
+      if gitsigns then
+        local ok, err = pcall(gitsigns.diffthis, commit_hash)
+        if not ok then
+          Log.warn(err)
+          goto continue
+        end
       end
 
       -- With vim-fugitive
@@ -814,20 +838,19 @@ function M.git_open_with_compare_hash()
       -- vim.cmd("VscodeDiff file " .. commit_hash)
 
       commit_hash_msg[#commit_hash_msg + 1] = commit_hash
+      ::continue::
     end
 
     Log.info("Compare diff:\nCurrent <--> " .. table.concat(commit_hash_msg, " "))
   end
 end
 
-function M.git_copy_to_clipboard_or_yank()
-  return function(selected, _)
-    local commit_hash = extract_git_hash_single(selected)
-    if commit_hash then
-      M.copy_to_clipboard(commit_hash)
-      Fzflua = setup_fzflua()
-      Fzflua.actions.resume()
-    end
+function M.git_copy_to_clipboard_or_yank(selected)
+  local commit_hash, _ = extract_git_hash_single(selected)
+  if commit_hash then
+    M.copy_to_clipboard(commit_hash)
+    Fzflua = setup_fzflua()
+    Fzflua.actions.resume()
   end
 end
 

@@ -1,8 +1,8 @@
-local add_on_event = require("vim-pack").add_on_event
+local add = require("vim-pack").add
 
 local UtilKey = require "utils.map"
 
-add_on_event({ "UIEnter" }, {
+add {
   {
     src = "dlyongemallo/diffview.nvim",
     lazy = true,
@@ -140,8 +140,8 @@ add_on_event({ "UIEnter" }, {
             { "n", "<Leader>os", actions.goto_file_split, { desc = "Git: open in split [diffview-view]" } },
             { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-view]" } },
 
-            { "n", "<Leader>oo", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
-            { "n", "<Leader>oO", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
+            { "n", "o", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
+            { "n", "O", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
             { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
@@ -192,29 +192,15 @@ add_on_event({ "UIEnter" }, {
             { "n", "gg", false },
             { "n", "G", false},
 
-            --  ─────────────────────────────[ EDIT FILE ]─────────────────────────────
-            { "n", "<Leader>oe", actions.goto_file_edit, { desc = "Git: open in prev tab [diffview-panel]" }, },
-            { "n", "<Leader>os", actions.goto_file_split, { desc = "Git: open in split [diffview-panel]" }, },
-            { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-panel]" }, },
-
             { "n", "R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview-panel]" }, },
 
-            --  ──────────────────[ OPEN FILE MANAGER FOR DIFFVIEW ]───────────────
-            { "n", "<Leader>oo", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-panel]" }, },
-            { "n", "<Leader>oO", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-panel]" } },
-
             --  ───────────────────────────────[ FOLD ]────────────────────────────
-            { "n", "<C-a>", actions.toggle_fold, { desc = "Git: toggle fold [diffview-panel]" } },
-            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold (alternative) [diffview-panel]" } },
-            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold (alternative-back) [diffview-panel]" } },
-
+            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview-panel]" } },
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview-panel]" } },
-
             { "n", "zR", actions.open_all_folds, { desc = "Git: open all folds [diffview-panel]" } },
-            { "n", "zO", actions.open_all_folds, { desc = "Git: open all folds (alternative) [diffview-panel]" } },
+            { "n", "zM", actions.close_all_folds, { desc = "Git: close all folds [diffview-panel]" } },
 
-            { "n", "zm", actions.close_all_folds, { desc = "Git: close all folds [diffview-panel]" } },
-            { "n", "zc", actions.close_all_folds, { desc = "Git: close all folds (alternative) [diffview-panel]" } },
+            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold (alternative-back) [diffview-panel]" } },
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
@@ -254,16 +240,13 @@ add_on_event({ "UIEnter" }, {
             { "n", "X", actions.restore_entry, { desc = "Git: restore file to the state from the selected entry [diffview-history]" }, },
 
             --  ───────────────────────────────[ FOLD ]────────────────────────────
-            { "n", "<C-a>", actions.toggle_fold, { desc = "Git: toggle fold [diffview-history]" } },
-            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold (alternative) [diffview-history]" } },
-            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold (alternative-back) [diffview-history]" } },
-
-            { "n", "zc", actions.close_all_folds, { desc = "Git: close all folds [diffview-history]" } },
-            { "n", "zm", actions.close_all_folds, { desc = "Git: close all folds (alternative) [diffview-history]" } },
-            { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-history]" }, },
-
+            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview-history]" } },
+            { "n", "zo", actions.toggle_fold, { desc = "Git: toggle fold (alternative) [diffview-history]" } },
             { "n", "zR", actions.open_all_folds, { desc = "Git: open all folds [diffview-history]" } },
-            { "n", "zO", actions.open_all_folds, { desc = "Git: open all folds (alternative) [diffview-history]" } },
+            { "n", "zM", actions.close_all_folds, { desc = "Git: close all folds (alternative) [diffview-history]" } },
+
+            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold (alternative-back) [diffview-history]" } },
+            { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-history]" }, },
 
             --  ──────────────────────────────[ SCROLL ]───────────────────────────
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll view up [diffview-history]" } },
@@ -274,18 +257,8 @@ add_on_event({ "UIEnter" }, {
             { "n", "gn", actions.select_next_entry, { desc = "Git: next select entry [diffview-history]" } },
             { "n", "gp", actions.select_prev_entry, { desc = "Git: prev select entry [diffview-history]" }, },
 
-
             { "n", "gg", false },
             { "n", "G", false},
-
-            --  ─────────────────────────────[ EDIT FILE ]─────────────────────────────
-            { "n", "<Leader>oe", actions.goto_file_edit, { desc = "Git: open in prev tab [diffview-history]" }, },
-            { "n", "<Leader>os", actions.goto_file_split, { desc = "Git: open in split [diffview-view]" } },
-            { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-history]" } },
-
-            --  ──────────────────[ OPEN FILE MANAGER FOR DIFFVIEW ]───────────────
-            { "n", "<Leader>oo", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-history]" } },
-            { "n", "<Leader>oO", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-history]" } },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_history_panel", { desc = "Git: open the help panel [diffview-history]" } },
@@ -295,48 +268,30 @@ add_on_event({ "UIEnter" }, {
         },
       }
     end,
-    on_setup = function()
-      UtilKey.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
-
-      UtilKey.nnoremap("<Leader>goo", function()
-        vim.cmd.DiffviewOpen()
-      end, { desc = "Git: DiffviewOpen [diffview]" })
-
-      UtilKey.nnoremap("<Leader>goh", function()
-        vim.cmd.DiffviewFileHistory()
-      end, { desc = "Git: DiffviewFileHistory repo [diffview]" })
-
-      UtilKey.xnoremap("<Leader>gl", function()
-        local function exit_visual_mode()
-          -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
-          local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-          vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
-          vim.api.nvim_feedkeys("gv", "x", false)
-          vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
-        end
-
-        local function get_visual_selection_info()
-          exit_visual_mode()
-
-          local _, start_row, start_col, _ = unpack(vim.fn.getpos "'<")
-          local _, end_row, end_col, _ = unpack(vim.fn.getpos "'>")
-          start_row = start_row - 1
-          end_row = end_row - 1
-
-          return {
-            start_row = start_row,
-            start_col = start_col,
-            end_row = end_row,
-            end_col = end_col,
-          }
-        end
-
-        local v = get_visual_selection_info()
-        local file = vim.fn.expand "%"
-        -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
-        local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
-        vim.cmd(str_cmds)
-      end, { desc = "Git: DiffviewFileHistory line (visual) [diffview]" })
-    end,
   },
-})
+}
+
+local load_diffview = function()
+  require("vim-pack").load_now "diffview.nvim"
+end
+
+UtilKey.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+
+UtilKey.nnoremap("<Leader>goo", function()
+  load_diffview()
+  vim.cmd.DiffviewOpen()
+end, { desc = "Git: DiffviewOpen [diffview]" })
+
+UtilKey.nnoremap("<Leader>goh", function()
+  load_diffview()
+  vim.cmd.DiffviewFileHistory()
+end, { desc = "Git: DiffviewFileHistory repo [diffview]" })
+
+UtilKey.xnoremap("<Leader>gl", function()
+  load_diffview()
+  local v = require("utils.cmd").get_visual_selection_info()
+  local file = vim.fn.expand "%"
+  -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
+  local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
+  vim.cmd(str_cmds)
+end, { desc = "Git: DiffviewFileHistory line (visual) [diffview]" })

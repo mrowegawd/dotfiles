@@ -1,4 +1,11 @@
+local Plugin = require "utils.plugin"
+local Layout = require "utils.layout"
+
 local Log = require "utils.log"
+
+local has_ergoterm = Plugin.has "ergoterm.nvim"
+
+---@alias WrapCmdOpts {cmd?: string, name?:string, layout?:string, is_toggle: boolean?}
 
 local M = setmetatable({}, {
   __call = function(m, ...)
@@ -6,85 +13,7 @@ local M = setmetatable({}, {
   end,
 })
 
----@type table<string,LazyFloat>
-local terminals = {}
-
----@param shell? string
-function M.setup(shell)
-  vim.o.shell = shell or vim.o.shell
-
-  -- Special handling for pwsh
-  if shell == "pwsh" or shell == "powershell" then
-    -- Check if 'pwsh' is executable and set the shell accordingly
-    if vim.fn.executable "pwsh" == 1 then
-      vim.o.shell = "pwsh"
-    elseif vim.fn.executable "powershell" == 1 then
-      vim.o.shell = "powershell"
-    else
-      return Log.error "No powershell executable found"
-    end
-
-    -- Setting shell command flags
-    vim.o.shellcmdflag =
-      "-NoProfile -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues['Out-File:Encoding']='utf8';$PSStyle.OutputRendering='plaintext';Remove-Alias -Force -ErrorAction SilentlyContinue tee;"
-
-    -- Setting shell redirection
-    vim.o.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
-
-    -- Setting shell pipe
-    vim.o.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
-
-    -- Setting shell quote options
-    vim.o.shellquote = ""
-    vim.o.shellxquote = ""
-  end
-end
-
----@class LazyTermOpts: LazyCmdOptions
----@field interactive? boolean
----@field esc_esc? boolean
----@field ctrl_hjkl? boolean
-
--- Opens a floating terminal (interactive by default)
----@param cmd? string[]|string
----@param opts? LazyTermOpts
-function M.open(cmd, opts)
-  opts = vim.tbl_deep_extend("force", {
-    ft = "lazyterm",
-    size = { width = 0.9, height = 0.9 },
-    backdrop = require("utils.plugin").has "edgy.nvim" and not cmd and 100 or nil,
-  }, opts or {}, { persistent = true }) --[[@as LazyTermOpts]]
-
-  local termkey = vim.inspect { cmd = cmd or "shell", cwd = opts.cwd, env = opts.env, count = vim.v.count1 }
-
-  if terminals[termkey] and terminals[termkey]:buf_valid() then
-    terminals[termkey]:toggle()
-  else
-    terminals[termkey] = require("lazy.util").float_term(cmd, opts)
-    local buf = terminals[termkey].buf
-    vim.b[buf].lazyterm_cmd = cmd
-    if opts.esc_esc == false then
-      vim.keymap.set("t", "<esc>", "<esc>", { buffer = buf, nowait = true })
-    end
-    if opts.ctrl_hjkl == false then
-      vim.keymap.set("t", "<c-h>", "<c-h>", { buffer = buf, nowait = true })
-      vim.keymap.set("t", "<c-j>", "<c-j>", { buffer = buf, nowait = true })
-      vim.keymap.set("t", "<c-k>", "<c-k>", { buffer = buf, nowait = true })
-      vim.keymap.set("t", "<c-l>", "<c-l>", { buffer = buf, nowait = true })
-    end
-
-    vim.api.nvim_create_autocmd("BufEnter", {
-      buffer = buf,
-      callback = function()
-        vim.cmd.startinsert()
-      end,
-    })
-  end
-
-  return terminals[termkey]
-end
-
-local base_term = nil
+local base_term = {}
 
 local load_egoterm = function()
   require("vim-pack").load_now "ergoterm.nvim"
@@ -106,49 +35,45 @@ local term_package = {
   },
 }
 
----@param opts? {cmd?: string, name?:string, layout?:string}
----@param is_new? boolean
-function M.wrap_open_cmd(opts, is_new)
-  is_new = is_new or false
+---@param opts WrapCmdOpts
+function M.wrap_open_cmd(opts)
   opts = opts or {}
 
-  local has_ergoterm = require("utils.plugin").has "ergoterm.nvim"
   if not has_ergoterm then
     Log.warn "ergoterm is not installed"
     return
   end
 
-  local base_term_opts = {}
-  if has_ergoterm then
-    base_term_opts = { cmd = "zsh" }
+  if not opts.is_toggle or opts.name == nil then
+    return term_package.ergoterm.get(opts)
   end
 
-  local term_opts = vim.tbl_deep_extend("force", base_term_opts, opts)
-  if is_new then
-    term_opts = opts
+  if not base_term[opts.name] then
+    local term_opts = vim.tbl_deep_extend("force", {
+      cmd = "zsh",
+    }, opts)
+
+    base_term[opts.name] = term_package.ergoterm.get(term_opts)
   end
 
-  if is_new then
-    if has_ergoterm then
-      return term_package["ergoterm"].get(term_opts)
-    end
-  end
+  return base_term[opts.name]
+end
 
-  if not base_term and not is_new then
-    if has_ergoterm then
-      base_term = term_package["ergoterm"].get(term_opts)
-    end
+---@param opts WrapCmdOpts
+local function open_new_terminal(opts)
+  local t = M.wrap_open_cmd(opts)
+  if t then
+    t:toggle()
   end
-
-  return base_term
 end
 
 function M.float_calcure()
-  local t = M.wrap_open_cmd({
+  local t = M.wrap_open_cmd {
     name = "calcure",
     cmd = " calcure",
     layout = "float",
-  }, true)
+    is_toggle = false,
+  }
 
   if t then
     t:toggle()
@@ -156,115 +81,86 @@ function M.float_calcure()
 end
 
 function M.float_note()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "Notes Wiki",
     dir = "~/Dropbox/neorg/",
     cmd = " nvim",
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 function M.float_newsboat()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "newsboat",
     cmd = [[newsboat -u ~/Dropbox/data.programming.forprivate/newsboat-urls]],
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 function M.float_btop()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "btop",
     cmd = "btop",
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 function M.float_resterm()
-  local t = M.wrap_open_cmd({
-    name = "resterm",
+  open_new_terminal {
+    name = "Resterm",
     cmd = "resterm",
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+  }
 end
 
 function M.float_rkill()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "Rkill",
     cmd = [[bash -i -c "r_kill"]],
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 function M.lazydocker()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "Lazydocker",
     cmd = "lazydocker",
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 function M.lazygit()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     name = "Lazygit",
     cmd = [[lazygit --use-config-file=$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml]],
     layout = "float",
-  }, true)
-
-  if t then
-    t:toggle()
-  end
+    is_toggle = true,
+  }
 end
 
 local select_layout_terminal_cmd = {
   ["clock"] = {
     get = function()
-      local t = M.wrap_open_cmd({
+      open_new_terminal {
         name = "STerm Tclock",
-        -- cmd = "tclock -c red timer -M",
         cmd = "timr-tui",
+        is_toggle = true,
         layout = "window",
-      }, true)
-      if t then
-        t:toggle()
-      end
+      }
     end,
   },
   ["pomodoro"] = {
     get = function(timer)
-      local t = M.wrap_open_cmd({
-        name = "STerm Tclock Pomodor",
+      open_new_terminal {
+        name = "STerm Tclock Pomodoro",
         cmd = "tclock -c red timer -d " .. timer .. " -M",
-        -- cmd = "timr-tui",
         layout = "window",
-      }, true)
-      if t then
-        t:toggle()
-      end
+      }
     end,
   },
 }
@@ -295,7 +191,7 @@ local function open_clock(select_command, main_win, curwin, clock_win)
         clock_win = vim.api.nvim_get_current_win()
       end
 
-      vim.api.nvim_win_set_height(clock_win, 10)
+      vim.api.nvim_win_resize(clock_win, 10, -1, { anchor = "left" })
 
       local mode_clock_name
       if type(select_command) == "table" then
@@ -321,7 +217,7 @@ local function open_clock(select_command, main_win, curwin, clock_win)
       end)
 
       -- always renew clock win
-      require("utils.layout").update_win_layout(mode_clock_name, clock_win)
+      Layout.update_win_layout(mode_clock_name, clock_win)
     end)
   end)
 end
@@ -332,18 +228,18 @@ function M.clock_mode(select_command, is_toggle)
   is_toggle = is_toggle or false
   select_command = select_command or "clock"
 
-  local main_layout = require("utils.layout").get_Win()
+  local main_layout = Layout.get_Win()
   if not main_layout.layout then
     Log.warn "field `layout` is missing or get renewed, check file`layout.lua`"
     return
   end
 
-  local clock_win = require("utils.layout").get_support_win_layout()
+  local clock_win = Layout.get_support_win_layout()
   local curwin = vim.api.nvim_get_current_win()
 
   if is_toggle then
     if type(select_command) == "string" and clock_win[select_command] then
-      require("utils.layout").close_support_window(select_command)
+      Layout.close_support_window(select_command)
       return
     end
   end
@@ -394,73 +290,66 @@ function M.open_terminal_in_filetree(cwd)
 
   vim.g.open_terminal_in_filetree = true
 
-  local t = M.wrap_open_cmd(opts, true)
-  if t then
-    t:toggle()
-  end
+  open_new_terminal(opts)
 end
 
 function M.open_float()
-  local function __open_term_wrapper()
-    if vim.g.open_terminal_in_filetree == nil or not vim.g.open_terminal_in_filetree then
-      local t = M.wrap_open_cmd {
-        name = "Float Term",
-        layout = "float",
-      }
-      if t then
-        t:toggle()
-      end
+  local function open_term()
+    if vim.g.open_terminal_in_filetree then
+      return
+    end
+
+    local t = M.wrap_open_cmd {
+      name = "Float Term",
+      layout = "float",
+    }
+
+    if t then
+      t:toggle()
     end
   end
 
-  if vim.g.open_terminal_in_filetree then
-    vim.ui.input({
-      prompt = "Terminal filetree is opened, kill anyway? (y/n) ",
-    }, function(input)
-      if input == "y" then
-        vim.g.open_terminal_in_filetree = false
-        __open_term_wrapper()
-      end
-    end)
+  if not vim.g.open_terminal_in_filetree then
+    open_term()
+    return
   end
 
-  __open_term_wrapper()
+  vim.ui.input({
+    prompt = "Terminal filetree is opened, kill anyway? (y/n) ",
+  }, function(input)
+    if input ~= "y" then
+      return
+    end
+
+    vim.g.open_terminal_in_filetree = false
+    open_term()
+  end)
 end
 
 function M.open_right()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     layout = "right",
-  }, true)
-  if t then
-    t:toggle()
-  end
+  }
 end
 
 function M.open_below()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     layout = "below",
-  }, true)
-  if t then
-    t:toggle()
-  end
+  }
 end
 
 function M.tab_term()
-  local t = M.wrap_open_cmd({
+  open_new_terminal {
     layout = "tab",
-  }, true)
-  if t then
-    t:toggle()
-  end
+  }
 end
 
 function M.toggle_term()
-  local t = M.wrap_open_cmd {
+  open_new_terminal {
+    name = "vterm",
     layout = "below",
+    is_toggle = true,
   }
-  if t then
-    t:toggle()
-  end
 end
 
 return M

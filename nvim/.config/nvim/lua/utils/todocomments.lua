@@ -1,5 +1,7 @@
 local M = {}
 
+local Log = require "utils.log"
+
 local tbl_dat_note = {}
 
 local UtilCmd = require "utils.cmd"
@@ -53,24 +55,7 @@ end
 local function load_item_todos(selected, tbl_cts)
   local items = {}
 
-  if #selected > 1 then
-    for _, sel in pairs(selected) do
-      for _, x in pairs(tbl_cts) do
-        local data_sel = get_extracted_entry(sel)
-        if x.text == data_sel.text and x.basename == data_sel.basename and x.lnum == data_sel.lnum then
-          items[#items + 1] = {
-            filename = x.filename,
-            lnum = x.lnum,
-            col = x.col,
-            text = x.text,
-          }
-        end
-      end
-    end
-  end
-
-  if #selected == 1 then
-    local sel = selected[1]
+  for _, sel in pairs(selected) do
     for _, x in pairs(tbl_cts) do
       local data_sel = get_extracted_entry(sel)
       if x.text == data_sel.text and x.basename == data_sel.basename and x.lnum == data_sel.lnum then
@@ -83,10 +68,7 @@ local function load_item_todos(selected, tbl_cts)
       end
     end
   end
-
-  if #items > 0 then
-    return items
-  end
+  return items
 end
 
 ---@param title_prefix "Buffer" | "All"
@@ -153,80 +135,71 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
       end,
     },
     actions = {
-      ["default"] = function(selected, _)
-        if not selected then
-          return
-        end
-        open_with("edit", tbl_cts, selected[1], is_open_folded)
-      end,
-
-      ["ctrl-v"] = function(selected, _)
-        if not selected then
-          return
-        end
-        open_with("vsplit", tbl_cts, selected[1], is_open_folded)
-      end,
-      ["ctrl-s"] = function(selected, _)
-        if not selected then
-          return
-        end
-        open_with("split", tbl_cts, selected[1], is_open_folded)
-      end,
-      ["ctrl-t"] = function(selected, _)
-        if not selected then
-          return
-        end
-        open_with("tabnew", tbl_cts, selected[1], is_open_folded)
-      end,
-
-      ["alt-v"] = function(selected, _)
-        if not selected then
-          return
-        end
-
-        local items = load_item_todos(selected, tbl_cts)
-        if not items then
-          return
-        end
-        UtilQf.save_to_qf_and_auto_open_qf(get_list_items("Buffer", items), true)
-      end,
-      ["alt-V"] = {
-        prefix = "toggle-all",
+      ["default"] = {
         fn = function(selected, _)
-          if not selected then
+          if not selected or #selected == 0 then
             return
           end
 
-          local items = load_item_todos(selected, tbl_cts)
-          if not items then
+          if #selected > 1 then
+            local items = load_item_todos(selected, tbl_cts)
+            if items then
+              UtilQf.save_to_qf_and_auto_open_qf(get_list_items("All", items))
+            end
             return
           end
-          UtilQf.save_to_qf_and_auto_open_qf(get_list_items("All", items), true)
+          open_with("edit", tbl_cts, selected[1], is_open_folded)
         end,
       },
-      ["alt-q"] = function(selected, _)
-        if not selected then
-          return
-        end
-
-        local items = load_item_todos(selected, tbl_cts)
-        if not items then
-          return
-        end
-        UtilQf.save_to_qf_and_auto_open_qf(get_list_items("Buffer", items))
-      end,
-      ["alt-Q"] = {
-        prefix = "toggle-all",
+      ["ctrl-v"] = {
         fn = function(selected, _)
-          if not selected then
+          if not selected or #selected == 0 then
+            return
+          end
+          for _, sel in ipairs(selected) do
+            open_with("vsplit", tbl_cts, sel, is_open_folded)
+          end
+        end,
+      },
+      ["ctrl-s"] = {
+        fn = function(selected, _)
+          if not selected or #selected == 0 then
+            return
+          end
+          for _, sel in ipairs(selected) do
+            open_with("split", tbl_cts, sel, is_open_folded)
+          end
+        end,
+      },
+      ["ctrl-t"] = {
+        fn = function(selected, _)
+          if not selected or #selected == 0 then
+            return
+          end
+          for _, sel in ipairs(selected) do
+            open_with("tabnew", tbl_cts, sel, is_open_folded)
+          end
+        end,
+      },
+      ["alt-Q"] = {
+        fn = function(selected, _)
+          if not selected or #selected == 0 then
             return
           end
 
           local items = load_item_todos(selected, tbl_cts)
-          if not items then
-            return
+          if items then
+            UtilQf.save_to_qf_and_auto_open_qf(get_list_items("Buffer", items), true)
           end
-          UtilQf.save_to_qf_and_auto_open_qf(get_list_items("All", items))
+        end,
+      },
+      ["alt-q"] = {
+        prefix = "select-all",
+        fn = function(selected, _)
+          local items = load_item_todos(selected, tbl_cts)
+          if items then
+            UtilQf.save_to_qf_and_auto_open_qf(get_list_items("All", items))
+          end
         end,
       },
     },

@@ -122,6 +122,10 @@ add {
               ["<C-n>"] = "next_git_modified",
               ["<C-p>"] = "prev_git_modified",
             },
+            fuzzy_finder_mappings = {
+              ["<a-n>"] = "move_cursor_down",
+              ["<a-p>"] = "move_cursor_up",
+            },
           },
         },
 
@@ -394,9 +398,7 @@ add {
               ["<Leader>gsr"] = "git_revert_file",
 
               ["e"] = "child_or_open",
-
               [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
-
               ["g?"] = "show_help",
             },
           },
@@ -411,6 +413,30 @@ add {
             ["e"] = "noop",
             ["t"] = "noop", -- disabled open tab
             ["m"] = "noop",
+            ["oc"] = "noop",
+            ["od"] = "noop",
+            ["og"] = "noop",
+            ["om"] = "noop",
+            ["on"] = "noop",
+            ["os"] = "noop",
+            ["ot"] = "noop",
+            ["f"] = "noop",
+            ["/"] = "noop",
+
+            ["<C-a>cc"] = { "order_by_created", nowait = false },
+            ["<C-a>cd"] = { "order_by_diagnostics", nowait = false },
+            ["<C-a>cg"] = { "order_by_git_status", nowait = false },
+            ["<C-a>cm"] = { "order_by_modified", nowait = false },
+            ["<C-a>cn"] = { "order_by_name", nowait = false },
+            ["<C-a>cs"] = { "order_by_size", nowait = false },
+            ["<C-a>ct"] = { "order_by_type", nowait = false },
+
+            ["<C-a>fd"] = "fuzzy_finder_directory",
+            ["<C-a>fg"] = "fuzzy_finder",
+            ["<C-a>fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
+            ["<C-a>ff"] = "filter_on_submit",
+            ["<C-a>fc"] = "clear_filter",
+            ["<C-a>fx"] = "clear_filter",
 
             ["<a-b>"] = "bookmark_cycle_pick",
             ["b"] = "bookmark_cycle_save",
@@ -424,8 +450,8 @@ add {
               config = { use_float = true, use_image_nvim = true },
             },
 
-            ["<LocalLeader>qs"] = "open_split",
-            ["<LocalLeader>qv"] = "open_vsplit",
+            ["<Leader>os"] = "open_split",
+            ["<Leader>ov"] = "open_vsplit",
 
             ["<a-T>"] = "open_cwd_in_terminal",
 
@@ -437,6 +463,7 @@ add {
             ["zc"] = "close_node",
             ["zR"] = "expand_all_subnodes",
             ["zO"] = "expand_all_nodes",
+            ["o"] = "open",
 
             ["th"] = "prev_source",
             ["tl"] = "next_source",

@@ -600,37 +600,46 @@ local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
 end
 
+---@param confirmation? boolean
+---@param visual? boolean
 function M.search_replace_keymap(confirmation, visual)
   confirmation = confirmation or false
-  visual = visual or false
-  local key = [[:%s/\v]]
-  local search_string = ""
-  if visual then
-    local selection_str = require("utils.cmd").get_visual_selection()
-    if selection_str then
-      search_string = selection_str.selection
-    end
-  else
-    key = key .. [[<]]
-    search_string = vim.fn.expand "<cword>"
+
+  local text = require("utils.cmd").get_selection()
+
+  local function esc_pattern(s)
+    s = vim.fn.escape(s, [[\/]])
+    s = s:gsub("\n", [[\n]])
+    return (s:gsub("<", "<lt>"))
   end
-  key = key .. M.escape(search_string, "[]")
+
+  local function esc_replace(s)
+    s = vim.fn.escape(s, [[\/&~]])
+    s = s:gsub("\n", [[\r]])
+    return (s:gsub("<", "<lt>"))
+  end
+
+  local key = visual and "<Esc>" or ""
+
+  key = key .. [[:%s/\V]]
+
   if not visual then
-    key = key .. [[>]]
+    key = key .. [[\<]]
   end
-  key = key .. "/" .. M.escape(search_string, "&")
-  if confirmation then
-    key = key .. [[/gcI]]
-  else
-    key = key .. [[/gI]]
+
+  key = key .. esc_pattern(text)
+
+  if not visual then
+    key = key .. [[\>]]
   end
+
+  key = key .. "/" .. esc_replace(text)
+  key = key .. (confirmation and "/gcI" or "/gI")
+
   M.feedkey(key)
 
   if not_vscode() then
-    local key_move = [[<Left><Left><Left>]]
-    if confirmation then
-      key_move = key_move .. [[<Left>]]
-    end
+    local key_move = confirmation and [[<Left><Left><Left><Left>]] or [[<Left><Left><Left>]]
     M.feedkey(key_move)
   end
 end

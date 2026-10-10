@@ -7,9 +7,6 @@ prepend_keymap = [
     "<Enter>",
   ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [
-    "<Tab>",
-  ], run = "plugin smart-enter", desc = "Enter child or file" },
-  { on = [
     "o",
   ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [
@@ -64,7 +61,7 @@ nohup mpv --ontop --no-border --force-window \
 '
 """, desc = "Play video playist on mpv" },
   { on = [
-    "<a-B>",
+    "<a-b>",
   ], run = "plugin bookmark-cycle -- pick", desc = "Bookmark pick (to select, save, delete)" },
   { on = [
     "b",
@@ -72,14 +69,14 @@ nohup mpv --ontop --no-border --force-window \
   { on = [
     "B",
   ], run = "plugin bookmark-cycle -- cycle", desc = "Bookmark cycle" },
-  # { on = [
-  #   "<a-b>",
-  # ], run = "plugin bookmark-cycle -- delete", desc = "Bookmark delete" },
 ]
 
 keymap = [
   { on = [
     "<Esc>",
+  ], run = "escape", desc = "Exit visual mode, clear selected, or cancel search" },
+  { on = [
+    "<C-c>",
   ], run = "escape", desc = "Exit visual mode, clear selected, or cancel search" },
   { on = [
     "q",
@@ -188,7 +185,7 @@ keymap = [
   # ╎ Selection                                                ╎
   # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
   { on = [
-    "<Space>",
+    "<Tab>",
   ], run = [
     "toggle --state=none",
     "arrow 1",

@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
+local add_on_event = require("vim-pack").add_on_event
 local on_plugin_update = require("vim-pack").on_plugin_update
 
+local Log = require "utils.log"
 local UtilKey = require "utils.map"
 
 -- Prepending nvim-treesitter's `runtime/` shadows Neovim's bundled queries for
@@ -100,6 +102,9 @@ add {
       })
     end,
   },
+}
+
+add_on_event("LspAttach", {
   {
     src = "nvim-treesitter/nvim-treesitter-context",
     module_name = "treesitter-context",
@@ -112,9 +117,10 @@ add {
             {
               TreesitterContext = {
                 bg = {
-                  from = "type",
-                  attr = "fg",
-                  transparency = 0.05,
+                  from = "Normal",
+                  attr = "bg",
+                  alter = 1,
+                  transparency = 0.35,
                   color = {
                     from = "Normal",
                     attr = "bg",
@@ -220,33 +226,31 @@ add {
         end,
       }
     end,
-    on_setup = function()
-      UtilKey.nnoremap("<Leader>ut", function()
-        local Log = require "utils.log"
-        local tsc = require "treesitter-context"
-        tsc.toggle()
-        if require("utils.inject").get_upvalue(tsc.toggle, "enabled") then
-          Log.info "Enabled Treesitter Context"
-        else
-          Log.warn "Disabled Treesitter Context"
-        end
-      end, { desc = "Toggle: treesitter context" })
-
-      UtilKey.nnoremap("<Leader>jc", function()
-        if vim.wo.diff then
-          return "[c"
-        else
-          vim.schedule(function()
-            require("treesitter-context").go_to_context()
-          end)
-
-          vim.cmd "normal! zt" -- move the cursor line to the top of the window
-          return "<Ignore>"
-        end
-      end, { desc = "JumpTo: treesitter context and align to top" })
-    end,
   },
-}
+})
+
+UtilKey.nnoremap("<Leader>ut", function()
+  local tsc = require "treesitter-context"
+  tsc.toggle()
+  if require("utils.inject").get_upvalue(tsc.toggle, "enabled") then
+    Log.info "Enabled Treesitter Context"
+  else
+    Log.warn "Disabled Treesitter Context"
+  end
+end, { desc = "Toggle: treesitter context" })
+
+UtilKey.nnoremap("<Leader>jc", function()
+  if vim.wo.diff then
+    return "[c"
+  else
+    vim.schedule(function()
+      require("treesitter-context").go_to_context()
+    end)
+
+    vim.cmd "normal! zt" -- move the cursor line to the top of the window
+    return "<Ignore>"
+  end
+end, { desc = "JumpTo: treesitter context and align to top" })
 
 on_plugin_update("nvim-treesitter", function()
   local treesitter = require "nvim-treesitter"

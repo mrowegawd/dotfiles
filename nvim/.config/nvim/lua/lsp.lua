@@ -12,15 +12,13 @@ add {
     setup = false,
     on_setup = function()
       require("mason").setup()
-
       require("mason-lspconfig").setup()
 
       require("mason-tool-installer").setup {
         ensure_installed = {
           "lua_ls",
-          "stylua",
-
           "cbfmt",
+          "stylua",
           "markdownlint-cli2",
           "markdown-toc",
           "cspell",
@@ -72,9 +70,6 @@ add {
       vim.keymap.del("i", "<C-s>")
 
       local keys = {
-        --  +----------------------------------------------------------+
-        --  LSP Core
-        --  +----------------------------------------------------------+
         {
           "<Leader>ld",
           function()
@@ -216,19 +211,21 @@ add {
               codeLens = {
                 enable = true,
               },
+              -- Using stylua for formatting.
+              --
+              hint = {
+                enable = true,
+                arrayIndex = "Disable",
+              },
+              runtime = {
+                version = "LuaJIT",
+              },
+              format = { enable = false },
               completion = {
                 callSnippet = "Replace",
               },
               doc = {
                 privateName = { "^_" },
-              },
-              hint = {
-                enable = true,
-                setType = false,
-                paramType = true,
-                paramName = "Disable",
-                semicolon = "Disable",
-                arrayIndex = "Disable",
               },
             },
           },
@@ -243,6 +240,51 @@ add {
         --   },
         -- },
       }
+
+      -- MODERN LSP API: Global configuration for all servers
+      -- Performance-optimized capabilities with completion support
+      local function setup_global_lsp_config()
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+        -- Enhanced completion capabilities
+        capabilities.textDocument.completion.completionItem = {
+          documentationFormat = { "markdown", "plaintext" },
+          snippetSupport = true,
+          preselectSupport = true,
+          insertReplaceSupport = true,
+          labelDetailsSupport = true,
+          deprecatedSupport = true,
+          commitCharactersSupport = true,
+          tagSupport = { valueSet = { 1 } },
+          resolveSupport = {
+            properties = {
+              "documentation",
+              "detail",
+              "additionalTextEdits",
+            },
+          },
+        }
+
+        -- Global LSP configuration for ALL servers
+        vim.lsp.config("*", {
+          capabilities = capabilities,
+          on_init = function(client, _)
+            -- PERFORMANCE: Disable semantic tokens for better responsiveness
+            -- Cross-version compatibility - simplified
+            local supports_method_fn = client.supports_method
+              or function(_, method)
+                return client:supports_method(method)
+              end
+
+            if supports_method_fn(client, "textDocument/semanticTokens") then
+              client.server_capabilities.semanticTokensProvider = nil
+            end
+          end,
+        })
+      end
+
+      -- Call global setup
+      setup_global_lsp_config()
 
       local names = vim.tbl_keys(servers) ---@type string[]
       table.sort(names)

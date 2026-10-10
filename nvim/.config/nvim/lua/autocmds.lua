@@ -1,10 +1,12 @@
 local cmd = vim.cmd
 
-local UtilAugroup = require("utils.map").augroup
+local UtilAugroup = function()
+  return require("utils.map").augroup
+end
 
 -- ├──────────────────────────────────┤ LSP ├───────────────────────────────┤
 
-UtilAugroup("LSPUserBehaviour", {
+UtilAugroup()("LSPUserBehaviour", {
   event = "LspDetach",
   command = function(event)
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -54,7 +56,7 @@ UtilAugroup("LSPUserBehaviour", {
 
 -- ├─────────────────────────────┤ BUFFER MAPPING ├─────────────────────────────┤
 
-UtilAugroup("SmartClose", {
+UtilAugroup()("SmartClose", {
   event = "FileType",
   pattern = {
     "DressingSelect",
@@ -88,9 +90,9 @@ UtilAugroup("SmartClose", {
         vim.keymap.set("n", x, function()
           if vim.bo[event.buf].filetype == "qf" then
             local cmd_qf = "cclose"
-            -- if RUtils.qf.is_loclist() then
-            --   cmd_qf = "lclose"
-            -- end
+            if require("utils.qf").is_loclist() then
+              cmd_qf = "lclose"
+            end
             vim.fn.win_gotoid(_G.LastWinId)
             vim.cmd(cmd_qf)
             return
@@ -110,7 +112,7 @@ UtilAugroup("SmartClose", {
 
 local resize_window = { "orgagenda", "NeogitCommitMessage" }
 
-UtilAugroup(
+UtilAugroup()(
   "WindowBehaviour",
   {
     event = "FileType",
@@ -134,22 +136,6 @@ UtilAugroup(
       _G.LastWinId = vim.fn.win_getid()
     end,
     desc = "Only show cursorline in the current window and save last visited window id",
-  },
-  {
-    event = "QuitPre",
-    command = function()
-      if vim.fn.getcmdwintype() ~= "" then
-        return
-      end
-
-      if vim.bo.filetype == "qf" then
-        return
-      end
-
-      vim.cmd "silent! lclose"
-      vim.cmd "silent! cclose"
-    end,
-    desc = "Auto-close loclist and quickfix when quitting a window",
   },
   {
     event = { "QuitPre", "BufDelete" },
@@ -226,7 +212,7 @@ UtilAugroup(
 
 -- ├──────────────────────────────────┤ MISC ├──────────────────────────────────┤
 
-UtilAugroup("DisableBigFiles", {
+UtilAugroup()("DisableBigFiles", {
   event = "FileType",
   pattern = "bigfile",
   command = function(args)
@@ -236,7 +222,7 @@ UtilAugroup("DisableBigFiles", {
   end,
 })
 
-UtilAugroup("WrapFiletype", {
+UtilAugroup()("WrapFiletype", {
   event = "FileType",
   pattern = { "typescriptreact", "typescript" },
   command = function()
@@ -267,7 +253,7 @@ UtilAugroup("WrapFiletype", {
   end,
 })
 
-UtilAugroup("DisableJsonConceal", {
+UtilAugroup()("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
   command = function()
@@ -275,14 +261,14 @@ UtilAugroup("DisableJsonConceal", {
   end,
 })
 
-UtilAugroup("TextYankHighlight", {
+UtilAugroup()("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
-    vim.hl.hl_op { higroup = "Visual", timeout = 500 }
+    vim.hl.hl_op { higroup = "Visual", timeout = 200 }
   end,
 })
 
-UtilAugroup("LocateLastPosition", { -- Go to last loc when opening a buffer
+UtilAugroup()("LocateLastPosition", { -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
   command = function(event)
     local exclude = { "gitcommit", "Glance", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage", "qf" }
@@ -298,7 +284,7 @@ UtilAugroup("LocateLastPosition", { -- Go to last loc when opening a buffer
   end,
 })
 
-UtilAugroup("CheckOutsideTime", {
+UtilAugroup()("CheckOutsideTime", {
   event = { "FocusGained", "BufEnter" },
   pattern = "*",
   command = function(event)
@@ -367,7 +353,7 @@ local function open_external(event, command)
   end)
 end
 
-UtilAugroup("OpenFileImages", {
+UtilAugroup()("OpenFileImages", {
   event = "BufEnter",
   pattern = { "*.png", "*.jpg", "*.jpeg" },
   command = function(event)
@@ -381,7 +367,7 @@ UtilAugroup("OpenFileImages", {
   end,
 })
 
-UtilAugroup("TrackLastBuffer", {
+UtilAugroup()("TrackLastBuffer", {
   event = "BufLeave",
   pattern = "*",
   command = function(event)
@@ -393,7 +379,7 @@ UtilAugroup("TrackLastBuffer", {
 
 -- ├───────────────────────────────┤ COPY PASTE ├───────────────────────────────┤
 
-UtilAugroup("SetNopaste", {
+UtilAugroup()("SetNopaste", {
   event = { "InsertLeave" },
   pattern = "*",
   command = "set nopaste",
@@ -402,7 +388,7 @@ UtilAugroup("SetNopaste", {
 -- Copy/Paste when using ssh on a remote server
 -- Only works on Neovim >= 0.10.0
 if vim.clipboard and vim.clipboard.osc52 then
-  UtilAugroup("SSH_clipboard", {
+  UtilAugroup()("SSH_clipboard", {
     event = { "VimEnter" },
     command = function()
       if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then

@@ -1,0 +1,362 @@
+#!/usr/bin/env bash
+
+set -u
+
+SCRIPT="${BASH_SOURCE[0]}"
+
+BOOKMARK_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/tmux/bookmarks"
+
+mkdir -p "$(dirname "$BOOKMARK_FILE")"
+touch "$BOOKMARK_FILE"
+
+# -------------------------------------------------------------------
+# Helpers
+# -------------------------------------------------------------------
+
+current_pane() {
+  tmux display-message -p '#{pane_id}'
+}
+
+pane_exists() {
+  local pane_id="$1"
+
+  tmux list-panes -a -F '#{pane_id}' |
+    grep -Fxq "$pane_id"
+}
+
+get_bookmarks() {
+  local pane_id
+
+  while IFS= read -r pane_id; do
+    [[ -z "$pane_id" ]] && continue
+
+    if pane_exists "$pane_id"; then
+      printf '%s\n' "$pane_id"
+    fi
+  done <"$BOOKMARK_FILE"
+}
+
+cleanup() {
+  local tmp
+
+  tmp="$(mktemp)"
+
+  get_bookmarks >"$tmp"
+
+  mv "$tmp" "$BOOKMARK_FILE"
+}
+
+delete_bookmark() {
+  local pane_id="$1"
+  local tmp
+
+  tmp="$(mktemp)"
+
+  grep -Fxv "$pane_id" "$BOOKMARK_FILE" >"$tmp" || true
+
+  mv "$tmp" "$BOOKMARK_FILE"
+}
+
+jump_to() {
+  local pane_id="$1"
+
+  if ! pane_exists "$pane_id"; then
+    tmux display-message "Bookmark no longer exists: $pane_id"
+    delete_bookmark "$pane_id"
+    return 0
+  fi
+
+  tmux switch-client -t "$pane_id"
+}
+
+# -------------------------------------------------------------------
+# Mark
+# -------------------------------------------------------------------
+
+mark() {
+  local pane_id
+
+  pane_id="$(current_pane)"
+
+  if grep -Fxq "$pane_id" "$BOOKMARK_FILE"; then
+    delete_bookmark "$pane_id"
+
+    tmux display-message "Bookmark removed: $pane_id"
+  else
+    printf '%s\n' "$pane_id" >>"$BOOKMARK_FILE"
+
+    tmux display-message "Bookmark added: $pane_id"
+  fi
+}
+
+# -------------------------------------------------------------------
+# Cycle
+# -------------------------------------------------------------------
+
+cycle() {
+  local direction="$1"
+  local current
+  local -a bookmarks
+  local count
+  local current_index=-1
+  local next_index
+
+  cleanup
+
+  mapfile -t bookmarks < <(get_bookmarks)
+
+  count="${#bookmarks[@]}"
+
+  if ((count == 0)); then
+    tmux display-message "No tmux bookmarks"
+    return 0
+  fi
+
+  current="$(current_pane)"
+
+  # Find current bookmark.
+  for ((i = 0; i < count; i++)); do
+    if [[ "${bookmarks[i]}" == "$current" ]]; then
+      current_index="$i"
+      break
+    fi
+  done
+
+  if [[ "$direction" == "next" ]]; then
+    if ((current_index == -1)); then
+      next_index=0
+    else
+      next_index=$(((current_index + 1) % count))
+    fi
+  else
+    if ((current_index == -1)); then
+      next_index=$((count - 1))
+    else
+      next_index=$(((current_index - 1 + count) % count))
+    fi
+  fi
+
+  jump_to "${bookmarks[next_index]}"
+}
+
+# -------------------------------------------------------------------
+# fzf
+# -------------------------------------------------------------------
+
+fzf_input() {
+  local pane_id
+
+  get_bookmarks |
+    while IFS= read -r pane_id; do
+      tmux display-message \
+        -p \
+        -t "$pane_id" \
+        '#{pane_id}|#{session_name}|#{window_index}|#{window_name}|#{pane_index}|#{pane_current_command}|#{pane_current_path}'
+    done
+}
+
+select_bookmark() {
+  local selected
+  local pane_id
+  local -a fzf_cmd
+
+  cleanup
+
+  if [[ ! -s "$BOOKMARK_FILE" ]]; then
+    tmux display-message "No tmux bookmarks"
+    return 0
+  fi
+
+  if [[ -n "${TMUX:-}" ]]; then
+    if ! command -v fzf-tmux >/dev/null 2>&1; then
+      tmux display-message "fzf-tmux is not installed"
+      return 0
+    fi
+
+    fzf_cmd=(fzf-tmux -p 80%)
+  else
+    fzf_cmd=(fzf --height=80%)
+  fi
+
+  selected="$(
+    fzf_input |
+      "${fzf_cmd[@]}" \
+        --delimiter='|' \
+        --layout=reverse \
+        --border \
+        --prompt='Bookmark > ' \
+        --header='Enter: jump   Ctrl-D: delete   Ctrl-E: edit   Esc: cancel' \
+        --pointer='▶' \
+        --marker='+' \
+        --preview-window='right:50%' \
+        --preview='tmux capture-pane -p -e -t {1} -S -30' \
+        --bind="ctrl-d:execute-silent($SCRIPT delete {1})+reload($SCRIPT list-internal)" \
+        --bind="ctrl-e:execute(${EDITOR:-nvim} \"$BOOKMARK_FILE\")+reload($SCRIPT list-internal)"
+  )"
+
+  [[ -z "$selected" ]] && return 0
+
+  pane_id="${selected%%|*}"
+  jump_to "$pane_id"
+}
+
+# -------------------------------------------------------------------
+# fzf internal input
+# -------------------------------------------------------------------
+
+list_internal() {
+  fzf_input
+}
+
+# -------------------------------------------------------------------
+# List
+# -------------------------------------------------------------------
+
+list_bookmarks() {
+  local pane_id
+  local session
+  local window
+  local window_name
+  local pane
+  local command
+  local path
+
+  cleanup
+
+  if [[ ! -s "$BOOKMARK_FILE" ]]; then
+    printf '%s\n' "No tmux bookmarks"
+    return 0
+  fi
+
+  while IFS= read -r pane_id; do
+
+    session="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{session_name}')"
+
+    window="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{window_index}')"
+
+    window_name="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{window_name}')"
+
+    pane="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{pane_index}')"
+
+    command="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{pane_current_command}')"
+
+    path="$(tmux display-message \
+      -p \
+      -t "$pane_id" \
+      '#{pane_current_path}')"
+
+    printf '%-5s  %-15s  %-4s  %-4s  %-12s  %s\n' \
+      "$pane_id" \
+      "$session" \
+      "$window" \
+      "$pane" \
+      "$command" \
+      "$path"
+
+  done <"$BOOKMARK_FILE"
+}
+
+# -------------------------------------------------------------------
+# Clear
+# -------------------------------------------------------------------
+
+clear_bookmarks() {
+  : >"$BOOKMARK_FILE"
+
+  tmux display-message "All tmux bookmarks cleared"
+}
+
+# -------------------------------------------------------------------
+# Edit
+# -------------------------------------------------------------------
+
+edit_bookmarks() {
+  tmux display-popup \
+    -E \
+    -w 80% \
+    -h 80% \
+    "${EDITOR:-nvim}" "$BOOKMARK_FILE"
+}
+
+# -------------------------------------------------------------------
+# Main
+# -------------------------------------------------------------------
+
+case "${1:-}" in
+
+mark)
+  mark
+  ;;
+
+next)
+  cycle next
+  ;;
+
+prev)
+  cycle prev
+  ;;
+
+select)
+  select_bookmark
+  ;;
+
+edit)
+  edit_bookmarks
+  ;;
+
+delete)
+  if [[ -z "${2:-}" ]]; then
+    printf '%s\n' "Usage: tm-markthis delete <pane_id>"
+    exit 1
+  fi
+
+  delete_bookmark "$2"
+  ;;
+
+list)
+  list_bookmarks
+  ;;
+
+list-internal)
+  list_internal
+  ;;
+
+clear)
+  clear_bookmarks
+  ;;
+
+cleanup)
+  cleanup
+  ;;
+
+*)
+  cat <<'EOF'
+Usage:
+    tm-markthis mark
+    tm-markthis next
+    tm-markthis prev
+    tm-markthis select
+    tm-markthis delete <pane_id>
+    tm-markthis list
+    tm-markthis clear
+    tm-markthis cleanup
+EOF
+  exit 1
+  ;;
+
+esac

@@ -99,6 +99,11 @@ add_local_or_remote {
         prev_ref_node = "<c-p>",
         down_and_jump = "<a-n>",
         up_and_jump = "<a-p>",
+
+        open_in_vsplit = "<Leader>ov",
+        open_in_split = "<Leader>os",
+        open_in_tab = "<Leader>ot",
+        open_in_float = "<Leader>oP",
       },
     },
   },

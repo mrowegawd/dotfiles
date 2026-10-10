@@ -86,97 +86,52 @@ function M.get_option(name_opt, scope)
   return vim.api.nvim_get_option_value(name_opt, { scope = scope })
 end
 
----@param opts? { strict: boolean, exit_from_visual: boolean }
----@return { line: string, selection: string, csrow: integer, cscol: integer, cerow:integer, cecol: integer } | nil
-function M.get_visual_selection(opts)
-  -- vim.cmd 'noau normal! "vy"'
-  -- local text = vim.fn.getreg "v"
-  -- vim.fn.setreg("v", {})
-  -- text = string.gsub(text, "\n", "")
-  -- if #text > 0 then
-  --   return text
-  -- else
-  --   return ""
-  -- end
-
-  opts = opts or {}
-  -- Adapted from fzf-lua:
-  -- https://github.com/ibhagwan/fzf-lua/blob/6ee73fdf2a79bbd74ec56d980262e29993b46f2b/lua/fzf-lua/utils.lua#L434-L466
-  -- this will exit visual mode
-  -- use 'gv' to reselect the text
-  local _, csrow, cscol, cerow, cecol
+---@return boolean
+---@return string
+function M.get_vim_mode()
   local mode = vim.fn.mode()
-  if opts.strict and not vim.endswith(string.lower(mode), "v") then
-    return
+  if mode:match "^[vV\22]" then
+    return true, mode
   end
+  return false, mode
+end
 
-  if mode == "v" or mode == "V" or mode == "" then
-    -- if we are in visual mode use the live position
-    _, csrow, cscol, _ = unpack(vim.fn.getpos ".")
-    _, cerow, cecol, _ = unpack(vim.fn.getpos "v")
-    if mode == "V" then
-      -- visual line doesn't provide columns
-      cscol, cecol = 0, 999
-    end
-    if not opts.exit_from_visual then
-      -- exit visual mode
-      require("utils.map").feedkey "<Esc>"
-    end
-  else
-    -- otherwise, use the last known visual position
-    _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
-    _, cerow, cecol, _ = unpack(vim.fn.getpos "'>")
-  end
+local function exit_visual_mode()
+  -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
+  local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+  vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+  vim.api.nvim_feedkeys("gv", "x", false)
+  vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+end
 
-  -- Swap vars if needed
-  if cerow < csrow then
-    csrow, cerow = cerow, csrow
-    cscol, cecol = cecol, cscol
-  elseif cerow == csrow and cecol < cscol then
-    cscol, cecol = cecol, cscol
-  end
+function M.get_visual_selection_info()
+  exit_visual_mode()
 
-  local lines = vim.fn.getline(csrow, cerow)
-  assert(type(lines) == "table")
-  if vim.tbl_isempty(lines) then
-    return
-  end
-
-  -- When the whole line is selected via visual line mode ("V"), cscol / cecol will be equal to "v:maxcol"
-  -- for some odd reason. So change that to what they should be here. See ':h getpos' for more info.
-  local maxcol = vim.api.nvim_get_vvar "maxcol"
-  if cscol == maxcol then
-    cscol = string.len(lines[1])
-  end
-  if cecol == maxcol then
-    cecol = string.len(lines[#lines])
-  end
-
-  ---@type string
-  local selection
-  local n = #lines
-  if n <= 0 then
-    selection = ""
-  elseif n == 1 then
-    selection = string.sub(lines[1], cscol, cecol)
-  elseif n == 2 then
-    selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
-  else
-    selection = string.sub(lines[1], cscol)
-      .. "\n"
-      .. table.concat(lines, "\n", 2, n - 1)
-      .. "\n"
-      .. string.sub(lines[n], 1, cecol)
-  end
+  local _, start_row, start_col, _ = unpack(vim.fn.getpos "'<")
+  local _, end_row, end_col, _ = unpack(vim.fn.getpos "'>")
+  start_row = start_row - 1
+  end_row = end_row - 1
 
   return {
-    lines = lines,
-    selection = selection,
-    csrow = csrow,
-    cscol = cscol,
-    cerow = cerow,
-    cecol = cecol,
+    start_row = start_row,
+    start_col = start_col,
+    end_row = end_row,
+    end_col = end_col,
   }
+end
+
+---@return string
+function M.get_selection()
+  local is_visual, mode = M.get_vim_mode()
+  if is_visual then
+    local type_map = { v = "v", V = "V", ["\22"] = "b" }
+    local vtype = type_map[mode] or "v"
+    local start_pos = vim.fn.getpos "v"
+    local end_pos = vim.fn.getpos "."
+    local region = vim.fn.getregion(start_pos, end_pos, { type = vtype })
+    return table.concat(region, "\n")
+  end
+  return vim.fn.expand "<cword>"
 end
 
 ---@param str string
@@ -214,24 +169,6 @@ end
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               OPEN IN BROWSE                                ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
----@param context_mode string
----@return string?
-local function get_target_from_selection(context_mode)
-  local mode = vim.fn.mode()
-
-  if mode == "v" or mode == "V" then
-    local exit_visual = context_mode == "mpv or svix"
-
-    local line = M.get_visual_selection {
-      exit_from_visual = exit_visual,
-    }
-
-    return line and line.selection or nil
-  end
-
-  return M.get_lines_under_cusor()
-end
 
 ---@param line_str string
 ---@return boolean
@@ -414,6 +351,8 @@ local function open_media_or_git(line_str)
             if sel == "Open PR with Octo" then
               vim.cmd "tabnew e"
             end
+            require("vim-pack").load_now "diffview.nvim"
+            require("vim-pack").load_now "octo.nvim"
             vim.cmd(table.concat(cmds, " "))
             return
           end
@@ -447,11 +386,9 @@ end
 ---@return string | nil
 local function open_in_browser(line_str)
   local uri = vim.fn.matchstr(line_str, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
-  -- local search_msg = "Search: "
 
   local url
   if #uri > 0 then
-    -- search_msg = "Open: "
     url = uri
   else
     url = string.format("https://google.com/search?q=%s", line_str)
@@ -522,7 +459,7 @@ function M.open_with(context_mode, mode_open)
     return
   end
 
-  local url = get_target_from_selection(context_mode)
+  local url = M.get_selection()
 
   if not url or url == "" then
     Log.info "Failed to extract string under cursor, abort"

@@ -1,19 +1,13 @@
 local wo = vim.wo
 
-local H = require "utils.highlights"
-
-local base_colors = {
-  Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" },
-}
+local base_colors = { Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } }
 
 local update_col_colorscheme = {
   ["ashen"] = {
     winseparator_fg_alter = 0.5,
     linenr_fg_alter = 1.3,
     nonetext_opacity = 0.35,
-    quickfixwinbar_fg_alter = 4,
     panelbottomlinenr_fg_alter = 2.5,
-    statusline_fg_alter = 0.1,
 
     normalnote_bg_alter = 0.4,
     commentnote_fg_alter = 0.9,
@@ -32,13 +26,9 @@ local update_col_colorscheme = {
     linenr_fg_alter = 1,
     winbarnote_fg_alter = 1.3,
     linenrnote_fg_alter = 0.8,
-    -- winbar_fg_alter = 0.5,
 
     outline_indent_fg_alter = -0.25,
     panelsidenormal_bg_alter = 0.1,
-
-    quickfixwinbar_bg_alter = 0.6,
-    statusline_fg_alter = 0.15,
 
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
@@ -48,7 +38,6 @@ local update_col_colorscheme = {
     winseparatornote_fg_alter = 0.25,
     commentnote_fg_alter = 0.7,
     linenr_fg_alter = 1.2,
-    -- winbar_fg_alter = 0.6,
 
     floatborderaiprompt_fg_alter = 4,
 
@@ -67,13 +56,10 @@ local update_col_colorscheme = {
   ["everforest"] = {
     linenr_fg_alter = 0.7,
     winseparator_fg_alter = 0.3,
-    statusline_fg_alter = 0.5,
-    statusline_bg_alter = -0.25,
     hl_trouble_indent = "Function",
     cursorlinebright_bg_alter = 0.5,
     floatborderaiprompt_fg_alter = 2.5,
     outline_indent_fg_alter = -0.3,
-    -- codeblock_bg_alter = -0.2,
     linenrnote_fg_alter = 0.7,
     orgdirective_fg_alter = 0.3,
     commentnote_fg_alter = 0.25,
@@ -88,9 +74,6 @@ local update_col_colorscheme = {
 
     panelsidenormal_bg_alter = 0.1,
 
-    quickfixwinbar_bg_alter = 0.4,
-
-    -- winbar_fg_alter = 0.5,
     winbarnote_fg_alter = 0.8,
 
     comment_fg_alter = 0.5,
@@ -105,32 +88,22 @@ local update_col_colorscheme = {
     linenr_fg_alter = 1,
     floatborderaiprompt_fg_alter = 2.5,
     panelsidenormal_bg_alter = 0.1,
-    quickfixwinbar_bg_alter = 0.55,
-    statusline_fg_alter = 0.25,
-    -- winbar_fg_alter = 0.35,
     winbarnote_fg_alter = 1.5,
     zshlines_fg_alter = -0.2,
     zshlines_bg_alter = 0.4,
   },
-  ["habamax"] = {
-    nonetext_opacity = 0.35,
-    winseparator_fg_alter = 0.4,
-    -- winbar_fg_alter = 0.4,
-    linenr_fg_alter = 0.9,
-    statusline_fg_alter = 0.15,
-    statusline_bg_alter = -0.35,
-    outline_indent_fg_alter = -0.2,
+  ["imli"] = {
+    nontextnote_fg_alter = 0.1,
+    winseparator_fg_alter = 0.35,
+    comment_fg_alter = 0.55,
+    orgdirective_fg_alter = 0.4,
+    linenr_fg_alter = 1,
+    codeblock_bg_alter = 0.4,
     floatborderaiprompt_fg_alter = 2.5,
-
-    panelsidenormal_bg_alter = 0.15,
-    quickfixwinbar_bg_alter = 0.55,
-
-    commentnote_fg_alter = 0.6,
-    linenrnote_fg_alter = 0.65,
-    winbarnote_fg_alter = 1.4,
-
-    zshlines_bg_alter = 0.4,
+    panelsidenormal_bg_alter = 0.1,
+    winbarnote_fg_alter = 1.5,
     zshlines_fg_alter = -0.2,
+    zshlines_bg_alter = 0.4,
   },
   ["intent"] = {
     nonetext_opacity = 0.25,
@@ -142,11 +115,8 @@ local update_col_colorscheme = {
     commentnote_fg_alter = 0.7,
     normalnote_bg_alter = 0.8,
 
-    codeblock_bg_alter = 0.2,
     panelsidenormal_bg_alter = 0.15,
-    statusline_fg_alter = 0.25,
     quickfixwinbar_fg_alter = 4,
-    -- winbar_fg_alter = 0.65,
     panelbottomlinenr_fg_alter = 3,
 
     outline_indent_fg_alter = -0.6,
@@ -154,12 +124,10 @@ local update_col_colorscheme = {
   ["jellybeans"] = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
     panelsidenormal_bg_alter = 0.1,
-    statusline_fg_alter = 0.2,
 
     outline_indent_fg_alter = -0.4,
     normalnote_bg_alter = 0.8,
     winseparator_fg_alter = 0.5,
-    -- winbar_fg_alter = 0.6,
     linenr_fg_alter = 1.2,
     linenrnote_fg_alter = 0.8,
   },
@@ -167,7 +135,6 @@ local update_col_colorscheme = {
     Directory = { fg = "#8fbfdc", bg = "NONE" },
     orgdirective_fg_alter = 0.7,
     linenrnote_fg_alter = 1.2,
-    -- winbar_fg_alter = 0.7,
     winseparator_fg_alter = 0.75,
     linenr_fg_alter = 1.8,
     normalnote_bg_alter = 0.8,
@@ -175,7 +142,6 @@ local update_col_colorscheme = {
     outline_indent_fg_alter = -0.4,
     floatborderaiprompt_fg_alter = 6,
 
-    codeblock_bg_alter = 0.2,
     panelbottomlinenr_fg_alter = 4.5,
     quickfixwinbar_fg_alter = 4.5,
     winseparatornote_fg_alter = 0.4,
@@ -203,8 +169,8 @@ local update_col_colorscheme = {
 
     panelsidenormal_bg_alter = -0.55,
 
-    statusline_bg_alter = 2,
-    statusline_fg_alter = 1.6,
+    statusline_bg_alter = 1.8,
+    statusline_fg_alter = 1.3,
 
     linenr_fg_alter = 4,
     winbar_fg_alter = 1,
@@ -220,14 +186,11 @@ local update_col_colorscheme = {
 
     normalnote_bg_alter = 3,
     orgdirective_fg_alter = 0.3,
-    -- codeblock_bg_alter = -0.35,
     winbarnote_fg_alter = 2,
     visualnote_bg_alter = 1.5,
     commentnote_fg_alter = 0.4,
     linenrnote_fg_alter = 1,
     floatbordernote_fg_alter = 0.65,
-
-    quickfixwinbar_fg_alter = 5,
 
     nontextaiprompt_fg_alter = 5,
 
@@ -238,7 +201,6 @@ local update_col_colorscheme = {
 
     outline_indent_fg_alter = -0.5,
 
-    statusline_fg_alter = 1.2,
     statusline_bg_alter = 1,
 
     zshlines_bg_alter = 0.7,
@@ -258,7 +220,6 @@ local update_col_colorscheme = {
     winbar_fg_alter = 0.6,
 
     linenrnote_fg_alter = 0.8,
-    -- codeblock_bg_alter = 0.25,
 
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
@@ -268,8 +229,6 @@ local update_col_colorscheme = {
     winbar_fg_alter = 0.4,
     winseparator_fg_alter = 0.4,
     linenrnote_fg_alter = 0.8,
-    statusline_fg_alter = 0.4,
-    statusline_bg_alter = -0.2,
     commentnote_fg_alter = 0.6,
     outline_indent_fg_alter = -0.35,
     panelsidenormal_bg_alter = 0.2,
@@ -283,7 +242,7 @@ local update_col_colorscheme = {
     winseparator_fg_alter = 0.5,
     linenrnote_fg_alter = 0.7,
     commentnote_fg_alter = 0.6,
-    statusline_bg_alter = -0.25,
+    statusline_bg_alter = -0.15,
     winbar_fg_alter = 0.4,
     panelsidenormal_bg_alter = 0.2,
     outline_indent_fg_alter = -0.3,
@@ -308,21 +267,18 @@ local update_col_colorscheme = {
     outline_indent_fg_alter = -0.25,
     panelsidenormal_bg_alter = 0.1,
 
-    quickfixwinbar_bg_alter = 0.6,
-    statusline_fg_alter = 0.1,
     statusline_bg_alter = -0.2,
 
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
   },
   ["tokyonight"] = {
+    nonetext_opacity = 0.3,
     linenr_fg_alter = 1,
     winseparator_fg_alter = 0.45,
     winseparatornote_fg_alter = 0.27,
     linenrnote_fg_alter = 0.65,
     commentnote_fg_alter = 0.7,
-    quickfixwinbar_bg_alter = 0.5,
-    statusline_fg_alter = 0.25,
     winbar_fg_alter = 0.65,
     panelsidenormal_bg_alter = 0.1,
     floatborderaiprompt_fg_alter = 3.5,
@@ -332,16 +288,14 @@ local update_col_colorscheme = {
     zshlines_bg_alter = 0.25,
   },
   ["tokyonight-night"] = {
-    nonetext_opacity = 0.3,
+    nonetext_opacity = 0.28,
     linenr_fg_alter = 2.2,
     linenrnote_fg_alter = 0.7,
     winseparator_fg_alter = 0.7,
     winbar_fg_alter = 0.85,
     normalnote_bg_alter = 1.5,
 
-    -- codeblock_bg_alter = 0.4,
     commentnote_fg_alter = 1.8,
-    quickfixwinbar_fg_alter = 4.5,
 
     outline_indent_fg_alter = -0.2,
 
@@ -352,21 +306,16 @@ local update_col_colorscheme = {
     panelbottomlinenr_fg_alter = 5,
   },
   ["tokyonight-storm"] = {
-    nonetext_opacity = 0.4,
+    nonetext_opacity = 0.32,
     linenr_fg_alter = 0.8,
     winseparator_fg_alter = 0.3,
     linenrnote_fg_alter = 0.5,
 
-    -- codeblock_bg_alter = -0.,
     winbarnote_fg_alter = 1,
     commentnote_fg_alter = 0.2,
     winseparatornote_fg_alter = 0.27,
 
-    quickfixwinbar_bg_alter = 0.5,
-    quickfixwinbar_fg_alter = 2,
     winbar_fg_alter = 0.35,
-    statusline_fg_alter = 0.15,
-    statusline_bg_alter = -0.3,
 
     floatborderaiprompt_fg_alter = 3,
 
@@ -381,9 +330,8 @@ local update_col_colorscheme = {
   },
 
   ["vscode"] = {
-    nontextnote_fg_alter = 0.3,
-    nonetext_opacity = 0.35,
-    -- Directory = { fg = "#569cd6", bg = "NONE" },
+    nontextnote_fg_alter = 1.5,
+    nonetext_opacity = 0.2,
     winseparatornote_fg_alter = 0.27,
     floatborderaiprompt_fg_alter = 3.5,
     hl_trouble_indent = "Function",
@@ -391,9 +339,7 @@ local update_col_colorscheme = {
     commentnote_fg_alter = 0.6,
     linenr_fg_alter = 0.8,
     winseparator_fg_alter = 0.4,
-    quickfixwinbar_bg_alter = 0.5,
     panelsidenormal_bg_alter = 0.1,
-    statusline_fg_alter = 0.05,
     winbar_fg_alter = 0.5,
   },
   ["zenburn"] = {
@@ -403,7 +349,6 @@ local update_col_colorscheme = {
     linenrnote_fg_alter = 0.4,
     statusline_fg_alter = 0.1,
     statusline_bg_alter = -0.2,
-    -- codeblock_bg_alter = -0.15,
     orgdirective_fg_alter = 0.25,
 
     cursorlinebright_bg_alter = 0.5,
@@ -418,9 +363,6 @@ local update_col_colorscheme = {
     normalfloat_bg_alter = -0.15,
     panelbottomlinenr_fg_alter = 1,
 
-    quickfixwinbar_bg_alter = 0.3,
-    quickfixwinbar_fg_alter = 1.25,
-
     winbar_fg_alter = 0.35,
     winbarnote_fg_alter = 0.8,
     zshlines_fg_alter = -0.1,
@@ -434,7 +376,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     winseparator_fg_alter = 0.8,
     linenr_fg_alter = 1.5,
     commentnote_fg_alter = -0.05,
-    codeblock_bg_alter = -0.25,
     hl_trouble_indent = "Boolean",
     linenrnote_fg_alter = 0.7,
     nonetext_opacity = 0.35,
@@ -472,7 +413,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     commentnote_fg_alter = 0.4,
     winbarnote_fg_alter = 1.2,
     linenrnote_fg_alter = 0.55,
-    codeblock_bg_alter = -0.25,
     orgdirective_fg_alter = 0.3,
   }
   update_col_colorscheme["catppuccin"] = {
@@ -491,7 +431,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     linenr_fg_alter = 1.2,
     panelsidenormal_bg_alter = 0.1,
     linenrnote_fg_alter = 0.9,
-    codeblock_bg_alter = 0.22,
     commentnote_fg_alter = 0.9,
     statusline_bg_alter = -0.2,
     winseparator_fg_alter = 0.8,
@@ -511,7 +450,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     winseparator_fg_alter = 0.7,
     commentnote_fg_alter = 0.8,
     linenr_fg_alter = 1,
-    codeblock_bg_alter = -0.2,
     zshlines_bg_alter = 0.4,
     zshlines_fg_alter = -0.05,
     normalnote_bg_alter = 0.45,
@@ -542,7 +480,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     linenr_fg_alter = 2.1,
 
     quickfixwinbar_fg_alter = 4,
-    codeblock_bg_alter = -0.2,
 
     orgdirective_fg_alter = 0.25,
     normalnote_bg_alter = 2,
@@ -561,7 +498,6 @@ if os.getenv "TERMINAL" == "ghostty" then
 
     winseparator_fg_alter = 0.6,
     nonetext_opacity = 0.35,
-    codeblock_bg_alter = -0.3,
     commentnote_fg_alter = 0.3,
   }
   update_col_colorscheme["intent"] = {
@@ -569,7 +505,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     winseparator_fg_alter = 1,
     linenrnote_fg_alter = 0.8,
     nonetext_opacity = 0.4,
-    codeblock_bg_alter = -0.4,
     quickfixwinbar_fg_alter = 5.5,
     quickfixwinbar_bg_alter = 1.25,
     panelbottomlinenr_fg_alter = 8,
@@ -582,7 +517,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     panelsidenormal_bg_alter = -0.5,
     winseparator_fg_alter = 2.5,
     statusline_bg_alter = -0.6,
-    codeblock_bg_alter = 0.55,
 
     winbar_fg_alter = 1,
 
@@ -614,7 +548,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     normalnote_bg_alter = 6,
     commentnote_fg_alter = 0.1,
     winbarnote_fg_alter = 1.2,
-    codeblock_bg_alter = -0.4,
 
     visualnote_bg_alter = 1.2,
     panelbottomlinenr_fg_alter = 12,
@@ -635,7 +568,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     quickfixwinbar_bg_alter = 1,
     quickfixwinbar_fg_alter = 3.5,
 
-    codeblock_bg_alter = -0.3,
     commentnote_fg_alter = 0.1,
     orgdirective_fg_alter = 0.3,
     normalnote_bg_alter = 1.5,
@@ -650,7 +582,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     panelsidenormal_bg_alter = 0.1,
 
     quickfixwinbar_bg_alter = 0.8,
-    quickfixwinbar_fg_alter = 2.6,
 
     winbarnote_fg_alter = 1.25,
     orgdirective_fg_alter = 0.3,
@@ -670,7 +601,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     quickfixwinbar_bg_alter = 0.6,
     quickfixwinbar_fg_alter = 2.6,
 
-    codeblock_bg_alter = -0.3,
     panelsidenormal_bg_alter = 0.1,
     statusline_bg_alter = -0.3,
     linenrnote_fg_alter = 0.65,
@@ -696,7 +626,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     panelbottomlinenr_fg_alter = 4,
     panelsidenormal_bg_alter = 0.15,
     normalnote_bg_alter = 1.5,
-    codeblock_bg_alter = 0.3,
     statusline_bg_alter = -0.4,
     quickfixwinbar_bg_alter = 1.15,
     quickfixwinbar_fg_alter = 4.5,
@@ -743,7 +672,6 @@ if os.getenv "TERMINAL" == "ghostty" then
     statusline_bg_alter = -0.17,
     statusline_fg_alter = 0.32,
     linenrnote_fg_alter = 0.5,
-    codeblock_bg_alter = -0.22,
     comment_fg_alter = 0.5,
     orgdirective_fg_alter = 0.2,
 
@@ -766,6 +694,7 @@ end
 local general_overrides = function()
   local colors = update_base_colors(vim.g.colorscheme)
 
+  local H = require "utils.highlights"
   local git_diff_add = H.get_git_fg_or_bg "DiffAdd"
   local git_diff_change = H.get_git_fg_or_bg "DiffChange"
   local git_diff_delete = H.get_git_fg_or_bg "DiffDelete"
@@ -824,15 +753,26 @@ local general_overrides = function()
 
     {
       CursorLineNr = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "Boolean", attr = "fg", opacity = 0.8 },
+        fg = { from = "Boolean", attr = "fg" },
+        bg = {
+          from = "Boolean",
+          attr = "fg",
+          transparency = 0.2,
+          color = { from = "Normal", attr = "bg" },
+        },
         bold = true,
       },
     },
     { -- ini dibutuhkan untuk re-link kembali CursorLineNr akibat perubahan warna
       CursorLineNrBackup = {
-        fg = { from = "Normal", attr = "bg" },
-        bg = { from = "Boolean", attr = "fg", opacity = 0.8 },
+        fg = { from = "Boolean", attr = "fg" },
+        bg = {
+          from = "Boolean",
+          attr = "fg",
+          transparency = 0.2,
+          color = { from = "Normal", attr = "bg" },
+        },
+
         bold = true,
       },
     },
@@ -851,7 +791,7 @@ local general_overrides = function()
           from = "Normal",
           attr = "fg",
           alter = colors.statusline_fg_alter or 0,
-          transparency = 0.35,
+          transparency = 0.4,
           color = { from = "Statusline", attr = "bg" },
         },
       },
@@ -1144,20 +1084,13 @@ local general_overrides = function()
     },
     {
       LspReferenceRead = {
-        -- bg = { from = "Type", attr = "fg" },
-        -- fg = { from = "Normal", attr = "bg" },
-        -- bold = true,
-        --
         fg = { from = "Normal", attr = "bg" },
         bg = {
           from = "Statement",
           attr = "fg",
-          -- alter = 0.2,
           transparency = 0.1,
           color = { from = "Type", attr = "fg" },
         },
-        -- underline = true,
-        -- bold = true,
       },
     },
     {
@@ -1166,21 +1099,13 @@ local general_overrides = function()
         bg = {
           from = "Type",
           attr = "fg",
-          -- alter = 0.2,
           transparency = 0.1,
           color = { from = "Statement", attr = "fg" },
         },
-        -- underline = true,
         bold = true,
       },
     },
 
-    -- {
-    --   LspCodeLens = {
-    --     fg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_fg_alter },
-    --     bg = { from = "Normal", attr = "bg", alter = colors.lsp_code_lens_bg_alter },
-    --   },
-    -- },
     {
       LspSignatureActiveParameter = {
         fg = { from = "Type", attr = "fg" },
@@ -1302,7 +1227,6 @@ local general_overrides = function()
     { FoldedNoteSign = { fg = { from = "LineNrNote", attr = "fg", alter = 0.5 } } },
     {
       FloatBorderNote = {
-        -- fg = { from = "NormalNote", attr = "bg", alter = colors.floatbordernote_fg_alter or 0.5 },
         fg = {
           from = "NormalNote",
           attr = "fg",
@@ -1473,7 +1397,6 @@ local general_overrides = function()
         fg = {
           from = "Normal",
           attr = "fg",
-          -- alter = colors.winbar_fg_alter or 0,
           transparency = 0.35,
           color = { from = "Normal", attr = "bg" },
         },
@@ -1579,6 +1502,7 @@ local general_overrides = function()
 end
 
 local plugins_overrides = function()
+  local H = require "utils.highlights"
   local colors = update_base_colors(vim.g.colorscheme)
   return H.all {
 
@@ -2126,13 +2050,6 @@ local plugins_overrides = function()
     },
     { ["@markup.list.markdown"] = { bg = "NONE" } },
 
-    -- {
-    --   ["@markup.link.label.markdown_inline"] = {
-    --     fg = { from = "@markup.link", attr = "fg", alter = 0.5 },
-    --     bg = "NONE",
-    --   },
-    -- },
-
     {
       ["@markup.quote.markdown"] = {
         fg = {
@@ -2212,7 +2129,7 @@ local plugins_overrides = function()
     -- Code block
     {
       RenderMarkdownCode = {
-        bg = { from = "NormalNote", attr = "bg", alter = colors.codeblock_bg_alter or 0.2, is_note = true },
+        bg = { from = "NormalNote", attr = "bg", alter = colors.codeblock_bg_alter or 0.3, is_note = true },
         italic = false,
       },
     },
@@ -2221,7 +2138,7 @@ local plugins_overrides = function()
         bg = {
           from = "RenderMarkdownCode",
           attr = "bg",
-          transparency = 0.4,
+          transparency = 0.35,
           color = { from = "NormalNote", attr = "bg" },
         },
       },
@@ -2313,10 +2230,14 @@ local plugins_overrides = function()
     { ["@org.drawer"] = { inherit = "Constant" } },
     { ["@org.plan.org"] = { inherit = "Constant" } },
     { ["@org.latex"] = { inherit = "Statement" } },
-    -- { ["@org.checkbox.org"] = { inherit = "Error" } },
-    -- { ["@org.checkbox.checked"] = { inherit = "org.comment.org", bg = "NONE" } },
     {
-      ["@org.directive"] = { fg = { from = "LineNrNote", attr = "fg", alter = colors.orgdirective_fg_alter or 0.45 } },
+      ["@org.directive"] = {
+        fg = {
+          from = "LineNrNote",
+          attr = "fg",
+          alter = colors.orgdirective_fg_alter or 0.45,
+        },
+      },
     },
     { ["@org.tag.org"] = { fg = { from = "@org.directive", attr = "fg", alter = 0.5 } } },
     { OrgBulletsDash = { inherit = "Special", bg = "NONE" } },
@@ -2343,6 +2264,52 @@ local plugins_overrides = function()
     },
 
     { OrgQuoteBlock = { inherit = "@markup.quote.markdown" } },
+
+    -- ╓─────────────────────────────────────────────────────────────────────────────╖
+    -- ║                                  ORG.NVIM                                   ║
+    -- ╙─────────────────────────────────────────────────────────────────────────────╜
+
+    {
+      CodeBlockFiletypeText = {
+        bg = {
+          from = "String",
+          attr = "fg",
+          alter = -0.2,
+          transparency = 0.1,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
+    {
+      CodeBlockFiletypeJson = {
+        bg = {
+          from = "Boolean",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
+    {
+      CodeBlockFiletypeDb = {
+        bg = {
+          from = "Type",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
+    {
+      OrgBlockDelimiter = {
+        fg = {
+          from = "@org.directive",
+          attr = "fg",
+          transparency = 0.45,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                   LAZYGIT                                   ║
@@ -2496,8 +2463,8 @@ local plugins_overrides = function()
 end
 
 local function set_panel_highlight()
+  local H = require "utils.highlights"
   local colors = update_base_colors(vim.g.colorscheme)
-
   H.all {
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
@@ -2616,7 +2583,13 @@ local function set_panel_highlight()
     },
     {
       HoveredTerminalFileManagerCursorline = {
-        bg = { from = "PanelSideBackground", attr = "bg", alter = 0.5 },
+        bg = {
+          from = "Directory",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.1,
+          color = { from = "Normal", attr = "bg" },
+        },
       },
     },
 
@@ -2660,7 +2633,7 @@ local function set_panel_highlight()
           from = "PanelBottomNormal",
           attr = "bg",
           alter = colors.quickfixwinbar_bg_alter or 1,
-          transparency = 0.85,
+          transparency = 0.7,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
       },
@@ -2671,7 +2644,9 @@ local function set_panel_highlight()
         fg = {
           from = "QuickFixWinbar",
           attr = "bg",
-          alter = colors.quickfixwinbar_fg_alter or 2.5,
+          alter = colors.quickfixwinbar_bg_alter or 4,
+          transparency = 0.7,
+          color = { from = "PanelBottomNormal", attr = "bg" },
         },
       },
     },
@@ -2735,8 +2710,6 @@ local function set_panel_highlight()
 
     {
       GrugFarInputLabel = {
-        -- fg = { from = "PanelSideBackground", attr = "bg", alter = 2 },
-        -- italic = true,
         fg = {
           from = "FloatTitle",
           attr = "fg",
@@ -2751,14 +2724,6 @@ local function set_panel_highlight()
     -- ║                                 QFBOOKMARK                                  ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    -- {
-    --   QFBookmarkFloatTitle = {
-    --     fg = {
-    --       from = "QuickFixMiddleLineNr",
-    --       attr = "fg",
-    --     },
-    --   },
-    -- },
     { QFBookmarkQfLineNr = { inherit = "WarningMsg", bg = "NONE" } },
 
     {
@@ -2777,6 +2742,7 @@ local function set_panel_highlight()
           attr = "fg",
           alter = 0.25,
         },
+        bg = "NONE",
       },
     },
 
@@ -2815,14 +2781,25 @@ local function set_panel_highlight()
 
     {
       TroubleDirectory = {
-        fg = { from = "Normal", attr = "fg" },
+        fg = { from = "Directory", attr = "fg" },
         bg = {
           from = "Directory",
           attr = "fg",
-          transparency = 0.2,
+          transparency = 0.1,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
         bold = true,
+      },
+    },
+    {
+      TroubleBasename = {
+        inherit = "TroubleDirectory",
+        fg = { from = "TroubleDirectory", attr = "fg", alter = 5 },
+      },
+    },
+    {
+      TroubleQfBasename = {
+        inherit = "TroubleBasename",
       },
     },
 
@@ -2916,7 +2893,6 @@ local function set_panel_highlight()
           from = "TroubleIndent",
           attr = "fg",
           alter = 0.1,
-          -- alter = colors.outline_indent_fg_alter or 0,
           transparency = 0.5,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
@@ -2939,14 +2915,11 @@ local function set_panel_highlight()
           from = "TroublePreview",
           attr = "fg",
           alter = 0.15,
-          -- transparency = 0.8,
-          -- color = { from = "PanelBottomNormal", attr = "bg" },
         },
       },
     },
     {
       OutlineCurrentParent = {
-        -- fg = { from = "Normal", attr = "bg" },
         bg = {
           from = "String",
           attr = "fg",
@@ -3219,6 +3192,7 @@ local function colorscheme_overrides()
 
   local hls = overrides[vim.g.colors_name]
   if hls then
+    local H = require "utils.highlights"
     H.all(hls)
   end
 end
@@ -3371,6 +3345,8 @@ Win.note_winhighlights = {
   ["org"] = true,
   ["markdown"] = true,
   ["octo"] = true,
+  ["help"] = true,
+  ["man"] = true,
   ["eldochover"] = true,
 }
 
@@ -3590,16 +3566,18 @@ end
 
 -- ├─────────────────────────────────┤ AUGRUP ├─────────────────────────────────┤
 
-local UtilAugroup = require("utils.map").augroup
+local UtilAugroup = function()
+  return require("utils.map").augroup
+end
 
-UtilAugroup("UserHighlights", {
+UtilAugroup()("UserHighlights", {
   event = "ColorScheme",
   command = function()
     user_highlights()
   end,
 })
 
-UtilAugroup("UserDimWindow", {
+UtilAugroup()("UserDimWindow", {
   event = "InsertEnter",
   pattern = "*",
   command = function(ctx)
@@ -3705,14 +3683,19 @@ local ai_prompt_filetypes = get_note_filetype(Win.aiprompt_winhighlights)
 
 local all_special = vim.tbl_extend("force", {}, Win.note_winhighlights, Win.aiprompt_winhighlights)
 
-UtilAugroup("UserHighlightsCustom", {
+UtilAugroup()("UserHighlightsCustom", {
   event = "FileType",
   pattern = note_filetypes,
   command = function(ctx)
     vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(ctx.buf) then
+        return
+      end
+
       if not pmenu_original then
         pmenu_original = save_pmenu_colors()
       end
+
       local ft = vim.bo[ctx.buf].filetype
       set_hl(ft)
     end)

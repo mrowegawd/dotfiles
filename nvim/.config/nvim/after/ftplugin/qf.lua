@@ -6,11 +6,31 @@ opt.listchars:append "trail: "
 bo.buflisted = false
 wo.list = false
 
-local UtilKey = require "utils.map"
-local UtilQf = require "utils.qf"
+vim.cmd.packadd "cfilter"
+
 local Log = require "utils.log"
 
-vim.cmd.packadd "cfilter"
+local UtilKey = function()
+  return require "utils.map"
+end
+local UtilQf = function()
+  return require "utils.qf"
+end
+
+-- `setup_trouble` helps load `trouble.nvim` upon entering the quickfix window.
+-- Previously loaded via `UIEvent`; heavy plugins are optimized/cleared during
+-- specific events to maintain performance.
+local load_trouble
+local setup_trouble = function()
+  if load_trouble then
+    return
+  end
+  vim.schedule(function()
+    require("vim-pack").load_now "trouble.nvim"
+  end)
+  load_trouble = true
+end
+setup_trouble()
 
 -- These keys are disabled
 keymap.set("n", "<C-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
@@ -22,33 +42,33 @@ end
 
 local __get_vars = {
   title_list = function()
-    if UtilQf.is_loclist() then
+    if UtilQf().is_loclist() then
       return "LF"
     end
     return "QF"
   end,
   title_icon = function()
-    if UtilQf.is_loclist() then
+    if UtilQf().is_loclist() then
       return " "
     end
     return ""
   end,
 }
 local get_items_list = function()
-  if UtilQf.is_loclist() then
-    local results = UtilQf.get_data_qf(true)
+  if UtilQf().is_loclist() then
+    local results = UtilQf().get_data_qf(true)
     return results.location.items
   end
 
-  local results = UtilQf.get_data_qf()
+  local results = UtilQf().get_data_qf()
   return results.quickfix.items
 end
 
-UtilKey.nnoremap("K", function()
+UtilKey().nnoremap("K", function()
   require("overlook.peek").peek_qf()
 end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), remap = true }, true)
 
-UtilKey.nnoremap("<Leader><Leader>", function()
+UtilKey().nnoremap("<Leader><Leader>", function()
   local actions = require "fzf-lua.actions"
   local opts = {
     actions = {
@@ -69,14 +89,14 @@ UtilKey.nnoremap("<Leader><Leader>", function()
     },
   }
 
-  if UtilQf.is_loclist() then
+  if UtilQf().is_loclist() then
     fzf_lua().loclist(opts)
   else
     fzf_lua().quickfix(opts)
   end
 end, { desc = "QF: select items [fzflua]", buffer = api.nvim_get_current_buf(), remap = true }, true)
 
-UtilKey.nnoremap("<Leader>fg", function()
+UtilKey().nnoremap("<Leader>fg", function()
   local path = require "fzf-lua.path"
   local actions = require "fzf-lua.actions"
 
@@ -116,9 +136,9 @@ UtilKey.nnoremap("<Leader>fg", function()
   }
 end, { buffer = api.nvim_get_current_buf(), desc = "QF: live grep list of items [fzflua]", remap = true }, true)
 
-UtilKey.nnoremap("<Leader>fG", function()
+UtilKey().nnoremap("<Leader>fG", function()
   local items = get_items_list()
-  local title = UtilQf.is_loclist() and UtilQf.get_title_qf(true) or UtilQf.get_title_qf()
+  local title = UtilQf().is_loclist() and UtilQf().get_title_qf(true) or UtilQf().get_title_qf()
 
   local _tbl = {}
   for _, x in pairs(items) do
@@ -218,13 +238,13 @@ UtilKey.nnoremap("<Leader>fG", function()
         local Fzflua = fzf_lua()
         title = title .. "  " .. Fzflua().config.__resume_data.last_query
         local list_items = { items = send_data(selected), title = title }
-        UtilQf.save_to_qf_and_auto_open_qf(list_items, true)
+        UtilQf().save_to_qf_and_auto_open_qf(list_items, true)
       end,
       ["alt-q"] = function(selected, _)
         local Fzflua = fzf_lua()
         title = title .. "  " .. Fzflua().config.__resume_data.last_query
         local list_items = { items = send_data(selected), title = title }
-        UtilQf.save_to_qf_and_auto_open_qf(list_items)
+        UtilQf().save_to_qf_and_auto_open_qf(list_items)
       end,
     },
   })

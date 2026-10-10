@@ -294,12 +294,12 @@ open_vsplit() {
   if [[ "$pane_count" -gt 1 ]]; then
     tmux split-window -h -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
   else
-    tmux split-window -hl 80 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
+    tmux split-window -hl 70 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
   fi
 }
 
 open_split() {
-  tmux split-window -v -l 20 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
+  tmux split-window -v -l 15 -t "$ORIGIN_TARGET" -c '#{pane_current_path}'
 }
 
 auto_resize_pane() {

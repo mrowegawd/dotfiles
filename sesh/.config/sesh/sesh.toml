@@ -1,28 +1,79 @@
+[[window]]
+name = "dotfilesxc"
+path = "~/Downloads/dotfilesxc"
+
+[[window]]
+name = "playbook"
+path = "~/moxconf/development/linux-void"
+startup_script = "source .venv/bin/activate"
+
+[[window]]
+name = "videos"
+path = "~/Downloads/screenshot/videos"
+startup_script = "yazi"
+
+[[window]]
+name = "notes"
+path = "~/Dropbox/neorg"
+
+[[window]]
+name = "vimrc"
+path = "~/moxconf/development/dotfiles"
+# startup_script = "vpack"
+
+[[window]]
+name = "Downloads"
+path = "~/Downloads"
+# startup_script = "sleep 2 && tmux split-window -h -R 50 && yazi "
+startup_script = "yazi"
+
+[[window]]
+name = ".config"
+path = "~/.config"
+
+[[window]]
+name = "Lazy"
+path = "~/.local/share/nvim/lazy"
+startup_script = "ll"
+
+[[window]]
+name = "Vim-pack"
+path = "~/.local/share/nvim/site/pack/core/opt"
+startup_script = "ll"
+
+# +------------------------------------------------------------------------------+
+# | DOTFILES                                                                     |
+# +------------------------------------------------------------------------------+
+
 [[session]]
 name = "Dotfiles"
 path = "~/moxconf/development/dotfiles"
-startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v"
+startup_command = "v"
+windows = ["dotfilesxc", "notes", ".config", "Lazy", "Vim-pack"]
+
+# +------------------------------------------------------------------------------+
+# | ANSIBLE PLAYBOOK                                                             |
+# +------------------------------------------------------------------------------+
 
 [[session]]
-name = "Downloads"
-path = "~/Downloads"
-disable_startup_command = true
-# preview_command = "bat --color=always ~/.config/zsh/.zshrc"
-
-# [[session]]
-# name = "Torrent"
-# path = "~/moxconf/media_and_tuts/torrents"
-# startup_command = "ls"
-#
-# [[session]]
-# name = "PDF"
-# path = "~/moxconf/media_and_tuts/pdf"
-# startup_command = "ls"
-
-[[session]]
-name = "Linux void"
+name = "Linuxvoid"
 path = "~/moxconf/development/linux-void"
-disable_startup_command = true
+startup_command = "source .venv/bin/activate"
+windows = ["playbook"]
+
+# +------------------------------------------------------------------------------+
+# | IMAGE & VIDEO                                                                |
+# +------------------------------------------------------------------------------+
+
+[[session]]
+name = "Image&Video"
+path = "~/Downloads/screenshot"
+startup_command = "yazi"
+windows = ["videos", "Downloads"]
+
+# +------------------------------------------------------------------------------+
+# | PROJECT                                                                      |
+# +------------------------------------------------------------------------------+
 
 [[session]]
 name = "Typescript"
@@ -50,36 +101,6 @@ path = "~/moxconf/development/project/misc"
 startup_command = ""
 
 [[session]]
-name = "Mobile"
-path = "~/moxconf/development/project/mobile"
-startup_command = ""
-
-[[session]]
-name = "Log Sentric"
-path = "~/moxconf/development/project/misc"
-startup_command = ""
-
-[[session]]
-name = "News"
-path = "~/moxconf/development/project/misc"
-startup_command = "newsboat-proxy"
-
-[[session]]
-name = "Bench"
-path = "~/moxconf/development/project/misc"
-startup_command = ""
-
-[[session]]
-name = "Lazy"
-path = "~/.local/share/nvim/lazy"
-startup_command = ""
-
-[[session]]
 name = "Nvimplugin"
 path = "~/.local/src/nvim_plugins"
-startup_command = ""
-
-[[session]]
-name = "Notes"
-path = "~/Dropbox/neorg"
 startup_command = ""

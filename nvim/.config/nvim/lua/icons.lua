@@ -6,6 +6,31 @@ M.border = {
   rightsideonly = { "", "", "", "", "", "", "", "│" },
 }
 
+M.status = {
+  success = "󰄴", -- statt ✅
+  error = "󰅚", -- statt ❌
+  warning = "", -- statt ⚠️
+  loading = "󰝲", -- statt 🔄
+  sync = "", -- statt 🔄 (Sync-Variante)
+  info = "󰋼", -- statt ℹ️
+  hint = "󰌶", -- statt 💡
+  warn = "", -- alias für warning
+  gear = "", -- alias für gear
+  rocket = "", -- für Performance-Status
+  list = "", -- Liste
+  vim = "",
+  neovim = "",
+  health = "󰓙", -- MINIMAL ERGÄNZUNG
+  update = "󰚰", -- MINIMAL ERGÄNZUNG
+  current = "", -- MINIMAL ERGÄNZUNG
+  trend_down = "󰔳", -- MINIMAL ERGÄNZUNG
+
+  search = "", -- Suche
+
+  stats = "󰋖", -- Statistiken
+  config = "", -- Konfiguration
+}
+
 M.misc = {
   ai = "  ",
   dots = "󰇘",

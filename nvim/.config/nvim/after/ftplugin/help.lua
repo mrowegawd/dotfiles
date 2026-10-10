@@ -17,7 +17,7 @@ local function get_text(wrapper)
   return vim.fn.matchstr(vim.fn.expand "<cWORD>", ([[\v%s\zs.{-}\ze%s]]):format(escaped, escaped))
 end
 
-keymap("n", "<Leader>lD", function()
+keymap("n", "gd", function()
   local text = get_text "|"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -27,7 +27,7 @@ keymap("n", "<Leader>lD", function()
     end
   end
 end, { desc = "Help: search |tag|", buffer = true })
-keymap("n", "<Leader>ld", function()
+keymap("n", "gD", function()
   local text = get_text "*"
   if text ~= "" then
     vim.cmd "normal! m'"
@@ -38,8 +38,8 @@ keymap("n", "<Leader>ld", function()
   end
 end, { desc = "Help: search *word*", buffer = true })
 
-keymap("n", "gd", "<C-]>", { desc = "Help: goto definition", buffer = true })
-keymap("n", "<BS>", "<C-t>", { desc = "Help: goback last definition", buffer = true })
+keymap("n", "<Leader>ld", "<C-]>", { desc = "Help: go to definition", buffer = true })
+keymap("n", "<BS>", "<C-t>", { desc = "Help: go back last definition", buffer = true })
 
 keymap("n", "go", function()
   local success = pcall(vim.cmd, "normal! /'\\l\\{2,\\}'\r")

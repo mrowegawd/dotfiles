@@ -322,25 +322,8 @@ local function gen_cmd_ext(pane_id, fpath_ext, fpath, back_to_pane_id)
     kill_process_by_name "zathura"
     os.execute("nohup zathura '" .. fpath .. "' >/dev/null 2>&1 &")
   elseif fpath_ext == "jpg" then
-    if not pane_id or pane_id == "" then
-      fail "pane_id required for image preview"
-      return
-    end
-
-    if os.getenv "TERMINAL" == "st" then
-      kill_process_by_name "sxiv"
-      os.execute('nohup sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
-    else
-      exec_os_cmd(pane_id, "clear")
-      exec_os_cmd(
-        pane_id,
-        "kitty +kitten icat --silent --scale-up --transfer-mode=memory --align left --stdin=no " .. fpath
-      )
-
-      if is_in_wezterm() and back_to_pane_id then
-        send_cmd("wezterm", { "cli", "activate-pane", "--pane-id", tostring(back_to_pane_id) })
-      end
-    end
+    kill_process_by_name "sxiv"
+    os.execute('nohup sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
   end
 end
 
@@ -369,25 +352,7 @@ end
 ---@param fpath_ext FileExt
 ---@param fpath string
 local function open_with_tmux(fpath_ext, fpath)
-  -- Non-image: no need pane preview
-  if fpath_ext ~= "jpg" then
-    gen_cmd_ext("", fpath_ext, fpath)
-    return
-  end
-
-  local preview_pane_id = resolve_toggle_term_pane_id()
-  if not preview_pane_id then
-    return
-  end
-
-  center_pane_vertically(preview_pane_id)
-  gen_cmd_ext(preview_pane_id, fpath_ext, fpath)
-
-  -- Back to yazi pane
-  local yazi_pane_id = os.getenv "TMUX_PANE"
-  if yazi_pane_id then
-    os.execute("tmux select-pane -t " .. yazi_pane_id)
-  end
+  gen_cmd_ext("", fpath_ext, fpath)
 end
 
 -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐

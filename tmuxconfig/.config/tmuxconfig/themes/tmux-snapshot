@@ -1,96 +1,148 @@
-# vim: foldmethod=marker foldlevel=0 ft=tmux
+# vim: foldmethod=marker foldlevel=0 ft=ini
 
-STATUSLINE_FG="#292929"
-STATUSLINE_BG="#060606"
-STATUSLINE_BG_MESSAGE="#7ca8cf"
+# ==============================================================================
+# COLOR PALETTE
+# ==============================================================================
 
-TAB_ACTIVE_FG="#060606"
-TAB_ACTIVE_BG="#444444"
+# --- Statusline ---------------------------------------------------------------
+
+STATUSLINE_FG="#4d4d4d"
+STATUSLINE_BG="#191919"
+STATUSLINE_BG_MESSAGE="#f1f1be"
+
+# --- Tabs / Windows -----------------------------------------------------------
+
+TAB_ACTIVE_FG="#191919"
+TAB_ACTIVE_BG="#5a5a5a"
 
 TAB_INACTIVE_FG="#7fa9cc"
 TAB_INACTIVE_BG="#374a59"
 
-SESSION_BG="#040404"
-SESSION_FG="#444444"
+# --- Session ------------------------------------------------------------------
 
-TMUX_BG="#040404"
-TMUX_FG="#b6b6ba"
-TMUX_KEYWORD="#e19067"
+SESSION_BG="#121212"
+SESSION_FG="#606060"
 
-# color untuk bg active pane saat command yazi running (khusus bg file manager)
-# agar sama dengan bg file-manager di nvim
-FM_BG="#040404"
-TMUX_VISUAL_BG="#fff7b4"
+# --- Tmux ---------------------------------------------------------------------
 
-BORDER_ACTIVE="#121212"
-BORDER_INACTIVE="#070707"
-BORDER_INACTIVE_STATUS_FG="#070707"
+TMUX_BG="#121212"
+TMUX_FG="#aaaaaa"
+TMUX_KEYWORD="#c586c0"
+TMUX_VISUAL_BG="#fffffc"
 
-RD="#e08585"
-BLUE="#75a1c7"
-WHITE="#c7c7c7"
-GREEN="#6fbe80"
+# --- File manager -------------------------------------------------------------
 
-# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-# ╎                      PANE & WINDOWS                      ╎
-# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+# Background used when yazi/file-manager is active.
+# Kept in sync with the file-manager background used by Neovim.
+FM_BG="#141414"
 
-# setw -g window-style "bg=$TMUX_BG,fg=$TMUX_FG"
-# setw -g window-active-style bg=$TMUX_BG
+# --- Pane borders -------------------------------------------------------------
 
-setw -g pane-border-status top # bottom, top
-setw -g pane-active-border-style "fg=$BORDER_ACTIVE,bg=$STATUSLINE_BG"
-setw -g pane-border-style "fg=$BORDER_INACTIVE,bg=$STATUSLINE_BG"
+BORDER_ACTIVE="#272727"
+BORDER_INACTIVE="#1d1d1d"
+BORDER_INACTIVE_STATUS_FG="#1d1d1d"
 
-set -g pane-border-format \
-  "#[fg=#f6c177]#{pane_index} #[fg=#e0def4]#{pane_current_command}"
+# --- General colors -----------------------------------------------------------
 
-# Color untuk scrollbar
-set -g pane-scrollbars-style "fg=$TMUX_KEYWORD,bg=$SESSION_BG"
+RED="#f44747"
+BLUE="#569cd6"
+WHITE="#d4d4d4"
+GREEN="#608b4e"
+YELLOW="#dcdcaa"
 
-# Color untuk mode visual tmux
-set -g mode-style "fg=$TMUX_BG,bg=$TMUX_VISUAL_BG"
 
-set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
-set -g message-command-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+# ==============================================================================
+# PANE & WINDOWS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Pane borders
+# ------------------------------------------------------------------------------
+
+set -g pane-active-border-style "fg=$BORDER_ACTIVE"
+set -g pane-border-style "fg=$BORDER_INACTIVE"
+# set -g pane-border-lines heavy
+
+# Mark active pane using border color.
+set -g pane-border-indicators colour
+
+# Show pane title on the top border.
+set -g pane-border-status top
+
+# Prefer the title explicitly set by the application.
+#
+# tmux initializes pane_title with the hostname. If the title is still equal
+# to host_short, fall back to pane_current_command.
+#
+# Result:
+#   1. explicit application title -> use pane_title
+#   2. no explicit title          -> use pane_current_command
+
+# set -g pane-border-format \
+#     " #{pane_index}. #{?#{==:#{pane_title},#{host_short}},#{pane_current_command},#{pane_title}} "
+
+set -g pane-border-format ""
+
+
+# ------------------------------------------------------------------------------
+# Pane scrollbar
+# ------------------------------------------------------------------------------
+
+set -g pane-scrollbars-style \
+    "fg=$TMUX_KEYWORD,bg=$SESSION_BG"
+
+
+# ------------------------------------------------------------------------------
+# Copy / visual mode
+# ------------------------------------------------------------------------------
+
+set -g mode-style \
+    "fg=$TMUX_BG,bg=$TMUX_VISUAL_BG"
+
+
+# ------------------------------------------------------------------------------
+# Messages
+# ------------------------------------------------------------------------------
+
+set -g message-style \
+    "fg=$TMUX_BG,bg=$STATUSLINE_BG_MESSAGE,bold"
+
+set -g message-command-style \
+    "fg=$TMUX_BG,bg=$STATUSLINE_BG_MESSAGE,bold"
 
 set -g clock-mode-colour "$STATUSLINE_BG_MESSAGE"
 
-# Display the border name for debugging purposes:
-# setw -g pane-border-format "\
-# #{?pane_active,#[fg=$RED] ,}\
-# #{?#{==:#{window_panes},1},#[fg=$STATUSLINE_FG]\
-# #{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id},\
-# #[fg=$STATUSLINE_FG]#{?pane_active,#[fg=$RED],} #{pane_index}.#{pane_id}} \
-# #{?pane_active,#{pane_current_command} ,}"
 
-# Border display name disabled
-setw -g pane-border-format ""
-
-# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-# ╎                        STATUSLINE                        ╎
-# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+# ==============================================================================
+# STATUSLINE
+# ==============================================================================
 
 set -g status on
-
-set -g status-style "fg=$STATUSLINE_BG_MESSAGE,bg=$TMUX_BG"
-set -g status-interval 5
 set -g status-position top
-set -g status-justify left # left,centre, absolute-centre
-set -g status-left ""
+set -g status-justify left
+set -g status-interval 5
 
-# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-# ╎ STATUS RIGHT ╎
-# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+set -g status-style \
+    "fg=$STATUSLINE_BG_MESSAGE,bg=$TMUX_BG"
+
+
+# ==============================================================================
+# STATUS RIGHT
+# ==============================================================================
 
 set -g status-right-length 100
-set -g status-right "#{?#{e|<:#{window_width},130},\
+
+set -g status-right "\
+#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$RED] #(date +\"%A %d-%b-%Y\") ,\
+#[fg=$RED] #(date +\"%A %d-%b-%Y\"),\
+\
 #[fg=$GREEN]#{pomodoro_status}\
-#[fg=$RED]#{?@resize-locked,🔒 Resize Pane OFF,}#[default] \
-#[fg=$RED]#{?pane_input_off,🔒 Input OFF,}#[default] \
-#[fg=$BLUE] #(~/.config/tmuxconfig/scripts/status-ses-tmux "#S") \
+#[fg=$RED]#{?@resize-locked,🔒 Resize Pane OFF,}\
+#[default] \
+#[fg=$RED]#{?pane_input_off,🔒 Input OFF,}\
+#[default] \
+#[fg=$BLUE] #($HOME/.config/tmuxconfig/scripts/status-ses-tmux \"#S\") \
 #[fg=$STATUSLINE_FG]  #(date +\"%A %d-%b-%Y\" | sed \
 -e 's/Monday/Senin/' \
 -e 's/Tuesday/Selasa/' \
@@ -99,55 +151,188 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 -e 's/Friday/Jumat/' \
 -e 's/Saturday/Sabtu/' \
 -e 's/Sunday/Minggu/') \
- #[fg=$RED] #(date +\"%H:%M\") \
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG] #{?client_prefix,#[fg=$TMUX_KEYWORD]#{prefix},#{prefix}}\
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold]  👨 #(whoami) }"
-
-# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-# ╎ STATUS LEFT ╎
-# └╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-
-# '' '' '' '' '' '' 
-
-set -g status-left-length 100
-set -g status-left "#{?#{>=:#{window_width},80},\
-#[bg=$SESSION_FG]#[fg=$SESSION_BG] ❐ #[bold]#S,\
-#[bg=$SESSION_BG]#[fg=$SESSION_FG]#(bash -c 'printf \"%*s\" $(( $(tmux display -p \"#{window_width}\") * 18 / 100 )) \"\"')  ❐ #[bold]#S}\
-  \
-#{?#{==:#I,1},\
-#{?#{==:#{pane_mode},copy-mode},\
-#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$RED],#[fg=$TMUX_BG]#[bg=$RED]},\
-#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]}},\
-#{?#{>=:#{window_width},80},#[fg=$SESSION_BG]#[bg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
+#[fg=$RED]  #(date +\"%H:%M\") \
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG] \
+#{?client_prefix,#[fg=$TMUX_KEYWORD]#{prefix},#{prefix}}\
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] 👨 #(whoami)\
 }"
 
-set-option -g window-status-current-format "\
-#{?pane_in_mode,\
-#{?#{==:#I,1},#[fg=$RED]#[bg=$RED],#[fg=$TMUX_BG]#[bg=$RED]}#[fg=$TMUX_BG]#[bg=$RED],\
-#{?#{==:#I,1},#[fg=$TAB_ACTIVE_BG]#[bg=$TAB_ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]}#[fg=$TAB_ACTIVE_FG]#[bg=$TAB_ACTIVE_BG]\
-}#[bold] #I:#{=30:#{b:pane_current_path}} #[nobold]\
-#{?window_zoomed_flag,#{?pane_in_mode,#[fg=$TMUX_BG]󰁌 ,#[fg=$TAB_ACTIVE_FG]󰁌 },}\
+
+# ==============================================================================
+# STATUS LEFT
+# ==============================================================================
+
+set -g status-left-length 100
+
+# Session name.
+#
+# Wide terminal:
+#   use normal session block.
+#
+# Narrow terminal:
+#   use a wider invisible/padded area before the session name so that
+#   the statusline remains visually balanced.
+
+set -g status-left "\
+#{?#{>=:#{window_width},80},\
+#[bg=$SESSION_FG]#[fg=$SESSION_BG] ❐ #[bold]#S,\
+#[bg=$SESSION_BG]#[fg=$SESSION_FG]\
+#(printf '%*s' $(( $(tmux display -p '#{window_width}') * 18 / 100 )) '')\
+ ❐ #[bold]#S\
+}\
+\
+#{?#{==:#I,1},\
+\
 #{?#{==:#{pane_mode},copy-mode},\
-#{?#{e|>:#{search_count},0},#[fg=$RED]#[bg=$TAB_ACTIVE_FG]#[fg=$TAB_ACTIVE_BG] Found #{search_count} #[fg=$TAB_ACTIVE_FG]#[bg=$STATUSLINE_BG_MESSAGE],#[fg=$RED]#[bg=$STATUSLINE_BG_MESSAGE]}\
-#[fg=$TMUX_BG] ℓ #{e|-|:#{history_size},#{scroll_position}}/#{history_size} #[fg=$STATUSLINE_BG_MESSAGE]#[bg=$TMUX_BG],\
+\
+#{?#{>=:#{window_width},80},\
+#[fg=$SESSION_BG]#[bg=$RED],\
+#[fg=$TMUX_BG]#[bg=$RED]\
+},\
+\
+#{?#{>=:#{window_width},80},\
+#[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG],\
+#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]\
+}\
+}\
+,\
+\
+#{?#{>=:#{window_width},80},\
+#[fg=$SESSION_BG]#[bg=$TMUX_BG],\
+#[fg=$TMUX_BG]#[bg=$TMUX_BG]\
+}\
+\
+}"
+
+
+# ==============================================================================
+# WINDOW STATUS — ACTIVE
+# ==============================================================================
+
+set -g window-status-current-format "\
+#{?pane_in_mode,\
+\
+#{?#{==:#I,1},\
+#[fg=$RED]#[bg=$RED],\
+#[fg=$TMUX_BG]#[bg=$RED]\
+}\
+#[fg=$TMUX_BG]#[bg=$RED],\
+\
+#{?#{==:#I,1},\
+#[fg=$TAB_ACTIVE_BG]#[bg=$TAB_ACTIVE_BG],\
+#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]\
+}\
+#[fg=$TAB_ACTIVE_FG]#[bg=$TAB_ACTIVE_BG]\
+}\
+\
+#[bold] #I:\
+#{?#{==:#{automatic-rename},1},\
+#{=30:#{b:pane_current_path}},\
+#{window_name}\
+}\
+#[nobold]\
+\
+#{?window_zoomed_flag,\
+#{?pane_in_mode,\
+#[fg=$TMUX_BG]󰁌 ,\
+#[fg=$TAB_ACTIVE_FG]󰁌 \
+},\
+}\
+\
+#{?#{==:#{pane_mode},copy-mode},\
+\
+#{?#{e|>:#{search_count},0},\
+\
+#[fg=$RED]#[bg=$TAB_ACTIVE_FG]\
+#[fg=$TAB_ACTIVE_BG] Found #{search_count} \
+#[fg=$TAB_ACTIVE_FG]#[bg=$STATUSLINE_BG_MESSAGE],\
+\
+#[fg=$RED]#[bg=$STATUSLINE_BG_MESSAGE]\
+}\
+\
+#[fg=$TMUX_BG] ℓ \
+#{e|-|:#{history_size},#{scroll_position}}\
+/#{history_size} \
+#[fg=$STATUSLINE_BG_MESSAGE]#[bg=$TMUX_BG],\
+\
 #[fg=$TAB_ACTIVE_BG]#[bg=$TMUX_BG]\
 }"
 
-set-option -g window-status-format "\
+
+# ==============================================================================
+# WINDOW STATUS — INACTIVE
+# ==============================================================================
+
+set -g window-status-format "\
 #[fg=$TMUX_BG,bg=$TMUX_BG]\
-#[fg=$STATUSLINE_FG,bg=$TMUX_BG,noreverse] #I:#{=30:#{b:pane_current_path}} \
-#{?window_zoomed_flag,#[fg=$YELLOW]󰁌 ,}\
-#[fg=$TMUX_BG,bg=$TMUX_BG]"
+#[fg=$STATUSLINE_FG,bg=$TMUX_BG,noreverse] \
+#I:\
+#{?#{==:#{automatic-rename},1},\
+#{=30:#{b:pane_current_path}},\
+#{window_name}\
+} \
+\
+#{?window_zoomed_flag,\
+#[fg=$YELLOW]󰁌 ,\
+}\
+\
+#[fg=$TMUX_BG,bg=$TMUX_BG]\
+"
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏                         PLUGINS                          ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-# ┌╌╌╌╌╌╌╌╌╌┐
-# ╎ FINGERS ╎
-# └╌╌╌╌╌╌╌╌╌┘
+# ==============================================================================
+# OPTIONAL / DEBUG FORMATS
+# ==============================================================================
 
-# overlay fingers / highlight handled by tmux-fingers
-set -g @fingers-hint-style 'fg=black,bg=yellow,bold'
-set -g @fingers-highlight-style 'fg=black,bg=green,bold'
-set -g @fingers-selected-hint-style 'fg=white,bg=blue,bold'
+# ------------------------------------------------------------------------------
+# Simple pane border
+# ------------------------------------------------------------------------------
+
+# set -g pane-border-format ""
+
+
+# ------------------------------------------------------------------------------
+# Debug pane border
+#
+# Uncomment when debugging pane state.
+# ------------------------------------------------------------------------------
+
+# set -g pane-border-format "\
+# #{?pane_active,#[fg=$RED] ,}\
+# #{?#{==:#{window_panes},1},\
+# #[fg=$STATUSLINE_FG]\
+# #{?pane_active,#[fg=$RED],} \
+# #{pane_index}.#{pane_id},\
+# #[fg=$STATUSLINE_FG]\
+# #{?pane_active,#[fg=$RED],} \
+# #{pane_index}.#{pane_id}} \
+# #{?pane_active,#{pane_current_command} ,}"
+
+
+# ------------------------------------------------------------------------------
+# Alternative simple pane border
+# ------------------------------------------------------------------------------
+
+# set -g pane-border-format \
+#     "#[fg=#f6c177]#{pane_index} #[fg=#e0def4]#{pane_current_command}"
+
+
+# ==============================================================================
+# PLUGINS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# tmux-fingers
+# ------------------------------------------------------------------------------
+
+# Overlay hint.
+set -g @fingers-hint-style \
+    'fg=black,bg=yellow,bold'
+
+# Highlight matched targets.
+set -g @fingers-highlight-style \
+    'fg=black,bg=green,bold'
+
+# Currently selected hint.
+set -g @fingers-selected-hint-style \
+    'fg=white,bg=blue,bold'

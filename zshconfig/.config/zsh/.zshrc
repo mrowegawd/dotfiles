@@ -110,21 +110,37 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   zstyle ':fzf-tab:*' use-fzf-default-opts yes
   zstyle ':fzf-tab:*' continuous-trigger 'ctrl-y'
 
+  zstyle ':fzf-tab:*' popup-min-size 30 10
+  zstyle ':fzf-tab:*' popup-pad 0 0
+  zstyle ':fzf-tab:*' popup-fit-preview yes
+
+  command-exists() {
+    ((${+commands[$1]}))
+    return $?
+  }
+
+  if command-exists eza; then
+    fzf_dir_preview='eza -1 --color=always --icons $realpath'
+    zstyle ':fzf-tab:complete:eza:*' fzf-preview "$fzf_dir_preview"
+  else
+    fzf_dir_preview='ls -1 --color=always $realpath'
+  fi
+
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview "$fzf_dir_preview"
+  zstyle ':fzf-tab:complete:ls:*' fzf-preview "$fzf_dir_preview"
+
   if [[ -n "$TMUX" ]]; then
     zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-    zstyle ':fzf-tab:*' popup-min-size 100 30
-    zstyle ':fzf-tab:*' popup-pad 2 1
-    zstyle ':fzf-tab:*' popup-fit-preview yes
-    zstyle ':fzf-tab:*' fzf-flags \
-      --preview-window "right:nohidden:50%" \
-      --no-border \
-      --min-height 20
-  else
-    zstyle ':fzf-tab:*' fzf-flags \
-      --preview-window "right:nohidden:50%" \
-      --border \
-      --min-height 20
   fi
+
+  # if command-exists bat; then
+  #   fzf_bat_preview='bat --color=always -n -r :500'
+  #   FZF_CTRL_T_OPTS="$FZF_CTRL_T_OPTS --preview '$fzf_bat_preview {}'"
+  #   zstyle ':fzf-tab:complete:bat:*' fzf-preview "$fzf_bat_preview \$realpath"
+  #   zstyle ':fzf-tab:complete:cat:*' fzf-preview "$fzf_bat_preview \$realpath"
+  # else
+  #   FZF_CTRL_T_OPTS="$FZF_CTRL_T_OPTS --preview 'less {}'"
+  # fi
 
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
@@ -411,6 +427,7 @@ source_if_exists "$HOME/.config/bashrc/aliases.bashrc"
 bindkey -v
 
 bindkey '^y' autosuggest-accept
+bindkey '^[y' autosuggest-accept
 bindkey '^?' backward-delete-char
 bindkey '^b' backward-word
 bindkey '^f' forward-word

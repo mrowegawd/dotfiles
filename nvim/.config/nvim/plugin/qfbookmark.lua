@@ -1,4 +1,5 @@
 local add_local_or_remote = require("vim-pack").add_local_or_remote
+-- local add_remote_or_local_on_event = require("vim-pack").add_remote_or_local_on_event
 
 local Log = require "utils.log"
 local ConfigPath = require("config").path

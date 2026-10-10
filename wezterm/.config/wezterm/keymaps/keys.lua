@@ -246,16 +246,6 @@ return {
       if KeymapUtil.is_in_tmux(pane) then
         window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
       else
-        if KeymapUtil.is_in_nnn(pane) then
-          window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-          return
-        end
-
-        if KeymapUtil.is_in_lf(pane) then
-          window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-          return
-        end
-
         if KeymapUtil.is_in_yazi(pane) then
           window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
           return
@@ -409,11 +399,6 @@ return {
       if KeymapUtil.is_in_tmux(pane) then
         window:perform_action({ SendKey = { key = "e", mods = "ALT" } }, pane)
       else
-        if KeymapUtil.is_in_nnn(pane) or KeymapUtil.is_in_lf(pane) or KeymapUtil.is_in_yazi(pane) then
-          window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-          return
-        end
-
         -- Handle jika cursor masih berada di nvim tetapi yazi sudah terbuka
         if KeymapUtil.is_right_pane_exists(pane) then
           window:perform_action({ ActivatePaneDirection = "Right" }, pane)

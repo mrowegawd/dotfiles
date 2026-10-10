@@ -23,8 +23,6 @@ fi
 #   export BROWSER="zen-browser"
 # fi
 
-# nnn -c
-# lf
 # yazi
 export TERM_FILEMANAGER="yazi"
 
@@ -52,18 +50,6 @@ export PATH="$PATH:/opt/flutter/bin"
 # config ansible agar bisa menampilkan color ketika menjalankan `molecule cli`
 export PY_COLORS='1'
 export ANSIBLE_FORCE_COLOR='1'
-#
-# }}}
-# NNN: -------------------------------------------------------------------- {{{
-#
-export NNN_OPENER=$HOME/.config/miscxrdb/nnn/nnn-opener.sh
-export NNN_PLUG='g:fzmark;q:fzsearch;o:fzopen;p:preview-tui;d:fzcd;t:termcd;O:opencurdir;G:oplazygit;D:oplazydocker;v:opvsplit;s:opsplit;P:opmpvlist'
-
-export NNN_FIFO='/tmp/nnn.fifo'
-export NNN_OPTS="H"
-
-BLK="0B" CHR="0B" DIR="04" EXE="06" REG="00" HARDLINK="06" SYMLINK="06" MISSING="00" ORPHAN="09" FIFO="06" SOCK="0B" OTHER="06"
-export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 #
 # }}}
 # SDKMAN: ----------------------------------------------------------------- {{{

@@ -37,6 +37,7 @@ GET_BLUE_ALT=$(xrdb_get ".color12")
 GET_MAGENTA=$(xrdb_get ".color5")
 GET_CYAN=$(xrdb_get ".color6")
 GET_WHITE=$(xrdb_get ".color7")
+GET_KEYWORD=$(xrdb_get ".color16")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Extra color
@@ -58,7 +59,7 @@ theme_get() { grep -i "$1:" <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xa
 replace_in() { sed -i -e "s/%%${2}%%/${3}/g" "$1"; }
 
 # Replace a variable assignment: replace_var <file> <var> <value>
-replace_var() { sed -i -e "s/^${2}=.*$/${2}=\"${3}\"/g" "$1"; }
+replace_var() { sed -i -e "s/^${2}[[:space:]]*=.*$/${2}=\"${3}\"/g" "$1"; }
 
 lighten_color() {
   local hex_color="$1" factor="$2"
@@ -105,7 +106,7 @@ send_notify() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 set_vim() {
-  local nvim_config="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
+  local nvim_config="$DOTFILES_PATH/nvim/.config/nvim/init.lua"
   local colorscheme="$1"
   [[ "$colorscheme" == "base2tone-space-dark" ]] && colorscheme="base2tone_space_dark"
   sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$colorscheme\"/" "$nvim_config"
@@ -204,7 +205,7 @@ set_tmux() {
 
   # General
   replace_var "$tmux_themes" "TMUX_FG" "$(theme_get tmux_fg)"
-  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_fm_bg)"
+  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_session_bg)"
   replace_var "$tmux_themes" "FM_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "TMUX_KEYWORD" "$(theme_get tmux_keyword)"
 
@@ -218,7 +219,7 @@ set_tmux() {
   replace_var "$tmux_themes" "BORDER_INACTIVE_STATUS_FG" "$(theme_get tmux_border_inactive_status_fg)"
 
   # Session
-  replace_var "$tmux_themes" "SESSION_BG" "$(theme_get tmux_fm_bg)"
+  replace_var "$tmux_themes" "SESSION_BG" "$(theme_get tmux_session_bg)"
   replace_var "$tmux_themes" "SESSION_FG" "$(theme_get tmux_session_fg)"
 
   # Statusline
@@ -232,6 +233,47 @@ set_tmux() {
   replace_var "$tmux_themes" "BLUE" "$GET_BLUE"
   replace_var "$tmux_themes" "WHITE" "$GET_WHITE"
   replace_var "$tmux_themes" "GREEN" "$GET_GREEN"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# set_herdr
+# ─────────────────────────────────────────────────────────────────────────────
+
+set_herdr() {
+  local herdr_theme="$HOME/.config/herdr/config.toml"
+
+  if [[ ! -f "$herdr_theme" ]]; then
+    send_notify "set_tmux: $herdr_theme not found!"
+    return
+  fi
+
+  sleep 1
+
+  # General
+  replace_var "$herdr_theme" "accent" "$(theme_get tmux_statusline_fg)"
+
+  # Text
+  replace_var "$herdr_theme" "subtext0" "$(theme_get tmux_statusline_fg)" # confirmed: inactive workspace names (not the line)
+  replace_var "$herdr_theme" "text" "$(theme_get tmux_message_bg)"
+
+  # Border
+  replace_var "$herdr_theme" "overlay0" "$(theme_get tmux_border_active)"
+  replace_var "$herdr_theme" "overlay1" "$(theme_get tmux_statusline_fg)"
+
+  replace_var "$herdr_theme" "surface_dim" "$(theme_get tmux_bg)"
+  replace_var "$herdr_theme" "surface0" "$(theme_get tmux_session_bg)"
+  replace_var "$herdr_theme" "surface1" "$(theme_get tmux_session_bg)"
+
+  # Session
+  replace_var "$herdr_theme" "panel_bg" "$(theme_get tmux_session_bg)"
+  replace_var "$herdr_theme" "sidebar_bg" "$(theme_get tmux_session_bg)"
+
+  # Base colors
+  replace_var "$herdr_theme" "red" "$GET_RED"
+  replace_var "$herdr_theme" "blue" "$GET_BLUE"
+  replace_var "$herdr_theme" "mauve" "$(theme_get tmux_visual_bg)"
+  replace_var "$herdr_theme" "yellow" "$GET_YELLOW"
+  replace_var "$herdr_theme" "green" "$GET_GREEN"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -634,28 +676,6 @@ set_shaders_color() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# set_eilmeldung
-# ─────────────────────────────────────────────────────────────────────────────
-
-set_eilmeldung() {
-  local config="$DOTFILES_PATH/eilmeldung/.config/eilmeldung/config.toml"
-
-  [[ ! -f "$config" ]] && return
-
-  sed -i -e "s/^background\s=.*$/background = \"$(theme_get tmux_bg)\"/g" "$config"
-  sed -i -e "s/^foreground\s=.*$/foreground = \"$GET_BLUE\"/g" "$config"
-  sed -i -e "s/^muted\s=.*$/muted = \"$(theme_get tmux_border_active)\"/g" "$config"
-  sed -i -e "s/^highlight\s=.*$/highlight = \"$(theme_get tmux_visual_bg)\"/g" "$config"
-  sed -i -e "s/^accent_primary\s=.*$/accent_primary = \"$GET_MAGENTA\"/g" "$config"
-  sed -i -e "s/^accent_secondary\s=.*$/accent_secondary = \"$GET_BLUE\"/g" "$config"
-  sed -i -e "s/^accent_tertiary\s=.*$/accent_tertiary = \"$GET_CYAN\"/g" "$config"
-  sed -i -e "s/^accent_quaternary\s=.*$/accent_quaternary = \"$GET_GREEN\"/g" "$config"
-  sed -i -e "s/^info\s=.*$/info = \"$GET_BLUE\"/g" "$config"
-  sed -i -e "s/^warning\s=.*$/warning = \"$GET_YELLOW\"/g" "$config"
-  sed -i -e "s/^error\s=.*$/error = \"$GET_RED\"/g" "$config"
-}
-
-# ─────────────────────────────────────────────────────────────────────────────
 # set_polybar (not implemented)
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -698,6 +718,7 @@ setup() {
   set_rofi
   set_dunst
   set_tmux "$theme"
+  set_herdr
   set_btop
   set_eww
   set_vim "$theme"
@@ -710,7 +731,6 @@ setup() {
   set_zshrc "$theme"
   set_shaders_color "$theme"
   set_kitty "$theme"
-  set_eilmeldung
 
   sleep 1 && send_notify "Reload bspwm config.."
 

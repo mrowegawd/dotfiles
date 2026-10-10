@@ -17,14 +17,29 @@ add {
       win_options = {
         concealcursor = "n",
       },
+      use_default_keymaps = false,
       keymaps = {
+        ["g?"] = { "actions.show_help", mode = "n" },
+        ["<CR>"] = "actions.select",
         ["<BS>"] = { "actions.parent", mode = "n" },
         ["~"] = { "<cmd>edit $HOME<CR>", mode = "n", desc = "Open CWD" },
 
-        ["<Localleader>qv"] = { "actions.select", opts = { vertical = true } },
-        ["<Localleader>qs"] = { "actions.select", opts = { horizontal = true } },
-        ["<Localleader>qt"] = { "actions.select", opts = { tab = true } },
-        ["<Localleader>qq"] = {
+        ["-"] = { "actions.parent", mode = "n" },
+        ["_"] = { "actions.open_cwd", mode = "n" },
+        ["`"] = { "actions.cd", mode = "n" },
+
+        ["<Leader>t"] = "actions.open_terminal",
+        ["<a-t>"] = "actions.open_terminal",
+        ["P"] = "actions.preview",
+        ["H"] = { "actions.toggle_hidden", mode = "n" },
+        ["<Leader>cd"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+        ["<Leader>ov"] = { "actions.select", opts = { vertical = true } },
+        ["<Leader>os"] = { "actions.select", opts = { horizontal = true } },
+        ["<Leader>ot"] = { "actions.select", opts = { tab = true } },
+        ["<c-a>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
+        ["<c-a>cs"] = { "actions.change_sort", mode = "n" },
+        ["<C-a>p"] = "actions.paste_from_system_clipboard",
+        ["<c-a>q"] = {
           function()
             local oil = require "oil"
             local fs = require "oil.fs"
@@ -92,17 +107,18 @@ add {
             end)
           end,
         },
-
-        ["<Leader>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
-        ["<Leader>p"] = "actions.paste_from_system_clipboard",
-        ["<Leader>t"] = "actions.open_terminal",
-        ["<a-t>"] = "actions.open_terminal",
-
-        ["P"] = "actions.preview",
-        ["H"] = { "actions.toggle_hidden", mode = "n" },
-
-        ["<Leader>cd"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
-
+        ["<c-a>uv"] = {
+          desc = "Toggle detail view",
+          callback = function()
+            local oil = require "oil"
+            local config = require "oil.config"
+            if #config.columns == 1 then
+              oil.set_columns { "icon", "permissions", "size", "mtime" }
+            else
+              oil.set_columns { "icon" }
+            end
+          end,
+        },
         ["<a-o>"] = {
           function()
             local reverse = {}
@@ -147,10 +163,9 @@ add {
         },
         ["<a-D>"] = {
           function()
-            require("utils.terminal").lazydocker()
+            return require("utils.terminal").lazydocker()
           end,
         },
-
         ["<Leader><Leader>"] = {
           function()
             local dir = require("oil").get_current_dir()
@@ -172,18 +187,6 @@ add {
             fzf_lua.live_grep { cwd = dir }
           end,
           desc = "[F]ind by [G]rep in dir",
-        },
-        ["<Localleader>qV"] = {
-          desc = "Toggle detail view",
-          callback = function()
-            local oil = require "oil"
-            local config = require "oil.config"
-            if #config.columns == 1 then
-              oil.set_columns { "icon", "permissions", "size", "mtime" }
-            else
-              oil.set_columns { "icon" }
-            end
-          end,
         },
       },
       view_options = {
