@@ -74,7 +74,7 @@ function M.spawn_toggle_pane(window, pane, direction, percent_size)
 end
 
 function M.spawn_file_manager(window, pane, percent_size, cmd_file_manager)
-  cmd_file_manager = cmd_file_manager or "yazi" -- nnn, yazi, ranger
+  cmd_file_manager = cmd_file_manager or "yazi" -- yazi
   percent_size = percent_size or 20
 
   window:perform_action(
@@ -163,14 +163,6 @@ end
 function M.is_in_nvim(pane)
   -- or pane:get_user_vars().IS_NVIM == "true"
   return pane:get_foreground_process_name():find "n?vim"
-end
-
-function M.is_in_nnn(pane)
-  return Util.get_foreground_process_name(pane, "nnn")
-end
-
-function M.is_in_lf(pane)
-  return Util.get_foreground_process_name(pane, "dash")
 end
 
 function M.is_in_yazi(pane)

@@ -1,27 +1,24 @@
-local Log = require "utils.log"
-
 local M = {
   copen = "belowright copen",
   lopen = "belowright lopen", -- :botright :topleft :aboveleft :belowright :leftabove :rightbelow
 }
 
 local Qfbookmark
-local load = false
 
 local function QfBookmarkUtil()
-  if Qfbookmark and load then
+  if Qfbookmark then
     return Qfbookmark
   end
 
-  -- if not require("utils.plugin").has_module "qfbookmark.nvim" then
-  --   Log.error "QFBookLists not install!!!"
-  --   return
-  -- end
+  local ok, qfmark = pcall(require, "qfbookmark.utils")
+  if not ok then
+    return nil
+  end
+  Qfbookmark = qfmark
 
-  Qfbookmark = require "qfbookmark.utils"
-  load = true
   return Qfbookmark
 end
+
 
 ---@param is_loc? boolean
 function M.get_total_stack_qf(is_loc)

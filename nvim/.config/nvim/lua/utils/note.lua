@@ -3,6 +3,7 @@ local M = {
 }
 
 local ConfigPath = require("config").path
+local wiki_path = ConfigPath.wiki_path
 
 local Log = require "utils.log"
 
@@ -17,11 +18,24 @@ local Orgmode, Fzflua, FzfluaBuiltin
 local file_ignores, title_picker, regex_url_backlinks, regex_title, rg_opts
 
 -- ├─────────────────────────────────┤ SETUP ├──────────────────────────────┤
+
+local function setup_org()
+  local ok, org = pcall(require, "org")
+  if not ok then
+    return nil
+  end
+  return org
+end
 local function setup_orgmode()
   if Orgmode then
     return Orgmode
   end
-  Orgmode = require "orgmode"
+  local ok, org = pcall(require, "orgmode")
+  if not ok then
+    Orgmode = setup_org()
+  end
+
+  Orgmode = org
   return Orgmode
 end
 
@@ -47,6 +61,62 @@ local function clone_tbl(tbl)
   end
   return t
 end
+
+local match_tags
+local set_global_agenda_files
+
+local contents_tags = { val = {}, tags = {} }
+
+local org_pgk = {
+  org = {
+    path_global_wiki = string.format("%s/**/*", wiki_path),
+    path_local_wiki = string.format("%s/orgmode/**/*", ConfigPath.wiki_path),
+    search_tag = function(t)
+      -- local api = require "org.api"
+      -- api.agenda.tags("working")
+
+      require("org.tags").set_tags(nil, { t })
+    end,
+    collect_tags = function()
+      local files = require "org.files"
+      local _tags = {}
+      for _, f in ipairs(files.agenda_files()) do
+        for _, x in ipairs(f.headlines) do
+          local tags = x:get_tags()
+          if vim.tbl_isempty(tags) then
+            goto continue
+          end
+          for _, t in ipairs(tags) do
+            table.insert(_tags, t)
+          end
+          ::continue::
+        end
+      end
+      contents_tags.tags = require("utils.cmd").remove_duplicates_table(_tags)
+    end,
+    set_agenda_dir = function(path)
+      local opts_ = require("org.config").opts
+      opts_.agenda_files = { path }
+    end,
+  },
+  orgmode = {
+    path_global_wiki = string.format("%s/**/*", wiki_path),
+    path_local_wiki = string.format("%s/orgmode/**/*", ConfigPath.wiki_path),
+    search_tag = function(tag)
+      Orgmode = setup_orgmode()
+      Orgmode.agenda:tags { match_query = tag }
+    end,
+    collect_tags = function()
+      contents_tags.tags = {}
+    end,
+    set_agenda_dir = function(path)
+      Orgmode = setup_orgmode()
+      Orgmode.setup { org_agenda_files = path }
+    end,
+  },
+}
+
+local org = org_pgk[M.note_mode]
 
 ---@param tbl table
 ---@param element string
@@ -443,7 +513,7 @@ local function live_grep()
   Fzflua = setup_fzflua()
   reset_vars()
 
-  return Fzflua.live_grep_glob {
+  return Fzflua.live_grep {
     cwd = ConfigPath.wiki_path,
     rg_opts = table.concat(rg_opts, " "),
     winopts = { title = get_title_note "- Live grep" },
@@ -453,14 +523,10 @@ end
 local function live_grep_visual()
   reset_vars()
 
-  local viz = require("utils.cmd").get_visual_selection { strict = true }
-  if not viz then
-    return
-  end
-
+  local viz = require("utils.cmd").get_selection()
   Fzflua = setup_fzflua()
   return Fzflua.grep {
-    query = string.format("%s", viz.selection),
+    query = string.format("%s", viz),
     rg_glob = true,
     cwd = ConfigPath.path.wiki_path,
     rg_opts = table.concat(rg_opts, " "),
@@ -867,11 +933,7 @@ function Mapping.insert_backlinks()
   }
 end
 
-local match_tags
-local set_global_agenda_files
-
----@param contents_tags table
-function Mapping.open_tags(contents_tags)
+function Mapping.open_tags()
   return {
     ["default"] = function(selection)
       if selection == nil then
@@ -897,8 +959,7 @@ function Mapping.open_tags(contents_tags)
 
       -- Temporarily swap ke full wiki path
       if M.note_mode == "org" then
-        Orgmode = setup_orgmode()
-        Orgmode.agenda:tags { match_query = match_tags }
+        org.search_tag(match_tags)
       elseif M.note_mode == "markdown" then
         local function gather_tag_picker_list(tag_locations, tags)
           local entries = {}
@@ -1036,32 +1097,22 @@ local function get_tags(opts)
     return
   end
 
-  local contents_tags = { val = {}, tags = {} }
-
   if M.note_mode == "org" then
-    local wiki_path = ConfigPath.wiki_path
-
     if not set_global_agenda_files then
-      local orgfiles = wiki_path .. "/**/*.org"
-      Orgmode = setup_orgmode()
-      Orgmode.setup { org_agenda_files = orgfiles }
-      set_global_agenda_files = true
+      org.set_agenda_dir(org.path_global_wiki)
+      org.collect_tags()
     end
 
-    get_tags_from_path_async(wiki_path, function(tags)
-      contents_tags.tags = tags
+    if #contents_tags.tags == 0 then
+      Log.warn "No tags found."
+      return
+    end
 
-      if #contents_tags.tags == 0 then
-        Log.warn "No tags found."
-        return
-      end
-
-      local fzfopts = {
-        winopts = { title = get_title_note "- Search note by tags" },
-        actions = Mapping.open_tags(contents_tags),
-      }
-      picker("search tags", contents_tags, fzfopts)
-    end)
+    local fzfopts = {
+      winopts = { title = get_title_note "- Search note by tags" },
+      actions = Mapping.open_tags(),
+    }
+    picker("search tags", contents_tags, fzfopts)
   elseif M.note_mode == "markdown" then
     local search = require "obsidian.search"
     search.find_tags_async("", function(tag_locations)
@@ -1073,7 +1124,7 @@ local function get_tags(opts)
       end
       local fzfopts = {
         winopts = { title = get_title_note "- Search note by tags", preview = { hidden = true } },
-        actions = Mapping.open_tags(contents_tags),
+        actions = Mapping.open_tags(),
       }
       picker("search tags", contents_tags, fzfopts)
     end)
@@ -1210,8 +1261,6 @@ local function insert_tag(opts)
     end
     return
   end
-
-  local contents_tags = { val = {}, tags = {} }
 
   local optsfzf = {
     winopts = { title = get_title_note "- insert tag" },
