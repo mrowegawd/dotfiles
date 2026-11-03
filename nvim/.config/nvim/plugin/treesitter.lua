@@ -2,8 +2,10 @@ local add = require("vim-pack").add
 local add_on_event = require("vim-pack").add_on_event
 local on_plugin_update = require("vim-pack").on_plugin_update
 
-local Log = require "utils.log"
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+local UtilKey = lazy "utils.map"
 
 -- Prepending nvim-treesitter's `runtime/` shadows Neovim's bundled queries for
 -- every language, not just the ones listed below. Those queries track
@@ -109,7 +111,7 @@ add_on_event("LspAttach", {
     src = "nvim-treesitter/nvim-treesitter-context",
     module_name = "treesitter-context",
     opts = function()
-      local H = require "utils.highlights"
+      local H = lazy "utils.highlights"
 
       H.plugin("treesitter-context", {
         theme = {
@@ -117,10 +119,10 @@ add_on_event("LspAttach", {
             {
               TreesitterContext = {
                 bg = {
-                  from = "Normal",
-                  attr = "bg",
-                  alter = 1,
-                  transparency = 0.35,
+                  from = "WinSeparator",
+                  attr = "fg",
+                  alter = 0.25,
+                  transparency = 0.5,
                   color = {
                     from = "Normal",
                     attr = "bg",
@@ -138,17 +140,51 @@ add_on_event("LspAttach", {
               TreesitterContextBottom = {
                 fg = { from = "TreesitterContext", attr = "bg" },
                 bg = { from = "TreesitterContext", attr = "bg" },
-                sp = "NONE",
+
+                underline = true,
+                sp = {
+                  from = "TreesitterContext",
+                  attr = "bg",
+                  alter = 1,
+                  transparency = 0.4,
+                  color = {
+                    from = "TreesitterContext",
+                    attr = "bg",
+                  },
+                },
               },
             },
 
             {
-              TreesitterContextLineNumber = {
+              TreesitterContextLineNumberBottom = {
                 fg = {
+                  from = "LineNr",
+                  attr = "fg",
+                  alter = 1.5,
+                },
+                -- sp = "NONE",
+                -- underline = false,
+                -- undercurl = false,
+
+                underline = true,
+                sp = {
                   from = "TreesitterContext",
                   attr = "bg",
-                  contrast = 0.15,
-                  transparency = 0.1,
+                  alter = 1,
+                  transparency = 0.3,
+                  color = {
+                    from = "TreesitterContext",
+                    attr = "bg",
+                  },
+                },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = {
+                  from = "TreesitterContextLineNumberBottom",
+                  attr = "fg",
+                  transparency = 0.4,
                   color = {
                     from = "TreesitterContext",
                     attr = "bg",
@@ -156,24 +192,6 @@ add_on_event("LspAttach", {
                 },
                 bg = { from = "TreesitterContext" },
                 bold = true,
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = {
-                  from = "Type",
-                  attr = "fg",
-                  contrast = 0.15,
-                  alter = 0.5,
-                  transparency = 0.15,
-                  color = {
-                    from = "TreesitterContext",
-                    attr = "bg",
-                  },
-                },
-                sp = "NONE",
-                underline = false,
-                undercurl = false,
               },
             },
           },
@@ -201,13 +219,13 @@ add_on_event("LspAttach", {
 
           -- Skip special buffers
           local bt = vim.bo[bufnr].buftype
-          if bt == "nofile" or bt == "prompt" or bt == "help" then
+          if bt == "nofile" or bt == "prompt" then
             return false
           end
 
           -- Skip certain filetypes
           local ft = vim.bo[bufnr].filetype
-          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt", "markdown", "octo" }
+          local excluded_fts = { "fugitive", "gitcommit", "TelescopePrompt", "markdown", "octo", "help" }
           if vim.tbl_contains(excluded_fts, ft) then
             return false
           end
@@ -230,9 +248,9 @@ add_on_event("LspAttach", {
 })
 
 UtilKey.nnoremap("<Leader>ut", function()
-  local tsc = require "treesitter-context"
+  local tsc = lazy "treesitter-context"
   tsc.toggle()
-  if require("utils.inject").get_upvalue(tsc.toggle, "enabled") then
+  if lazy("utils.inject").get_upvalue(tsc.toggle, "enabled") then
     Log.info "Enabled Treesitter Context"
   else
     Log.warn "Disabled Treesitter Context"
@@ -244,7 +262,7 @@ UtilKey.nnoremap("<Leader>jc", function()
     return "[c"
   else
     vim.schedule(function()
-      require("treesitter-context").go_to_context()
+      lazy("treesitter-context").go_to_context()
     end)
 
     vim.cmd "normal! zt" -- move the cursor line to the top of the window
@@ -253,7 +271,7 @@ UtilKey.nnoremap("<Leader>jc", function()
 end, { desc = "JumpTo: treesitter context and align to top" })
 
 on_plugin_update("nvim-treesitter", function()
-  local treesitter = require "nvim-treesitter"
+  local treesitter = lazy "nvim-treesitter"
 
   -- Re-install and update parsers.
   treesitter.install(install_list()):wait(300000)

@@ -9,7 +9,9 @@
 
 local M = {}
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
 
 -- ├─────────────────────────────────┤ State ├──────────────────────────────┤
 

@@ -136,13 +136,6 @@ local attrs = {
   default = true,
 }
 
--- Fallback highlight group mappings for colorscheme specific differences.
-local colorscheme_hl_fallbacks = {
-  ["vscode"] = {
-    ["@markup.link"] = "@markup.link.url",
-  },
-}
-
 --- Read a highlight group and convert numeric colors to hex strings (#rrggbb).
 --- Silent variant — never emits warnings. Used by M.set() when inheriting from
 --- a group that may not exist yet (e.g. a brand-new group being defined for
@@ -153,12 +146,25 @@ function M.get_hl_as_hex(opts, ns)
   ns, opts = ns or 0, opts or {}
   opts.link = opts.link ~= nil and opts.link or false
 
-  local colorscheme_map = colorscheme_hl_fallbacks[vim.g.colorscheme]
-  if colorscheme_map and colorscheme_map[opts.name] then
-    opts.name = colorscheme_map[opts.name]
+  -- Skip invalid group names (E5248) and out-of-bounds ids
+  if opts.name then
+    -- allowed chars: a-z A-Z 0-9 _ . @
+    if type(opts.name) ~= "string" or not opts.name:match "^[%w_.@]+$" then
+      return {}
+    end
+  elseif opts.id then
+    if type(opts.id) ~= "number" or opts.id <= 0 then
+      return {}
+    end
+  else
+    return {}
   end
 
-  local hl = vim.api.nvim_get_hl(ns, opts)
+  local ok, hl = pcall(vim.api.nvim_get_hl, ns, opts)
+  if not ok or type(hl) ~= "table" then
+    return {}
+  end
+
   return {
     fg = hl.fg and ("#%06x"):format(hl.fg) or nil,
     bg = hl.bg and ("#%06x"):format(hl.bg) or nil,
@@ -363,6 +369,67 @@ function M.contrast(color, amount)
   return rgb_to_hex(r, g, b)
 end
 
+--- Combine two colors into a new one.
+---
+---   mode = "add"      (default) A + B*intensity, per channel, clamped (brighter)
+---   mode = "subtract" A - B*intensity, per channel, clamped (darker)
+---   mode = "mix"      linear interpolation A -> B (intensity 1.0 = full B)
+---   mode = "screen"   screen blend A with B, then interpolated by intensity
+---   mode = "multiply" multiply blend A with B, then interpolated by intensity
+---
+---   intensity = 0.0 → result = A (no change)
+---   intensity = 1.0 → B's effect at max
+---
+---@param a         string hex color A (source)
+---@param b         string hex color B (the one being added)
+---@param intensity number 0.0 – 1.0
+---@param mode      string? "add"|"subtract"|"mix"|"screen"|"multiply"
+---@return string   hex color C
+function M.combine(a, b, intensity, mode)
+  assert(type(a) == "string", "combine: 'a' must be a hex string, got: " .. type(a))
+  assert(type(b) == "string", "combine: 'b' must be a hex string, got: " .. type(b))
+  assert(type(intensity) == "number", "combine: 'intensity' must be a number, got: " .. type(intensity))
+  intensity = math.max(0.0, math.min(1.0, intensity))
+  mode = mode or "add"
+
+  local ca, cb = hex_to_rgb(a), hex_to_rgb(b)
+
+  local ops = {
+    add = function(x, y)
+      return x + y * intensity
+    end,
+    subtract = function(x, y)
+      return x - y * intensity
+    end,
+    mix = function(x, y)
+      return x + (y - x) * intensity
+    end,
+    screen = function(x, y)
+      local full = 255 - (255 - x) * (255 - y) / 255
+      return x + (full - x) * intensity
+    end,
+    multiply = function(x, y)
+      local full = x * y / 255
+      return x + (full - x) * intensity
+    end,
+  }
+
+  local op = ops[mode]
+  if not op then
+    notify_warn(
+      string.format(
+        "combine: unknown mode '%s'.\n  Valid modes: %s\n  Falling back to 'add'.",
+        tostring(mode),
+        table.concat(vim.tbl_keys(ops), ", ")
+      ),
+      "Highlight: combine"
+    )
+    op = ops.add
+  end
+
+  return rgb_to_hex(clamp(op(ca[1], cb[1])), clamp(op(ca[2], cb[2])), clamp(op(ca[3], cb[3])))
+end
+
 --- Increase the saturation of a color.
 ---@param hex        string hex color
 ---@param percentage number 0.0 – 1.0  (1.0 = fully saturated, 0.0 = gray)
@@ -497,6 +564,10 @@ end
 --                         bg source: hl.bg string/table, or Normal / NormalNote / NormalAiPrompt
 --   transparency number   blend toward an explicit target color (0.0 = target, 1.0 = source color)
 --                         target source: hl.color hex string or { from, attr } table
+--   combine      string|table   second color to merge with the source (A + B → C)
+--                               hex string or { from, attr, … } (supports nested modifiers)
+--     combine_intensity number  0.0 = no effect, 1.0 = full effect (default 0.5)
+--     combine_mode      string  "add" (default) | "subtract" | "mix" | "screen" | "multiply"
 --   contrast     number   push away from mid-gray (0.0 = no change, 1.0 = maximum)
 -------------------------------------------------------------------------------
 
@@ -560,7 +631,40 @@ local function resolve_transparency_target(hl)
   return M.get("Normal", "bg", "#000000")
 end
 
-local function resolve_from_attribute(hl, attr)
+-- Forward declaration: resolve_combine_color needs to call it recursively.
+local resolve_from_attribute
+
+local function resolve_combine_color(hl, attr)
+  local other = hl.combine
+  if type(other) == "table" then
+    other = resolve_from_attribute(other, attr)
+  end
+
+  if type(other) == "string" then
+    return other
+  end
+
+  notify_warn(
+    string.format(
+      "combine: 'combine' field is missing or invalid.\n"
+        .. "  Use: combine = '#rrggbb'  or  combine = { from = 'GroupName', attr = 'fg' }\n"
+        .. "  Got: %s\n"
+        .. "  Field skipped.",
+      vim.inspect(hl.combine)
+    ),
+    "Highlight: resolve_combine_color"
+  )
+  return nil
+end
+
+--- Resolve a highlight field written in the shorthand table syntax.
+--- Returns the input unchanged when it is not a `{ from = ... }` table
+--- (e.g. plain hex strings, booleans, numbers), otherwise the resolved hex color
+--- (or "NONE" on error).
+---@param hl   any     spec table { from = ..., ... } or a plain value
+---@param attr string  default attribute when `hl.attr` is omitted
+---@return any
+resolve_from_attribute = function(hl, attr)
   if type(hl) ~= "table" or not hl.from then
     return hl
   end
@@ -644,7 +748,31 @@ local function resolve_from_attribute(hl, attr)
     end
   end
 
-  -- 4. contrast: push away from mid-gray based on luminance
+  -- 4. combine: merge with another color (A + B → C)
+  --    combine           = "#rrggbb" | { from = "Group", attr = "fg", … }
+  --    combine_intensity = 0.0 – 1.0 (default 0.5)
+  --    combine_mode      = "add" | "subtract" | "mix" | "screen" | "multiply" (default "add")
+  if hl.combine ~= nil then
+    local intensity = hl.combine_intensity == nil and 0.5 or hl.combine_intensity
+    if type(intensity) ~= "number" or intensity < 0 or intensity > 1 then
+      notify_warn(
+        string.format(
+          "combine_intensity: value must be a number between 0.0 and 1.0, got %s (%s). Field skipped.\n"
+            .. "  Example: combine_intensity = 0.4",
+          type(intensity),
+          vim.inspect(intensity)
+        ),
+        "Highlight: combine_intensity"
+      )
+    else
+      local other = resolve_combine_color(hl, attr)
+      if other then
+        colour = M.combine(colour, other, intensity, hl.combine_mode)
+      end
+    end
+  end
+
+  -- 5. contrast: push away from mid-gray based on luminance
   --    0.0 → no change
   --    1.0 → maximum push (dark → white, light → black)
   if hl.contrast ~= nil then

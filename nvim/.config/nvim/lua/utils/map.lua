@@ -1,7 +1,27 @@
 local map = vim.keymap.set
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
+local Log = lazy "utils.log"
+
+---@alias MapFn fun(lhs: string, rhs: string|function, opts?: MapOpts)
+
+---@class utils.map
+---@field lsp table
+---@field noremap fun(mode: ModeKeys, lhs: string, rhs: string|function, opts?: MapOpts)
+---@field remap fun(mode: ModeKeys, lhs: string, rhs: string|function, opts?: MapOpts)
+---@field nnoremap MapFn
+---@field xnoremap MapFn
+---@field vnoremap MapFn
+---@field inoremap MapFn
+---@field onoremap MapFn
+---@field cnoremap MapFn
+---@field tnoremap MapFn
+---@field snoremap MapFn
+---@field nmap MapFn
+---@field imap MapFn
+---@field vmap MapFn
+---@field [string] any
 local M = { lsp = {} }
 
 ---@alias ModeKey
@@ -23,168 +43,90 @@ local M = { lsp = {} }
 
 ---@alias ModeKeys ModeKey | ModeKey[]
 
----@param mode ModeKeys
----@param lhs string
----@param rhs string | function
----@param opts? vim.keymap.set.Opts
-local recursive_map = function(mode, lhs, rhs, opts)
-  opts = opts or {}
-  opts.remap = true
-  map(mode, lhs, rhs, opts)
-end
+------ Flag untuk `nvim_feedkeys()`. Bisa digabung, mis. "nx" atau "mi".
+---@alias ModeFeedKey
+---| ""   # default (diperlakukan sebagai "n")
+---| "m"  # remap keys (ikuti mapping)
+---| "n"  # no remap
+---| "t"  # handle sebagai typed input
+---| "i"  # insert di depan typeahead
+---| "x"  # execute sampai typeahead kosong
+---| "!"  # (dengan x) jangan akhiri insert mode
+---| "L"  # jangan pakai lowlevel input
+---| string # kombinasi, mis. "nx", "mt"
 
-local function count_spaces(input)
-  local spaceCount = 0
+local MODE_HL = {
+  n = "GitSignsAdd",
+  i = "GitSignsChange",
+  x = "GitSignsDelete",
+  v = "GitSignsDelete",
+}
 
-  -- Iterasi setiap karakter dalam string
-  for i = 1, #input do
-    local char = input:sub(i, i)
-    if char == " " then
-      spaceCount = spaceCount + 1
-    end
-  end
-
-  return spaceCount
-end
 M.show_help_buf_keymap = function()
-  local Fzf = require "fzf-lua"
+  local Fzf = lazy "fzf-lua"
+  local sep = Fzf.utils.ansi_from_hl("Tabline", "|")
+  local items = {}
 
-  local ft = vim.bo.filetype
-  local tbl_maps_normal = vim.api.nvim_buf_get_keymap(0, "n")
-  local tbl_maps_insert = vim.api.nvim_buf_get_keymap(0, "i")
-  -- local tbl_maps_visual = vim.api.nvim_buf_get_keymap(0, "v")
-
-  local function merge_multiple_tables(...)
-    local result = {}
-    for _, tbl in ipairs { ... } do
-      for k, v in pairs(tbl) do
-        result[k] = v
-      end
+  for _, mode in ipairs { "n", "i", "x" } do
+    for _, m in ipairs(vim.api.nvim_buf_get_keymap(0, mode)) do
+      local hl = MODE_HL[m.mode] or "GitSignsAdd"
+      local lhs = (m.lhs:gsub(" ", "<space>"))
+      local desc = Fzf.utils.ansi_from_hl(hl, m.desc or "<builtin>")
+      local mode_str = Fzf.utils.ansi_from_hl(hl, m.mode)
+      items[#items + 1] = string.format("%-14s %s mode:%s %s %s", lhs, sep, mode_str, sep, desc)
     end
-    return result
   end
 
-  local tbl_maps = merge_multiple_tables(tbl_maps_normal, tbl_maps_insert)
+  table.sort(items)
 
-  local col = {}
-
-  for _, tbl in pairs(tbl_maps) do
-    if tbl.desc == nil then -- remove nil desc
-      tbl.desc = "<builtin>"
-    end
-
-    local c_spaces = count_spaces(tbl.lhs)
-
-    local lhs = tbl.lhs
-    if c_spaces > 0 then
-      lhs = "<space>" .. require("utils.cmd").strip_whitespaces(tbl.lhs)
-    end
-
-    local mode_color = "GitSignsAdd"
-    if tbl.mode == "i" then
-      mode_color = "GitSignsChange"
-    elseif tbl.mode == "v" then
-      mode_color = "GitSignsDelete"
-    end
-
-    local mode = Fzf.utils.ansi_from_hl(mode_color, tbl.mode)
-    local icon_separator = Fzf.utils.ansi_from_hl("Tabline", "|")
-    local desc = Fzf.utils.ansi_from_hl(mode_color, tbl.desc)
-
-    local map_desc = string.format("%-14s %s mode:%s %s %s", lhs, icon_separator, mode, icon_separator, desc)
-    col[#col + 1] = map_desc
-  end
-
-  -- local opts = RUtils.fzflua.open_center_height_small_but_wide {
-  local opts = {
-    winopts = { title = "Keymaps For Curbuf (" .. ft .. ")" },
+  return Fzf.fzf_exec(items, {
+    winopts = { title = "Keymaps For Curbuf (" .. vim.bo.filetype .. ")" },
     actions = {
-      ["default"] = function(_, _)
+      ["default"] = function()
         Log.info "Not implemented yet"
       end,
     },
-  }
-
-  -- sort alphabetically
-  table.sort(col)
-
-  -- return RUtils.fzflua.setup_fzflua().fzf_exec(col, opts)
-  return require("fzf-lua").fzf_exec(col, opts)
+  })
 end
 
-M.nmap = function(...)
-  recursive_map("n", ...)
-end
-M.imap = function(...)
-  recursive_map("i", ...)
-end
-M.vmap = function(...)
-  recursive_map("v", ...)
-end
+---@class MapOpts : vim.keymap.set.Opts
+---@field force? boolean  -- paksa overwrite (unique=false); bukan opsi vim.keymap.set
 
-local detect_duplicate_map = function(...)
-  local args = { ... }
-  local key = args[1]
-  local key_alt = args[2]
-  local opts = args[3]
-  local force_map = args[4] or false
-  if not force_map then
-    if opts and opts.unique == nil then
-      opts.unique = true
+---@param recursive boolean
+local function make_mapper(recursive)
+  ---@param mode ModeKeys
+  ---@param lhs string
+  ---@param rhs string | function
+  ---@param opts? MapOpts
+  return function(mode, lhs, rhs, opts)
+    local o = vim.tbl_extend("keep", opts or {}, { remap = recursive })
+    local force = o.force
+    o.force = nil
+    if o.unique == nil then
+      o.unique = not force
     end
-  else
-    opts.unique = false
+    map(mode, lhs, rhs, o)
   end
-  return key, key_alt, opts
 end
 
----@param mode ModeKeys
----@param lhs string
----@param rhs string | function
----@param opts? vim.keymap.set.Opts
----@param force_map? boolean
-local function noremap(mode, lhs, rhs, opts, force_map)
-  local _, _, map_opts = detect_duplicate_map(lhs, rhs, opts, force_map)
-
-  map_opts = map_opts or {}
-  map_opts.remap = false
-
-  map(mode, lhs, rhs, map_opts)
-end
+local noremap = make_mapper(false)
+local remap = make_mapper(true)
 
 M.noremap = noremap
+M.remap = remap
 
-M.nnoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("n", key, key_alt, opts)
+-- nnoremap, xnoremap, vnoremap, inoremap, onoremap, cnoremap, tnoremap, snoremap
+for _, mode in ipairs { "n", "x", "v", "i", "o", "c", "t", "s" } do
+  M[mode .. "noremap"] = function(lhs, rhs, opts)
+    return noremap(mode, lhs, rhs, opts)
+  end
 end
-M.xnoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("x", key, key_alt, opts)
-end
-M.vnoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("v", key, key_alt, opts)
-end
-M.inoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("i", key, key_alt, opts)
-end
-M.onoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("o", key, key_alt, opts)
-end
-M.cnoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("c", key, key_alt, opts)
-end
-M.tnoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("t", key, key_alt, opts)
-end
-M.snoremap = function(...)
-  local key, key_alt, opts = detect_duplicate_map(...)
-  map("s", key, key_alt, opts)
+
+-- nmap, imap, vmap
+for _, mode in ipairs { "n", "i", "v" } do
+  M[mode .. "map"] = function(lhs, rhs, opts)
+    return remap(mode, lhs, rhs, opts)
+  end
 end
 
 M.cabbrev = function(short, long)
@@ -214,7 +156,7 @@ function M.delete_augroup_name(augroup_name, bufnr)
   local cmds_found, cmds = pcall(vim.api.nvim_get_autocmds, { group = augroup_name, buffer = bufnr })
   if cmds_found then
     vim.tbl_map(function(cmd)
-      vim.api.nvim_del_autocmd(cmd.id)
+      return vim.api.nvim_del_autocmd(cmd.id)
     end, cmds)
   end
 end
@@ -241,9 +183,8 @@ local function validate_autocmd(name, command)
 
   if #incorrect > 0 then
     vim.schedule(function()
-      local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
-      ---@diagnostic disable-next-line: param-type-mismatch
-      vim.notify(msg, "error", { title = string.format("Autocmd: %s", name) })
+      local msg = "Incorrect keys: " .. table.concat(incorrect, ", ") .. string.format("Autocmd: %s", name)
+      Log.error(msg)
     end)
   end
 end
@@ -277,7 +218,7 @@ end
 
 ---@param plugin_name string
 function M.plugin_load_now(plugin_name)
-  require("vim-pack").load_now(plugin_name)
+  lazy("vim-pack").load_now(plugin_name)
 end
 
 function M.escape(text, additional_char)
@@ -301,8 +242,21 @@ function M.feedkey(key, mode)
 end
 
 ---@param key string
-function M.feedkey_with_no_escape(key)
-  vim.api.nvim_feedkeys(key, "n", false)
+---@param mode ModeFeedKey?
+function M.feedkey_with_no_escape(key, mode)
+  mode = mode or "n"
+  vim.api.nvim_feedkeys(key, mode, false)
+end
+
+---@param key_plug string
+function M.feedkey_plug(key_plug)
+  if not key_plug:lower():find("<plug>", 1, true) then
+    Log.warn 'Define `key_plug` using "<Plug>"'
+    return
+  end
+
+  local keycode = vim.keycode(key_plug)
+  M.feedkey_with_no_escape(keycode, "m")
 end
 
 ---@param au_name string
@@ -322,27 +276,7 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
     end,
   })
 end
---
--- ---@param is_next? boolean
--- function M.go_prev_or_next_buffer(is_next)
---   is_next = is_next or false
---
---   local cmd_msg
---
---   if is_next then
---     cmd_msg = "bnext"
---   else
---     cmd_msg = "bprev"
---   end
---
---   local is_buf_winfixbuf = vim.api.nvim_get_option_value("winfixbuf", { scope = "local" })
---   if not is_buf_winfixbuf then
---     vim.cmd(cmd_msg)
---     -- else
---     --   RUtils.warn("Cannot use " .. cmd_msg .. ", `winfixbuf` is enabled")
---   end
--- end
---
+
 -- ╓─────────────────────────────────────────────────────────────────────────────╖
 -- ║                                 MAGIC JUMP                                  ║
 -- ╙─────────────────────────────────────────────────────────────────────────────╜
@@ -506,6 +440,30 @@ end
 
 -- ├───────────────────────────────┤ Core jump ├────────────────────────────┤
 
+function M.safe_set_cursor(win, line, col)
+  local bufnr = vim.api.nvim_win_get_buf(win)
+  local line_count = vim.api.nvim_buf_line_count(bufnr)
+
+  -- Clamp line
+  if line < 1 then
+    line = 1
+  end
+  if line > line_count then
+    line = line_count
+  end
+
+  -- Clamp col
+  local text = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, false)[1] or ""
+  if col < 0 then
+    col = 0
+  end
+  if col > #text then
+    col = #text
+  end
+
+  vim.api.nvim_win_set_cursor(win, { line, col })
+end
+
 ---@param winid number
 ---@param dir   number
 ---@param count number
@@ -557,7 +515,7 @@ local function jump_fold(winid, dir, count)
 
     if pos ~= cur then
       vim.cmd "normal! m`" -- save original position to jumplist
-      vim.api.nvim_win_set_cursor(winid, { pos, 0 })
+      M.safe_set_cursor(winid, pos, 0)
       adjust_viewport()
     end
   end)
@@ -577,17 +535,17 @@ function M.magic_jump(is_jump_prev)
   end
 
   -- http (kulala plugin)
-  if ft == "http" then
-    local ok, kulala = pcall(require, "kulala")
-    if not ok then
-      return
-    end
-    return is_jump_prev and kulala.jump_prev() or kulala.jump_next()
-  end
+  -- if ft == "http" then
+  --   local ok, kulala = pcall(require, "kulala")
+  --   if not ok then
+  --     return
+  --   end
+  --   return is_jump_prev and kulala.jump_prev() or kulala.jump_next()
+  -- end
 
   -- markdown: jump between headings
   if ft == "markdown" then
-    return require("utils.markdown").go_to_heading(nil, is_jump_prev and {} or nil)
+    return lazy("utils.markdown").go_to_heading(nil, is_jump_prev and {} or nil)
   end
 
   -- default: scan-first fold jump
@@ -605,7 +563,7 @@ end
 function M.search_replace_keymap(confirmation, visual)
   confirmation = confirmation or false
 
-  local text = require("utils.cmd").get_selection()
+  local text = lazy("utils.cmd").get_selection()
 
   local function esc_pattern(s)
     s = vim.fn.escape(s, [[\/]])
@@ -648,8 +606,6 @@ end
 -- ║                                     LSP                                     ║
 -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
----@alias lazyvim.util.cmp.Action fun():boolean?
----@type table<string, lazyvim.util.cmp.Action>
 M.actions = {
   -- Native Snippets
   snippet_forward = function()
@@ -667,18 +623,37 @@ M.actions = {
   end,
 }
 
----@param value string|LazyKeysSpec
----@param mode? string
----@return LazyKeys
+---@class LspKeySpec
+---@field [1] string                         lhs
+---@field [2] string|function|false          rhs (false/vim.NIL = remove the key from the spec)
+---@field mode? ModeKey|ModeKey[]
+---@field has? string|string[]               LSP method that must be supported (e.g. "definition")
+---@field enabled? boolean|fun(buf:integer):boolean
+---@field desc? string
+
+--- Keys that are NOT vim.keymap.set options.
+local SKIP = { mode = true, id = true, ft = true, rhs = true, lhs = true, has = true, enabled = true }
+
+---@param value string|table
+---@param mode? ModeKey
 function M.parse(value, mode)
-  value = type(value) == "string" and { value } or value --[[@as LazyKeysSpec]]
-  local ret = vim.deepcopy(value) --[[@as LazyKeys]]
+  value = type(value) == "string" and { value } or value
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local ret = vim.deepcopy(value)
   ret.lhs = ret[1] or ""
   ret.rhs = ret[2]
-  ---@diagnostic disable-next-line: no-unknown
-  ret[1] = nil
-  ---@diagnostic disable-next-line: no-unknown
-  ret[2] = nil
+
+  -- format lama: { lhs, rhs, { desc = ... } }
+  local legacy = ret[3]
+  ret[1], ret[2], ret[3] = nil, nil, nil
+  if type(legacy) == "table" then
+    for k, v in pairs(legacy) do
+      if ret[k] == nil then
+        ret[k] = v
+      end
+    end
+  end
+
   ret.mode = mode or "n"
   ret.id = vim.api.nvim_replace_termcodes(ret.lhs, true, true, true)
 
@@ -686,86 +661,63 @@ function M.parse(value, mode)
     local ft = type(ret.ft) == "string" and { ret.ft } or ret.ft --[[@as string[] ]]
     ret.id = ret.id .. " (" .. table.concat(ft, ", ") .. ")"
   end
-
   if ret.mode ~= "n" then
     ret.id = ret.id .. " (" .. ret.mode .. ")"
   end
   return ret
 end
 
----@param spec? (string|LazyKeysSpec)[]
+--- Expand per-mode, dedupe by id (last one wins), keep the order.
+---@param spec? (string|LspKeySpec)[]
+---@return table[]
 function M.lsp.resolve(spec)
-  ---@type LazyKeys[]
-  local values = {}
+  local by_id, order, seen = {}, {}, {}
 
   for _, value in ipairs(spec or {}) do
-    value = type(value) == "string" and { value } or value --[[@as LazyKeysSpec]]
+    value = type(value) == "string" and { value } or value
 
-    local mode = value.mode or "n"
-    local modes = type(mode) == "table" and mode or { mode }
+    local raw_mode = value.mode or "n"
+    ---@type ModeKey[]
+    local modes = type(raw_mode) == "table" and raw_mode or { raw_mode }
 
     for _, mode in ipairs(modes) do
       local keys = M.parse(value, mode)
-
       if keys.rhs == vim.NIL or keys.rhs == false then
-        values[keys.id] = nil
+        by_id[keys.id] = nil
       else
-        values[keys.id] = keys
+        if not seen[keys.id] then
+          seen[keys.id] = true
+          order[#order + 1] = keys.id
+        end
+        by_id[keys.id] = keys
       end
     end
   end
 
-  return values
+  local list = {}
+  for _, id in ipairs(order) do
+    if by_id[id] then
+      list[#list + 1] = by_id[id]
+    end
+  end
+  return list
 end
 
-local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
-
----@param keys LazyKeys
+---@param keys table
+---@return vim.keymap.set.Opts
 function M.opts(keys)
-  local opts = {} ---@type LazyKeysBase
-  ---@diagnostic disable-next-line: no-unknown
+  local opts = {}
   for k, v in pairs(keys) do
-    if type(k) ~= "number" and not skip[k] then
-      ---@diagnostic disable-next-line: no-unknown
+    if type(k) ~= "number" and not SKIP[k] then
       opts[k] = v
     end
   end
   return opts
 end
 
----@class snacks.keymap.set.Opts: vim.keymap.set.Opts
----@field ft? string|string[] Filetype(s) to set the keymap for.
----@field lsp? vim.lsp.get_clients.Filter Set for buffers with LSP clients matching this filter.
----@field enabled? boolean|fun(buf?:number): boolean condition to enable the keymap.
----@param filter vim.lsp.get_clients.Filter
----@param spec LazyKeysLspSpec[]
-function M.lsp.set_keymaps(filter, spec)
-  for _, keys in pairs(M.lsp.resolve(spec)) do
-    ---@cast keys LazyKeysLsp
-    local filters = {} ---@type vim.lsp.get_clients.Filter[]
-    if keys.has then
-      local methods = type(keys.has) == "string" and { keys.has } or keys.has --[[@as string[] ]]
-      for _, method in ipairs(methods) do
-        method = method:find "/" and method or ("textDocument/" .. method)
-        filters[#filters + 1] = vim.tbl_extend("force", vim.deepcopy(filter), { method = method })
-      end
-    else
-      filters[#filters + 1] = filter
-    end
-
-    for _, f in ipairs(filters) do
-      local opts = M.opts(keys)
-      ---@cast opts snacks.keymap.set.Opts
-      opts.lsp = f
-      opts.enabled = keys.enabled
-
-      local key, key_alt, copts = detect_duplicate_map(keys.lhs, keys.rhs, keys[3])
-      map(keys.mode or "n", key, key_alt, copts)
-    end
-  end
-end
-
+---@param buffer integer
 ---@param method string|string[]
+---@return boolean
 function M.has(buffer, method)
   if type(method) == "table" then
     for _, m in ipairs(method) do
@@ -776,314 +728,130 @@ function M.has(buffer, method)
     return false
   end
   method = method:find "/" and method or "textDocument/" .. method
-  local clients = vim.lsp.get_clients { bufnr = buffer }
-  for _, client in ipairs(clients) do
-    if client:supports_method(method) then
+  for _, client in ipairs(vim.lsp.get_clients { bufnr = buffer }) do
+    if client:supports_method(method, buffer) then
       return true
     end
   end
   return false
 end
---
--- local function remove_duplicates_lsp(lsp_items)
---   if (lsp_items.lsp_items and #lsp_items.items == 0) or not lsp_items.items then
---     return lsp_items
---   end
---
---   local look_up = {}
---
---   local function check_tbl_element(new_tbl, element_1, element_2, element_3, element_4)
---     for _, x in pairs(new_tbl) do
---       if x.text == element_1 and x.lnum == element_2 and x.col == element_3 and x.filename == element_4 then
---         return true
---       end
---     end
---     return false
---   end
---
---   for _, x in pairs(lsp_items.items) do
---     if not check_tbl_element(look_up, x.text, x.lnum, x.col, x.filename) then
---       table.insert(look_up, x)
---     end
---   end
---
---   if #look_up > 0 then
---     lsp_items.items = vim.deepcopy(look_up)
---   end
---
---   return lsp_items
--- end
---
--- -- ---@return LazyKeysLsp[]
--- -- function M.resolve(buffer, spec_maps)
--- --   local Keys = require "lazy.core.handler.keys"
--- --   if not Keys.resolve then
--- --     return {}
--- --   end
--- --   local spec = vim.tbl_extend("force", {}, spec_maps)
--- --   local opts = RUtils.opts "nvim-lspconfig"
--- --   if opts ~= nil then
--- --     local clients = vim.lsp.get_clients { bufnr = buffer }
--- --     for _, client in ipairs(clients) do
--- --       if opts.servers ~= nil then
--- --         local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
--- --         vim.list_extend(spec, maps)
--- --       end
--- --     end
--- --   end
--- --   return Keys.resolve(spec)
--- -- end
---
--- function M.on_attach(_, buffer, spec_maps)
---   local Keys = require "lazy.core.handler.keys"
---   local keymaps = M.resolve(buffer, spec_maps)
---
---   for _, keys in pairs(keymaps) do
---     local has = not keys.has or M.has(buffer, keys.has)
---     local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
---
---     if has and cond then
---       local opts = Keys.opts(keys)
---       ---@cast opts snacks.keymap.set.Opts
---       opts.cond = nil
---       opts.has = nil
---       opts.silent = opts.silent ~= false
---       opts.buffer = buffer
---       if opts.unique == nil then
---         opts.unique = true
---       end
---       map(keys.mode or "n", keys.lhs, keys.rhs, opts)
---     end
---   end
--- end
---
--- -- ---@param curpos { pos: integer, col: integer, line: string, buf: integer }
--- -- ---@return string | nil
--- -- local function get_extracted_strings(curpos)
--- --   local word_under_cursor
--- --
--- --   -- Ambil karakter di posisi kursor (bisa nil kalau di ujung baris)
--- --   local char_at_cursor = curpos.line:sub(curpos.col + 1, curpos.col + 1)
--- --
--- --   -- Ambil bagian sebelum dan sesudah kursor
--- --   local before = curpos.line:sub(1, curpos.col):match "[_%w%.:]+$"
--- --   local after = curpos.line:sub(curpos.col + 1):match "^[%w_%.:]+" or ""
--- --
--- --   -- Jika kursor berada di titik pemisah seperti '.', maka abaikan `after`
--- --   if char_at_cursor == "." or char_at_cursor == ":" then
--- --     word_under_cursor = before
--- --   else
--- --     word_under_cursor = (before or "") .. after
--- --   end
--- --
--- --   if not word_under_cursor or word_under_cursor == "" then
--- --     RUtils.warn "No string found under cursor."
--- --     return
--- --   end
--- --
--- --   return word_under_cursor
--- -- end
---
--- ---@param items {bufnr: integer, filename: string, lnum:integer}
--- local function all_item_locations_equal(items)
---   if #items == 0 then
---     return false
---   end
---   for i = 2, #items do
---     local item = items[i]
---     if item.bufnr ~= items[1].bufnr or item.filename ~= items[1].filename or item.lnum ~= items[1].lnum then
---       return false
---     end
---   end
---   return true
--- end
---
--- -- ---@param yield any
--- -- ---@param open_mode? "vsplit" | "split" | "tabnew" | "none"
--- -- function M.lsp.wrap_location_method(yield, open_mode)
--- --   open_mode = open_mode or "none"
--- --   return function()
--- --     local from = RUtils.get_curpos_under_cursor()
--- --     if not from then
--- --       return
--- --     end
--- --
--- --     local target_strings = get_extracted_strings(from)
--- --     if not target_strings then
--- --       return
--- --     end
--- --
--- --     yield {
--- --       ---@param t vim.lsp.LocationOpts.OnList
--- --       on_list = function(t)
--- --         local curpos = RUtils.get_curpos_under_cursor()
--- --         if not vim.deep_equal(from, curpos) then
--- --           -- We have moved the cursor since fetching locations, so abort
--- --           RUtils.warn("Request definition abort process,\nyour cursor postion has been changed!", { title = "LSP" })
--- --           return
--- --         end
--- --
--- --         if open_mode ~= "none" then
--- --           vim.cmd(open_mode)
--- --         end
--- --
--- --         RUtils.info("`" .. target_strings .. "`", { title = t.title })
--- --
--- --         if all_item_locations_equal(t.items) then
--- --           -- Mostly copied from neovim source
--- --           local item = t.items[1]
--- --           local b = item.bufnr or vim.fn.bufadd(item.filename)
--- --
--- --           -- Save position in jumplist
--- --           vim.cmd "normal! m'"
--- --           -- Push a new item into tagstack
--- --           local tagname = vim.fn.expand "<cword>"
--- --           local tagstack = { { tagname = tagname, from = from } }
--- --           local winid = vim.api.nvim_get_current_win()
--- --           vim.fn.settagstack(vim.fn.win_getid(winid), { items = tagstack }, "t")
--- --
--- --           vim.bo[b].buflisted = true
--- --           vim.api.nvim_win_set_buf(winid, b)
--- --           pcall(vim.api.nvim_win_set_cursor, winid, { item.lnum, item.col - 1 })
--- --           vim._with({ win = winid }, function()
--- --             -- Open folds under the cursor
--- --             vim.cmd "normal! zv"
--- --           end)
--- --         else
--- --           local items = t.items
--- --           if #t.items == 3 or #t.items == 2 then
--- --             if not vim.deep_equal(t.items[1], t.items[2]) then
--- --               items[#items + 1] = t.items[1]
--- --             end
--- --           end
--- --
--- --           local list_items = { items = items, title = t.title .. ": " .. target_strings, context = t.context }
--- --           if t.context and type(t.context) == "string" then
--- --             list_items["context"] = t.context
--- --           end
--- --           list_items = remove_duplicates_lsp(list_items)
--- --           RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
--- --         end
--- --       end,
--- --     }
--- --   end
--- -- end
---
--- -- function M.lsp.wrap_references_to_send_qf()
--- --   local from = RUtils.get_curpos_under_cursor()
--- --   if not from then
--- --     return
--- --   end
--- --
--- --   local target_strings = get_extracted_strings(from)
--- --   if not target_strings then
--- --     return
--- --   end
--- --
--- --   vim.lsp.buf.references(nil, {
--- --     on_list = function(t)
--- --       local curpos = RUtils.get_curpos_under_cursor()
--- --
--- --       -- if all_item_locations_equal(t.items) then
--- --       if not vim.islist(t.items) or type(t.items) ~= "table" or #t.items == 0 then
--- --         RUtils.warn("No results request references for `" .. from.line .. "`", { title = "LSP" })
--- --         return
--- --       end
--- --
--- --       local qf_win = require("qfbookmark.utils").windows_is_opened "qf"
--- --       if qf_win.found then
--- --         pcall(vim.api.nvim_win_close, qf_win.winnr, true)
--- --       end
--- --
--- --       local items = t.items
--- --       if #t.items == 3 or #t.items == 2 then
--- --         if not vim.deep_equal(t.items[1], t.items[2]) then
--- --           items[#items + 1] = t.items[1]
--- --         end
--- --       end
--- --
--- --       RUtils.info("`" .. target_strings .. "`", { title = "LSP " .. t.title })
--- --
--- --       -- RUtils.info(vim.inspect(t.context))
--- --       -- Info ----- notify.info RUtils { method: textDocument/references, id: 13 }
--- --
--- --       -- How to get
--- --       -- getqflist({'all': 1})          " dapatkan semua field
--- --       -- getqflist({'items': 1})        " hanya items
--- --       -- getqflist({'context': 1})      " hanya context
--- --       -- getqflist({'id': id, 'items': 1, 'context': 1}) " berdasarkan id tertentu
--- --       --
--- --       --
--- --       -- Kalau kamu mau melihat context quickfix saat ini:
--- --       -- vim.notify(vim.inspect(vim.fn.getqflist({ context = 1 }).context))
--- --       --
--- --       -- Kalau kamu mau melihat semua field (termasuk items, title, context, dll):
--- --       -- vim.notify(vim.inspect(vim.fn.getqflist({ all = 1 })))
--- --       --
--- --       local set_jump = false
--- --
--- --       if not vim.deep_equal(from, curpos) then
--- --         if #t.items > 1 then
--- --           local bufname = vim.api.nvim_buf_get_name(t.context.bufnr)
--- --           vim.cmd("topleft vsplit " .. bufname)
--- --           local win_id = vim.api.nvim_get_current_win()
--- --
--- --           local target_width = 80
--- --
--- --           -- Check current window width
--- --           local cur_width = vim.api.nvim_win_get_width(win_id)
--- --           if cur_width ~= target_width then
--- --             vim.cmd "wincmd ="
--- --             vim.api.nvim_win_set_width(win_id, target_width)
--- --           end
--- --         end
--- --         set_jump = true
--- --       end
--- --
--- --       local list_items =
--- --         { items = items, title = "LSP " .. t.title .. ": " .. RUtils.lstrip_whitespace(target_strings) }
--- --       if t.context and type(t.context) == "table" then
--- --         if t.context.method and t.context.bufnr then
--- --           list_items["context"] = { name = t.context.method, bufnr = t.context.bufnr }
--- --         end
--- --       end
--- --
--- --       list_items = remove_duplicates_lsp(list_items)
--- --       RUtils.qf.save_to_qf_and_auto_open_qf(list_items)
--- --
--- --       if vim.bo.filetype == "qf" then
--- --         vim.cmd "wincmd p"
--- --       end
--- --       if set_jump then
--- --         pcall(vim.api.nvim_win_set_cursor, 0, { from.pos, from.col - 1 })
--- --         vim.cmd "normal! m'"
--- --       end
--- --     end,
--- --   })
--- -- end
---
----@param next integer
----@param severity vim.diagnostic.Severity | nil
-function M.lsp.diagnostic_goto(next, severity)
-  local go = next and 1 or -1
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    vim.diagnostic.jump { severity = severity, float = false, count = go }
+
+---@param k table
+---@param buf integer
+local function key_enabled(k, buf)
+  local e = k.enabled
+  if e == nil or e == true then
+    return true
   end
+  if type(e) == "function" then
+    return e(buf) and true or false
+  end
+  return false
 end
 
--- local is_set_toggle_words = false
--- function M.lsp.toggle_words()
---   local is_enabled = Snacks.words.enabled
---
---   if is_enabled and is_set_toggle_words then
---     Snacks.words.disable()
---     is_set_toggle_words = false
---   else
---     Snacks.words.enable()
---     is_set_toggle_words = true
---   end
---   RUtils.info(tostring(not is_enabled), { title = "Toggle Jump Scope Highlight" })
--- end
+--- Set up LSP keymaps LAZILY: resolve once, attach buffer-local on LspAttach,
+--- but only if the client actually supports `has`. Removed again on LspDetach
+--- when it's no longer supported.
+---@param spec (string|LspKeySpec)[]
+---@return integer augroup
+function M.lsp.setup_keymaps(spec)
+  local keys = M.lsp.resolve(spec)
+  local by_id = {}
+  for _, k in ipairs(keys) do
+    by_id[k.id] = k
+  end
 
+  ---@type table<integer, table<string, boolean>>
+  local applied = {}
+
+  local function apply(buf)
+    if not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    local done = applied[buf] or {}
+    applied[buf] = done
+
+    for _, k in ipairs(keys) do
+      if not done[k.id] and (not k.has or M.has(buf, k.has)) and key_enabled(k, buf) then
+        ---@class  vim.keymap.set.Opts
+        local opts = M.opts(k)
+        opts.buffer = buf
+        opts.silent = opts.silent ~= false
+        if opts.unique == nil then
+          opts.unique = false
+        end
+
+        local ok, err = pcall(map, k.mode, k.lhs, k.rhs, opts)
+        if ok then
+          done[k.id] = true
+        else
+          Log.warn(("LSP keymap `%s` gagal: %s"):format(k.lhs, err))
+        end
+      end
+    end
+  end
+
+  local function prune(buf)
+    if not vim.api.nvim_buf_is_valid(buf) then
+      applied[buf] = nil
+      return
+    end
+    for id in pairs(applied[buf] or {}) do
+      local k = by_id[id]
+      if k and k.has and not M.has(buf, k.has) then
+        pcall(vim.keymap.del, k.mode, k.lhs, { buffer = buf })
+        applied[buf][id] = nil
+      end
+    end
+  end
+
+  local group = vim.api.nvim_create_augroup("Mr00x/LspKeymaps", { clear = true })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = group,
+    desc = "Apply LSP keymaps (buffer-local)",
+    callback = function(args)
+      apply(args.buf)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("LspDetach", {
+    group = group,
+    desc = "Prune LSP keymaps",
+    callback = function(args)
+      -- the client is still attached during this event, so wait until it's actually gone
+      vim.schedule(function()
+        prune(args.buf)
+      end)
+    end,
+  })
+
+  -- Buffers that already had a client attached before this setup ran (lazy-loaded plugin)
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    for buf in pairs(client.attached_buffers) do
+      apply(buf)
+    end
+  end
+
+  return group
+end
+
+--- Jump to the next / previous diagnostic.
+---@param dir integer|boolean  true or number > 0 = next, otherwise = prev
+---@param severity? string|integer  e.g. "ERROR" or vim.diagnostic.severity.ERROR
+function M.lsp.diagnostic_goto(dir, severity)
+  local count = (dir == true or (type(dir) == "number" and dir > 0)) and 1 or -1
+
+  ---@type vim.diagnostic.Severity?
+  local sev
+  if type(severity) == "string" then
+    sev = vim.diagnostic.severity[severity:upper()]
+  elseif type(severity) == "number" then
+    sev = severity --[[@as vim.diagnostic.Severity]]
+  end
+
+  return function()
+    vim.diagnostic.jump { severity = sev, float = false, count = count }
+  end
+end
 return M

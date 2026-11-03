@@ -1,22 +1,15 @@
 local M = {}
 
-local border = require("icons").border
-local UtilCmd = require "utils.cmd"
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
-local Fzflua
+local Border = lazy("icons").border
+local UtilCmd = lazy "utils.cmd"
+local Log = lazy "utils.log"
 
-local function setup_fzflua()
-  if Fzflua then
-    return Fzflua
-  end
-  Fzflua = require "fzf-lua"
-  return Fzflua
-end
+local Fzflua = lazy "fzf-lua"
 
 local function get_extracted_cmds(fzf_lua_, content_lines, only_key, is_dock)
   is_dock = is_dock or false
-  only_key = only_key or false
 
   local pad = 1
   local padding_line = 1
@@ -69,7 +62,7 @@ local dropdown = function(opts)
     ---@diagnostic disable: missing-fields
     ---@type fzf-lua.config.Winopts
     winopts = {
-      border = border.rectangle,
+      border = Border.rectangle,
       title_pos = opts.winopts.title and "center" or nil,
       height = 20,
       width = math.floor(vim.o.columns / 2 + 8),
@@ -115,10 +108,10 @@ function M.padding_prompt(is_expand)
   return padding
 end
 
-function M.open_cmd_bulk_center(commands, opts)
-  Fzflua = setup_fzflua()
+function M.open_cmd_bulk_center(commands, opts, only_key)
+  only_key = only_key or false
 
-  local content_lines, padding_line = get_extracted_cmds(Fzflua, commands)
+  local content_lines, padding_line = get_extracted_cmds(Fzflua, commands, only_key)
 
   local editor_cols = vim.o.columns
   local editor_lines = vim.o.lines
@@ -163,6 +156,51 @@ function M.open_cmd_bulk_center(commands, opts)
           end
 
           Log.warn("Selection does not match!\n--> " .. vim.inspect(commands))
+        end,
+      },
+    }, opts))
+  )
+end
+
+local layout_center = function(opts)
+  return dropdown(vim.tbl_deep_extend("force", {
+    ---@diagnostic disable: missing-fields
+    ---@type fzf-lua.config.Winopts
+    winopts = {
+      fullscreen = false,
+      height = 20,
+      width = 0.25,
+      row = 0.50,
+      col = 0.50,
+    },
+  }, opts))
+end
+
+function M.open_cmd_bulk_key_only(commands, opts)
+  local cmds = get_extracted_cmds(Fzflua, commands, true)
+
+  Fzflua.fzf_exec(
+    cmds,
+    layout_center(vim.tbl_deep_extend("force", {
+      winopts = {
+        title = opts.title and opts.title or "",
+        height = #cmds + 5,
+      },
+      actions = {
+        ["default"] = function(selected, _)
+          if not selected then
+            return
+          end
+
+          local sel = selected[1]
+          local sel_ansi = Fzflua.utils.strip_ansi_coloring(sel)
+          local build_idx_cmd = UtilCmd.strip_whitespaces(sel_ansi)
+
+          if commands[build_idx_cmd] then
+            commands[build_idx_cmd]()
+          else
+            Log.warn("Selection does not match!\n--> " .. vim.inspect(commands))
+          end
         end,
       },
     }, opts))

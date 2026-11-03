@@ -30,19 +30,6 @@ function M.note_mappings_ft(bufnr)
 
   _keys = {
     ["n"] = {
-      ["<Leader>ld"] = {
-        function()
-          UtilNote.open_item_heading_default()
-        end,
-        "Note: open under cursor",
-      },
-      ["<Leader>lv"] = {
-        function()
-          UtilNote.open_item_heading_vsplit()
-        end,
-        "Note: open vsplit under cursor",
-      },
-
       -- ├────────────────────────────┤ JUMP TO HEADING ├─────────────────────────┤
       ["<Leader>fs"] = {
         function()

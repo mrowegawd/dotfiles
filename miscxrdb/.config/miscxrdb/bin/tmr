@@ -1,26 +1,59 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+HERDR_SOCK="${HERDR_SOCKET_PATH:-$HOME/.config/herdr/herdr.sock}"
+SERVER_LOG="${XDG_RUNTIME_DIR:-/tmp}/herdr-server.log"
 
 not_in_herdr() {
-  [ -z "$HERDR_ENV" ]
+  [[ -z "${HERDR_ENV:-}" ]]
 }
 
-sesh_root=$(herdr plugin list --plugin fullerzz.sesh --json | jq -r '.result.plugins[0].plugin_root')
+server_ready() {
+  [[ -S "$HERDR_SOCK" ]] && herdr status server >/dev/null 2>&1
+}
 
-# Run this pertama kali
-# "$sesh_root/bin/herdr-sesh" config migrate
+ensure_server() {
+  server_ready && return 0
+
+  [[ -S "$HERDR_SOCK" ]] && rm -f "$HERDR_SOCK"
+
+  setsid nohup herdr server >"$SERVER_LOG" 2>&1 </dev/null &
+  local server_pid=$!
+
+  for _ in {1..100}; do
+    server_ready && return 0
+
+    if ! kill -0 "$server_pid" 2>/dev/null; then
+      break
+    fi
+
+    sleep 0.1
+  done
+
+  echo "Error: failed to start the Herdr server." >&2
+  cat "$SERVER_LOG" >&2
+  return 1
+}
+
+sesh_root=$(
+  herdr plugin list --plugin fullerzz.sesh --json |
+    jq -er '.result.plugins[0].plugin_root'
+)
 
 herdr_sesh="$sesh_root/bin/herdr-sesh"
 
 if not_in_herdr; then
-  session=$("$herdr_sesh" list --json | jq -r '.[].name' | fzf)
+  ensure_server
 
-  # User membatalkan fzf
-  if [ -z "$session" ]; then
-    exit 0
-  fi
+  session=$(
+    "$herdr_sesh" list --json |
+      jq -r '.[].name' |
+      fzf
+  ) || session=""
 
-  "$sesh_root/bin/herdr-sesh" connect "$session"
-  herdr
+  [[ -n "$session" ]] && "$herdr_sesh" connect "$session"
+
+  exec herdr # always attach to herdr server
 else
-  "$sesh_root/bin/herdr-sesh" picker
+  exec "$herdr_sesh" picker
 fi

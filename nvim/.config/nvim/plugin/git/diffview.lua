@@ -1,15 +1,17 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 add {
   {
     src = "dlyongemallo/diffview.nvim",
     lazy = true,
     opts = function()
-      local actions = require "diffview.actions"
+      local actions = lazy "diffview.actions"
 
-      local H = require "utils.highlights"
+      local H = lazy "utils.highlights"
       H.plugin("DiffviewHiCol", {
         theme = {
           ["*"] = {
@@ -27,7 +29,7 @@ add {
             { DiffviewStatusDeleted = { inherit = "GitSignsDelete", bg = "NONE" } },
 
             { DiffviewHash = { fg = { from = "diffAdded", attr = "fg" } } },
-            { DiffviewNonText = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+            { DiffviewNonText = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.1 } } },
 
             { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
             { DiffviewFilePanelDeletions = { inherit = "DiffviewStatusDeleted" } },
@@ -99,10 +101,12 @@ add {
             })
 
             -- turn off gitsigns inline diff
-            ---@diagnostic disable-next-line: param-type-mismatch
-            pcall(vim.cmd, "Gitsigns toggle_linehl false")
-            ---@diagnostic disable-next-line: param-type-mismatch
-            pcall(vim.cmd, "Gitsigns toggle_word_diff false")
+            pcall(function()
+              vim.cmd "Gitsigns toggle_linehl false"
+            end)
+            pcall(function()
+              vim.cmd "Gitsigns toggle_word_diff false"
+            end)
 
             -- clear highlights
             vim.cmd "nohl"
@@ -141,19 +145,19 @@ add {
             { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-view]" } },
 
             { "n", "o", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
-            { "n", "O", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
+            { "n", "<C-c>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
-            { "n", "<S-Up>", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
+            { "n", "<C-c><C-n>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
+            { "n", "<C-c><C-p>", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
-            { "n", "<a-1>", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
-            { "n", "<a-3>", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
-            { "n", "<a-0>", actions.conflict_choose "base", { desc = "Git: choose BASE (kosong) conflict [diffview-view]" } },
-            { "n", "<a-2>", actions.conflict_choose "all", { desc = "Git: choose BOTH conflict [diffview-view]" } },
+            { "n", "<C-c>c1", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
+            { "n", "<C-c>c3", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
+            { "n", "<C-c>c0", actions.conflict_choose "base", { desc = "Git: choose BASE (kosong) conflict [diffview-view]" } },
+            { "n", "<C-c>c2", actions.conflict_choose "all", { desc = "Git: choose BOTH conflict [diffview-view]" } },
 
-            { "n", "<LocalLeader>qcN", actions.conflict_choose "none", { desc = "Git: delete region conflict [diffview-view]" } },
-            { "n", "<LocalLeader>qcA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-view]" }, },
+            { "n", "<C-c>cN", actions.conflict_choose "none", { desc = "Git: delete region conflict [diffview-view]" } },
+            { "n", "<C-c>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-view]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview-view]" } },
@@ -192,7 +196,7 @@ add {
             { "n", "gg", false },
             { "n", "G", false},
 
-            { "n", "R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview-panel]" }, },
+            { "n", "<C-c>R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview-panel]" }, },
 
             --  ───────────────────────────────[ FOLD ]────────────────────────────
             { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview-panel]" } },
@@ -204,15 +208,15 @@ add {
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<S-Down>", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
-            { "n", "<S-Up>", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
+            { "n", "<C-c><C-n>", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<C-c><C-p>", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
-            { "n", "<a-1>", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
-            { "n", "<a-3>", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },
-            { "n", "<a-0>", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-panel]" }, },
-            { "n", "<a-2>", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-panel]" }, },
+            { "n", "<C-c>c1", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
+            { "n", "<C-c>c3", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },
+            { "n", "<C-c>c0", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-panel]" }, },
+            { "n", "<C-c>c2", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-panel]" }, },
 
-            { "n", "<LocalLeader>qcD", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-panel]" }, },
+            { "n", "<C-c>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-panel]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview-panel]" } },
@@ -272,7 +276,7 @@ add {
 }
 
 local load_diffview = function()
-  require("vim-pack").load_now "diffview.nvim"
+  lazy("vim-pack").load_now "diffview.nvim"
 end
 
 UtilKey.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
@@ -289,7 +293,7 @@ end, { desc = "Git: DiffviewFileHistory repo [diffview]" })
 
 UtilKey.xnoremap("<Leader>gl", function()
   load_diffview()
-  local v = require("utils.cmd").get_visual_selection_info()
+  local v = lazy("utils.cmd").get_visual_selection_info()
   local file = vim.fn.expand "%"
   -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
   local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)

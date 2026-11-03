@@ -1,7 +1,9 @@
 local UtilKey = require "utils.map"
 
-local Log = require "utils.log"
-local IconMisc = require("icons").misc
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+local IconMisc = lazy("icons").misc
 
 local silent = { silent = true }
 local nosilent = { silent = false }
@@ -41,57 +43,58 @@ UtilKey.snoremap("hh", function() vim.schedule(function() vim.cmd "nohlsearch" U
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 --stylua: ignore
-UtilKey.nnoremap("zb", function() require "utils.fold".cycle_fold_level() end, { desc = "Fold: cycle level (state-aware)" })
+UtilKey.nnoremap("<S-Tab>", function() lazy "utils.fold".cycle_fold_level() end, { desc = "Fold: cycle level (state-aware)" })
 --stylua: ignore
-UtilKey.nnoremap("zf", function() require "utils.fold".focus_current() end, { desc = "Fold: focus current (respect cycle level)" })
+UtilKey.nnoremap("zf", function() lazy "utils.fold".focus_current() end, { desc = "Fold: focus current (respect cycle level)" })
 --stylua: ignore
-UtilKey.nnoremap("zM", function() require "utils.fold".close_all() end, { desc = "Fold: close all (level tersimpan)" })
+UtilKey.nnoremap("zM", function() lazy "utils.fold".close_all() end, { desc = "Fold: close all (level tersimpan)" })
 --stylua: ignore
-UtilKey.nnoremap("zR", function() require "utils.fold".open_all() end, { desc = "Fold: open all (state dipertahankan)" })
+UtilKey.nnoremap("zR", function() lazy "utils.fold".open_all() end, { desc = "Fold: open all (state dipertahankan)" })
 --stylua: ignore
-UtilKey.nnoremap("zx", function() require "utils.fold".restore_level() end, { desc = "Fold: restore level sebelum zRUtils.fold" })
+UtilKey.nnoremap("zx", function() lazy "utils.fold".restore_level() end, { desc = "Fold: restore level sebelum zRUtils.fold" })
 
 -- This works on ghostty+tmux but failed on kitty+tmux,
 UtilKey.nnoremap("<Tab>", "za", { desc = "Fold: toggle fold" })
-UtilKey.nnoremap("<C-i>", "<C-i>")
+
+-- Restore the default `<C-i>` (alternate `<Tab>`) behavior because it was
+-- previously used as a fold mapping.
+UtilKey.nnoremap("<C-i>", "<C-i>", {})
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              WINDOW <leader>w                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-local function util_window()
-  return require "utils.window"
-end
+local UtilWindow = lazy "utils.window"
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>wv", function() util_window().arange_wins "vsplit"() end, { desc = "Window: vsplit" })
+UtilKey.nnoremap("<Leader>wv", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit" })
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>ws", function() util_window().arange_wins "split"() end, { desc = "Window: split" })
+UtilKey.nnoremap("<Leader>ws", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>s", function() util_window().arange_wins "split"() end, { desc = "Window: split" })
+UtilKey.nnoremap("<c-w>s", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>j", function() util_window().arange_wins "split"() end, { desc = "Window: split (alternative)" })
+UtilKey.nnoremap("<c-w>j", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>v", function() util_window().arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<c-w>v", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>l", function() util_window().arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<c-w>l", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>ll", function() util_window().switch_focus_targeted_window() end, { desc = "Window: switch focus" })
+UtilKey.noremap({ "n", "x" }, "<Leader>ll", function() UtilWindow.switch_focus_targeted_window() end, { desc = "Window: switch focus" })
 
 --stylua: ignore
-UtilKey.nnoremap("<c-w>L", function() if vim.w.is_overlook_popup then util_window().arange_wins "vsplit"() end UtilKey.feedkey "<C-w>L" end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<c-w>L", function() if vim.w.is_overlook_popup then UtilWindow.arange_wins "vsplit"() end UtilKey.feedkey "<C-w>L" end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>t", function() util_window().arange_wins "tabe"() end, { desc = "Window: move new tab", silent = true })
+UtilKey.nnoremap("<c-w>t", function() UtilWindow.arange_wins "tabe"() end, { desc = "Window: move new tab", silent = true })
 
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>wJ", function() util_window().arange_wins "J"() end, { desc = "Window: move ↓" })
+UtilKey.noremap({ "n", "x" }, "<Leader>wJ", function() UtilWindow.arange_wins "J"() end, { desc = "Window: move ↓" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>wK", function() util_window().arange_wins "K"() end, { desc = "Window: move ↑" })
+UtilKey.noremap({ "n", "x" }, "<Leader>wK", function() UtilWindow.arange_wins "K"() end, { desc = "Window: move ↑" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>wH", function() util_window().arange_wins "H"() end, { desc = "Window: move ←" })
+UtilKey.noremap({ "n", "x" }, "<Leader>wH", function() UtilWindow.arange_wins "H"() end, { desc = "Window: move ←" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>wL", function() util_window().arange_wins "H"() end, { desc = "Window: move →" })
+UtilKey.noremap({ "n", "x" }, "<Leader>wL", function() UtilWindow.arange_wins "H"() end, { desc = "Window: move →" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                   TAB t..                                   ╏
@@ -121,16 +124,13 @@ UtilKey.nnoremap("<Leader>bl", "<C-^>", { desc = "Buffer: last buf (alternate)",
 UtilKey.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: equalize window size", silent = true })
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>bQ", function() util_window()._only() Log.info(IconMisc.checklist .. " Purge buffers") end, { desc = "Buffer: kill/purge other buffers" })
-
+UtilKey.nnoremap("<Leader>bK", function() UtilWindow._only() Log.info(IconMisc.checklist .. " Purge buffers") end, { desc = "Buffer: kill/purge other buffers" })
 --stylua: ignore
-UtilKey.nnoremap("<Leader>bk", function () util_window().magic_quit() end, { desc = "Buffer: magic exit" })
+UtilKey.nnoremap("<Leader>bk", function () UtilWindow.magic_quit() end, { desc = "Buffer: magic exit" })
 --stylua: ignore
-UtilKey.nnoremap("<Leader>bK", function() util_window().bufremove() end, { desc = "Buffer: kill/close buffer" })
-UtilKey.nnoremap("<Leader>bN", vim.cmd.E, { desc = "Buffer: new empty" })
-
+UtilKey.nnoremap("<Leader>bN", vim.cmd.E, { desc = "Buffer: open new buffer empty" })
 --stylua: ignore
-UtilKey.noremap({ "n", "t", "x" }, "<a-x>", function() local buf = vim.api.nvim_get_current_buf() require("bufdelete").bufdelete(buf, true) end, { desc = "Buffer: close", silent = true })
+UtilKey.noremap({ "n", "t", "x" }, "<a-x>", function() local buf = vim.api.nvim_get_current_buf() lazy("bufdelete").bufdelete(buf, true) end, { desc = "Buffer: close", silent = true })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               HELP <leader>h                                ╏
@@ -139,44 +139,42 @@ UtilKey.noremap({ "n", "t", "x" }, "<a-x>", function() local buf = vim.api.nvim_
 --stylua: ignore
 UtilKey.nnoremap("<Leader>hR", function() vim.cmd [[wall!]] vim.cmd [[restart]] end, { desc = "Help: restart nvim" }) --stylua: ignore
 --stylua: ignore
-UtilKey.nnoremap("<Leader>hb", require("utils.map").show_help_buf_keymap, { desc = "Help: show keymaps buffer", silent = true })
+UtilKey.nnoremap("<Leader>hb", lazy("utils.map").show_help_buf_keymap, { desc = "Help: show keymaps buffer", silent = true })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              SEARCH <leader>s                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-local replace_keymap = require("utils.map").search_replace_keymap
+local replace_keymap = lazy("utils.map").search_replace_keymap
 --stylua: ignore
 UtilKey.nnoremap("<Leader>xR", replace_keymap, { desc = "Exec: replace string under cursor" })
 --stylua: ignore
 UtilKey.xnoremap("<Leader>xR", function() replace_keymap(false, true) end, { desc = "Exec: replace visual selection", })
-
-
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               OPEN <leader>o                                ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>ob", function() require("utils.cmd").open_with "browser" end, { desc = "Open: lookup in browser" })
+UtilKey.noremap({ "n", "x" }, "<Leader>ob", function() lazy("utils.cmd").open_with "browser" end, { desc = "Open: lookup in browser" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>oB", function() require("utils.cmd").open_with "mpv or svix" end, { desc = "Open: open-with" })
+UtilKey.noremap({ "n", "x" }, "<Leader>oB", function() lazy("utils.cmd").open_with "mpv or svix" end, { desc = "Open: open-with" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>oe", function() require("utils.cmd").open_with "go to file" end, { desc = "Open: under cursor" })
+UtilKey.noremap({ "n", "x" }, "<Leader>oe", function() lazy("utils.cmd").open_with "go to file" end, { desc = "Open: under cursor" })
 --stylua: ignore
-UtilKey.noremap({ "n", "x" }, "<Leader>ov", function() require("utils.cmd").open_with("go to file", "vsplit") end, { desc = "Open: under cursor vsplit" })
+UtilKey.noremap({ "n", "x" }, "<Leader>ov", function() lazy("utils.cmd").open_with("go to file", "vsplit") end, { desc = "Open: under cursor vsplit" })
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>oR", function() require("utils.cmd").browse_this_error(true) end, { desc = "Open: lookup error online" })
+UtilKey.nnoremap("<Leader>oR", function() lazy("utils.cmd").browse_this_error(true) end, { desc = "Open: lookup error online" })
 --stylua: ignore
-UtilKey.xnoremap("<Leader>oR", function() require("utils.cmd").browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
+UtilKey.xnoremap("<Leader>oR", function() lazy("utils.cmd").browse_this_error(true) end, { desc = "Open: lookup error online (visual)" })
 
 UtilKey.nnoremap("<Leader>oU", function()
   if not package.loaded["undotree"] then
     vim.cmd "packadd nvim.undotree "
   end
-  require("utils.layout").toggle_sidebar("nvim-undotree", function()
-    require("undotree").open()
+  lazy("utils.layout").toggle_sidebar("nvim-undotree", function()
+    lazy("undotree").open()
   end, true)
 end, { desc = "Open: undotree" })
 
@@ -184,7 +182,7 @@ end, { desc = "Open: undotree" })
 -- ╏                              TOGGLE <leader>u                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-UtilKey.nnoremap("<Leader>ul", require("utils.layout").disable, { desc = "Toggle: disable/enable layout" })
+UtilKey.nnoremap("<Leader>ul", lazy("utils.layout").disable, { desc = "Toggle: disable/enable layout" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                  TERMINAL                                   ╏
@@ -210,11 +208,10 @@ UtilKey.tnoremap("<c-Up>", function() UtilKey.feedkey("<C-\\><C-n><C-w>k") end, 
 -- stylua: ignore
 UtilKey.tnoremap("<c-Right>", function() UtilKey.feedkey("<C-\\><C-n>:wincmd l<CR>") end, { desc = "Terminal: move right" })
 
--- ├──────────────────────────────────┤ OPEN ├──────────────────────────────────┤
 -- ════════════════════════════════ TOGGLE TERM ═════════════════════════════
 
 local function get_term()
-  return require "utils.terminal"
+  return lazy "utils.terminal"
 end
 
 -- stylua: ignore
@@ -269,7 +266,6 @@ UtilKey.cabbrev("w;", "update!")
 -- ╏                                   SCROLL                                    ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
--- Scroll with magic jump
 --stylua: ignore
 UtilKey.nnoremap("<a-n>", function() UtilKey.magic_jump() end, { desc = "Scroll: magic jump" })
 --stylua: ignore
@@ -453,44 +449,45 @@ UtilKey.xnoremap("<Leader>gv", "<esc><cmd>CompareClipboardSelection<cr>", { desc
 
 -- Mapping fo testing
 -- UtilKey.nnoremap("<Leader><F1>", function()
---   for i = 1, 10 do
---     vim.defer_fn(function()
---       vim.notify("Hello " .. i, "info", { id = "test" })
---     end, i * 500)
---   end
---
---   Log.info "this RUtils info"
---   Log.warn "this RUtils warn"
---   Log.error "this RUtils error"
+-- .. some logic
 -- end, { desc = "Exec: replace visual selection" })
 
--- UtilKey.vmap("K", "<Nop>")
--- UtilKey.nmap("K", "<Nop>")
 UtilKey.nmap("q", "<Nop>")
 
--- Snacks.toggle.zoom():map "<Leader>mm"
---
 UtilKey.nnoremap("<Leader>n", function()
   -- convert into lua: "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
   vim.cmd "nohlsearch"
   vim.cmd "diffupdate"
 
   -- clean up vim-highlighter
-  local ok, _ = require("utils.plugin").require(vim.fn.HiList)
-  if ok then
-    local Hilist = vim.fn.HiList()
-    if Hilist and #Hilist > 0 then
-      vim.cmd "Hi -"
+  if vim.fn.exists "*HiList" == 1 then
+    local ok, list = pcall(vim.fn.HiList)
+    if ok and list and not vim.tbl_isempty(list) then
+      vim.cmd "Hi clear"
     end
   end
 
   UtilKey.actions.snippet_stop()
+
+  vim.cmd.redraw { bang = true }
 end, { desc = "Misc: redraw / clear hlsearch / diff update" })
 
 --stylua: ignore
 UtilKey.nnoremap("*", function() local word = vim.fn.expand "<cword>" vim.fn.setreg("/", "\\v" .. word) vim.o.hlsearch = true end, { remap = true, desc = "Misc: search word under cursor (no jump)" })
 --stylua: ignore
 UtilKey.nnoremap("dd", function() if vim.fn.getline "." == "" then return '"_dd' end return "dd" end, { expr = true })
+
+UtilKey.nnoremap("<Leader>xl", function()
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local ok, _ = pcall(vim.cmd, "vimgrep /\\%>70c./ %")
+  if not ok then
+    Log.warn "Lines is fine. Abort."
+    return
+  end
+  vim.schedule(function()
+    vim.cmd "copen"
+  end)
+end, { desc = "Exec: vimgrep 70c" })
 
 -- It works better with "Very Magic", but it still doesn't work well with blink.
 -- [[<Esc>/\v%V]])
@@ -507,7 +504,7 @@ UtilKey.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 UtilKey.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>cd", function() local filepath =vim.fn.expand "%:p:h" vim.cmd(vim.fmt("cd %s", filepath)) vim.notify(vim.fmt("ROOT CHANGED: %s", filepath)) end, { desc = "Action: cd to file" })
+UtilKey.nnoremap("<Leader>cd", function() local filepath =vim.fn.expand "%:p:h" vim.cmd(string.format("cd %s", filepath)) vim.notify(string.format("ROOT CHANGED: %s", filepath)) end, { desc = "Action: cd to file" })
 --stylua: ignore
 UtilKey.nnoremap("<Leader>cy", function() local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or "" vim.fn.setreg("+", path) vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" }) end, { silent = true, desc = "Action: copy path buffer" })
 UtilKey.nnoremap("<Leader>xP", function()
@@ -529,31 +526,42 @@ UtilKey.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev
 -- ╏                                    NOTES                                    ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-UtilKey.nnoremap("<Localleader>aft", require("utils.note").filter_by_tags, { desc = "Note: find notes by tag" })
-UtilKey.nnoremap("<Localleader>afl", require("utils.note").last_filter_by_tags, { desc = "Note: repeat tag search" })
-UtilKey.nnoremap("<Localleader>aff", require("utils.note").find_files_notes, { desc = "Note: find note files" })
-UtilKey.nnoremap("<Localleader>afg", require("utils.note").live_grep, { desc = "Note: live grep" })
-UtilKey.vnoremap("<Localleader>afg", require("utils.note").live_grep_visual, { desc = "Note: live grep (visual)" })
+UtilKey.nnoremap("<Localleader>aft", lazy("utils.note").filter_by_tags, { desc = "Note: find notes by tag" })
+UtilKey.nnoremap("<Localleader>afl", lazy("utils.note").last_filter_by_tags, { desc = "Note: repeat tag search" })
+UtilKey.nnoremap("<Localleader>aff", lazy("utils.note").find_files_notes, { desc = "Note: find note files" })
+UtilKey.nnoremap("<Localleader>afg", lazy("utils.note").live_grep, { desc = "Note: live grep" })
+UtilKey.vnoremap("<Localleader>afg", lazy("utils.note").live_grep_visual, { desc = "Note: live grep (visual)" })
 
--- -- UtilKey.nnoremap("<Localleader>a<F5>", RUtils.notes.get_note_mode, { desc = "Note: show note mode" })
 --stylua: ignore
-UtilKey.nnoremap( "<Localleader>aS", require("utils.note").swith_note_mode, { desc = "Note: swith note mode org or markdown" })
+UtilKey.nnoremap("<Localleader>aS", lazy("utils.note").swith_note_mode, { desc = "Note: swith org or markdown note mode" })
+--stylua: ignore
+UtilKey.nnoremap("<Localleader>aud", "<CMD>OrgChangeDirAgenda<CR>", { desc = "Note: switch beetween agenda dir global and local" })
 
--- -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
--- -- ╏                                  COMMANDS                                   ╏
--- -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
---
--- -- RUtils.create_command("Snippets", RUtils.cmd.edit_snippet, { desc = "Misc: edit snippet file" })
--- -- RUtils.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
---
--- --stylua: ignore
--- RUtils.create_command("InfoOption", function() vim.cmd "options" end, { desc = "Misc: echo options" })
---
--- --stylua: ignore
--- vim.api.nvim_create_user_command("LspLog", function() vim.cmd(string.format("tabnew %s", vim.lsp.log.get_filename())) end, { desc = "Show LSP client log" })
--- --stylua: ignore
--- vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", { desc = "Show LSP info" })
---
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                  COMMANDS                                   ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+local load_plugin_keys = {
+  g = "gitsigns.nvim",
+  d = "diffview.nvim",
+  c = "candela.nvim",
+}
+
+---@param p string
+local load_plugin_now = function(p)
+  local load_p = load_plugin_keys[p]
+  if load_p then
+    lazy("vim-pack").load_now(load_p)
+    return
+  end
+
+  Log.warn(string.format("there is no plugin load for `%s`", p))
+end
+
+local function util_fzflua()
+  return lazy "utils.fzflua"
+end
+
 -- vim.api.nvim_create_user_command("DFile", function()
 --   local has_fzf, fzf = pcall(require, "fzf-lua")
 --
@@ -602,234 +610,221 @@ UtilKey.nnoremap( "<Localleader>aS", require("utils.note").swith_note_mode, { de
 --     }
 --   end
 -- end, {})
---
--- local ctrl_o_nvim = function()
---   RUtils.fzflua.open_cmd_bulk_key_only({
---     ["Clock mode"] = function()
---       UtilTerm.clock_mode("clock", true)
---     end,
---     ["Pomodoro 1h"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "1h" } }
---     end,
---     ["Pomodoro 25m"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "25m" } }
---     end,
---     ["Pomodoro 10m"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "10m" } }
---     end,
---     ["Layout width toggle"] = function()
---       RUtils.layout.disable()
---     end,
---     ["News"] = function()
---       UtilTerm.float_newsboat()
---     end,
---     ["Calendar"] = function()
---       UtilTerm.float_calcure()
---     end,
---     ["Btop"] = function()
---       UtilTerm.float_btop()
---     end,
---     ["Rust upserv"] = function()
---       print "sf"
---     end,
---     ["Rust upserv2"] = function()
---       print "sf"
---     end,
---     ["Rust benc"] = function()
---       print "sf"
---     end,
---     ["Grav term"] = function()
---       print "sf"
---     end,
---     ["Log meta"] = function()
---       print "sf"
---     end,
---     ["R-kill"] = function()
---       UtilTerm.float_rkill()
---     end,
---   }, { winopts = { title = RUtils.fzflua.format_title("Alt-Y", RUtils.config.icons.misc.circle) } })
--- end
---
--- UtilKey.nnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands" })
--- UtilKey.tnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands" })
--- UtilKey.xnoremap("<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands (visual)" })
---
--- local bulk_cmd_misc = function()
---   local cmds = {
---     ["Screenkey - open screenkey on nvim"] = function()
---       cmd "Screenkey"
---     end,
---     ["PDFview - open pdf with nvim"] = function()
---       require("pdfview").menu()
---     end,
---     ["tailwindcss.com - open in browser"] = function()
---       cmd "!open https://tailwindcss.com"
---     end,
---     ["Clock mode - run clock"] = function()
---       UtilTerm.clock_mode("clock", true)
---     end,
---     ["Pomodoro 1h - work 1hour"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "1h" } }
---     end,
---     ["Pomodoro 25m - work 25minutes"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "25m" } }
---     end,
---     ["Pomodoro 10m - work 10minutes"] = function()
---       UtilTerm.clock_mode { pomodoro = { timer = "10m" } }
---     end,
---     ["TestNotify - runt tess notification"] = function()
---       -- to replace an existing notification just use the same id.
---       -- you can also use the return value of the notify function as id.
---       for i = 1, 10 do
---         vim.defer_fn(function()
---           vim.notify("Hello " .. i, "info", { id = "test" })
---         end, i * 500)
---       end
---
---       RUtils.info "this RUtils info"
---       RUtils.warn "this RUtils warn"
---       RUtils.error "this RUtils error"
---     end,
---     ["Browser devdocs - with input"] = function()
---       local ok, query = pcall(vim.fn.input, "Search DevDocs: ")
---       if not ok or not query or query == "" then
---         return
---       end
---
---       local encoded_url = string.format('open "https://devdocs.io/#q=%s"', query:gsub(" ", "%%20"))
---       os.execute(encoded_url)
---     end,
---     ["Treesitter - open inspect tree under cursor"] = function()
---       vim.treesitter.inspect_tree()
---       vim.api.nvim_input "I"
---     end,
---   }
---
---   if RUtils.has "candela.nvim" then
---     cmds["Candela - add color for log highlights"] = function()
---       if not vim.tbl_contains({ "log", "bigfile" }, vim.bo.filetype) then
---         RUtils.warn "Not log file!"
---         return
---       end
---
---       local CandelaUi = require "candela.ui"
---       CandelaUi.toggle()
---     end
---   end
---
---   RUtils.fzflua.open_cmd_bulk_center(
---     cmds,
---     { winopts = { title = RUtils.fzflua.format_title("Open Commands", RUtils.config.icons.misc.fire) } }
---   )
--- end
---
--- UtilKey.nnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands" })
--- UtilKey.tnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands" })
--- UtilKey.xnoremap("<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands (visual)" })
---
--- local bulk_cmd_git = function()
---   RUtils.fzflua.open_cmd_bulk_center({
---     ["Diffview - open DiffviewOpen"] = function()
---       vim.cmd [[DiffviewOpen]]
---     end,
---     ["Diffview - open DiffviewFileHistory repo"] = function()
---       vim.cmd [[DiffviewFileHistory]]
---     end,
---     ["Diffview - open DiffviewFileHistory curbuf"] = function()
---       vim.cmd [[DiffviewFileHistory --follow %]]
---     end,
---     ["Diffview - open DiffviewFileHistory line"] = function()
---       vim.cmd [[DiffviewFileHistory --follow]]
---     end,
---     ["Codediff - open VscodeDiff"] = function()
---       vim.cmd [[VscodeDiff]]
---     end,
---     ["Diff - windo this"] = function()
---       vim.cmd [[windo diffthis]]
---     end,
---     ["GH - open PR"] = function()
---       vim.cmd [[GHOpenPR]]
---     end,
---     ["GH - open issue"] = function()
---       vim.cmd [[GHOpenIssue]]
---     end,
---     ["GitWorktree - create"] = function()
---       vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
---     end,
---     ["GitWorktree - manage"] = function()
---       vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
---     end,
---     ["GitConflict - refresh"] = function()
---       vim.cmd [[GitConflictRefresh]]
---     end,
---     ["GitConflict - send list to qf"] = function()
---       vim.cmd [[GitConflictListQf]]
---     end,
---     ["GitConflict - choosing ours (current)"] = function()
---       ---@diagnostic disable-next-line: undefined-field
---       RUtils.info("Choosing ours (current)", { title = "GitConflict" })
---       vim.cmd [[GitConflictChooseOurs]]
---     end,
---     ["GitConflict - choosing theirs (incoming)"] = function()
---       ---@diagnostic disable-next-line: undefined-field
---       RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
---       vim.cmd [[GitConflictChooseTheirs]]
---     end,
---     ["GitConflict - choosing none of them (deleted)"] = function()
---       ---@diagnostic disable-next-line: undefined-field
---       RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
---       vim.cmd [[GitConflictChooseNone]]
---     end,
---     ["GitSigns - show blame"] = function()
---       local gs = package.loaded.gitsigns
---       gs.blame()
---     end,
---     ["GitSigns - toggle diff deleted"] = function()
---       local gs = package.loaded.gitsigns
---       gs.toggle_deleted()
---     end,
---     ["GitSigns - toggle word diff"] = function()
---       local gs = package.loaded.gitsigns
---       gs.toggle_word_diff()
---     end,
---   }, { winopts = { title = RUtils.fzflua.format_title("Git Commands", RUtils.config.icons.git.branch) } })
--- end
---
--- UtilKey.nnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
--- UtilKey.tnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
--- UtilKey.xnoremap("<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands (visual)" })
---
--- local bulk_cmd_toggle = function()
---   RUtils.fzflua.open_cmd_bulk_center({
---     ["Layout - toggle sidebar size"] = function()
---       RUtils.layout.disable()
---     end,
---     ["Color highlight - toggle CccHighlighterToggle"] = function()
---       vim.cmd.CccHighlighterToggle()
---     end,
---     ["Outline - toggle auto follow"] = function()
---       vim.cmd.OutlineToggleFollow()
---     end,
---     ["VimHighlighter - clear all"] = function()
---       local ok, _ = pcall(vim.fn.HiList)
---       if ok then
---         local Hilist = vim.fn.HiList()
---         if Hilist and #Hilist > 0 then
---           vim.cmd "Hi clear"
---           return
---         end
---       end
---       RUtils.info "No active highlights to clear"
---     end,
---     ["Treesitter - toggle highlight"] = function()
---       Snacks.toggle.treesitter()
---     end,
---   }, { winopts = { title = RUtils.fzflua.format_title("Toggle Commands", RUtils.config.icons.misc.tools) } })
--- end
---
--- UtilKey.nnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands" })
--- UtilKey.tnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands" })
--- UtilKey.xnoremap("<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands (visual)" })
+
+local ctrl_o_nvim = function()
+  util_fzflua().open_cmd_bulk_key_only({
+    ["Clock mode"] = function()
+      get_term().clock_mode("clock", true)
+    end,
+    ["Pomodoro 1h"] = function()
+      get_term().clock_mode { pomodoro = { timer = "1h" } }
+    end,
+    ["Pomodoro 25m"] = function()
+      get_term().clock_mode { pomodoro = { timer = "25m" } }
+    end,
+    ["Pomodoro 10m"] = function()
+      get_term().clock_mode { pomodoro = { timer = "10m" } }
+    end,
+    ["Layout width toggle"] = function()
+      get_term().layout.disable()
+    end,
+    ["News"] = function()
+      get_term().float_newsboat()
+    end,
+    ["Calendar"] = function()
+      get_term().float_calcure()
+    end,
+    ["Btop"] = function()
+      get_term().float_btop()
+    end,
+    ["Rust upserv"] = function()
+      print "sf"
+    end,
+    ["Rust upserv2"] = function()
+      print "sf"
+    end,
+    ["Rust benc"] = function()
+      print "sf"
+    end,
+    ["Grav term"] = function()
+      print "sf"
+    end,
+    ["Log meta"] = function()
+      print "sf"
+    end,
+    ["R-kill"] = function()
+      get_term().float_rkill()
+    end,
+  }, { winopts = { title = "Alt-Y" } })
+end
+
+UtilKey.noremap({ "n", "x", "t" }, "<a-s-y>", ctrl_o_nvim, { desc = "Bulk: alt_Y commands (visual)" })
+
+local bulk_cmd_misc = function()
+  local cmds = {
+    ["Screenkey - open screenkey on nvim"] = function()
+      vim.cmd "Screenkey"
+    end,
+    ["PDFview - open pdf with nvim"] = function()
+      lazy("pdfview").menu()
+    end,
+    ["tailwindcss.com - open in browser"] = function()
+      vim.cmd "!open https://tailwindcss.com"
+    end,
+    ["Clock mode - run clock"] = function()
+      get_term().clock_mode("clock", true)
+    end,
+    ["Pomodoro 1h - work 1hour"] = function()
+      get_term().clock_mode { pomodoro = { timer = "1h" } }
+    end,
+    ["Pomodoro 25m - work 25minutes"] = function()
+      get_term().clock_mode { pomodoro = { timer = "25m" } }
+    end,
+    ["Pomodoro 10m - work 10minutes"] = function()
+      get_term().clock_mode { pomodoro = { timer = "10m" } }
+    end,
+    ["TestNotify - runt test notification"] = function()
+      -- to replace an existing notification just use the same id.
+      -- you can also use the return value of the notify function as id.
+      for i = 1, 10 do
+        vim.defer_fn(function()
+          vim.notify("Hello " .. i, vim.log.levels.INFO, { id = "test" })
+        end, i * 500)
+      end
+
+      Log.info "this is info msg"
+      Log.warn "this is warn"
+      Log.error "this is error"
+    end,
+    ["Browser devdocs - with input"] = function()
+      local ok, query = pcall(vim.fn.input, "Search DevDocs: ")
+      if not ok or not query or query == "" then
+        return
+      end
+
+      local encoded_url = string.format('open "https://devdocs.io/#q=%s"', query:gsub(" ", "%%20"))
+      os.execute(encoded_url)
+    end,
+    ["Treesitter - open inspect tree under cursor"] = function()
+      vim.treesitter.inspect_tree()
+      vim.api.nvim_input "I"
+    end,
+  }
+
+  if vim.tbl_contains({ "log", "bigfile" }, vim.bo.filetype) then
+    cmds["Candela - add color for log highlights"] = function()
+      lazy("candela.ui").toggle()
+    end
+  end
+
+  util_fzflua().open_cmd_bulk_center(cmds, { winopts = { title = "Open Commands" } })
+end
+
+UtilKey.noremap({ "n", "x", "t" }, "<Leader>oF", bulk_cmd_misc, { desc = "Bulk: open commands" })
+
+local bulk_cmd_git = function()
+  util_fzflua().open_cmd_bulk_center({
+    ["Diffview - open DiffviewOpen"] = function()
+      load_plugin_now "d"
+      vim.cmd [[DiffviewOpen]]
+    end,
+    ["Diffview - open DiffviewFileHistory repo"] = function()
+      load_plugin_now "d"
+      vim.cmd [[DiffviewFileHistory]]
+    end,
+    ["Diffview - open DiffviewFileHistory curbuf"] = function()
+      load_plugin_now "d"
+      vim.cmd [[DiffviewFileHistory --follow %]]
+    end,
+    ["Diffview - open DiffviewFileHistory line"] = function()
+      load_plugin_now "d"
+      vim.cmd [[DiffviewFileHistory --follow]]
+    end,
+    ["Codediff - open VscodeDiff"] = function()
+      vim.cmd [[VscodeDiff]]
+    end,
+    ["Diff - windo this"] = function()
+      vim.cmd [[windo diffthis]]
+    end,
+    ["GH - open PR"] = function()
+      vim.cmd [[GHOpenPR]]
+    end,
+    ["GH - open issue"] = function()
+      vim.cmd [[GHOpenIssue]]
+    end,
+    ["GitWorktree - create"] = function()
+      vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
+    end,
+    ["GitWorktree - manage"] = function()
+      vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
+    end,
+    ["GitConflict - refresh"] = function()
+      vim.cmd [[GitConflictRefresh]]
+    end,
+    ["GitConflict - send list to qf"] = function()
+      vim.cmd [[GitConflictListQf]]
+    end,
+    ["GitConflict - choosing ours (current)"] = function()
+      Log.info "Choosing ours (current)"
+      vim.cmd [[GitConflictChooseOurs]]
+    end,
+    ["GitConflict - choosing theirs (incoming)"] = function()
+      Log.info "Choosing theirs (incoming)"
+      vim.cmd [[GitConflictChooseTheirs]]
+    end,
+    ["GitConflict - choosing none of them (deleted)"] = function()
+      Log.info "Choosing none of them (deleted)"
+      vim.cmd [[GitConflictChooseNone]]
+    end,
+    ["GitSigns - show blame"] = function()
+      load_plugin_now "g"
+      local gs = package.loaded.gitsigns
+      gs.blame()
+    end,
+    ["GitSigns - toggle diff deleted"] = function()
+      load_plugin_now "g"
+      local gs = package.loaded.gitsigns
+      gs.toggle_deleted()
+    end,
+    ["GitSigns - toggle word diff"] = function()
+      load_plugin_now "g"
+      local gs = package.loaded.gitsigns
+      gs.toggle_word_diff()
+    end,
+  }, { winopts = { title = "Git Commands" } })
+end
+
+UtilKey.noremap({ "n", "x", "t" }, "<Leader>gF", bulk_cmd_git, { desc = "Bulk: git commands" })
+
+local bulk_cmd_toggle = function()
+  util_fzflua().open_cmd_bulk_center({
+    -- ["Layout - toggle sidebar size"] = function()
+    --   RUtils.layout.disable()
+    -- end,
+    ["Color highlight - toggle CccHighlighterToggle"] = function()
+      vim.cmd.CccHighlighterToggle()
+    end,
+    ["Outline - toggle auto follow"] = function()
+      vim.cmd.OutlineToggleFollow()
+    end,
+    ["VimHighlighter - clear all"] = function()
+      local ok, _ = pcall(vim.fn.HiList)
+      if ok then
+        local Hilist = vim.fn.HiList()
+        if Hilist and #Hilist > 0 then
+          vim.cmd "Hi clear"
+          return
+        end
+      end
+      Log.info "No active highlights to clear"
+    end,
+    -- ["Treesitter - toggle highlight"] = function()
+    --   Snacks.toggle.treesitter()
+    -- end,
+  }, { winopts = { title = "Toggle Commands" } })
+end
+
+UtilKey.noremap({ "n", "x", "t" }, "<Leader>uF", bulk_cmd_toggle, { desc = "Bulk: toggle commands" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                              TMUX INTEGRATION                               ╏
@@ -879,8 +874,8 @@ end, { desc = "CTRL_o: open notes" })
 
 UtilKey.nnoremap("<a-E>", function()
   if vim.g.main_layout == "default" or not vim.g.main_layout then
-    require("vim-pack").load_now "neo-tree.nvim"
-    require("utils.layout").toggle_sidebar("neo-tree", function()
+    lazy("vim-pack").load_now "neo-tree.nvim"
+    lazy("utils.layout").toggle_sidebar("neo-tree", function()
       vim.cmd "Neotree reveal focus"
     end)
     return

@@ -1,9 +1,10 @@
 local add_on_event = require("vim-pack").add_on_event
 
-local solid_bar = require("icons").misc.vertical_bar
-local dashed_bar = require("icons").misc.dashed_bar
+local lazy = require("utils.plugin").require_lazy
 
-local UtilWindow = require "utils.window"
+local solid_bar = lazy("icons").misc.vertical_bar
+local dashed_bar = lazy("icons").misc.dashed_bar
+local UtilWindow = lazy "utils.window"
 
 -- Adds git related signs to the gutter, as well as utilities for managing changes.
 add_on_event({ "BufReadPost", "BufNewFile" }, {
@@ -66,6 +67,9 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
           map("x", "<Leader>gp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns]")
           map("n", "<Leader>gP", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
           map("x", "<Leader>gP", gs.preview_hunk, "Git: preview hunk infloat [gitsigns]")
+
+          map("n", "<Leader>gob", lazy("utils.git").open_file, "Git: browse this file [gitsigns]")
+          map("n", "<Leader>goB", lazy("utils.git").open_repo, "Git: browse this repo [gitsigns]")
 
           vim.api.nvim_create_user_command("GitToggleDelete", function()
             gs.toggle_deleted()

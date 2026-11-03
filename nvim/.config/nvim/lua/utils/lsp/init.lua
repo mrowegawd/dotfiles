@@ -109,7 +109,9 @@ function M.print_status(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local clients = M.get_clients(bufnr)
 
-  local icons = require "icons"
+  local lazy = require("utils.plugin").require_lazy
+
+  local icons = lazy "icons"
   print(icons.status.gear .. " LSP Status for Buffer " .. bufnr .. " (" .. vim.bo[bufnr].filetype .. "):")
 
   if #clients == 0 then

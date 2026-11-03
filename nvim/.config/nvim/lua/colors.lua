@@ -1,688 +1,687 @@
-local wo = vim.wo
-
 local base_colors = { Directory = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } }
 
 local update_col_colorscheme = {
   ["ashen"] = {
-    winseparator_fg_alter = 0.5,
-    linenr_fg_alter = 1.3,
-    nonetext_opacity = 0.35,
-    panelbottomlinenr_fg_alter = 2.5,
+    nonetext_opacity = 0.3,
+    linenr_transparency_fg = 0.25,
+    troubleindent_transparency_fg = 0.35,
+    winseparator_fg_alter = 0.8,
+    pmenusel_transparency_bg = 0.3,
+    panelsidenormal_bg_alter = -0.75,
+    panelbottomlinenr_fg_alter = 3.5,
+    comment_transparency_fg = 0.55,
+    statuslinetheme_transparency_fg = 0.7,
 
-    normalnote_bg_alter = 0.4,
+    normalnote_fg_alter = 8,
     commentnote_fg_alter = 0.9,
     codeblock_bg_alter = 0.25,
-    linenrnote_fg_alter = 0.8,
+    linenrnote_transparency_fg = 0.3,
+    winseparatornote_fg_alter = 0.25,
 
     zshlines_fg_alter = -0.05,
   },
   ["catppuccin"] = {
-    nonetext_opacity = 0.4,
-    panelbottomlinenr_fg_alter = 1.3,
-    winseparator_fg_alter = 0.5,
-    floatborderaiprompt_fg_alter = 2.5,
-    winseparatornote_fg_alter = 0.3,
-    commentnote_fg_alter = 0.15,
-    linenr_fg_alter = 1,
-    winbarnote_fg_alter = 1.3,
-    linenrnote_fg_alter = 0.8,
-
-    outline_indent_fg_alter = -0.25,
-    panelsidenormal_bg_alter = 0.1,
-
-    zshlines_bg_alter = 0.2,
+    linenr_transparency_fg = 0.2,
+    floatborder_transparency_fg = 0.05,
+    tabline_fg_alter = 0.4,
+    normalfloat_bg_alter = -0.3,
+    panelbottomlinenr_fg_alter = 2,
+    panelsidenormal_bg_alter = -0.5,
+    statuslinetheme_transparency_fg = 0.5,
+    zshlines_bg_alter = 0.1,
     zshlines_fg_alter = -0.1,
+    pmenusel_bg_alter = 0.4,
+    pmenusel_transparency_bg = 0.7,
+    troubleindent_transparency_fg = 0.13,
+
+    floatborderaiprompt_fg_alter = 2.5,
+
+    winseparatornote_fg_alter = 0.2,
+    commentnote_fg_alter = 0.15,
+    linenrnote_transparency_fg = 0.25,
   },
   ["cendre"] = {
-    winseparator_fg_alter = 0.55,
-    winseparatornote_fg_alter = 0.25,
-    commentnote_fg_alter = 0.7,
-    linenr_fg_alter = 1.2,
-
-    floatborderaiprompt_fg_alter = 4,
-
-    normalnote_bg_alter = 1,
-
-    hl_trouble_indent = "Function",
-    outline_indent_fg_alter = -0.45,
-
-    panelsidenormal_bg_alter = 0.2,
-
+    linenr_transparency_fg = 0.25,
+    panelsidenormal_bg_alter = -0.75,
     panelbottomlinenr_fg_alter = 2.5,
-
+    troubleindent_transparency_fg = 0.4,
+    floatborder_transparency_fg = 0.15,
+    winbar_fg_alter = 0.8,
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
+    statuslinetheme_fg_alter = 4,
+
+    normalnote_bg_alter = 1,
+    normalnote_fg_alter = 8,
+    winseparatornote_fg_alter = 0.2,
+    commentnote_fg_alter = 0.7,
+    linenrnote_transparency_fg = 0.25,
+
+    floatborderaiprompt_fg_alter = 4,
   },
   ["everforest"] = {
-    linenr_fg_alter = 0.7,
-    winseparator_fg_alter = 0.3,
-    hl_trouble_indent = "Function",
-    cursorlinebright_bg_alter = 0.5,
     floatborderaiprompt_fg_alter = 2.5,
-    outline_indent_fg_alter = -0.3,
-    linenrnote_fg_alter = 0.7,
+    pmenusel_transparency_bg = 0.13,
+    tabline_fg_alter = 0.55,
+    linenr_transparency_fg = 0.2,
+    cursorlinebright_bg_alter = 0.7,
     orgdirective_fg_alter = 0.3,
-    commentnote_fg_alter = 0.25,
-
-    panelbottomlinenr_fg_alter = 1,
+    comment_transparency_fg = 0.5,
+    statuslinetheme_fg_alter = 3,
+    panelsidenormal_bg_alter = -0.6,
+    normalfloat_bg_alter = -0.15,
+    zshlines_fg_alter = -0.1,
+    zshlines_bg_alter = 0.2,
+    panelbottomlinenr_fg_alter = 2,
     panelbottomcomment_fg_alter = -0.5,
 
-    normalnote_bg_alter = 0.4,
-
     winseparatornote_fg_alter = 0.15,
-    normalfloat_bg_alter = -0.1,
-
-    panelsidenormal_bg_alter = 0.1,
-
-    winbarnote_fg_alter = 0.8,
-
-    comment_fg_alter = 0.5,
-    zshlines_fg_alter = -0.05,
-    zshlines_bg_alter = 0.2,
+    normalnote_bg_alter = 0.4,
+    commentnote_fg_alter = 0.25,
+    linenrnote_fg_alter = 0.8,
   },
   ["gruvbox"] = {
-    nontextnote_fg_alter = 0.5,
-    winseparator_fg_alter = 0.35,
-    comment_fg_alter = 0.55,
+    linenr_transparency_fg = 0.22,
+    panelsidenormal_bg_alter = -0.65,
     orgdirective_fg_alter = 0.4,
-    linenr_fg_alter = 1,
-    floatborderaiprompt_fg_alter = 2.5,
-    panelsidenormal_bg_alter = 0.1,
-    winbarnote_fg_alter = 1.5,
+    tabline_fg_alter = 0.45,
+    statuslinetheme_fg_alter = 3.5,
+    cursorlinebright_bg_alter = 1,
+    pmenusel_transparency_bg = 0.3,
     zshlines_fg_alter = -0.2,
     zshlines_bg_alter = 0.4,
+
+    normalnote_fg_alter = 8,
+    normalnote_transparency_fg = 0.6,
+    winseparatornote_fg_alter = 0.2,
+    nontextnote_fg_alter = 0.5,
+    linenrnote_transparency_fg = 0.25,
+
+    floatborderaiprompt_fg_alter = 2.5,
   },
   ["imli"] = {
-    nontextnote_fg_alter = 0.1,
-    winseparator_fg_alter = 0.35,
-    comment_fg_alter = 0.55,
+    nonetext_opacity = 0.3,
+    linenr_transparency_fg = 0.3,
+    comment_transparency_fg = 0.65,
     orgdirective_fg_alter = 0.4,
-    linenr_fg_alter = 1,
+    winseparator_fg_alter = 1.2,
+    troubleindent_transparency_fg = 0.3,
+    codeblock_bg_alter = 0.4,
+    floatborderaiprompt_fg_alter = 2.5,
+    panelbottomlinenr_fg_alter = 3,
+    pmenusel_transparency_bg = 0.6,
+    panelsidenormal_bg_alter = -0.65,
+    zshlines_fg_alter = -0.2,
+    zshlines_bg_alter = 0.4,
+
+    normalnote_fg_alter = 13,
+    normalnote_transparency_fg = 0.8,
+    winseparatornote_fg_alter = 0.25,
+    linenrnote_transparency_fg = 0.35,
+    nontextnote_fg_alter = 0.1,
+  },
+  ["ef-dream"] = {
+    nonetext_opacity = 0.2,
+    orgdirective_fg_alter = 0.4,
+    statuslinetheme_fg_alter = 3,
+    floatborder_transparency_fg = 0.15,
+    codeblock_bg_alter = 0.4,
+    linenr_transparency_fg = 0.15,
+    floatborderaiprompt_fg_alter = 2.5,
+    panelsidenormal_bg_alter = 0.1,
+    panelbottomlinenr_fg_alter = 1.5,
+    zshlines_fg_alter = -0.2,
+    zshlines_bg_alter = 0.4,
+
+    nontextnote_fg_alter = 0.1,
+    normalnote_fg_alter = 8,
+    linenrnote_transparency_fg = 0.2,
+    winseparatornote_fg_alter = 0.15,
+  },
+  ["ef-eagle"] = {
+    nontextnote_fg_alter = 0.1,
+    orgdirective_fg_alter = 0.4,
     codeblock_bg_alter = 0.4,
     floatborderaiprompt_fg_alter = 2.5,
     panelsidenormal_bg_alter = 0.1,
-    winbarnote_fg_alter = 1.5,
     zshlines_fg_alter = -0.2,
     zshlines_bg_alter = 0.4,
   },
-  ["intent"] = {
-    nonetext_opacity = 0.25,
-    comment_fg_alter = 0.7,
-    winseparator_fg_alter = 0.85,
-    linenr_fg_alter = 1.7,
+  ["ef-cherie"] = {
+    nonetext_opacity = 0.15,
+    troubleindent_transparency_fg = 0.55,
+    codeblock_bg_alter = 0.4,
+    panelsidenormal_bg_alter = -0.8,
+    linenr_transparency_fg = 0.32,
+    tabline_fg_alter = 0.7,
+    panelbottomlinenr_fg_alter = 3.5,
+    cursorlinebright_bg_alter = 1.2,
+    zshlines_fg_alter = -0.2,
+    zshlines_bg_alter = 0.4,
+    statuslinetheme_transparency_fg = 0.9,
 
     linenrnote_fg_alter = 1.2,
+    normalnote_transparency_fg = 0.9,
+    normalnote_fg_alter = 14,
+    nontextnote_fg_alter = 0.1,
+    orgdirective_fg_alter = 0.4,
+
+    floatborderaiprompt_fg_alter = 2.5,
+  },
+  ["intent"] = {
+    pmenusel_bg_alter = 2,
+    floatborder_transparency_fg = 0.2,
+    troubleindent_transparency_fg = 0.55,
+    panelsidenormal_bg_alter = -0.9,
+    panelbottomlinenr_fg_alter = 5,
+    winseparator_fg_alter = 1.75,
+    linenr_transparency_fg = 0.4,
+
+    linenrnote_fg_alter = 1.25,
+    winseparatornote_fg_alter = 0.45,
     commentnote_fg_alter = 0.7,
+    normalnote_fg_alter = 11,
     normalnote_bg_alter = 0.8,
-
-    panelsidenormal_bg_alter = 0.15,
-    quickfixwinbar_fg_alter = 4,
-    panelbottomlinenr_fg_alter = 3,
-
-    outline_indent_fg_alter = -0.6,
   },
   ["jellybeans"] = {
-    Directory = { fg = "#8fbfdc", bg = "NONE" },
-    panelsidenormal_bg_alter = 0.1,
+    nonetext_opacity = 0.3,
+    panelsidenormal_bg_alter = -0.7,
+    winseparator_fg_alter = 1.4,
+    linenr_transparency_fg = 0.22,
+    panelbottomlinenr_fg_alter = 3,
+    normalfloat_bg_alter = -0.3,
+    statuslinetheme_transparency_fg = 0.7,
+    pmenusel_transparency_bg = 0.2,
 
-    outline_indent_fg_alter = -0.4,
+    winseparatornote_fg_alter = 0.25,
     normalnote_bg_alter = 0.8,
-    winseparator_fg_alter = 0.5,
-    linenr_fg_alter = 1.2,
-    linenrnote_fg_alter = 0.8,
+    normalnote_fg_alter = 9,
+    linenrnote_transparency_fg = 0.3,
   },
   ["kanagawa"] = {
-    Directory = { fg = "#8fbfdc", bg = "NONE" },
     orgdirective_fg_alter = 0.7,
-    linenrnote_fg_alter = 1.2,
-    winseparator_fg_alter = 0.75,
-    linenr_fg_alter = 1.8,
-    normalnote_bg_alter = 0.8,
+    pmenusel_transparency_bg = 0.25,
+    troubleindent_transparency_fg = 0.3,
+    statuslinetheme_transparency_fg = 0.9,
+    floatborder_transparency_fg = 0.15,
+    panelsidenormal_bg_alter = -0.8,
+    panelbottomlinenr_fg_alter = 4,
+    linenr_transparency_fg = 0.5,
 
-    outline_indent_fg_alter = -0.4,
     floatborderaiprompt_fg_alter = 6,
 
-    panelbottomlinenr_fg_alter = 4.5,
-    quickfixwinbar_fg_alter = 4.5,
     winseparatornote_fg_alter = 0.4,
-
-    panelsidenormal_bg_alter = 0.1,
-    statusline_bg_alter = -0.4,
+    normalnote_fg_alter = 12,
+    normalnote_bg_alter = 0.8,
   },
   ["lackluster"] = {
-    Directory = { fg = "#7788aa", bg = "NONE" },
-    winseparator_fg_alter = 1.85,
-    winseparatornote_fg_alter = 0.65,
     codeblock_bg_alter = 0.25,
-    comment_fg_alter = 0.65,
-    outline_indent_fg_alter = -0.4,
     floatborderaiprompt_fg_alter = 18,
-
+    tabline_fg_alter = 0.8,
+    winseparator_fg_alter = 3,
+    linenr_transparency_fg = 0.6,
+    linenr_fg_alter = 4.5,
+    pmenusel_transparency_bg = 0.1,
+    cursorlinebright_bg_alter = 2.5,
+    comment_transparency_fg = 0.45,
+    floatborder_transparency_fg = 0.15,
+    statuslinetheme_fg_alter = 8,
+    panelbottomlinenr_fg_alter = 8,
+    panelsidenormal_bg_alter = -0.8,
+    winbar_fg_alter = 0.8,
     nonetext_opacity = 0.3,
-    winbarnote_fg_alter = 2.5,
+    troubleindent_transparency_fg = 0.85,
+
+    winseparatornote_fg_alter = 0.3,
+    normalnote_fg_alter = 13,
     normalnote_bg_alter = 3.5,
-    linenrnote_fg_alter = 0.8,
+    linenrnote_fg_alter = 1.2,
     commentnote_fg_alter = 0.45,
-
-    quickfixwinbar_fg_alter = 5,
-    panelbottomlinenr_fg_alter = 6,
-
-    panelsidenormal_bg_alter = -0.55,
-
-    statusline_bg_alter = 1.8,
-    statusline_fg_alter = 1.3,
-
-    linenr_fg_alter = 4,
-    winbar_fg_alter = 1,
   },
   ["luna"] = {
-    nonetext_opacity = 0.25,
-    linenr_fg_alter = 3.5,
-    winseparator_fg_alter = 1.8,
-    winseparatornote_fg_alter = 0.4,
-    winbar_fg_alter = 0.85,
-    comment_fg_alter = 1.2,
+    Directory = { fg = "#75a1c7", bg = "NONE" },
     floatborderaiprompt_fg_alter = 15,
+    linenr_fg_alter = 4.5,
+    floatborder_transparency_fg = 0.2,
+    winseparator_fg_alter = 2.8,
+    normalfloat_bg_alter = 0.65,
+    winbar_fg_alter = 0.6,
+    comment_transparency_fg = 0.5,
+    statuslinetheme_fg_alter = 8,
+    panelsidenormal_bg_alter = 0.5,
+    panelbottomlinenr_fg_alter = 4.5,
+    panelbottomcomment_fg_alter = -0.1,
+    zshlines_bg_alter = 0.7,
+    troubleindent_transparency_fg = 0.35,
 
     normalnote_bg_alter = 3,
+    normalnote_fg_alter = 11,
     orgdirective_fg_alter = 0.3,
-    winbarnote_fg_alter = 2,
     visualnote_bg_alter = 1.5,
+    linenrnote_fg_alter = 1.2,
     commentnote_fg_alter = 0.4,
-    linenrnote_fg_alter = 1,
-    floatbordernote_fg_alter = 0.65,
+    winseparatornote_fg_alter = 0.4,
 
     nontextaiprompt_fg_alter = 5,
-
-    panelsidenormal_bg_alter = -0.35,
-
-    panelbottomlinenr_fg_alter = 4,
-    panelbottomcomment_fg_alter = -0.1,
-
-    outline_indent_fg_alter = -0.5,
-
-    statusline_bg_alter = 1,
-
-    zshlines_bg_alter = 0.7,
   },
   ["neogotham"] = {
-    nonetext_opacity = 0.25,
-    linenr_fg_alter = 1.25,
-    winseparator_fg_alter = 0.65,
-
-    statusline_bg_alter = -0.4,
-    statusline_fg_alter = 0.05,
-
-    quickfixwinbar_bg_alter = 0.45,
-    quickfixwinbar_fg_alter = 3.5,
     panelsidenormal_bg_alter = 0.5,
-    outline_indent_fg_alter = -0.3,
-    winbar_fg_alter = 0.6,
-
-    linenrnote_fg_alter = 0.8,
-
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
+
+    linenrnote_fg_alter = 0.8,
   },
   ["oxocarbon"] = {
-    linenr_fg_alter = 1.2,
-    winbar_fg_alter = 0.4,
-    winseparator_fg_alter = 0.4,
     linenrnote_fg_alter = 0.8,
     commentnote_fg_alter = 0.6,
-    outline_indent_fg_alter = -0.35,
     panelsidenormal_bg_alter = 0.2,
     normalnote_bg_alter = 0.8,
     zshlines_fg_alter = -0.15,
     zshlines_bg_alter = 0.3,
   },
   ["rose-pine"] = {
-    nonetext_opacity = 0.25,
-    linenr_fg_alter = 1,
-    winseparator_fg_alter = 0.5,
     linenrnote_fg_alter = 0.7,
     commentnote_fg_alter = 0.6,
-    statusline_bg_alter = -0.15,
-    winbar_fg_alter = 0.4,
     panelsidenormal_bg_alter = 0.2,
-    outline_indent_fg_alter = -0.3,
-    hl_trouble_indent = "Function",
     zshlines_fg_alter = -0.15,
     zshlines_bg_alter = 0.25,
   },
   ["techbase"] = {
-    Directory = { fg = "#A9B9EF", bg = "NONE" },
     nonetext_opacity = 0.4,
-    panelbottomlinenr_fg_alter = 1.3,
-    winseparator_fg_alter = 0.4,
-    floatborderaiprompt_fg_alter = 2.5,
-    linenr_fg_alter = 0.8,
-    comment_fg_alter = 0.65,
-    winbarnote_fg_alter = 1.3,
-    linenrnote_fg_alter = 0.8,
-
-    winseparatornote_fg_alter = 0.3,
-    commentnote_fg_alter = 0.15,
-
-    outline_indent_fg_alter = -0.25,
-    panelsidenormal_bg_alter = 0.1,
-
-    statusline_bg_alter = -0.2,
-
+    linenr_transparency_fg = 0.18,
+    statuslinetheme_transparency_fg = 0.5,
+    winbar_fg_alter = 0.6,
+    tabline_fg_alter = 0.7,
+    pmenusel_transparency_bg = 0.6,
+    pmenusel_bg_alter = 0.4,
+    panelsidenormal_bg_alter = -0.6,
+    panelbottomlinenr_fg_alter = 2.5,
+    comment_fg_alter = 0.5,
+    comment_transparency_fg = 0.8,
     zshlines_bg_alter = 0.2,
     zshlines_fg_alter = -0.1,
+
+    winseparatornote_fg_alter = 0.2,
+    normalnote_fg_alter = 9,
+    commentnote_fg_alter = 0.15,
+    linenrnote_fg_alter = 0.7,
+
+    floatborderaiprompt_fg_alter = 2.5,
   },
   ["tokyonight"] = {
     nonetext_opacity = 0.3,
-    linenr_fg_alter = 1,
-    winseparator_fg_alter = 0.45,
     winseparatornote_fg_alter = 0.27,
     linenrnote_fg_alter = 0.65,
     commentnote_fg_alter = 0.7,
-    winbar_fg_alter = 0.65,
     panelsidenormal_bg_alter = 0.1,
     floatborderaiprompt_fg_alter = 3.5,
-    winbarnote_fg_alter = 1.4,
-    outline_indent_fg_alter = -0.1,
     zshlines_fg_alter = -0.15,
     zshlines_bg_alter = 0.25,
   },
   ["tokyonight-night"] = {
-    nonetext_opacity = 0.28,
-    linenr_fg_alter = 2.2,
-    linenrnote_fg_alter = 0.7,
-    winseparator_fg_alter = 0.7,
-    winbar_fg_alter = 0.85,
-    normalnote_bg_alter = 1.5,
-
-    commentnote_fg_alter = 1.8,
-
-    outline_indent_fg_alter = -0.2,
-
+    linenr_transparency_fg = 0.35,
+    tabline_fg_alter = 0.65,
+    comment_transparency_fg = 0.75,
+    troubleindent_transparency_fg = 0.3,
+    cursorlinebright_bg_alter = 1.3,
+    pmenusel_transparency_bg = 0.35,
+    winbar_fg_alter = 1,
+    floatborder_transparency_fg = 0.18,
+    winseparator_fg_alter = 1.5,
     floatborderaiprompt_fg_alter = 6,
+    panelsidenormal_bg_alter = 0.4,
+    panelbottomlinenr_fg_alter = 2.5,
 
-    panelsidenormal_bg_alter = 0.1,
-
-    panelbottomlinenr_fg_alter = 5,
+    normalnote_bg_alter = 1.5,
+    normalnote_fg_alter = 10,
+    linenrnote_fg_alter = 1.25,
+    commentnote_fg_alter = 1.5,
   },
   ["tokyonight-storm"] = {
     nonetext_opacity = 0.32,
-    linenr_fg_alter = 0.8,
-    winseparator_fg_alter = 0.3,
-    linenrnote_fg_alter = 0.5,
+    panelsidenormal_bg_alter = 0.15,
+    panelbottomlinenr_fg_alter = 1.5,
 
-    winbarnote_fg_alter = 1,
     commentnote_fg_alter = 0.2,
+    linenrnote_fg_alter = 0.5,
     winseparatornote_fg_alter = 0.27,
 
-    winbar_fg_alter = 0.35,
-
     floatborderaiprompt_fg_alter = 3,
-
-    comment_fg_alter = 0.5,
-
-    panelsidenormal_bg_alter = 0.15,
-
-    panelbottomlinenr_fg_alter = 1.5,
 
     zshlines_fg_alter = -0.1,
     zshlines_bg_alter = 0.3,
   },
 
   ["vscode"] = {
-    nontextnote_fg_alter = 1.5,
     nonetext_opacity = 0.2,
+    linenr_transparency_fg = 0.22,
+    normalfloat_bg_alter = -0.3,
+    panelsidenormal_bg_alter = -0.6,
+    statuslinetheme_transparency_fg = 0.6,
+    cursorlinebright_bg_alter = 0.8,
+    folded_fg_alter = 2,
+    pmenusel_transparency_bg = 0.4,
+    pmenusel_bg_alter = 0.5,
+
+    normalnote_fg_alter = 10,
+    nontextnote_fg_alter = 1.5,
+    linenrnote_transparency_fg = 0.28,
     winseparatornote_fg_alter = 0.27,
-    floatborderaiprompt_fg_alter = 3.5,
-    hl_trouble_indent = "Function",
-    comment_fg_alter = 0.5,
     commentnote_fg_alter = 0.6,
-    linenr_fg_alter = 0.8,
-    winseparator_fg_alter = 0.4,
-    panelsidenormal_bg_alter = 0.1,
-    winbar_fg_alter = 0.5,
+
+    floatborderaiprompt_fg_alter = 3.5,
   },
   ["zenburn"] = {
-    linenr_fg_alter = 0.55,
-    winseparator_fg_alter = 0.2,
-    commentnote_fg_alter = 0.25,
-    linenrnote_fg_alter = 0.4,
-    statusline_fg_alter = 0.1,
-    statusline_bg_alter = -0.2,
-    orgdirective_fg_alter = 0.25,
-
+    Directory = { fg = "#f2d9a0", bg = "NONE" },
+    normalfloat_bg_alter = -0.2,
+    linenr_transparency_fg = 0.12,
+    foldedsign_fg_alter = 0.25,
+    winseparator_fg_alter = 0.4,
+    statuslinetheme_transparency_fg = 0.5,
     cursorlinebright_bg_alter = 0.5,
-    winseparatornote_fg_alter = 0.2,
+    tabline_fg_alter = 0.4,
+    panelsidenormal_bg_alter = -0.6,
+    panelbottomlinenr_fg_alter = 1.5,
+    troubleindent_transparency_fg = 0.05,
+    pmenusel_bg_alter = 2,
+    pmenusel_transparency_bg = 0.5,
+    winbar_fg_alter = 0.5,
 
-    floatborderaiprompt_fg_alter = 1.5,
-    comment_fg_alter = 0.25,
-
-    panelsidenormal_bg_alter = 0.1,
-    normalnote_bg_alter = 0.3,
-
-    normalfloat_bg_alter = -0.15,
-    panelbottomlinenr_fg_alter = 1,
-
-    winbar_fg_alter = 0.35,
-    winbarnote_fg_alter = 0.8,
     zshlines_fg_alter = -0.1,
     zshlines_bg_alter = 0.2,
-    tabline_fg_alter = 0.15,
+
+    normalnote_bg_alter = 0.2,
+    normalnote_fg_alter = 25,
+    nonetext_opacity = 0.3,
+    commentnote_fg_alter = 0.25,
+    linenrnote_fg_alter = 2,
+    linenrnote_transparency_fg = 0.2,
+    winseparatornote_fg_alter = 0.12,
+    orgdirective_fg_alter = 0.25,
+
+    floatborderaiprompt_fg_alter = 1.5,
   },
 }
 
-if os.getenv "TERMINAL" == "ghostty" then
+if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
   update_col_colorscheme["ashen"] = {
-    winseparator_fg_alter = 0.8,
-    linenr_fg_alter = 1.5,
-    commentnote_fg_alter = -0.05,
-    hl_trouble_indent = "Boolean",
-    linenrnote_fg_alter = 0.7,
-    nonetext_opacity = 0.35,
+    linenr_fg_alter = 1.45,
     winbar_fg_alter = 0.6,
-    winbarnote_fg_alter = 1.3,
     orgdirective_fg_alter = 0.3,
+
     normalnote_bg_alter = 1.5,
-    quickfixwinbar_bg_alter = 0.85,
-    quickfixwinbar_fg_alter = 3,
-    panelsidenormal_bg_alter = 0.15,
-    outline_indent_fg_alter = -0.3,
-  }
-  update_col_colorscheme["everforest"] = {
-    normalfloat_bg_alter = -0.15,
-    statusline_bg_alter = 0.2,
-    statusline_fg_alter = 0.6,
-    linenr_fg_alter = 0.7,
-    winseparator_fg_alter = 0.6,
-    hl_trouble_indent = "@variable",
-    zshlines_fg_alter = -0.1,
-
-    quickfixwinbar_bg_alter = 0.55,
-    quickfixwinbar_fg_alter = 2,
-    outline_indent_fg_alter = -0.3,
-    visualnote_bg_alter = 0.1,
-    winbar_fg_alter = 0.6,
-    comment_fg_alter = 0.65,
-    foldedsign_fg_alter = 0.4,
-    zshlines_bg_alter = 0.2,
-
-    panelsidenormal_bg_alter = -0.4,
-
-    winseparatornote_fg_alter = 0.6,
-    normalnote_bg_alter = 0.4,
-    commentnote_fg_alter = 0.4,
-    winbarnote_fg_alter = 1.2,
-    linenrnote_fg_alter = 0.55,
-    orgdirective_fg_alter = 0.3,
+    commentnote_fg_alter = 0.15,
+    linenrnote_fg_alter = 0.7,
   }
   update_col_colorscheme["catppuccin"] = {
-    linenr_fg_alter = 0.9,
-    linenrnote_fg_alter = 0.6,
-    commentnote_fg_alter = 0.8,
-    winseparator_fg_alter = 0.6,
+    linenr_fg_alter = 1.3,
+    winbar_fg_alter = 0.6,
+    panelsidenormal_bg_alter = -0.5,
     zshlines_bg_alter = 0.2,
-    winbarnote_fg_alter = 1.4,
-    winbar_fg_alter = 0.65,
-    hl_trouble_indent = "Function",
+    statuslinetheme_transparency_fg = 0.5,
+    pmenusel_transparency_bg = 0.4,
+    pmenusel_bg_alter = 0.5,
 
-    outline_indent_fg_alter = -0.3,
+    linenrnote_fg_alter = 0.6,
+    normalnote_fg_alter = 8,
+    commentnote_fg_alter = 0.8,
   }
   update_col_colorscheme["cendre"] = {
-    linenr_fg_alter = 1.2,
-    panelsidenormal_bg_alter = 0.1,
-    linenrnote_fg_alter = 0.9,
-    commentnote_fg_alter = 0.9,
-    statusline_bg_alter = -0.2,
-    winseparator_fg_alter = 0.8,
-
-    quickfixwinbar_bg_alter = 0.6,
-    quickfixwinbar_fg_alter = 3,
-
+    linenr_fg_alter = 1.8,
     zshlines_bg_alter = 0.5,
-    winseparatornote_fg_alter = 0.5,
     zshlines_fg_alter = 0.05,
-    winbar_fg_alter = 0.7,
+    winbar_fg_alter = 0.8,
+    cursorlinebright_bg_alter = 0.7,
+    panelsidenormal_bg_alter = -0.5,
+    statuslinetheme_transparency_fg = 0.7,
+    pmenusel_transparency_bg = 0.8,
 
-    hl_trouble_indent = "Function",
-    outline_indent_fg_alter = -0.3,
+    normalnote_fg_alter = 10,
+    commentnote_fg_alter = 0.9,
+    linenrnote_fg_alter = 0.9,
+    winseparatornote_fg_alter = 0.5,
+  }
+  update_col_colorscheme["ef-cherie"] = {
+    nonetext_opacity = 0.15,
+    linenr_fg_alter = 2.2,
+    troubleindent_transparency_fg = 0.4,
+    panelsidenormal_bg_alter = -0.5,
+    cursorlinebright_bg_alter = 0.9,
+    winbar_fg_alter = 0.8,
+
+    normalnote_fg_alter = 15,
+    linenrnote_transparency_fg = 0.4,
+  }
+  update_col_colorscheme["ef-dream"] = {
+    linenr_fg_alter = 1.25,
+    statuslinetheme_transparency_fg = 0.5,
+    panelsidenormal_bg_alter = -0.4,
+    troubleindent_transparency_fg = 0.15,
+    panelbottomlinenr_fg_alter = 1.5,
+
+    linenrnote_fg_alter = 0.65,
+    normalnote_fg_alter = 8,
+    winseparatornote_fg_alter = 0.13,
+  }
+  update_col_colorscheme["everforest"] = {
+    nonetext_opacity = 0.3,
+    normalfloat_bg_alter = -0.15,
+    zshlines_fg_alter = -0.1,
+    panelsidenormal_bg_alter = -0.45,
+    linenr_fg_alter = 1.5,
+    statuslinetheme_transparency_fg = 0.5,
+    pmenusel_transparency_bg = 0.15,
+
+    linenrnote_fg_alter = 0.9,
   }
   update_col_colorscheme["gruvbox"] = {
-    winseparator_fg_alter = 0.7,
-    commentnote_fg_alter = 0.8,
-    linenr_fg_alter = 1,
+    winbar_fg_alter = 0.8,
+    orgdirective_fg_alter = 0.4,
+    linenr_fg_alter = 1.6,
+    winseparator_fg_alter = 0.8,
+    statuslinetheme_transparency_fg = 0.6,
+    panelsidenormal_bg_alter = -0.6,
+    panelbottomlinenr_fg_alter = 1.8,
     zshlines_bg_alter = 0.4,
     zshlines_fg_alter = -0.05,
-    normalnote_bg_alter = 0.45,
-    orgdirective_fg_alter = 0.4,
 
-    outline_indent_fg_alter = -0.3,
-    winbar_fg_alter = 0.5,
-    winbarnote_fg_alter = 1,
+    linenrnote_fg_alter = 1.2,
+    commentnote_fg_alter = 0.8,
+    normalnote_bg_alter = 0.45,
+  }
+  update_col_colorscheme["imli"] = {
+    linenr_fg_alter = 1.8,
+    winbar_fg_alter = 0.8,
+    winseparator_fg_alter = 1.4,
+    cursorlinebright_bg_alter = 1,
+    statuslinetheme_fg_alter = 4.2,
+    panelsidenormal_bg_alter = -0.4,
+    panelbottomlinenr_fg_alter = 1.5,
+
+    linenrnote_fg_alter = 1.2,
+    normalnote_fg_alter = 15,
   }
   update_col_colorscheme["jellybeans"] = {
-    winseparator_fg_alter = 0.7,
-    winseparatornote_fg_alter = 0.45,
-    linenr_fg_alter = 1.35,
-    winbarnote_fg_alter = 1.5,
-    winbar_fg_alter = 0.7,
-    quickfixwinbar_bg_alter = 0.9,
-    quickfixwinbar_fg_alter = 3,
-    linenrnote_fg_alter = 0.85,
+    linenr_fg_alter = 1.7,
+    statuslinetheme_fg_alter = 4.2,
+    winbar_fg_alter = 0.6,
+    troubleindent_transparency_fg = 0.3,
+    winseparator_fg_alter = 1.5,
+    cursorlinebright_bg_alter = 0.7,
+    panelsidenormal_bg_alter = -0.55,
+    panelbottomlinenr_fg_alter = 3.25,
+
+    linenrnote_fg_alter = 1.2,
     commentnote_fg_alter = 0.8,
+    winseparatornote_fg_alter = 0.45,
   }
   update_col_colorscheme["kanagawa"] = {
-    winseparator_fg_alter = 1.2,
+    nonetext_opacity = 0.3,
 
     panelsidenormal_bg_alter = 0.1,
     panelbottomlinenr_fg_alter = 3,
-    statusline_bg_alter = -0.3,
-    winbar_fg_alter = 0.85,
-    linenr_fg_alter = 2.1,
-
-    quickfixwinbar_fg_alter = 4,
 
     orgdirective_fg_alter = 0.25,
-    normalnote_bg_alter = 2,
-    winbarnote_fg_alter = 1.3,
-    linenrnote_fg_alter = 1,
+    normalnote_bg_alter = 1.5,
 
+    linenrnote_fg_alter = 1,
     commentnote_fg_alter = 0.45,
   }
   update_col_colorscheme["habamax"] = {
-    linenr_fg_alter = 0.95,
-    statusline_bg_alter = -0.3,
     panelsidenormal_bg_alter = 0.1,
-    winbar_fg_alter = 0.6,
-    winbarnote_fg_alter = 1.2,
     linenrnote_fg_alter = 0.55,
 
-    winseparator_fg_alter = 0.6,
     nonetext_opacity = 0.35,
     commentnote_fg_alter = 0.3,
   }
   update_col_colorscheme["intent"] = {
-    linenr_fg_alter = 2,
-    winseparator_fg_alter = 1,
-    linenrnote_fg_alter = 0.8,
-    nonetext_opacity = 0.4,
-    quickfixwinbar_fg_alter = 5.5,
-    quickfixwinbar_bg_alter = 1.25,
-    panelbottomlinenr_fg_alter = 8,
-    winbar_fg_alter = 0.8,
-    commentnote_fg_alter = 0.6,
+    linenr_fg_alter = 2.35,
+    winseparator_fg_alter = 1.8,
+    troubleindent_transparency_fg = 0.4,
+    panelbottomlinenr_fg_alter = 2.8,
+    cursorlinebright_bg_alter = 1.4,
+    pmenusel_bg_alter = 0.25,
+    pmenusel_transparency_bg = 0.85,
+    winbar_fg_alter = 0.9,
+
     normalnote_bg_alter = 1.5,
-  }
-  update_col_colorscheme["luna"] = {
-    linenr_fg_alter = 4,
-    panelsidenormal_bg_alter = -0.5,
-    winseparator_fg_alter = 2.5,
-    statusline_bg_alter = -0.6,
-
-    winbar_fg_alter = 1,
-
-    nonetext_opacity = 0.35,
-
-    quickfixwinbar_bg_alter = 12,
-    quickfixwinbar_fg_alter = 7,
-
-    floatbordernote_fg_alter = 2,
-    winseparatornote_fg_alter = 0.8,
-    linenrnote_fg_alter = 1.7,
-    commentnote_fg_alter = 1.2,
-    winbarnote_fg_alter = 2.25,
-    normalnote_bg_alter = 1.8,
-
-    panelbottomlinenr_fg_alter = 30,
-
-    comment_fg_alter = 1.2,
+    normalnote_fg_alter = 12,
+    linenrnote_fg_alter = 1.2,
+    commentnote_fg_alter = 0.6,
   }
   update_col_colorscheme["lackluster"] = {
-    linenr_fg_alter = 4.5,
-    hl_trouble_indent = "WarningMsg",
-    panelsidenormal_bg_alter = 0.2,
+    nonetext_opacity = 0.3,
+    tabline_fg_alter = 2,
+    linenr_fg_alter = 5,
+    winseparator_fg_alter = 2.8,
+    winbar_fg_alter = 1.25,
+    cursorlinebright_bg_alter = 1.8,
+    statuslinetheme_fg_alter = 9,
+    troubleindent_transparency_fg = 0.6,
+    panelsidenormal_bg_alter = 0.3,
+    panelbottomlinenr_fg_alter = 7,
+    pmenusel_transparency_bg = 0.08,
 
-    quickfixwinbar_fg_alter = 6.5,
-    quickfixwinbar_bg_alter = 4,
-
-    linenrnote_fg_alter = 1,
+    orgdirective_fg_alter = 0.6,
+    winseparatornote_fg_alter = 0.6,
+    linenrnote_fg_alter = 0.8,
     normalnote_bg_alter = 6,
     commentnote_fg_alter = 0.1,
-    winbarnote_fg_alter = 1.2,
-
     visualnote_bg_alter = 1.2,
-    panelbottomlinenr_fg_alter = 12,
+  }
+  update_col_colorscheme["luna"] = {
+    nonetext_opacity = 0.35,
+    statuslinetheme_fg_alter = 8,
+    panelsidenormal_bg_alter = 0.1,
+    panelbottomlinenr_fg_alter = 5,
+    cursorlinebright_bg_alter = 1.45,
+    tabline_fg_alter = 2,
+    troubleindent_transparency_fg = 0.6,
+    winbar_fg_alter = 1.25,
+    winseparator_fg_alter = 2,
+    zshlines_fg_alter = 0.15,
 
-    winbar_fg_alter = 0.8,
-    statusline_bg_alter = -0.6,
-    orgdirective_fg_alter = 0.6,
-    statusline_fg_alter = 0.8,
-    winseparator_fg_alter = 2.35,
-    winseparatornote_fg_alter = 1.2,
+    normalnote_bg_alter = 1.8,
+    normalnote_fg_alter = 12,
+    commentnote_fg_alter = 1.2,
+    winseparatornote_fg_alter = 0.8,
+    linenrnote_fg_alter = 1.25,
+  }
+  update_col_colorscheme["techbase"] = {
+    nonetext_opacity = 0.38,
+    linenr_fg_alter = 1.4,
+    comment_fg_alter = 0.7,
+    tabline_fg_alter = 0.5,
+    troubleindent_transparency_fg = 0.25,
+    pmenusel_transparency_bg = 0.6,
+    statuslinetheme_transparency_fg = 0.5,
+    panelbottomlinenr_fg_alter = 1.5,
+
+    linenrnote_fg_alter = 0.8,
   }
   update_col_colorscheme["neogotham"] = {
     zshlines_fg_alter = 0.2,
     zshlines_bg_alter = 0.65,
-    linenr_fg_alter = 1.3,
-    winbar_fg_alter = 0.75,
-
-    quickfixwinbar_bg_alter = 1,
-    quickfixwinbar_fg_alter = 3.5,
 
     commentnote_fg_alter = 0.1,
     orgdirective_fg_alter = 0.3,
     normalnote_bg_alter = 1.5,
     linenrnote_fg_alter = 1,
-    winbarnote_fg_alter = 1.25,
-    winseparator_fg_alter = 1,
   }
   update_col_colorscheme["oxocarbon"] = {
-    linenr_fg_alter = 1.3,
-    winseparator_fg_alter = 0.8,
     normalnote_bg_alter = 0.8,
     panelsidenormal_bg_alter = 0.1,
 
-    quickfixwinbar_bg_alter = 0.8,
-
-    winbarnote_fg_alter = 1.25,
     orgdirective_fg_alter = 0.3,
-    winbar_fg_alter = 0.5,
-    statusline_bg_alter = -0.3,
     linenrnote_fg_alter = 0.8,
     commentnote_fg_alter = 0.8,
   }
-  update_col_colorscheme["nightfox"] = { linenr_fg_alter = 1.2, winseparator_fg_alter = 0.6 }
+  update_col_colorscheme["nightfox"] = { linenr_fg_alter = 1.2 }
   update_col_colorscheme["rose-pine"] = {
-    winseparator_fg_alter = 0.85,
-    winbarnote_fg_alter = 1.25,
     normalnote_bg_alter = 1.1,
     orgdirective_fg_alter = 0.3,
     commentnote_fg_alter = 0.22,
 
-    quickfixwinbar_bg_alter = 0.6,
-    quickfixwinbar_fg_alter = 2.6,
-
     panelsidenormal_bg_alter = 0.1,
-    statusline_bg_alter = -0.3,
     linenrnote_fg_alter = 0.65,
   }
   update_col_colorscheme["tokyonight"] = {
     nonetext_opacity = 0.4,
     panelsidenormal_bg_alter = 0.1,
-    winseparator_fg_alter = 0.65,
     linenrnote_fg_alter = 0.5,
-    quickfixwinbar_bg_alter = 0.75,
-    quickfixwinbar_fg_alter = 3,
 
-    winbarnote_fg_alter = 1.5,
     winseparatornote_fg_alter = 0.4,
-    winbar_fg_alter = 0.5,
     commentnote_fg_alter = 0.8,
     normalnote_bg_alter = 0.6,
   }
   update_col_colorscheme["tokyonight-night"] = {
     nonetext_opacity = 0.35,
-    winseparator_fg_alter = 1.35,
-
+    linenr_fg_alter = 2.6,
     panelbottomlinenr_fg_alter = 4,
-    panelsidenormal_bg_alter = 0.15,
+    statuslinetheme_fg_alter = 7,
+    panelsidenormal_bg_alter = -0.6,
+    winbar_fg_alter = 0.6,
     normalnote_bg_alter = 1.5,
-    statusline_bg_alter = -0.4,
-    quickfixwinbar_bg_alter = 1.15,
-    quickfixwinbar_fg_alter = 4.5,
 
-    linenr_fg_alter = 2.4,
     linenrnote_fg_alter = 1.2,
     commentnote_fg_alter = 0.8,
     orgdirective_fg_alter = 0.5,
+    normalnote_fg_alter = 10,
   }
   update_col_colorscheme["tokyonight-storm"] = {
     commentnote_fg_alter = 0.55,
-    statusline_bg_alter = -0.18,
-    winseparator_fg_alter = 0.55,
-    quickfixwinbar_bg_alter = 0.6,
-    quickfixwinbar_fg_alter = 2,
-    linenr_fg_alter = 0.7,
     normalnote_bg_alter = 0.4,
-    winbarnote_fg_alter = 1,
     linenrnote_fg_alter = 0.55,
-    winbar_fg_alter = 0.55,
   }
   update_col_colorscheme["vscode"] = {
     commentnote_fg_alter = 0.85,
+    winbar_fg_alter = 0.6,
+    linenr_fg_alter = 1.5,
+    statuslinetheme_fg_alter = 3.5,
+    panelsidenormal_bg_alter = -0.6,
+    folded_fg_alter = 0.8,
 
-    quickfixwinbar_bg_alter = 0.7,
-    quickfixwinbar_fg_alter = 2.5,
-
-    statusline_bg_alter = -0.25,
-    linenr_fg_alter = 0.9,
-    statusline_fg_alter = 0.35,
-    winseparator_fg_alter = 0.6,
-    hl_trouble_indent = "@variable",
     zshlines_bg_alter = 0.25,
     normalnote_bg_alter = 0.4,
-    winbarnote_fg_alter = 1.2,
-    winbar_fg_alter = 0.5,
+    linenrnote_fg_alter = 0.95,
   }
   update_col_colorscheme["zenburn"] = {
-    commentnote_fg_alter = 0.12,
+    linenr_fg_alter = 0.65,
+    nonetext_opacity = 0.35,
     panelbottomlinenr_fg_alter = 1,
-    winbar_fg_alter = 0.4,
-    winbarnote_fg_alter = 0.8,
-    linenr_fg_alter = 0.5,
-    statusline_bg_alter = -0.17,
-    statusline_fg_alter = 0.32,
-    linenrnote_fg_alter = 0.5,
-    comment_fg_alter = 0.5,
+    statuslinetheme_transparency_fg = 0.5,
+    winseparator_fg_alter = 0.6,
+    troubleindent_transparency_fg = 0.08,
     orgdirective_fg_alter = 0.2,
-
-    quickfixwinbar_bg_alter = 0.4,
-    quickfixwinbar_fg_alter = 1.8,
-
-    normalfloat_bg_alter = -0.2,
-    normalnote_bg_alter = 0.35,
-    outline_indent_fg_alter = -0.3,
     zshlines_bg_alter = 0.2,
-    winseparator_fg_alter = 0.3,
+    tabline_fg_alter = 0.4,
+
+    winseparatornote_fg_alter = 0.25,
+    normalfloat_bg_alter = -0.2,
+    normalnote_bg_alter = 0.25,
+    normalnote_fg_alter = 19,
+    linenrnote_fg_alter = 0.5,
+    commentnote_fg_alter = 0.12,
   }
 end
 
@@ -705,33 +704,40 @@ local general_overrides = function()
     -- ║                                    BASE                                     ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
     { NormalNC = { inherit = "Normal" } },
-    { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
-    { ColorColumn = { bg = { from = "Normal", attr = "bg" } } },
-    { ErrorMsg = { bg = "NONE" } },
-
     { Directory = colors.Directory },
-
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
+    { WarningMsg = { bg = "NONE" } },
     {
       NonText = {
-        fg = { from = "NonText", attr = "fg", alter = 0.5, opacity = colors.nonetext_opacity or 0.5 },
+        fg = { from = "NonText", attr = "fg", alter = 0.5, opacity = colors.nonetext_opacity or 0.25 },
         bg = "NONE",
       },
     },
     {
       WinSeparator = {
-        fg = { from = "Normal", attr = "bg", alter = colors.winseparator_fg_alter or 0.6 },
+        fg = {
+          from = "Normal",
+          attr = "bg",
+          alter = colors.winseparator_fg_alter or 1,
+          transparency = 0.25,
+          color = { from = "Normal", attr = "bg" },
+        },
         bg = "NONE",
       },
     },
 
     {
       LineNr = {
+        fg = {
+          from = "Normal",
+          attr = "bg",
+          alter = colors.linenr_fg_alter or 4,
+          transparency = colors.linenr_transparency_fg or 0.65,
+          color = { from = "Normal", attr = "bg" },
+        },
         bg = "NONE",
-        fg = { from = "Normal", attr = "bg", alter = colors.linenr_fg_alter or 1.15 },
         bold = false,
       },
     },
@@ -739,11 +745,16 @@ local general_overrides = function()
     { LineNrBelow = { inherit = "LineNr" } },
     {
       Comment = {
-        fg = { from = "LineNr", attr = "fg", alter = colors.comment_fg_alter or 0.6, opacity = 0.85 },
+        fg = {
+          from = "Comment",
+          attr = "fg",
+          alter = colors.comment_fg_alter or 0,
+          transparency = colors.comment_transparency_fg or 0.6,
+          color = { from = "Normal", attr = "bg" },
+        },
         italic = true,
       },
     },
-    { Type = { italic = true, bold = true } },
     { ["@comment"] = { inherit = "Comment" } },
 
     { CursorLine = { bg = { from = "Normal", attr = "bg" } } },
@@ -776,31 +787,53 @@ local general_overrides = function()
         bold = true,
       },
     },
-    {
-      Visual = {
-        bg = { from = "type", attr = "fg", transparency = 0.15, color = { from = "Normal", attr = "bg" } },
-        fg = "NONE",
-      },
-    },
 
-    { StatusLine = { bg = { from = "Normal", attr = "bg", alter = colors.statusline_bg_alter or -0.3 } } },
     {
       StatusLine = {
-        reverse = false,
+        bg = { from = "Normal", attr = "bg", alter = -0.3 },
         fg = {
           from = "Normal",
-          attr = "fg",
-          alter = colors.statusline_fg_alter or 0,
-          transparency = 0.4,
+          attr = "bg",
+          contrast = 0.5,
+          transparency = 0.7,
           color = { from = "Statusline", attr = "bg" },
         },
+        reverse = false,
       },
     },
     { StatusLineNC = { inherit = "StatusLine" } },
 
+    -- --------------------
+
+    {
+      StatusLineTheme = {
+        bg = {
+          from = "LineNr",
+          attr = "fg",
+          transparency = 0.2,
+          color = { from = "Normal", attr = "bg" },
+        },
+        reverse = false,
+      },
+    },
+    {
+      StatusLineTheme = {
+        fg = {
+          from = "StatusLineTheme",
+          attr = "bg",
+          alter = colors.statuslinetheme_fg_alter or 5,
+          transparency = colors.statuslinetheme_transparency_fg or 0.8,
+          color = { from = "StatusLineTheme", attr = "bg" },
+        },
+      },
+    },
+    { StatusLineNCTheme = { inherit = "StatusLineTheme" } },
+
+    -- --------------------
+
     {
       Pmenu = {
-        fg = { from = "Normal", attr = "fg", opacity = 0.6 },
+        fg = { from = "Pmenu", attr = "fg" },
         bg = { from = "Normal", attr = "bg" },
         reverse = false,
       },
@@ -808,82 +841,69 @@ local general_overrides = function()
     {
       PmenuSel = {
         fg = "NONE",
-        bg = { from = "Keyword", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
+        bg = {
+          from = "PmenuSel",
+          attr = "bg",
+          alter = colors.pmenusel_bg_alter or 0,
+          transparency = colors.pmenusel_transparency_bg or 0.3,
+          color = {
+            from = "Pmenu",
+            attr = "bg",
+          },
+        },
         underline = false,
         reverse = false,
       },
     },
 
-    { PmenuFloatBorder = { bg = { from = "Pmenu", attr = "bg" }, fg = { from = "Pmenu", attr = "bg" } } },
     {
-      PmenuThumb = {
-        bg = { from = "PmenuSel", attr = "bg", alter = 1 },
-        fg = { from = "PmenuSel", attr = "bg" },
+      PmenuFloatBorder = {
+        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "Pmenu", attr = "bg" },
       },
     },
-    { PmenuSbar = { bg = { from = "PmenuSel", attr = "bg" } } },
 
     {
       NormalFloat = {
-        fg = { from = "Normal", attr = "fg" },
-        bg = { from = "Normal", attr = "bg", alter = colors.normalfloat_bg_alter or 0.25 },
+        bg = { from = "Normal", attr = "bg", alter = colors.normalfloat_bg_alter or -0.25 },
         reverse = false,
       },
     },
-
     {
       FloatBorder = {
-        fg = { from = "WinSeparator", attr = "fg", alter = 0.15 },
-        bg = { from = "Normal", attr = "bg" },
+        fg = {
+          from = "FloatBorder",
+          attr = "fg",
+          alter = colors.floatborder_fg_alter or 0,
+          transparency = colors.floatborder_transparency_fg or 0.1,
+          color = {
+            from = "Normal",
+            attr = "bg",
+          },
+        },
+        bg = { from = "NormalFloat", attr = "bg" },
       },
     },
+
     {
-      FloatTitle = {
-        fg = { from = "FloatBorder", attr = "fg", alter = 2 },
-        bg = { from = "Normal", attr = "bg" },
-        bold = true,
-      },
-    },
-    {
-      FloatFooter = {
-        fg = { from = "FloatTitle", attr = "fg", alter = -0.05 },
+      TabLine = {
+        fg = {
+          from = "LineNr",
+          attr = "fg",
+          alter = colors.tabline_fg_alter or 0.6,
+        },
         bg = "NONE",
       },
     },
-    {
-      FloatCursorline = {
-        fg = "NONE",
-        bg = { from = "NormalFloat", attr = "bg", alter = 0.2 },
-      },
-    },
-
-    { TabLine = { fg = { from = "LineNr", attr = "fg", alter = colors.tabline_fg_alter or 0.4 }, bg = "NONE" } },
-
-    {
-      CurSearch = {
-        bg = { from = "CurSearch", attr = "bg", alter = 0.7 },
-        fg = { from = "CurSearch", attr = "bg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
-        bold = true,
-      },
-    },
-    {
-      Search = {
-        inherit = "CurSearch",
-        fg = { from = "CurSearch", attr = "fg", alter = 0.5 },
-        bg = { from = "CurSearch", attr = "bg", transparency = 0.8, color = { from = "Normal", attr = "bg" } },
-        reverse = true,
-      },
-    },
-    { IncSearch = { inherit = "CurSearch" } },
-    { TermCursor = { inherit = "Cursor" } },
-    { Substitute = { inherit = "CurSearch" } },
 
     {
       Folded = {
         fg = {
-          from = "LineNr",
+          from = "Folded",
           attr = "fg",
-          contrast = 0.1,
+          alter = colors.folded_fg_alter or 2,
+          transparency = 0.6,
+          color = { from = "Normal", attr = "bg" },
         },
         bg = "NONE",
       },
@@ -891,9 +911,9 @@ local general_overrides = function()
     {
       FoldedSign = {
         fg = {
-          from = "LineNr",
+          from = "Folded",
           attr = "fg",
-          alter = colors.foldedsign_fg_alter or 0.5,
+          contrast = 0.1,
         },
         bg = "NONE",
       },
@@ -961,7 +981,7 @@ local general_overrides = function()
     },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
-    -- ║                                    ERROR                                    ║
+    -- ║                                    ERRORS                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
     { ErrorMsg = { bg = "NONE", fg = { from = "diffRemoved", attr = "fg", alter = 0.2 }, reverse = false } },
@@ -1030,7 +1050,6 @@ local general_overrides = function()
     -- ║                                     LSP                                     ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    -- Struktur & Data
     { LspKindArray = { inherit = "@type" } },
     { LspKindClass = { inherit = "@type" } },
     { LspKindStruct = { inherit = "@type" } },
@@ -1040,7 +1059,6 @@ local general_overrides = function()
     { LspKindTypeParameter = { inherit = "@type.definition" } },
     { LspKindTypeAlias = { inherit = "@type.definition" } },
 
-    -- Variabel & Member
     { LspKindVariable = { inherit = "@variable" } },
     { LspKindField = { inherit = "@variable.member" } },
     { LspKindProperty = { inherit = "@property" } },
@@ -1048,24 +1066,20 @@ local general_overrides = function()
     { LspKindConstant = { inherit = "@constant" } },
     { LspKindKey = { inherit = "@variable.member" } },
 
-    -- Fungsi & Metode
     { LspKindFunction = { inherit = "@function" } },
     { LspKindMethod = { inherit = "@function.method" } },
     { LspKindConstructor = { inherit = "@constructor" } },
 
-    -- Konteks & Scope
     { LspKindModule = { inherit = "@module" } },
     { LspKindPackage = { inherit = "@module" } },
     { LspKindNamespace = { inherit = "@module" } },
 
-    -- Tipe Data Primitif
     { LspKindString = { inherit = "@string" } },
     { LspKindNumber = { inherit = "@number" } },
     { LspKindBoolean = { inherit = "@boolean" } },
     { LspKindValue = { inherit = "@constant" } },
     { LspKindNull = { inherit = "@constant.builtin" } },
 
-    -- Lain-lain
     { LspKindKeyword = { inherit = "@keyword" } },
     { LspKindOperator = { inherit = "@operator" } },
     { LspKindSnippet = { inherit = "@comment", fg = { from = "@comment", alter = 0.5 } } },
@@ -1073,13 +1087,11 @@ local general_overrides = function()
     { LspKindFolder = { inherit = "Directory" } },
     { LspKindUnit = { inherit = "@type" } },
     { LspKindEvent = { inherit = "Special" } },
-    -- { LspKindReference = { inherit = "@markup.link" } },
 
     {
       LspReferenceText = {
         bg = { from = "Special", attr = "fg" },
         fg = { from = "Normal", attr = "bg" },
-        -- bold = true,
       },
     },
     {
@@ -1158,23 +1170,33 @@ local general_overrides = function()
     -- ├──────────────────────────────────┤ NOTE ├──────────────────────────────────┤
     {
       NormalNote = {
-        fg = { from = "Normal", attr = "fg", alter = 0.1 },
-        bg = { from = "Normal", attr = "bg", alter = colors.normalnote_bg_alter or 0.6 },
+        bg = {
+          from = "Normal",
+          attr = "bg",
+          alter = colors.normalnote_bg_alter or 0.6,
+        },
       },
     },
     {
       NormalNote = {
         fg = {
           from = "NormalNote",
-          attr = "fg",
-          transparency = 0.65,
+          attr = "bg",
+          alter = colors.normalnote_fg_alter or 6,
+          transparency = colors.normalnote_transparency_fg or 0.7,
           color = { from = "NormalNote", attr = "bg" },
         },
       },
     },
     {
       LineNrNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.linenrnote_fg_alter or 0.6 },
+        fg = {
+          from = "NormalNote",
+          attr = "bg",
+          alter = colors.linenrnote_fg_alter or 2,
+          transparency = colors.linenrnote_transparency_fg or 0.7,
+          color = { from = "NormalNote", attr = "bg" },
+        },
         bg = { from = "NormalNote", attr = "bg" },
       },
     },
@@ -1273,6 +1295,23 @@ local general_overrides = function()
     },
 
     { BlinkCmpLabelKindNote = { fg = { from = "LineNrNote", attr = "fg", alter = 0.4 } } },
+
+    {
+      WinBarNote = {
+        fg = { from = "LineNrNote", attr = "fg", alter = 0.4 },
+        bg = { from = "NormalNote", attr = "bg" },
+      },
+    },
+    {
+      WinBarNote = {
+        fg = {
+          from = "WinBarNote",
+          attr = "fg",
+          transparency = 0.8,
+          color = { from = "NormalNote", attr = "bg" },
+        },
+      },
+    },
 
     -- ├───────────────────────────────┤ AI PROMPT ├────────────────────────────┤
 
@@ -1395,12 +1434,10 @@ local general_overrides = function()
     {
       WinBar = {
         fg = {
-          from = "Normal",
+          from = "LineNr",
           attr = "fg",
-          transparency = 0.35,
-          color = { from = "Normal", attr = "bg" },
+          alter = colors.winbar_fg_alter or 0.6,
         },
-
         bg = { from = "Normal", attr = "bg" },
       },
     },
@@ -1427,12 +1464,6 @@ local general_overrides = function()
       WinBarYellow = {
         fg = { from = "diffChanged", attr = "fg", alter = 0.1 },
         bg = { from = "diffChanged", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
-      },
-    },
-    {
-      WinBarNote = {
-        fg = { from = "NormalNote", attr = "bg", alter = colors.winbarnote_fg_alter or 1.8 },
-        bg = { from = "NormalNote", attr = "bg" },
       },
     },
     {
@@ -1512,8 +1543,8 @@ local plugins_overrides = function()
 
     {
       NoiceCmdline = {
-        fg = { from = "StatusLine", attr = "fg", alter = 1.5 },
-        bg = { from = "StatusLine", attr = "bg" },
+        fg = { from = "StatusLineTheme", attr = "fg", alter = 1.5 },
+        bg = { from = "StatusLineTheme", attr = "bg" },
       },
     },
 
@@ -1526,14 +1557,14 @@ local plugins_overrides = function()
 
     {
       BlinkDocNormal = {
+        inherit = "NormalFloat",
         fg = { from = "Normal", attr = "fg" },
-        bg = { from = "NormalFloat", attr = "bg", alter = 0.15 },
       },
     },
     {
       BlinkDocFloatBorder = {
-        fg = { from = "BlinkDocNormal", attr = "bg", alter = 0.1 },
-        bg = { from = "NormalFloat", attr = "bg", alter = 0.15 },
+        inherit = "NormalFloat",
+        fg = { from = "BlinkDocNormal", attr = "bg" },
       },
     },
 
@@ -1571,7 +1602,19 @@ local plugins_overrides = function()
         bg = { from = "BlinkDocNormal", attr = "bg" },
       },
     },
-    { BlinkCmpLabelMatch = { fg = { from = "constant", attr = "fg", alter = 0.4 } } },
+    {
+      BlinkCmpLabelMatch = {
+        fg = {
+          from = "Constant",
+          attr = "fg",
+          combine = { from = "Boolean", attr = "fg", alter = 0.8 },
+          combine_mode = "multiply",
+          combine_intensity = 0.4,
+          contrast = 0.08,
+        },
+        bold = true,
+      },
+    },
     {
       BlinkCmpLabelKind = {
         fg = {
@@ -1650,7 +1693,19 @@ local plugins_overrides = function()
 
     -- ├─────────────────────────────────┤ PROMPT ├─────────────────────────────────┤
 
-    { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+    {
+      FzfLuaFilePart = {
+        fg = { from = "Keyword", attr = "fg", contrast = 0.15 },
+        bg = { from = "FzfLuaNormal", attr = "bg" },
+        bold = false,
+      },
+    },
+    {
+      FzfLuaNormal = {
+        fg = { from = "FzfLuaFilePart", attr = "fg" },
+        bg = { from = "NormalFloat", attr = "bg" },
+      },
+    },
     {
       FzfLuaTitle = {
         inherit = "FloatTitle",
@@ -1659,13 +1714,6 @@ local plugins_overrides = function()
       },
     },
     { FzfLuaBorder = { inherit = "FloatBorder" } },
-    {
-      FzfLuaFilePart = {
-        fg = { from = "Keyword", attr = "fg", contrast = 0.15 },
-        bg = { from = "FzfLuaNormal", attr = "bg" },
-        bold = false,
-      },
-    },
     { FzfLuaDirPart = { inherit = "FzfLuaFilePart" } },
     {
       FzfLuaHeaderText = {
@@ -1690,8 +1738,8 @@ local plugins_overrides = function()
 
     {
       FzfLuaSel = {
-        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.25 },
-        bg = { from = "Keyword", attr = "fg", transparency = 0.15, color = { from = "FzfLuaNormal", attr = "bg" } },
+        fg = { from = "FzfLuaFilePart", attr = "fg", alter = 0.2 },
+        bg = { from = "PmenuSel", attr = "bg" },
         bold = true,
       },
     },
@@ -1730,13 +1778,7 @@ local plugins_overrides = function()
     {
       FzfLuaCursorLine = {
         fg = "NONE",
-        bg = {
-          from = "FzfLuaNormal",
-          attr = "bg",
-          alter = 0.5,
-          transparency = 1,
-          color = { from = "FzfLuaNormal", bg = "attr" },
-        },
+        bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
 
@@ -2052,14 +2094,14 @@ local plugins_overrides = function()
 
     {
       ["@markup.quote.markdown"] = {
-        fg = {
+        bg = {
           from = "Boolean",
           attr = "fg",
-          alter = 0.2,
-          transparency = 0.9,
+          alter = 0.1,
+          transparency = 0.1,
           color = { from = "NormalNote", attr = "bg" },
         },
-        bg = { from = "NormalNote", attr = "bg", alter = -0.1 },
+        fg = { from = "Boolean", attr = "fg", alter = 0.1 },
         italic = true,
         bold = false,
       },
@@ -2138,7 +2180,7 @@ local plugins_overrides = function()
         bg = {
           from = "RenderMarkdownCode",
           attr = "bg",
-          transparency = 0.35,
+          transparency = 0.4,
           color = { from = "NormalNote", attr = "bg" },
         },
       },
@@ -2154,7 +2196,8 @@ local plugins_overrides = function()
         bg = {
           from = "String",
           attr = "fg",
-          transparency = 0.1,
+          alter = -0.5,
+          transparency = 0.2,
           color = { from = "NormalNote", attr = "bg" },
         },
       },
@@ -2200,13 +2243,15 @@ local plugins_overrides = function()
     {
       ["@org.agenda.header"] = {
         fg = {
-          from = "StatusLine",
+          from = "StatusLineTheme",
           attr = "fg",
           alter = 0.1,
         },
-        bg = { from = "StatusLine", attr = "bg" },
+        bg = { from = "StatusLineTheme", attr = "bg" },
       },
     },
+
+    { OrgVerbatim = { inherit = "RenderMarkdownCodeInline" } },
 
     -- ├────────────────────────────────┤ Headline ├────────────────────────────────┤
     { ["Headline"] = { bg = "NONE" } },
@@ -2252,7 +2297,6 @@ local plugins_overrides = function()
 
     { ["@org.code"] = { inherit = "RenderMarkdownCodeInline" } },
 
-    { CodeBlock = { inherit = "RenderMarkdownCode", reverse = false } },
     {
       ["@org.block.org"] = {
         fg = {
@@ -2263,12 +2307,11 @@ local plugins_overrides = function()
       },
     },
 
-    { OrgQuoteBlock = { inherit = "@markup.quote.markdown" } },
-
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                  ORG.NVIM                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
+    { CodeBlock = { inherit = "RenderMarkdownCode", reverse = false } },
     {
       CodeBlockFiletypeText = {
         bg = {
@@ -2296,16 +2339,6 @@ local plugins_overrides = function()
           from = "Type",
           attr = "fg",
           transparency = 0.05,
-          color = { from = "NormalNote", attr = "bg" },
-        },
-      },
-    },
-    {
-      OrgBlockDelimiter = {
-        fg = {
-          from = "@org.directive",
-          attr = "fg",
-          transparency = 0.45,
           color = { from = "NormalNote", attr = "bg" },
         },
       },
@@ -2343,6 +2376,8 @@ local plugins_overrides = function()
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                 NOTIFY.NVIM                                 ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
+
+    { NotifyBackground = { inherit = "SnacksNotifierInfo" } },
 
     -- ╭──────╮
     -- │ INFO │
@@ -2407,9 +2442,6 @@ local plugins_overrides = function()
         bg = {
           from = "NormalFloat",
           attr = "bg",
-          alter = 0.5,
-          transparency = 0.45,
-          color = { from = "Normal", attr = "bg" },
         },
       },
     },
@@ -2419,6 +2451,18 @@ local plugins_overrides = function()
     { WhichKeyDesc = { inherit = "WhichKeyNormal", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
     { WhichKeyBorder = { inherit = "WhichKeyNormal" } },
     { WhichKeyTitle = { inherit = "FzfLuaTitle" } },
+    {
+      WhichKeyIcon = {
+        fg = "NONE",
+        bg = {
+          from = "WhichKeyNormal",
+          attr = "bg",
+        },
+        sp = "NONE",
+        underline = false,
+        reverse = false,
+      },
+    },
 
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    NAVIC                                    ║
@@ -2458,7 +2502,7 @@ local plugins_overrides = function()
     { NavicIconsValue = { inherit = "LspKindValue" } },
 
     { NavicSeparator = { fg = { from = "WinBar", attr = "fg", alter = -0.1 } } },
-    { LspInlayHint = { inherit = "LspInlayHint" } },
+    { LspInlayHint = { inherit = "LspInlayhint" } },
   }
 end
 
@@ -2473,20 +2517,21 @@ local function set_panel_highlight()
 
     {
       PanelSideNormal = {
-        bg = { from = "StatusLine", attr = "bg", alter = colors.panelsidenormal_bg_alter or -0.1 },
-      },
-    },
-    {
-      PanelSideNormal = {
-        fg = { from = "@property", attr = "fg", alter = colors.panelsidenormal_fg_alter or 0.5 },
+        bg = {
+          from = "StatusLineTheme",
+          attr = "bg",
+          alter = colors.panelsidenormal_bg_alter or -0.5,
+          transparency = 0.4,
+          color = { from = "Normal", attr = "bg" },
+        },
       },
     },
     {
       PanelSideNormal = {
         fg = {
-          from = "PanelSideNormal",
+          from = "Normal",
           attr = "fg",
-          transparency = 0.45,
+          transparency = 0.7,
           color = { from = "PanelSideNormal", attr = "bg" },
         },
       },
@@ -2507,7 +2552,7 @@ local function set_panel_highlight()
 
     { PanelSideStNC = { link = "PanelSideWinSeparator" } },
     { PanelSideSt = { bg = { from = "Visual", alter = -0.2 } } },
-    { PanelSideStusLine = { bg = { from = "StatusLine" }, fg = { from = "Normal", attr = "fg" } } },
+    { PanelSideStusLine = { bg = { from = "StatusLineTheme" }, fg = { from = "Normal", attr = "fg" } } },
 
     {
       PanelSideWinSeparator = {
@@ -2550,7 +2595,11 @@ local function set_panel_highlight()
 
     {
       PanelBottomLineNr = {
-        fg = { from = "PanelBottomNormal", attr = "bg", alter = colors.panelbottomlinenr_fg_alter or 2 },
+        fg = {
+          from = "PanelBottomNormal",
+          attr = "bg",
+          alter = colors.panelbottomlinenr_fg_alter or 2,
+        },
       },
     },
 
@@ -2630,23 +2679,12 @@ local function set_panel_highlight()
     {
       QuickFixWinbar = {
         bg = {
-          from = "PanelBottomNormal",
-          attr = "bg",
-          alter = colors.quickfixwinbar_bg_alter or 1,
-          transparency = 0.7,
-          color = { from = "PanelBottomNormal", attr = "bg" },
+          from = "StatusLineTheme",
+          attr = "fg",
         },
-      },
-    },
-
-    {
-      QuickFixWinbar = {
         fg = {
-          from = "QuickFixWinbar",
+          from = "PanelSideNormal",
           attr = "bg",
-          alter = colors.quickfixwinbar_bg_alter or 4,
-          transparency = 0.7,
-          color = { from = "PanelBottomNormal", attr = "bg" },
         },
       },
     },
@@ -2660,7 +2698,6 @@ local function set_panel_highlight()
         fg = {
           from = "PanelSideRootName",
           attr = "fg",
-          -- alter = vim.tbl_contains({ "luna", "lackluster" }, vim.g.colorscheme) and 8 or 2,
           alter = 0.5,
         },
         italic = true,
@@ -2694,26 +2731,13 @@ local function set_panel_highlight()
         underline = true,
       },
     },
-    {
-      GrugFarResultsLineNr = {
-        fg = { from = "LineNr", attr = "fg", alter = 0.6 },
-        bg = { from = "PanelSideBackground", attr = "bg", alter = 1, opacity = 0.1 },
-      },
-    },
-    {
-      GrugFarResultsNumberLabel = {
-        fg = { from = "diffRemoved", attr = "fg", alter = 0.1, opacity = 0.5 },
-        bold = false,
-        -- bold = true,
-      },
-    },
 
     {
       GrugFarInputLabel = {
         fg = {
-          from = "FloatTitle",
+          from = "Boolean",
           attr = "fg",
-          alter = 1.2,
+          alter = 0.5,
           transparency = 0.6,
           color = { from = "PanelSideBackground", attr = "bg" },
         },
@@ -2724,13 +2748,14 @@ local function set_panel_highlight()
     -- ║                                 QFBOOKMARK                                  ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { QFBookmarkQfLineNr = { inherit = "WarningMsg", bg = "NONE" } },
+    { qfbookmarkqflinenr = { inherit = "warningmsg", bg = "none" } },
 
     {
       QFBookmarkQfSep = {
         fg = {
-          from = "WinSeparator",
-          attr = "fg",
+          from = "PanelSideNormal",
+          attr = "bg",
+          contrast = 0.1,
         },
       },
     },
@@ -2806,19 +2831,10 @@ local function set_panel_highlight()
     {
       TroubleIndent = {
         fg = {
-          from = "TroubleDirectory",
+          from = "PanelSideNormal",
           attr = "bg",
-        },
-        bg = "NONE",
-      },
-    },
-    {
-      TroubleIndent = {
-        fg = {
-          from = "TroubleIndent",
-          attr = "fg",
-          -- opacity = 0.5,
-          transparency = 0.6,
+          alter = 3.5,
+          transparency = colors.troubleindent_transparency_fg or 0.2,
           color = { from = "PanelSideNormal", attr = "bg" },
         },
         bg = "NONE",
@@ -2827,21 +2843,26 @@ local function set_panel_highlight()
     {
       TroubleIndentFoldClosed = {
         inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.4 },
+        fg = { from = "TroubleIndent", attr = "fg", alter = 0.6 },
       },
     },
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-
     {
       TroubleFsPos = {
-        inherit = "TroubleIndent",
-        fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 },
+        fg = { from = "TroubleIndentFoldClosed", attr = "fg", alter = 0.1 },
+        bg = "NONE",
       },
     },
     {
       TroubleFsCount = {
-        fg = { from = "Directory", attr = "fg", alter = -0.13 },
-        bg = { from = "TroubleFsPos", attr = "fg" },
+        fg = { from = "Directory", attr = "fg", alter = 0.1 },
+        bg = {
+          from = "Directory",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.15,
+          color = { from = "PanelSideNormal", attr = "bg" },
+        },
       },
     },
 
@@ -2893,7 +2914,7 @@ local function set_panel_highlight()
           from = "TroubleIndent",
           attr = "fg",
           alter = 0.1,
-          transparency = 0.5,
+          transparency = 0.7,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
         bg = "NONE",
@@ -2941,8 +2962,8 @@ local function set_panel_highlight()
         fg = {
           from = "OutlineFoldMarker",
           attr = "fg",
-          alter = -0.05,
-          transparency = 0.5,
+          alter = 0.1,
+          transparency = 0.6,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
         bg = "NONE",
@@ -2956,8 +2977,8 @@ local function set_panel_highlight()
     -- ║                                   AERIALS                                   ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
-    { AerialGuide = { link = "OutlineGuides" } },
-    { AerialLine = { link = "OutlineCurrent" } },
+    -- { AerialGuide = { link = "OutlineGuides" } },
+    -- { AerialLine = { link = "OutlineCurrent" } },
 
     { AerialBoolean = { link = "LspKindBoolean" } },
     { AerialBooleanIcon = { link = "LspKindBoolean" } },
@@ -3272,7 +3293,6 @@ local winhighlight_ai_panel = table.concat({
   "@markup.list.markdown:@markup.list.markdown",
   "Delimiter:DelimiterAiPrompt",
 
-  --
   "RenderMarkdownH1Bg:@markup.heading.1.markdown_ai",
   "@markup.heading.1.markdown:@markup.heading.1.markdown_ai",
   "RenderMarkdownH2Bg:@markup.heading.2.markdown_ai",
@@ -3294,6 +3314,7 @@ Win.filetype_blacklist_winhighlights = {
   ["qfbookmark"] = true,
   ["wayfinder"] = true,
   ["pdfview_menu"] = true,
+  ["notify"] = true,
 }
 
 Win.filetype_winhighlights = {
@@ -3343,6 +3364,7 @@ Win.cursorline_bright = {
 
 Win.note_winhighlights = {
   ["org"] = true,
+  ["orgagenda"] = true,
   ["markdown"] = true,
   ["octo"] = true,
   ["help"] = true,
@@ -3356,205 +3378,220 @@ Win.aiprompt_winhighlights = {
 
 -- ├─────────────────────────────────┤ HELPER ├─────────────────────────────────┤
 
----@return { filetype: string, buftype: string, is_float: boolean  }
-local __get_win_opts = function()
-  local filetype, buftype = require("utils.window").get_bo_buft()
-  local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-  return {
-    filetype = filetype,
-    buftype = buftype,
-    is_float = is_float,
-  }
+local function current_ft()
+  return (require("utils.window").get_bo_buft())
 end
 
-local get_winhighlight_for_filetype = function(filetype)
-  if Win.filetype_winhighlights[filetype] then
+local function is_float(win)
+  return vim.api.nvim_win_get_config(win).relative ~= ""
+end
+
+local function win_ft(win)
+  return vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+end
+
+local function get_whl(win)
+  return vim.api.nvim_get_option_value("winhighlight", { win = win, scope = "local" })
+end
+
+-- scope = "local": doesn't change the global value, so new windows won't inherit it.
+local function set_whl(win, value)
+  if get_whl(win) ~= value then
+    vim.api.nvim_set_option_value("winhighlight", value, { win = win, scope = "local" })
+  end
+end
+
+local function set_win_cursorline(win, on)
+  vim.api.nvim_set_option_value("cursorline", on, { win = win, scope = "local" })
+end
+
+local function winhighlight_for_filetype(ft)
+  if Win.filetype_winhighlights[ft] then
     return winhighlight_bottom_panel
   end
-  if Win.note_winhighlights[filetype] then
+  if Win.note_winhighlights[ft] then
     return winhighlight_note_panel
   end
-  if Win.aiprompt_winhighlights[filetype] then
+  if Win.aiprompt_winhighlights[ft] then
     return winhighlight_ai_panel
   end
   return nil
 end
 
-local set_winhighlights = function(filetype)
-  local hl = get_winhighlight_for_filetype(filetype)
-  if hl then
-    wo.winhighlight = hl
-    vim.w.winhighlight_owner = filetype
+-- ├────────────────────────────┤ BRIGHT CURSORLINE ├────────────────────────────┤
+-- Level-triggered: no state is stored or restored. `bright_active` is
+-- recalculated from the active window, then the bright entry is added or
+-- removed safely, without doing anything twice.
+local BRIGHT_NORMAL = "CursorLine:CursorLineBright"
+local BRIGHT_NOTE = "CursorLine:CursorLineNoteBright"
+
+local bright_active = false
+
+---@return string? Bright winhighlight entry for this window, or nil if not needed.
+local function bright_entry_for(win)
+  if not bright_active or is_float(win) then
+    return nil
+  end
+  local ft = win_ft(win)
+  if Win.cursorline_bright[ft] or Win.cursorline_blacklist[ft] or Win.filetype_blacklist_winhighlights[ft] then
+    return nil
+  end
+  return Win.note_winhighlights[ft] and BRIGHT_NOTE or BRIGHT_NORMAL
+end
+
+--- Remove any old bright entry, then add `entry` (nil means remove only).
+--- The entry is added at the end, so removing it automatically restores the default CursorLine.
+local function with_bright(hl, entry)
+  local parts = {}
+  for part in vim.gsplit(hl or "", ",", { plain = true, trimempty = true }) do
+    if part ~= BRIGHT_NORMAL and part ~= BRIGHT_NOTE then
+      parts[#parts + 1] = part
+    end
+  end
+  parts[#parts + 1] = entry
+  return table.concat(parts, ",")
+end
+
+local function any_trigger_window()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if not is_float(win) and Win.cursorline_bright[win_ft(win)] then
+      return true
+    end
+  end
+  return false
+end
+
+local function update_bright_state()
+  local cur = vim.api.nvim_get_current_win()
+  if is_float(cur) then
+    -- Floats don't change the state, unless the trigger window is gone (self-healing).
+    bright_active = bright_active and any_trigger_window()
   else
-    if vim.w.winhighlight_owner ~= nil then
-      wo.winhighlight = ""
-      vim.w.winhighlight_owner = nil
+    bright_active = Win.cursorline_bright[win_ft(cur)] == true
+  end
+end
+
+local function sync_bright()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local entry = bright_entry_for(win)
+    set_whl(win, with_bright(get_whl(win), entry))
+    if entry then
+      set_win_cursorline(win, true)
     end
   end
 end
 
-local hl_note = {
-  ["Pmenu"] = "PmenuNote",
-  ["PmenuSel"] = "PmenuSelNote",
-}
+-- ├────────────────────────────┤ WINHIGHLIGHT OWNER ├───────────────────────────┤
+--- Set winhighlight based on the filetype, but only for windows managed by this module.
+--- Other windows (e.g. plugin floats) are left untouched.
+local function apply_owned_winhighlight(win, ft)
+  local base = winhighlight_for_filetype(ft)
 
-local hl_aiprompt = {
-  ["Pmenu"] = "PmenuAiPrompt",
-  ["PmenuSel"] = "PmenuSelAiPrompt",
-}
-
-local hl_cursorline = {
-  ["CursorLine"] = "CursorLineBright",
-  ["CursorLineNr"] = "PanelBottomCursorLineNr",
-  ["CursorLineNote"] = "CursorLineNoteBright",
-  ["CursorLineNrNote"] = "PanelBottomCursorLineNr",
-}
-
-local pmenu_original = nil
-local cursorline_original = nil
-
----@param ft string
----@param is_color_restore? boolean
----@param is_cursorline_restore? boolean
-local function set_hl(ft, is_color_restore, is_cursorline_restore)
-  is_color_restore = is_color_restore or false
-  is_cursorline_restore = is_cursorline_restore or false
-
-  local function __set(tbl)
-    for key, val in pairs(tbl) do
-      vim.api.nvim_set_hl(0, key, { link = val })
-    end
+  if base then
+    vim.w[win].winhighlight_owner = ft
+  elseif vim.w[win].winhighlight_owner ~= nil then
+    base = ""
+    vim.w[win].winhighlight_owner = nil
+  else
+    return
   end
 
-  if is_color_restore then
-    if not pmenu_original then
-      return
+  set_whl(win, with_bright(base, bright_entry_for(win)))
+end
+
+-- ├───────────────────────────────┤ CURSORLINE ├───────────────────────────────┤
+
+local function set_cursorline(active)
+  if Win.cursorline_blacklist[current_ft()] or vim.w.is_overlook_popup then
+    active = false
+  end
+  set_win_cursorline(vim.api.nvim_get_current_win(), active)
+end
+
+-- ├────────────────────────────────┤ PMENU ├─────────────────────────────────┤
+
+local pmenu_original = nil ---@type { pmenu: table, pmenusel: table }?
+local pmenu_applied = nil ---@type "ai"|"note"|nil
+
+local pmenu_links = {
+  ai = { Pmenu = "PmenuAiPrompt", PmenuSel = "PmenuSelAiPrompt" },
+  note = { Pmenu = "PmenuNote", PmenuSel = "PmenuSelNote" },
+}
+
+local function pmenu_kind(ft)
+  if Win.aiprompt_winhighlights[ft] then
+    return "ai"
+  end
+  if Win.note_winhighlights[ft] then
+    return "note"
+  end
+  return nil
+end
+
+local function save_pmenu_colors()
+  local function resolve(name)
+    local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+    if vim.tbl_isempty(hl) then
+      local linked = vim.api.nvim_get_hl(0, { name = name, link = true }).link
+      if linked then
+        hl = vim.api.nvim_get_hl(0, { name = linked, link = false })
+      end
     end
+    return hl
+  end
+  return { pmenu = resolve "Pmenu", pmenusel = resolve "PmenuSel" }
+end
+
+local function sync_pmenu()
+  local kind = pmenu_kind(current_ft())
+  if kind == pmenu_applied then
+    return
+  end
+
+  if kind then
+    -- Save the original highlight before overriding it for the first time.
+    if not pmenu_original and pmenu_applied == nil then
+      pmenu_original = save_pmenu_colors()
+    end
+    for group, link in pairs(pmenu_links[kind]) do
+      vim.api.nvim_set_hl(0, group, { link = link })
+    end
+  elseif pmenu_original then
     vim.api.nvim_set_hl(0, "Pmenu", pmenu_original.pmenu)
     vim.api.nvim_set_hl(0, "PmenuSel", pmenu_original.pmenusel)
+  end
+  pmenu_applied = kind
+end
 
-    pmenu_original = nil
+-- ├────────────────────────────────┤ UPDATE ├────────────────────────────────┤
+
+--- The only place that recalculates the active window state.
+local function update_current_window()
+  local win = vim.api.nvim_get_current_win()
+  local ft = current_ft()
+
+  update_bright_state() -- Run this before apply_* so the bright entry isn't outdated.
+  if not Win.filetype_blacklist_winhighlights[ft] then
+    apply_owned_winhighlight(win, ft)
+  end
+  set_cursorline(not vim.startswith(vim.api.nvim_get_mode().mode, "i"))
+  sync_bright()
+  sync_pmenu()
+end
+
+-- Some events fire back-to-back (WinEnter + BufEnter + FileType, etc.).
+-- Combine them into a single update per tick.
+local update_pending = false
+
+local function schedule_update()
+  if update_pending then
     return
   end
-
-  if is_cursorline_restore then
-    if cursorline_original then
-      __set { ["CursorLineNote"] = "CursorLine" }
-      __set { ["CursorLineNrNote"] = "CursorLineNrNoteBackup" }
-      __set { ["CursorLine"] = "CursorLine" }
-      __set { ["CursorLineNr"] = "CursorLineNrBackup" }
-
-      cursorline_original = nil
-      return
-    end
-
-    if Win.cursorline_bright[ft] then
-      __set(hl_cursorline)
-    end
-    return
-  end
-
-  if Win.aiprompt_winhighlights[ft] then
-    __set(hl_aiprompt)
-  end
-
-  if Win.note_winhighlights[ft] then
-    __set(hl_note)
-  end
-end
-
--- ├──────────────────────────────┤ FOCUS OR NOT ├──────────────────────────────┤
-
-local function focus(ctx)
-  ctx = ctx or {}
-  local cur_winopts = __get_win_opts()
-  local filetype = cur_winopts.filetype
-
-  if Win.filetype_blacklist_winhighlights[filetype] then
-    return
-  end
-
-  if cur_winopts.is_float then
-    local hl = get_winhighlight_for_filetype(filetype)
-    if hl then
-      wo.winhighlight = hl
-      vim.w.winhighlight_owner = filetype
-      return
-    end
-    if not vim.w.is_overlook_popup then
-      wo.winhighlight = ""
-    end
-    return
-  end
-
-  set_winhighlights(filetype)
-end
-
-local function blurred(ctx)
-  ctx = ctx or {}
-  local cur_winopts = __get_win_opts()
-  local filetype = cur_winopts.filetype
-
-  set_winhighlights(filetype)
-end
-
--- ├───────────────────────────────┤ SET CURSOR ├───────────────────────────────┤
-
-local function set_cursorline(ctx, active)
-  ctx = ctx or {}
-  local cur_winopts = __get_win_opts()
-  local filetype = cur_winopts.filetype
-
-  if Win.cursorline_blacklist[filetype] then
-    active = false
-  end
-
-  if vim.w.is_overlook_popup then
-    active = false
-  end
-
-  wo.cursorline = active
-
-  local ft = vim.bo.filetype
-  set_hl(ft, false, true)
-end
-
--- ├───────────────────────────────┤ BUF EVENT ├────────────────────────────┤
-
-local function buf_enter(ctx)
-  focus(ctx)
-  set_cursorline(ctx, true)
-end
-
-local function buf_leave(ctx)
-  focus(ctx)
-  set_cursorline(ctx, false)
-end
-
-local function win_enter(ctx)
-  focus(ctx)
-  set_cursorline(ctx, true)
-end
-
-local function win_leave(ctx)
-  blurred(ctx)
-  set_cursorline(ctx, true)
-end
-
-local function insert_enter(ctx)
-  set_cursorline(ctx, false)
-end
-
-local function insert_leave(ctx)
-  set_cursorline(ctx, true)
-end
-
-local function focus_gain(ctx)
-  set_cursorline(ctx, true)
-end
-
-local function focus_lost(ctx)
-  blurred(ctx)
+  update_pending = true
+  vim.defer_fn(function()
+    update_pending = false
+    update_current_window()
+  end, 1)
 end
 
 local function user_highlights()
@@ -3562,6 +3599,12 @@ local function user_highlights()
   plugins_overrides()
   set_panel_highlight()
   colorscheme_overrides()
+
+  -- Save these AFTER applying overrides, so restore brings back your custom
+  -- Pmenu colors.
+  pmenu_original = save_pmenu_colors()
+  pmenu_applied = nil
+  sync_pmenu()
 end
 
 -- ├─────────────────────────────────┤ AUGRUP ├─────────────────────────────────┤
@@ -3578,177 +3621,32 @@ UtilAugroup()("UserHighlights", {
 })
 
 UtilAugroup()("UserDimWindow", {
-  event = "InsertEnter",
+  event = { "VimEnter", "BufEnter", "WinEnter", "TabEnter", "FileType", "WinClosed" },
   pattern = "*",
-  command = function(ctx)
-    insert_enter(ctx)
-  end,
-}, {
-  event = "InsertLeave",
-  pattern = "*",
-  command = function(ctx)
-    insert_leave(ctx)
-  end,
-}, {
-  event = "BufRead",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      buf_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "BufEnter",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      buf_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "BufLeave",
-  pattern = "*",
-  command = function(ctx)
-    if not cursorline_original then
-      cursorline_original = true
-    end
-
-    vim.defer_fn(function()
-      buf_leave(ctx)
-    end, 1)
+  command = function()
+    schedule_update()
   end,
 }, {
   event = "WinNew",
   pattern = "*",
   command = function()
-    wo.winhighlight = ""
-    vim.w.winhighlight_owner = nil
+    -- The newest window has the highest ID
+    -- (works for both splits and floats with enter=false).
+    local newest = math.max(unpack(vim.api.nvim_list_wins()))
+    set_whl(newest, "")
+    vim.w[newest].winhighlight_owner = nil
+    schedule_update()
   end,
 }, {
-  event = "WinEnter",
+  event = "InsertEnter",
   pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      win_enter(ctx)
-    end, 1)
+  command = function()
+    set_cursorline(false)
   end,
 }, {
-  event = "WinLeave",
+  event = "InsertLeave",
   pattern = "*",
-  command = function(ctx)
-    if not cursorline_original then
-      cursorline_original = true
-    end
-    win_leave(ctx)
-  end,
-}, {
-  event = "VimEnter",
-  pattern = "*",
-  command = function(ctx)
-    vim.defer_fn(function()
-      win_enter(ctx)
-    end, 1)
-  end,
-}, {
-  event = "FocusGained",
-  pattern = "*",
-  command = function(ctx)
-    focus_gain(ctx)
-  end,
-}, {
-  event = "FocusLost",
-  pattern = "*",
-  command = function(ctx)
-    focus_lost(ctx)
-  end,
-})
-
--- Store original Pmenu colors before overriding
-local function save_pmenu_colors()
-  local pmenu = vim.api.nvim_get_hl(0, { name = "Pmenu", link = false })
-  local pmenusel = vim.api.nvim_get_hl(0, { name = "PmenuSel", link = false })
-  return { pmenu = pmenu, pmenusel = pmenusel }
-end
-
-local get_note_filetype = function(win_highlights)
-  local tbl = {}
-  for key, _ in pairs(win_highlights) do
-    tbl[#tbl + 1] = key
-  end
-  return tbl
-end
-
-local note_filetypes = get_note_filetype(Win.note_winhighlights)
-local ai_prompt_filetypes = get_note_filetype(Win.aiprompt_winhighlights)
-
-local all_special = vim.tbl_extend("force", {}, Win.note_winhighlights, Win.aiprompt_winhighlights)
-
-UtilAugroup()("UserHighlightsCustom", {
-  event = "FileType",
-  pattern = note_filetypes,
-  command = function(ctx)
-    vim.schedule(function()
-      if not vim.api.nvim_buf_is_valid(ctx.buf) then
-        return
-      end
-
-      if not pmenu_original then
-        pmenu_original = save_pmenu_colors()
-      end
-
-      local ft = vim.bo[ctx.buf].filetype
-      set_hl(ft)
-    end)
-  end,
-}, {
-  event = "FileType",
-  pattern = ai_prompt_filetypes,
-  command = function(ctx)
-    if not pmenu_original then
-      pmenu_original = save_pmenu_colors()
-    end
-    local ft = vim.bo[ctx.buf].filetype
-    set_hl(ft)
-  end,
-}, {
-  event = { "BufEnter", "WinEnter" },
-  pattern = "*",
-  command = function(ctx)
-    if not pmenu_original then
-      pmenu_original = save_pmenu_colors()
-    end
-
-    local ft = vim.bo[ctx.buf].filetype
-    if all_special[ft] then
-      set_hl(ft)
-    end
-  end,
-}, {
-  event = { "BufLeave", "WinLeave" },
-  pattern = "*",
-  command = function(ctx)
-    local ft = vim.bo[ctx.buf].filetype
-    if all_special[ft] then
-      set_hl(ft, true)
-    end
-  end,
-}, {
-  event = "WinClosed",
-  pattern = "*",
-  command = function(ctx)
-    -- Check if closed window was a float
-    local win = tonumber(ctx.match)
-    if not win or not vim.api.nvim_win_is_valid(win) then
-      return
-    end
-
-    local cfg = vim.api.nvim_win_get_config(win)
-    if cfg.relative ~= "" then
-      -- Float was closed, check current window filetype
-      local cur_ft = vim.bo.filetype
-      if not all_special[cur_ft] then
-        set_hl(cur_ft, true)
-      end
-    end
+  command = function()
+    set_cursorline(true)
   end,
 })

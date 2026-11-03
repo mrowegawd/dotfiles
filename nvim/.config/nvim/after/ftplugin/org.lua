@@ -7,11 +7,18 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.bo.smartindent = true
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 UtilKey.nnoremap("<Leader>ri", function()
   vim.cmd.ImgInsert()
-end, { desc = "Note: insert image", buffer = vim.api.nvim_get_current_buf(), remap = true }, true)
+end, {
+  desc = "Note: insert image",
+  buffer = vim.api.nvim_get_current_buf(),
+  remap = true,
+  force = true,
+})
 
 UtilKey.nnoremap("<Leader>rn", function()
   local opts = {
@@ -35,5 +42,10 @@ UtilKey.nnoremap("<Leader>rn", function()
     },
   }, {})
 
-  require("fzf-lua").fzf_exec({ "SnipRun", "ImgInsert" }, opts)
-end, { desc = "Note: task runner", buffer = vim.api.nvim_get_current_buf(), remap = true }, true)
+  lazy("fzf-lua").fzf_exec({ "SnipRun", "ImgInsert" }, opts)
+end, {
+  desc = "Note: task runner",
+  buffer = vim.api.nvim_get_current_buf(),
+  remap = true,
+  force = true,
+})

@@ -1,12 +1,12 @@
 local cmd = vim.cmd
 
-local UtilAugroup = function()
-  return require("utils.map").augroup
-end
+local lazy = require("utils.plugin").require_lazy
+
+local UtilAugroup = lazy("utils.map").augroup
 
 -- ├──────────────────────────────────┤ LSP ├───────────────────────────────┤
 
-UtilAugroup()("LSPUserBehaviour", {
+UtilAugroup("LSPUserBehaviour", {
   event = "LspDetach",
   command = function(event)
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -56,7 +56,7 @@ UtilAugroup()("LSPUserBehaviour", {
 
 -- ├─────────────────────────────┤ BUFFER MAPPING ├─────────────────────────────┤
 
-UtilAugroup()("SmartClose", {
+UtilAugroup("SmartClose", {
   event = "FileType",
   pattern = {
     "DressingSelect",
@@ -90,7 +90,7 @@ UtilAugroup()("SmartClose", {
         vim.keymap.set("n", x, function()
           if vim.bo[event.buf].filetype == "qf" then
             local cmd_qf = "cclose"
-            if require("utils.qf").is_loclist() then
+            if lazy("utils.qf").is_loclist() then
               cmd_qf = "lclose"
             end
             vim.fn.win_gotoid(_G.LastWinId)
@@ -112,7 +112,7 @@ UtilAugroup()("SmartClose", {
 
 local resize_window = { "orgagenda", "NeogitCommitMessage" }
 
-UtilAugroup()(
+UtilAugroup(
   "WindowBehaviour",
   {
     event = "FileType",
@@ -188,8 +188,12 @@ UtilAugroup()(
           return
         end
 
-        vim.opt_local.cursorline = false
-        vim.opt_local.signcolumn = "no"
+        for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+          if vim.api.nvim_win_is_valid(win) then
+            vim.wo[win].cursorline = false
+            vim.wo[win].signcolumn = "no"
+          end
+        end
       end, 100)
     end,
   }
@@ -212,7 +216,7 @@ UtilAugroup()(
 
 -- ├──────────────────────────────────┤ MISC ├──────────────────────────────────┤
 
-UtilAugroup()("DisableBigFiles", {
+UtilAugroup("DisableBigFiles", {
   event = "FileType",
   pattern = "bigfile",
   command = function(args)
@@ -222,7 +226,7 @@ UtilAugroup()("DisableBigFiles", {
   end,
 })
 
-UtilAugroup()("WrapFiletype", {
+UtilAugroup("WrapFiletype", {
   event = "FileType",
   pattern = { "typescriptreact", "typescript" },
   command = function()
@@ -238,8 +242,8 @@ UtilAugroup()("WrapFiletype", {
       if not buf or not vim.api.nvim_buf_is_valid(buf) then
         return
       end
-      require("utils.note").swith_note_mode(vim.bo[buf].filetype)
-      require("keymaps_note").note_mappings_ft(buf)
+      lazy("utils.note").swith_note_mode(vim.bo[buf].filetype)
+      lazy("keymaps_note").note_mappings_ft(buf)
     end)
   end,
 }, {
@@ -253,7 +257,7 @@ UtilAugroup()("WrapFiletype", {
   end,
 })
 
-UtilAugroup()("DisableJsonConceal", {
+UtilAugroup("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
   command = function()
@@ -261,14 +265,14 @@ UtilAugroup()("DisableJsonConceal", {
   end,
 })
 
-UtilAugroup()("TextYankHighlight", {
+UtilAugroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
     vim.hl.hl_op { higroup = "Visual", timeout = 200 }
   end,
 })
 
-UtilAugroup()("LocateLastPosition", { -- Go to last loc when opening a buffer
+UtilAugroup("LocateLastPosition", { -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
   command = function(event)
     local exclude = { "gitcommit", "Glance", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage", "qf" }
@@ -284,7 +288,7 @@ UtilAugroup()("LocateLastPosition", { -- Go to last loc when opening a buffer
   end,
 })
 
-UtilAugroup()("CheckOutsideTime", {
+UtilAugroup("CheckOutsideTime", {
   event = { "FocusGained", "BufEnter" },
   pattern = "*",
   command = function(event)
@@ -308,14 +312,14 @@ UtilAugroup()("CheckOutsideTime", {
 })
 
 -- To check error when quit from nvim, commented when you not using it
--- UtilAugroup("GetErrorMessageNvimWhenQuit", {
---   -- https://www.reddit.com/r/neovim/comments/10magvp/how_to_see_messages_that_are_displayed_when
---   event = "VimLeave",
---   pattern = "*",
---   command = function()
---     vim.cmd "redir! > /tmp/nvim_msgs.txt"
---   end,
--- })
+UtilAugroup("GetErrorMessageNvimWhenQuit", {
+  -- https://www.reddit.com/r/neovim/comments/10magvp/how_to_see_messages_that_are_displayed_when
+  event = "VimLeave",
+  pattern = "*",
+  command = function()
+    vim.cmd "redir! > /tmp/nvim_msgs.txt"
+  end,
+})
 
 -- ├──────────────────────────┤ OPEN IMAGE AND MEDIA ├──────────────────────────┤
 
@@ -353,7 +357,7 @@ local function open_external(event, command)
   end)
 end
 
-UtilAugroup()("OpenFileImages", {
+UtilAugroup("OpenFileImages", {
   event = "BufEnter",
   pattern = { "*.png", "*.jpg", "*.jpeg" },
   command = function(event)
@@ -367,7 +371,7 @@ UtilAugroup()("OpenFileImages", {
   end,
 })
 
-UtilAugroup()("TrackLastBuffer", {
+UtilAugroup("TrackLastBuffer", {
   event = "BufLeave",
   pattern = "*",
   command = function(event)
@@ -379,31 +383,9 @@ UtilAugroup()("TrackLastBuffer", {
 
 -- ├───────────────────────────────┤ COPY PASTE ├───────────────────────────────┤
 
-UtilAugroup()("SetNopaste", {
+UtilAugroup("SetNopaste", {
   event = { "InsertLeave" },
   pattern = "*",
   command = "set nopaste",
 })
 
--- Copy/Paste when using ssh on a remote server
--- Only works on Neovim >= 0.10.0
-if vim.clipboard and vim.clipboard.osc52 then
-  UtilAugroup()("SSH_clipboard", {
-    event = { "VimEnter" },
-    command = function()
-      if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then
-        vim.g.clipboard = {
-          name = "OSC 52",
-          copy = {
-            ["+"] = require("vim.clipboard.osc52").copy,
-            ["*"] = require("vim.clipboard.osc52").copy,
-          },
-          paste = {
-            ["+"] = require("vim.clipboard.osc52").paste,
-            ["*"] = require("vim.clipboard.osc52").paste,
-          },
-        }
-      end
-    end,
-  })
-end

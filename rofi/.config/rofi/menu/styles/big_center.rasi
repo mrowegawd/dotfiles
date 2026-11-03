@@ -13,7 +13,6 @@ configuration {
     window-format: 		            "[{w}] ··· {c} ···   {t}";
     click-to-exit: 		            true;
     combi-hide-mode-prefix:       false;
-    sorting-method:       "fzf";
     display-window: 			        "  ";
     display-windowcd: 		        "  ";
     display-run: 					        "  ";
@@ -23,8 +22,8 @@ configuration {
 
     kb-remove-to-eol:             "";
     kb-accept-entry:              "Control+m,Return,KP_Enter";
-    kb-row-up:                    "Up,Control+p";
-    kb-row-down:                  "Down,Control+n";
+    kb-row-up:                    "Alt+p";
+    kb-row-down:                  "Alt+n";
 }
 
 * {
@@ -96,8 +95,8 @@ inputbar {
 
 mainbox {
     background-color:                   @background;
-    border:                             0% 0% 0% 0%;
-    border-radius:                      0% 0% 0% 0%;
+    border:                             0%;
+    border-radius:                      0%;
     border-color:                       @border;
     children:                           [ inputbar, listview ];
     spacing:                            0%;

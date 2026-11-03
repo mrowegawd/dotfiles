@@ -1,6 +1,6 @@
-local add_on_event = require("vim-pack").add_on_event
+local add = require("vim-pack").add
 
-add_on_event("UIEnter", {
+add {
   {
     src = "folke/which-key.nvim",
     opts = {
@@ -17,9 +17,9 @@ add_on_event("UIEnter", {
           { plugin = "orgmode", cat = "filetype", icon = "📓", name = "org" },
           { plugin = "diffview", cat = "filetype", icon = " ", name = "diffview" },
 
-          { pattern = "note", icon = "📓" },
+          { pattern = "note", icon = "📓", name = "green" },
           { plugin = "todo-comments.nvim", cat = "filetype", name = "TODO" },
-          { pattern = "help", icon = " ", colorh = "gray" },
+          { pattern = "help", icon = " ", color = "gray" },
           { pattern = "insert", icon = "󰀧 ", color = "green" },
           { pattern = "picker", icon = "💊" },
           { pattern = "projects", icon = " ", color = "blue" },
@@ -36,6 +36,7 @@ add_on_event("UIEnter", {
           { "<Leader>a", group = "ai" },
           { "<Leader>q", group = "session/quickfix" },
           { "<Leader>c", group = "code/action" },
+          { "<Leader>cb", group = "comment-box" },
 
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "picker" },
@@ -51,11 +52,12 @@ add_on_event("UIEnter", {
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>go", group = "open" },
-          { "<Leader>gb", group = "buffer" },
+
+          { "<Leader>o", group = "open" },
 
           { "<Leader>h", group = "help" },
 
-          { "<Leader>o", group = "open/linking" },
+          -- { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
 
           { "<Leader>t", group = "testing" },
@@ -65,7 +67,11 @@ add_on_event("UIEnter", {
           { "<Leader>s", group = "search" },
           { "<Leader>m", group = "zoom" },
 
-          { "<Leader>x", group = "exec:diagnostics/quickfix/trouble/cmd", icon = { icon = "󱖫 ", color = "green" } },
+          {
+            "<Leader>x",
+            group = "exec:diagnostics/quickfix/trouble/cmd",
+            icon = { icon = "󱖫 ", color = "green" },
+          },
 
           { "<Leader>w", group = "windows" },
           { "<leader>b", group = "buffer" },
@@ -73,8 +79,13 @@ add_on_event("UIEnter", {
           { "<Localleader>g", group = "grug-far" },
 
           { "<Localleader>a", group = "note" },
+          { "<Localleader>ai", group = "insert" },
           { "<Localleader>c", group = "ai" },
-          { "<Localleader>n", group = "noice-notification" },
+          { "<Localleader>n", group = "notify/notifications" },
+          { "<Localleader>t", group = "terminals" },
+
+          { "<C-c>g", group = "git:commands" },
+          { "<C-c>u", group = "toggle:commands" },
 
           { "<Localleader>x", group = "refactoring" },
 
@@ -89,4 +100,4 @@ add_on_event("UIEnter", {
       },
     },
   },
-})
+}

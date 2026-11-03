@@ -1,6 +1,8 @@
+local M = {}
+
 local uv = vim.uv
 
-local M = {}
+local lazy = require("utils.plugin").require_lazy
 
 --- Returns if the path exists on disk
 ---@param filename string
@@ -26,7 +28,7 @@ end
 ---@param path string
 ---@return string
 function M.sanitize(path)
-  if require("utils.platform").is_win() then
+  if lazy("utils.platform").is_win() then
     path = path:sub(1, 1):upper() .. path:sub(2)
     path = path:gsub("\\", "/")
   end
@@ -36,7 +38,7 @@ end
 ---@param path string
 ---@return boolean
 function M.is_fs_root(path)
-  if require("utils.platform").is_win() then
+  if lazy("utils.platform").is_win() then
     return path:match "^%a:$"
   else
     return path == "/"
@@ -85,7 +87,7 @@ end
 
 ---@param filename string
 function M.is_absolute(filename)
-  if require("utils.platform").is_win() then
+  if lazy("utils.platform").is_win() then
     return filename:match "^%a:" or filename:match "^\\\\"
   else
     return filename:match "^/"
@@ -168,7 +170,7 @@ function M.is_descendant(root, path)
   return dir == root
 end
 
-local ConfigPath = require("config").path
+local ConfigPath = lazy("config").path
 
 ---@param path string
 function M.get_agenda_path(path)

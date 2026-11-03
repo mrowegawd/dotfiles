@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 add {
   {
@@ -14,7 +16,7 @@ add {
 }
 
 local load_comment_box = function()
-  require("vim-pack").load_now "comment-box.nvim"
+  lazy("vim-pack").load_now "comment-box.nvim"
 end
 
 UtilKey.noremap({ "n", "x" }, "<Leader>cbb", function()

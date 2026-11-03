@@ -1,11 +1,8 @@
 local M = {
-  note_mode = "org",
+  note_mode = "org", -- "orgnvim"
 }
 
-local ConfigPath = require("config").path
-local wiki_path = ConfigPath.wiki_path
-
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
 ---@alias Mode_open "vsplit" | "split" | "tabe" | "default"
 ---@alias Opts_file {filename: string, col?: integer, lnum?: integer, title_str?: string }
@@ -14,40 +11,19 @@ local Log = require "utils.log"
 -- whether to use an org file or markdown
 ---@type "org" | "markdown" | "orgagenda"
 
-local Orgmode, Fzflua, FzfluaBuiltin
+local Log = lazy "utils.log"
+
+local Config = lazy "config"
+local ConfigPath = Config.path
+local wiki_path = ConfigPath.wiki_path
+
+local Orgmode = lazy "org"
+local Fzflua = lazy "fzf-lua"
+local FzfluaBuiltin = lazy "fzf-lua.previewer.builtin"
+
 local file_ignores, title_picker, regex_url_backlinks, regex_title, rg_opts
 
 -- ├─────────────────────────────────┤ SETUP ├──────────────────────────────┤
-
-local function setup_org()
-  local ok, org = pcall(require, "org")
-  if not ok then
-    return nil
-  end
-  return org
-end
-local function setup_orgmode()
-  if Orgmode then
-    return Orgmode
-  end
-  local ok, org = pcall(require, "orgmode")
-  if not ok then
-    Orgmode = setup_org()
-  end
-
-  Orgmode = org
-  return Orgmode
-end
-
-M.setup_orgmode = setup_orgmode
-
-local function setup_fzflua()
-  if Fzflua then
-    return Fzflua
-  end
-  FzfLua = require "fzf-lua"
-  return FzfLua
-end
 
 local function not_implement()
   Log.warn "not implemented yet"
@@ -69,16 +45,13 @@ local contents_tags = { val = {}, tags = {} }
 
 local org_pgk = {
   org = {
-    path_global_wiki = string.format("%s/**/*", wiki_path),
-    path_local_wiki = string.format("%s/orgmode/**/*", ConfigPath.wiki_path),
+    path_global_wiki = string.format("%s/**/**/*", wiki_path),
+    path_local_wiki = string.format("%s/orgmode/**/**/*", ConfigPath.wiki_path),
     search_tag = function(t)
-      -- local api = require "org.api"
-      -- api.agenda.tags("working")
-
-      require("org.tags").set_tags(nil, { t })
+      lazy("org.tags").set_tags(nil, { t })
     end,
     collect_tags = function()
-      local files = require "org.files"
+      local files = lazy "org.files"
       local _tags = {}
       for _, f in ipairs(files.agenda_files()) do
         for _, x in ipairs(f.headlines) do
@@ -92,31 +65,48 @@ local org_pgk = {
           ::continue::
         end
       end
-      contents_tags.tags = require("utils.cmd").remove_duplicates_table(_tags)
+      contents_tags.tags = lazy("utils.cmd").remove_duplicates_table(_tags)
     end,
     set_agenda_dir = function(path)
-      local opts_ = require("org.config").opts
+      local opts_ = lazy("org.config").opts
       opts_.agenda_files = { path }
     end,
   },
   orgmode = {
-    path_global_wiki = string.format("%s/**/*", wiki_path),
-    path_local_wiki = string.format("%s/orgmode/**/*", ConfigPath.wiki_path),
+    path_global_wiki = string.format("%s/**/**/*", wiki_path),
+    path_local_wiki = string.format("%s/orgmode/**/**/*", ConfigPath.wiki_path),
     search_tag = function(tag)
-      Orgmode = setup_orgmode()
       Orgmode.agenda:tags { match_query = tag }
     end,
     collect_tags = function()
       contents_tags.tags = {}
     end,
     set_agenda_dir = function(path)
-      Orgmode = setup_orgmode()
       Orgmode.setup { org_agenda_files = path }
     end,
   },
 }
 
 local org = org_pgk[M.note_mode]
+
+---@param notify boolean?
+---@param is_set boolean?
+function M.toggle_agenda_dir(notify, is_set)
+  notify = notify or false
+  is_set = is_set or false
+
+  if set_global_agenda_files or is_set then
+    org.set_agenda_dir(org.path_local_wiki)
+    set_global_agenda_files = false
+  else
+    org.set_agenda_dir(org.path_global_wiki)
+    set_global_agenda_files = true
+  end
+
+  if notify then
+    Log.info("Agenda dir changed to: " .. (set_global_agenda_files and "global" or "minimal"))
+  end
+end
 
 ---@param tbl table
 ---@param element string
@@ -305,7 +295,7 @@ local function open(mode_open, opts_file)
   end
 
   vim.schedule(function()
-    require("utils.cmd").force_foldopen()
+    lazy("utils.cmd").force_foldopen()
 
     local row = vim.fn.winline()
     local height = vim.api.nvim_win_get_height(0)
@@ -341,7 +331,7 @@ local function get_headline_at_cursor(mode_open)
   local filename, headline_opts, lnum, col
 
   if M.note_mode == "orgagenda" then
-    local orgapi = require "orgmode.api.agenda"
+    local orgapi = lazy "orgmode.api.agenda"
     headline_opts = orgapi.get_headline_at_cursor()
     if not headline_opts then
       Log.warn "orgagenda: `headline_opts` is nil. Something went wrong."
@@ -355,8 +345,8 @@ local function get_headline_at_cursor(mode_open)
     lnum = headline_opts.position.start_line
     col = headline_opts.position.end_col
   elseif M.note_mode == "org" then
-    local OrgHyperlink = require "orgmode.org.links.hyperlink"
-    local OrgLinkUrl = require "orgmode.org.links.url"
+    local OrgHyperlink = lazy "orgmode.org.links.hyperlink"
+    local OrgLinkUrl = lazy "orgmode.org.links.url"
     local link = OrgHyperlink.at_cursor()
     if not link then
       return
@@ -378,7 +368,6 @@ local function get_headline_at_cursor(mode_open)
         end
       end
 
-      Orgmode = setup_orgmode()
       Orgmode.action "org_mappings.open_at_point"
       return
     end
@@ -395,7 +384,6 @@ local function get_headline_at_cursor(mode_open)
         end
       end
 
-      Orgmode = setup_orgmode()
       Orgmode.links:follow(link.url:to_string())
       return
     end
@@ -444,7 +432,7 @@ local function get_headline_at_cursor(mode_open)
             --   end
             -- end
 
-            local obsidian = require "obsidian"
+            local obsidian = lazy "obsidian"
             local api = obsidian.api
             api.open_note(items[1], open_strategy)
           else
@@ -453,7 +441,7 @@ local function get_headline_at_cursor(mode_open)
             end
           end
         else
-          require("obsidian").picker.pick(items, { prompt_title = "Resolve link" })
+          lazy("obsidian").picker.pick(items, { prompt_title = "Resolve link" })
         end
       end,
     }
@@ -498,7 +486,6 @@ local function __define_tbl_paths(tbl_paths)
 end
 
 local function find_files()
-  Fzflua = setup_fzflua()
   reset_vars()
 
   Fzflua.files {
@@ -510,7 +497,6 @@ local function find_files()
 end
 
 local function live_grep()
-  Fzflua = setup_fzflua()
   reset_vars()
 
   return Fzflua.live_grep {
@@ -523,8 +509,7 @@ end
 local function live_grep_visual()
   reset_vars()
 
-  local viz = require("utils.cmd").get_selection()
-  Fzflua = setup_fzflua()
+  local viz = lazy("utils.cmd").get_selection()
   return Fzflua.grep {
     query = string.format("%s", viz),
     rg_glob = true,
@@ -554,8 +539,6 @@ local function picker(name, contents, opts)
 
   last_state[name] = { contents = contents.tags, opts = vim.deepcopy(opts) }
 
-  Fzflua = setup_fzflua()
-
   if name == "search tags" then
     Fzflua.fzf_exec(contents.tags, opts_fzf(opts))
   else
@@ -570,7 +553,6 @@ local function resume_picker(name)
     return
   end
   s.opts.resume = true
-  Fzflua = setup_fzflua()
   Fzflua.fzf_exec(s.contents, s.opts)
 end
 
@@ -585,11 +567,11 @@ local function extract_str_title(selected, filename, is_global)
 
   local sel
   if type(selected) == "table" then
-    sel = require("utils.cmd").__strip_str(selected[1])
+    sel = lazy("utils.cmd").__strip_str(selected[1])
   end
 
   if type(selected) == "string" then
-    sel = require("utils.cmd").__strip_str(selected)
+    sel = lazy("utils.cmd").__strip_str(selected)
   end
 
   if not sel then
@@ -614,7 +596,7 @@ local function extract_str_title(selected, filename, is_global)
     filename = filename,
     lnum = lnum,
     col = col,
-    title_str = require("utils.cmd").strip_whitespaces(title_str),
+    title_str = lazy("utils.cmd").strip_whitespaces(title_str),
   }
 
   return file_opts
@@ -665,7 +647,6 @@ end
 ---@param is_global boolean?
 function Mapping.open_and_jump_to_file(filename, is_global)
   is_global = is_global or false
-  Fzflua = setup_fzflua()
 
   return {
     ["default"] = function(selected, _)
@@ -733,7 +714,7 @@ function Mapping.open_and_jump_to_file(filename, is_global)
         items = extracted_selected_tags(selected, filename, is_global),
         title = "Tags Note",
       }
-      require("utils.qf").save_to_qf_and_auto_open_qf(list_items)
+      lazy("utils.qf").save_to_qf_and_auto_open_qf(list_items)
     end,
 
     ["alt-Q"] = {
@@ -748,7 +729,7 @@ function Mapping.open_and_jump_to_file(filename, is_global)
           title = "Note Stuff",
         }
 
-        require("utils.qf").save_to_qf_and_auto_open_qf(list_items)
+        lazy("utils.qf").save_to_qf_and_auto_open_qf(list_items)
       end,
     },
     ["alt-v"] = function(selected)
@@ -759,7 +740,7 @@ function Mapping.open_and_jump_to_file(filename, is_global)
         items = extracted_selected_tags(selected, filename, is_global),
         title = "Tags Note",
       }
-      require("utils.qf").save_to_qf_and_auto_open_qf(list_items, true)
+      lazy("utils.qf").save_to_qf_and_auto_open_qf(list_items, true)
     end,
 
     ["alt-V"] = {
@@ -774,7 +755,7 @@ function Mapping.open_and_jump_to_file(filename, is_global)
           title = "Note Stuff",
         }
 
-        require("utils.qf").save_to_qf_and_auto_open_qf(list_items, true)
+        lazy("utils.qf").save_to_qf_and_auto_open_qf(list_items, true)
       end,
     },
   }
@@ -784,7 +765,6 @@ end
 ---@param is_global boolean?
 function Mapping.insert_title(filename, is_global)
   is_global = is_global or false
-  Fzflua = setup_fzflua()
 
   local icon_prefix = is_global and "🔗" or " "
 
@@ -847,7 +827,6 @@ function Mapping.insert_title(filename, is_global)
 end
 
 function Mapping.insert_backlinks()
-  Fzflua = setup_fzflua()
   return {
     ["default"] = function(selected, _)
       local e = Fzflua.path.entry_to_file(selected[1])
@@ -984,11 +963,12 @@ function Mapping.open_tags()
           end
 
           vim.schedule(function()
-            Obsidian.picker.pick(entries, {
+            local obsidian = lazy "obsidian"
+            obsidian.picker.pick(entries, {
               prompt_title = "#" .. table.concat(tags, ", #"),
               actions = {
                 ["default"] = function(selected, fzf_opts)
-                  local entry_to_file = require("fzf-lua.path").entry_to_file
+                  local entry_to_file = lazy("fzf-lua.path").entry_to_file
                   local path = entry_to_file(selected[1], fzf_opts).path
                   if not path then
                     return
@@ -1002,7 +982,7 @@ function Mapping.open_tags()
                   --   opts.callback { filename = path }
                   -- end
                   -- elseif not opts.no_default_mappings then
-                  --   require("fzf-lua.actions").file_edit_or_qf(selected, fzf_opts)
+                  --   lazy("fzf-lua.actions").file_edit_or_qf(selected, fzf_opts)
                   -- end
                 end,
               },
@@ -1100,9 +1080,14 @@ local function get_tags(opts)
   if M.note_mode == "org" then
     if not set_global_agenda_files then
       org.set_agenda_dir(org.path_global_wiki)
-      org.collect_tags()
     end
+    vim.cmd "Org pick_tag"
+    org.set_agenda_dir(org.path_local_wiki)
+    return
+  end
 
+  if M.note_mode == "orgmode" then
+    org.set_agenda_dir(org.path_global_wiki)
     if #contents_tags.tags == 0 then
       Log.warn "No tags found."
       return
@@ -1113,8 +1098,11 @@ local function get_tags(opts)
       actions = Mapping.open_tags(),
     }
     picker("search tags", contents_tags, fzfopts)
-  elseif M.note_mode == "markdown" then
-    local search = require "obsidian.search"
+    return
+  end
+
+  if M.note_mode == "markdown" then
+    local search = lazy "obsidian.search"
     search.find_tags_async("", function(tag_locations)
       contents_tags.tags = list_tags(tag_locations)
       contents_tags.val = tag_locations
@@ -1153,10 +1141,6 @@ local function grep(is_global, target_file, opts)
   table.insert(clone_rg_opts, "-e")
 
   local function Preview_buffer_fzflua(fn)
-    if not FzfluaBuiltin then
-      FzfluaBuiltin = require "fzf-lua.previewer.builtin"
-    end
-
     local Previewer = FzfluaBuiltin.buffer_or_file:extend()
 
     function Previewer:new(o, optsc, fzf_win)
@@ -1179,7 +1163,7 @@ local function grep(is_global, target_file, opts)
   local previewer = Preview_buffer_fzflua(function(entry)
     local data = {}
 
-    local entry_strip_ansi = require("utils.cmd").__strip_str(entry)
+    local entry_strip_ansi = lazy("utils.cmd").__strip_str(entry)
     if not entry_strip_ansi then
       return data
     end
@@ -1220,7 +1204,6 @@ local function grep(is_global, target_file, opts)
     rg_opts = table.concat(clone_rg_opts, " "),
   }, opts)
 
-  Fzflua = setup_fzflua()
   Fzflua.grep(fzfopts)
 end
 
@@ -1281,14 +1264,13 @@ local function insert_tag(opts)
   }
 
   if M.note_mode == "org" then
-    Orgmode = setup_orgmode()
     contents_tags.tags = Orgmode.files:get_tags()
     if not contents_tags.tags or #contents_tags.tags == 0 then
       return
     end
     picker("insert tags", contents_tags, optsfzf)
   elseif M.note_mode == "markdown" then
-    local search = require "obsidian.search"
+    local search = lazy "obsidian.search"
     search.find_tags_async("", function(tag_locations)
       contents_tags.tags = list_tags(tag_locations)
       contents_tags.val = tag_locations
@@ -1347,7 +1329,6 @@ end
 local function insert_backlinks_files()
   reset_vars()
 
-  Fzflua = setup_fzflua()
   Fzflua.files {
     cwd = ConfigPath.wiki_path,
     file_ignore_patterns = file_ignores,
@@ -1461,7 +1442,6 @@ end
 
 ---@param bufnr integer
 local function set_repeater_todo(bufnr, repeater_dates, headline)
-  Orgmode = setup_orgmode()
   local OrgMappings = Orgmode.org_mappings
 
   vim.api.nvim_buf_call(bufnr, function()
@@ -1497,7 +1477,7 @@ local function set_repeater_todo(bufnr, repeater_dates, headline)
       return
     end
 
-    local Date = require "orgmode.objects.date"
+    local Date = lazy "orgmode.objects.date"
 
     -- Step 3: set LAST_REPEAT pada headline yang sudah fresh
     fresh_headline:set_property("LAST_REPEAT", Date.now():to_wrapped_string(false))
@@ -1513,10 +1493,9 @@ end
 
 ---@param tags string[]
 local function remove_todo_by_tag(tags)
-  Orgmode = setup_orgmode()
   local files = Orgmode.files
 
-  local EventManager = require "orgmode.events"
+  local EventManager = lazy "orgmode.events"
   local events = EventManager.event
 
   if not files then
@@ -1618,6 +1597,172 @@ M.auto_remote_repeater_todo = function()
   -- hasilnya kurang optimal, string bakal di apply pada incorrect line
   local tags = { "working", "workout" }
   remove_todo_by_tag(tags)
+end
+
+--- Extract date info from an AgendaItem for a given field.
+--- `tags`/`todo`/`search` don't populate `it.date`, so we also check `it.headline`.
+--- @param it table
+--- @param field string "date" | "scheduled" | "deadline"
+--- @return string|nil date_string  "YYYY-MM-DD"
+--- @return table|nil date_obj     full Date object (has .timestamp, .time, .repeater)
+local function item_date(it, field)
+  local function norm(v)
+    if type(v) == "table" and v.date then
+      return v.date, v
+    elseif type(v) == "string" then
+      return v, nil
+    end
+    return nil, nil
+  end
+
+  -- field directly on the item (populated for "agenda" type)
+  if it[field] then
+    local s, o = norm(it[field])
+    if s then
+      return s, o
+    end
+  end
+
+  -- field on the headline (scheduled/deadline always live here)
+  if it.headline and it.headline[field] then
+    local s, o = norm(it.headline[field])
+    if s then
+      return s, o
+    end
+  end
+
+  -- fallback: if "date" is requested but empty, try scheduled then deadline
+  if field == "date" and it.headline then
+    local s, o = norm(it.headline.scheduled)
+    if s then
+      return s, o
+    end
+    s, o = norm(it.headline.deadline)
+    if s then
+      return s, o
+    end
+  end
+
+  return nil, nil
+end
+
+--- Mark overdue entries as DONE, with a configurable query.
+--- @param opts? table
+---   opts.match        string|nil  Tag/property match string (default "+homework")
+---   opts.mode         string|nil  "tags" | "todo" | "search" (default "tags")
+---   opts.date_field   string|nil  "date" | "scheduled" | "deadline" (default "date")
+---   opts.today        string|nil  Override today's date (YYYY-MM-DD), for testing
+---   opts.state        string|nil  Target state (default "DONE")
+---   opts.save         boolean|nil true = always save, false = don't save, nil = org.nvim default
+---   opts.dry_run      boolean|nil true = report only, no changes
+---   opts.notify       boolean|nil false = fully silent
+---   opts.by_time      boolean|nil true = compare by timestamp (time of day), false = by date
+--- @return integer done, integer failed, string[]? errors
+M.auto_remote_repeater_todo_org_nvim = function(opts)
+  opts = opts or {}
+  local match = opts.match or "+homework"
+  local mode = opts.mode or "tags"
+  local date_field = opts.date_field or "date"
+  local state = opts.state or "DONE"
+  local today = opts.today or os.date "%Y-%m-%d"
+  local notify = opts.notify ~= false
+  local by_time = opts.by_time == true
+  local now_ts = os.time()
+
+  local agenda = lazy "org.api.agenda"
+
+  -- Fetch items according to mode
+  local items, err
+  if mode == "tags" then
+    items, err = agenda.tags(match, { todo_only = true })
+  elseif mode == "todo" then
+    items, err = agenda.todo { keywords = match ~= "" and match or nil }
+  elseif mode == "search" then
+    items, err = agenda.search(match, { todo_only = true })
+  else
+    return 0, 0, { "unknown mode: " .. tostring(mode) }
+  end
+
+  if not items then
+    if notify then
+      Log.error("Query failed: " .. (err or "unknown"))
+    end
+    return 0, 0, { err or "query failed" }
+  end
+
+  -- Filter overdue entries based on the chosen date_field
+  local overdue = {}
+  for _, it in ipairs(items) do
+    if not it.done and it.headline then
+      local ds, dobj = item_date(it, date_field)
+      local is_overdue = false
+      if ds then
+        if by_time and dobj and dobj.timestamp then
+          -- compare by seconds (local timestamp). Items without a time default to 00:00.
+          is_overdue = dobj.timestamp < now_ts
+        else
+          -- compare YYYY-MM-DD strings (lexicographic order = chronological order)
+          is_overdue = ds < today
+        end
+      end
+      if is_overdue then
+        -- stash date info for messages / dry-run
+        ---@diagnostic disable-next-line: inject-field
+        it._auto_done_ds = ds
+        ---@diagnostic disable-next-line: inject-field
+        it._auto_done_dobj = dobj
+        table.insert(overdue, it)
+      end
+    end
+  end
+
+  if #overdue == 0 then
+    if notify then
+      Log.info("No overdue entries for match: " .. match)
+    end
+    return 0, 0, nil
+  end
+
+  -- Dry run: report only
+  if opts.dry_run then
+    if notify then
+      local list = {}
+      for _, it in ipairs(overdue) do
+        table.insert(list, string.format("  %s (%s, %s)", it.title, tostring(it._auto_done_ds or "?"), it.file or "?"))
+      end
+      Log.info(string.format("[dry-run] %d overdue entries:\n%s", #overdue, table.concat(list, "\n")))
+    end
+    return #overdue, 0, nil
+  end
+
+  -- Mark each one as DONE
+  local done, failed = 0, 0
+  local errors = {}
+  for _, it in ipairs(overdue) do
+    local ok, res, serr = pcall(function()
+      return it.headline:set_todo(state, { save = opts.save })
+    end)
+    if ok and res then
+      done = done + 1
+    else
+      failed = failed + 1
+      local msg = string.format("%s (%s)", it.title, tostring(serr or res))
+      table.insert(errors, msg)
+      if notify then
+        Log.warn("Failed to set " .. state .. ": " .. msg)
+      end
+    end
+  end
+
+  if notify then
+    if failed > 0 then
+      Log.warn(string.format("Overdue: %d marked %s, %d failed", done, state, failed))
+    else
+      Log.info(string.format("Overdue: %d marked %s, %d failed", done, state, failed))
+    end
+  end
+
+  return done, failed, #errors > 0 and errors or nil
 end
 
 return M

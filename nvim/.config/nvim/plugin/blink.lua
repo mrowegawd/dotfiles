@@ -1,7 +1,51 @@
 local add_on_event = require("vim-pack").add_on_event
 
-local ConfigPath = require("config").path
-local Icons = require "icons"
+_G.LspConfig = {}
+
+-- Define higlights for markdown hover documentation
+local md_docs_ns = vim.api.nvim_create_namespace "markdown_docs_highlights"
+function _G.LspConfig.highlight_doc_patterns(bufnr)
+  vim.api.nvim_buf_clear_namespace(bufnr, md_docs_ns, 0, -1)
+  local patterns = {
+    ["─"] = "RenderMarkdownDash",
+    ["%-%-%-"] = "RenderMarkdownDash",
+    -- Lua/vimdoc
+    ["@%S+"] = "@variable.parameter",
+    -- Python
+    ["^%s*(Parameters)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Returns)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Examples)$"] = "@markup.heading.vimdoc",
+    ["^%s*(Notes)$"] = "@markup.heading.vimdoc",
+    ["^%s*(See Also)$"] = "@markup.heading.vimdoc",
+  }
+
+  for l, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
+    if vim.startswith(line, "``` man") then
+      vim.bo[bufnr].filetype = "man"
+      return
+    end
+
+    for pattern, hl_group in pairs(patterns) do
+      local from = 1
+      while true do
+        local s, e = line:find(pattern, from)
+        if not s then
+          break
+        end
+        vim.api.nvim_buf_set_extmark(bufnr, md_docs_ns, l - 1, s - 1, {
+          end_col = e,
+          hl_group = hl_group,
+        })
+        from = e + 1
+      end
+    end
+  end
+end
+
+local lazy = require("utils.plugin").require_lazy
+
+local ConfigPath = lazy("config").path
+local Icons = lazy "icons"
 
 local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local idx = 1
@@ -15,7 +59,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
     src = "L3MON4D3/LuaSnip",
     module_name = "luasnip",
     opts = function()
-      local types = require "luasnip.util.types"
+      local types = lazy "luasnip.util.types"
       return {
         -- Check if the current snippet was deleted.
         delete_check_events = "TextChanged",
@@ -43,22 +87,9 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
       }
     end,
     on_setup = function()
-      -- Load my custom snippets:
-      require("luasnip.loaders.from_vscode").lazy_load {
+      lazy("luasnip.loaders.from_vscode").lazy_load {
         paths = ConfigPath.snippet_path,
       }
-
-      vim.keymap.set("i", "<C-r>s", function()
-        require("luasnip.extras.otf").on_the_fly "s"
-      end, { desc = "Insert on-the-fly snippet" })
-
-      -- Use <C-c> to select a choice in a snippet.
-      vim.keymap.set({ "i", "s" }, "<C-c>", function()
-        ---@diagnostic disable-next-line: undefined-field
-        if require("luasnip").choice_active() then
-          require "luasnip.extras.select_choice"()
-        end
-      end, { desc = "Select choice" })
     end,
   },
   {
@@ -71,10 +102,9 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
         ["<C-e>"] = {},
         ["<C-b>"] = {},
 
-        -- ["<a-y>"] = { "select_and_accept" },
         ["<a-y>"] = {
           function(cmp)
-            local luasnip = require "luasnip"
+            local luasnip = lazy "luasnip"
             if cmp.is_visible() then
               return cmp.select_and_accept()
             elseif luasnip.expand_or_jumpable() then
@@ -89,7 +119,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
         },
         ["<Tab>"] = {
           function()
-            local luasnip = require "luasnip"
+            local luasnip = lazy "luasnip"
             if luasnip.expand_or_jumpable() then
               return luasnip.expand_or_jump()
             elseif luasnip.get_active_snip() then
@@ -102,7 +132,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
         },
         ["<S-Tab>"] = {
           function()
-            local luasnip = require "luasnip"
+            local luasnip = lazy "luasnip"
             if luasnip.get_active_snip() then
               return luasnip.jump(-1)
             elseif vim.snippet.active() then
@@ -111,11 +141,6 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               local cur = vim.api.nvim_win_get_cursor(0)
               pcall(vim.api.nvim_win_set_cursor, 0, { cur[1], cur[2] - 1 })
             end
-          end,
-        },
-        ["<C-s>"] = {
-          function()
-            require("luasnip").unlink_current()
           end,
         },
         ["<c-g>"] = {
@@ -156,10 +181,10 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
         list = {
           selection = {
             preselect = function(ctx)
-              return ctx.mode == "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+              return ctx.mode == "cmdline" and not lazy("blink.cmp").snippet_active { direction = 1 }
             end,
             auto_insert = function(ctx)
-              return ctx.mode == "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+              return ctx.mode == "cmdline" and not lazy("blink.cmp").snippet_active { direction = 1 }
             end,
           },
           max_items = 50,
@@ -225,7 +250,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
                     kind = Icons.kinds[ctx.kind] or ""
                   end
 
-                  return " " .. require("utils.cmd").strip_whitespaces(kind) .. " "
+                  return " " .. lazy("utils.cmd").strip_whitespaces(kind) .. " "
                 end,
                 highlight = function(ctx)
                   if ctx.deprecated then
@@ -279,16 +304,16 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             border = Icons.border.rightsideonly, -- or "none",
             winhighlight = "Normal:BlinkDocNormal,FloatBorder:BlinkDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
-          -- draw = function(opts)
-          --   opts.default_implementation()
-          --   vim.schedule(function()
-          --     _G.LspConfig.highlight_doc_patterns(opts.window.buf)
-          --     local win_id = opts.window:get_win()
-          --     if win_id then
-          --       require("render-markdown.core.ui").update(opts.window.buf, win_id, "BlinkDraw", true)
-          --     end
-          --   end)
-          -- end,
+          draw = function(opts)
+            opts.default_implementation()
+            vim.schedule(function()
+              _G.LspConfig.highlight_doc_patterns(opts.window.buf)
+              local win_id = opts.window:get_win()
+              if win_id then
+                lazy("render-markdown.core.ui").update(opts.window.buf, win_id, "BlinkDraw", true)
+              end
+            end)
+          end,
         },
         ghost_text = {
           enabled = false,
@@ -309,10 +334,10 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             function()
               local type = vim.fn.getcmdtype()
               if type == "/" or type == "?" then
-                return require("utils.map").feedkey "<C-Down>"
+                return lazy("utils.map").feedkey "<C-Down>"
               end
               if type == ":" or type == "@" then
-                return require("utils.map").feedkey "<C-Down>"
+                return lazy("utils.map").feedkey "<C-Down>"
               end
             end,
           },
@@ -320,10 +345,10 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             function()
               local type = vim.fn.getcmdtype()
               if type == "/" or type == "?" then
-                return require("utils.map").feedkey "<C-Up>"
+                return lazy("utils.map").feedkey "<C-Up>"
               end
               if type == ":" or type == "@" then
-                return require("utils.map").feedkey "<C-Up>"
+                return lazy("utils.map").feedkey "<C-Up>"
               end
             end,
           },
@@ -332,10 +357,10 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
-                  return require("utils.map").feedkey "<C-Down>"
+                  return lazy("utils.map").feedkey "<C-Down>"
                 end
                 if type == ":" or type == "@" then
-                  return require("utils.map").feedkey "<C-Down>"
+                  return lazy("utils.map").feedkey "<C-Down>"
                 end
               else
                 cmp.select_next()
@@ -347,10 +372,10 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
-                  return require("utils.map").feedkey "<C-Up>"
+                  return lazy("utils.map").feedkey "<C-Up>"
                 end
                 if type == ":" or type == "@" then
-                  return require("utils.map").feedkey "<C-Up>"
+                  return lazy("utils.map").feedkey "<C-Up>"
                 end
               else
                 cmp.select_prev()
@@ -367,7 +392,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             "cancel",
             function()
               if vim.fn.getcmdtype() ~= "" then
-                return require("utils.map").feedkey "<C-c>"
+                return lazy("utils.map").feedkey "<C-c>"
               end
             end,
           },
@@ -420,7 +445,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
         },
       },
       appearance = {
-        kind_icons = require("icons").kinds,
+        kind_icons = lazy("icons").kinds,
       },
     },
   },
@@ -428,7 +453,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
 
 local on_plugin_update = require("vim-pack").on_plugin_update
 
-on_plugin_update("nvim-treesitter", function()
+on_plugin_update("blink.cmp", function()
   ---@diagnostic disable-next-line: undefined-field
-  require("blink.cmp").build():pwait()
+  lazy("blink.cmp").build():pwait()
 end)

@@ -1,10 +1,11 @@
 local add = require("vim-pack").add
 
-local icons = require "icons"
-local UtilKey = require "utils.map"
-local UtilFzfDiffiew = require "utils.fzf_diffview"
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local UtilKey = lazy "utils.map"
+local icons = lazy "icons"
+local Log = lazy "utils.log"
+local UtilFzfDiffiew = lazy "utils.fzf_diffview"
 
 local fd_opts = "--color never "
   .. "--type f "
@@ -17,7 +18,7 @@ local fd_opts = "--color never "
 -- is loaded.
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.ui.select = function(items, opts, on_choice)
-  local ui_select = require "fzf-lua.providers.ui_select"
+  local ui_select = lazy "fzf-lua.providers.ui_select"
 
   if not ui_select.is_registered() then
     ui_select.register(function(ui_opts)
@@ -59,7 +60,7 @@ vim.ui.select = function(items, opts, on_choice)
 end
 
 local path_normalize = function(path_str)
-  local path = vim.uv.cwd() .. "/" .. require("utils.cmd").__strip_str(path_str) or path_str
+  local path = vim.uv.cwd() .. "/" .. lazy("utils.cmd").__strip_str(path_str) or path_str
   return vim.fs.normalize(path)
 end
 
@@ -68,17 +69,20 @@ add {
   {
     src = "ibhagwan/fzf-lua",
     opts = function()
-      local actions = require "fzf-lua.actions"
+      local actions = lazy "fzf-lua.actions"
       return {
         { "border-fused", "hide" },
         -- Make stuff better combine with the editor.
-        fzf_colors = {
-          bg = { "bg", "Normal" },
-          gutter = { "bg", "Normal" },
-          info = { "fg", "Conditional" },
-          scrollbar = { "bg", "Normal" },
-          separator = { "fg", "Comment" },
-        },
+        -- fzf_colors = {
+        --   fg = { "fg", "FzfLuaNormal" },
+        --   bg = { "bg", "FzfLuaNormal" },
+        --   ["fg+"] = { "fg", "FzfLuaSel" },
+        --   ["bg+"] = { "bg", "FzfLuaSel" },
+        --   gutter = { "bg", "Normal" },
+        --   info = { "fg", "Conditional" },
+        --   scrollbar = { "bg", "Normal" },
+        --   separator = { "fg", "Comment" },
+        -- },
         fzf_opts = {
           ["--info"] = "default",
           ["--layout"] = "reverse-list",
@@ -115,8 +119,15 @@ add {
           },
         },
         defaults = { git_icons = false },
+        -- previewers = {
+        --   codeaction = { toggle_behavior = "extend" },
+        -- },
         previewers = {
-          codeaction = { toggle_behavior = "extend" },
+          builtin = {
+            syntax_limit_b = 1024 * 100, -- skip syntax untuk file > 100KB
+            limit_b = 1024 * 1024, -- jangan preview file > 1MB
+            treesitter = { enabled = false }, -- matikan treesitter di preview
+          },
         },
         files = {
           winopts = {
@@ -141,7 +152,7 @@ add {
             },
             ["ctrl-x"] = {
               fn = function()
-                require("fzf-lua").files {
+                lazy("fzf-lua").files {
                   fd_opts = [[--color=never --type d --type l --exclude .git]],
                   actions = {
                     ["default"] = function(selected, opts)
@@ -162,7 +173,7 @@ add {
                         ["enter"] = actions.file_edit_or_qf,
                       }
 
-                      require("fzf-lua").files(opts)
+                      lazy("fzf-lua").files(opts)
                     end,
                   },
                 }
@@ -173,7 +184,7 @@ add {
             },
             ["ctrl-o"] = {
               fn = function(...)
-                local P = require "overlook.peek"
+                local P = lazy "overlook.peek"
                 P.peek_fzflua(...)
               end,
               noclose = false,
@@ -189,7 +200,7 @@ add {
                 local paths = {}
                 if #selected > 1 then
                   for _, file in pairs(selected) do
-                    if not require("utils.cmd").check_tbl_element(paths, file) then
+                    if not lazy("utils.cmd").check_tbl_element(paths, file) then
                       paths[#paths + 1] = path_normalize(file)
                     end
                   end
@@ -198,7 +209,7 @@ add {
                 end
 
                 UtilKey.plugin_load_now "grug-far.nvim"
-                local grug = require "grug-far"
+                local grug = lazy "grug-far"
                 grug.open {
                   prefills = {
                     search = "",
@@ -439,7 +450,7 @@ add {
             },
             ["ctrl-x"] = {
               fn = function()
-                require("fzf-lua").files {
+                lazy("fzf-lua").files {
                   fd_opts = [[--color=never --type d --type l --exclude .git]],
                   actions = {
                     ["default"] = function(selected)
@@ -473,7 +484,7 @@ add {
                         ["enter"] = actions.file_edit_or_qf,
                       }
 
-                      require("fzf-lua").live_grep(opts)
+                      lazy("fzf-lua").live_grep(opts)
                     end,
                   },
                 }
@@ -524,7 +535,7 @@ add {
                   -- Else only show errors.
                   opts.severity_only = vim.diagnostic.severity.ERROR
                 end
-                require("fzf-lua").resume(opts)
+                lazy("fzf-lua").resume(opts)
               end,
               noclose = true,
               desc = "toggle-all-only-errors",
@@ -549,7 +560,7 @@ add {
                   cwd_only = false,
                   winopts = { preview = { hidden = opts.hidden } },
                 }
-                require("fzf-lua").oldfiles(opts)
+                lazy("fzf-lua").oldfiles(opts)
               end,
               noclose = true,
               desc = "toggle-hidden-oldfiles",
@@ -572,7 +583,7 @@ add {
 }
 
 local function search_current_buf()
-  local actions = require "fzf-lua.actions"
+  local actions = lazy "fzf-lua.actions"
   local opts = {
     winopts = {
       height = 0.6,
@@ -603,19 +614,19 @@ local function search_current_buf()
   -- See https://github.com/ibhagwan/fzf-lua/issues/2051
   local mode = vim.api.nvim_get_mode().mode
   if vim.startswith(mode, "n") then
-    require("fzf-lua").lgrep_curbuf(opts)
+    lazy("fzf-lua").lgrep_curbuf(opts)
   else
-    local sel = require("utils.cmd").get_selection() or ""
+    local sel = lazy("utils.cmd").get_selection() or ""
     sel = vim.trim((sel:gsub("\n.*", "")))
     opts.query = sel
 
     vim.api.nvim_feedkeys(vim.keycode "<Esc>", "nx", false)
-    require("fzf-lua").blines(opts)
+    lazy("fzf-lua").blines(opts)
   end
 end
 
 UtilKey.noremap({ "n", "x" }, "<Leader>fb", search_current_buf, { desc = "Picker: search current buffer [fzflua]" })
-UtilKey.nnoremap("<Leader><Leader>", "<cmd>FzfLua files<cr>", { desc = "Picker: find files [fzflua]" })
+UtilKey.nnoremap("<Leader>ff", "<cmd>FzfLua files<cr>", { desc = "Picker: find files [fzflua]" })
 UtilKey.nnoremap("<Leader>fc", "<cmd>FzfLua highlights<cr>", { desc = "Picker: highlights [fzfua]" })
 UtilKey.nnoremap("<Leader>fC", "<cmd>FzfLua colorschemes<cr>", { desc = "Picker: colorschemes [fzfua]" })
 UtilKey.nnoremap("<Leader>fA", "<cmd>FzfLua autocmds<cr>", { desc = "Picker: commands [fzfua]" })
@@ -627,7 +638,7 @@ UtilKey.nnoremap("<Leader>fF", function()
     return pack.spec.name
   end, packs)
 
-  require("fzf-lua").fzf_exec(items, {
+  lazy("fzf-lua").fzf_exec(items, {
     prompt = "Plugins> ",
     actions = {
       ["enter"] = {
@@ -643,7 +654,7 @@ UtilKey.nnoremap("<Leader>fF", function()
 
           Log.info(item_plugins[1])
           local cj = vim.fn.stdpath "data" .. "/site/pack/core/opt/" .. item_plugins[1]
-          require("fzf-lua").files { cwd = cj }
+          lazy("fzf-lua").files { cwd = cj }
         end,
       },
     },
@@ -651,12 +662,12 @@ UtilKey.nnoremap("<Leader>fF", function()
 end, { desc = "Picker: commands [fzfua]" })
 
 UtilKey.nnoremap("<Leader>fz", function()
-  require("fzf-lua").files {
+  lazy("fzf-lua").files {
     cwd = "~/.config/miscxrdb/xresource-theme",
     fzf_opts = { ["--header"] = "" },
     actions = {
       ["default"] = function(selected)
-        local colorscheme = require("utils.cmd").__strip_str(selected[1])
+        local colorscheme = lazy("utils.cmd").__strip_str(selected[1])
 
         local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. colorscheme
         vim.cmd [[ChangeMasterTheme]]
@@ -678,7 +689,7 @@ UtilKey.nnoremap("<Leader>fh", "<cmd>FzfLua command_history<cr>", { desc = "Pick
 UtilKey.nnoremap("<Leader>fH", "<cmd>FzfLua search_history<cr>", { desc = "Picker: search history [fzflua]" })
 
 UtilKey.nnoremap("<Leader>fo", function()
-  return require("fzf-lua").files { cwd = "~/moxconf/development/dotfiles" }
+  return lazy("fzf-lua").files { cwd = "~/moxconf/development/dotfiles" }
 end, { desc = "Picker: dotfiles [fzflua]" })
 
 -- Help
@@ -686,9 +697,9 @@ UtilKey.nnoremap("<Leader>hB", "<cmd>FzfLua keymaps<cr>", { desc = "Help: show g
 UtilKey.nnoremap("<Leader>hm", "<cmd>FzfLua man_pages<cr>", { desc = "Help: man pages [fzflua]" })
 UtilKey.nnoremap("<Leader>hh", "<cmd>FzfLua help_tags<cr>", { desc = "Help: nvim [fzflua]" })
 UtilKey.xnoremap("<Leader>hh", function()
-  local sel = require("utils.cmd").get_selection()
+  local sel = lazy("utils.cmd").get_selection()
   if sel then
-    local selection = require("utils.cmd").strip_whitespaces(sel)
+    local selection = lazy("utils.cmd").strip_whitespaces(sel)
     local _, err = pcall(function()
       vim.cmd("h " .. selection)
     end)
@@ -703,7 +714,7 @@ UtilKey.nnoremap("<Leader>fr", "<cmd>FzfLua oldfiles<cr>", { desc = "Picker: rec
 UtilKey.nnoremap("<Leader>fl", "<cmd>FzfLua resume<cr>", { desc = "Picker: resume (last search) [fzfua]" })
 UtilKey.nnoremap("z=", "<cmd>FzfLua spell_suggest<cr>", { desc = "Picker: spelling suggestions [fzflua]" })
 UtilKey.inoremap("<C-x><C-f>", function()
-  require("fzf-lua").complete_path {
+  lazy("fzf-lua").complete_path {
     winopts = {
       height = 0.4,
       width = 0.5,
@@ -714,14 +725,14 @@ end, { desc = "Picker: fuzzy complete path [fzflua]" })
 
 -- Git
 UtilKey.nnoremap("<C-c>gs", "<cmd>FzfLua git_status<cr>", { desc = "Git: status [fzfua]" })
-UtilKey.nnoremap("<C-c>gS", "<cmd>FzfLua git_stash<cr>", { desc = "Git: status [fzfua]" })
+UtilKey.nnoremap("<C-c>gS", "<cmd>FzfLua git_stash<cr>", { desc = "Git: stash [fzfua]" })
 UtilKey.nnoremap("<C-c>gl", "<cmd>FzfLua git_bcommits<cr>", { desc = "Git: bcommits [fzfua]" })
 UtilKey.nnoremap("<C-c>gL", "<cmd>FzfLua git_commits<cr>", { desc = "Git: commits [fzfua]" })
 
 --stylua: ignore
-UtilKey.nnoremap( "<C-c>gD", require("utils.git").trace_file_event, { desc = "Git: track commit for renamed or file deleted [fzflua]" })
+UtilKey.nnoremap( "<C-c>gD", lazy("utils.git").trace_file_event, { desc = "Git: track commit for renamed or file deleted [fzflua]" })
 --stylua: ignore
-UtilKey.nnoremap( "<C-c>gf", require("utils.git").select_file_different_branch, { desc = "Git: find files branch [fzflua]" })
+UtilKey.nnoremap( "<C-c>gf", lazy("utils.git").select_file_different_branch, { desc = "Git: find files branch [fzflua]" })
 
 -- LSP
 --stylua: ignore

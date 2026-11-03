@@ -1,14 +1,16 @@
 local M = {}
 
-local ConfigPath = require("config").path
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local Config = lazy "config"
+local ConfigPath = Config.path
+local Log = lazy "utils.log"
 
 ---@param tbl table
 ---@param element any
 ---@return boolean
 function M.check_tbl_element(tbl, element)
-  for _, x in pairs(tbl) do
+  for _, x in ipairs(tbl) do
     if x == element then
       return true
     end
@@ -53,11 +55,12 @@ function M.get_total_wins()
   return tbl_winsplits
 end
 
+---Remove duplicate elements while preserving their original order.
 ---@param old_tbl table
 ---@return table
 function M.remove_duplicates_table(old_tbl)
   local new_tbl = {}
-  for _, element in pairs(old_tbl) do
+  for _, element in ipairs(old_tbl) do
     if not M.check_tbl_element(new_tbl, element) then
       table.insert(new_tbl, element)
     end
@@ -164,6 +167,12 @@ function M.strip_whitespaces(str)
     return M.rstrip_whitespace(M.lstrip_whitespace(str))
   end
   return ""
+end
+
+---@param winid integer?
+function M.is_float(winid)
+  winid = winid or 0
+  return vim.api.nvim_win_get_config(winid).relative ~= ""
 end
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -302,8 +311,6 @@ local function open_media_or_git(line_str)
     return false, "define `width` error"
   end
 
-  Log.info(tostring(#contents))
-
   local opts = {
     winopts = {
       height = #contents + #contents,
@@ -342,7 +349,7 @@ local function open_media_or_git(line_str)
 
               key_open = vim.split(tostring(key_open), "-")
 
-              local msg = require("utils.cmd").strip_whitespaces(key_open[1])
+              local msg = M.strip_whitespaces(key_open[1])
               notif_msg = msg .. ": " .. line_str
             end
           end
@@ -351,8 +358,8 @@ local function open_media_or_git(line_str)
             if sel == "Open PR with Octo" then
               vim.cmd "tabnew e"
             end
-            require("vim-pack").load_now "diffview.nvim"
-            require("vim-pack").load_now "octo.nvim"
+            lazy("vim-pack").load_now "diffview.nvim"
+            lazy("vim-pack").load_now "octo.nvim"
             vim.cmd(table.concat(cmds, " "))
             return
           end
@@ -378,7 +385,10 @@ local function open_media_or_git(line_str)
     },
   }
 
-  require("fzf-lua").fzf_exec(contents, opts)
+  local Fzflua = lazy "fzf-lua"
+  Fzflua.fzf_exec(contents, opts)
+
+  return true, nil
 end
 
 ---@param line_str string
@@ -409,9 +419,9 @@ end
 ---@param mode_open string
 ---@return boolean, string|nil
 local function goto_file(url, mode_open)
-  local ok, _ = require("utils.window").call_stack_peek()
+  local ok, _ = lazy("utils.window").call_stack_peek()
   if not ok then
-    require("utils.window").arange_wins "vsplit"()
+    lazy("utils.window").arange_wins "vsplit"()
     return true, nil
   end
 
@@ -422,10 +432,12 @@ local function goto_file(url, mode_open)
   end
 
   if not filepath then
-    local success, err = pcall(vim.cmd.normal, {
-      "gf",
-      bang = true,
-    })
+    local success, err = pcall(function()
+      vim.cmd.normal {
+        "gf",
+        bang = true,
+      }
+    end)
 
     if not success then
       return false, "Use fallback `qf` Go to file" .. err .. "warn"
@@ -445,12 +457,18 @@ local function goto_file(url, mode_open)
       target_col,
     })
   end, 1)
+  return true, nil
 end
 
 ---@param context_mode "mpv or svix" | "browser" | "go to file"
 ---@param mode_open? "vsplit" | "split" | "edit"
 function M.open_with(context_mode, mode_open)
   mode_open = mode_open or "edit"
+
+  if M.is_float() and vim.w.is_overlook_popup then
+    lazy("utils.window").arange_wins "vsplit"()
+    return
+  end
 
   local available_modes = { "mpv or svix", "browser", "go to file" }
 
@@ -640,7 +658,7 @@ function M.browse_this_error(is_selection)
     selection_str[#selection_str + 1] = idx
   end
 
-  require("fzf-lua").fzf_exec(selection_str, fzfopts)
+  lazy("fzf-lua").fzf_exec(selection_str, fzfopts)
 end
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -734,7 +752,7 @@ local function formatted_snippets(filetype, opts, snippets_global)
 end
 
 function M.edit_snippet()
-  local ft, _ = require("utils.window").get_bo_buft()
+  local ft, _ = lazy("utils.window").get_bo_buft()
   if ft == "" then
     return
   end
@@ -790,19 +808,19 @@ function M.edit_snippet()
     end
   end
 
-  local Scan = require "plenary.scandir"
+  local Scan = lazy "plenary.scandir"
 
   for _, snip in pairs(snippets_base.snippets) do
     local dirs = {}
     local is_single = false
 
     local path_snip = snippets_base.root_path .. snip
-    if require("utils.file").is_dir(path_snip) then
+    if lazy("utils.file").is_dir(path_snip) then
       dirs = Scan.scan_dir(path_snip, { depth = 1, search_pattern = "json" })
     end
 
     local path_snip_json = path_snip .. ".json"
-    if require("utils.file").is_file(path_snip_json) then
+    if lazy("utils.file").is_file(path_snip_json) then
       dirs = { path_snip_json }
       is_single = true
     end

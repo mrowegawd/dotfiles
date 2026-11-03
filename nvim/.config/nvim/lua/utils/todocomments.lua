@@ -1,22 +1,14 @@
 local M = {}
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
 local tbl_dat_note = {}
 
-local UtilCmd = require "utils.cmd"
-local UtilQf = require "utils.qf"
-local ConfigPath = require("config").path
+local UtilCmd = lazy "utils.cmd"
+local UtilQf = lazy "utils.qf"
+local ConfigPath = lazy("config").path
 
-local Fzflua
-
-local setup_fzflua = function()
-  if not Fzflua then
-    Fzflua = require "fzf-lua"
-  end
-
-  return Fzflua
-end
+local Fzflua = lazy "fzf-lua"
 
 local function get_extracted_entry(entry)
   if not entry then
@@ -45,7 +37,7 @@ local function open_with(mode, tbl_cts, sel, is_open_folded)
     if x.text == data_sel.text and x.basename == data_sel.basename and x.lnum == data_sel.lnum then
       vim.cmd(mode .. " " .. x.filename)
       if is_open_folded then
-        require("utils.map").feedkey "zO"
+        lazy("utils.map").feedkey "zO"
       end
       vim.api.nvim_win_set_cursor(0, { tonumber(x.lnum), 1 })
     end
@@ -88,7 +80,7 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
     tbl_cts = { tbl_cts, "table" },
   }
 
-  local builtin = require "fzf-lua.previewer.builtin"
+  local builtin = lazy "fzf-lua.previewer.builtin"
   local Todopreviewer = builtin.buffer_or_file:extend()
 
   function Todopreviewer:new(o, opts, fzf_win)
@@ -127,7 +119,6 @@ local function picker(contents, tbl_cts, fzf_opts, is_open_folded)
     return {}
   end
 
-  Fzflua = setup_fzflua()
   Fzflua.fzf_exec(contents, {
     previewer = {
       _ctor = function()
@@ -214,8 +205,8 @@ local function todocomments(path, is_global, set_note)
   is_global = is_global or false
 
   return function()
-    local Search = require "todo-comments.search"
-    local opts_todo_comments = require("vim-pack").opts "todo-comments.nvim"
+    local Search = lazy "todo-comments.search"
+    local opts_todo_comments = lazy("vim-pack").opts "todo-comments.nvim"
 
     if set_note then
       local add_type, remove_type
@@ -233,13 +224,12 @@ local function todocomments(path, is_global, set_note)
       opts_todo_comments.search.args[#opts_todo_comments.search.args + 1] = add_type
     end
 
-    require("todo-comments").setup(opts_todo_comments)
-    Fzflua = setup_fzflua()
+    lazy("todo-comments").setup(opts_todo_comments)
 
     local contents = function(cb)
       Search.search(function(results)
         for _, item in pairs(results) do
-          local pathtodo = require("utils.file").basename(item.filename)
+          local pathtodo = lazy("utils.file").basename(item.filename)
           item.basename = pathtodo
           tbl_dat_note[#tbl_dat_note + 1] = item
         end

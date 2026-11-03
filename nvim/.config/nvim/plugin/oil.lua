@@ -1,9 +1,11 @@
 local add = require("vim-pack").add
 
-local ConfigPath = require("config").path
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local ConfigPath = lazy("config").path
+local UtilKey = lazy "utils.map"
+
+local Log = lazy "utils.log"
 
 add {
   {
@@ -28,22 +30,22 @@ add {
         ["_"] = { "actions.open_cwd", mode = "n" },
         ["`"] = { "actions.cd", mode = "n" },
 
-        ["<Leader>t"] = "actions.open_terminal",
-        ["<a-t>"] = "actions.open_terminal",
+        ["<LocalLeader>to"] = "actions.open_terminal",
         ["P"] = "actions.preview",
         ["H"] = { "actions.toggle_hidden", mode = "n" },
         ["<Leader>cd"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
         ["<Leader>ov"] = { "actions.select", opts = { vertical = true } },
         ["<Leader>os"] = { "actions.select", opts = { horizontal = true } },
         ["<Leader>ot"] = { "actions.select", opts = { tab = true } },
-        ["<c-a>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
-        ["<c-a>cs"] = { "actions.change_sort", mode = "n" },
-        ["<C-a>p"] = "actions.paste_from_system_clipboard",
-        ["<c-a>q"] = {
+        ["<C-c>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
+        ["<C-c>vv"] = { "actions.change_sort", mode = "n" },
+        ["<C-c>p"] = "actions.paste_from_system_clipboard",
+        ["<C-c>q"] = {
+          desc = "add path into qf",
           function()
-            local oil = require "oil"
-            local fs = require "oil.fs"
-            local dir = require("oil").get_current_dir()
+            local oil = lazy "oil"
+            local fs = lazy "oil.fs"
+            local dir = lazy("oil").get_current_dir()
 
             ---@return integer start
             ---@return integer end
@@ -100,18 +102,18 @@ add {
               mode = " "
             end
 
-            require("utils.qf").save_to_qf_and_auto_open_qf(data, false, mode)
+            lazy("utils.qf").save_to_qf_and_auto_open_qf(data, false, mode)
 
             vim.schedule(function()
               vim.cmd "wincmd p"
             end)
           end,
         },
-        ["<c-a>uv"] = {
+        ["<C-c>vd"] = {
           desc = "Toggle detail view",
           callback = function()
-            local oil = require "oil"
-            local config = require "oil.config"
+            local oil = lazy "oil"
+            local config = lazy "oil.config"
             if #config.columns == 1 then
               oil.set_columns { "icon", "permissions", "size", "mtime" }
             else
@@ -134,7 +136,7 @@ add {
                 end
               end
             end
-            return require("fzf-lua").fzf_exec(reverse, {
+            return lazy("fzf-lua").fzf_exec(reverse, {
               actions = {
                 ["default"] = {
                   fn = function(e)
@@ -143,7 +145,7 @@ add {
                     end
 
                     vim.cmd.cd(e[1])
-                    require("oil").open(e[1])
+                    lazy("oil").open(e[1])
                   end,
                 },
               },
@@ -152,41 +154,43 @@ add {
         },
         ["<a-G>"] = {
           function()
-            require("utils.terminal").lazygit()
-          end,
-        },
-        ["<a-T>"] = {
-          function()
-            local dir = require("oil").get_current_dir()
-            require("utils.terminal").open_terminal_in_filetree(dir)
+            lazy("utils.terminal").lazygit()
           end,
         },
         ["<a-D>"] = {
+          desc = "open lazydocker",
           function()
-            return require("utils.terminal").lazydocker()
+            return lazy("utils.terminal").lazydocker()
           end,
         },
-        ["<Leader><Leader>"] = {
+        ["<C-c><C-t>"] = {
+          desc = "open_cwd_in_terminal",
           function()
-            local dir = require("oil").get_current_dir()
+            local dir = lazy("oil").get_current_dir()
+            lazy("utils.terminal").open_terminal_in_filetree(dir)
+          end,
+        },
+        ["<C-c>ff"] = {
+          desc = "find files in dir",
+          function()
+            local dir = lazy("oil").get_current_dir()
             if vim.api.nvim_win_get_config(0).relative ~= "" then
               vim.api.nvim_win_close(0, true)
             end
-            local fzf_lua = require "fzf-lua"
+            local fzf_lua = lazy "fzf-lua"
             fzf_lua.files { cwd = dir }
           end,
-          desc = "[F]ind [F]iles in dir",
         },
-        ["<Leader>fg"] = {
+        ["<C-c>fg"] = {
+          desc = "Find grep in dir",
           function()
-            local dir = require("oil").get_current_dir()
+            local dir = lazy("oil").get_current_dir()
             if vim.api.nvim_win_get_config(0).relative ~= "" then
               vim.api.nvim_win_close(0, true)
             end
-            local fzf_lua = require "fzf-lua"
+            local fzf_lua = lazy "fzf-lua"
             fzf_lua.live_grep { cwd = dir }
           end,
-          desc = "[F]ind by [G]rep in dir",
         },
       },
       view_options = {
@@ -215,3 +219,17 @@ UtilKey.nnoremap("<Leader>oo", function()
 
   vim.cmd "Oil"
 end)
+
+local UtilAugroup = lazy("utils.map").augroup
+local whichkey = lazy "which-key"
+
+UtilAugroup("oil", {
+  event = "FileType",
+  pattern = "oil",
+  command = function(ev)
+    whichkey.add {
+      { "<C-c>f", group = "find", buffer = ev.buf },
+      { "<C-c>v", group = "view", buffer = ev.buf },
+    }
+  end,
+})

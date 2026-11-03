@@ -205,7 +205,7 @@ set_tmux() {
 
   # General
   replace_var "$tmux_themes" "TMUX_FG" "$(theme_get tmux_fg)"
-  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_session_bg)"
+  replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_bg)"
   replace_var "$tmux_themes" "FM_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "TMUX_KEYWORD" "$(theme_get tmux_keyword)"
 
@@ -533,6 +533,7 @@ set_lazygit() {
   replace_in "$lazygit_fla" "options_text_color" "$(theme_get lazygit_option_txt)"
   replace_in "$lazygit_fla" "selected_line_bg_color" "$(theme_get lazygit_selected_bg)"
   replace_in "$lazygit_fla" "default_fg_color" "$(theme_get lazygit_default_fg)"
+  replace_in "$lazygit_fla" "author_fg_color" "$(theme_get lazygit_author_fg)"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -713,7 +714,6 @@ setup() {
     "s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$theme\"/g" \
     "$DOTFILES_PATH/home/.Xresources"
   xrdb ~/.Xresources
-  xrdb -merge ~/.Xresources
 
   set_rofi
   set_dunst
@@ -731,6 +731,8 @@ setup() {
   set_zshrc "$theme"
   set_shaders_color "$theme"
   set_kitty "$theme"
+
+  xrdb -merge ~/.Xresources
 
   sleep 1 && send_notify "Reload bspwm config.."
 

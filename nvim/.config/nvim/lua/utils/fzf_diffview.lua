@@ -1,50 +1,31 @@
 local M = {}
 
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+
+local UtilCmd = lazy "utils.cmd"
+local UtilFile = lazy "utils.file"
+local UtilQf = lazy "utils.qf"
+
+local Fzflua = lazy "fzf-lua"
+local Gitsigns = lazy "gitsigns"
+
 local last_query = ""
-local UtilCmd = require "utils.cmd"
-local UtilFile = require "utils.file"
-local UtilQf = require "utils.qf"
-
-local Log = require "utils.log"
-
-local Fzflua
-local setup_fzflua = function()
-  if Fzflua then
-    return Fzflua
-  end
-
-  Fzflua = require "fzf-lua"
-  return Fzflua
-end
-
-local Gitsigns
-local get_gitsigns = function()
-  if Gitsigns then
-    return Gitsigns
-  end
-
-  local ok, gitsigns = pcall(require, "gitsigns")
-  if not ok then
-    return nil
-  end
-
-  Gitsigns = gitsigns
-  return Gitsigns
-end
 
 local status_cmd_git = {
   ["open commit only"] = function(commit_hash)
-    require("vim-pack").load_now "diffview.nvim"
+    lazy("vim-pack").load_now "diffview.nvim"
     -- cmds = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
     -- return "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
     return "DiffviewOpen " .. commit_hash .. "^!"
   end,
   ["open commit only with fugitive"] = function(commit_hash)
-    require("vim-pack").load_now "vim-fugitive"
+    lazy("vim-pack").load_now "vim-fugitive"
     return "Gedit " .. commit_hash
   end,
   ["open commit only with gitsigns"] = function(commit_hash)
-    require("vim-pack").load_now "vim-fugitive"
+    lazy("vim-pack").load_now "vim-fugitive"
     return "Gedit " .. commit_hash
   end,
   ["compare commit diff to head"] = function(commit_hash)
@@ -373,7 +354,7 @@ function M.git_flags()
   local git_flags = config["git_flags"] or {}
 
   if type(git_flags) ~= "table" then
-    vim.notify("git_flags must be a table", vim.log.levels.ERROR, { title = "Advanced Git Search" })
+    Log.error "git_flags must be a table"
     return nil
   end
 
@@ -384,7 +365,7 @@ function M.git_diff_flags()
   local git_diff_flags = config["git_diff_flags"] or {}
 
   if type(git_diff_flags) ~= "table" then
-    vim.notify("git_diff_flags must be a table", vim.log.levels.ERROR, { title = "Advanced Git Search" })
+    Log.error "git_diff_flags must be a table"
     return nil
   end
 
@@ -399,7 +380,7 @@ function M.format_git_diff_command(command, git_flags_ix, git_diff_flags_ix)
   local git_flags = M.git_flags()
 
   if git_flags_ix > git_diff_flags_ix then
-    vim.notify("git_flags must be inserted before git_diff_flags", vim.log.levels.ERROR)
+    Log.error "git_flags must be inserted before git_diff_flags"
   end
 
   if git_diff_flags ~= nil and #git_diff_flags > 0 then
@@ -474,7 +455,7 @@ end
 function M.git_diff_content_previewer(opts)
   opts = opts or { bufnr = nil }
 
-  local fzf_shell = require "fzf-lua.shell"
+  local fzf_shell = lazy "fzf-lua.shell"
 
   return fzf_shell.stringify_cmd(function(items)
     local selection = items[1]
@@ -527,7 +508,7 @@ local function convert_path_hash_commit(short_hash)
   end
 
   -- Fugitive
-  require("vim-pack").load_now "vim-fugitive"
+  lazy("vim-pack").load_now "vim-fugitive"
   local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
 
   -- Neogit
@@ -766,8 +747,8 @@ end
 function M.git_open_with_browser(selected)
   local commit_hash, _ = extract_git_hash_single(selected)
   if commit_hash then
-    require("vim-pack").load_now "vim-rhubarb"
-    require("vim-pack").load_now "vim-fugitive"
+    lazy("vim-pack").load_now "vim-rhubarb"
+    lazy("vim-pack").load_now "vim-fugitive"
     vim.api.nvim_command(":" .. get_browse_command(commit_hash))
   end
 end
@@ -817,13 +798,10 @@ function M.git_open_with_compare_hash()
       end
 
       -- With gitsigns
-      local gitsigns = get_gitsigns()
-      if gitsigns then
-        local ok, err = pcall(gitsigns.diffthis, commit_hash)
-        if not ok then
-          Log.warn(err)
-          goto continue
-        end
+      local ok, err = pcall(Gitsigns.diffthis, commit_hash)
+      if not ok then
+        Log.warn(err)
+        goto continue
       end
 
       -- With vim-fugitive
@@ -849,14 +827,12 @@ function M.git_copy_to_clipboard_or_yank(selected)
   local commit_hash, _ = extract_git_hash_single(selected)
   if commit_hash then
     M.copy_to_clipboard(commit_hash)
-    Fzflua = setup_fzflua()
     Fzflua.actions.resume()
   end
 end
 
 function M.git_grep_log()
   return function()
-    Fzflua = setup_fzflua()
     Fzflua.fzf_live(function(query)
       return M.git_log_content_finder(query, nil)
     end, M.opts_diffview_log("repo", "Grep log history"))

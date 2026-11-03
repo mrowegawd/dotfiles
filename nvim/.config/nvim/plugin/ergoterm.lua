@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 -- Navigation with jump motions.
 add {
@@ -17,14 +19,14 @@ add {
 }
 
 local load_egoterm = function()
-  require("vim-pack").load_now "ergoterm.nvim"
+  lazy("vim-pack").load_now "ergoterm.nvim"
 end
 
-UtilKey.nnoremap("<Leader>oT", function()
+UtilKey.noremap({ "n", "x", "t" }, "<Localleader>tf", function()
   load_egoterm()
   vim.cmd "TermSelect"
-end, { desc = "Open: terminal select [ergoterm.nvim]" })
-UtilKey.nnoremap("<Leader>ot", function()
+end, { desc = "Terminal: term select [ergoterm.nvim]" })
+UtilKey.noremap({ "n", "x", "t" }, "<Localleader>tt", function()
   load_egoterm()
   vim.cmd "TermNew layout=right"
-end, { desc = "Open: terminal right [ergoterm.nvim]" })
+end, { desc = "Terminal: open term right [ergoterm.nvim]" })

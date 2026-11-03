@@ -4,7 +4,9 @@ local home = os.getenv "HOME"
 local bookmark_file = home .. "/.cache/yazi/bookmarks"
 local index_file = home .. "/.cache/yazi/bookmark-index"
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
 
 function M.ensure_files()
   os.execute("mkdir -p " .. home .. "/.cache/yazi")

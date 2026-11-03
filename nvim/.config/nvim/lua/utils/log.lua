@@ -1,7 +1,7 @@
 local M = {}
 
 local function send_notify(msg, levels)
-  vim.notify(msg, levels)
+  vim.notify(msg, levels, { title = "Notify" })
 end
 
 function M.warn(msg)

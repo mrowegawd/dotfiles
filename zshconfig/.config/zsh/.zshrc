@@ -9,6 +9,7 @@
 
 stty -ixon
 zmodload zsh/datetime
+zmodload zsh/nearcolor
 
 typeset -A __DOTS
 __DOTS[ITALIC_ON]=$'\e[3m'
@@ -39,8 +40,8 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors
 
-colorline="#1c1c1c"
-colorsuggest="fg=#2e2e2e"
+colorline="#313131"
+colorsuggest="fg=#4b4b4b"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -243,12 +244,12 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' use-cache true
 zstyle ':vcs_info:*' max-exports 2
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr "%F{green} ●%f"
-zstyle ':vcs_info:*' unstagedstr "%F{red} ●%f"
+zstyle ':vcs_info:*' stagedstr "%F{114} ●"
+zstyle ':vcs_info:*' unstagedstr "%F{203} ●"
 zstyle ':vcs_info:*' use-simple true
 zstyle ':vcs_info:git+set-message:*' hooks git-untracked git-stash git-compare git-remotebranch
-zstyle ':vcs_info:git*:*' actionformats '(%B%F{red}%b|%a%c%u%%b%f) '
-zstyle ':vcs_info:git:*' formats "%F{249}(%f%F{blue}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%f%F{249})%f%c%u%m"
+zstyle ':vcs_info:git*:*' actionformats '%B%F{203}%b|%a%b%c%u'
+zstyle ':vcs_info:git:*' formats "%F{150}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%c%u%m"
 
 __in_git() { [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; }
 
@@ -256,7 +257,8 @@ function +vi-git-untracked() {
   emulate -L zsh
   if __in_git; then
     if [[ -n $(git ls-files --directory --no-empty-directory --exclude-standard --others 2>/dev/null) ]]; then
-      hook_com[unstaged]+="%F{blue} %f" # alternatives ●
+      # hook_com[unstaged]+="%F{blue} %f" # alternatives ●
+      hook_com[unstaged]+="%F{blue} %f"
     fi
   fi
 }
@@ -318,24 +320,55 @@ function +vi-git-remotebranch() {
 
 setopt PROMPT_SUBST
 
+# Glyphs (Nerd Font)
+typeset -g __G_SEP=$'\ue0b0'      #
+typeset -g __G_RSEP=$'\ue0b2'     #
+typeset -g __G_FOLDER=$'\uf07c'   #
+typeset -g __G_BRANCH=$'\ue0a0'   #
+typeset -g __G_PY=$'\ue73c'       #
+
 function __prompt_eval() {
-  local virtualenv_prompt=""
-  if [[ -n "$VIRTUAL_ENV" ]]; then
-    virtualenv_prompt="%F{green}($(basename "$VIRTUAL_ENV"))%f"
+  # Warna (256-color) — ubah sesuka hati
+  local dir_bg="${colorline}" dir_fg="${colorsuggest}"
+  local git_bg=238
+  local venv_bg=65 venv_fg=255
+
+  local top=""
+
+  # Segmen 1: direktori
+  top+="%K{$dir_bg}%F{$dir_fg}%B ${__G_FOLDER} %1~ %b"
+
+  # Segmen 2: git
+  local git="$_git_status_prompt"
+  if [[ "$git" == " " ]]; then
+    # bukan repo git → tutup di sini
+    top+="%k%F{$dir_bg}${__G_SEP}%f"
+  else
+    [[ -z "$git" ]] && git="%F{246}…"   # masih loading
+    top+="%K{$git_bg}%F{$dir_bg}${__G_SEP}"
+    top+="%F{150} ${__G_BRANCH} ${git} "
+    top+="%k%F{$git_bg}${__G_SEP}%f"
   fi
+
+  # Segmen 3: virtualenv (opsional)
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    top+=" %K{$venv_bg}%F{$venv_fg} ${__G_PY} $(basename "$VIRTUAL_ENV") %k%F{$venv_bg}${__G_SEP}%f"
+  fi
+
+  # Jobs
+  top+="%(1j. %F{cyan}job:%j✦%f .)"
 
   local dots_prompt_icon="%F{$colorline}╰─ %f"
   local dots_prompt_failure_icon="%F{$colorline}╰─%f%F{red}✘ %f"
-  local placeholder="(%F{blue}%{$__DOTS[ITALIC_ON]%}…%{$__DOTS[ITALIC_OFF]%}%f)"
-  local top="%F{$colorline}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{$colorline}]%f %(1j.%F{cyan}job:%j✦%f .) %F{cyan}${virtualenv_prompt}"
   local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
+
   echo $top$'\n'$bottom
 }
 
 export PROMPT='$(__prompt_eval)'
 # Right prompt
-export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
+export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{${colorline}}${__G_RSEP}%K{${colorline}}%F{${colorsuggest}} %* %k%f'
 export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -436,7 +469,17 @@ bindkey '^e' end-of-line
 bindkey '^l' forward-char
 bindkey '^h' backward-char
 
-bindkey -M viins '^w' backward-kill-word
+# Remove characters from WORDCHARS so '/' is treated as a word boundary.
+backward-kill-dir() {
+    local WORDCHARS=${WORDCHARS//\//}
+    WORDCHARS=${WORDCHARS//./}
+    WORDCHARS=${WORDCHARS//%/}
+    WORDCHARS=${WORDCHARS//#/}
+    zle backward-kill-word
+    zle -f kill
+}
+zle -N backward-kill-dir
+bindkey -M viins '^w' backward-kill-dir
 bindkey -r "^s"
 
 autoload -U edit-command-line
@@ -457,8 +500,8 @@ bindkey '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '\e[Z' reverse-menu-complete
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ PLUGINS (LATE)                                           ╏
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏ PLUGINS (LATE)                                          ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┛
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$colorsuggest

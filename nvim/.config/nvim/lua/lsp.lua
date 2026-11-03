@@ -1,7 +1,278 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
-local IconDiagnostic = require("icons").diagnostics
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
+local Log = lazy "utils.log"
+
+---@param mode string  Trouble mode, e.g. "lsp_definitions"
+---@param extra? string
+local function trouble(mode, extra)
+  return function()
+    lazy("vim-pack").load_now "trouble.nvim"
+    vim.cmd(("Trouble %s toggle focus=true auto_refresh=false%s"):format(mode, extra and (" " .. extra) or ""))
+  end
+end
+
+local ALLOWED_SYMBOL_KINDS = {
+  Class = true,
+  Constructor = true,
+  Enum = true,
+  Function = true,
+  Interface = true,
+  Method = true,
+  Module = true,
+  Namespace = true,
+  Struct = true,
+}
+
+local function document_symbols_to_loclist()
+  vim.lsp.buf.document_symbol {
+    on_list = function(opts)
+      local items = opts.items or {}
+
+      if next(ALLOWED_SYMBOL_KINDS) then
+        items = vim.tbl_filter(function(item)
+          return ALLOWED_SYMBOL_KINDS[item.kind] == true
+        end, items)
+      end
+
+      if #items == 0 then
+        Log.warn "No symbols found"
+        return
+      end
+
+      vim.fn.setloclist(0, {}, " ", { title = "Document Symbols", items = items })
+      vim.cmd "lopen"
+    end,
+  }
+end
+
+local function code_action()
+  if vim.bo.filetype == "rust" then
+    return vim.cmd.RustLsp "codeAction"
+  end
+  if lazy("utils.plugin").has_module "tiny-code-action.nvim" then
+    return lazy("tiny-code-action").code_action {}
+  end
+  vim.lsp.buf.code_action()
+end
+
+---@param scope? "line"|"cursor"
+local function diagnostic_float_markdown(scope)
+  scope = scope or "line"
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local lnum, col = pos[1] - 1, pos[2]
+
+  local diags = vim.diagnostic.get(0, { lnum = lnum })
+  if scope == "cursor" then
+    diags = vim.tbl_filter(function(d)
+      local end_col = (d.end_lnum == d.lnum) and d.end_col or math.huge
+      return col >= d.col and col <= math.max(end_col, d.col)
+    end, diags)
+  end
+
+  if #diags == 0 then
+    Log.info "No diagnostics here"
+    return
+  end
+
+  table.sort(diags, function(a, b)
+    return a.severity < b.severity
+  end)
+
+  local icons = lazy("icons").diagnostics
+  local S = vim.diagnostic.severity
+  local label = {
+    [S.ERROR] = { "Error", icons.Error },
+    [S.WARN] = { "Warn", icons.Warn },
+    [S.INFO] = { "Info", icons.Info },
+    [S.HINT] = { "Hint", icons.Hint },
+  }
+
+  local lines = {}
+  for i, d in ipairs(diags) do
+    local l = label[d.severity] or label[S.INFO]
+    local meta = {}
+    if d.source then
+      meta[#meta + 1] = ("`%s`"):format(d.source)
+    end
+    if d.code then
+      meta[#meta + 1] = ("`%s`"):format(d.code)
+    end
+
+    lines[#lines + 1] = ("**%s %s**  %s"):format(l[2], l[1], table.concat(meta, " "))
+    lines[#lines + 1] = ""
+    vim.list_extend(lines, vim.split(d.message, "\n", { plain = true, trimempty = true }))
+
+    if i < #diags then
+      vim.list_extend(lines, { "", "---", "" })
+    end
+  end
+
+  local _, winnr = vim.lsp.util.open_floating_preview(lines, "markdown", {
+    border = "rounded",
+    focus_id = "lsp_diagnostic_float",
+    max_width = math.floor(vim.o.columns * 0.6),
+    close_events = { "CursorMoved", "InsertEnter", "BufHidden" },
+  })
+
+  if winnr and vim.api.nvim_win_is_valid(winnr) then
+    vim.wo[winnr].conceallevel = 2
+    vim.wo[winnr].wrap = true
+  end
+end
+
+---@return LspKeySpec[]
+local function get_keys()
+  local diag = UtilKey.lsp.diagnostic_goto
+
+  return {
+    -- Nav
+    { "<Leader>ld", trouble "lsp_definitions", has = "definition", desc = "LSP: definitions [trouble]" },
+    {
+      "<Leader>lv",
+      trouble("lsp_definitions", "open_mode=vsplit"),
+      has = "definition",
+      desc = "LSP: definitions vsplit [trouble]",
+    },
+    { "<Leader>lt", trouble "lsp_type_definitions", has = "typeDefinition", desc = "LSP: type definitions [trouble]" },
+    { "<Leader>lr", trouble "lsp_references", has = "references", desc = "LSP: references [trouble]", nowait = true },
+    { "<Leader>lR", trouble "lsp", desc = "LSP: lsp stuff [trouble]", nowait = true },
+    { "gO", document_symbols_to_loclist, has = "documentSymbol", desc = "LSP: document symbols to location list" },
+
+    -- Hover
+    { "K", vim.lsp.buf.hover, has = "hover", desc = "LSP: Hover" },
+    {
+      "<C-c>ls",
+      function()
+        lazy("utils.hover_eldoc").show "float"
+      end,
+      has = "hover",
+      desc = "LSP: show hover [hover_eglot]",
+    },
+    {
+      "<C-c>lS",
+      function()
+        lazy("utils.hover_eldoc").toggle "float"
+      end,
+      has = "hover",
+      desc = "LSP: toggle hover [hover_eglot]",
+    },
+    {
+      "<C-s>",
+      function()
+        lazy("utils.hover_eldoc").toggle_auto_hover()
+      end,
+      has = "hover",
+      desc = "LSP: show signature [hover_eglot]",
+      mode = { "i", "v" },
+    },
+
+    -- Code actions & rename
+    { "<Leader>ca", code_action, mode = { "n", "x" }, has = "codeAction", desc = "Action: source action" },
+    { "<Leader>cr", vim.lsp.buf.rename, has = "rename", desc = "Action: rename" },
+
+    -- Diagnostics (doesn't need `has`, still attached to buffers with LSP)
+    { "dn", diag(1), desc = "Diagnostic: next item" },
+    { "dp", diag(-1), desc = "Diagnostic: prev item" },
+    {
+      "dP",
+      function()
+        diagnostic_float_markdown "line"
+      end,
+      desc = "Diagnostic: open float peek (markdown)",
+    },
+    {
+      "dK",
+      function()
+        diagnostic_float_markdown "cursor"
+      end,
+      desc = "Diagnostic: float at cursor (markdown)",
+    },
+  }
+end
+
+local function setup_diagnostics()
+  local icons = lazy("icons").diagnostics
+  local S = vim.diagnostic.severity
+
+  vim.diagnostic.config {
+    underline = true,
+    update_in_insert = false,
+    virtual_text = false,
+    virtual_lines = false,
+    severity_sort = true,
+    signs = {
+      text = {
+        [S.ERROR] = icons.Error,
+        [S.WARN] = icons.Warn,
+        [S.HINT] = icons.Hint,
+        [S.INFO] = icons.Info,
+      },
+      numhl = {
+        [S.ERROR] = "DiagnosticsErrorNumHl",
+        [S.WARN] = "DiagnosticsWarnNumHl",
+        [S.HINT] = "DiagnosticsHintNumHl",
+        [S.INFO] = "DiagnosticsInfoNumHl",
+      },
+    },
+  }
+end
+
+local function disable_default_keymaps()
+  for _, lhs in ipairs { "grn", "gri", "grr", "grt", "gO" } do
+    pcall(vim.keymap.del, "n", lhs)
+  end
+  pcall(vim.keymap.del, { "n", "x" }, "gra")
+  for _, mode in ipairs { "i", "s" } do
+    pcall(vim.keymap.del, mode, "<C-s>")
+  end
+end
+
+local function setup_global_lsp_config()
+  local capabilities = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), {
+    textDocument = {
+      completion = {
+        completionItem = {
+          documentationFormat = { "markdown", "plaintext" },
+          snippetSupport = true,
+          preselectSupport = true,
+          insertReplaceSupport = true,
+          labelDetailsSupport = true,
+          deprecatedSupport = true,
+          commitCharactersSupport = true,
+          tagSupport = { valueSet = { 1 } },
+          resolveSupport = { properties = { "documentation", "detail", "additionalTextEdits" } },
+        },
+      },
+    },
+  })
+
+  vim.lsp.config("*", {
+    capabilities = capabilities,
+    on_init = function(client)
+      -- PERFORMANCE: disable semantic tokens
+      client.server_capabilities.semanticTokensProvider = nil
+    end,
+  })
+end
+
+local servers = {
+  lua_ls = {
+    settings = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        codeLens = { enable = true },
+        hint = { enable = true, arrayIndex = "Disable" },
+        runtime = { version = "LuaJIT" },
+        format = { enable = false }, -- use stylua
+        completion = { callSnippet = "Replace" },
+        doc = { privateName = { "^_" } },
+      },
+    },
+  },
+}
 
 add {
   { src = "mason-org/mason.nvim" },
@@ -11,314 +282,33 @@ add {
     src = "neovim/nvim-lspconfig",
     setup = false,
     on_setup = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup()
-
-      require("mason-tool-installer").setup {
-        ensure_installed = {
-          "lua_ls",
-          "cbfmt",
-          "stylua",
-          "markdownlint-cli2",
-          "markdown-toc",
-          "cspell",
-        },
+      lazy("mason").setup()
+      lazy("mason-lspconfig").setup()
+      lazy("mason-tool-installer").setup {
+        ensure_installed = { "lua_ls", "cbfmt", "stylua", "markdownlint-cli2", "markdown-toc", "cspell" },
       }
 
-      local diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = false,
-        severity_sort = true,
-        virtual_lines = false,
-        -- prefix = "icons",
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = IconDiagnostic.Error,
-            [vim.diagnostic.severity.WARN] = IconDiagnostic.Warn,
-            [vim.diagnostic.severity.HINT] = IconDiagnostic.Hint,
-            [vim.diagnostic.severity.INFO] = IconDiagnostic.Info,
-          },
-          numhl = {
-            [vim.diagnostic.severity.ERROR] = "DiagnosticsErrorNumHl",
-            [vim.diagnostic.severity.WARN] = "DiagnosticsWarnNumHl",
-            [vim.diagnostic.severity.HINT] = "DiagnosticsHintNumHl",
-            [vim.diagnostic.severity.INFO] = "DiagnosticsInfoNumHl",
-          },
-        },
-      }
-
-      -- Uncomment this if you want to add this virtual_text on diagnostics
-      -- if type(diagnostics.virtual_text) == "table" and diagnostics.virtual_text.prefix == "icons" then
-      --   ---@diagnostic disable-next-line: inject-field
-      --   diagnostics.virtual_text.prefix = function(diagnostic)
-      --     for d, icon in pairs(IconDiagnostic) do
-      --       if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-      --         return icon
-      --       end
-      --     end
-      --     return "●"
-      --   end
-      -- end
-      vim.diagnostic.config(diagnostics)
-
-      -- disable default keybindings
-      for _, bind in ipairs { "grn", "gra", "gri", "grr", "gO", "grt" } do
-        vim.keymap.del("n", bind)
-      end
-      vim.keymap.del("s", "<C-s>")
-      vim.keymap.del("i", "<C-s>")
-
-      local keys = {
-        {
-          "<Leader>ld",
-          function()
-            -- if vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype) then
-            --   RUtils.notes.open_item_heading_default()
-            -- else
-            vim.cmd "Trouble lsp_definitions toggle focus=true auto_refresh=false"
-            -- end
-          end,
-          has = "definition",
-          { desc = "LSP: definitions [trouble]" },
-        },
-        {
-          "<Leader>lv",
-          function()
-            -- if vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype) then
-            --   RUtils.notes.open_item_heading_vsplit()
-            -- else
-            vim.cmd "Trouble lsp_definitions toggle focus=true auto_refresh=false open_mode=vsplit"
-            -- end
-          end,
-          has = "definition",
-          { desc = "LSP: definitions vsplit [trouble]" },
-        },
-        {
-          "<Leader>lt",
-          "<CMD>Trouble lsp_type_definitions toggle focus=true auto_refresh=false<CR>",
-          has = "definition",
-          { desc = "LSP: type definitions [trouble]" },
-        },
-        {
-          "<Leader>lR",
-          "<CMD>Trouble lsp toggle focus=true auto_refresh=false<CR>",
-          { desc = "LSP: lsp stuff [trouble]", nowait = true },
-        },
-        {
-          "<Leader>lr",
-          "<CMD>Trouble lsp_references toggle focus=true auto_refresh=false<CR>",
-          { desc = "LSP: references [trouble]", nowait = true },
-        },
-
-        --  +----------------------------------------------------------+
-        --  Hover and SignatureHelp
-        --  +----------------------------------------------------------+
-        {
-          "K",
-          function()
-            vim.lsp.buf.hover()
-          end,
-          { desc = "LSP: Hover" },
-        },
-        {
-          "<Leader>la",
-          function()
-            require("utils.hover_eldoc").toggle_auto_hover()
-          end,
-          { desc = "LSP: show hover (split) [hover_eglot]" },
-        },
-
-        --  +----------------------------------------------------------+
-        --  Code Actions
-        --  +----------------------------------------------------------+
-        -- { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action LSP", has = "codeAction" },
-        {
-          "<Leader>ca",
-          function()
-            if vim.bo[0].filetype == "rust" then
-              return vim.cmd.RustLsp "codeAction"
-            end
-            if require("utils.plugin").has_module "tiny-code-action.nvim" then
-              return require("tiny-code-action").code_action {}
-            end
-          end,
-          mode = { "n", "x" },
-          has = "codeAction",
-          { desc = "Action: source action" },
-        },
-        -- {
-        --   "<Leader>luc",
-        --   function()
-        --     local code_lens_enabled = not vim.lsp.codelens.is_enabled()
-        --     vim.lsp.codelens.enable(code_lens_enabled)
-        --
-        --     Log.info(tostring(code_lens_enabled))
-        --   end,
-        --   desc = "Action: toggle codelens",
-        --   mode = { "n", "x" },
-        --   has = "codeLens",
-        -- },
-
-        --  +----------------------------------------------------------+
-        --  Renaming
-        --  +----------------------------------------------------------+
-        -- {
-        --   "<Leader>cR",
-        --   function()
-        --     Snacks.rename.rename_file()
-        --   end,
-        --   desc = "Action: rename file",
-        --   mode = { "n" },
-        --   has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
-        -- },
-        {
-          "<Leader>cr",
-          function()
-            -- -- local ok = require("utils.plugin").has_module("inc_rename", "inc-rename.nvim")
-            -- local ok, inc_rename = pcall(require, "inc_rename")
-            -- if not ok then
-            --   return vim.lsp.buf.rename()
-            -- end
-            -- return ":" .. inc_rename.default_config.cmd_name .. " " .. vim.fn.expand "<cword>"
-            vim.lsp.buf.rename()
-          end,
-          has = "rename",
-          { desc = "Action: rename" },
-        },
-
-        --  +----------------------------------------------------------+
-        --  Diagnostics
-        --  +----------------------------------------------------------+
-        { "dn", UtilKey.lsp.diagnostic_goto(1), { desc = "Diagnostic: next item" } },
-        { "dp", UtilKey.lsp.diagnostic_goto(-1), { desc = "Diagnostic: prev item" } },
-        {
-          "dP",
-          function()
-            vim.diagnostic.open_float { scope = "line", border = "rounded" }
-          end,
-          { desc = "Diagnostic: open float peek" },
-        },
-      }
-
-      local servers = {
-        lua_ls = {
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false,
-              },
-              codeLens = {
-                enable = true,
-              },
-              -- Using stylua for formatting.
-              --
-              hint = {
-                enable = true,
-                arrayIndex = "Disable",
-              },
-              runtime = {
-                version = "LuaJIT",
-              },
-              format = { enable = false },
-              completion = {
-                callSnippet = "Replace",
-              },
-              doc = {
-                privateName = { "^_" },
-              },
-            },
-          },
-        },
-
-        -- ruff = {
-        --   cmd_env = { RUFF_TRACE = "messages" },
-        --   init_options = {
-        --     settings = {
-        --       logLevel = "error",
-        --     },
-        --   },
-        -- },
-      }
-
-      -- MODERN LSP API: Global configuration for all servers
-      -- Performance-optimized capabilities with completion support
-      local function setup_global_lsp_config()
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-        -- Enhanced completion capabilities
-        capabilities.textDocument.completion.completionItem = {
-          documentationFormat = { "markdown", "plaintext" },
-          snippetSupport = true,
-          preselectSupport = true,
-          insertReplaceSupport = true,
-          labelDetailsSupport = true,
-          deprecatedSupport = true,
-          commitCharactersSupport = true,
-          tagSupport = { valueSet = { 1 } },
-          resolveSupport = {
-            properties = {
-              "documentation",
-              "detail",
-              "additionalTextEdits",
-            },
-          },
-        }
-
-        -- Global LSP configuration for ALL servers
-        vim.lsp.config("*", {
-          capabilities = capabilities,
-          on_init = function(client, _)
-            -- PERFORMANCE: Disable semantic tokens for better responsiveness
-            -- Cross-version compatibility - simplified
-            local supports_method_fn = client.supports_method
-              or function(_, method)
-                return client:supports_method(method)
-              end
-
-            if supports_method_fn(client, "textDocument/semanticTokens") then
-              client.server_capabilities.semanticTokensProvider = nil
-            end
-          end,
-        })
-      end
-
-      -- Call global setup
+      setup_diagnostics()
+      disable_default_keymaps()
       setup_global_lsp_config()
 
-      local names = vim.tbl_keys(servers) ---@type string[]
-      table.sort(names)
-      for _, server in ipairs(names) do
-        local server_opts = servers[server]
-        vim.lsp.config(server, server_opts)
-
-        if type(server_opts) == "table" and keys then
-          UtilKey.lsp.set_keymaps({ name = server ~= "*" and server or nil }, keys)
-        end
+      -- Config per server, then enable explicitly (safe even if mason-lspconfig
+      -- auto-enables too)
+      for name, opts in pairs(servers) do
+        vim.lsp.config(name, opts)
       end
+      vim.lsp.enable(vim.tbl_keys(servers))
 
-      -- Set up LSP servers.
-      -- vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
-      --   once = true,
-      --   callback = function()
-      --     -- Extend neovim's client capabilities with the completion ones.
-      --     vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities(nil, true) })
-      --
-      --     -- local servers = vim
-      --     --   .iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-      --     --   :map(function(file)
-      --     --     return vim.fn.fnamemodify(file, ":t:r")
-      --     --   end)
-      --     --   :totable()
-      --     -- vim.lsp.enable(servers)
-      --   end,
-      -- })
+      -- Keymaps: attached buffer-local on LspAttach, ONCE for all servers
+      UtilKey.lsp.setup_keymaps(get_keys())
 
-      -- HACK: Override buf_request to ignore notifications from LSP servers that don't implement a method.
-      local buf_request = vim.lsp.buf_request
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.lsp.buf_request = function(bufnr, method, params, handler)
-        return buf_request(bufnr, method, params, handler, function() end)
+      -- Only relevant for nvim < 0.11
+      if vim.fn.has "nvim-0.11" == 0 then
+        local buf_request = vim.lsp.buf_request
+        ---@diagnostic disable-next-line: duplicate-set-field
+        vim.lsp.buf_request = function(bufnr, method, params, handler)
+          return buf_request(bufnr, method, params, handler, function() end)
+        end
       end
     end,
   },

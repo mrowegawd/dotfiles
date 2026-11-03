@@ -1,6 +1,7 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+local UtilKey = lazy "utils.map"
 
 add {
   {
@@ -16,7 +17,7 @@ add {
 }
 
 local load_ccc = function()
-  require("vim-pack").load_now "ccc.nvim"
+  lazy("vim-pack").load_now "ccc.nvim"
 end
 
 UtilKey.nnoremap("<Leader>oP", function()

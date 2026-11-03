@@ -1,0 +1,23 @@
+# ef-cherie-coder (generated oleh gen.lua)
+background = #190a0f
+foreground = #d3cfcf
+cursor-color = #ff5aaf
+cursor-text = #190a0f
+selection-background = #232f3f
+selection-foreground = #d3cfcf
+palette = 0=#291f26
+palette = 1=#ff7359
+palette = 2=#7ccf63
+palette = 3=#e5b76f
+palette = 4=#f470df
+palette = 5=#ef80bf
+palette = 6=#8fcfdf
+palette = 7=#cfc8ca
+palette = 8=#7a7078
+palette = 9=#ff9a85
+palette = 10=#a3de8c
+palette = 11=#f2d29a
+palette = 12=#a9c3ff
+palette = 13=#ff9fd3
+palette = 14=#b5e6f0
+palette = 15=#f4eeee

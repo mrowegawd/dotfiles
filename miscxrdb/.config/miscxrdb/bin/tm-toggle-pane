@@ -627,6 +627,7 @@ float_term() {
   if ! session_exists "$session"; then
     tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
       -S "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
+      -s "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
       -b rounded \
       -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session zsh;'"
   else
@@ -635,6 +636,7 @@ float_term() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '100%' -h '50%' -x '80%' -y '80%' \
         -S "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
+        -s "bg=$COL_BORDER_BG,fg=$COL_BORDER_FG" \
         -b rounded \
         -E "tmux attach -t $session"
     fi

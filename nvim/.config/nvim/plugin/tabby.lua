@@ -11,15 +11,11 @@ add_on_event("BufReadPost", {
       end
 
       local theme = {
-        fill = "Normal", -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+        fill = "Normal",
         head = "Normal",
         separator = "Normal",
 
-        -- current_tab = { fg = h("Keyword").fg, bg = h("TabLine").bg },
-        -- tab = { fg = h("TabLine").fg, bg = h("TabLine").bg },
-        -- win = { fg = h("TabLine").fg, bg = h("TabLine").bg },
-
-        current_tab = { fg = h("Keyword").fg, bg = h("Normal").bg },
+        current_tab = { fg = h("TabLine").fg, bg = h("Normal").bg },
         tab = { fg = h("TabLine").fg, bg = h("Normal").bg },
         win = { fg = h("TabLine").fg, bg = h("Normal").bg },
 

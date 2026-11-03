@@ -1,14 +1,13 @@
-local opt_local = vim.opt_local
 local keymap = vim.keymap.set
 
-opt_local.number = false
-opt_local.relativenumber = false
-opt_local.signcolumn = "no"
-opt_local.buflisted = false
-opt_local.conceallevel = 2
-opt_local.list = false
+vim.opt_local.number = false
+vim.opt_local.relativenumber = false
+vim.opt_local.signcolumn = "no"
+vim.opt_local.buflisted = false
+vim.opt_local.conceallevel = 2
+vim.opt_local.list = false
 
-local UtilKey = require "utils.map"
+-- local UtilKey = require "utils.map"
 local Log = require "utils.log"
 
 local function get_text(wrapper)
@@ -42,15 +41,13 @@ keymap("n", "<Leader>ld", "<C-]>", { desc = "Help: go to definition", buffer = t
 keymap("n", "<BS>", "<C-t>", { desc = "Help: go back last definition", buffer = true })
 
 keymap("n", "go", function()
-  local success = pcall(vim.cmd, "normal! /'\\l\\{2,\\}'\r")
-  if not success then
-    return
-  end
+  pcall(function()
+    vim.cmd "normal! /'\\l\\{2,\\}'\r"
+  end)
 end, { buffer = true, silent = true })
 
 keymap("n", "gO", function()
-  local success = pcall(vim.cmd, "normal! ?'\\l\\{2,\\}'\r")
-  if not success then
-    return
-  end
+  pcall(function()
+    vim.cmd "normal! ?'\\l\\{2,\\}'\r"
+  end)
 end, { buffer = true, silent = true })

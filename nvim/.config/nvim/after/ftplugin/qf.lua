@@ -8,137 +8,205 @@ wo.list = false
 
 vim.cmd.packadd "cfilter"
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
-local UtilKey = function()
-  return require "utils.map"
-end
-local UtilQf = function()
-  return require "utils.qf"
-end
+local UtilKey = lazy "utils.map"
+local UtilQf = lazy "utils.qf"
+
+local Log = lazy "utils.log"
+
+local Fzflua = lazy "fzf-lua"
+local FzfActions = lazy "fzf-lua.actions"
+local WhichKey = lazy "which-key"
+
+local mappings = {
+  { "<C-c>F", group = "filter:cdo/cfdo/Cfilter/Dedupe" },
+  { "<C-c>x", group = "exec" },
+}
+WhichKey.add(mappings)
 
 -- `setup_trouble` helps load `trouble.nvim` upon entering the quickfix window.
 -- Previously loaded via `UIEvent`; heavy plugins are optimized/cleared during
 -- specific events to maintain performance.
-local load_trouble
-local setup_trouble = function()
-  if load_trouble then
-    return
-  end
-  vim.schedule(function()
-    require("vim-pack").load_now "trouble.nvim"
-  end)
-  load_trouble = true
-end
-setup_trouble()
+vim.schedule(function()
+  lazy("vim-pack").load_now "trouble.nvim"
+end)
 
 -- These keys are disabled
 keymap.set("n", "<C-i>", "<Nop>", { buffer = api.nvim_get_current_buf() })
 keymap.set("n", "<C-o>", "<Nop>", { buffer = api.nvim_get_current_buf() })
-
-local fzf_lua = function()
-  return require("utils.plugin").reqcall "fzf-lua"
-end
+keymap.set("n", "K", "<Nop>", { buffer = api.nvim_get_current_buf() })
 
 local __get_vars = {
   title_list = function()
-    if UtilQf().is_loclist() then
+    if UtilQf.is_loclist() then
       return "LF"
     end
     return "QF"
   end,
   title_icon = function()
-    if UtilQf().is_loclist() then
+    if UtilQf.is_loclist() then
       return " "
     end
     return ""
   end,
 }
 local get_items_list = function()
-  if UtilQf().is_loclist() then
-    local results = UtilQf().get_data_qf(true)
+  if UtilQf.is_loclist() then
+    local results = UtilQf.get_data_qf(true)
     return results.location.items
   end
 
-  local results = UtilQf().get_data_qf()
+  local results = UtilQf.get_data_qf()
   return results.quickfix.items
 end
 
-UtilKey().nnoremap("K", function()
-  require("overlook.peek").peek_qf()
-end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), remap = true }, true)
+local function find_edit_win()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].buftype == "" then
+      return win
+    end
+  end
+end
+local function edit_at_line_col(selected, opts)
+  local path = lazy "fzf-lua.path"
 
-UtilKey().nnoremap("<Leader><Leader>", function()
-  local actions = require "fzf-lua.actions"
+  if #selected > 1 then
+    return FzfActions.file_sel_to_qf(selected, opts)
+  end
+
+  local entry = path.entry_to_file(selected[1], opts)
+
+  local win = find_edit_win()
+  if win then
+    vim.api.nvim_set_current_win(win)
+  else
+    vim.cmd "topleft split"
+  end
+
+  vim.cmd("edit " .. vim.fn.fnameescape(entry.path))
+
+  if entry.line and entry.line > 0 then
+    pcall(vim.api.nvim_win_set_cursor, 0, { entry.line, math.max((entry.col or 1) - 1, 0) })
+    vim.cmd "normal! zvzz"
+  end
+end
+
+local function peek_item_qf()
+  local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
+  local is_loc = UtilQf.is_loclist()
+  local qflist = UtilQf.get_list_qf(is_loc)
+  local item = qflist.items[cursor_lnum]
+
+  lazy("overlook.window").open_popup {
+    target_bufnr = item.bufnr,
+    lnum = item.lnum,
+    col = item.col,
+    title = vim.fn.bufname(item.bufnr),
+  }
+end
+
+UtilKey.nnoremap("<Leader>cpp", function()
+  lazy("vim-pack").load_now "overlook.nvim"
+  peek_item_qf()
+end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
+UtilKey.nnoremap("P", function()
+  lazy("vim-pack").load_now "overlook.nvim"
+  peek_item_qf()
+end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
+
+UtilKey.nnoremap("<Leader>ff", function()
   local opts = {
     actions = {
-      ["alt-l"] = actions.file_sel_to_ll,
-      ["alt-L"] = {
-        prefix = "toggle-all",
-        fn = actions.file_sel_to_ll,
+      ["default"] = edit_at_line_col,
+      ["ctrl-s"] = FzfActions.file_split,
+      ["ctrl-v"] = FzfActions.file_vsplit,
+      ["ctrl-t"] = FzfActions.file_tabedit,
+      ["alt-q"] = {
+        prefix = "select-all",
+        fn = function(selected, opts)
+          FzfActions.file_sel_to_qf(selected, opts)
+        end,
       },
-      ["alt-q"] = actions.file_sel_to_qf,
-      ["alt-Q"] = {
-        prefix = "toggle-all",
-        fn = actions.file_sel_to_qf,
-      },
-
-      ["ctrl-s"] = actions.buf_split,
-      ["ctrl-v"] = actions.buf_vsplit,
-      ["ctrl-t"] = actions.buf_tabedit,
     },
   }
 
-  if UtilQf().is_loclist() then
-    fzf_lua().loclist(opts)
+  if UtilQf.is_loclist() then
+    Fzflua.loclist(opts)
   else
-    fzf_lua().quickfix(opts)
+    Fzflua.quickfix(opts)
   end
-end, { desc = "QF: select items [fzflua]", buffer = api.nvim_get_current_buf(), remap = true }, true)
+end, { desc = "QF: select items [fzflua]", buffer = api.nvim_get_current_buf(), force = true })
 
-UtilKey().nnoremap("<Leader>fg", function()
-  local path = require "fzf-lua.path"
-  local actions = require "fzf-lua.actions"
-
+UtilKey.nnoremap("<Leader>fg", function()
   local qf_items = get_items_list()
-  -- local title_ = "Grep" .. __get_vars.title_list()
+  local qf_files = {}
+  local excluded_ext = {
+    png = true,
+    jpeg = true,
+    gif = true,
+    jpg = true,
+    spl = true,
+    csv = true,
+    add = true,
+    sug = true,
+  }
 
-  local qf_ntbl = {}
-  for _, qf_item in pairs(qf_items) do
-    local fname = qf_item.filename
-    if
-      not fname:match "%.png$"
-      and not fname:match "%.jpeg$"
-      and not fname:match "%.gif$"
-      and not fname:match "%.jpg$"
-      and not fname:match "%.spl$"
-      and not fname:match "%.csv$"
-      and not fname:match "%.add$"
-      and not fname:match "%.sug$"
-    then
-      table.insert(qf_ntbl, path.normalize(fname, vim.uv.cwd()))
+  for _, item in ipairs(qf_items) do
+    local fname = item.filename
+
+    if (not fname or fname == "") and item.bufnr and item.bufnr > 0 then
+      fname = vim.api.nvim_buf_get_name(item.bufnr)
+    end
+
+    if fname and fname ~= "" then
+      fname = vim.fn.fnamemodify(vim.fn.expand(fname), ":p")
+
+      local ext = fname:match "%.([^./]+)$"
+      ext = ext and ext:lower() or nil
+
+      if vim.fn.filereadable(fname) == 1 and (not ext or not excluded_ext[ext]) then
+        qf_files[#qf_files + 1] = fname
+      end
     end
   end
 
-  qf_ntbl = require("utils.cmd").remove_duplicates_table(qf_ntbl)
+  if #qf_files == 0 then
+    Log.warn "Quickfix list has no searchable files"
+    return
+  end
 
-  local rg_opts_format = [[--column --line-number -i --hidden --no-heading --color=always --smart-case ]]
-    .. table.concat(qf_ntbl, " ")
+  local cmd = lazy "utils.cmd"
+  qf_files = cmd.remove_duplicates_table(qf_files)
+
+  local escaped = {}
+  for _, f in ipairs(qf_files) do
+    escaped[#escaped + 1] = vim.fn.shellescape(f)
+  end
+
+  local rg_opts_format = [[--with-filename --column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+    .. table.concat(escaped, " ")
     .. " -e "
 
-  return fzf_lua().live_grep {
+  Fzflua.live_grep {
     rg_opts = rg_opts_format,
     actions = {
-      ["ctrl-s"] = actions.buf_split,
-      ["ctrl-v"] = actions.buf_vsplit,
-      ["ctrl-t"] = actions.buf_tabedit,
+      ["default"] = edit_at_line_col,
+      ["ctrl-s"] = FzfActions.file_split,
+      ["ctrl-v"] = FzfActions.file_vsplit,
+      ["ctrl-t"] = FzfActions.file_tabedit,
     },
   }
-end, { buffer = api.nvim_get_current_buf(), desc = "QF: live grep list of items [fzflua]", remap = true }, true)
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: live grep list of items [fzflua]",
+  force = true,
+})
 
-UtilKey().nnoremap("<Leader>fG", function()
+UtilKey.nnoremap("<Leader>fG", function()
   local items = get_items_list()
-  local title = UtilQf().is_loclist() and UtilQf().get_title_qf(true) or UtilQf().get_title_qf()
+  local title = UtilQf.is_loclist() and UtilQf.get_title_qf(true) or UtilQf.get_title_qf()
 
   local _tbl = {}
   for _, x in pairs(items) do
@@ -149,7 +217,7 @@ UtilKey().nnoremap("<Leader>fG", function()
     _tbl[#_tbl + 1] = x.text
   end
 
-  local builtin = require "fzf-lua.previewer.builtin"
+  local builtin = lazy "fzf-lua.previewer.builtin"
   local QFPreviewer = builtin.buffer_or_file:extend()
 
   function QFPreviewer:new(o, opts, fzf_win)
@@ -189,7 +257,7 @@ UtilKey().nnoremap("<Leader>fG", function()
     return data
   end
 
-  fzf_lua().fzf_exec(_tbl, {
+  Fzflua.fzf_exec(_tbl, {
     previewer = QFPreviewer,
     winopts = {
       title = string.format("Grep%s Word >> %s", __get_vars.title_list(), title),
@@ -235,20 +303,18 @@ UtilKey().nnoremap("<Leader>fG", function()
         end
       end,
       ["alt-v"] = function(selected, _)
-        local Fzflua = fzf_lua()
-        title = title .. "  " .. Fzflua().config.__resume_data.last_query
+        title = title .. "  " .. Fzflua.config.__resume_data.last_query
         local list_items = { items = send_data(selected), title = title }
-        UtilQf().save_to_qf_and_auto_open_qf(list_items, true)
+        UtilQf.save_to_qf_and_auto_open_qf(list_items, true)
       end,
       ["alt-q"] = function(selected, _)
-        local Fzflua = fzf_lua()
-        title = title .. "  " .. Fzflua().config.__resume_data.last_query
+        title = title .. "  " .. Fzflua.config.__resume_data.last_query
         local list_items = { items = send_data(selected), title = title }
-        UtilQf().save_to_qf_and_auto_open_qf(list_items)
+        UtilQf.save_to_qf_and_auto_open_qf(list_items)
       end,
     },
   })
-end, { buffer = api.nvim_get_current_buf(), desc = "QF: grep text of items [fzflua]", remap = true }, true)
+end, { buffer = api.nvim_get_current_buf(), desc = "QF: grep text of items [fzflua]", force = true })
 
 -- ============================================================
 -- QfSort — sort quickfix list berdasarkan field
@@ -285,10 +351,7 @@ local function parse_field_arg(raw)
     local name, dir = part:match "^([%w_]+):?(%a*)$"
     name = name or part
     if not qf_fields[name] then
-      vim.notify(
-        "QfSort: field tidak dikenal: " .. tostring(name) .. " (pakai: file, line, col, text, type)",
-        vim.log.levels.ERROR
-      )
+      Log.error("QfSort: field tidak dikenal: " .. tostring(name) .. " (pakai: file, line, col, text, type)")
       return nil
     end
     table.insert(specs, { name = name, desc = (dir == "desc") })
@@ -297,12 +360,41 @@ local function parse_field_arg(raw)
 end
 
 vim.api.nvim_create_user_command("QfReindentBlock", function()
-  local ctrl_v = vim.api.nvim_replace_termcodes("<C-v>", true, false, true)
-  local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+  local seen, files = {}, {}
+  for _, item in ipairs(vim.fn.getqflist()) do
+    if item.bufnr > 0 then
+      local name = vim.api.nvim_buf_get_name(item.bufnr)
+      if name ~= "" and not seen[name] then
+        seen[name] = true
+        files[#files + 1] = name
+      end
+    end
+  end
 
-  vim.cmd("cdo normal! gg" .. ctrl_v .. "G=" .. esc)
-  vim.cmd "cdo update"
-  vim.api.nvim_feedkeys(esc, "n", false)
+  if #files == 0 then
+    Log.warn "Quickfix is empty"
+    return
+  end
+
+  local origin = vim.api.nvim_get_current_buf()
+
+  for _, name in ipairs(files) do
+    -- `edit` memicu ftdetect/ftplugin, jadi filetype dan indentexpr org terpasang
+    vim.cmd("silent! hide edit " .. vim.fn.fnameescape(name))
+
+    if vim.bo.filetype == "org" then
+      lazy("org.indent").indent_region(0, 1, vim.api.nvim_buf_line_count(0))
+    else
+      vim.cmd "silent keepjumps normal! gg=G"
+    end
+
+    vim.cmd "silent update"
+  end
+
+  if vim.api.nvim_buf_is_valid(origin) then
+    vim.api.nvim_set_current_buf(origin)
+  end
+  Log.info(("Reindent done: %d file"):format(#files))
 end, {})
 
 vim.api.nvim_create_user_command("QfSort", function(opts)
@@ -315,7 +407,7 @@ vim.api.nvim_create_user_command("QfSort", function(opts)
   end
 
   if not field_arg then
-    vim.notify("QfSort: perlu argumen f=<field>, contoh: :QfSort f=file,line", vim.log.levels.ERROR)
+    Log.error "QfSort: perlu argumen f=<field>, contoh: :QfSort f=file,line"
     return
   end
 
@@ -419,9 +511,21 @@ vim.api.nvim_create_user_command("QfLongLines", function()
   end
 
   if #files == 0 then
-    vim.notify("Quickfix kosong.", vim.log.levels.WARN)
+    Log.warn "Quickfix is empty."
     return
   end
 
   vim.cmd("vimgrep /\\%>70c./ " .. table.concat(files, " "))
-end, { desc = "Cari baris >70 karakter di semua file unik dari quickfix saat ini" })
+end, { desc = "Qf: Cari baris >70 karakter di semua file unik dari quickfix saat ini" })
+
+UtilKey.nnoremap("<C-c>xl", "<CMD>QfLongLines<CR>", {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: collect long lines from qf items",
+  force = true,
+})
+
+UtilKey.nnoremap("<C-c>xD", ":QfDedupe ", {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: check dedupe by filter f=file/line/file,line",
+  force = true,
+})

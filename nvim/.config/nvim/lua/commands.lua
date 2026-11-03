@@ -1,10 +1,10 @@
-local IconsStatus = require("icons").status
-local IconsMisc = require("icons").misc
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
 
-local CreateCmd = function()
-  return require("utils.cmd").create_command
-end
+local IconsStatus = lazy("icons").status
+local IconsMisc = lazy("icons").misc
+local CreateCmd = lazy("utils.cmd").create_command
+
+local Log = lazy "utils.log"
 
 local function complete_packages(arg_lead)
   arg_lead = arg_lead or ""
@@ -20,20 +20,19 @@ local function complete_packages(arg_lead)
     :totable()
 end
 
-CreateCmd()("PackUpdate", function(info)
-  if #info.fargs ~= 0 then
+CreateCmd("PackUpdate", function(info)
+  if #info.fargs > 0 then
     vim.pack.update(info.fargs, { force = info.bang })
-  else
-    local prompt = "Do you want to update ALL packages?"
-    local choice = vim.fn.confirm(prompt, "&Yes\n&No", 2)
-
-    if choice == 1 then
-      Log.info "Updating everything."
-      vim.pack.update(nil, { force = info.bang })
-    else
-      Log.warn "Update aborted."
-    end
+    return
   end
+
+  local ok, choice = pcall(vim.fn.confirm, "Do you want to update ALL packages?", "&Yes\n&No", 2)
+  if not ok or choice ~= 1 then
+    return
+  end
+
+  Log.info "Updating everything."
+  vim.pack.update(nil, { force = info.bang })
 end, {
   desc = "Update packages",
   nargs = "*",
@@ -42,35 +41,39 @@ end, {
 })
 
 --stylua: ignore
-CreateCmd()( "ChangeMasterTheme", require("utils.themechange").change_colorscheme_global, { desc = "Misc: change colorscheme global" })
+CreateCmd("ChangeMasterTheme", lazy("utils.themechange").change_colorscheme_global, { desc = "Misc: change colorscheme global" })
 --stylua: ignore
-CreateCmd()("ImgInsert", require("utils.maim").insert, { desc = "Misc: insert image" })
+CreateCmd("ImgInsert", lazy("utils.maim").insert, { desc = "Misc: insert image" })
 --stylua: ignore
-CreateCmd()("E", function() vim.cmd [[ vnew ]] end, { desc = "Misc: start enew" })
+CreateCmd("E", function() vim.cmd [[ vnew ]] end, { desc = "Misc: start enew" })
 --stylua: ignore
-CreateCmd()("PackDelete", function(info) vim.pack.del(info.fargs, { force = info.bang }) end, { desc = "Delete packages", nargs = "+", bang = true, complete = complete_packages, })
+CreateCmd("PackDelete", function(info) vim.pack.del(info.fargs, { force = info.bang }) end, { desc = "Delete packages", nargs = "+", bang = true, complete = complete_packages, })
 --stylua: ignore
-CreateCmd()("Snippets", require("utils.cmd").edit_snippet, { desc = "Misc: edit snippet file" })
+CreateCmd("Snippets", lazy("utils.cmd").edit_snippet, { desc = "Misc: edit snippet file" })
 --stylua: ignore
-CreateCmd()("LspLog", function() vim.cmd(string.format("tabnew %s", vim.lsp.log.get_filename())) end, { desc = "Show LSP client log" })
+CreateCmd("InfoOption", function() vim.cmd "options" end, { desc = "Misc: echo options" })
+
 --stylua: ignore
-CreateCmd()("LspInfo", ":checkhealth vim.lsp", { desc = "Show LSP info" })
+CreateCmd("ProfilerStart", function() lazy("utils.event_profiler").start() end, {})
+--stylua: ignore
+CreateCmd("ProfilerStop", function() lazy("utils.event_profiler").start() end, {})
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                LSP COMMANDS                                 ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local function lsp_call()
-  return require "utils.lsp"
+  return lazy "utils.lsp"
 end
 
-CreateCmd()("LspInfoNew", function()
-  lsp_call().print_status()
-end, {
-  desc = "Show enhanced LSP information",
-})
+--stylua: ignore
+CreateCmd("LspLog", function() vim.cmd(string.format("tabnew %s", vim.lsp.log.get_filename())) end, { desc = "Show LSP client log" })
+--stylua: ignore
+CreateCmd("LspInfo", ":checkhealth vim.lsp", { desc = "Show LSP info" })
+--stylua: ignore
+CreateCmd("LspInfoNew", function() lsp_call().print_status() end, { desc = "Show enhanced LSP information", })
 
-CreateCmd()("LspStatusNew", function()
+CreateCmd("LspStatusNew", function()
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients { bufnr = bufnr }
   print(IconsStatus.list .. " LSP Status for Buffer " .. bufnr .. " (" .. vim.bo.filetype .. "):")
@@ -101,15 +104,13 @@ CreateCmd()("LspStatusNew", function()
     local status = enabled and IconsStatus.success .. " enabled" or IconsStatus.error .. " disabled"
     print("  " .. name .. ": " .. status)
   end
-end, {
-  desc = "Show LSP client status",
-})
+end, { desc = "Show LSP client status" })
 
-CreateCmd()("LspRestart", function()
+CreateCmd("LspRestart", function()
   -- Get all active clients
   local clients = vim.lsp.get_clients()
   if #clients == 0 then
-    vim.notify(IconsStatus.warning .. " No active LSP clients found", vim.log.levels.WARN)
+    Log.warn(IconsStatus.warning .. " No active LSP clients found")
     return
   end
 
@@ -126,18 +127,16 @@ CreateCmd()("LspRestart", function()
         break
       end
     end
-    vim.notify(IconsStatus.sync .. " LSP restarted", vim.log.levels.INFO)
+    Log.info(IconsStatus.sync .. " LSP restarted")
   end, 1000)
-end, {
-  desc = "Restart LSP clients",
-})
+end, { desc = "Restart LSP clients" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                               PLUGIN VIM-PACK                               ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local function get_all_plugins()
-  local all_plugins = vim.deepcopy(require("vim-pack").specs)
+  local all_plugins = vim.deepcopy(lazy("vim-pack").specs)
   -- local config = M.load_optional_config()
   --
   -- if config.selected then
@@ -154,7 +153,7 @@ local function get_all_plugins()
   return all_plugins
 end
 
-CreateCmd()("PluginStatus", function()
+CreateCmd("PluginStatus", function()
   local all_plugins = get_all_plugins()
 
   print(IconsStatus.search .. " Plugin Status:")
@@ -169,3 +168,21 @@ CreateCmd()("PluginStatus", function()
 end, {
   desc = "Show plugin installation status",
 })
+
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                     ORG                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+CreateCmd("OrgChangeDirAgenda", function(args)
+  if #args.fargs == 0 then
+    lazy("utils.note").toggle_agenda_dir(true)
+    return
+  end
+end, { desc = "Change agenda dir", nargs = "*" })
+
+CreateCmd("OrgChangeDirAgendaMinimal", function(args)
+  if #args.fargs == 0 then
+    lazy("utils.note").toggle_agenda_dir(true, true)
+    return
+  end
+end, { desc = "Change agenda dir", nargs = "*" })

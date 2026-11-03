@@ -13,3 +13,5 @@ gui:
       - "%%default_fg_color%%"
     searchingActiveBorderColor:
       - "#eed49f"
+    authorColors:
+      '*': '%%author_fg_color%%'

@@ -1,8 +1,9 @@
 local add_local_or_remote = require("vim-pack").add_local_or_remote
--- local add_remote_or_local_on_event = require("vim-pack").add_remote_or_local_on_event
 
-local Log = require "utils.log"
-local ConfigPath = require("config").path
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+local ConfigPath = lazy("config").path
 
 ---@return boolean|nil
 local is_filetype_is_loclist = function()
@@ -11,7 +12,7 @@ local is_filetype_is_loclist = function()
     return nil
   end
 
-  if require("utils.qf").is_loclist() then
+  if lazy("utils.qf").is_loclist() then
     return true
   end
   return false
@@ -45,6 +46,9 @@ add_local_or_remote {
       return {
         save_dir = ConfigPath.wiki_path .. "/orgmode/nvim-plugin/qfbookmark",
         picker = "fzf-lua",
+        extmarks = {
+          priority = 80,
+        },
         window = {
           quickfix = {
             theme = {
@@ -91,17 +95,17 @@ add_local_or_remote {
               default = "codecompanion", -- builtin fallback: clipboard
               handler = {
                 avante = function(text)
-                  require("avante.api").ask { question = text }
+                  lazy("avante.api").ask { question = text }
                 end,
                 codecompanion = function(text)
-                  local Chat = require "codecompanion"
+                  local Chat = lazy "codecompanion"
                   local chat = Chat.last_chat()
                   vim.schedule(function()
                     if not chat then
                       chat = Chat.chat()
 
                       if not chat then
-                        return vim.notify("Something went wrong", vim.log.levels.ERROR)
+                        return Log.error "Something went wrong"
                       end
                     end
                     chat:add_buf_message {
@@ -122,24 +126,26 @@ add_local_or_remote {
                   target = ConfigPath.wiki_path .. "/orgmode/gtd/refile.org",
                   description = "Remind me tomorrow",
                   templates = function()
-                    local Date = require "orgmode.objects.date"
-                    local scheduled_date = Date.today().tomorrow()
-                    return string.format(
+                    return "hello"
 
-                      [[
-  * TODO check this later                                   :mytodo:
-    SCHEDULED: <%d-%s-%s %s 18:00>
-
-    #+begin_src %s
-    <TEXT_HERE>
-    #+end_src
-  ]],
-                      scheduled_date.year,
-                      #tostring(scheduled_date.month) == 1 and "0" .. scheduled_date.month or scheduled_date.month,
-                      #tostring(scheduled_date.day) == 1 and "0" .. scheduled_date.day or scheduled_date.day,
-                      scheduled_date.dayname,
-                      vim.bo.filetype
-                    )
+                    --                   local Date = lazy "orgmode.objects.date"
+                    --                   local scheduled_date = Date.today().tomorrow()
+                    --                   return string.format(
+                    --
+                    --                     [[
+                    -- * TODO check this later                                   :mytodo:
+                    --   SCHEDULED: <%d-%s-%s %s 18:00>
+                    --
+                    --   #+begin_src %s
+                    --   <TEXT_HERE>
+                    --   #+end_src
+                    -- ]],
+                    --                     scheduled_date.year,
+                    --                     #tostring(scheduled_date.month) == 1 and "0" .. scheduled_date.month or scheduled_date.month,
+                    --                     #tostring(scheduled_date.day) == 1 and "0" .. scheduled_date.day or scheduled_date.day,
+                    --                     scheduled_date.dayname,
+                    --                     vim.bo.filetype
+                    --                   )
                   end,
                 },
                 notice = {
@@ -174,13 +180,13 @@ add_local_or_remote {
                   templates = function()
                     return string.format(
                       [[
-    - [ ] error ..
+- [ ] error ..
 
-      #+begin_src %s
-      <TEXT_HERE>
-      #+end_src
+  #+begin_src %s
+  <TEXT_HERE>
+  #+end_src
 
-        ]],
+    ]],
                       vim.bo.filetype
                     )
                   end,
@@ -196,6 +202,8 @@ add_local_or_remote {
 
             next_item = "<a-n>",
             prev_item = "<a-p>",
+
+            quit = { "q", "<Esc>" },
           },
 
           note = {
@@ -233,7 +241,7 @@ add_local_or_remote {
                 enabled = true,
                 commands = {
                   {
-                    key = "sq",
+                    key = "<C-c><C-q>",
                     cmd = function(opts)
                       opts.selected:add_to "quickfix"
                     end,
@@ -241,28 +249,28 @@ add_local_or_remote {
                   },
 
                   {
-                    key = "sd",
+                    key = "<C-c><C-d>",
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
                     desc = "Qf: add to debug mark",
                   },
                   {
-                    key = "sn",
+                    key = "<C-c><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
                     desc = "Qf: add to note mark",
                   },
                   {
-                    key = "sf",
+                    key = "<C-c><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
                     desc = "Qf: add to fix mark",
                   },
                   {
-                    key = "ss",
+                    key = "<C-c><C-m>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -279,28 +287,28 @@ add_local_or_remote {
                 enabled = true,
                 commands = {
                   {
-                    key = "sd",
+                    key = "<C-c><C-d>",
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
                     desc = "Qf: add item to debug mark",
                   },
                   {
-                    key = "sn",
+                    key = "<C-c><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
                     desc = "Qf: add to note mark",
                   },
                   {
-                    key = "sf",
+                    key = "<C-c><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
                     desc = "Qf: add to fix mark",
                   },
                   {
-                    key = "ss",
+                    key = "<C-c><C-m>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -309,7 +317,7 @@ add_local_or_remote {
 
                   -- 🔧 Filter & Update (Quickfix)
                   {
-                    key = "<LocalLeader>qf",
+                    key = "<C-c>Ff",
                     cmd = function()
                       local str_cmd = call_func { qf = "Cfilter", lf = "Lfilter" }
                       if str_cmd then
@@ -320,7 +328,7 @@ add_local_or_remote {
                     desc = "Qf: run Cfilter or Lfilter",
                   },
                   {
-                    key = "<Localleader>qd",
+                    key = "<C-c>Fc",
                     cmd = function()
                       local str_cmd = call_func { qf = "cdo", lf = "ldo" }
                       if str_cmd then
@@ -332,7 +340,7 @@ add_local_or_remote {
                   },
 
                   {
-                    key = "<Localleader>qD",
+                    key = "<C-c>Fd",
                     cmd = function()
                       local str_cmd = call_func { qf = "cfdo", lf = "lfdo" }
                       if str_cmd then

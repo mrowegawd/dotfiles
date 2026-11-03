@@ -1,6 +1,6 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
 
 add {
   {
@@ -70,11 +70,9 @@ add {
           ["<c-v>"] = "VSplitOpen",
           ["<c-t>"] = "TabOpen",
 
-          ["<LocalLeader>qP"] = "PeekFile",
-          ["<LocalLeader>qy"] = "YankSelected",
-          ["<LocalLeader>qO"] = "OpenTree",
-
-          ["<LocalLeader>qY"] = "OpenTree",
+          ["<C-c>pp"] = "PeekFile",
+          ["<C-c>y"] = "YankSelected",
+          ["<C-c>ob"] = "OpenTree",
 
           ["<c-n>"] = "GoToNextHunkHeader",
           ["<c-p>"] = "GoToPreviousHunkHeader",
@@ -103,20 +101,21 @@ add {
           ["Z"] = false,
           ["o"] = false,
 
-          ["<LocalLeader>qot"] = "TagPopup",
-          ["<LocalLeader>qom"] = "MergePopup",
-          ["<LocalLeader>qoM"] = "MarginPopup",
-          ["<LocalLeader>qor"] = "RemotePopup",
-          ["<LocalLeader>qow"] = "WorktreePopup",
-          ["<LocalLeader>qoR"] = "RevertPopup",
-          ["<LocalLeader>qod"] = "DiffPopup",
-          ["<LocalLeader>qob"] = "BranchPopup",
-          ["<LocalLeader>qoB"] = "BisectPopup",
-          ["<LocalLeader>qos"] = "StashPopup",
+          ["<C-c>ot"] = "TagPopup",
+          ["<C-c>om"] = "MergePopup",
+          ["<C-c>oM"] = "MarginPopup",
+          ["<C-c>or"] = "RemotePopup",
+          ["<C-c>ow"] = "WorktreePopup",
+          ["<C-c>oR"] = "RevertPopup",
+          ["<C-c>od"] = "DiffPopup",
+          ["<C-c>oc"] = "BranchPopup",
+          ["<C-c>oB"] = "BisectPopup",
+          ["<C-c>os"] = "StashPopup",
 
-          ["<LocalLeader>ql"] = "LogPopup",
+          ["<C-c>ol"] = "LogPopup",
 
           ["g?"] = "HelpPopup",
+          ["<c-c>?"] = "HelpPopup",
         },
       },
       integrations = {
@@ -128,8 +127,39 @@ add {
   },
 }
 
+local UtilKey = lazy "utils.map"
+local UtilAugroup = lazy("utils.map").augroup
+
 UtilKey.nnoremap("<Leader>gg", function()
   UtilKey.plugin_load_now "neogit"
   vim.cmd.Neogit()
   vim.cmd "wincmd ="
 end)
+
+local whichkey = lazy "which-key"
+
+UtilAugroup("neogit", {
+  event = "FileType",
+  pattern = "NeogitStatus",
+  command = function(ev)
+    whichkey.add {
+      { "<C-c>y", group = "help", buffer = ev.buf },
+      { "<C-c>o", group = "open", buffer = ev.buf },
+      { "<C-c>ot", group = "TagPopup", buffer = ev.buf },
+      { "<C-c>om", name = "MergePopup", buffer = ev.buf },
+      { "<C-c>oM", name = "MerginPopup", buffer = ev.buf },
+      { "<C-c>ow", name = "WorktreePopup", buffer = ev.buf },
+      { "<C-c>or", name = "RemotePopup", buffer = ev.buf },
+      { "<C-c>oR", name = "RevertPopup", buffer = ev.buf },
+      { "<C-c>od", name = "DiffPopup", buffer = ev.buf },
+      { "<C-c>oc", name = "BranchPopup", buffer = ev.buf },
+      { "<C-c>oB", name = "BisectPopup", buffer = ev.buf },
+      { "<C-c>os", name = "StagsPopup", buffer = ev.buf },
+
+      { "<C-c>ob", name = "Browse this worktree", buffer = ev.buf },
+
+      { "<C-c>ol", name = "LogPopup", buffer = ev.buf },
+      { "<C-c>?", name = "help", buffer = ev.buf },
+    }
+  end,
+})

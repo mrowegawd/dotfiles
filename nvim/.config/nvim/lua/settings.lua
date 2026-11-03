@@ -7,7 +7,22 @@ vim.g.maplocalleader = ","
 -- {{{ Generals
 o.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
 o.breakindent = true -- start wrapped lines indented
-o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard, but its slow
+
+local is_ssh = (vim.env.SSH_TTY or vim.env.SSH_CONNECTION) ~= nil
+o.clipboard = is_ssh and "" or "unnamedplus"
+-- if is_ssh then
+--   local osc52 = require "vim.ui.clipboard.osc52"
+--   local function paste_from_register()
+--     return { vim.fn.split(vim.fn.getreg '"', "\n"), vim.fn.getregtype '"' }
+--   end
+--
+--   vim.g.clipboard = {
+--     name = "OSC 52 (copy only)",
+--     copy = { ["+"] = osc52.copy "+", ["*"] = osc52.copy "*" },
+--     paste = { ["+"] = paste_from_register, ["*"] = paste_from_register },
+--   }
+-- end
+
 o.cmdheight = 0 -- cmdline height: 0 1 2
 o.completeopt = "menuone,noinsert"
 o.concealcursor = "nc"
@@ -130,7 +145,7 @@ o.shiftwidth = 2 -- Indent/outdent by two columns
 o.shiftround = true -- Always indent/outdent to nearest tabstop
 o.expandtab = true -- Convert all tabs that are typed into spaces
 o.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
--- o.statuscolumn = [[%!v:lua.require'utils.statuscolumn'.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
+o.statuscolumn = [[%!v:lua.require'utils.statuscolumn'.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 -- opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 o.formatoptions = "tcqjn12" -- "cront",
 o.splitkeep = "cursor" -- cursor, screen
@@ -166,6 +181,7 @@ o.foldtext = ""
 o.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
 o.updatetime = 200 -- Save swap file and trigger CursorHold
 o.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the undodir
+o.undolevels = 10000
 o.history = 1000 -- Number of commands to remember in a history table (per buffer).
 o.swapfile = false -- Ask what state to recover when opening a file that was not saved.
 o.backup = false -- no backup file

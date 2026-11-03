@@ -1,0 +1,660 @@
+#!/usr/bin/env bash
+
+# io-stall-check
+#
+# Linux I/O stall diagnostic utility.
+#
+# Features:
+#   - D-state process monitoring (+ WCHAN aggregation, kernel stack when root)
+#   - PSI CPU / memory / I/O (before, after, and stall-time delta)
+#   - Block device statistics, deltas and utilisation
+#   - Filesystem mount / block device information
+#   - Optional iotop capture running DURING the monitoring window
+#   - Kernel I/O / hung-task warning inspection (journalctl, dmesg fallback)
+#   - Automatic summary and report generation
+#
+# Usage:
+#   io-stall-check
+#   io-stall-check -d 60 -i 0.5
+#   sudo io-stall-check -d 60 -i 1
+#
+
+set -Eeuo pipefail
+umask 077 # report may contain command lines of other processes
+
+readonly SCRIPT_NAME="${0##*/}"
+
+if ((BASH_VERSINFO[0] < 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 4))); then
+  printf 'Error: bash >= 4.4 is required (found %s)\n' "$BASH_VERSION" >&2
+  exit 1
+fi
+
+DURATION=30
+INTERVAL=1
+OUTPUT_DIR="./io-stall-reports"
+PS_TIMEOUT=5
+
+TOTAL_SAMPLES=0
+SAMPLES_WITH_DSTATE=0
+PS_FAILURES=0
+ELAPSED=1
+IOTOP_PID=""
+TEE_PID=""
+
+declare -A DSTATE_COUNT=()
+declare -A DSTATE_DETAILS=()
+declare -A DSTATE_STACK_SAVED=()
+declare -A WCHAN_COUNT=()
+
+usage() {
+  cat <<EOF
+Usage: $SCRIPT_NAME [options]
+
+Options:
+  -d, --duration SEC   Monitoring duration (default: 30)
+  -i, --interval SEC   Sampling interval (default: 1)
+  -o, --output DIR     Report directory (default: ./io-stall-reports)
+  -h, --help           Show this help
+
+Examples:
+  $SCRIPT_NAME
+  $SCRIPT_NAME -d 60 -i 0.5
+  sudo $SCRIPT_NAME --duration 120 --interval 1
+EOF
+}
+
+log() {
+  printf '[%(%H:%M:%S)T] %s\n' -1 "$*"
+}
+
+section() {
+  printf '\n%s\n' "================================================================"
+  printf ' %s\n' "$1"
+  printf '%s\n' "================================================================"
+}
+
+die() {
+  printf 'Error: %s\n' "$*" >&2
+  exit 1
+}
+
+have() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Run a command; never abort the script if it fails.
+run() {
+  "$@" 2>&1 || printf '(command failed: %s)\n' "$*"
+}
+
+# with_timeout SECONDS cmd...  (falls back to plain execution without `timeout`)
+with_timeout() {
+  local seconds="$1"
+  shift
+  if have timeout; then
+    timeout "$seconds" "$@"
+  else
+    "$@"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+
+while (($#)); do
+  case "$1" in
+  -d | --duration)
+    (($# >= 2)) || die "Missing duration value."
+    DURATION="$2"
+    shift 2
+    ;;
+  --duration=*)
+    DURATION="${1#*=}"
+    shift
+    ;;
+  -i | --interval)
+    (($# >= 2)) || die "Missing interval value."
+    INTERVAL="$2"
+    shift 2
+    ;;
+  --interval=*)
+    INTERVAL="${1#*=}"
+    shift
+    ;;
+  -o | --output)
+    (($# >= 2)) || die "Missing output directory."
+    OUTPUT_DIR="$2"
+    shift 2
+    ;;
+  --output=*)
+    OUTPUT_DIR="${1#*=}"
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    die "Unknown option: $1 (see --help)"
+    ;;
+  esac
+done
+
+[[ "$DURATION" =~ ^[0-9]+$ ]] ||
+  die "Duration must be a positive integer."
+
+DURATION=$((10#$DURATION)) # avoid octal interpretation of values like "08"
+
+((DURATION > 0)) ||
+  die "Duration must be greater than zero."
+
+[[ "$INTERVAL" =~ ^[0-9]+([.][0-9]+)?$ ]] ||
+  die "Interval must be a positive number."
+
+for command in ps awk date sleep tee sort tail grep; do
+  have "$command" || die "Required command not found: $command"
+done
+
+awk -v interval="$INTERVAL" 'BEGIN { exit !(interval > 0) }' ||
+  die "Interval must be greater than zero."
+
+[[ -r /proc/diskstats ]] ||
+  die "/proc/diskstats not readable (is this Linux?)."
+
+mkdir -p "$OUTPUT_DIR"
+
+printf -v TIMESTAMP '%(%Y%m%d-%H%M%S)T' -1
+readonly TIMESTAMP
+readonly REPORT="$OUTPUT_DIR/io-stall-$TIMESTAMP.log"
+readonly DSTATE_LOG="$OUTPUT_DIR/dstate-$TIMESTAMP.log"
+readonly STACK_LOG="$OUTPUT_DIR/dstate-stacks-$TIMESTAMP.log"
+readonly IOTOP_LOG="$OUTPUT_DIR/iotop-$TIMESTAMP.log"
+readonly DISK_BEFORE="$OUTPUT_DIR/disk-before-$TIMESTAMP.log"
+readonly DISK_AFTER="$OUTPUT_DIR/disk-after-$TIMESTAMP.log"
+
+# tee ignores INT/TERM so Ctrl+C does not kill the logger before the script
+# has a chance to print its final messages.
+exec > >(
+  trap '' INT TERM
+  exec tee "$REPORT"
+) 2>&1
+TEE_PID=$!
+
+cleanup() {
+  local rc=$?
+  trap - EXIT
+  if [[ -n "$IOTOP_PID" ]]; then
+    kill "$IOTOP_PID" 2>/dev/null || true
+  fi
+  # Close our end of the pipe and wait for tee to flush the report.
+  exec >&- 2>&-
+  wait "$TEE_PID" 2>/dev/null || true
+  exit "$rc"
+}
+
+on_error() {
+  local rc=$?
+  log "ERROR: line ${BASH_LINENO[0]}: '$BASH_COMMAND' exited with status $rc"
+}
+
+trap cleanup EXIT
+trap on_error ERR
+trap 'log "Interrupted. Partial report: $REPORT"; exit 130' INT
+trap 'log "Terminated. Partial report: $REPORT"; exit 143' TERM
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+read_psi() {
+  local resource="$1"
+
+  if [[ -r "/proc/pressure/$resource" ]]; then
+    cat "/proc/pressure/$resource"
+  else
+    printf 'PSI unavailable: %s\n' "$resource"
+  fi
+}
+
+# psi_total RESOURCE some|full -> cumulative stall time in microseconds
+psi_total() {
+  local resource="$1" kind="$2"
+
+  [[ -r "/proc/pressure/$resource" ]] || return 0
+
+  awk -v k="$kind" '
+    $1 == k {
+      for (i = 2; i <= NF; i++)
+        if ($i ~ /^total=/) {
+          sub(/^total=/, "", $i)
+          print $i
+        }
+    }
+  ' "/proc/pressure/$resource"
+}
+
+# print_psi_delta RESOURCE KIND BEFORE_US AFTER_US
+print_psi_delta() {
+  local resource="$1" kind="$2" before="$3" after="$4"
+
+  [[ -n "$before" && -n "$after" ]] || return 0
+
+  awk -v r="$resource" -v k="$kind" -v b="$before" -v a="$after" \
+    -v e="$ELAPSED" '
+    BEGIN {
+      ms = (a - b) / 1000
+      printf "PSI %-7s %-4s stall time : %10.1f ms (%.2f%% of %d s)\n",
+        r, k, ms, ms / (e * 10), e
+    }
+  '
+}
+
+# Output: name read_sectors write_sectors io_ticks_ms
+# diskstats fields (1-indexed): 3=name 6=sectors read 10=sectors written
+# 13=ms spent doing I/O.
+parse_diskstats() {
+  awk '
+    $3 ~ /^(sd[a-z]+|nvme[0-9]+n[0-9]+|vd[a-z]+|xvd[a-z]+|mmcblk[0-9]+|md[0-9]+|dm-[0-9]+)$/ {
+      printf "%s %s %s %s\n", $3, $6, $10, $13
+    }
+  ' /proc/diskstats
+}
+
+save_disk_snapshot() {
+  parse_diskstats >"$1"
+}
+
+# calculate_disk_delta BEFORE AFTER ELAPSED_SECONDS
+calculate_disk_delta() {
+  local before="$1" after="$2" elapsed="$3"
+
+  if [[ ! -s "$before" || ! -s "$after" ]]; then
+    echo "No supported block devices found in /proc/diskstats."
+    return 0
+  fi
+
+  awk -v elapsed="$elapsed" '
+    NR == FNR {
+      rd[$1] = $2
+      wr[$1] = $3
+      io[$1] = $4
+      seen[$1] = 1
+      next
+    }
+
+    !($1 in seen) { next }
+
+    {
+      dr = $2 - rd[$1]
+      dw = $3 - wr[$1]
+      dio = $4 - io[$1]
+
+      if (dr < 0 || dw < 0 || dio < 0)
+        next
+
+      # Diskstats sector size is always 512 bytes.
+      # util% = io_ms / (elapsed * 1000 ms) * 100
+      printf "%-12s Read: %10.2f KiB | Write: %10.2f KiB | I/O time: %8.2f s | Util: %5.1f%%\n",
+        $1,
+        dr * 512 / 1024,
+        dw * 512 / 1024,
+        dio / 1000,
+        dio / (elapsed * 10)
+    }
+  ' "$before" "$after"
+}
+
+print_dstate_table() {
+  local pid count
+
+  printf '%-10s %-8s %s\n' "PID" "SAMPLES" "LAST OBSERVED (STATE PID PPID USER WCHAN COMM ARGS)"
+
+  for pid in "${!DSTATE_COUNT[@]}"; do
+    printf '%s\t%s\n' "${DSTATE_COUNT[$pid]}" "$pid"
+  done | sort -rn | while IFS=$'\t' read -r count pid; do
+    printf '%-10s %-8s %s\n' "$pid" "$count" "${DSTATE_DETAILS[$pid]}"
+  done
+}
+
+print_wchan_table() {
+  local wchan
+
+  printf '%-8s %s\n' "SAMPLES" "WCHAN"
+
+  for wchan in "${!WCHAN_COUNT[@]}"; do
+    printf '%s\t%s\n' "${WCHAN_COUNT[$wchan]}" "$wchan"
+  done | sort -rn | while IFS=$'\t' read -r count wchan; do
+    printf '%-8s %s\n' "$count" "$wchan"
+  done
+}
+
+# ---------------------------------------------------------------------------
+# System information
+# ---------------------------------------------------------------------------
+
+section "SYSTEM INFORMATION"
+
+printf 'Hostname : %s\n' "$(uname -n)"
+printf 'Kernel   : %s\n' "$(uname -r)"
+printf 'Date     : %s\n' "$(date)"
+printf 'User     : %s\n' "$(id)"
+printf 'Duration : %s seconds\n' "$DURATION"
+printf 'Interval : %s seconds\n' "$INTERVAL"
+printf 'Report   : %s\n' "$REPORT"
+
+if ((EUID != 0)); then
+  printf '\nNOTE: not running as root. WCHAN may show "-", and kernel stacks,\n'
+  printf '      iotop and dmesg/journal data will be unavailable. Use sudo.\n'
+fi
+
+section "CPU AND MEMORY"
+
+if have nproc; then
+  printf 'Logical CPUs: %s\n' "$(nproc)"
+fi
+
+if have free; then
+  run free -h
+fi
+
+section "FILESYSTEM MOUNTS"
+
+if have findmnt; then
+  run findmnt -o TARGET,SOURCE,FSTYPE,OPTIONS
+else
+  run cat /proc/mounts
+fi
+
+section "BLOCK DEVICES"
+
+if have lsblk; then
+  # MOUNTPOINTS (plural) requires util-linux >= 2.37; fall back to MOUNTPOINT.
+  if ! lsblk -o NAME,TYPE,SIZE,ROTA,TRAN,FSTYPE,MOUNTPOINTS,MODEL 2>/dev/null; then
+    run lsblk -o NAME,TYPE,SIZE,ROTA,TRAN,FSTYPE,MOUNTPOINT,MODEL
+  fi
+else
+  echo "lsblk is not installed."
+fi
+
+# ---------------------------------------------------------------------------
+# PSI before monitoring
+# ---------------------------------------------------------------------------
+
+section "PSI BEFORE MONITORING"
+
+for resource in cpu memory io; do
+  printf '\n[%s]\n' "$resource"
+  read_psi "$resource"
+done
+
+PSI_IO_SOME_BEFORE="$(psi_total io some)"
+PSI_IO_FULL_BEFORE="$(psi_total io full)"
+PSI_MEM_SOME_BEFORE="$(psi_total memory some)"
+PSI_MEM_FULL_BEFORE="$(psi_total memory full)"
+PSI_CPU_SOME_BEFORE="$(psi_total cpu some)"
+
+# ---------------------------------------------------------------------------
+# Cgroup
+# ---------------------------------------------------------------------------
+
+section "CGROUP INFORMATION"
+
+cat /proc/self/cgroup
+
+# cgroup v2: use the cgroup this process actually lives in, not just the root.
+CGROUP_PATH="$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup 2>/dev/null || true)"
+CGROUP_IO_PRESSURE=""
+
+for candidate in \
+  "/sys/fs/cgroup${CGROUP_PATH}/io.pressure" \
+  "/sys/fs/cgroup/io.pressure"; do
+  if [[ -r "$candidate" ]]; then
+    CGROUP_IO_PRESSURE="$candidate"
+    break
+  fi
+done
+
+if [[ -n "$CGROUP_IO_PRESSURE" ]]; then
+  printf '\n[Cgroup I/O pressure: %s]\n' "$CGROUP_IO_PRESSURE"
+  cat "$CGROUP_IO_PRESSURE"
+else
+  echo "Cgroup io.pressure unavailable."
+fi
+
+# ---------------------------------------------------------------------------
+# Disk statistics before monitoring
+# ---------------------------------------------------------------------------
+
+section "DISK STATISTICS BEFORE (name read_sectors write_sectors io_ms)"
+
+save_disk_snapshot "$DISK_BEFORE"
+cat "$DISK_BEFORE"
+
+# ---------------------------------------------------------------------------
+# D-state monitoring
+# ---------------------------------------------------------------------------
+
+section "MONITORING D-STATE PROCESSES"
+
+: >"$DSTATE_LOG"
+: >"$STACK_LOG"
+
+# iotop only makes sense while the stall is happening, so run it in the
+# background for the whole monitoring window (root only).
+if have iotop && ((EUID == 0)); then
+  log "Starting background iotop capture -> $IOTOP_LOG"
+  iotop -b -o -P -d 1 -n "$DURATION" >"$IOTOP_LOG" 2>&1 &
+  IOTOP_PID=$!
+fi
+
+log "Monitoring for ${DURATION}s (interval ${INTERVAL}s)..."
+
+START_TIME=$SECONDS
+
+while ((SECONDS - START_TIME < DURATION)); do
+  TOTAL_SAMPLES=$((TOTAL_SAMPLES + 1))
+  printf -v CURRENT_TIME '%(%F %T)T' -1
+
+  # ps reads /proc/<pid>/cmdline; for a task stuck in D-state this can block
+  # forever, so guard it with a timeout. A hung ps is itself a strong signal.
+  if ! PS_OUTPUT="$(
+    with_timeout "$PS_TIMEOUT" \
+      ps -eo state,pid,ppid,user:16,wchan:32,comm,args --sort=pid 2>/dev/null
+  )"; then
+    PS_FAILURES=$((PS_FAILURES + 1))
+    printf '\n[%s]\nps failed or timed out after %ss (possible hung /proc access)\n' \
+      "$CURRENT_TIME" "$PS_TIMEOUT" >>"$DSTATE_LOG"
+    sleep "$INTERVAL"
+    continue
+  fi
+
+  DSTATE_PROCESSES="$(awk 'NR > 1 && $1 ~ /^D/' <<<"$PS_OUTPUT")"
+
+  if [[ -n "$DSTATE_PROCESSES" ]]; then
+    SAMPLES_WITH_DSTATE=$((SAMPLES_WITH_DSTATE + 1))
+
+    {
+      printf '\n[%s]\n' "$CURRENT_TIME"
+      printf '%s\n' "$DSTATE_PROCESSES"
+    } >>"$DSTATE_LOG"
+
+    while IFS= read -r line; do
+      [[ -z "$line" ]] && continue
+
+      # state pid ppid user wchan rest...
+      read -r _ pid _ _ wchan _ <<<"$line"
+
+      [[ "$pid" =~ ^[0-9]+$ ]] || continue
+
+      DSTATE_COUNT["$pid"]=$((${DSTATE_COUNT["$pid"]:-0} + 1))
+      DSTATE_DETAILS["$pid"]="$line"
+      WCHAN_COUNT["$wchan"]=$((${WCHAN_COUNT["$wchan"]:-0} + 1))
+
+      # Kernel stack of the blocked task (root only), once per PID.
+      if ((EUID == 0)) && [[ -z "${DSTATE_STACK_SAVED["$pid"]:-}" ]]; then
+        DSTATE_STACK_SAVED["$pid"]=1
+        {
+          printf '\n[%s] PID %s kernel stack\n' "$CURRENT_TIME" "$pid"
+          with_timeout 2 cat "/proc/$pid/stack" 2>&1 || echo "(unreadable)"
+        } >>"$STACK_LOG"
+      fi
+    done <<<"$DSTATE_PROCESSES"
+  fi
+
+  sleep "$INTERVAL"
+done
+
+ELAPSED=$((SECONDS - START_TIME))
+((ELAPSED > 0)) || ELAPSED=1
+
+# ---------------------------------------------------------------------------
+# D-state report
+# ---------------------------------------------------------------------------
+
+section "D-STATE RAW LOG (last 200 lines; full log: $DSTATE_LOG)"
+
+if [[ -s "$DSTATE_LOG" ]]; then
+  tail -n 200 "$DSTATE_LOG"
+else
+  echo "No D-state process captured during monitoring."
+fi
+
+section "D-STATE SUMMARY"
+
+if ((${#DSTATE_COUNT[@]})); then
+  print_dstate_table
+  printf '\n'
+  print_wchan_table
+else
+  echo "No D-state process detected."
+fi
+
+if [[ -s "$STACK_LOG" ]]; then
+  section "KERNEL STACKS OF D-STATE PIDS (first observation)"
+  tail -n 200 "$STACK_LOG"
+fi
+
+# ---------------------------------------------------------------------------
+# Disk statistics after monitoring
+# ---------------------------------------------------------------------------
+
+section "DISK STATISTICS AFTER (name read_sectors write_sectors io_ms)"
+
+save_disk_snapshot "$DISK_AFTER"
+cat "$DISK_AFTER"
+
+section "DISK ACTIVITY DURING MONITORING (${ELAPSED}s)"
+
+calculate_disk_delta "$DISK_BEFORE" "$DISK_AFTER" "$ELAPSED"
+
+# ---------------------------------------------------------------------------
+# PSI after monitoring
+# ---------------------------------------------------------------------------
+
+section "PSI AFTER MONITORING"
+
+for resource in cpu memory io; do
+  printf '\n[%s]\n' "$resource"
+  read_psi "$resource"
+done
+
+section "PSI STALL TIME DURING MONITORING"
+
+if [[ -n "$PSI_IO_SOME_BEFORE" ]]; then
+  print_psi_delta io some "$PSI_IO_SOME_BEFORE" "$(psi_total io some)"
+  print_psi_delta io full "$PSI_IO_FULL_BEFORE" "$(psi_total io full)"
+  print_psi_delta memory some "$PSI_MEM_SOME_BEFORE" "$(psi_total memory some)"
+  print_psi_delta memory full "$PSI_MEM_FULL_BEFORE" "$(psi_total memory full)"
+  print_psi_delta cpu some "$PSI_CPU_SOME_BEFORE" "$(psi_total cpu some)"
+else
+  echo "PSI unavailable (kernel < 4.20 or CONFIG_PSI disabled)."
+fi
+
+# ---------------------------------------------------------------------------
+# iotop
+# ---------------------------------------------------------------------------
+
+section "IOTOP CAPTURE (during monitoring)"
+
+if [[ -n "$IOTOP_PID" ]]; then
+  wait "$IOTOP_PID" 2>/dev/null || true
+  IOTOP_PID=""
+  tail -n 150 "$IOTOP_LOG"
+elif ! have iotop; then
+  echo "iotop is not installed."
+else
+  echo "Run with sudo to collect per-process I/O information."
+fi
+
+# ---------------------------------------------------------------------------
+# Kernel messages
+# ---------------------------------------------------------------------------
+
+section "KERNEL I/O WARNINGS"
+
+KERNEL_PATTERN='blocked for more than|hung_task|I/O error|buffer i/o|blk_update_request|timed? ?out|reset|ata[0-9]+|scsi|nvme|ext4|xfs|btrfs|ntfs|fuse|nfs|call trace'
+
+KERNEL_RAW=""
+
+if have journalctl; then
+  KERNEL_RAW="$(journalctl -k -b -p warning..alert --no-pager -q 2>/dev/null || true)"
+fi
+
+if [[ -z "$KERNEL_RAW" ]] && have dmesg; then
+  KERNEL_RAW="$(dmesg --level=warn,err,crit,alert,emerg 2>/dev/null || true)"
+fi
+
+if [[ -z "$KERNEL_RAW" ]]; then
+  echo "Kernel log unavailable or empty (try sudo / check dmesg_restrict)."
+else
+  KERNEL_LOG="$(grep -Ei "$KERNEL_PATTERN" <<<"$KERNEL_RAW" | tail -n 200 || true)"
+
+  if [[ -n "$KERNEL_LOG" ]]; then
+    printf '%s\n' "$KERNEL_LOG"
+  else
+    echo "No matching kernel warnings."
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# Final summary
+# ---------------------------------------------------------------------------
+
+section "FINAL SUMMARY"
+
+printf 'Monitoring samples      : %s\n' "$TOTAL_SAMPLES"
+printf 'Samples with D-state    : %s\n' "$SAMPLES_WITH_DSTATE"
+printf 'Unique D-state PIDs     : %s\n' "${#DSTATE_COUNT[@]}"
+printf 'ps failures/timeouts    : %s\n' "$PS_FAILURES"
+
+if ((TOTAL_SAMPLES > 0)); then
+  awk -v d="$SAMPLES_WITH_DSTATE" -v t="$TOTAL_SAMPLES" '
+    BEGIN {
+      printf "D-state sample ratio    : %.2f%%\n", (d / t) * 100
+    }
+  '
+fi
+
+if ((PS_FAILURES > 0)); then
+  printf '\nWARNING: ps hung or failed %s time(s). This often means a task is\n' "$PS_FAILURES"
+  printf 'blocked in the kernel (NFS/FUSE/disk) while /proc was being read.\n'
+fi
+
+if ((${#DSTATE_COUNT[@]} == 0)); then
+  printf '\nNo D-state process was captured.\n'
+  printf 'Short-lived stalls may still have occurred between samples;\n'
+  printf 'check the PSI stall times above.\n'
+fi
+
+printf '\nReport files:\n'
+printf '  Main report : %s\n' "$REPORT"
+printf '  D-state log : %s\n' "$DSTATE_LOG"
+printf '  Stack log   : %s\n' "$STACK_LOG"
+printf '  iotop log   : %s\n' "$IOTOP_LOG"
+printf '  Disk before : %s\n' "$DISK_BEFORE"
+printf '  Disk after  : %s\n' "$DISK_AFTER"
+
+section "DONE"
+
+log "Diagnostic completed."

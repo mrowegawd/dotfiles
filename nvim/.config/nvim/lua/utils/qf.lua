@@ -3,22 +3,9 @@ local M = {
   lopen = "belowright lopen", -- :botright :topleft :aboveleft :belowright :leftabove :rightbelow
 }
 
-local Qfbookmark
+local lazy = require("utils.plugin").require_lazy
 
-local function QfBookmarkUtil()
-  if Qfbookmark then
-    return Qfbookmark
-  end
-
-  local ok, qfmark = pcall(require, "qfbookmark.utils")
-  if not ok then
-    return nil
-  end
-  Qfbookmark = qfmark
-
-  return Qfbookmark
-end
-
+local QfBookmarkUtil = lazy "qfbookmark.utils"
 
 ---@param is_loc? boolean
 function M.get_total_stack_qf(is_loc)
@@ -72,13 +59,13 @@ end
 ---@param buf? integer
 ---@return boolean
 function M.is_loclist(buf)
-  return QfBookmarkUtil().is_loclist(buf)
+  return QfBookmarkUtil.is_loclist(buf)
 end
 
 ---@param winnr integer
 ---@return boolean
 function M.is_quickfix_win(winnr)
-  return QfBookmarkUtil().is_quickfix_win(winnr)
+  return QfBookmarkUtil.is_quickfix_win(winnr)
 end
 
 ---@param winnr integer
@@ -89,26 +76,26 @@ end
 
 ---@return integer
 function M.get_qf_cursor_idx()
-  return QfBookmarkUtil().get_current_qf_idx()
+  return QfBookmarkUtil.get_current_qf_idx()
 end
 
 ---@param is_loc? boolean
 function M.get_title_qf(is_loc)
-  return QfBookmarkUtil().get_title_qf(is_loc)
+  return QfBookmarkUtil.get_title_qf(is_loc)
 end
 
 ---@param is_loc? boolean
 ---@param context_name? string
 ---@return table
 function M.get_list_qf(is_loc, context_name)
-  return QfBookmarkUtil().get_list_qf(is_loc, context_name)
+  return QfBookmarkUtil.get_list_qf(is_loc, context_name)
 end
 
 ---@param is_loc? boolean
 ---@param context_name? string
 ---@return QFBookListResults
 function M.get_data_qf(is_loc, context_name)
-  return QfBookmarkUtil().get_data_qf(is_loc, context_name)
+  return QfBookmarkUtil.get_data_qf(is_loc, context_name)
 end
 
 ---@param list_items QFBookLists
@@ -116,7 +103,7 @@ end
 ---@param mode? string
 ---@param winid? integer
 function M.save_to_qf(list_items, is_loc, mode, winid)
-  QfBookmarkUtil().save_to_qf(list_items, is_loc, mode, winid)
+  QfBookmarkUtil.save_to_qf(list_items, is_loc, mode, winid)
 end
 
 ---@param list_items QFBookLists

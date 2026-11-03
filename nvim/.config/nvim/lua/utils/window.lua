@@ -1,8 +1,9 @@
-local Log = require "utils.log"
-
 local option = vim.api.nvim_get_option_value
 
-local IconMisc = require("icons").misc
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+local IconMisc = lazy("icons").misc
 
 local M = {}
 
@@ -43,7 +44,7 @@ end
 
 ---@param cmd string
 local function toggle_diffview(cmd)
-  if next(require("diffview.lib").views) == nil then
+  if next(lazy("diffview.lib").views) == nil then
     vim.cmd(cmd)
   else
     vim.cmd "DiffviewClose"
@@ -109,7 +110,7 @@ function M.magic_quit()
     end,
     ["feed"] = function()
       local quit_cmd = function()
-        return require("feed").quit()
+        return lazy("feed").quit()
       end
       return true, quit_cmd
     end,
@@ -158,7 +159,7 @@ function M.magic_quit()
   end
 
   if vim.bo.buftype == "terminal" and vim.bo.filetype == "" then
-    if tonumber(require("sniprun.display").term.buffer) > 0 then
+    if tonumber(lazy("sniprun.display").term.buffer) > 0 then
       return vim.cmd "SnipClose"
     end
   end
@@ -194,8 +195,9 @@ function M.bufremove(buf)
       end
 
       -- Try using previous buffer
-      ---@diagnostic disable-next-line: param-type-mismatch
-      local has_previous = pcall(vim.cmd, "bprevious")
+      local has_previous = pcall(function()
+        vim.cmd "bprevious"
+      end)
       if has_previous and buf ~= vim.api.nvim_win_get_buf(win) then
         return
       end
@@ -206,8 +208,9 @@ function M.bufremove(buf)
     end)
   end
   if vim.api.nvim_buf_is_valid(buf) then
-    ---@diagnostic disable-next-line: param-type-mismatch
-    pcall(vim.cmd, "bdelete! " .. buf)
+    pcall(function()
+      vim.cmd("bdelete! " .. buf)
+    end)
   end
 end
 
@@ -225,20 +228,26 @@ function M.arange_wins(direction)
     end
 
     if vim.w.is_overlook_popup then
+      local Overlook_api = lazy "overlook.api"
       if direction == "split" then
-        require("overlook.api").open_in_split()
+        Overlook_api.open_in_split()
       end
       if direction == "vsplit" then
-        require("overlook.api").open_in_vsplit()
+        Overlook_api.open_in_vsplit()
       end
       if direction == "tabe" then
-        require("overlook.api").open_in_tab()
+        Overlook_api.open_in_tab()
       end
       return
     end
 
     if vim.tbl_contains({ "split", "vsplit" }, direction) then
-      vim.cmd(direction)
+      local ok, err = pcall(function()
+        vim.cmd(direction)
+      end)
+      if not ok then
+        Log.warn("Cannot create window: " .. err)
+      end
       return
     end
 
@@ -277,33 +286,33 @@ local function go_prev_window(ft_wins)
   return false
 end
 
----@return boolean, integer|nil
+---@return boolean
+---@return integer|nil
 function M.call_stack_peek()
   if vim.w.is_overlook_popup then
     return true, vim.w.overlook_popup.root_winid
   end
 
-  local Stack = require "overlook.stack"
-  if not Stack then
-    return false, nil
-  end
-
+  local Overlook_win = lazy "overlook.window"
   local current_win = vim.api.nvim_get_current_win()
 
-  if Stack.instances[current_win] and not Stack.empty() then
-    return true, Stack.top().winid
+  if Overlook_win.instances[current_win] then
+    local w1 = Overlook_win.get(current_win)
+    if not w1:empty() then
+      return true, w1:top().winid
+    end
   end
   return false, nil
 end
 
 function M.switch_focus_targeted_window()
   local ok, switch_winid = M.call_stack_peek()
-  if ok then
+  if ok and switch_winid and vim.api.nvim_win_is_valid(switch_winid) then
     pcall(vim.api.nvim_set_current_win, switch_winid)
     return
   end
 
-  local float_win = { "codecompanion", "wayfinder" }
+  local float_win = { "codecompanion", "wayfinder", "eldochover" }
   if go_prev_window(float_win) then
     return
   end
@@ -328,7 +337,7 @@ function M.windows_is_opened(filetypes, is_tab, is_more_guard)
   is_tab = is_tab or false
   is_more_guard = is_more_guard or false
 
-  local QfbookmarkUtils = require "qfbookmark.utils"
+  local QfbookmarkUtils = lazy "qfbookmark.utils"
   return QfbookmarkUtils.windows_is_opened(filetypes, is_tab, is_more_guard)
 end
 

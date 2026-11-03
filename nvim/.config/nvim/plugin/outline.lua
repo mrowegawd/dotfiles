@@ -1,9 +1,10 @@
 local add_local_or_remote = require("vim-pack").add_local_or_remote
 
-local kind = require("icons").kinds
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local kind = lazy("icons").kinds
+local UtilKey = lazy "utils.map"
+local Log = lazy "utils.log"
 
 local _outline_follow_state = nil
 
@@ -85,12 +86,12 @@ add_local_or_remote {
         goto_and_close = {},
         restore_location = "~",
         unfold = "zo",
-        fold_toggle = { "<S-tab>", "<Tab>", "za" },
+        fold_toggle = { "<Tab>", "za" },
         fold = "zc",
         fold_all = "zM",
         unfold_all = { "zO", "zR" },
         fold_reset = "<space><space>",
-        cycle_fold_depth = "zb",
+        cycle_fold_depth = "<S-tab>",
         toggle_preview = "P",
         rename_symbol = {},
         code_actions = {},
@@ -110,14 +111,14 @@ add_local_or_remote {
 }
 
 local load_outline = function()
-  require("vim-pack").load_now "outline.nvim"
+  lazy("vim-pack").load_now "outline.nvim"
 end
 
 UtilKey.disable_ctrl_i_and_o("NoOutline", { "Outline" })
 
 UtilKey.nnoremap("<Leader>oa", function()
   load_outline()
-  require("utils.layout").toggle_sidebar("Outline", function()
+  lazy("utils.layout").toggle_sidebar("Outline", function()
     vim.cmd.Outline()
   end)
 end, { desc = "Open: outline window [outline]" })
@@ -127,9 +128,14 @@ UtilKey.nnoremap("<Leader>oA", function()
   vim.cmd.OutlineFloat()
 end, { desc = "Open: outline float window [outline]" })
 
+UtilKey.nnoremap("<Leader>ua", function()
+  load_outline()
+  vim.cmd.OutlineFloat()
+end, { desc = "Toggle: toggle follow outline [outline]" })
+
 vim.api.nvim_create_user_command("OutlineToggleFollow", function()
   load_outline()
-  local cfg = require "outline.config"
+  local cfg = lazy "outline.config"
   local o = cfg.o
 
   if _outline_follow_state == nil then

@@ -1,8 +1,10 @@
 local add_local_or_remote = require("vim-pack").add_local_or_remote
 
-local UtilKey = require "utils.map"
-local UtilWindow = require "utils.window"
-local IconsLSP = require("icons").kinds
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
+local UtilWindow = lazy "utils.window"
+local IconsLSP = lazy("icons").kinds
 
 local function auto_close_qf_win()
   local qf_win = UtilWindow.windows_is_opened "qf"
@@ -82,49 +84,27 @@ add_local_or_remote {
 }
 
 local load_trouble = function()
-  require("vim-pack").load_now "trouble.nvim"
+  lazy("vim-pack").load_now "trouble.nvim"
 end
 
-UtilKey.nnoremap("<Leader>xr", function()
-  load_trouble()
-  vim.cmd "Trouble resume"
-end, { desc = "Exec: resume [trouble]" })
-UtilKey.nnoremap("<Leader>xx", function()
-  load_trouble()
-  vim.cmd.Trouble()
-end, { desc = "Exec: open list builtin [trouble]" })
+local cmds = {
+  --stylua: ignore
+  { "<Leader>xr", function() vim.cmd "Trouble resume" end, "resume" },
+  --stylua: ignore
+  { "<Leader>xF", function() vim.cmd.Trouble() end, "list builtin" },
+  --stylua: ignore
+  { "<Leader>xt", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd [[Trouble todo toggle filter.buf=0]] end, "todo-trouble on curbuf" },
+  --stylua: ignore
+  { "<Leader>xT", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd.TodoTrouble() end, "todo-trouble on curbuf" },
+  --stylua: ignore
+  { "<Leader>xD", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle]] end, "workspace diagnostics (global project)" },
+  --stylua: ignore
+  { "<Leader>xd", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle filter.buf=0]] end, "document diagnostics (on curbuf)" },
+}
 
-UtilKey.nnoremap("<Leader>xt", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd [[Trouble todo toggle filter.buf=0]]
-end, { desc = "Exec: check todotrouble curbuf [trouble]" })
-
-UtilKey.nnoremap("<Leader>xT", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd.TodoTrouble()
-end, { desc = "Exec: check global todotrouble [trouble]" })
-
-UtilKey.nnoremap("<Leader>xD", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd [[Trouble diagnostics toggle]]
-end, { desc = "Exec: workspaces diagnostics [trouble]" })
-UtilKey.nnoremap("<Leader>xd", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
-end, { desc = "Exec: document diagnostisc [trouble]" })
-
-UtilKey.nnoremap("<Leader>xl", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd "Trouble loclist toggle"
-end, { desc = "Exec: open loclist with [trouble]" })
-
-UtilKey.nnoremap("<Leader>xq", function()
-  load_trouble()
-  auto_close_qf_win()
-  vim.cmd "Trouble qflist toggle"
-end, { desc = "Exec: open quickfix (qf) with [trouble]" })
+for _, cmd in ipairs(cmds) do
+  UtilKey.nnoremap(cmd[1], function()
+    load_trouble()
+    cmd[2]()
+  end, { desc = ("Exec: %s [trouble]"):format(cmd[3]) })
+end

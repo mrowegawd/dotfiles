@@ -3,7 +3,9 @@ local M = {}
 local executable = "maim"
 local file_options = "-s"
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
 
 ---@param input_png string
 local build_dir_img = function(input_png)
@@ -27,7 +29,7 @@ local build_dir_img = function(input_png)
   local buffer_directory = vim.fs.dirname(buffer_path)
   local image_directory_path = buffer_directory .. "/" .. image_subdir
 
-  require("utils.file").create_dir(image_directory_path) -- will create dir if not exists
+  lazy("utils.file").create_dir(image_directory_path) -- will create dir if not exists
 
   local relative_image_path = "./" .. image_subdir .. "/" .. input_png
   local absolute_image_path = image_directory_path .. "/" .. input_png
@@ -45,7 +47,7 @@ local build_dir_img = function(input_png)
     image_insert_syntax = "[[file:" .. input_png .. "]]"
   end
 
-  if require("utils.file").file.exists(absolute_image_path) then
+  if lazy("utils.file").file.exists(absolute_image_path) then
     Log.warn "image name already exists"
     return
   end
@@ -59,7 +61,6 @@ local build_dir_img = function(input_png)
 end
 
 M.insert = function()
-  Log.info "test"
   vim.ui.input({
     prompt = "Name image: ",
   }, function(input)

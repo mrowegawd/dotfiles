@@ -1,9 +1,11 @@
-local Plugin = require "utils.plugin"
-local Layout = require "utils.layout"
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local HasPlugin = lazy("utils.plugin").has
+local Layout = lazy "utils.layout"
 
-local has_ergoterm = Plugin.has "ergoterm.nvim"
+local Log = lazy "utils.log"
+
+local has_ergoterm = HasPlugin "ergoterm.nvim"
 
 ---@alias WrapCmdOpts {cmd?: string, name?:string, layout?:string, is_toggle: boolean?}
 
@@ -16,20 +18,20 @@ local M = setmetatable({}, {
 local base_term = {}
 
 local load_egoterm = function()
-  require("vim-pack").load_now "ergoterm.nvim"
+  lazy("vim-pack").load_now "ergoterm.nvim"
 end
 
 local term_package = {
   ["ergoterm"] = {
     get = function(opts)
       load_egoterm()
-      local terms = require "ergoterm"
+      local terms = lazy "ergoterm"
       return terms.Terminal:new(opts)
     end,
   },
   ["toggleterm"] = {
     get = function(opts)
-      local terms = require "toggleterm"
+      local terms = lazy "toggleterm"
       return terms.Terminal:new(opts)
     end,
   },
@@ -302,6 +304,7 @@ function M.open_float()
     local t = M.wrap_open_cmd {
       name = "Float Term",
       layout = "float",
+      is_toggle = true,
     }
 
     if t then

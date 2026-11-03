@@ -1,17 +1,16 @@
-local add_on_file_type = require("vim-pack").add_on_file_type
+local add = require("vim-pack").add
 
-local allow_ft_render_markdown = { "markdown", "octo", "noice", "eldochover", "codecompanion" }
+local allow_ft_render_markdown = { "markdown", "octo", "noice", "eldochover", "codecompanion", "org" }
 
--- Markdown preview on the browser.
-add_on_file_type(allow_ft_render_markdown, {
+add {
   {
     src = "MeanderingProgrammer/render-markdown.nvim",
     opts = {
-      -- custom_handlers = {
-      --   org = {
-      --     parse = RUtils.rendermarkdown.parse_org,
-      --   },
-      -- },
+      custom_handlers = {
+        org = {
+          parse = require("utils.render-markdown.org.org-heading").setup(),
+        },
+      },
       bullet = { icons = { "", "•", "", "-", "-" } },
       file_types = allow_ft_render_markdown,
       code = {
@@ -89,10 +88,7 @@ add_on_file_type(allow_ft_render_markdown, {
       html = { comment = { conceal = false } },
       overrides = {
         filetype = {
-          -- org = {
-          --   -- Disable anti_conceal to prevent sign flickering in org buffers
-          --   anti_conceal = { enabled = true },
-          -- },
+          eldochover = {},
           noice = {},
           codecompanion = {
             heading = {
@@ -130,4 +126,4 @@ add_on_file_type(allow_ft_render_markdown, {
       },
     },
   },
-})
+}

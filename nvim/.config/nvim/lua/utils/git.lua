@@ -1,382 +1,414 @@
 local M = {}
 
-local outputs = {}
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local Log = lazy "utils.log"
+local Fzflua = lazy "fzf-lua"
 
-local Fzflua
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                 GIT HELPERS                                 ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-local setup_fzflua = function()
-  if not Fzflua then
-    Fzflua = require "fzf-lua"
+local ANSI_PATTERN = "\27%[[%d;]*m"
+
+--- Run git directly without a shell
+--- (avoids quoting issues and injection, no need for 2>/dev/null).
+---@param args string[]
+---@param cwd string?
+---@return string? output  nil if the command fails or returns nothing
+local function git(args, cwd)
+  local ok, res = pcall(function()
+    return vim.system(vim.list_extend({ "git" }, args), { cwd = cwd, text = true }):wait()
+  end)
+  if not ok or res.code ~= 0 then
+    return nil
   end
-
-  return Fzflua
+  local out = vim.trim(res.stdout or "")
+  return out ~= "" and out or nil
 end
 
-local function get_files_from_branch(branch)
-  local cmd = string.format("git ls-tree -r --name-only %s", branch)
-  local result = vim.fn.systemlist(cmd)
-  return result
+local function git_root()
+  local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
+  if vim.fn.isdirectory(dir) == 0 then
+    ---@diagnostic disable-next-line: cast-local-type
+    dir = vim.uv.cwd()
+  end
+  return git({ "rev-parse", "--show-toplevel" }, dir)
 end
 
-local function extracted_entry_str(selected, deleted_files)
-  local sel = selected[1]
-  if not sel then
-    return
+--- Get the branch name, or fall back to the commit hash if HEAD is detached.
+local function git_ref(root)
+  local branch = git({ "rev-parse", "--abbrev-ref", "HEAD" }, root)
+  if branch and branch ~= "HEAD" then
+    return branch
   end
+  return git({ "rev-parse", "HEAD" }, root)
+end
 
-  Fzflua = setup_fzflua()
-  local sel_str = Fzflua.utils.strip_ansi_coloring(sel)
+--- Parse remote URL (scp-like, ssh://, git://, http(s)://) -> host, path
+---@return string? host, string? path
+local function parse_remote(raw)
+  raw = raw:gsub("/+$", ""):gsub("%.git$", "")
 
-  local items = nil
-  for _, item in ipairs(deleted_files) do
-    local display_str = Fzflua.utils.strip_ansi_coloring(item.display)
-    if display_str == sel_str then
-      items = item
-      break
+  local host, path
+  if not raw:find("://", 1, true) then
+    -- git@github.com:owner/repo
+    host, path = raw:match "^[^@/]+@([^:/]+):(.+)$"
+  else
+    local scheme, authority, rest = raw:match "^(%a[%w+.-]*)://([^/]+)/(.+)$"
+    if scheme then
+      host = authority:gsub("^.*@", "") -- buang user:token@
+      if scheme ~= "http" and scheme ~= "https" then
+        host = host:gsub(":%d+$", "") -- buang port ssh
+      end
+      path = rest
     end
   end
 
-  if not items then
-    return
-  end
-
-  -- Example output:
-  --  {
-  --   commit = "4b3c088",
-  --   display = "\27[33m4b3c088\27[0m — \27[31mmiscxrdb/.config/miscxrdb/xresource-theme/base46-jabuti\27[0m",
-  --   path = "miscxrdb/.config/miscxrdb/xresource-theme/base46-jabuti"
-  -- }
-
-  return items
-end
-
--- local function open_file_from_branch(branch, filepath)
---   -- local cmd = string.format("git show %s:%s", branch, filepath)
---   -- local content = vim.fn.systemlist(cmd)
---   -- if vim.v.shell_error ~= 0 then
---   --   vim.notify("Error getting file: " .. filepath, vim.log.levels.ERROR)
---   --   return
---   -- end
---   --
---   -- -- Isi konten
---   -- vim.cmd "enew"
---   -- vim.api.nvim_buf_set_lines(0, 0, -1, false, content)
---   -- vim.bo.filetype = vim.fn.fnamemodify(filepath, ":e") -- Set filetype berdasarkan ekstensi
---   -- vim.bo.modified = false
---   -- vim.bo.readonly = true
---   -- vim.bo.bufhidden = "wipe"
---   -- vim.bo.buftype = ""
---   -- vim.b.source_branch = branch
---   -- vim.b.source_path = filepath
--- end
-
-local os_name = jit and jit.os or ""
-local function redirect_stderr_to_null(command)
-  if os_name == "Windows" then
-    return command .. " 2>NUL"
-  end
-  return command .. " 2>/dev/null"
-end
-
-local function shellescape(value)
-  return vim.fn.shellescape(value)
-end
-
-local function git_output(command)
-  local output = vim.fn.system(redirect_stderr_to_null("git " .. command))
-  if vim.v.shell_error ~= 0 then
+  if not host or not path then
     return nil
   end
-  return vim.fn.trim(output)
+  path = path:gsub("^/+", "")
+  return host, path
 end
 
-local function get_repo_name(remote_name)
+---@class RemoteInfo
+---@field host string
+---@field path string  "owner/repo" (atau group/subgroup/repo)
+---@field url string   https url
+
+---@param root string
+---@param remote_name string?
+---@return RemoteInfo?
+local function remote_info(root, remote_name)
   remote_name = remote_name or "origin"
-  local remote_url = git_output("config --get " .. shellescape("remote." .. remote_name .. ".url"))
-  if not remote_url or remote_url == "" then
-    vim.notify(
-      string.format("No remote '%s' found. Run 'git remote -v' to check configured remotes", remote_name),
-      vim.log.levels.ERROR
-    )
+  local raw = git({ "config", "--get", "remote." .. remote_name .. ".url" }, root)
+  if not raw then
+    Log.error(string.format("Remote '%s' tidak ditemukan. Jalankan 'git remote -v' untuk cek", remote_name))
     return nil
   end
 
-  -- Remove trailing ".git" kalau ada
-  remote_url = remote_url:gsub("%.git$", "")
-
-  -- Format SSH: git@github.com:owner/repo  atau ssh://git@github.com/owner/repo
-  local owner, repo = remote_url:match "^git@[^:/]+[:/](.+)/(.+)$"
-
-  -- Format HTTPS/SSH-URI: https://github.com/owner/repo  atau ssh://git@host/owner/repo
-  if not owner then
-    owner, repo = remote_url:match "^%a+://[^/]+/(.+)/(.+)$"
-  end
-
-  if not owner or not repo then
-    vim.notify(string.format("Could not parse owner/repo from remote URL: %s", remote_url), vim.log.levels.ERROR)
+  local host, path = parse_remote(raw)
+  if not host then
+    Log.error("Tidak bisa parse owner/repo dari remote URL: " .. raw)
     return nil
   end
 
-  return owner .. "/" .. repo
+  return { host = host, path = path, url = "https://" .. host .. "/" .. path }
 end
+
+--- Resolve the repo root and remote info in one go, logging an error if it fails.
+---@return string? root, RemoteInfo? remote
+local function resolve_repo()
+  local root = git_root()
+  if not root then
+    Log.error "Not a git repository"
+    return nil
+  end
+  local remote = remote_info(root)
+  if not remote then
+    return nil
+  end
+  return root, remote
+end
+
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                               GENERAL HELPERS                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local function copy_to_clipboard(text)
   vim.fn.setreg("+", text)
-  ---@diagnostic disable-next-line: undefined-field
   Log.info("Git `" .. text .. "` copied to clipboard")
 end
 
--- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
--- ┃ MAPPING                                                 ┃
--- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
-local function default_select_deleted(deleted_files, is_fugitive)
-  return function(selected, _)
-    if not selected then
-      return
-    end
-
-    is_fugitive = is_fugitive or false
-
-    local items = extracted_entry_str(selected, deleted_files)
-    if not items then
-      return
-    end
-
-    if is_fugitive then
-      vim.cmd "vsplit"
-      vim.cmd("Gedit " .. items.commit)
-    else
-      vim.cmd("DiffviewOpen " .. items.commit .. "^.." .. items.commit)
-    end
-
-    local git_use = is_fugitive and "fugitive" or "diffview"
-    Log.info("Open diff (with `" .. git_use .. "`) : " .. items.path)
+local function open_url(url)
+  local _, err = vim.ui.open(url)
+  if err then
+    Log.error("Gagal membuka: " .. tostring(err))
+    return
   end
+  Log.info("Opening: " .. url)
 end
 
-local function open_deleted_files(mode, deleted_files)
-  return function(selected, _)
-    if not selected then
-      return
-    end
-
-    local items = extracted_entry_str(selected, deleted_files)
-    if not items then
-      return
-    end
-
-    local cmd_git = "Gclog " .. items.commit
-    -- local cmd_git = "Gclog " .. items.commit .. ":%"
-    -- local cmd_git = "Gedit " .. items.commit .. ":" .. items.path
-
-    vim.cmd(mode)
-    vim.cmd(cmd_git)
-  end
+local function url_encode(s)
+  return (s:gsub("[^%w%-%._~/]", function(c)
+    return string.format("%%%02X", c:byte())
+  end))
 end
 
-local function open_current_file_from_branch(mode)
-  return function(selected, _)
-    if not selected then
-      return
-    end
-
-    local sel = selected[1]
-
-    vim.cmd(mode)
-    vim.cmd("Gedit " .. sel .. ":%")
-  end
+local function normalize_slashes(p)
+  return (p:gsub("\\", "/"))
 end
 
-local function copy_hash(deleted_files)
-  return function(selected, _)
-    if not selected then
-      return
-    end
-
-    local items = extracted_entry_str(selected, deleted_files)
-    if not items then
-      return
-    end
-
-    require("utils.fzf_diffview").copy_to_clipboard(items.commit)
+--- Get the file path relative to the repo root (handles symlinks and Windows paths).
+local function relative_path(root, bufname)
+  local abs = vim.uv.fs_realpath(bufname) or vim.fn.fnamemodify(bufname, ":p")
+  abs, root = normalize_slashes(abs), normalize_slashes(root)
+  if abs:sub(1, #root + 1) ~= root .. "/" then
+    return nil
   end
+  return abs:sub(#root + 2)
 end
 
-local function copy_branch()
-  return function(selected, _)
-    if not selected then
-      return
-    end
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                             FZF ACTION BUILDERS                             ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-    local sel = selected[1]
-    require("utils.fzf_diffview").copy_to_clipboard(sel)
-  end
-end
+local WINDOW_KEYS = {
+  ["ctrl-s"] = "split",
+  ["ctrl-v"] = "vsplit",
+  ["ctrl-t"] = "tabnew",
+}
 
-local function select_branch()
-  return function(selected, _)
-    if not selected then
-      return
-    end
-
-    local branch = selected[1]
-    local files = get_files_from_branch(branch)
-
-    Fzflua = setup_fzflua()
-    Fzflua.fzf_exec(files, {
-      actions = {
-        ["default"] = {
-          fn = function(selected_file, _)
-            if not selected then
-              return
-            end
-            local filepath = selected_file[1]
-            vim.cmd("Gedit " .. branch .. ":" .. filepath)
-          end,
-        },
-        ["ctrl-v"] = {
-          fn = function(selected_file, _)
-            if not selected then
-              return
-            end
-            local filepath = selected_file[1]
-            vim.cmd "vsplit"
-            vim.cmd("Gedit " .. branch .. ":" .. filepath)
-          end,
-        },
-        ["ctrl-s"] = {
-
-          fn = function(selected_file, _)
-            if not selected then
-              return
-            end
-            local filepath = selected_file[1]
-            vim.cmd "split"
-            vim.cmd("Gedit " .. branch .. ":" .. filepath)
-          end,
-        },
-        ["ctrl-t"] = {
-          fn = function(selected_file, _)
-            if not selected then
-              return
-            end
-            local filepath = selected_file[1]
-            vim.cmd "tabnew"
-            vim.cmd("Gedit " .. branch .. ":" .. filepath)
-          end,
-        },
-      },
-    })
-  end
-end
-
--- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
--- ┃ FUNC                                                    ┃
--- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
-function M.trace_file_event()
-  local function get_deleted_files()
-    local handle = io.popen "git log --diff-filter=D --summary"
-    if not handle then
-      return {}
-    end
-    local output = handle:read "*a"
-    handle:close()
-
-    -- for commit, from, to in output:gmatch("commit ([%x]+).-rename from ([^\n]+).-rename to ([^\n]+)") do
-    -- for commit, from, to in output:gmatch("commit ([%x]+).-rename ([^\n]+)") do
-    local current_commit = ""
-
-    for line in output:gmatch "[^\r\n]+" do
-      local commit = line:match "^commit ([%x]+)"
-      if commit then
-        current_commit = commit
-      else
-        local path, _ = line:match "^%s*delete mode %d+ ([^\n]+)"
-        if path and current_commit ~= "" then
-          local colored = string.format(
-            "\27[33m%s\27[0m — \27[31m%s\27[0m",
-            current_commit:sub(1, 8), -- Kuning
-            path -- Merah
-          )
-
-          -- local display = string.format(
-          --   "\27[34m%s\27[0m  \27[31m%s\27[0m  →  \27[32m%s\27[0m",
-          --   commit:sub(1, 8), -- Blue commit
-          --   from,             -- Red old path
-          --   to                -- Green new path
-          -- )
-          table.insert(outputs, {
-            -- display = current_commit:sub(1, 8) .. " | " .. path,
-            display = colored,
-            -- display = display,
-            commit = current_commit,
-            path = path,
-            -- from = from,
-            -- to = to,
-          })
-        end
+--- Build the default, ctrl-s, ctrl-v, and ctrl-t actions in one go.
+---@param handler fun(sel: string, mode: string?)
+---@param default_mode string?
+local function window_actions(handler, default_mode)
+  local function wrap(mode)
+    return function(selected)
+      local sel = selected and selected[1]
+      if sel then
+        handler(sel, mode)
       end
     end
-
-    return outputs
   end
 
-  local deleted_files = get_deleted_files()
-  if #deleted_files == 0 then
-    ---@diagnostic disable-next-line: undefined-field
-    Log.warn "No deleted files found"
+  local actions = { ["default"] = wrap(default_mode) }
+  for key, mode in pairs(WINDOW_KEYS) do
+    actions[key] = wrap(mode)
+  end
+  return actions
+end
+
+--- Entry format dari trace_file_event: "<hash> — <path>" (dengan/ tanpa ANSI).
+---@return { commit: string, path: string }?
+local function parse_entry(sel)
+  if not sel then
+    return nil
+  end
+  local plain = sel:gsub(ANSI_PATTERN, "")
+  local commit, path = plain:match "^(%x+) — (.+)$"
+  if commit then
+    return { commit = commit, path = path }
+  end
+end
+
+local function entry_action(fn)
+  return function(selected)
+    local entry = parse_entry(selected and selected[1])
+    if entry then
+      fn(entry)
+    end
+  end
+end
+
+local function run_with_mode(mode, cmd)
+  if mode then
+    vim.cmd(mode)
+  end
+  vim.cmd(cmd)
+end
+
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                    FUNC                                     ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+--- Stream previously deleted files into fzf asynchronously (keeps the UI responsive).
+function M.trace_file_event()
+  local root = git_root()
+  if not root then
+    Log.error "Bukan repository git"
     return
   end
 
-  local fzf_contents = {}
-  for _, x in pairs(outputs) do
-    fzf_contents[#fzf_contents + 1] = x.display
-  end
+  local actions = window_actions(function(sel, mode)
+    local entry = parse_entry(sel)
+    if entry then
+      run_with_mode(mode, "Gclog " .. entry.commit)
+    end
+  end, "edit")
 
-  Fzflua = setup_fzflua()
-  Fzflua.fzf_exec(fzf_contents, {
+  actions["alt-c"] = entry_action(function(e)
+    copy_to_clipboard(e.commit)
+  end)
+
+  actions["ctrl-o"] = entry_action(function(e)
+    require("vim-pack").load_now "diffview.nvim"
+    vim.cmd("DiffviewOpen " .. e.commit .. "^.." .. e.commit)
+    Log.info("Open diff (with `diffview`) : " .. e.path)
+  end)
+
+  actions["ctrl-z"] = entry_action(function(e)
+    vim.cmd "vsplit"
+    lazy("vim-pack").load_now "vim-fugitive"
+    vim.cmd("Gedit " .. e.commit)
+    Log.info("Open diff (with `fugitive`) : " .. e.path)
+  end)
+
+  Fzflua.fzf_exec(function(fzf_cb)
+    local commit, count, tail = nil, 0, ""
+
+    local function feed(line)
+      line = line:gsub("\r$", "")
+      if line == "" then
+        return
+      end
+      local hash = line:match "^commit (%x+)$"
+      if hash then
+        commit = hash
+      elseif commit then
+        count = count + 1
+        -- Yellow: commit hash, red: file path
+        fzf_cb(string.format("\27[33m%s\27[0m — \27[31m%s\27[0m", commit:sub(1, 8), line))
+      end
+    end
+
+    local ok = pcall(vim.system, {
+      "git",
+      "-c",
+      "core.quotepath=false",
+      "log",
+      "--diff-filter=D",
+      "--name-only",
+      "--format=commit %H",
+    }, {
+      cwd = root,
+      text = true,
+      stdout = function(_, data)
+        if not data then
+          return
+        end
+        local lines = vim.split(tail .. data, "\n", { plain = true })
+        tail = table.remove(lines) -- The last line might be incomplete
+        for _, line in ipairs(lines) do
+          feed(line)
+        end
+      end,
+    }, function()
+      feed(tail)
+      fzf_cb() -- Close the stream
+      if count == 0 then
+        vim.schedule(function()
+          Log.warn "No deleted files found"
+        end)
+      end
+    end)
+
+    if not ok then
+      fzf_cb()
+    end
+  end, {
     fzf_opts = { ["--header"] = [[a-c:copyhash  ^o:diffviewopen  ^z:fugitive]] },
-    actions = {
-      ["default"] = open_deleted_files("edit", deleted_files),
-      ["ctrl-s"] = open_deleted_files("split", deleted_files),
-      ["ctrl-v"] = open_deleted_files("vsplit", deleted_files),
-      ["ctrl-t"] = open_deleted_files("tabnew", deleted_files),
-
-      ["alt-c"] = copy_hash(deleted_files),
-
-      ["ctrl-o"] = default_select_deleted(deleted_files),
-      ["ctrl-z"] = default_select_deleted(deleted_files, true),
-    },
+    actions = actions,
   })
 end
 
+--- Pick a branch, then a file from that branch, and open it with fugitive.
 function M.select_file_different_branch()
+  local root = git_root()
   local branches = vim.fn.systemlist {
     "git",
+    "-C",
+    root or ".",
     "branch",
     "--all",
     "--format=%(refname:short)",
   }
 
-  Fzflua = setup_fzflua()
   Fzflua.fzf_exec(branches, {
     actions = {
-      ["default"] = select_branch(),
-      ["alt-c"] = copy_branch(),
-      ["ctrl-o"] = open_current_file_from_branch "vsplit",
+      ["default"] = function(selected)
+        local branch = selected and selected[1]
+        if not branch then
+          return
+        end
+
+        -- Pass a command string so fzf-lua runs it asynchronously without blocking.
+        -- --full-tree keeps paths relative to the repo root, which works with Gedit.
+        local cmd = "git ls-tree -r --name-only --full-tree " .. vim.fn.shellescape(branch)
+
+        Fzflua.fzf_exec(cmd, {
+          cwd = root,
+          actions = window_actions(function(filepath, mode)
+            lazy("vim-pack").load_now "vim-fugitive"
+            run_with_mode(mode, "Gedit " .. vim.fn.fnameescape(branch .. ":" .. filepath))
+          end),
+        })
+      end,
+
+      ["alt-c"] = function(selected)
+        if selected and selected[1] then
+          copy_to_clipboard(selected[1])
+        end
+      end,
+
+      ["ctrl-o"] = function(selected)
+        local branch = selected and selected[1]
+        if branch then
+          lazy("vim-pack").load_now "vim-fugitive"
+          vim.cmd "vsplit"
+          vim.cmd("Gedit " .. branch .. ":%")
+        end
+      end,
     },
   })
 end
 
 function M.copy_repo_name()
-  local repo_name = get_repo_name()
-  if repo_name then
-    copy_to_clipboard(repo_name)
+  local _, remote = resolve_repo()
+  if remote then
+    copy_to_clipboard(remote.path)
   end
+end
+
+function M.open_repo()
+  local _, remote = resolve_repo()
+  if remote then
+    open_url(remote.url)
+  end
+end
+
+--- Format URL "blob" per forge: { host-pattern, format(url, ref, path, line) }
+local FORGES = {
+  { "gitlab", "%s/-/blob/%s/%s#L%d" },
+  { "bitbucket", "%s/src/%s/%s#lines-%d" },
+}
+local DEFAULT_BLOB_FMT = "%s/blob/%s/%s#L%d" -- GitHub & fallback
+
+function M.open_file()
+  local root, remote = resolve_repo()
+  if not root or not remote then
+    return
+  end
+
+  local ref = git_ref(root)
+  if not ref then
+    Log.error "Tidak bisa resolve branch (detached HEAD?)"
+    return
+  end
+
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname == "" then
+    Log.error "Buffer ini bukan file"
+    return
+  end
+
+  local rel_path = relative_path(root, bufname)
+  if not rel_path then
+    Log.error "File berada di luar repository"
+    return
+  end
+
+  local fmt = DEFAULT_BLOB_FMT
+  for _, forge in ipairs(FORGES) do
+    if remote.host:find(forge[1], 1, true) then
+      fmt = forge[2]
+      break
+    end
+  end
+
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  open_url(string.format(fmt, remote.url, url_encode(ref), url_encode(rel_path), line))
 end
 
 return M

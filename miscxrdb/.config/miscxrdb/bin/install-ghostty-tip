@@ -1,0 +1,443 @@
+#!/usr/bin/env bash
+# install-ghostty-tip.sh
+#
+# Unduh Ghostty "tip" (nightly) resmi, build, lalu install lengkap di Linux:
+# binary, desktop entry, ikon, terminfo, shell integration, tema, man page.
+#
+# Rilis tip resmi hanya berisi source (tanpa binary Linux), jadi script ini:
+#   1. memasang dependensi sistem (apt/dnf/pacman/zypper/apk/xbps)
+#   2. mengunduh ghostty-source.tar.gz dari rilis "tip"
+#   3. membaca versi Zig yang dibutuhkan dari build.zig.zon, lalu mengunduh Zig itu
+#   4. zig build -Doptimize=ReleaseFast ke folder staging
+#   5. menyalin hasilnya ke prefix dan mencatat manifest (agar bisa di-uninstall)
+#
+# Pemakaian: ./install-ghostty-tip.sh [--prefix DIR | --system] [--no-deps]
+#                                     [--keep] [--zig VERSI] [--uninstall]
+# Jalankan ulang script yang sama kapan saja untuk update ke tip terbaru.
+
+set -Eeuo pipefail
+
+TIP_URL="https://github.com/ghostty-org/ghostty/releases/download/tip/ghostty-source.tar.gz"
+FALLBACK_ZIG="0.16.0" # dipakai hanya jika build.zig.zon tidak terbaca
+
+PREFIX="${HOME}/.local"
+PREFIX_SET=0
+SYSTEM=0
+INSTALL_DEPS=1
+KEEP=0
+UNINSTALL=0
+ZIG_OVERRIDE=""
+
+STATE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/ghostty-tip"
+MANIFEST="$STATE_DIR/manifest"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/ghostty-tip"
+
+PM=""
+SUDO=""
+NO_SYS_LS=0
+NEED_ROOT_FS=0
+WORK=""
+
+if [[ -t 1 ]]; then
+  C_B=$'\033[1m' C_Y=$'\033[33m' C_R=$'\033[31m' C_G=$'\033[32m' C_0=$'\033[0m'
+else
+  C_B="" C_Y="" C_R="" C_G="" C_0=""
+fi
+log() { printf '%s==>%s %s\n' "$C_G$C_B" "$C_0" "$*"; }
+warn() { printf '%s[peringatan]%s %s\n' "$C_Y" "$C_0" "$*" >&2; }
+die() {
+  printf '%s[error]%s %s\n' "$C_R" "$C_0" "$*" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'EOF'
+Pemakaian: install-ghostty-tip.sh [opsi]
+
+  --prefix DIR   Folder instalasi (default: ~/.local)
+  --system       Install ke /usr/local untuk semua user (butuh sudo/doas)
+  --no-deps      Jangan install paket dependensi sistem
+  --zig VERSI    Paksa versi Zig tertentu (default: dibaca dari build.zig.zon)
+  --keep         Simpan folder kerja build (untuk debugging)
+  --uninstall    Hapus Ghostty tip yang dipasang script ini
+  -h, --help     Tampilkan bantuan
+EOF
+}
+
+parse_args() {
+  while (($#)); do
+    case "$1" in
+    --prefix)
+      [[ $# -ge 2 ]] || die "--prefix butuh argumen"
+      PREFIX="$2"
+      PREFIX_SET=1
+      shift 2
+      ;;
+    --system)
+      SYSTEM=1
+      shift
+      ;;
+    --no-deps)
+      INSTALL_DEPS=0
+      shift
+      ;;
+    --zig)
+      [[ $# -ge 2 ]] || die "--zig butuh argumen"
+      ZIG_OVERRIDE="$2"
+      shift 2
+      ;;
+    --keep)
+      KEEP=1
+      shift
+      ;;
+    --uninstall)
+      UNINSTALL=1
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *) die "opsi tidak dikenal: $1 (coba --help)" ;;
+    esac
+  done
+  if ((SYSTEM && !PREFIX_SET)); then
+    PREFIX="/usr/local"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Hak akses
+# ---------------------------------------------------------------------------
+detect_sudo() {
+  if [[ $EUID -eq 0 ]]; then
+    SUDO=""
+  elif command -v sudo >/dev/null 2>&1; then
+    SUDO="sudo"
+  elif command -v doas >/dev/null 2>&1; then
+    SUDO="doas"
+  else
+    SUDO="__none__"
+  fi
+}
+
+as_root() {
+  if [[ -z $SUDO ]]; then
+    "$@"
+  elif [[ $SUDO == "__none__" ]]; then
+    die "butuh root untuk: $* (sudo/doas tidak ditemukan)"
+  else
+    "$SUDO" "$@"
+  fi
+}
+
+# run_priv <0|1> cmd...  -> jalankan dengan root jika argumen pertama 1
+run_priv() {
+  local use_root=$1
+  shift
+  if ((use_root)); then as_root "$@"; else "$@"; fi
+}
+
+fs() { run_priv "$NEED_ROOT_FS" "$@"; }
+
+# ---------------------------------------------------------------------------
+# Dependensi sistem (daftar paket mengikuti dokumentasi resmi Ghostty)
+# ---------------------------------------------------------------------------
+detect_pm() {
+  local ids
+  [[ -r /etc/os-release ]] || {
+    PM=""
+    return 0
+  }
+  # shellcheck disable=SC1091
+  ids=" $(. /etc/os-release && printf '%s %s' "${ID:-}" "${ID_LIKE:-}") "
+  case "$ids" in
+  *" arch "*) PM=pacman ;;
+  *" debian "* | *" ubuntu "*) PM=apt ;;
+  *" fedora "* | *" rhel "*) PM=dnf ;;
+  *" suse "* | *" opensuse "*) PM=zypper ;;
+  *" alpine "*) PM=apk ;;
+  *" void "*) PM=xbps ;;
+  *) PM="" ;;
+  esac
+}
+
+pm_install() {
+  case "$PM" in
+  apt) as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" ;;
+  dnf) as_root dnf install -y "$@" ;;
+  pacman) as_root pacman -S --needed --noconfirm "$@" ;;
+  zypper) as_root zypper --non-interactive install "$@" ;;
+  apk) as_root apk add "$@" ;;
+  xbps) as_root xbps-install -y "$@" ;;
+  *) return 1 ;;
+  esac
+}
+
+install_deps() {
+  local -a core=() extra=()
+  local layer=""
+
+  case "$PM" in
+  apt)
+    core=(libgtk-4-dev libadwaita-1-dev gettext libxml2-utils pkg-config curl xz-utils tar ca-certificates)
+    layer="libgtk4-layer-shell-dev"
+    # Debian unstable/testing butuh gcc-multilib
+    if grep -qs sid /etc/debian_version 2>/dev/null; then extra+=(gcc-multilib); fi
+    as_root apt-get update
+    ;;
+  dnf)
+    core=(gtk4-devel libadwaita-devel gettext pkgconf-pkg-config curl xz tar)
+    layer="gtk4-layer-shell-devel"
+    ;;
+  pacman)
+    core=(gtk4 libadwaita gettext pkgconf curl xz tar)
+    layer="gtk4-layer-shell"
+    ;;
+  zypper)
+    core=(gtk4-devel libadwaita-devel gettext pkgconf ncurses-devel curl xz tar)
+    layer="gtk4-layer-shell-devel"
+    ;;
+  apk)
+    core=(gtk4.0-dev libadwaita-dev pkgconf ncurses gettext curl xz tar)
+    layer="gtk4-layer-shell-dev"
+    ;;
+  xbps)
+    core=(gtk4-devel libadwaita-devel pkg-config gettext curl xz tar)
+    layer="gtk4-layer-shell-devel"
+    as_root xbps-install -S -y || true
+    ;;
+  *)
+    warn "Distro tidak dikenali; lewati instalasi dependensi."
+    warn "Pastikan terpasang: gtk4, libadwaita, gtk4-layer-shell, pkg-config, gettext, curl, xz, tar."
+    return 0
+    ;;
+  esac
+
+  log "Memasang dependensi sistem ($PM) ..."
+  pm_install "${core[@]}" ${extra[@]+"${extra[@]}"}
+
+  # gtk4-layer-shell belum ada di semua distro (mis. Ubuntu 24.04, Debian 12, openSUSE Leap)
+  if ! pm_install "$layer" >/dev/null 2>&1; then
+    NO_SYS_LS=1
+    warn "Paket $layer tidak tersedia -> gtk4-layer-shell akan dikompilasi dari source."
+    pm_install patchelf >/dev/null 2>&1 || warn "patchelf tidak terpasang; mungkin perlu LD_LIBRARY_PATH=$PREFIX/lib"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Zig
+# ---------------------------------------------------------------------------
+zig_version_from_zon() {
+  sed -n 's/.*minimum_zig_version *= *"\([^"]*\)".*/\1/p' "$1/build.zig.zon" 2>/dev/null | head -n1
+}
+
+# ensure_zig <versi> -> set ZIG
+ensure_zig() {
+  local want="$1" arch name url expected got
+
+  if command -v zig >/dev/null 2>&1 && [[ "$(zig version 2>/dev/null)" == "$want" ]]; then
+    ZIG="$(command -v zig)"
+    log "Memakai Zig sistem $want ($ZIG)"
+    return 0
+  fi
+
+  case "$(uname -m)" in
+  x86_64 | amd64) arch="x86_64" ;;
+  aarch64 | arm64) arch="aarch64" ;;
+  *) die "arsitektur tidak didukung: $(uname -m)" ;;
+  esac
+
+  name="zig-${arch}-linux-${want}"
+  if [[ -x "$CACHE_DIR/$name/zig" ]]; then
+    ZIG="$CACHE_DIR/$name/zig"
+    log "Memakai Zig $want dari cache"
+    return 0
+  fi
+
+  if [[ $want == *-dev* ]]; then
+    url="https://ziglang.org/builds/${name}.tar.xz"
+  else
+    url="https://ziglang.org/download/${want}/${name}.tar.xz"
+  fi
+
+  log "Mengunduh Zig $want ..."
+  mkdir -p "$CACHE_DIR"
+  curl -fL --retry 3 -o "$WORK/zig.tar.xz" "$url"
+
+  # verifikasi checksum (rilis stabil saja, butuh python3)
+  if [[ $want != *-dev* ]] && command -v python3 >/dev/null 2>&1; then
+    expected="$(curl -fsSL https://ziglang.org/download/index.json |
+      python3 -c 'import json,sys; print(json.load(sys.stdin)[sys.argv[1]][sys.argv[2]]["shasum"])' \
+        "$want" "${arch}-linux" 2>/dev/null || true)"
+    if [[ -n $expected ]]; then
+      got="$(sha256sum "$WORK/zig.tar.xz" | cut -d' ' -f1)"
+      [[ $got == "$expected" ]] || die "checksum Zig tidak cocok (diharapkan $expected, dapat $got)"
+      log "Checksum Zig OK"
+    else
+      warn "Checksum Zig tidak bisa diverifikasi; lanjut."
+    fi
+  fi
+
+  tar -xf "$WORK/zig.tar.xz" -C "$CACHE_DIR"
+  [[ -x "$CACHE_DIR/$name/zig" ]] || die "Zig tidak ditemukan setelah ekstrak: $CACHE_DIR/$name/zig"
+  ZIG="$CACHE_DIR/$name/zig"
+}
+
+# ---------------------------------------------------------------------------
+# Install / uninstall
+# ---------------------------------------------------------------------------
+# remove_from_manifest -> hapus semua file yang tercatat di manifest
+remove_from_manifest() {
+  local old_prefix rel d use_root=0
+  [[ -f $MANIFEST ]] || {
+    warn "manifest tidak ditemukan: $MANIFEST"
+    return 1
+  }
+  old_prefix="$(sed -n '1s/^#prefix=//p' "$MANIFEST")"
+  [[ -n $old_prefix ]] || die "manifest rusak: $MANIFEST"
+  [[ -w $old_prefix ]] || use_root=1
+
+  while IFS= read -r rel; do
+    [[ -z $rel || $rel == \#* ]] && continue
+    run_priv "$use_root" rm -f -- "$old_prefix/$rel"
+    d="$(dirname -- "$old_prefix/$rel")"
+    while [[ $d != "$old_prefix" && $d == "$old_prefix"/* ]]; do
+      case "$d" in "$old_prefix/bin" | "$old_prefix/lib" | "$old_prefix/share") break ;; esac
+      run_priv "$use_root" rmdir "$d" 2>/dev/null || break
+      d="$(dirname -- "$d")"
+    done
+  done <"$MANIFEST"
+  rm -f -- "$MANIFEST"
+}
+
+# install_stage <stage-dir> <label-versi>
+install_stage() {
+  local stage="$1" label="$2"
+  [[ -x "$stage/bin/ghostty" ]] || die "build tidak menghasilkan bin/ghostty"
+
+  if [[ -f $MANIFEST ]]; then
+    log "Membersihkan instalasi tip sebelumnya ..."
+    remove_from_manifest || true
+  fi
+
+  fs mkdir -p "$PREFIX"
+  fs cp -a "$stage/." "$PREFIX/"
+
+  mkdir -p "$STATE_DIR"
+  {
+    echo "#prefix=$PREFIX"
+    echo "#version=$label"
+    (cd "$stage" && find . \( -type f -o -type l \) | sed 's|^\./||' | sort)
+  } >"$MANIFEST"
+}
+
+post_install() {
+  if command -v update-desktop-database >/dev/null 2>&1; then
+    fs update-desktop-database "$PREFIX/share/applications" 2>/dev/null || true
+  fi
+  if command -v gtk-update-icon-cache >/dev/null 2>&1 && [[ -d "$PREFIX/share/icons/hicolor" ]]; then
+    fs gtk-update-icon-cache -f -t "$PREFIX/share/icons/hicolor" 2>/dev/null || true
+  fi
+  case ":$PATH:" in
+  *":$PREFIX/bin:"*) ;;
+  *) warn "$PREFIX/bin belum ada di PATH. Tambahkan ke profil shell Anda (dan ke PATH sesi desktop agar peluncur aplikasi bisa membukanya)." ;;
+  esac
+}
+
+cleanup() {
+  [[ -n $WORK ]] || return 0
+  if ((KEEP)); then
+    log "Folder kerja dipertahankan: $WORK"
+  else
+    rm -rf -- "$WORK"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+main() {
+  local src zig_ver stage label
+  local -a flags
+
+  parse_args "$@"
+  [[ "$(uname -s)" == "Linux" ]] || die "script ini hanya untuk Linux"
+  detect_sudo
+
+  if ((UNINSTALL)); then
+    remove_from_manifest || die "tidak ada instalasi yang tercatat"
+    log "Ghostty tip dihapus. Konfigurasi di ~/.config/ghostty tidak disentuh."
+    return 0
+  fi
+
+  if [[ -e /run/ostree-booted ]]; then
+    die "Distro immutable (ostree) terdeteksi. Jalankan di dalam toolbox/distrobox."
+  fi
+
+  detect_pm
+  if ((INSTALL_DEPS)); then install_deps; fi
+
+  local c
+  for c in curl tar xz sed find; do
+    command -v "$c" >/dev/null 2>&1 || die "perintah '$c' tidak ditemukan"
+  done
+
+  if mkdir -p "$PREFIX" 2>/dev/null && [[ -w $PREFIX ]]; then
+    NEED_ROOT_FS=0
+  else
+    NEED_ROOT_FS=1
+  fi
+
+  WORK="$(mktemp -d)"
+  trap cleanup EXIT
+
+  log "Mengunduh source Ghostty tip ..."
+  curl -fL --retry 3 -o "$WORK/ghostty-source.tar.gz" "$TIP_URL"
+  mkdir -p "$WORK/src"
+  tar -xf "$WORK/ghostty-source.tar.gz" -C "$WORK/src"
+  src="$(find "$WORK/src" -mindepth 1 -maxdepth 1 -type d | head -n1)"
+  [[ -n $src && -f "$src/build.zig" ]] || die "isi tarball tidak dikenali"
+  label="$(basename "$src")"
+  log "Versi tip: $label"
+
+  zig_ver="${ZIG_OVERRIDE:-$(zig_version_from_zon "$src")}"
+  if [[ -z $zig_ver ]]; then
+    zig_ver="$FALLBACK_ZIG"
+    warn "versi Zig tidak terbaca dari build.zig.zon; memakai $zig_ver"
+  fi
+  log "Versi Zig yang dibutuhkan: $zig_ver"
+  ensure_zig "$zig_ver"
+
+  stage="$WORK/stage"
+  flags=(-Doptimize=ReleaseFast)
+  if ((NO_SYS_LS)); then flags+=(-fno-sys=gtk4-layer-shell); fi
+
+  log "Build Ghostty (bisa memakan beberapa menit, butuh internet untuk dependensi Zig) ..."
+  printf 'Perintah build:'
+  printf ' %q' "$ZIG" build -p "$stage" "${flags[@]}"
+  printf '\n'
+  (cd "$src" && "$ZIG" build -p "$stage" "${flags[@]}")
+
+  if ((NO_SYS_LS)) && command -v patchelf >/dev/null 2>&1; then
+    # shellcheck disable=SC2016 # $ORIGIN harus literal
+    patchelf --set-rpath '$ORIGIN/../lib' "$stage/bin/ghostty"
+  fi
+
+  log "Menginstall ke $PREFIX ..."
+  install_stage "$stage" "$label"
+  post_install
+
+  log "Selesai: $label"
+  "$PREFIX/bin/ghostty" +version || true
+  echo
+  echo "Konfigurasi : ~/.config/ghostty/config"
+  echo "Update      : jalankan ulang script ini"
+  echo "Uninstall   : $0 --uninstall"
+  if ((NO_SYS_LS)) && ! command -v patchelf >/dev/null 2>&1; then
+    warn "Jika Ghostty gagal start dari peluncur aplikasi, set LD_LIBRARY_PATH=$PREFIX/lib atau install patchelf lalu jalankan ulang."
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+  exit
+fi

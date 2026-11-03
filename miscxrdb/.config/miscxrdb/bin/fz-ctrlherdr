@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HERDR="${HERDR_BIN_PATH:-herdr}"
+NOTES_DIR="$HOME/Dropbox/neorg"
+NOTES_LABEL="notes-wiki"
+STATE_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/herdr-notes-toggle.prev"
+
+mkdir -p "$(dirname "$STATE_FILE")"
+
+snapshot="$("$HERDR" api snapshot)"
+
+current_workspace="$(
+  jq -r '.result.snapshot.focused_workspace_id // empty' <<<"$snapshot"
+)"
+
+notes_workspace="$(
+  jq -r --arg label "$NOTES_LABEL" '
+    .result.snapshot.workspaces[]?
+    | select(.label == $label)
+    | .workspace_id
+  ' <<<"$snapshot" | head -n 1
+)"
+
+save_previous() {
+  [[ -n "$current_workspace" ]] && printf '%s\n' "$current_workspace" >"$STATE_FILE"
+}
+
+# 1. Workspace notes belum ada -> buat, jalankan nvim
+if [[ -z "$notes_workspace" ]]; then
+  save_previous
+
+  created="$(
+    "$HERDR" workspace create \
+      --cwd "$NOTES_DIR" \
+      --label "$NOTES_LABEL" \
+      --focus
+  )"
+
+  pane_id="$(jq -r '.result.root_pane.pane_id' <<<"$created")"
+  "$HERDR" pane run "$pane_id" 'exec nvim'
+  exit 0
+fi
+
+# 2. Sedang di notes -> kembali ke workspace sebelumnya
+if [[ "$current_workspace" == "$notes_workspace" ]]; then
+  target=""
+
+  if [[ -s "$STATE_FILE" ]]; then
+    saved="$(<"$STATE_FILE")"
+    # pastikan workspace tersimpan masih ada dan bukan notes
+    target="$(
+      jq -r --arg id "$saved" --arg notes "$notes_workspace" '
+        .result.snapshot.workspaces[]?
+        | select(.workspace_id == $id and .workspace_id != $notes)
+        | .workspace_id
+      ' <<<"$snapshot" | head -n 1
+    )"
+  fi
+
+  # fallback: workspace pertama selain notes
+  if [[ -z "$target" ]]; then
+    target="$(
+      jq -r --arg notes "$notes_workspace" '
+        .result.snapshot.workspaces[]?
+        | select(.workspace_id != $notes)
+        | .workspace_id
+      ' <<<"$snapshot" | head -n 1
+    )"
+  fi
+
+  [[ -n "$target" ]] && "$HERDR" workspace focus "$target"
+
+# 3. Di workspace lain -> simpan posisi, pindah ke notes
+else
+  save_previous
+  "$HERDR" workspace focus "$notes_workspace"
+fi

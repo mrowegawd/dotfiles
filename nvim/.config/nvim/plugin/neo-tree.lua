@@ -1,10 +1,12 @@
 local add = require("vim-pack").add
 
-local ConfigPath = require("config").path
-local UtilKey = require "utils.map"
-local UtilFilexplorer = require "utils.fileexplorer-bookmark"
+local lazy = require("utils.plugin").require_lazy
 
-local Log = require "utils.log"
+local ConfigPath = lazy("config").path
+local UtilKey = lazy "utils.map"
+local UtilFilexplorer = lazy "utils.fileexplorer-bookmark"
+
+local Log = lazy "utils.log"
 local toggle_state = false
 
 add {
@@ -18,9 +20,9 @@ add {
     opts = function()
       UtilKey.disable_ctrl_i_and_o("NoOutline", { "Outline" })
 
-      local Preview = require "neo-tree.sources.common.preview"
+      local Preview = lazy "neo-tree.sources.common.preview"
 
-      local H = require "utils.highlights"
+      local H = lazy "utils.highlights"
       H.plugin("NeoTreeHi", {
         theme = {
           ["*"] = {
@@ -31,7 +33,7 @@ add {
             { NeoTreeRootName = { inherit = "PanelSideRootName" } },
             { NeoTreeStatusLine = { inherit = "PanelSideStusLine" } },
             { NeoTreeWinSeparator = { inherit = "PanelSideWinSeparator" } },
-            { NeoTreeDimText = { bg = "None" } },
+            { NeoTreeExpander = { inherit = "TroubleIndentFoldClosed" } },
             {
               NeoTreeTabActive = {
                 fg = { from = "Keyword", attr = "fg" },
@@ -41,13 +43,13 @@ add {
             },
             {
               NeoTreeTabInActive = {
-                fg = { from = "PanelSideBackground", attr = "bg" },
-                bg = { from = "Comment", attr = "fg", alter = -0.1 },
+                fg = { from = "QuickFixWinbar", attr = "fg" },
+                bg = { from = "QuickFixWinbar", attr = "bg" },
                 bold = true,
               },
             },
 
-            { NeoTreeIndentMarker = { fg = { from = "OutlineGuides", attr = "fg" }, bold = false } },
+            { NeoTreeIndentMarker = { fg = { from = "TroubleIndent", attr = "fg" }, bold = false } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelSideNormal", fg = { from = "Comment" } } },
 
             { NeoTreeGitAdded = { inherit = "GitSignsAdd" } },
@@ -128,21 +130,19 @@ add {
             },
           },
         },
-
         default_component_configs = {
           indent = {
             indent_size = 2.5,
             expander_highlight = "NeoTreeExpander",
           },
         },
-
         commands = {
           parent_or_close = function(state)
             local node = state.tree:get_node()
             if (node.type == "directory" or node:has_children()) and node:is_expanded() then
               state.commands.toggle_node(state)
             else
-              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+              lazy("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
             end
           end,
 
@@ -160,7 +160,7 @@ add {
                 end
               end
             end
-            return require("fzf-lua").fzf_exec(reverse, {
+            return lazy("fzf-lua").fzf_exec(reverse, {
               actions = {
                 ["default"] = {
                   fn = function(e)
@@ -222,7 +222,7 @@ add {
                     UtilFilexplorer.write_bookmarks(newlist)
                     Log.info("delete `" .. selection[1] .. "`, reload this pick")
 
-                    require("fzf-lua").resume(opts)
+                    lazy("fzf-lua").resume(opts)
                   end,
                   noclose = true,
                   desc = "del-item-bookmark",
@@ -230,7 +230,7 @@ add {
                 },
               },
             }
-            require("fzf-lua").fzf_exec(list_bookmarks, opts)
+            lazy("fzf-lua").fzf_exec(list_bookmarks, opts)
           end,
 
           bookmark_cycle_cycle = function()
@@ -255,7 +255,7 @@ add {
 
           open_cwd_in_terminal = function(state)
             local node = state.tree:get_node()
-            require("utils.terminal").open_terminal_in_filetree(node.path)
+            lazy("utils.terminal").open_terminal_in_filetree(node.path)
           end,
 
           toggle_previewer_user = function(state)
@@ -322,7 +322,7 @@ add {
               if choice == cmds[1] then
                 vim.cmd "wincmd l"
                 vim.schedule(function()
-                  require("fzf-lua").live_grep {
+                  lazy("fzf-lua").live_grep {
                     actions = {
                       ["default"] = {
                         fn = function(e)
@@ -330,7 +330,7 @@ add {
                             return
                           end
 
-                          local sel = require("utils.cmd").__strip_str(e[1])
+                          local sel = lazy("utils.cmd").__strip_str(e[1])
                           if not sel then
                             return
                           end
@@ -358,14 +358,14 @@ add {
 
               if choice == cmds[2] then
                 vim.cmd "wincmd l"
-                require("fzf-lua").files {
+                lazy("fzf-lua").files {
                   actions = {
                     ["default"] = {
                       fn = function(e)
                         if not e or #e == 0 then
                           return
                         end
-                        local sel = require("utils.cmd").__strip_str(e[1])
+                        local sel = lazy("utils.cmd").__strip_str(e[1])
                         if sel then
                           local res = vim.split(sel, "\t")
                           local filepath = res[2]
@@ -403,7 +403,6 @@ add {
             },
           },
         },
-
         window = {
           mappings = {
             ["tn"] = "noop",
@@ -421,22 +420,22 @@ add {
             ["os"] = "noop",
             ["ot"] = "noop",
             ["f"] = "noop",
+            ["z"] = "noop",
             ["/"] = "noop",
 
-            ["<C-a>cc"] = { "order_by_created", nowait = false },
-            ["<C-a>cd"] = { "order_by_diagnostics", nowait = false },
-            ["<C-a>cg"] = { "order_by_git_status", nowait = false },
-            ["<C-a>cm"] = { "order_by_modified", nowait = false },
-            ["<C-a>cn"] = { "order_by_name", nowait = false },
-            ["<C-a>cs"] = { "order_by_size", nowait = false },
-            ["<C-a>ct"] = { "order_by_type", nowait = false },
+            ["<C-c>vc"] = { "order_by_created", nowait = false },
+            ["<C-c>vd"] = { "order_by_diagnostics", nowait = false },
+            ["<C-c>vg"] = { "order_by_git_status", nowait = false },
+            ["<C-c>vm"] = { "order_by_modified", nowait = false },
+            ["<C-c>vn"] = { "order_by_name", nowait = false },
+            ["<C-c>vs"] = { "order_by_size", nowait = false },
+            ["<C-c>vt"] = { "order_by_type", nowait = false },
 
-            ["<C-a>fd"] = "fuzzy_finder_directory",
-            ["<C-a>fg"] = "fuzzy_finder",
-            ["<C-a>fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
-            ["<C-a>ff"] = "filter_on_submit",
-            ["<C-a>fc"] = "clear_filter",
-            ["<C-a>fx"] = "clear_filter",
+            ["<C-c>Fd"] = "fuzzy_finder_directory",
+            ["<C-c>Fg"] = "fuzzy_finder",
+            ["<C-c>Fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
+            ["<C-c>Ff"] = "filter_on_submit",
+            ["<C-c>FC"] = "clear_filter",
 
             ["<a-b>"] = "bookmark_cycle_pick",
             ["b"] = "bookmark_cycle_save",
@@ -453,10 +452,10 @@ add {
             ["<Leader>os"] = "open_split",
             ["<Leader>ov"] = "open_vsplit",
 
-            ["<a-T>"] = "open_cwd_in_terminal",
+            ["<C-c><C-t>"] = "open_cwd_in_terminal",
 
             ["<S-Tab>"] = "invert_selection",
-            ["<C-c>"] = "clear_selection",
+            ["<C-c><C-c>"] = "clear_selection",
             ["<Tab>"] = "select",
 
             ["zM"] = "close_all_nodes",
@@ -485,12 +484,27 @@ add {
 }
 
 local load_neotree = function()
-  require("vim-pack").load_now "neo-tree.nvim"
+  lazy("vim-pack").load_now "neo-tree.nvim"
 end
 
 UtilKey.nnoremap("<a-e>", function()
   load_neotree()
-  require("utils.layout").toggle_sidebar("neo-tree", function()
+  lazy("utils.layout").toggle_sidebar("neo-tree", function()
     vim.cmd "Neotree toggle"
   end)
 end, { desc = "Open: file explore [neotree]" })
+
+
+local UtilAugroup = lazy("utils.map").augroup
+local whichkey = lazy "which-key"
+
+UtilAugroup("neotree", {
+  event = "FileType",
+  pattern = "neo-tree",
+  command = function(ev)
+    whichkey.add {
+      { "<C-c>F", group = "filter:sort", buffer = ev.buf },
+      { "<C-c>v", group = "view", buffer = ev.buf },
+    }
+  end,
+})

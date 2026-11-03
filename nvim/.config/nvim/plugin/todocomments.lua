@@ -1,6 +1,9 @@
 local add = require("vim-pack").add
 
-local IconMisc = require("icons").misc
+local lazy = require("utils.plugin").require_lazy
+
+local IconMisc = lazy("icons").misc
+local UtilKey = lazy "utils.map"
 
 local alts = {
   FIX = { "FIXME", "BUG", "FIXIT", "ISSUE", "ERROR" },
@@ -10,8 +13,6 @@ local alts = {
   PREF = { "PERF", "OPTIM", "OPTIMIZE", "PERFORMANCE" },
   INFO = { "INFO" },
 }
-
-local UtilKey = require "utils.map"
 
 add {
   {
@@ -93,7 +94,7 @@ add {
 
 UtilKey.nnoremap("<Leader>fT", function()
   UtilKey.plugin_load_now "todo-comments.nvim"
-  local UtilTodocomments = require "utils.todocomments"
+  local UtilTodocomments = lazy "utils.todocomments"
   if vim.bo.filetype == "markdown" then
     UtilTodocomments.search_global_note("markdown", { title = "Todo Note Markdown Global" })
   elseif vim.bo.filetype == "org" then
@@ -107,7 +108,7 @@ end, { desc = "Picker: find todo comment global (fzflua) [todocomments]" })
 
 UtilKey.nnoremap("<Leader>ft", function()
   UtilKey.plugin_load_now "todo-comments.nvim"
-  local UtilTodocomments = require "utils.todocomments"
+  local UtilTodocomments = lazy "utils.todocomments"
   UtilTodocomments.search_local { title = "Curbuf" }
   vim.cmd "normal! zz"
 end, { desc = "Picker: find todo comment local (fzflua) [todocomments]" })

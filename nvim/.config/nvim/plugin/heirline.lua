@@ -1,21 +1,24 @@
 local add_on_event = require("vim-pack").add_on_event
 
+local lazy = require("utils.plugin").require_lazy
+
+local UtilAugroup = lazy("utils.map").augroup
+
 add_on_event("ColorScheme", {
   { src = "nvim-tree/nvim-web-devicons", setup = false },
   {
     src = "SmiteshP/nvim-navic",
     opts = function()
-      local IconLSP = require("icons").kinds
+      local IconLSP = lazy("icons").kinds
 
-      vim.api.nvim_create_autocmd("LspAttach", {
-        desc = "Configure LSP keymaps",
-        callback = function(args)
+      UtilAugroup("nvim-navic", {
+        event = "LspAttach",
+        command = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then
             return
           end
-
-          require("nvim-navic").attach(client, args.buf)
+          lazy("nvim-navic").attach(client, args.buf)
         end,
       })
 
@@ -24,7 +27,6 @@ add_on_event("ColorScheme", {
         highlight = true,
         separator = "  ",
         enc = function(line, col, winnr)
-          -- line: 16 bit (65535); col: 10 bit (1023); winnr: 6 bit (63)
           return bit.bor(bit.lshift(line, 16), bit.lshift(col, 6), winnr)
         end,
         dec = function(c)
@@ -74,7 +76,7 @@ add_on_event("ColorScheme", {
   {
     src = "rebelot/heirline.nvim",
     opts = function()
-      local comp = require "statusline.components"
+      local comp = lazy "statusline.components"
       return {
         statusline = { comp.status_active_left },
         winbar = { comp.status_winbar_active_left },
@@ -124,11 +126,10 @@ add_on_event("ColorScheme", {
       }
     end,
     on_setup = function()
-      local group = vim.api.nvim_create_augroup("AuHeirline", { clear = true })
-      vim.api.nvim_create_autocmd("FileType", {
-        group = group,
+      UtilAugroup("heirline", {
         pattern = "*",
-        callback = function()
+        event = "FileType",
+        command = function()
           local bh = vim.bo.bufhidden
           if bh == "wipe" or bh == "delete" then
             vim.bo.buflisted = false

@@ -3,8 +3,10 @@ local add = require("vim-pack").add
 local img_from_terminal = true
 local set_number = 0 -- 0 means random number; 1–9 are fixed numbers
 
-local UtilKey = require "utils.map"
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
+local Log = lazy "utils.log"
 
 ---@param min_height? integer
 local function allow_height(min_height)
@@ -19,14 +21,14 @@ local function set_img_dashboard()
     vim.fs.joinpath(vim.env.HOME, "moxconf", "development", "dotfiles", "img", "nvim-dashboard")
 
   local is_img = function()
-    if require("utils.file").is_dir(nvim_dashboard_path) and img_from_terminal then
+    if lazy("utils.file").is_dir(nvim_dashboard_path) and img_from_terminal then
       return true
     end
     return false
   end
 
   local is_image = is_img()
-  local fn_img = require("utils.logo").setup(is_image, set_number)
+  local fn_img = lazy("utils.logo").setup(is_image, set_number)
 
   local align = allow_height() and "right" or "center"
   local height = align == "center" and 20 or 20
@@ -60,49 +62,24 @@ add {
   {
     src = "folke/snacks.nvim",
     opts = function()
-      -- code
       return {
+        notifier = {
+          enabled = true,
+          -- level = vim.log.levels.TRACE,
+        },
         words = { enabled = false },
         image = {
           enabled = true,
           doc = { inline = true, float = false, max_width = 80, max_height = 60 },
-        },
-        styles = {
-          snacks_image = {
-            relative = "editor",
-            col = -1,
-          },
-          --   -- dashboard = {
-          --   --   wo = {
-          --   --     winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
-          --   --     wrap = false,
-          --   --   },
-          --   -- },
-          --   notifier = {
-          --     wo = {
-          --       winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
-          --       wrap = false,
-          --     },
-          --   },
-          notification = {
-            wo = {
-              winhighlight = "Normal:NormalFloat,NormalFloat:NormalFloat",
-            },
-          },
-          notification_history = {
-            wo = {
-              winhighlight = "Normal:NormalFloat",
-            },
-          },
         },
         indent = {
           enabled = true,
           char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
           -- char = "", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
           only_scope = false,
-          indent = { enabled = false },
           only_current = false,
-          scope = { enabled = false },
+          indent = { enabled = false },
+          scope = { enabled = true },
           chunk = {
             enabled = true,
             hl = "SnacksIndentScope",
@@ -131,7 +108,7 @@ add {
               (bufname and bufname:match "diffview://")
               or vim.t.diffview_view_initialized
               or (vim.bo[buf].filetype == "snacks_picker_preview")
-              or vim.tbl_contains({ "markdown", "org" }, vim.bo.filetype)
+              or vim.tbl_contains({ "markdown", "org", "tmux", "ini", "toml" }, vim.bo.filetype)
             then
               return false
             end
@@ -146,10 +123,25 @@ add {
             keys = {
               {
                 icon = " ",
-                key = "<space>",
+                key = "f",
                 desc = "Find File",
                 action = function()
-                  require("fzf-lua").files()
+                  vim.schedule(function()
+                    lazy("fzf-lua").files()
+
+                    -- local profiler = require "utils.event_profiler"
+                    -- profiler.start()
+
+                    -- profiler.mark "before load"
+                    -- lazy("fzf-lua").files()
+                    -- lazy("fzf-lua").files { previewer = "bat" } -- atau "cat"
+                    -- profiler.mark "after load"
+
+                    -- vim.defer_fn(function()
+                    --   profiler.stop()
+                    -- end, 1000)
+                    --
+                  end)
                 end,
               },
               { icon = " ", hidden = true, key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -158,15 +150,19 @@ add {
                 key = "r",
                 desc = "Recent Files",
                 action = function()
-                  require("fzf-lua").oldfiles()
+                  vim.schedule(function()
+                    lazy("fzf-lua").oldfiles()
+                  end)
                 end,
               },
               {
                 icon = " ",
-                key = "s",
+                key = "L",
                 desc = "Select Session",
                 action = function()
-                  print "asdf"
+                  vim.schedule(function()
+                    lazy("utils.session").select_session()
+                  end)
                 end,
               },
               {
@@ -174,12 +170,39 @@ add {
                 key = "l",
                 desc = "Restore Last Session",
                 action = function()
-                  -- require("vim-pack").load_now "resession"
-                  require("resession").load(require("utils.session").last_session_name(), { silence_errors = true })
-                  --
+                  vim.schedule(function()
+                    -- local profiler = require "utils.event_profiler"
+
+                    -- profiler.start()
+                    -- profiler.mark "before load"
+
+                    -- local p = require "jit.p"
+                    -- p.start("vl", "/tmp/jitp.log")
+                    -- lazy("resession").load(lazy("utils.session").last_session_name(), { silence_errors = true })
+
+                    local resession = require "resession"
+
+                    local orig_bufload = vim.fn.bufload
+                    ---@diagnostic disable-next-line: duplicate-set-field
+                    vim.fn.bufload = function() end -- sementara: jangan baca file saat restore
+
+                    local ok, err = pcall(resession.load, lazy("utils.session").last_session_name()) -- argumen sama seperti pemanggilan kamu sekarang
+                    vim.fn.bufload = orig_bufload -- selalu dikembalikan, walau load error
+
+                    if not ok then
+                      Log.error(tostring(err))
+                    end
+
+                    -- p.stop()
+                    -- profiler.mark "after load"
+                    --
+                    -- vim.defer_fn(function()
+                    --   profiler.stop()
+                    -- end, 1000)
+                  end)
                 end,
               },
-              { icon = "󰒲 ", key = "y", desc = "Lazy", action = ":Lazy" },
+              -- { icon = "󰒲 ", key = "y", desc = "Lazy", action = ":Lazy" },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
           },
@@ -207,23 +230,23 @@ add {
             --   }
             -- end,
 
-            file = function(item, ctx)
-              -- local fname = vim.fn.fnamemodify(item.file, ":~")
-              local fname = vim.fn.fnamemodify(item.file, ":.")
-              fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
-              if #fname > ctx.width then
-                local dir = vim.fn.fnamemodify(fname, ":h")
-                local file = vim.fn.fnamemodify(fname, ":t")
-                if dir and file then
-                  file = file:sub(-(ctx.width - #dir - 2))
-                  fname = dir .. "/…" .. file
-                end
-              end
-              local dir, file = fname:match "^(.*)/(.+)$"
-              return dir
-                  and { { item.key, hl = "Keyword" }, { " " }, { dir .. "/", hl = "dir" }, { file, hl = "file" } }
-                or { { fname, hl = "file" } }
-            end,
+            -- file = function(item, ctx)
+            --   -- local fname = vim.fn.fnamemodify(item.file, ":~")
+            --   local fname = vim.fn.fnamemodify(item.file, ":.")
+            --   fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+            --   if #fname > ctx.width then
+            --     local dir = vim.fn.fnamemodify(fname, ":h")
+            --     local file = vim.fn.fnamemodify(fname, ":t")
+            --     if dir and file then
+            --       file = file:sub(-(ctx.width - #dir - 2))
+            --       fname = dir .. "/…" .. file
+            --     end
+            --   end
+            --   local dir, file = fname:match "^(.*)/(.+)$"
+            --   return dir
+            --       and { { item.key, hl = "Keyword" }, { " " }, { dir .. "/", hl = "dir" }, { file, hl = "file" } }
+            --     or { { fname, hl = "file" } }
+            -- end,
             icon = { "" },
           },
           sections = {
@@ -342,7 +365,6 @@ add {
                   width = 0.85,
                   min_width = 0.6,
                   height = 0.85,
-                  -- border = "rounded",
                   { win = "preview", title = "{preview}", border = "rounded" },
                   {
                     { win = "input", height = 1, border = "bottom" },
@@ -359,7 +381,7 @@ add {
       }
     end,
     on_setup = function()
-      local Snacks = require "snacks"
+      local Snacks = lazy "snacks"
 
       Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
       Snacks.toggle.zen():map "<Leader>uz"
@@ -385,7 +407,7 @@ add {
         is_prev = is_prev or false
 
         local key = {
-          hilist = is_prev and "Hi}" or "Hi{",
+          hilist = is_prev and "Hi{" or "Hi}",
           snack_word = is_prev and -vim.v.count1 or vim.v.count1,
           neogidiffview = is_prev and "}" or "{",
           wo_diff = is_prev and "[c" or "]c",
@@ -426,6 +448,27 @@ add {
       UtilKey.nnoremap("<C-k>", function()
         __jump_scope()
       end)
+
+      UtilKey.nnoremap("<Localleader>nw", function()
+        lazy("snacks.notifier").show_history {
+          filter = function(n)
+            local lvl = vim.log.levels[n.level:upper()] -- only show -> WARN and ERROR
+            return lvl >= vim.log.levels.WARN
+          end,
+        }
+      end, { desc = "Notify: show WARN/ERROR history [snacks.nvim]" })
+
+      UtilKey.nnoremap("<Localleader>nd", function()
+        lazy("snacks.notifier").hide()
+      end, { desc = "Notify: dismiss all notifications [snacks.nvim]" })
+
+      UtilKey.nnoremap("<Localleader>nl", function()
+        lazy("snacks.notifier").show_history {
+          -- filter = function(n)
+          --   return vim.log.levels[n.level:upper()] >= vim.log.levels.TRACE
+          -- end,
+        }
+      end, { desc = "Notify: show notification history [snacks.nvim]" })
 
       UtilKey.nnoremap("<c-n>", function()
         __jump_lsp_mark_githunk()

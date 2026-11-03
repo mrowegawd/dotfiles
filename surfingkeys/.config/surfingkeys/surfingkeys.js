@@ -27,11 +27,15 @@ unmap("L");
 unmap("<Ctrl-j>");
 unmap("<Ctrl-k>");
 
+imap('hh', '<Esc>');
+
 // general settings
 settings.historyMUOrder = false;
 settings.tabsMRUOrder = false;
 settings.omnibarMaxResults = 20;
 settings.tabsThreshold = 0;
+settings.omnibarPosition = 'bottom';
+settings.showTabIndices = true;
 
 function scrollBySmooth(size, ward) {
   window.scrollTo({
@@ -107,35 +111,43 @@ map("<Ctrl-g>", "<Ctrl-f>");
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
-map("C", ";u");
-map("<Alt-v>", "cf", 0, "#1Open multiple links in a new tab (alternative)");
+
+// const hintsCharactersRight = "dhtnsbmwvzcr";
+// const hintsCharactersLeft = "iueoakjq;";
+const hintsCharactersAll = "crhtnsueoabmwvzkjq;";
+
+Hints.charactersUpper = false;
+Hints.style("font-size: 14px !important;");
+settings.hintAlign = "left";
+
+unmap("f");
+mapkey("f", "#1Open a link", () => {
+  Hints.setCharacters(hintsCharactersAll);
+  Hints.create("", Hints.dispatchMouseClick);
+});
 
 unmap("F");
-mapkey("F", "#1Open link in new tab", () => {
-  Hints.create("", Hints.dispatchMouseClick, {
-    tabbed: true,
-    active: true,
-  });
+mapkey("F", "#1Open a link in non-active new tab or click", () => {
+  Hints.setCharacters(hintsCharactersAll);
+  Hints.create("", Hints.dispatchMouseClick, { tabbed: true, active: false });
 });
+
+map("<Ctrl-Space>E", ";u");
+map("<Alt-f>", "cf", 0, "#1Open multiple links in a new tab (alternative)");
 
 // WARN: Currently, Idk why this map doesn't work anymore
-mapkey("<Alt-f>", "#1Open link and simulates Zen's Glance", () => {
-  Hints.create("*[href]", (element) => {
-    const event = new MouseEvent("click", {
-      altKey: true,
-      bubbles: true,
-      cancelable: true,
-      view: window,
-    });
-    element.dispatchEvent(event);
-  });
-});
+// mapkey("<Alt-f>", "#1Open link and simulates Zen's Glance", () => {
+//   Hints.create("*[href]", (element) => {
+//     const event = new MouseEvent("click", {
+//       altKey: true,
+//       bubbles: true,
+//       cancelable: true,
+//       view: window,
+//     });
+//     element.dispatchEvent(event);
+//   });
+// });
 
-mapkey("Q", "#1Click on an Image or a button in background, multiple", function () {
-  Hints.create("img, button", (i) => {
-    tabOpenLink(i.src)();
-  });
-});
 
 // TEST ============================================================
 // mapkey(";dv", "#1Download video", function () {
@@ -184,26 +196,26 @@ mapkey("Q", "#1Click on an Image or a button in background, multiple", function 
 // ╭─────────────────────────────────────────────────────────╮
 // │ OMNIBAR                                                 │
 // ╰─────────────────────────────────────────────────────────╯
-cmap("<Ctrl-j>", "<Tab>");
-cmap("<Ctrl-k>", "<Shift-Tab>");
-cmap("<Ctrl-n>", "<Tab>");
-cmap("<Ctrl-p>", "<Shift-Tab>");
+cmap("<Alt-p>", "<Tab>");
+cmap("<Alt-n>", "<Shift-Tab>");
+cmap("<Ctrl-p>", "<Tab>");
+cmap("<Ctrl-n>", "<Shift-Tab>");
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ TAB                                                     │
 // ╰─────────────────────────────────────────────────────────╯
-mapkey("<Alt-ArrowLeft>", "#3Move current tab to left", function () {
+mapkey("<Ctrl-Alt-ArrowLeft>", "#3Move current tab to left", function () {
   RUNTIME("moveTab", { step: -1 });
 });
-mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
+mapkey("<Ctrl-Alt-ArrowRight>", "#3Move current tab to right", function () {
   RUNTIME("moveTab", { step: 1 });
 });
-// mapkey("<Alt-ArrowUp>", "#Move current tab to up", function () {
-//   RUNTIME("moveTab", { step: -1 });
-// });
-// mapkey("<Alt-ArrowDown>", "#Move current tab to down", function () {
-//   RUNTIME("moveTab", { step: 1 });
-// });
+mapkey("<Ctrl-Alt-ArrowUp>", "#Move current tab to up", function () {
+  RUNTIME("moveTab", { step: -1 });
+});
+mapkey("<Ctrl-Alt-ArrowDown>", "#Move current tab to down", function () {
+  RUNTIME("moveTab", { step: 1 });
+});
 mapkey("<Space>bK", "#3Close all tabs except current one", function () {
   RUNTIME("tabOnly");
 });
@@ -215,33 +227,14 @@ mapkey("M", "#3Mute/unmute current tab", function () {
 });
 
 map("<Space>ff", "T");
-map("<Alt-h>", "R");
-map("<Alt-l>", "E");
-
-// mapkey("gxk", "#3Close tab on up", function () {
-//   RUNTIME("closeTabLeft");
-// });
-// mapkey("gxj", "#3Close tab on down", function () {
-//   RUNTIME("closeTabRight");
-// });
-// mapkey("gxK", "#3Close all tabs on up", function () {
-//   RUNTIME("closeTabsToLeft");
-// });
-// mapkey("gxJ", "#3Close all tabs on down", function () {
-//   RUNTIME("closeTabsToRight");
-// });
+map("<Ctrl-Alt-l>", "R");
+map("<Ctrl-Alt-h>", "E");
+map("<Alt-l>", "R");
+map("<Alt-h>", "E");
 
 mapkey(
   "<Ctrl-l>",
   "#Go one tab right",
-  function () {
-    RUNTIME("nextTab");
-  },
-  { repeatIgnore: true },
-);
-mapkey(
-  "<Ctrl-j>",
-  "#3Go one tab right",
   function () {
     RUNTIME("nextTab");
   },
@@ -256,15 +249,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Ctrl-k>",
-  "#3Go one tab left",
-  function () {
-    RUNTIME("previousTab");
-  },
-  { repeatIgnore: true },
-);
-mapkey(
-  "<Ctrl-n>",
+  "<Ctrl-j>",
   "#3Go one tab right",
   function () {
     RUNTIME("nextTab");
@@ -272,7 +257,7 @@ mapkey(
   { repeatIgnore: true },
 );
 mapkey(
-  "<Ctrl-p>",
+  "<Ctrl-k>",
   "#3Go one tab left",
   function () {
     RUNTIME("previousTab");
@@ -284,31 +269,59 @@ map("gH", ":feedkeys 99E", 0, "#3Go to the first tab");
 map("gL", ":feedkeys 99R", 0, "#3Go to the last tab");
 map("gK", ":feedkeys 99E", 0, "#3Go to the first tab");
 map("gJ", ":feedkeys 99R", 0, "#3Go to the last tab");
-map("<Space>R", ":feedkeys 99r", 0, "#3Reload all tabs");
 
-map("<Ctrl-o>", "S"); // backward link history
-map("<Ctrl-i>", "D"); // forward link history
+// map("<Ctrl-Space>R", ":feedkeys 99r", 0, "#3Reload all tabs");
+mapkey('<Ctrl-Space>R', 'Reload all tabs', function() {
+    RUNTIME('reloadAllTabs');
+});
+
 
 mapkey("q", "#3Close current tab", () => {
   RUNTIME("closeTab");
 });
 
-mapkey("<Space>bk", "#3Close current tab", () => {
-  RUNTIME("closeTab");
+mapkey("<Space>bk", "#3Close tab", function () {
+    RUNTIME.repeats = 1;
+    RUNTIME('closeTab');
 });
 
 mapkey("<Space>fo", "#3Open recently closed", () => {
   Front.openOmnibar({ type: "RecentlyClosed" });
 });
 
+// ╭─────────────────────────────────────────────────────────╮
+// │ VIEW                                                    │
+// ╰─────────────────────────────────────────────────────────╯
+// View page source
+mapkey('<Space>vs', 'View page source', function () {
+    RUNTIME('viewSource', { tab: { tabbed: true } });
+});
+
+mapkey("<Space>vi", "#1Click on an Image or a button in background, multiple", function () {
+  Hints.create("img, button", (i) => {
+    tabOpenLink(i.src)();
+  });
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ HISTORY                                                 │
+// ╰─────────────────────────────────────────────────────────╯
+
+map("<Ctrl-o>", "S"); // backward link history
+map("<Ctrl-i>", "D"); // forward link history
+
 mapkey("<Space>fh", "#3Open history tabs", () => {
   Front.openOmnibar({ type: "History" });
+});
+
+mapkey('<Space>fH', 'Delete history older than 30 days', function () {
+    RUNTIME('deleteHistoryOlderThan', { days: 30, });
 });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ BOOKMARKS                                               │
 // ╰─────────────────────────────────────────────────────────╯
-mapkey("<Space>fb", "#Open bookmark", function () {
+mapkey("<Space>fb", "#3Open bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
 });
 
@@ -324,11 +337,32 @@ mapkey("<Ctrl-0>", "#3Zoom reset", function () {
 // ╭─────────────────────────────────────────────────────────╮
 // │ SEARCH                                                  │
 // ╰─────────────────────────────────────────────────────────╯
+
+mapkey('<Space>sg', 'Search in google in current tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'g', tabbed: false });
+});
+
+mapkey('<Space>sG', 'Search in google in new tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
+});
+
+mapkey('<Space>sy', 'Search in Youtube in current tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'y', tabbed: false });
+});
+
+mapkey('<Space>sY', 'Search in Youtube in new tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'y' });
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ YANK                                                    │
+// ╰─────────────────────────────────────────────────────────╯
+
 addSearchAlias(
-  "s",
+  "S",
   "StackOverflow",
   "https://stackoverflow.com/search?q=",
-  "s",
+  "<Space>y",
   "https://api.stackexchange.com/2.2/search/advanced?pagesize=10&" +
     "order=desc&sort=relevance&site=stackoverflow&q=",
   function (response) {
@@ -346,7 +380,7 @@ addSearchAlias(
   "g",
   "Google",
   "https://www.google.com/search?q=",
-  "s",
+  "<Space>y",
   "https://www.google.com/complete/search?client=chrome-omni&gs_ri=chrome-ext&oit=1&cp=1&pgcl=7&q=",
   function (response) {
     var res = eval(response.text);
@@ -354,30 +388,12 @@ addSearchAlias(
   },
 );
 
-// mapkey("p", "Open the clipboard in the current tab", function () {
-//   let data;
-//   Clipboard.read(function (response) {
-//     if (
-//       response.data.startsWith("http://") ||
-//       response.data.startsWith("https://") ||
-//       response.data.startsWith("www.")
-//     ) {
-//       data = response.data;
-//     } else {
-//       data = "https://www.google.com/search?q=" + response.data;
-//     }
-//     RUNTIME("openLink", {
-//       tab: { tabbed: false },
-//       url: data,
-//     });
-//   });
-// });
 
 addSearchAlias(
   "G",
   "GitHub",
   "https://github.com/search?q=",
-  "s",
+  "<Space>y",
   "https://api.github.com/search/repositories?order=desc&q=",
   function (response) {
     var res = JSON.parse(response.text)["items"];
@@ -394,7 +410,22 @@ addSearchAlias(
   },
 );
 
-addSearchAlias("y", "YouTube LOL", "https://www.youtube.com/results?search_query=");
+// ╭─────────────────────────────────────────────────────────╮
+// │ MISC                                                    │
+// ╰─────────────────────────────────────────────────────────╯
+
+// Chrome specific
+mapkey('<Space>od', 'Open Chrome Downloads', function () {
+    tabOpenLink('chrome://downloads/');
+});
+
+mapkey('<Space>oh', 'Open Chrome History', function () {
+    tabOpenLink('chrome://history/');
+});
+
+mapkey('<Space>xd', 'Close Downloads Shelf', function () {
+    RUNTIME('closeDownloadsShelf', { clearHistory: true });
+});
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ HINT                                                    │
@@ -405,8 +436,8 @@ Hints.style(`
     font-size: 18px;
     font-weight: bold;
     text-transform: lowercase;
-    color: #FFFF00 !important;
-    background: #3B4252 !important;
+    color: #ECEFF4 !important;        /* teks terang */
+    background: #1B1E28 !important;   /* bg sangat gelap */
     border: solid 1px #4C566A !important;
     text-align: center;
     padding: 5px;
@@ -420,9 +451,9 @@ Hints.style(
     font-size: 18px;
     font-weight: bold;
     text-transform: lowercase;
-    color: #FFFF00 !important;
-    background: #6272a4 !important;
-    border: solid 2px #4C566A !important;
+    color: #ECEFF4 !important;
+    background: #232838 !important;
+    border: solid 2px #81A1C1 !important;
     text-align: center;
     padding: 5px;
     line-height: 1;
@@ -433,11 +464,11 @@ Hints.style(
 // set visual-mode style
 Visual.style(
   "marks",
-  "background-color: #A3BE8C; border: 1px solid #3B4252 !important; text-decoration: underline;",
+  "background-color: #A3BE8C; border: 1px solid #1B1E28 !important; text-decoration: underline; color: #1B1E28 !important;",
 );
 Visual.style(
   "cursor",
-  "background-color: #E5E9F0 !important; border: 1px solid #6272a4 !important; border-bottom: 2px solid green !important; padding: 2px !important; outline: 1px solid rgba(255,255,255,.75) !important;",
+  "background-color: #ECEFF4 !important; border: 1px solid #81A1C1 !important; border-bottom: 2px solid #A3BE8C !important; padding: 2px !important; outline: 1px solid rgba(255,255,255,.75) !important;",
 );
 
 // ╭─────────────────────────────────────────────────────────╮
@@ -448,22 +479,31 @@ settings.theme = `
     --font: "JetBrainsMono Nerd Font Mono", Arial, sans-serif;
     --font-size: 18px;
     --font-weight: bold;
-    --fg: #E5E9F0;
-    --bg: #3B4252;
-    --bg-dark: #2E3440;
-    --border: #4C566A;
-    --main-fg: #88C0D0;
+
+    /* Teks terang */
+    --fg:        #ECEFF4;
+    --fg-dim:    #D8DEE9;
+
+    /* Background gelap */
+    --bg:        #1B1E28;
+    --bg-dark:   #14161E;
+    --bg-alt:    #232838;
+
+    /* Aksen */
+    --border:    #3B4252;
+    --border-hi: #4C566A;
+    --main-fg:   #88C0D0;
     --accent-fg: #A3BE8C;
-    --info-fg: #5E81AC;
-    --select: #4C566A;
-    --orange: #D08770;
-    --red: #BF616A;
-    --yellow: #EBCB8B;
+    --info-fg:   #5E81AC;
+    --select:    #434C5E;
+    --orange:    #D08770;
+    --red:       #BF616A;
+    --yellow:    #EBCB8B;
   }
   /* ---------- Generic ---------- */
   .sk_theme {
-  background: var(--bg);
-  color: var(--fg);
+    background: var(--bg);
+    color: var(--fg);
     background-color: var(--bg);
     border-color: var(--border);
     font-family: var(--font);
@@ -476,8 +516,8 @@ settings.theme = `
   }
 
   div.surfingkeys_cursor {
-    background-color: #0642CE;
-    color: red;
+    background-color: #88C0D0;
+    color: #14161E;
   }
   .sk_theme tbody {
     color: var(--fg);
@@ -490,8 +530,8 @@ settings.theme = `
     color: var(--accent-fg) !important;
   }
   #sk_tabs .sk_tab {
-    background: var(--bg-dark);
-    border: 1px solid var(--border);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-hi);
   }
   #sk_tabs .sk_tab_title {
     color: var(--fg);
@@ -501,7 +541,7 @@ settings.theme = `
   }
   #sk_tabs .sk_tab_hint {
     background: var(--bg);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-hi);
     color: var(--accent-fg);
   }
   .sk_theme #sk_frame {
@@ -511,11 +551,6 @@ settings.theme = `
   }
 
   /* ---------- Omnibar ---------- */
-  /* Uncomment this and use settings.omnibarPosition = 'bottom' for Pentadactyl/Tridactyl style bottom bar */
-  /* .sk_theme#sk_omnibar {
-    width: 100%;
-    left: 0;
-  } */
   .sk_theme .title {
     color: var(--accent-fg);
   }
@@ -538,11 +573,11 @@ settings.theme = `
     font-size: calc(var(--font-size) - 2px);
   }
   .sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
-    background: var(--border);
+    background: var(--bg-alt);
     padding: 5px;
   }
   .sk_theme #sk_omnibarSearchResult ul li:nth-child(even) {
-    background: var(--border);
+    background: var(--bg-alt);
     padding: 5px;
   }
   .sk_theme #sk_omnibarSearchResult ul li.focused {
@@ -552,28 +587,32 @@ settings.theme = `
     padding-left: 15px;
   }
   .sk_theme #sk_omnibarSearchArea {
-    border-top-color: var(--border);
+    border-top-color: var(--border-hi);
     border-bottom-color: transparent;
     margin: 0;
     padding: 5px 10px;
+    background: var(--bg);
   }
   .sk_theme #sk_omnibarSearchArea:before {
     content: "󱋤";
     display: inline-block;
     margin-left: 5px;
     font-size: 22px;
+    color: var(--main-fg);
   }
   .sk_theme #sk_omnibarSearchArea input,
   .sk_theme #sk_omnibarSearchArea span {
     font-size: 20px;
-    padding:10px 0;
+    padding: 10px 0;
+    color: var(--fg);
   }
   .sk_theme #sk_omnibarSearchArea .prompt {
     text-transform: uppercase;
     padding-left: 10px;
+    color: var(--fg-dim);
   }
   .sk_theme #sk_omnibarSearchArea .prompt:after {
-    content: "";
+    content: "";
     display: inline-block;
     margin-right: 5px;
     color: var(--accent-fg);
@@ -583,7 +622,7 @@ settings.theme = `
     display: none;
   }
   .sk_theme #sk_omnibarSearchArea .separator:after {
-    content: "";
+    content: "";
     display: inline-block;
     margin-right: 5px;
     color: var(--accent-fg);
@@ -595,9 +634,9 @@ settings.theme = `
     font-size: var(--font-size);
     font-weight: var(--font-weight);
     background: var(--bg);
-    border-color: var(--border);
+    border-color: var(--border-hi);
     color: var(--fg);
-    opacity: 0.9;
+    opacity: 0.95;
   }
 
   /* ---------- Popup Keys ---------- */
@@ -615,14 +654,14 @@ settings.theme = `
   #sk_bubble {
     background-color: var(--bg) !important;
     color: var(--fg) !important;
-    border-color: var(--border) !important;
+    border-color: var(--border-hi) !important;
   }
   #sk_bubble * {
     color: var(--fg) !important;
   }
   #sk_bubble div.sk_arrow div:nth-of-type(1) {
-    border-top-color: var(--border) !important;
-    border-bottom-color: var(--border) !important;
+    border-top-color: var(--border-hi) !important;
+    border-bottom-color: var(--border-hi) !important;
   }
   #sk_bubble div.sk_arrow div:nth-of-type(2) {
     border-top-color: var(--bg) !important;
@@ -633,11 +672,13 @@ settings.theme = `
   #sk_status,
   #sk_find {
     font-size: var(--font-size);
-    border-color: var(--border);
+    border-color: var(--border-hi);
+    background: var(--bg);
+    color: var(--fg);
   }
   .sk_theme kbd {
     background: var(--bg-dark);
-    border-color: var(--border);
+    border-color: var(--border-hi);
     box-shadow: none;
     color: var(--fg);
   }
@@ -649,7 +690,6 @@ settings.theme = `
   #sk_editor {
     background: var(--bg-dark) !important;
     height: 50% !important;
-    /* Remove this to restore the default editor size */
   }
   .ace_dialog-bottom {
     border-top: 1px solid var(--bg) !important;
@@ -658,14 +698,15 @@ settings.theme = `
   .ace_gutter,
   .ace_gutter-cell,
   .ace_dialog {
-    background: var(--bg) !important;
+    background: var(--bg-alt) !important;
   }
   .ace-chrome {
     color: var(--fg) !important;
+    background: var(--bg-dark) !important;
   }
   .ace_gutter,
   .ace_dialog {
-    color: var(--fg) !important;
+    color: var(--fg-dim) !important;
   }
   .ace_cursor {
     color: var(--fg) !important;
@@ -684,13 +725,14 @@ settings.theme = `
     font-family: var(--font);
     font-size: var(--font-size);
     font-weight: var(--font-weight);
+    color: var(--fg);
   }
 
   /* Disable RichHints CSS animation */
   .expandRichHints {
-      animation: 0s ease-in-out 1 forwards expandRichHints;
+    animation: 0s ease-in-out 1 forwards expandRichHints;
   }
   .collapseRichHints {
-      animation: 0s ease-in-out 1 forwards collapseRichHints;
+    animation: 0s ease-in-out 1 forwards collapseRichHints;
   }
-  `;
+`;

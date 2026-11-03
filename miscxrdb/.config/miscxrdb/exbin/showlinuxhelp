@@ -72,7 +72,7 @@ surfingkeys() {
   EDIT_CMD="bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && zsh -c 'nvim $SURFINGKEYS_PATH'"
   RELOAD_CMD="dunstify '$TITLE_DUNST' 'Surfingkeys snippet updated'"
 
-  SELECT=$(awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
+  SELECT=$(awk '/^[a-zA-Z?.\<\>]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' "$SURFINGKEYS_PATH" | sed 's/#//' | sort |
     column -t -s $'\t' | $FZF_COMMAND \
     --header="^x:edit  ^r:reload" \
     --bind="ctrl-x:execute($EDIT_CMD)" \

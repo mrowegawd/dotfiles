@@ -2,24 +2,68 @@ local keymap, api = vim.keymap, vim.api
 
 vim.opt_local.wrap = false
 
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+
+---@param mode "vsplit" | "split" | "none" | "tab"
+local function open_item(mode)
+  local inst = lazy("grug-far").get_instance(0)
+  if not inst then
+    return
+  end
+
+  local grug_win = api.nvim_get_current_win()
+
+  local target_win = vim.fn.win_getid(vim.fn.winnr "#")
+
+  if target_win == 0 or target_win == grug_win then
+    return Log.warn "No previous window available"
+  end
+
+  api.nvim_set_current_win(target_win)
+
+  if mode == "tab" then
+    vim.cmd "tab split"
+  elseif mode == "vsplit" then
+    vim.cmd "vsplit"
+  elseif mode == "split" then
+    vim.cmd "split"
+  end
+
+  api.nvim_set_current_win(grug_win)
+
+  inst:open_location()
+end
+
 keymap.set("n", "o", function()
-  local get_inst = function()
-    return require("grug-far").get_instance(0)
-  end
+  open_item "none"
+end, {
+  buffer = api.nvim_get_current_buf(),
+  silent = true,
+  desc = "Open match",
+})
 
-  if vim.v.count then
-    get_inst():goto_match(vim.v.count)
-  end
-  get_inst():goto_location()
-end, { buffer = api.nvim_get_current_buf(), silent = true })
+keymap.set("n", "<Leader>ov", function()
+  open_item "vsplit"
+end, {
+  buffer = api.nvim_get_current_buf(),
+  silent = true,
+  desc = "Open match in vsplit",
+})
 
-keymap.set("n", "<c-v>", function()
-  local get_inst = function()
-    return require("grug-far").get_instance(0)
-  end
+keymap.set("n", "<Leader>os", function()
+  open_item "split"
+end, {
+  buffer = api.nvim_get_current_buf(),
+  silent = true,
+  desc = "Open match in split",
+})
 
-  if vim.v.count then
-    get_inst():goto_match(vim.v.count)
-  end
-  get_inst():goto_location()
-end, { buffer = api.nvim_get_current_buf(), silent = true })
+keymap.set("n", "<Leader>ot", function()
+  open_item "tab"
+end, {
+  buffer = api.nvim_get_current_buf(),
+  silent = true,
+  desc = "Open match in current tab and send other matches to a new tab",
+})

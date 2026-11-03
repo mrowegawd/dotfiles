@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local IconsLSP = require("icons").kinds
+local lazy = require("utils.plugin").require_lazy
+
+local IconsLSP = lazy("icons").kinds
 
 add {
   { src = "MadKuntilanak/nui.nvim", setup = false },
@@ -42,25 +44,29 @@ add {
 }
 
 local load_meoyarn = function()
-  require("vim-pack").load_now "meow.yarn.nvim"
+  lazy("vim-pack").load_now "meow.yarn.nvim"
 end
 
-vim.api.nvim_create_user_command("PeekWHOCallers", function()
-  load_meoyarn()
-  require("meow.yarn").open_tree("call_hierarchy", "callers")
-end, { desc = "LSP: show callers (who calls this function) [meow.yarn]" })
+local UtilKey = lazy "utils.map"
 
-vim.api.nvim_create_user_command("PeekWHATCallees", function()
-  load_meoyarn()
-  require("meow.yarn").open_tree("call_hierarchy", "callees")
-end, { desc = "LSP: show callees (functions called by this function) [meow.yarn]" })
+local function call_meow(type, sub_type)
+  return lazy("meow.yarn").open_tree(type, sub_type)
+end
 
-vim.api.nvim_create_user_command("PeekSUPERTYPE", function()
-  load_meoyarn()
-  require("meow.yarn").open_tree("type_hierarchy", "supertypes")
-end, { desc = "LSP: show supertypes (parent types) [meow.yarn]" })
+local cmds = {
+  --stylua: ignore
+  { "<Leader>cpw", function() call_meow("call_hierarchy", "callers") end, "who caller" },
+  --stylua: ignore
+  { "<Leader>cpW", function() call_meow("call_hierarchy", "callees") end, "what callers" },
+  --stylua: ignore
+  { "<Leader>cpS", function() call_meow("type_hierarchy", "supertypes") end, "Super Type" },
+  --stylua: ignore
+  { "<Leader>cps", function() call_meow("type_hierarchy", "subtypes") end, "Sub Type" },
+}
 
-vim.api.nvim_create_user_command("PeekSUBTYPE", function()
-  load_meoyarn()
-  require("meow.yarn").open_tree("type_hierarchy", "subtypes")
-end, { desc = "LSP: show subtypes (derived/child types) [meow.yarn]" })
+for _, cmd in ipairs(cmds) do
+  UtilKey.nnoremap(cmd[1], function()
+    load_meoyarn()
+    cmd[2]()
+  end, { desc = ("Peek: %s [meow.yarn]"):format(cmd[3]) })
+end

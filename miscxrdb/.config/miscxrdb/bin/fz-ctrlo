@@ -39,11 +39,12 @@ _init_colors() {
   if [[ -f $TMUX_SNAPSHOT_PATH ]]; then
     mapfile -t s < <(awk -F= '
       { u = toupper($0) }
-      !b && u ~ /STATUSLINE_BG/ { b = $2; gsub(/"/, "", b) }
+      !b && u ~ /TMUX_BG/ { b = $2; gsub(/"/, "", b) }
       !r && u ~ /RED/           { r = $2; gsub(/"/, "", r) }
       END { print b; print r }' "$TMUX_SNAPSHOT_PATH")
     if [[ -n ${s[0]:-} ]]; then COL_BG=${s[0]}; fi
     if [[ -n ${s[1]:-} ]]; then COL_RED=${s[1]}; fi
+
   fi
 }
 
@@ -58,7 +59,7 @@ not_in_tmux() {
 
 _require_tmux() {
   if not_in_tmux; then
-    echo "${1:-[+] can not run, you are not in tmux mode}"
+    dunstify "${1:-[+] can not run, you are not in tmux mode}"
     exit 1
   fi
 }
@@ -132,11 +133,23 @@ _clipboard_paste() {
 }
 
 _popup_run() {
-  local w=$1 h=$2 dir=$3 x=$4 y=$5 cmd=$6
+  local w=$1 h=$2 dir=$3
+  local popup_x=$4 popup_y=$5 cmd=$6
   _init_colors
-  local -a args=(-w "$w" -h "$h" -d "$dir" -S "bg=$COL_BG,fg=$COL_TAB_ACTIVE_FG" -b rounded -EE)
-  [[ -n $x ]] && args+=(-x "$x")
-  [[ -n $y ]] && args+=(-y "$y")
+
+  local -a args=(
+    -w "$w"
+    -h "$h"
+    -d "$dir"
+    -s "bg=$COL_BG,fg=$COL_TAB_ACTIVE_FG" # `s` color area popup
+    -S "bg=$COL_BG,fg=$COL_TAB_ACTIVE_FG" # `S` color border popup
+    -b rounded
+    -E
+  )
+
+  [[ -n $popup_x ]] && args+=(-x "$popup_x")
+  [[ -n $popup_y ]] && args+=(-y "$popup_y")
+
   tmux display-popup "${args[@]}" "$cmd"
 }
 
@@ -148,12 +161,19 @@ _session_cmd() {
 
 # _toggle_popup <session> <w> <h> <command> [dir] [x] [y]
 _toggle_popup() {
-  local session=$1 w=$2 h=$3 cmd=$4 dir=${5:-$PANE_PATH_FMT} x=${6:-} y=${7:-}
+  local session=$1 w=$2 h=$3 cmd=$4
+  local dir=${5:-$PANE_PATH_FMT}
+  local popup_x=${6:-} popup_y=${7:-}
+
   if [[ $(tmux display-message -p '#S') == "$session" ]]; then
     tmux detach-client
     return
   fi
-  _popup_run "$w" "$h" "$dir" "$x" "$y" "$(_session_cmd "$session" "$cmd")"
+
+  _popup_run \
+    "$w" "$h" "$dir" \
+    "$popup_x" "$popup_y" \
+    "$(_session_cmd "$session" "$cmd")"
 }
 
 _tm_toggle_pane() {
