@@ -55,6 +55,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
   { src = "saghen/blink.lib", setup = false },
   { src = "mikavilpas/blink-ripgrep.nvim", setup = false },
   { src = "Kaiser-Yang/blink-cmp-git", setup = false },
+  { src = "kristijanhusak/vim-dadbod-completion", setup = false },
   {
     src = "L3MON4D3/LuaSnip",
     module_name = "luasnip",
@@ -117,6 +118,21 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
           end,
           "fallback",
         },
+        ["<c-y>"] = {
+          function(cmp)
+            local luasnip = lazy "luasnip"
+            if cmp.is_visible() then
+              return cmp.select_and_accept()
+            elseif luasnip.expand_or_jumpable() then
+              return cmp.accept()
+            elseif luasnip.get_active_snip() then
+              return luasnip.jump(1)
+            elseif vim.snippet.active() then
+              return vim.snippet.jump(1)
+            end
+          end,
+          "fallback",
+        },
         ["<Tab>"] = {
           function()
             local luasnip = lazy "luasnip"
@@ -148,14 +164,14 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             return cmp.show { providers = { "ripgrep" } }
           end,
         },
-        ["<a-r>"] = {
+        ["<c-r>"] = {
           function(cmp)
             local current_provider = providers[idx]
             cmp.show { providers = { current_provider } }
             idx = (idx % #providers) + 1
           end,
         },
-        ["<a-q>"] = { "hide" },
+        ["<c-q>"] = { "hide" },
         ["<a-n>"] = {
           function(cmp)
             if not cmp.is_visible() then
@@ -329,6 +345,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
           ["<Left>"] = false,
 
           ["<a-y>"] = { "select_and_accept" },
+          ["<c-y>"] = { "select_and_accept" },
 
           ["<a-j>"] = {
             function()
@@ -382,12 +399,12 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               end
             end,
           },
-          ["<a-r>"] = {
+          ["<c-r>"] = {
             "hide",
             "cancel",
             "show",
           },
-          ["<a-q>"] = {
+          ["<c-q>"] = {
             "hide",
             "cancel",
             function()
@@ -419,8 +436,12 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
 
           return sources
         end,
-        per_filetype = { org = { inherit_defaults = true, "org" } },
+        per_filetype = {
+          org = { inherit_defaults = true, "org" },
+          sql = { "snippets", "dadbod", "buffer" },
+        },
         providers = {
+          dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
           org = { name = "Org", module = "org.completion.blink" },
           git = {
             module = "blink-cmp-git",

@@ -2,6 +2,8 @@ local add_on_event = require("vim-pack").add_on_event
 
 local lazy = require("utils.plugin").require_lazy
 
+local UtilKey = lazy "utils.map"
+
 add_on_event("BufWritePre", {
   {
     src = "stevearc/conform.nvim",
@@ -35,6 +37,10 @@ add_on_event("BufWritePre", {
 
           -- For filetypes without a formatter:
           ["_"] = { "trim_whitespace", "trim_newlines" },
+
+          sql = { "sqlfluff" },
+          mysql = { "sqlfluff" },
+          plsql = { "sqlfluff" },
         },
         format_on_save = function()
           if vim.bo.filetype == "java" then
@@ -77,6 +83,10 @@ add_on_event("BufWritePre", {
             cwd = lazy("conform.util").root_file {
               vim.env.HOME .. "/.config/linters/.cbfmt.toml",
             },
+          },
+
+          sqlfluff = {
+            args = { "format", "--dialect=ansi", "-" },
           },
 
           orgfmt = {
@@ -123,11 +133,9 @@ add_on_event("BufWritePre", {
   },
 })
 
-local UtilKey = lazy "utils.map"
-
 UtilKey.noremap({ "n", "x" }, "<Leader>cf", function()
   lazy("conform").format { timeout_ms = 3000 }
-end, { desc = "Open: run formatting [conform.nvim]" })
+end, { desc = "Action: run formatting [conform.nvim]" })
 
 -- Use conform for gq.
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

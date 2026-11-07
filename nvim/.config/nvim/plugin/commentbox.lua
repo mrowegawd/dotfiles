@@ -49,6 +49,11 @@ UtilKey.noremap({ "n", "x" }, "<Leader>cba", function()
   vim.cmd "CBlcline10"
 end, { desc = "Action: comment line 10" })
 
+UtilKey.noremap({ "n", "x" }, "<Leader>cby", function()
+  load_comment_box()
+  vim.cmd "CBllline6"
+end, { desc = "Action: comment line left 6" })
+
 UtilKey.noremap({ "n", "x" }, "<Leader>cbA", function()
   load_comment_box()
   vim.cmd "CBlcline13"

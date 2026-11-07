@@ -2,13 +2,19 @@ local add = require("vim-pack").add
 
 local allow_ft_render_markdown = { "markdown", "octo", "noice", "eldochover", "codecompanion", "org" }
 
+local lazy = require("utils.plugin").require_lazy
+
+lazy("utils.render-markdown.org.org-heading").setup()
+
 add {
   {
     src = "MeanderingProgrammer/render-markdown.nvim",
     opts = {
       custom_handlers = {
         org = {
-          parse = require("utils.render-markdown.org.org-heading").setup(),
+          parse = function()
+            return {}
+          end,
         },
       },
       bullet = { icons = { "", "•", "", "-", "-" } },

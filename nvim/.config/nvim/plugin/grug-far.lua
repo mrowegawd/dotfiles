@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 -- Find and replace.
 add {
@@ -14,16 +16,18 @@ add {
       resultLocation = { showNumberLabel = false },
       windowCreationCommand = "botright vsplit",
       keymaps = {
-        replace = { n = "<c-c>" },
-        qflist = { n = "<c-q>" },
-        syncLocations = { n = "<Localleader>s" },
-        syncLine = { n = "<Localleader>l" },
+        replace = { n = "<C-c><C-c>" },
+        qflist = { n = "<C-q>" },
+        syncLocations = { n = "<C-c>xs" },
+        syncLine = { n = "<C-c>xl" },
         close = { n = "q" },
-        historyOpen = { n = "<Leader>h" },
-        historyAdd = { n = "<Leader>A" },
-        refresh = { n = "R" },
+        historyOpen = { n = "<C-c>oh" },
+        historyAdd = { n = "<C-a>A" },
+        refresh = { n = "<C-c>R" },
         gotoLocation = { n = "<enter>" },
         pickHistoryEntry = { n = "<enter>" },
+        nextInput = { n = "<a-n>" },
+        prevInput = { n = "<a-p>" },
       },
     },
   },
@@ -32,7 +36,7 @@ add {
 UtilKey.nnoremap("<Localleader>gg", function()
   UtilKey.plugin_load_now "grug-far.nvim"
 
-  local grug = require "grug-far"
+  local grug = lazy "grug-far"
   local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"
   grug.open {
     transient = true,
@@ -44,7 +48,7 @@ UtilKey.nnoremap("<Localleader>gg", function()
 end, { desc = "GrepEnchanted: grug far current path (visual) [grugfar]" })
 UtilKey.vnoremap("<Localleader>gg", function()
   UtilKey.plugin_load_now "grug-far.nvim"
-  local grug = require "grug-far"
+  local grug = lazy "grug-far"
   local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"
   grug.open {
     transient = true,
@@ -59,7 +63,7 @@ UtilKey.nnoremap("<Localleader>gb", function()
   UtilKey.plugin_load_now "grug-far.nvim"
 
   local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
-  local grug = require "grug-far"
+  local grug = lazy "grug-far"
   grug.open {
     prefills = {
       search = "",
@@ -76,8 +80,8 @@ UtilKey.vnoremap("<Localleader>gb", function()
   UtilKey.plugin_load_now "grug-far.nvim"
 
   local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
-  local grug = require "grug-far"
-  local _str = require("utils.cmd").get_selection()
+  local grug = lazy "grug-far"
+  local _str = lazy("utils.cmd").get_selection()
 
   grug.open {
     prefills = {

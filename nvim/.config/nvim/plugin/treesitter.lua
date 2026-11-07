@@ -268,7 +268,7 @@ UtilKey.nnoremap("<Leader>jc", function()
     vim.cmd "normal! zt" -- move the cursor line to the top of the window
     return "<Ignore>"
   end
-end, { desc = "JumpTo: treesitter context and align to top" })
+end, { desc = "Jump: treesitter context and align to top" })
 
 on_plugin_update("nvim-treesitter", function()
   local treesitter = lazy "nvim-treesitter"

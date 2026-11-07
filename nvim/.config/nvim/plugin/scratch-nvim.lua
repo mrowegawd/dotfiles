@@ -1,7 +1,9 @@
 local add = require("vim-pack").add
 
-local ConfigPath = require("config").path
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local ConfigPath = lazy("config").path
+local UtilKey = lazy "utils.map"
 
 add {
   {

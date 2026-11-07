@@ -143,6 +143,26 @@ M.dap = {
   Trace = "✎ ",
 }
 
+M.dap = {
+  Stopped = "",
+  Breakpoint = "",
+  BreakpointCondition = "",
+  BreakpointRejected = "",
+  LogPoint = "",
+
+  Disconnect = "",
+  Pause = "",
+  Play = "",
+  Run_last = "",
+  Step_back = "",
+  Step_into = "",
+  Step_out = "",
+  Step_over = "",
+  Terminate = "",
+  Debug = "",
+  Trace = "✎ ",
+}
+
 M.diagnostics = {
   Error = " ",
   Warn = " ",

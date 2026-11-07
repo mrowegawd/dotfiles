@@ -1,8 +1,10 @@
 local M = {}
 
+local lazy = require("utils.plugin").require_lazy
+
 local _keys
 
-local UtilNote = require "utils.note"
+local UtilNote = lazy "utils.note"
 
 local function set_keymaps(mappings, bufnr)
   for mode, x in pairs(mappings) do
@@ -45,25 +47,25 @@ function M.note_mappings_ft(bufnr)
       },
 
       -- ├──────────────────────────────────┤ FIND ├──────────────────────────────────┤
-      ["<Leader>rr"] = {
+      ["<Localleader>afb"] = {
         function()
           UtilNote.find_backlinks_local()
         end,
         "Note: find local backlink",
       },
-      ["<Leader>rR"] = {
+      ["<Localleader>afB"] = {
         function()
           UtilNote.find_backlinks_global()
         end,
         "Note: find global backlink",
       },
-      ["<Leader>uu"] = {
+      ["<Localleader>afu"] = {
         function()
           UtilNote.find_url_and_backlinks_local()
         end,
         "Note: find backlink and http in local",
       },
-      ["<Leader>uU"] = {
+      ["<Localleader>afU"] = {
         function()
           UtilNote.find_url_and_backlinks_global()
         end,

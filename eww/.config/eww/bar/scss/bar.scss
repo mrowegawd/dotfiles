@@ -17,12 +17,12 @@
   .icon {
     font-size: 2.3rem;
     padding: 1rem 0;
-    color: $magenta;
+    color: $red;
   }
 }
 
 .icon {
-  color: $magenta;
+  color: $fg;
   font-family: $altfont;
   margin: 5px 8px 0px 0px;
   font-size: 1.3rem;
@@ -60,7 +60,7 @@ tooltip {
 
   button {
     margin: 0px 2px;
-    color: $magenta;
+    color: $fg;
     padding: 0;
   }
 
@@ -114,7 +114,7 @@ tooltip {
 
 .volume-osd {
   // @include window;
-  background-color: $black;
+  background-color: $red;
   box-shadow: 0 0 0 0px black;
   // min-width: 25rem;
   // border-top-left-radius: 10px;
@@ -141,11 +141,11 @@ tooltip {
 
 .volume-icon {
   &.less {
-    color: $red;
+    color: $fg;
   }
 
   &.more {
-    color: $magenta;
+    color: $green;
   }
 }
 

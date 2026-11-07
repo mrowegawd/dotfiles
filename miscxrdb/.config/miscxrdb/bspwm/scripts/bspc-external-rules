@@ -244,6 +244,8 @@ case $instance.$class in
 *.SimpleScreenRecorder) videos ;;
 *.[Ff]irefox) browser ;;
 *.firefox-esr) browser ;;
+*.google-chrome) browser ;;
+*.Google-chrome) browser ;;
 *.firefox_firefox) browser ;;
 *.Navigator) browser ;;
 *.Chromium) browser ;;

@@ -9,56 +9,93 @@
 
 stty -ixon
 zmodload zsh/datetime
-zmodload zsh/nearcolor
+
+# Load nearcolor only if the terminal does not support truecolor.
+# Truecolor terminals use hex colors directly without mapping them to the
+# 256-color palette.
+[[ $COLORTERM == (truecolor|24bit) ]] || zmodload zsh/nearcolor
+
+typeset -U path PATH fpath   # Automatically remove duplicates, including in nested shells.
 
 typeset -A __DOTS
 __DOTS[ITALIC_ON]=$'\e[3m'
 __DOTS[ITALIC_OFF]=$'\e[23m'
 
 exists() { (($+commands[$1])); }
+command-exists() { exists "$@"; } # Keep a compatibility wrapper for scripts that use command-exists.
+source_if_exists() { [[ -f $1 ]] && source $1; }
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ OPTIONS                                                  ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# Cache dir: pakai ZSH_CACHE_DIR dari .zshenv kalau ada
+typeset -g _zcache=${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh}
+[[ -d $_zcache ]] || mkdir -p $_zcache
 
-HISTSIZE=100000
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-HISTFILE=$ZSH_CACHE_DIR/.zsh_history
+# Cache the output of `<tool> init/completion zsh` to a file.
+# Regenerate only when the binary is newer than the cache.
+# Usage: __cached_init <name> <binary> <command...>
+__cached_init() {
+  local name=$1 bin=$commands[$2]
+  shift 2
+  [[ -n $bin ]] || return 1
+  local f=$_zcache/$name.zsh
+  if [[ ! -s $f || $bin -nt $f ]]; then
+    "$@" >|$f 2>/dev/null
+  fi
+  source $f
+}
 
-setopt INTERACTIVE_COMMENTS LONG_LIST_JOBS NOTIFY APPEND_HISTORY AUTO_CD
-setopt COMPLETE_ALIASES AUTOPARAMSLASH AUTO_PUSHD CORRECT EXTENDED_HISTORY
-setopt HIST_BEEP HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_VERIFY
-setopt PROMPT_CR PROMPT_SP RM_STAR_WAIT INC_APPEND_HISTORY
-setopt PUSHD_IGNORE_DUPS PUSHD_SILENT SHARE_HISTORY
-unsetopt HIST_SAVE_NO_DUPS
+# ── OPTIONS ───────────────────────────────────────────────────────────
 
-fpath=($ZDOTDIR/funcs ${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+HISTSIZE=110000   # Keep larger than SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work effectively.
+SAVEHIST=100000
+HISTFILE=$_zcache/.zsh_history
 
-autoload -Uz $ZDOTDIR/funcs/*(.:t)
-autoload -U colors && colors
+setopt INTERACTIVE_COMMENTS LONG_LIST_JOBS AUTO_CD AUTO_PUSHD CORRECT RM_STAR_WAIT
+setopt PUSHD_IGNORE_DUPS PUSHD_SILENT
+setopt EXTENDED_HISTORY SHARE_HISTORY HIST_BEEP HIST_VERIFY
+setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
-colorline="#313131"
-colorsuggest="fg=#4b4b4b"
+KEYTIMEOUT=20   # 0.2s; reduce the delay when typing 'h' due to the 'hh' binding.
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ COMPLETION                                               ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# ── COLORS ────────────────────────────────────────────────────────────
 
-autoload -Uz compinit && compinit
+autoload -Uz colors && colors
 
-# Fix bottleneck: compinit hanya rebuild dump kalau sudah > 24 jam
-# Tanpa ini, compinit scan semua fpath setiap shell start (~100-300ms)
+colorline="#171717"
+colorsuggest="#3b3b3b"
+colorprompt_fg="#060606"
+colorprompt_bg="#696969"
+colorpromptbright_bg="#252525"
+colorbranch=150
+
+# ── FPATH / PATH / FUNCS ──────────────────────────────────────────────
+
+fpath=(${ZDOTDIR:-$HOME}/funcs ${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+path=(${ASDF_DATA_DIR:-$HOME/.asdf}/shims $path)
+
+# Go: avoid running `asdf where` or `go env` (4 processes on startup).
+# If GOPATH was previously inside the asdf directory,
+# set its path manually here.
+export GOPATH=${GOPATH:-$HOME/go}
+path+=($GOPATH/bin $HOME/.config/emacs/bin)
+
 () {
-  local zcd="${ZDOTDIR:-$HOME}/.zcompdump"
-  local zcdc="$zcd.zwc"
-  if [[ -f "$zcd"(#qN.mh+24) || ! -f "$zcd" ]]; then
-    compinit -d "$zcd"
-    { zcompile "$zcd"; } &| # compile di background
+  local -a funcs=(${ZDOTDIR:-$HOME}/funcs/*(N.:t))
+  (( $#funcs )) && autoload -Uz $funcs
+}
+
+# ── COMPLETION ────────────────────────────────────────────────────────
+
+autoload -Uz compinit
+() {
+  setopt localoptions extendedglob
+  local zcd=$_zcache/.zcompdump
+  # Rebuild the dump if missing or older than 24 hours; otherwise, use the cache.
+  if [[ ! -f $zcd || -n $zcd(#qN.mh+24) ]]; then
+    compinit -d $zcd
+    { zcompile $zcd } &|
   else
-    compinit -C -d "$zcd" # -C: skip security check, pakai cache
+    compinit -C -d $zcd
   fi
 }
 
@@ -81,71 +118,45 @@ zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ':completion:*' cache-path $_zcache/.zcompcache
 zstyle ':completion:*' matcher-list '' \
   '+m:{[:lower:]}={[:upper:]}' \
   '+m:{[:upper:]}={[:lower:]}' \
   '+m:{_-}={-_}' \
   'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,comm -w -w'
 
-zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
+## Cache completions generated by external tools.
+[[ $TERM == xterm-kitty ]] && __cached_init kitty-completion kitty kitty + complete setup zsh
+__cached_init uv-completion uv uv generate-shell-completion zsh
 
-if [[ "$TERM" == "xterm-kitty" ]]; then
-  kitty + complete setup zsh | source /dev/stdin
-fi
+# ── PLUGINS ───────────────────────────────────────────────────────────
+# Load order:
+# fzf-tab (after compinit) -> autosuggestions -> ... -> syntax-highlighting (last).
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ SOURCE PLUGINS                                           ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
-source_if_exists() { [[ -f $1 ]] && source $1; }
-
-source_if_exists "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source_if_exists "$ZSH_PLUGINS/autoenv/autoenv.plugin.zsh"
-
-# ── FZF-TAB ───────────────────────────────────────────────────────────
 if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
 
   zstyle ':completion:*' menu no
   zstyle ':fzf-tab:*' use-fzf-default-opts yes
   zstyle ':fzf-tab:*' continuous-trigger 'ctrl-y'
-
   zstyle ':fzf-tab:*' popup-min-size 30 10
   zstyle ':fzf-tab:*' popup-pad 0 0
   zstyle ':fzf-tab:*' popup-fit-preview yes
+  [[ -n $TMUX ]] && zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 
-  command-exists() {
-    ((${+commands[$1]}))
-    return $?
-  }
-
-  if command-exists eza; then
-    fzf_dir_preview='eza -1 --color=always --icons $realpath'
-    zstyle ':fzf-tab:complete:eza:*' fzf-preview "$fzf_dir_preview"
+  if exists eza; then
+    fzf_dir_preview='eza -a --tree --level=2 --icons --color=always $realpath'
+    zstyle ':fzf-tab:complete:eza:*' fzf-preview $fzf_dir_preview
   else
     fzf_dir_preview='ls -1 --color=always $realpath'
   fi
-
-  zstyle ':fzf-tab:complete:cd:*' fzf-preview "$fzf_dir_preview"
-  zstyle ':fzf-tab:complete:ls:*' fzf-preview "$fzf_dir_preview"
-
-  if [[ -n "$TMUX" ]]; then
-    zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-  fi
-
-  # if command-exists bat; then
-  #   fzf_bat_preview='bat --color=always -n -r :500'
-  #   FZF_CTRL_T_OPTS="$FZF_CTRL_T_OPTS --preview '$fzf_bat_preview {}'"
-  #   zstyle ':fzf-tab:complete:bat:*' fzf-preview "$fzf_bat_preview \$realpath"
-  #   zstyle ':fzf-tab:complete:cat:*' fzf-preview "$fzf_bat_preview \$realpath"
-  # else
-  #   FZF_CTRL_T_OPTS="$FZF_CTRL_T_OPTS --preview 'less {}'"
-  # fi
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview $fzf_dir_preview
+  zstyle ':fzf-tab:complete:ls:*' fzf-preview $fzf_dir_preview
 
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-  icat() { kitten icat $@; }
+  icat() { kitten icat "$@"; }
   zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
   zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
 
@@ -153,29 +164,20 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
   zstyle ':fzf-tab:complete:sxiv:*' fzf-flags --height 60% --min-height 20 --border --preview-window "right:50%"
 
-  zstyle ':fzf-tab:complete:zathura:*' fzf-preview 'pdftotext $realpath - | head -n 20'
-  zstyle ':fzf-tab:complete:tdf:*' fzf-preview 'pdftotext $realpath - | head -n 20'
-  zstyle ':fzf-tab:complete:fancy-cat:*' fzf-preview 'pdftotext $realpath - | head -n 20'
+  zstyle ':fzf-tab:complete:(zathura|tdf|fancy-cat):*' fzf-preview 'pdftotext $realpath - | head -n 20'
   zstyle ':fzf-tab:complete:git:*' fzf-flags --preview-window "right:50%:hidden:cycle"
 
-  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
   zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
     '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
   zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
-
-  if command -v eza >/dev/null; then
-    fzf_dir_preview='eza -a --tree --level=2 --icons --color=always $realpath'
-    zstyle ':fzf-tab:complete:eza:*' fzf-preview "$fzf_dir_preview"
-  else
-    fzf_dir_preview='ls -1 --color=always $realpath'
-  fi
-  zstyle ':fzf-tab:complete:cd:*' fzf-preview "$fzf_dir_preview"
-  zstyle ':fzf-tab:complete:ls:*' fzf-preview "$fzf_dir_preview"
 fi
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ LESS                                                     ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+source_if_exists "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source_if_exists "$ZSH_PLUGINS/autoenv/autoenv.plugin.zsh"
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=${colorsuggest}"
+
+# ── LESS / MAN ────────────────────────────────────────────────────────
 
 export LESSCHARSET=UTF-8
 export PAGER=less
@@ -189,275 +191,192 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ VI-MODE                                                  ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# ── GIT STATUS (async, 1x panggilan git) ──────────────────────────────
+# Run the worker in a subprocess and print the prompt segment directly
+# (single line, no tabs).
 
-vim_insert_mode=""
-vim_normal_mode="%F{${colorline}}╰─%f%F{green} %f"
-vim_mode=$vim_insert_mode
+__git_worker() {
+  cd -q -- "$1" 2>/dev/null || return
+  local out
+  out=$(command git --no-optional-locks status --porcelain=v2 --branch --show-stash 2>/dev/null) || return
 
-function zle-line-finish { vim_mode=$vim_insert_mode; }
+  local branch="" upstream="" line xy
+  local -i ahead=0 behind=0 stash=0 staged=0 unstaged=0 untracked=0
+  local -a ab
+  for line in "${(@f)out}"; do
+    case $line in
+      '# branch.head '*)     branch=${line#'# branch.head '} ;;
+      '# branch.upstream '*) upstream=${line#'# branch.upstream '} ;;
+      '# branch.ab '*)
+        ab=(${=${line#'# branch.ab '}})
+        ahead=${ab[1]#+}
+        behind=${ab[2]#-}
+        ;;
+      '# stash '*) stash=${line#'# stash '} ;;
+      '? '*)       untracked=1 ;;
+      '1 '*|'2 '*|'u '*)
+        xy=${line[3,4]}
+        [[ ${xy[1]} != . ]] && staged=1
+        [[ ${xy[2]} != . ]] && unstaged=1
+        ;;
+    esac
+  done
+  [[ -n $upstream && ${upstream#*/} != "$branch" ]] && branch+="→[${upstream}]"
+  branch=${branch//\%/%%}
+
+  local s="%F{$colorbranch}%{${__DOTS[ITALIC_ON]}%}${branch}%{${__DOTS[ITALIC_OFF]}%}"
+  (( staged ))    && s+="%F{114} ●"
+  (( unstaged ))  && s+="%F{203} ●"
+  (( untracked )) && s+=" %F{blue}?"
+  (( stash ))     && s+=" %F{yellow}⚑"
+  (( ahead ))     && s+=" %F{red}⇡${ahead}"
+  (( behind ))    && s+=" %F{cyan}⇣${behind}"
+  print -r -- $s
+}
+
+typeset -g __git_seg=""
+typeset -g __git_fd=""
+__git_async_start() {
+  # Cancel the previous request.
+  if [[ -n $__git_fd ]]; then
+    zle -F $__git_fd 2>/dev/null
+    exec {__git_fd}<&-
+    __git_fd=""
+  fi
+  exec {__git_fd}< <(__git_worker $PWD)
+  zle -F $__git_fd __git_async_done
+}
+
+__git_async_done() {
+  local fd=$1 raw
+  raw=$(<&$fd)
+  zle -F $fd
+  exec {fd}<&-
+  __git_fd=""
+  __git_seg=$raw
+  __build_prompt
+  zle && zle reset-prompt
+}
+
+# ── VI-MODE ───────────────────────────────────────────────────────────
+
+typeset -g vim_insert_mode=""
+typeset -g vim_normal_mode="%F{${colorline}}╰─%f%F{green} %f"
+typeset -g vim_mode=$vim_insert_mode
+
+zle-keymap-select() {
+  if [[ $KEYMAP == vicmd ]]; then
+    vim_mode=$vim_normal_mode
+    print -n '\e[2 q'   # block
+  else
+    vim_mode=$vim_insert_mode
+    print -n '\e[6 q'   # beam
+  fi
+  __build_prompt
+  zle reset-prompt
+}
+zle-line-init() { print -n '\e[6 q'; }
+zle-line-finish() { vim_mode=$vim_insert_mode; print -n '\e[6 q'; }
+zle -N zle-keymap-select
+zle -N zle-line-init
 zle -N zle-line-finish
 
-function TRAPINT() {
-  vim_mode=$vim_insert_mode
-  return $((128 + $1))
-}
+# ── PROMPT  ───────────────────────────────────────────────────────────
 
-cursor_mode() {
-  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
-  cursor_block='\e[2 q'
-  cursor_beam='\e[6 q'
-
-  function zle-keymap-select {
-    vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
-    zle && zle reset-prompt
-
-    if [[ ${KEYMAP} == vicmd ]] ||
-      [[ $1 = 'block' ]]; then
-      echo -ne $cursor_block
-    elif [[ ${KEYMAP} == main ]] ||
-      [[ ${KEYMAP} == viins ]] ||
-      [[ ${KEYMAP} = '' ]] ||
-      [[ $1 = 'beam' ]]; then
-      echo -ne $cursor_beam
-    fi
-  }
-
-  zle-line-init() {
-    echo -ne $cursor_beam
-  }
-
-  zle -N zle-keymap-select
-  zle -N zle-line-init
-}
-
-cursor_mode
-
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ VCS                                                      ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' use-cache true
-zstyle ':vcs_info:*' max-exports 2
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr "%F{114} ●"
-zstyle ':vcs_info:*' unstagedstr "%F{203} ●"
-zstyle ':vcs_info:*' use-simple true
-zstyle ':vcs_info:git+set-message:*' hooks git-untracked git-stash git-compare git-remotebranch
-zstyle ':vcs_info:git*:*' actionformats '%B%F{203}%b|%a%b%c%u'
-zstyle ':vcs_info:git:*' formats "%F{150}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%c%u%m"
-
-__in_git() { [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; }
-
-function +vi-git-untracked() {
-  emulate -L zsh
-  if __in_git; then
-    if [[ -n $(git ls-files --directory --no-empty-directory --exclude-standard --others 2>/dev/null) ]]; then
-      # hook_com[unstaged]+="%F{blue} %f" # alternatives ●
-      hook_com[unstaged]+="%F{blue} %f"
-    fi
-  fi
-}
-
-function +vi-git-stash() {
-  local stash_icon=""
-  emulate -L zsh
-  if __in_git; then
-    if [[ -n $(git rev-list --walk-reflogs --count refs/stash 2>/dev/null) ]]; then
-      hook_com[unstaged]+=" %F{yellow}$stash_icon%f"
-    fi
-  fi
-}
-
-function +vi-git-compare() {
-  local ahead behind
-  local -a gitstatus
-
-  # Exit early in case the worktree is on a detached HEAD
-  git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
-
-  local -a ahead_and_behind=(
-    $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
-  )
-
-  ahead=${ahead_and_behind[1]}
-  behind=${ahead_and_behind[2]}
-
-  local ahead_symbol="%{$fg[red]%} ⇡%{$reset_color%}${ahead}"
-  local behind_symbol="%{$fg[cyan]%} ⇣%{$reset_color%}${behind}"
-  (($ahead)) && gitstatus+=("${ahead_symbol}")
-  (($behind)) && gitstatus+=("${behind_symbol}")
-  # `(j:<char>:)` represents joining the items of a list with a character
-  # similar to a string.join type operation this can also be written as
-  # (j./.) the character representing each part is interchangeable, and the
-  # middle character represents the string to use to join the items
-  # https://zsh.sourceforge.io/Guide/zshguide05.html#l124
-  hook_com[misc]+="${(j: :)gitstatus}"
-}
-
-function +vi-git-remotebranch() {
-  local remote
-  # Are we on a remote-tracking branch?
-  remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
-    --symbolic-full-name 2>/dev/null)/refs\/remotes\//}
-
-  # The first test will show a tracking branch whenever there is one. The
-  # second test, however, will only show the remote branch's name if it
-  # differs from the local one.
-  # if [[ -n ${remote} ]] ; then
-  if [[ -n ${remote} && ${remote#*/} != ${hook_com[branch]} ]]; then
-    hook_com[branch]="${hook_com[branch]}→[${remote}]"
-  fi
-}
-
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ PROMPT                                                   ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
-setopt PROMPT_SUBST
-
-# Glyphs (Nerd Font)
 typeset -g __G_SEP=$'\ue0b0'      #
 typeset -g __G_RSEP=$'\ue0b2'     #
 typeset -g __G_FOLDER=$'\uf07c'   #
 typeset -g __G_BRANCH=$'\ue0a0'   #
 typeset -g __G_PY=$'\ue73c'       #
 
-function __prompt_eval() {
-  # Warna (256-color) — ubah sesuka hati
-  local dir_bg="${colorline}" dir_fg="${colorsuggest}"
-  local git_bg=238
+__build_prompt() {
+  local dir_bg=$colorprompt_bg dir_fg=$colorprompt_fg git_bg=$colorpromptbright_bg
   local venv_bg=65 venv_fg=255
 
-  local top=""
+  # Segment 1: directory
+  local top="%K{$dir_bg}%F{$dir_fg}%B ${__G_FOLDER} %1~ %b"
 
-  # Segmen 1: direktori
-  top+="%K{$dir_bg}%F{$dir_fg}%B ${__G_FOLDER} %1~ %b"
-
-  # Segmen 2: git
-  local git="$_git_status_prompt"
-  if [[ "$git" == " " ]]; then
-    # bukan repo git → tutup di sini
+  # Segment 2: git (empty = not a repo or not ready)
+  if [[ -z $__git_seg ]]; then
     top+="%k%F{$dir_bg}${__G_SEP}%f"
   else
-    [[ -z "$git" ]] && git="%F{246}…"   # masih loading
     top+="%K{$git_bg}%F{$dir_bg}${__G_SEP}"
-    top+="%F{150} ${__G_BRANCH} ${git} "
+    top+="%F{$colorbranch} ${__G_BRANCH} ${__git_seg} "
     top+="%k%F{$git_bg}${__G_SEP}%f"
   fi
 
-  # Segmen 3: virtualenv (opsional)
-  if [[ -n "$VIRTUAL_ENV" ]]; then
-    top+=" %K{$venv_bg}%F{$venv_fg} ${__G_PY} $(basename "$VIRTUAL_ENV") %k%F{$venv_bg}${__G_SEP}%f"
+  # Segment 3: virtual environment
+  if [[ -n $VIRTUAL_ENV ]]; then
+    top+=" %K{$venv_bg}%F{$venv_fg} ${__G_PY} ${VIRTUAL_ENV:t//\%/%%} %k%F{$venv_bg}${__G_SEP}%f"
   fi
 
-  # Jobs
+  # Background jobs
   top+="%(1j. %F{cyan}job:%j✦%f .)"
 
-  local dots_prompt_icon="%F{$colorline}╰─ %f"
-  local dots_prompt_failure_icon="%F{$colorline}╰─%f%F{red}✘ %f"
-  local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
-  local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
+  local ok="%F{$colorline}╰─ %f"
+  local fail="%F{$colorline}╰─%f%F{red}✘ %f"
+  local bottom=${vim_mode:-"%(?.${ok}.${fail})"}
 
-  echo $top$'\n'$bottom
+  PROMPT="${top}"$'\n'"${bottom}"
+
+  # Right prompt
+  local rt=""
+  [[ -n $cmd_exec_time ]] && rt="%F{yellow}%{${__DOTS[ITALIC_ON]}%}${cmd_exec_time}%{${__DOTS[ITALIC_OFF]}%}%f "
+  RPROMPT="${rt}%F{$git_bg}${__G_RSEP}%K{$git_bg}%F{$dir_bg} %* %k%f"
 }
 
-export PROMPT='$(__prompt_eval)'
-# Right prompt
-export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{${colorline}}${__G_RSEP}%K{${colorline}}%F{${colorsuggest}} %* %k%f'
-export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
+SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ EXECUTION TIME                                           ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# ── EXECUTION TIME + HOOKS ────────────────────────────────────────────
+
+typeset -g cmd_exec_time=""
 
 __human_time_to_var() {
-  local total=$1 var=$2
+  local total=$1
   local d=$((total / 86400)) h=$((total / 3600 % 24)) m=$((total / 60 % 60)) s=$((total % 60))
   local human=""
   ((d)) && human+="${d}d "
   ((h)) && human+="${h}h "
   ((m)) && human+="${m}m "
   human+="${s}s"
-  typeset -g "${var}"="${human}"
+  typeset -g cmd_exec_time=$human
 }
 
-__check_cmd_exec_time() {
-  integer elapsed=$((EPOCHSECONDS - ${cmd_timestamp:-$EPOCHSECONDS}))
-  typeset -g cmd_exec_time=
-  ((elapsed > 1)) && __human_time_to_var $elapsed cmd_exec_time
+__preexec() { typeset -gi __cmd_ts=$EPOCHSECONDS; }
+
+__precmd() {
+  # 1) time execution
+  local -i elapsed=0
+  (( ${__cmd_ts:-0} )) && elapsed=$(( EPOCHSECONDS - __cmd_ts ))
+  __cmd_ts=0
+  cmd_exec_time=""
+  (( elapsed > 1 )) && __human_time_to_var $elapsed
+  # 2) reset vi-mode, 3) git async, 4) render
+  vim_mode=$vim_insert_mode
+  __git_async_start
+  __build_prompt
 }
 
-__timings_preexec() { typeset -g cmd_timestamp=$EPOCHSECONDS; }
-__timings_precmd() {
-  __check_cmd_exec_time
-  unset cmd_timestamp
-}
+__chpwd() { __git_seg=""; }
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ HOOKS                                                    ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+TRAPWINCH() { zle && zle reset-prompt; }
 
 autoload -Uz add-zsh-hook
+add-zsh-hook preexec __preexec
+add-zsh-hook precmd __precmd
+add-zsh-hook chpwd __chpwd
 
-__async_vcs_start() {
-  # Close the last file descriptor to invalidate old requests
-  if [[ -n "$__prompt_async_fd" ]] && { true <&$__prompt_async_fd; } 2>/dev/null; then
-    exec 9<&-
-    zle -F $__prompt_async_fd
-  fi
-  # fork a process to fetch the vcs status and open a pipe to read from it
-  exec 9< <(
-    __async_vcs_info $PWD
-  )
-  __prompt_async_fd=9
+# ── LOCAL SCRIPTS ─────────────────────────────────────────────────────
 
-  # When the fd is readable, call the response handler
-  zle -F "$__prompt_async_fd" __async_vcs_info_done
-}
-
-__async_vcs_info() {
-  cd -q "$1"
-  vcs_info
-  print ${vcs_info_msg_0_}
-}
-
-__async_vcs_info_done() {
-  local fd=$1
-  local raw="$(<&$fd)"
-  _git_status_prompt="$raw"
-  [[ -z $_git_status_prompt ]] && _git_status_prompt=" "
-  zle -F "$fd"
-  exec 9<&-
-  unset __prompt_async_fd
-  zle && zle reset-prompt
-}
-
-function TRAPWINCH() { zle && zle reset-prompt; }
-
-add-zsh-hook precmd __timings_precmd
-add-zsh-hook precmd __async_vcs_start
-add-zsh-hook preexec __timings_preexec
-
-__on_chpwd() { _git_status_prompt=""; }
-add-zsh-hook chpwd __on_chpwd
-
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ LOCAL SCRIPTS                                            ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
-for script in $ZDOTDIR/scripts/*; do source $script; done
+for script in ${ZDOTDIR:-$HOME}/scripts/*(N.); do source $script; done
 source_if_exists "$HOME/.config/bashrc/aliases.bashrc"
 
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ KEYBINDINGS                                              ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# ── KEYBINDINGS ───────────────────────────────────────────────────────
 
 bindkey -v
+
+source_if_exists "$HOME/.fzf.zsh"
+source_if_exists "$HOME/.config/miscxrdb/fzf/fzf.config"
 
 bindkey '^y' autosuggest-accept
 bindkey '^[y' autosuggest-accept
@@ -468,71 +387,30 @@ bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
 bindkey '^l' forward-char
 bindkey '^h' backward-char
+bindkey '^p' up-history
+bindkey '^n' down-history
+bindkey -r '^s'
 
-# Remove characters from WORDCHARS so '/' is treated as a word boundary.
 backward-kill-dir() {
-    local WORDCHARS=${WORDCHARS//\//}
-    WORDCHARS=${WORDCHARS//./}
-    WORDCHARS=${WORDCHARS//%/}
-    WORDCHARS=${WORDCHARS//#/}
-    zle backward-kill-word
-    zle -f kill
+  local WORDCHARS=${WORDCHARS//[\/.%#]/}
+  zle backward-kill-word
+  zle -f kill
 }
 zle -N backward-kill-dir
 bindkey -M viins '^w' backward-kill-dir
-bindkey -r "^s"
 
-autoload -U edit-command-line
+autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M viins '^[q' edit-command-line
 bindkey -M viins 'hh' vi-cmd-mode
 
-bindkey '^r' history-incremental-search-backward
-bindkey '^p' up-history
-bindkey '^n' down-history
-
+bindkey '^[[Z' reverse-menu-complete
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
-bindkey '^[[Z' reverse-menu-complete
-bindkey -M menuselect '^[[Z' reverse-menu-complete
-bindkey -M menuselect '\e[Z' reverse-menu-complete
-
-# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
-# ╏ PLUGINS (LATE)                                          ╏
-# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┛
-
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$colorsuggest
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
-
-source_if_exists "$HOME/.fzf.zsh"
-source_if_exists "$HOME/.config/miscxrdb/fzf/fzf.config"
-
-if command -v asdf >/dev/null 2>&1 && asdf where golang >/dev/null 2>&1; then
-  local golang_dir="$(asdf where golang)"
-  export GOPATH="${golang_dir}/packages"
-  export GOROOT="${golang_dir}/go"
-  export PATH="${PATH}:$(go env GOPATH)/bin:$(go env GOBIN)"
-fi
-
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
-fi
-
-# Fix bottleneck: cache hasil uv completion ke file, jangan generate tiap start
-# Generate ulang hanya kalau uv binary berubah (cek via mtime)
-if [[ -f ~/.local/bin/uv ]]; then
-  local _uv_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/uv-completion.zsh"
-  if [[ ! -f "$_uv_comp_cache" || ~/.local/bin/uv -nt "$_uv_comp_cache" ]]; then
-    mkdir -p "${_uv_comp_cache:h}"
-    ~/.local/bin/uv generate-shell-completion zsh >|"$_uv_comp_cache"
-  fi
-  source_if_exists "$_uv_comp_cache"
-fi
-
-export PATH="${PATH}:$HOME/.config/emacs/bin"
+__cached_init zoxide zoxide zoxide init zsh
 
 # ⚠️ MUST be sourced last
 source_if_exists "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

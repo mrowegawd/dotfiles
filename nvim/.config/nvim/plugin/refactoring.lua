@@ -1,9 +1,14 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 add {
-  { src = "lewis6991/async.nvim", setup = false },
+  {
+    src = "lewis6991/async.nvim",
+    setup = false,
+  },
   {
     src = "ThePrimeagen/refactoring.nvim",
     lazy = true,
@@ -11,32 +16,32 @@ add {
   },
 }
 
-UtilKey.xnoremap("<Localleader>xi", function()
+UtilKey.nnoremap("<Localleader>rf", function()
   UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring").inline_var()
-end, { desc = "Refactoring: inline variable" })
-
-UtilKey.nnoremap("<Localleader>xf", function()
-  UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring").extract_func()
+  return lazy("refactoring").extract_func()
 end, { desc = "Refactoring: extract func" })
 
-UtilKey.nnoremap("<Localleader>xF", function()
+UtilKey.nnoremap("<Localleader>rF", function()
   UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring").extract_func_to_file()
+  return lazy("refactoring").extract_func_to_file()
 end, { desc = "Refactoring: extract func to file" })
 
-UtilKey.nnoremap("<Localleader>xv", function()
+UtilKey.xnoremap("<Localleader>ri", function()
   UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring").extract_var()
+  return lazy("refactoring").inline_var()
+end, { desc = "Refactoring: inline variable" })
+
+UtilKey.nnoremap("<Localleader>rv", function()
+  UtilKey.plugin_load_now "refactoring.nvim"
+  return lazy("refactoring").extract_var()
 end, { desc = "Refactoring: extract var" })
 
-UtilKey.nnoremap("<Localleader>xP", function()
+UtilKey.nnoremap("<Localleader>rP", function()
   UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring.debug").print_loc { output_location = "below" }
+  return lazy("refactoring.debug").print_loc { output_location = "below" }
 end, { desc = "Refactoring: insert print above [refactoring]" })
 
-UtilKey.nnoremap("<Localleader>xp", function()
+UtilKey.nnoremap("<Localleader>rp", function()
   UtilKey.plugin_load_now "refactoring.nvim"
-  return require("refactoring.debug").print_var { output_location = "below" } .. "iw"
+  return lazy("refactoring.debug").print_var { output_location = "below" } .. "iw"
 end, { desc = "Refactoring: insert print below [refactoring]" })

@@ -1,7 +1,5 @@
 local M = {}
 
-local UtilQf = require "utils.qf"
-
 ---@type QFBookListResults
 local result = {
   quickfix = {},
@@ -11,6 +9,8 @@ local result = {
 local load_qf = false
 
 M.on_save = function()
+  local UtilQf = require "utils.qf"
+
   local qflist = UtilQf.get_data_qf()
   local loclist = UtilQf.get_data_qf(true)
 
@@ -39,6 +39,8 @@ end
 
 ---@param data QFBookListResults
 M.on_pre_load = function(data)
+  local UtilQf = require "utils.qf"
+
   if load_qf then
     return
   end

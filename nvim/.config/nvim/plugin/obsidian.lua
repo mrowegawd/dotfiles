@@ -1,6 +1,8 @@
 local add_on_file_type = require("vim-pack").add_on_file_type
 
-local ConfigPath = require("config").path
+local lazy = require("utils.plugin").require_lazy
+
+local ConfigPath = lazy("config").path
 
 add_on_file_type("markdown", {
   {
@@ -33,7 +35,7 @@ add_on_file_type("markdown", {
         attachments = {
           img_text_func = function(path)
             local name = vim.fs.basename(tostring(path))
-            local encoded_name = require("obsidian.util").urlencode(name)
+            local encoded_name = lazy("obsidian.util").urlencode(name)
             return string.format("![%s](%s)", name, encoded_name)
           end,
         },

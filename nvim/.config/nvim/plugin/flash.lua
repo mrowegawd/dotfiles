@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 -- Navigation with jump motions.
 add {
@@ -44,8 +46,8 @@ local load_flash = function()
 end
 
 --stylua: ignore
-UtilKey.noremap({ "n", "o", "x" }, "gs", function() load_flash() require("flash").jump() end, { desc = "Flash: jump [flash]" })
+UtilKey.noremap({ "n", "o", "x" }, "gs", function() load_flash() lazy("flash").jump() end, { desc = "Flash: jump [flash]" })
 --stylua: ignore
-UtilKey.onoremap("r", function() load_flash() require("flash").treesitter_search() end, { desc = "Flash: treesitter search" })
+UtilKey.onoremap("r", function() load_flash() lazy("flash").treesitter_search() end, { desc = "Flash: treesitter search" })
 --stylua: ignore
-UtilKey.onoremap("R", function() load_flash() require("flash").remote() end, { desc = "Flash: remote flash" })
+UtilKey.onoremap("R", function() load_flash() lazy("flash").remote() end, { desc = "Flash: remote flash" })

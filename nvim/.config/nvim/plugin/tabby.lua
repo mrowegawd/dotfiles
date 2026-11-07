@@ -1,5 +1,7 @@
 local add_on_event = require("vim-pack").add_on_event
 
+local lazy = require("utils.plugin").require_lazy
+
 add_on_event("BufReadPost", {
   {
     src = "nanozuki/tabby.nvim",
@@ -22,7 +24,7 @@ add_on_event("BufReadPost", {
         tail = "TabLine",
       }
 
-      require("tabby").setup {
+      lazy("tabby").setup {
         justify = "right",
         line = function(line)
           return {

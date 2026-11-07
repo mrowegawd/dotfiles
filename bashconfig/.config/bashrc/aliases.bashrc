@@ -48,7 +48,6 @@ ll() {
   eza --long --all --git --color=always --group-directories-first --icons
 }
 
-alias nnn='nnn -e -H -r'
 alias lazygit='lazygit --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
 
 # if command -v eza >/dev/null; then
@@ -627,15 +626,10 @@ r_rm_all() {
   find "$1" -type f -name "*" -exec shred -v -n 25 -u -z {} \;
 }
 
-# run: open lf
+# run: open file manager
 r_r() {
-  # if command -v lfrun >/dev/null; then
-  # 	lfrun
-  if command -v nnn >/dev/null; then
-    nnn -c
-  else
-    # echo "lfrun not installed!"
-    echo "nnn not installed!"
+  if command -v yazi >/dev/null; then
+    yazi
   fi
 }
 

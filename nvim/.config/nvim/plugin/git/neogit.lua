@@ -143,7 +143,7 @@ UtilAugroup("neogit", {
   pattern = "NeogitStatus",
   command = function(ev)
     whichkey.add {
-      { "<C-c>y", group = "help", buffer = ev.buf },
+      { "<C-c>y", name = "yank selected", buffer = ev.buf },
       { "<C-c>o", group = "open", buffer = ev.buf },
       { "<C-c>ot", group = "TagPopup", buffer = ev.buf },
       { "<C-c>om", name = "MergePopup", buffer = ev.buf },

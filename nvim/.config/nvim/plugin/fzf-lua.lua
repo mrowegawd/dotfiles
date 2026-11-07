@@ -73,16 +73,18 @@ add {
       return {
         { "border-fused", "hide" },
         -- Make stuff better combine with the editor.
-        -- fzf_colors = {
-        --   fg = { "fg", "FzfLuaNormal" },
-        --   bg = { "bg", "FzfLuaNormal" },
-        --   ["fg+"] = { "fg", "FzfLuaSel" },
-        --   ["bg+"] = { "bg", "FzfLuaSel" },
-        --   gutter = { "bg", "Normal" },
-        --   info = { "fg", "Conditional" },
-        --   scrollbar = { "bg", "Normal" },
-        --   separator = { "fg", "Comment" },
-        -- },
+        fzf_colors = {
+          fg = { "fg", "FzfLuaFilePart" },
+          bg = { "bg", "FzfLuaNormal" },
+          ["fg+"] = { "fg", "FzfLuaSel" },
+          ["bg+"] = { "bg", "FzfLuaSel" },
+          gutter = { "bg", "FzfLuaNormal" },
+          -- ["prompt"] = { "bg", "FzfLuaNormal" },
+          -- info = { "fg", "Conditional" },
+          -- scrollbar = { "bg", "Normal" },
+          -- separator = { "fg", "Comment" },
+          -- border = { "FzfLuaBorder" },
+        },
         fzf_opts = {
           ["--info"] = "default",
           ["--layout"] = "reverse-list",
@@ -112,6 +114,7 @@ add {
         winopts = {
           height = 0.85,
           width = 0.55,
+          backdrop = 100,
           preview = {
             scrollbar = false,
             layout = "vertical",
@@ -273,8 +276,8 @@ add {
               },
               ["alt-c"] = {
                 fn = UtilFzfDiffiew.git_open_with_compare_hash(),
-                desc = "compare-diff-hash",
-                header = "compare-diff-hash",
+                desc = "comp-diff",
+                header = "comp-diff",
               },
               ["alt-o"] = {
                 fn = function(selected)
@@ -285,22 +288,22 @@ add {
                     UtilFzfDiffiew.git_open_with_browser(sel)
                   end
                 end,
-                desc = "open-in-browser",
-                header = "open-in-browser",
+                desc = "oin-browser",
+                header = "oin-browser",
               },
               ["ctrl-o"] = {
                 fn = function(selected)
                   UtilFzfDiffiew.git_open_with_diffview(selected)
                 end,
-                desc = "open-in-diffview",
-                header = "open-in-diffview",
+                desc = "oin-diffview",
+                header = "oin-diffview",
               },
               ["ctrl-x"] = {
                 fn = function(selected)
                   UtilFzfDiffiew.git_open_with_fugitive(selected)
                 end,
-                desc = "open-in-fugitive",
-                header = "open-in-fugitive",
+                desc = "oin-fugitive",
+                header = "oin-fugitive",
               },
               ["ctrl-q"] = {
                 fn = function(selected)
@@ -377,8 +380,8 @@ add {
               },
               ["alt-c"] = {
                 fn = UtilFzfDiffiew.git_open_with_compare_hash(),
-                desc = "compare-diff-hash",
-                header = "compare-diff-hash",
+                desc = "comp-diff",
+                header = "comp-diff",
               },
               ["alt-o"] = {
                 fn = function(selected)
@@ -389,22 +392,22 @@ add {
                     UtilFzfDiffiew.git_open_with_browser(sel)
                   end
                 end,
-                desc = "open-in-browser",
-                header = "open-in-browser",
+                desc = "oin-browser",
+                header = "oin-browser",
               },
               ["ctrl-o"] = {
                 fn = function(selected)
                   UtilFzfDiffiew.git_open_with_diffview(selected)
                 end,
-                desc = "open-in-diffview",
-                header = "open-in-diffview",
+                desc = "oin-diffview",
+                header = "in-diffview",
               },
               ["ctrl-x"] = {
                 fn = function(selected)
                   UtilFzfDiffiew.git_open_with_fugitive(selected)
                 end,
-                desc = "open-in-fugitive",
-                header = "open-in-fugitive",
+                desc = "oin-fugitive",
+                header = "oin-fugitive",
               },
               ["ctrl-q"] = {
                 fn = function(selected)

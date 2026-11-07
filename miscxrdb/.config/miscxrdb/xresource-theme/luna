@@ -1,24 +1,45 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 
-*.foreground: #e4e4e8
-*.background: #060606
-*.cursorColor: #e4e4e8
+*.foreground:   #e4e4e8
+*.background:   #060606
+*.cursorColor:  #e19067
 
-*.color0: #000000
-*.color1: #e08585
-*.color2: #6fbe80
-*.color3: #c2916a
-*.color4: #75a1c7
-*.color5: #c4a8d6
-*.color6: #75a1c7
-*.color7: #c7c7c7
-*.color8: #888888
-*.color9: #e08585
-*.color10: #6fbe80
-*.color11: #d9a35a
-*.color12: #8c9cb8
-*.color13: #c4a8d6
-*.color14: #75a1c7
-*.color15: #ffffff
+! black
+*.color0:       #333333
+*.color8:       #888888
+! red
+*.color1:       #e08585
+*.color9:       #e69d9d
+! green
+*.color2:       #6fbe80
+*.color10:      #8ccb99
+! yellow
+*.color3:       #d9a35a
+*.color11:      #e1b57b
+! blue
+*.color4:       #75a1c7
+*.color12:      #91b4d2
+! magenta
+*.color5:       #c4a8d6
+*.color13:      #d0b9de
+! cyan
+*.color6:       #86b3ac
+*.color14:      #9ec2bd
+! white
+*.color7:       #c7c7c7
+*.color15:      #f0f0f0
 
-*.color16: #e19067
+*.color16:      #e19067
+
+! Opsional: urxvt
+URxvt*highlightColor:      #384048
+URxvt*highlightTextColor:  #e4e4e8
+URxvt*colorUL:             #75a1c7
+URxvt*colorBD:             #f0f0f0
+URxvt*cursorColor:         #e19067
+URxvt*borderColor:         #060606
+
+! Opsional: xterm
+XTerm*cursorColor:            #e19067
+XTerm*pointerColorForeground: #e4e4e8
+XTerm*pointerColorBackground: #060606

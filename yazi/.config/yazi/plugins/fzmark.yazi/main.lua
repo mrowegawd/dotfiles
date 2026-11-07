@@ -91,7 +91,7 @@ local function open_with_wezterm(cwd_bookmark)
   -- 	Command("wezterm"):arg(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
   if not child then
-    return fail("Spawn `rfzf` failed with error code %s. Do you have it installed?", err)
+    return fail("Spawn `fzf` failed with error code %s. Do you have it installed?", err)
   end
 
   local output, err = child:wait_with_output()

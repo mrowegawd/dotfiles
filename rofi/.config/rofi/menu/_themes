@@ -37,7 +37,7 @@ GET_BLUE_ALT=$(xrdb_get ".color12")
 GET_MAGENTA=$(xrdb_get ".color5")
 GET_CYAN=$(xrdb_get ".color6")
 GET_WHITE=$(xrdb_get ".color7")
-GET_KEYWORD=$(xrdb_get ".color16")
+# GET_KEYWORD=$(xrdb_get ".color16")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Extra color
@@ -512,8 +512,14 @@ set_zshrc() {
     exit 1
   }
 
-  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$(theme_get zshrc_sugest)\"/g" "$zshrc"
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"$(theme_get zshrc_sugest)\"/g" "$zshrc"
   sed -i -e "s/^colorline=.*/colorline=\"$(theme_get zshrc_lines)\"/g" "$zshrc"
+
+  sed -i -e "s/^colorprompt_fg=.*/colorprompt_fg=\"$(theme_get zshrc_prompt_fg)\"/g" "$zshrc"
+  sed -i -e "s/^colorprompt_bg=.*/colorprompt_bg=\"$(theme_get zshrc_prompt_bg)\"/g" "$zshrc"
+
+  sed -i -e "s/^colorpromptbright_fg=.*/colorpromptbright_fg=\"$(theme_get zshrc_promptbrigt_fg)\"/g" "$zshrc"
+  sed -i -e "s/^colorpromptbright_bg=.*/colorpromptbright_bg=\"$(theme_get zshrc_promptbrigt_bg)\"/g" "$zshrc"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────

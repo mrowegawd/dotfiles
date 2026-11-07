@@ -152,11 +152,11 @@ add {
           TroublePreview = { bg = "bg1" },
 
           -- fzf-lua
-          FzfLuaNormal = { fg = "fg1", bg = "bg_second" },
-          FzfLuaBorder = { fg = "bg3", bg = "bg_second" },
-          FzfLuaTitle = { fg = "yellow_lite", bold = true },
-          FzfLuaCursorLine = { bg = "bg2" },
-          FzfLuaSearch = { fg = "bg_main", bg = "yellow_lite" },
+          -- FzfLuaNormal = { fg = "fg1", bg = "bg_second" },
+          -- FzfLuaBorder = { fg = "bg3", bg = "bg_second" },
+          -- FzfLuaTitle = { fg = "yellow_lite", bold = true },
+          -- FzfLuaCursorLine = { bg = "bg2" },
+          -- FzfLuaSearch = { fg = "bg_main", bg = "yellow_lite" },
         },
       }
     end,

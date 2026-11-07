@@ -1,6 +1,28 @@
 local M = {}
 
-local Log = require "utils.log"
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                   HELPERS                                   ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+---@param t table
+local function sorted_pairs(t)
+  local keys = vim.tbl_keys(t)
+  table.sort(keys, function(a, b)
+    return tostring(a) < tostring(b)
+  end)
+  local i = 0
+  return function()
+    i = i + 1
+    local k = keys[i]
+    if k ~= nil then
+      return k, t[k]
+    end
+  end
+end
 
 ---@param contents string | table
 ---@param path? string
@@ -9,326 +31,303 @@ function M.send_contents_to_file(contents, path, is_theme)
   path = path or "/tmp/isi_contents_dari_nvim"
   is_theme = is_theme or false
 
-  if require("utils.file").is_file(path) then
-    vim.system { "rm", path }
-    vim.system { "touch", path }
-  end
-
-  local file = io.open(path, "w")
+  local file, err = io.open(path, "w")
   if not file then
+    Log.warn(string.format("Failed to open '%s': %s", path, tostring(err)))
     return
   end
 
-  local msg_notify_send
+  file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
 
-  local is_done = false
+  local msg
 
-  if not is_done then
-    file:write "! vim: foldmethod=marker foldlevel=0 ft=xdefaults\n\n"
-
-    if type(contents) == "table" then
-      for i, x in pairs(contents) do
-        if is_theme then
-          for idx, j in pairs(x) do
-            file:write(i .. "_" .. idx .. ": " .. j .. "\n")
-          end
-        else
-          -- file:write(tostring(x) .. "\n")
-          file:write(vim.inspect(x) .. "\n")
-          is_done = true
-        end
-      end
-
+  if type(contents) == "table" then
+    for key, value in sorted_pairs(contents) do
       if is_theme then
-        msg_notify_send = "Theme changes detected. Don't forget to reload."
+        for name, color in sorted_pairs(value) do
+          file:write(string.format("%s_%s: %s\n", key, name, tostring(color)))
+        end
       else
-        msg_notify_send = string.format("Something write in path: '%s'", path)
+        file:write(vim.inspect(value) .. "\n")
       end
     end
-
-    if type(contents) == "string" then
-      file:write(contents .. "\n")
-      msg_notify_send = string.format("Something write in path: '%s'", path)
-    end
+    msg = is_theme and "Theme changes detected. Don't forget to reload."
+      or string.format("Something write in path: '%s'", path)
+  elseif type(contents) == "string" then
+    file:write(contents .. "\n")
+    msg = string.format("Something write in path: '%s'", path)
+  else
+    msg = string.format("Unsupported contents type: %s", type(contents))
   end
-
-  Log.warn(msg_notify_send)
 
   file:close()
+  Log.warn(msg)
 end
 
-function M.change_colorscheme_global()
-  local H = require "utils.highlights"
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                               PALETTE BUILDER                               ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-  -- ─< TAB >────────────────────────────────────────────────────────────
-  -- Active Tab
-  -- local tab_session_fg = H.get("Winbar", "fg")
-  -- local tab_session_bg = H.get("Winbar", "bg")
+---@return table
+function M.build_colors()
+  local H = lazy "utils.highlights"
+  local tint, darken = H.tint, H.darken
 
-  local statusline_fg = H.darken(H.get("Statusline", "fg"), 0.76, H.get("Statusline", "bg"))
-  local statusline_bg = H.get("Normal", "bg")
-
-  local tab_active_fg = H.get("Winbar", "bg")
-  local tab_active_bg = H.get("Winbar", "fg")
-
-  -- Inactive Tab
-  -- local tab_inactive_fg = H.tint(H.get("Comment", "fg"), 0.4)
-  -- local tab_inactive_bg = H.get("NormalNote", "bg")
-
-  local tab_inactive_fg = H.get("Winbar", "fg")
-  local tab_inactive_bg = H.get("Winbar", "bg")
-
-  -- Border Pane
-  local border_active = H.tint(H.get("WinSeparator", "fg"), 0.1)
-  local border_inactive = H.tint(H.get("Normal", "bg"), 0.15)
-
-  -- ─< ZSH >────────────────────────────────────────────────────────────
-  local zsh_lines = H.get("Zshlines", "fg")
-  local zsh_sugest = H.get("Zshlines", "bg")
-
-  -- ─< YAZI >───────────────────────────────────────────────────────────
-  local yazi_hovered = H.get("HoveredTerminalFileManagerCursorline", "bg")
-
-  -- ─< DUNST >──────────────────────────────────────────────────────────
-  local low_fg = H.tint(H.get("WinSeparator", "fg"), 2.2)
-  local low_bg = H.tint(H.get("WinSeparator", "fg"), 0.1)
-  local low_frame = H.tint(H.get("WinSeparator", "fg"), 0.1)
-  local normal_title_fg = H.get("Normal", "fg")
-
-  local normal_fg = H.tint(H.get("WinSeparator", "fg"), 4)
-  local normal_fg_base = H.tint(H.get("WinSeparator", "fg"), 1)
-  local normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.7)
-
-  local normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.7)
-
-  local critical_fg = H.tint(H.get("diffRemoved", "fg"), 0.4)
-  local critical_bg = H.tint(H.get("diffRemoved", "fg"), -0.25)
-  local critical_frame = H.tint(H.get("diffRemoved", "fg"), -0.2)
-
-  if
-    vim.tbl_contains(
-      { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" },
-      vim.g.colorscheme
-    )
-  then
-    normal_fg = H.tint(H.get("WinSeparator", "fg"), 1.5)
-    normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.05)
-    normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.15)
-    critical_fg = H.tint(H.get("diffRemoved", "fg"), 1)
-  end
-  if vim.tbl_contains({ "tokyonight-storm", "tokyonight" }, vim.g.colorscheme) then
-    normal_fg = H.tint(H.get("WinSeparator", "fg"), 1)
-    normal_bg = H.tint(H.get("WinSeparator", "fg"), -0.1)
-    normal_frame = H.tint(H.get("WinSeparator", "fg"), -0.1)
+  local cache = {}
+  local function get(group, attr)
+    local key = group .. ":" .. attr
+    local v = cache[key]
+    if v == nil then
+      v = H.get(group, attr) or H.get("Normal", attr)
+      cache[key] = v
+    end
+    return v
   end
 
-  if vim.tbl_contains({ "gruvbox", "base46-everforest" }, vim.g.colorscheme) then
-    normal_fg_base = H.tint(H.get("WinSeparator", "fg"), 0.4)
+  local function theme_is(list)
+    return vim.tbl_contains(list, vim.g.colorscheme)
   end
 
-  if vim.tbl_contains({ "zenburn" }, vim.g.colorscheme) then
-    normal_fg = H.tint(H.get("WinSeparator", "fg"), 0.9)
-    normal_bg = H.tint(H.get("WinSeparator", "fg"), 0.02)
-    normal_frame = H.tint(H.get("WinSeparator", "fg"), 0.15)
-    critical_fg = H.tint(H.get("diffRemoved", "fg"), 1)
+  -- ├──────────────────────────────┤ Base palette ├──────────────────────────────┤
+  local bg, fg = get("Normal", "bg"), get("Normal", "fg")
+  local sep = get("WinSeparator", "fg")
+  local keyword = get("Keyword", "fg")
+  local func = get("Function", "fg")
+  local removed = get("diffRemoved", "fg")
+  local changed = get("diffChanged", "fg")
+
+  local text_dim = tint(fg, -0.2)
+  local red_muted = darken(removed, 0.8, bg)
+
+  -- Statusline: ONE SOURCE!
+  local statusline = {
+    raw_fg = get("StatuslineTheme", "fg"),
+    bg = get("StatuslineTheme", "bg"),
+  }
+  statusline.fg = darken(statusline.raw_fg, 0.7, statusline.bg)
+
+  -- Tab
+  local tab_active = { fg = get("QuickFixWinbar", "fg"), bg = get("QuickFixWinbar", "bg") }
+  local tab_inactive = { fg = get("Winbar", "fg"), bg = get("Winbar", "bg") }
+
+  -- Border pane
+  local border_active = tint(sep, 0.1)
+  local border_inactive = tint(bg, 0.15)
+
+  -- ├─────────────────────────────────┤ Dunst ├──────────────────────────────┤
+  local low = tint(sep, 0.1)
+  local normal_bg = tint(sep, 0.7)
+  local normal_frame = tint(sep, 0.7)
+  local normal_fg_base = tint(sep, 1)
+  local normal_fg
+  local critical_fg = tint(removed, 0.4)
+
+  if theme_is { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" } then
+    normal_bg = tint(sep, 0.05)
+    normal_frame = tint(sep, 0.15)
+    critical_fg = tint(removed, 1)
   end
+  if theme_is { "tokyonight-storm", "tokyonight" } then
+    normal_bg = tint(sep, -0.1)
+    normal_frame = tint(sep, -0.1)
+  end
+  if theme_is { "gruvbox", "base46-everforest" } then
+    normal_fg_base = tint(sep, 0.4)
+  end
+  if theme_is { "zenburn" } then
+    normal_fg = tint(sep, 0.9)
+    normal_bg = tint(sep, 0.02)
+    normal_frame = tint(sep, 0.15)
+    critical_fg = tint(removed, 1)
+  end
+  normal_fg = normal_fg or darken(fg, 0.7, normal_bg)
 
-  -- ─< LAZYGIT >────────────────────────────────────────────────────────
-  local lazygit_inactive_border = H.tint(H.get("WinSeparator", "fg"), 0.5)
-  local lazygit_inactive_text = H.tint(H.get("WinSeparator", "fg"), 4)
-  local lazygit_option_text = H.tint(H.get("Normal", "bg"), 4)
-
-  local defined_cols = {
+  -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+  -- ╏                                   OUTPUT                                    ╏
+  -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+  return {
     fzf = {
-      -- Normal
-      fg = H.get("FzfLuaFilePart", "fg"),
-      bg = H.get("FzfLuaNormal", "bg"),
-      match_fuzzy = H.get("FzfLuaFzfMatchFuzzy", "fg"),
+      fg = get("FzfLuaFilePart", "fg"),
+      bg = get("FzfLuaNormal", "bg"),
+      match_fuzzy = get("FzfLuaFzfMatchFuzzy", "fg"),
 
-      -- Selection
-      selection_fg = H.get("FzfLuaSel", "fg"),
-      selection_bg = H.get("FzfLuaSel", "bg"),
-      match = H.get("FzfLuaFzfMatch", "fg"),
+      selection_fg = get("FzfLuaSel", "fg"),
+      selection_bg = get("FzfLuaSel", "bg"),
+      match = get("FzfLuaFzfMatch", "fg"),
 
-      marker = H.get("MarkerFzflua", "fg"),
+      marker = get("MarkerFzflua", "fg"),
 
-      gutter = H.get("FzfLuaNormal", "bg"),
-      pointer = H.get("Keyword", "fg"),
-      border = H.get("FzfLuaBorder", "fg"),
-      header = H.get("FzfLuaHeaderText", "fg"),
+      gutter = get("FzfLuaNormal", "bg"),
+      pointer = keyword,
+      border = get("FzfLuaBorder", "fg"),
+      header = get("FzfLuaHeaderText", "fg"),
     },
+
     tmux = {
-      fg = H.tint(H.get("Normal", "fg"), -0.2),
-      bg = H.get("Normal", "bg"),
+      fg = text_dim,
+      bg = bg,
+      fm_bg = get("PanelSideBackground", "bg"), -- file manager bg (yazi, dll)
+      keyword = keyword,
 
-      -- file manager bg ex: yazi, etc
-      fm_bg = H.get("PanelSideBackground", "bg"),
+      tab_active_fg = tab_active.fg,
+      tab_active_bg = tab_active.bg,
 
-      keyword = H.get("Keyword", "fg"),
+      statusline_fg = statusline.fg,
+      statusline_bg = statusline.bg,
 
-      tab_active_fg = tab_active_fg,
-      tab_active_bg = tab_active_bg,
+      session_fg = statusline.raw_fg,
+      session_bg = statusline.bg,
 
-      statusline_fg = statusline_fg,
-      statusline_bg = statusline_bg,
-
-      session_fg = H.get("Statusline", "fg"),
-      session_bg = H.get("Statusline", "bg"),
-
-      message_bg = H.tint(H.darken(H.get("Function", "fg"), 0.6, H.get("Normal", "bg")), 0.7),
-
-      visual_bg = H.get("CurSearch", "bg"),
+      message_bg = tint(darken(func, 0.6, bg), 0.7),
+      visual_bg = get("CurSearch", "bg"),
 
       border_active = border_active,
       border_inactive = border_inactive,
       border_inactive_status_fg = border_inactive,
     },
+
     kitty = {
-      tab_active_fg = tab_active_fg,
-      tab_active_bg = tab_active_bg,
-
-      tab_inactive_fg = tab_inactive_fg,
-      tab_inactive_bg = tab_inactive_bg,
-
-      tab_bar_bg = H.get("Normal", "bg"),
+      tab_active_fg = tab_active.fg,
+      tab_active_bg = tab_active.bg,
+      tab_inactive_fg = tab_inactive.fg,
+      tab_inactive_bg = tab_inactive.bg,
+      tab_bar_bg = bg,
 
       border_active = border_active,
       border_inactive = border_inactive,
     },
+
     lazygit = {
-      active_border = H.get("Keyword", "fg"),
-
-      inactive_border = lazygit_inactive_border,
-      default_fg = lazygit_inactive_text,
-
-      selected_bg = H.get("LazygitselectedLineBgColor", "bg"),
-
-      option_txt = lazygit_option_text,
+      active_border = keyword,
+      inactive_border = tint(sep, 0.5),
+      default_fg = darken(fg, 0.6, bg),
+      author_fg = get("Boolean", "fg"),
+      selected_bg = get("LazygitselectedLineBgColor", "bg"),
+      option_txt = darken(fg, 0.6, bg),
     },
+
     dunst = {
-      low_fg = low_fg,
-      low_bg = low_bg,
-      low_frame = low_frame,
+      low_fg = tint(sep, 2.2),
+      low_bg = low,
+      low_frame = low,
 
-      normal_title_fg = normal_title_fg,
-
+      normal_title_fg = fg,
       normal_fg = normal_fg,
       normal_bg = normal_bg,
       normal_frame = normal_frame,
 
       critical_fg = critical_fg,
-      critical_bg = critical_bg,
-      critical_frame = critical_frame,
+      critical_bg = tint(removed, -0.25),
+      critical_frame = tint(removed, -0.2),
 
-      bg = H.tint(H.get("Normal", "bg"), 0.25),
-      fg = H.tint(H.get("Normal", "bg"), 0.25),
-      border = H.tint(H.get("Normal", "bg"), 0.25),
+      bg = tint(bg, 0.25),
+      fg = tint(fg, 0.25),
+      border = tint(bg, 0.25),
     },
+
     zshrc = {
-      lines = zsh_lines,
-      sugest = zsh_sugest,
+      lines = get("Zshlines", "fg"),
+      sugest = get("Zshlines", "bg"),
+
+      prompt_fg = get("Zshprompt", "fg"),
+      prompt_bg = get("Zshprompt", "bg"),
+      promptbrigt_fg = get("ZshpromptBright", "fg"),
+      promptbrigt_bg = get("ZshpromptBright", "bg"),
     },
+
     btop = {
-      fg = H.tint(H.get("Normal", "fg"), -0.2),
-      bg = H.get("Normal", "bg"),
+      fg = text_dim,
+      bg = bg,
 
-      yellow_alt = H.tint(H.get("diffChanged", "fg"), -0.45),
-      highlight_key = H.tint(H.get("diffRemoved", "fg"), 0.1),
+      yellow_alt = tint(changed, -0.45),
+      highlight_key = tint(removed, 0.1),
 
-      cursorline_fg = H.tint(H.get("Keyword", "fg"), 1),
-      cursorline_bg = H.tint(H.get("Keyword", "fg"), -0.5),
+      cursorline_fg = tint(keyword, 1),
+      cursorline_bg = tint(keyword, -0.5),
 
-      border_fg = H.tint(H.get("WinSeparator", "fg"), 0.25),
-
-      title = H.tint(H.get("Keyword", "fg"), -0.2),
-
-      inactive_text = H.tint(H.get("Normal", "fg"), -0.6),
-
-      darken_bg = H.tint(H.get("Normal", "bg"), -0.5),
+      border_fg = tint(sep, 0.25),
+      title = tint(keyword, -0.2),
+      inactive_text = tint(fg, -0.6),
+      darken_bg = tint(bg, -0.5),
     },
+
     delta = {
-      hunk_header_fg = H.get("diffFile", "fg"),
-      hunk_header_bg = H.get("diffFile", "bg"),
+      hunk_header_fg = get("diffFile", "fg"),
+      hunk_header_bg = get("diffFile", "bg"),
 
-      line_number_fg = H.tint(H.get("Normal", "bg"), 0.5),
+      line_number_fg = tint(bg, 0.5),
+      line_number_plus = get("NeogitDiffAdd", "fg"),
+      line_number_minus = get("NeogitDiffDelete", "fg"),
 
-      line_number_plus = H.get("NeogitDiffAdd", "fg"),
-      line_number_minus = H.get("NeogitDiffDelete", "fg"),
+      hunk_plus_fg = get("NeogitDiffAdd", "fg"),
+      hunk_plus_bg = get("NeogitDiffAdd", "bg"),
+      hunk_emp_plus_fg = get("NeogitDiffAddInline", "fg"),
+      hunk_emp_plus_bg = get("NeogitDiffAddInline", "bg"),
 
-      hunk_plus_fg = H.get("NeogitDiffAdd", "fg"),
-      hunk_plus_bg = H.get("NeogitDiffAdd", "bg"),
-      hunk_emp_plus_fg = H.get("NeogitDiffAddInline", "fg"),
-      hunk_emp_plus_bg = H.get("NeogitDiffAddInline", "bg"),
-
-      hunk_minus_fg = H.get("NeogitDiffDelete", "fg"),
-      hunk_minus_bg = H.get("NeogitDiffDelete", "bg"),
-      hunk_emp_minus_fg = H.get("NeogitDiffDeleteInline", "fg"),
-      hunk_emp_minus_bg = H.get("NeogitDiffDeleteInline", "bg"),
+      hunk_minus_fg = get("NeogitDiffDelete", "fg"),
+      hunk_minus_bg = get("NeogitDiffDelete", "bg"),
+      hunk_emp_minus_fg = get("NeogitDiffDeleteInline", "fg"),
+      hunk_emp_minus_bg = get("NeogitDiffDeleteInline", "bg"),
     },
+
     eww = {
-      bg = H.get("Normal", "bg"),
+      bg = bg,
+      fg = statusline.fg,
+      fg2 = tint(changed, -0.3),
 
-      fg = H.tint(H.get("Normal", "fg"), -0.5),
-      fg2 = H.tint(H.get("diffChanged", "fg"), -0.3),
+      bg_darken = tint(bg, -0.3),
+      bg_alt = tint(bg, 0.3),
 
-      bg_darken = H.tint(H.get("Normal", "fg"), -0.3),
-      bg_alt = H.tint(H.get("Normal", "fg"), 0.3),
-
-      red = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
-
+      red = red_muted,
       icon_fg = normal_fg_base,
-
-      keyword = H.get("Keyword", "fg"),
+      keyword = keyword,
     },
+
     yazi = {
-      cwd = H.get("PanelSideRootName", "fg"),
-      hovered = yazi_hovered,
+      cwd = get("PanelSideRootName", "fg"),
+      hovered = get("HoveredTerminalFileManagerCursorline", "bg"),
 
-      selected = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
-      count_selected_bg = H.darken(H.get("diffRemoved", "fg"), 0.8, H.get("Normal", "bg")),
+      selected = red_muted,
+      count_selected_bg = red_muted,
 
-      find_keyword_fg = H.get("CurSearch", "fg"),
-      find_keyword_bg = H.get("CurSearch", "bg"),
+      find_keyword_fg = get("CurSearch", "fg"),
+      find_keyword_bg = get("CurSearch", "bg"),
 
-      copied = H.tint(H.get("diffChanged", "fg"), 0.3),
-      count_copied_bg = H.tint(H.get("diffChanged", "fg"), -0.5),
+      copied = tint(changed, 0.3),
+      count_copied_bg = tint(changed, -0.5),
 
-      cut = H.tint(H.get("String", "fg"), 0.3),
-      count_cut_bg = H.tint(H.get("String", "fg"), -0.5),
+      cut = tint(get("String", "fg"), 0.3),
+      count_cut_bg = tint(get("String", "fg"), -0.5),
 
-      marked_fg = H.tint(H.get("Function", "fg"), 0.1),
-      marked_bg = H.tint(H.get("Function", "fg"), -0.5),
+      marked_fg = tint(func, 0.1),
+      marked_bg = tint(func, -0.5),
 
-      tab_active_fg = H.get("Keyword", "fg"),
-      tab_active_bg = H.get("NormalKeyword", "bg"),
-      tab_inactive_fg = H.get("NormalKeyword", "bg"),
-      tab_inactive_bg = H.tint(H.get("TabLine", "fg"), 0.2),
+      tab_active_fg = keyword,
+      tab_active_bg = get("NormalKeyword", "bg"),
+      tab_inactive_fg = get("NormalKeyword", "bg"),
+      tab_inactive_bg = tint(get("TabLine", "fg"), 0.2),
 
-      -- statusline_normal_fg = H.get("StatusLineRightBlock", "fg"),
-      -- statusline_normal_bg = H.get("StatusLineRightBlock", "bg"),
-      -- statusline_normal_fg_alt = H.darken(H.get("StatusLineRightBlock", "fg"), 0.7, H.get("Normal", "bg")),
-      -- statusline_normal_bg_alt = H.darken(H.get("StatusLineRightBlock", "bg"), 0.6, H.get("Normal", "bg")),
+      statusline_normal_fg = statusline.raw_fg,
+      statusline_normal_bg = statusline.bg,
+      statusline_normal_fg_alt = statusline.fg,
+      statusline_normal_bg_alt = darken(statusline.bg, 0.6, bg),
 
-      statusline_normal_fg = H.get("Statusline", "fg"),
-      statusline_normal_bg = H.get("Statusline", "bg"),
-      statusline_normal_fg_alt = H.darken(H.get("Statusline", "fg"), 0.7, H.get("Normal", "bg")),
-      statusline_normal_bg_alt = H.darken(H.get("Statusline", "bg"), 0.6, H.get("Normal", "bg")),
+      statusline_select_fg = tint(get("Visual", "bg"), 2),
+      statusline_select_bg = tint(get("Visual", "bg"), 0.4),
+      statusline_select_fg_alt = tint(get("Visual", "bg"), 1),
+      statusline_select_bg_alt = get("Visual", "bg"),
 
-      statusline_select_fg = H.tint(H.get("Visual", "bg"), 2),
-      statusline_select_bg = H.tint(H.get("Visual", "bg"), 0.4),
-      statusline_select_fg_alt = H.tint(H.get("Visual", "bg"), 1),
-      statusline_select_bg_alt = H.get("Visual", "bg"),
+      statusline_unset_fg = tint(func, -0.5),
+      statusline_unset_bg = tint(func, 0.4),
+      statusline_unset_fg_alt = tint(func, -0.8),
+      statusline_unset_bg_alt = func,
 
-      statusline_unset_fg = H.tint(H.get("Function", "fg"), -0.5),
-      statusline_unset_bg = H.tint(H.get("Function", "fg"), 0.4),
-      statusline_unset_fg_alt = H.tint(H.get("Function", "fg"), -0.8),
-      statusline_unset_bg_alt = H.get("Function", "fg"),
+      directory = get("Directory", "fg"),
 
-      directory = H.get("Directory", "fg"),
-
-      menu_bg = H.get("Pmenu", "bg"),
-      menu_fg = H.get("Pmenu", "fg"),
+      menu_bg = get("Pmenu", "bg"),
+      menu_fg = get("Pmenu", "fg"),
     },
+
     rofi = {
       foreground = normal_bg,
 
@@ -336,16 +335,18 @@ function M.change_colorscheme_global()
       background_alt = normal_fg,
 
       selected = normal_fg,
-      selected_alt = H.tint(H.get("Keyword", "fg"), -0.25),
+      selected_alt = tint(keyword, -0.25),
 
-      keyword = H.get("Keyword", "fg"),
+      keyword = keyword,
 
-      red = H.tint(H.get("diffRemoved", "fg"), -0.3),
-      green = H.tint(H.get("diffAdded", "bg"), -0.3),
+      red = tint(removed, -0.3),
+      green = tint(get("diffAdded", "bg"), -0.3),
     },
   }
+end
 
-  M.send_contents_to_file(defined_cols, "/tmp/master-colors-themes", true)
+function M.change_colorscheme_global()
+  M.send_contents_to_file(M.build_colors(), "/tmp/master-colors-themes", true)
 end
 
 return M

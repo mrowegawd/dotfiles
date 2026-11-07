@@ -106,8 +106,8 @@ end
 
 local function setup_buffer(bufnr, winid, symbol)
   vim.api.nvim_buf_set_name(bufnr, "LSP Hover --> " .. symbol)
-  vim.api.nvim_set_option_value("modifiable", false, { buf = bufnr })
   vim.api.nvim_set_option_value("filetype", "eldochover", { buf = bufnr })
+  vim.api.nvim_set_option_value("modifiable", false, { buf = bufnr })
   vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = bufnr })
   vim.api.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
   vim.api.nvim_set_option_value("swapfile", false, { buf = bufnr })
@@ -155,7 +155,7 @@ local function open_float(bufnr)
   local height = calc_float_height()
   local width = math.max(20, math.floor(vim.o.columns * M.config.float_width_ratio))
   local col = math.max(0, vim.o.columns - width - M.config.float_padding)
-  return vim.api.nvim_open_win(bufnr, false, {
+  return vim.api.nvim_open_win(bufnr, true, {
     relative = "editor",
     row = M.config.float_padding,
     col = col,
@@ -164,6 +164,25 @@ local function open_float(bufnr)
     style = "minimal",
     border = M.config.float_border,
   })
+end
+
+local function attach_render_markdown(bufnr)
+  local ok, render = pcall(require, "render-markdown")
+  if not ok then
+    return
+  end
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+  local state_ok, state = pcall(require, "render-markdown.state")
+  if state_ok and state.get then
+    pcall(state.get, bufnr)
+  end
+  pcall(function()
+    vim.api.nvim_buf_call(bufnr, function()
+      render.buf_enable()
+    end)
+  end)
 end
 
 ---Open the content buffer in the requested layout and set it up.
@@ -183,6 +202,7 @@ local function present(lines, symbol, layout)
   else
     winid = open_split(bufnr, calc_split_height(#lines))
   end
+
   hover.buf, hover.win = bufnr, winid
 
   setup_buffer(bufnr, winid, symbol)
@@ -190,9 +210,11 @@ local function present(lines, symbol, layout)
   vim.api.nvim_set_option_value("winfixheight", true, { win = winid })
 
   vim.schedule(function()
-    if vim.api.nvim_buf_is_valid(bufnr) then
-      vim.treesitter.start(bufnr, "markdown")
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+      return
     end
+    pcall(vim.treesitter.start, bufnr, "markdown")
+    attach_render_markdown(bufnr)
   end)
 end
 
@@ -299,6 +321,9 @@ function M.show(layout)
     end
     local symbol = resolve_symbol(result, caller_win)
     present(lines, symbol, layout)
+    if vim.api.nvim_win_is_valid(caller_win) then
+      vim.api.nvim_set_current_win(caller_win)
+    end
   end)
 end
 

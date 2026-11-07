@@ -30,30 +30,26 @@ row_gap = 1
 # ╘══════════════════════════════════════════════════════════════════════════════╛
 
 [keys]
-prefix = "ctrl+space"  # default: "ctrl+b"
+prefix = "ctrl+space"
 copy_mode = "prefix+shift+v"
-# reload_config = "prefix+r"     # default: "prefix+shift+r"
-# resize_mode = "prefix+shift+r" # default: "prefix+r"
 
 # +------------------------------------------------------------------------------+
 # | WORKSPACES (aka session in tmux)                                             |
 # +------------------------------------------------------------------------------+
 
-new_workspace = "prefix+shift+n"  # tmux N        | default: "prefix+shift+n" (unchanged)
-previous_workspace = "prefix+ctrl+k"  # unified nav: Ctrl-a C-k = up (vertical)    | default: "" (unset)
-next_workspace = "prefix+ctrl+j"  # unified nav: Ctrl-a C-j = down (vertical)  | default: "" (unset)
-close_workspace = "prefix+shift+x"  # tmux X        | default: "prefix+shift+d"
-switch_workspace = "prefix+1..9"  # Ctrl-a 1..9 → workspace N (projects — reliable plain numbers)
-workspace_picker = "prefix+w"  # default: "prefix+w" (unchanged)
-
-# goto = "prefix+s"                  # tmux C-w (choose-tree) | default: "prefix+g"
+new_workspace = "prefix+shift+n"
+previous_workspace = "prefix+ctrl+k"
+next_workspace = "prefix+ctrl+j"
+close_workspace = "prefix+shift+x"
+switch_workspace = "prefix+1..9"
+workspace_picker = "prefix+w"
 
 goto = ""
 
 navigate_workspace_up = ["k", "ctrl+p"]
 navigate_workspace_down = ["j", "ctrl+n"]
 
-new_worktree = ""  # tmux C-w (choose-tree) | default: "prefix+g"
+new_worktree = ""
 
 # +------------------------------------------------------------------------------+
 # | TABS (aka window in tmux)                                                    |
@@ -115,31 +111,64 @@ description = "navigate right (vim/herdr)"
 key = "alt+shift+b"
 type = "popup"
 command = "btop"
-description = "open float btop"
+description = "open btop"
 width = "80%"
 height = "80%"
 
-# [[keys.command]] /// <--- ini salah, seharusnya di get dari fzctrl_o
-# key = "alt+shift+c"
-# type = "popup"
-# command = "rkill"
-# description = "open float rkill"
-# width = "80%"
-# height = "80%"
+[[keys.command]]
+key = "alt+shift+s"
+type = "popup"
+command = "tmr"
+description = "select session"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "alt+shift+c"
+type = "popup"
+command = "bash -i -c 'r_kill'"
+description = "open rkill"
+width = "80%"
+height = "80%"
 
 [[keys.command]]
 key = "alt+shift+g"
 type = "popup"
 command = "lazygit --use-config-file $HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"
-description = "open float lazygit"
+description = "open lazygit"
 width = "80%"
 height = "80%"
 
 [[keys.command]]
-key = "alt+f"
-type = "shell"
-command = "bash $HOME/.config/miscxrdb/bin/tm-toggle-pane handle_split_term"
-description = "toggle split term"
+key = "alt+shift+w"
+type = "popup"
+command = "fz-ctrlherdr"
+description = "open note float"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "alt+shift+z"
+type = "popup"
+command = "resterm"
+description = "open resterm"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "alt+shift+d"
+type = "popup"
+command = "lazydocker"
+description = "open lazydocker"
+width = "80%"
+height = "80%"
+
+# install: herdr plugin install meerzulee/herdr-float --yes
+[[keys.command]]
+key = "alt+shift+t"
+type = "plugin_action"
+command = "herdr-float.toggle"
+description = "Toggle floating scratch shell"
 
 # ╒══════════════════════════════════════════════════════════════════════════════╕
 #                                      THEMES
@@ -151,25 +180,25 @@ auto_switch = false
 
 [theme.custom]
 # sidebar_bg="#0e0e0e"
-panel_bg = "#0e0e0e"
-surface_dim = "#060606"
+panel_bg="#090909"
+surface_dim="#060606"
 selection_bg = "#3b3b3b"
 
-surface0 = "#0e0e0e"
-surface1 = "#0e0e0e"
+surface0="#090909"
+surface1="#090909"
 
-overlay0 = "#121212"
-overlay1 = "#3b3b3b"
+overlay0="#0b0b0b"
+overlay1="#323232"
 
-text = "#7ca8cf"
-subtext0 = "#3b3b3b"
+text="#7ca8cf"
+subtext0="#323232"
 
-accent = "#3b3b3b"
+accent="#323232"
 
-blue = "#75a1c7"
+blue="#75a1c7"
 teal = "#00dfdb"
-mauve = "#fff7b4"
-green = "#6fbe80"
-red = "#e08585"
+mauve="#c2916a"
+green="#6fbe80"
+red="#e08585"
 peach = "#d98870"  # oxocarbon pink
-yellow = "#c2916a"
+yellow="#d9a35a"

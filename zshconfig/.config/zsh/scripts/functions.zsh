@@ -1,601 +1,574 @@
 # vim: ft=zsh sw=2 ts=2 et
 
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                                   HELPERS                                    ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# Direct escape sequences (no fork `tput` at shell start).
+typeset -g Green=$'\e[32m' Yellow=$'\e[33m' Red=$'\e[31m' Color_Off=$'\e[0m'
+
+_have()    { command -v "$1" >/dev/null 2>&1 }
+_log()     { print -r -- "${Green}==>${Color_Off} $*" }
+_warn()    { print -u2 -r -- "${Yellow}[warn]${Color_Off} $*" }
+_section() { print -r -- $'\n'"${Green}━━ $* ━━${Color_Off}" }
+
+# End the widget with a fresh prompt, without executing the buffer contents.
+# The currently typed buffer is saved first, then restored at the next prompt.
+_zle_fresh_prompt() {
+  [[ -n $BUFFER ]] && zle push-line
+  zle accept-line
+}
+
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                                    NEOVIM                                    ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 build-nvim() {
-  neovim_dir="$PROJECTS_DIR/contrib/neovim"
-  [ ! -d $neovim_dir ] && git clone https://github.com/neovim/neovim.git $neovim_dir
-  pushd $neovim_dir
+  [[ -n $PROJECTS_DIR ]] || { _warn "PROJECTS_DIR belum di-set"; return 1; }
 
-  git checkout master
-  git reset --hard origin/$(git rev-parse --abbrev-ref HEAD) && git clean -fdx
-  git fetch --tags -f
-  git pull --rebase --prune
+  local dir="$PROJECTS_DIR/contrib/neovim"
+  local prefix="$HOME/neovim"
 
-  git checkout nightly
+  if [[ ! -d $dir/.git ]]; then
+    git clone https://github.com/neovim/neovim.git "$dir" || return 1
+  fi
 
-  [ -d "$neovim_dir/build/" ] && rm -r ./build/
-  rm -rf $HOME/neovim/*
+  pushd -q "$dir" || return 1
+  {
+    _log "sync tag nightly"
+    # `nightly` is a moving tag -> fetch --force.
+    # `.deps` is preserved so dependencies aren't recompiled on every build.
+    git fetch --tags --force --prune origin &&
+      git checkout --force nightly &&
+      git clean -fdx -e .deps &&
+      make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$prefix" ||
+      return 1
 
-  make CMAKE_BUILD_TYPE=Release \
-    CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
-
-  make install
-  popd
+    # The old install is only removed AFTER a successful build.
+    rm -rf -- "$prefix"
+    make install
+  } always {
+    popd -q
+  }
 }
-build-install() {
-  # ──────────────────────────────────────────────────────────────────────
-  # APT
-  # ──────────────────────────────────────────────────────────────────────
-  if ! command -v xinput >/dev/null; then
-    echo "Installing: xinput - Fixing mouse lagging..?"
-    sudo apt install xinput -y
+
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                                  INSTALLER                                   ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+#  Usage:  build-install            -> install only what's missing
+#          build-install --update   -> upgrade everything
+#
+#  Note: `UPDATE` and `failed` are declared local in build-install and
+#  used by the helpers below via zsh dynamic scoping.
+
+# ├───────────────────────────────────┤ APT ├─────────────────────────────────┤
+_install_apt() {
+  _section "APT"
+
+  # format: "binary=package [package...]"
+  local -a table=(
+    "curl=curl"
+    "jq=jq"
+    "xinput=xinput"                    # fix mouse lag
+    "pass=pass"                        # password manager
+    "urlview=urlview"
+    "rg=ripgrep"
+    "pamixer=pamixer"
+    "sqlite3=sqlite3"
+    "proxychains4=proxychains4"        # tor wrapper
+    "btop=btop"                        # process monitor
+    "toilet=toilet"                    # colored figlet
+    "play=sox libsox-fmt-all"          # play sound from the terminal
+    "hub=hub"                          # git cli extension
+  )
+
+  local -a missing=()
+  local entry
+  for entry in $table; do
+    _have "${entry%%=*}" || missing+=( ${=entry#*=} )
+  done
+
+  # fd: on Debian/Ubuntu the binary is named `fdfind`
+  _have fd || _have fdfind || missing+=( fd-find )
+
+  if (( $#missing )); then
+    _log "apt: $missing"
+    sudo apt install -y $missing || failed+=( apt )
   fi
 
-  if ! command -v pass >/dev/null; then
-    echo "Installing: pass - The standard unix password manager"
-    sudo apt install pass -y
-    # sudo apt install pass ydotool ydotoold -y
+  if ! _have fd && _have fdfind; then
+    mkdir -p "$HOME/.local/bin" &&
+      ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
   fi
+}
 
-  if ! command -v urlview >/dev/null; then
-    echo "Installing: urlview"
-    sudo apt install urlview -y
-  fi
+_install_gh() {
+  _have gh && return 0
+  _log "gh - GitHub CLI"
 
-  if ! command -v rg >/dev/null; then
-    echo "Installing: rg"
-    sudo apt install pamixer ripgrep -y
-  fi
-
-  if ! command -v sqlite3 >/dev/null; then
-    echo "Installing: sqlite3"
-    sudo apt install sqlite3 -y
-  fi
-
-  # if ! command -v betterlockscreen >/dev/null; then
-  #   echo "Installing: i3lock - screen lock"
-  #   sudo apt install autoconf gcc make pkg-config libpam0g-dev \
-  #     libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
-  #     libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
-  #     libxcb-randr0-dev libxcb-image0-dev libxcb-util0-dev libxcb-xrm-dev \
-  #     libxkbcommon-dev libxkbcommon-x11-dev libjpeg-dev -y
-  #   git clone https://github.com/Raymo111/i3lock-color.git && cd i3lock-color && ./install-i3lock-color.sh
-  #   wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
-  # fi
-
-  if ! command -v fd >/dev/null; then
-    echo "Installing: fd - Blazingly fast for search folder name"
-    sudo apt install fd-find -y
-    sudo ln -s /usr/bin/fdfind $HOME/.local/bin/fd
-  fi
-
-  if ! command -v proxychains >/dev/null; then
-    echo "Installing: proxychains - Wrapper for tor"
-    sudo apt install proxychains4 -y
-  fi
-
-  if ! command -v newsboat >/dev/null; then
-    echo "Installing: newsbato - Feed news"
-    chmod +x "$HOME/.config/miscxrdb/exbin/install-newsboat"
-    bash "$HOME/.config/miscxrdb/exbin/install-newsboat"
-  fi
-
-  if ! command -v btop >/dev/null; then
-    echo "Installing: btop - fancy pid monitor"
-    VERSION="1.4.4"
-    ARCH="x86_64"
-    PLATFORM="linux"
-    LOCATION_PATH="$HOME/.local/src"
-
-    FILENAME="btop-${ARCH}-${PLATFORM}-musl.tbz"
-    BASE_URL="https://github.com/aristocratos/btop/releases/download/v${VERSION}"
-    DOWNLOAD_URL="${BASE_URL}/${FILENAME}"
-
-    EXTRACT_TO_PATH="$LOCATION_PATH/${FILENAME}"
-
-    wget "${DOWNLOAD_URL}" -O "${EXTRACT_TO_PATH}" || curl -LO "${DOWNLOAD_URL}"
-
-    if [[ -f $EXTRACT_TO_PATH ]]; then
-      tar -xvjf "$EXTRACT_TO_PATH" -C "$LOCATION_PATH"
-      cd "$LOCATION_PATH/btop"
-      sudo make install
-    fi
-  fi
-
-  if ! command -v gh >/dev/null; then
-    echo "Installing: gh - git cli tool"
-    type -p curl >/dev/null || sudo apt install curl -y
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
-      sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
+  local keyring=/usr/share/keyrings/githubcli-archive-keyring.gpg
+  {
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg |
+      sudo dd of=$keyring status=none &&
+      sudo chmod go+r $keyring &&
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=$keyring] https://cli.github.com/packages stable main" |
+      sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
       sudo apt update &&
-      sudo apt install gh -y
-  fi
-
-  # if ! command -v ueberzugpp >/dev/null; then
-  #   echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
-  #   echo 'deb http://download.opensuse.org/repositories/home:/justkidding/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:justkidding.list
-  #   curl -fsSL https://download.opensuse.org/repositories/home:justkidding/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_justkidding.gpg > /dev/null
-  #   sudo apt update -y && sudo apt install ueberzugpp -y
-  # fi
-
-  if ! command -v toilet >/dev/null; then
-    echo "Installing: play - Funny color command"
-    sudo apt install toilet -y
-  fi
-
-  # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
-  # https://github.com/caarlos0/timer
-  # cara install `timer`:
-  # echo 'deb [trusted=yes] https://repo.caarlos0.dev/apt/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
-  # sudo apt update
-  # sudo apt install timer
-
-  if ! command -v play >/dev/null; then
-    echo "Installing: play - Play sound from the terminal"
-    sudo apt install sox libsox-fmt-all -y
-  fi
-
-  if ! command -v hub >/dev/null; then
-    echo "Installing: hub - An extensions to cmdline git"
-    sudo apt install hub -y
-  fi
-
-  if ! command -v resterm >/dev/null; then
-    echo "Installing: resterm - Terminal client for HTTP/GraphQL/gRPC with support for SSH tunnels, WebSockets, SSE, workflows, profiling, OpenAPI and response diffs"
-
-    sudo apt install hub -y
-
-    # Detect latest tag
-    LATEST_TAG=$(curl -fsSL https://api.github.com/repos/unkn0wn-root/resterm/releases/latest | jq -r .tag_name)
-
-    # Download the matching binary (Darwin/Linux + amd64/arm64)
-    curl -fL -o resterm "https://github.com/unkn0wn-root/resterm/releases/download/${LATEST_TAG}/resterm_$(uname -s)_$(uname -m)"
-
-    # Make it executable and move it onto your PATH
-    chmod +x resterm
-    sudo install -m 0755 resterm /usr/local/bin/resterm
-  fi
-
-  # ──────────────────────────────────────────────────────────────────────
-  # RUST, cargo
-  # ──────────────────────────────────────────────────────────────────────
-  # if ! command -v bat >/dev/null; then
-  echo "Installing: bat - we cat before bat"
-  # sudo apt install ydotool ydotool -y
-  cargo install bat
-  asdf reshim rust
-  # fi
-
-  # if ! command -v viu >/dev/null; then
-  echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
-  cargo install viu
-  asdf reshim rust
-  # fi
-
-  # if ! command -v rmpc >/dev/null; then
-  echo "Installing: rmpc - Terminal mp3 (alternatif dari nncmpc)"
-  cargo install --git https://github.com/mierak/rmpc --locked # install latest
-  asdf reshim rust
-  # fi
-
-  # if ! command -v gifski >/dev/null; then
-  # Install: gifski
-  # gihtub: https://github.com/sindresorhus/Gifski
-  # install binary langsung dari link https://gif.ski/
-  echo "Installing: gifski - Gif encoder"
-  cargo install gifski
-  asdf reshim rust
-  # fi
-
-  # if ! command -v dua >/dev/null; then
-  echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
-  cargo install dua-cli
-  asdf reshim rust
-  # fi
-
-  # if ! command -v procs >/dev/null; then
-  echo "Installing: procs - Better than use 'ps' command"
-  cargo install procs
-  asdf reshim rust
-  # fi
-
-  # if ! command -v eza >/dev/null; then
-  echo "Installing: eza - ls colors"
-  cargo install eza
-  asdf reshim rust
-  # fi
-
-  # if ! command -v zoxide >/dev/null; then
-  echo "Installing: zoxide - A smarter cd commands"
-  cargo install zoxide --locked
-  asdf reshim rust
-  # fi
-
-  # if ! command -v delta >/dev/null; then
-  echo "Installing: delta - Color for git hunk/chommits"
-  cargo install git-delta
-  asdf reshim rust
-  # fi
-
-  # if ! command -v rg >/dev/null; then
-  # echo "Installing: rg - Grep drugs"
-  # cargo install ripgrep
-  # asdf reshim rust
-  # fi
-
-  # https://github.com/race604/clock-tui
-  # if ! command -v tclock >/dev/null; then
-  echo "Installing: tclock - Clock tui"
-  cargo install clock-tui
-  asdf reshim rust
-  # fi
-
-  # if ! command -v tree-sitter >/dev/null; then
-  echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
-  cargo install tree-sitter-cli
-  asdf reshim rust
-  # fi
-
-  # if ! command -v yazi >/dev/null; then
-  echo "Installing: yazi - File manager tui"
-  cargo install --force yazi-build --locked
-  asdf reshim rust
-
-  # yazi git integration
-  # ya pkg add yazi-rs/plugins:git
-  # fi
-
-  # if ! command -v rust-analyzer >/dev/null; then
-  echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
-  rustup component add rust-analyzer
-  asdf reshim rust
-  # fi
-
-  # ──────────────────────────────────────────────────────────────────────
-  # GO install
-  # ──────────────────────────────────────────────────────────────────────
-  # if ! command -v dive >/dev/null; then
-  echo "Installing: dive - Explore docker layer"
-  go install github.com/wagoodman/dive@latest
-  asdf reshim golang
-  # fi
-
-  # if ! command -v sesh >/dev/null; then
-  echo "Installing: sesh - Handle tmux session"
-  go install github.com/joshmedeski/sesh/v2@latest
-  asdf reshim golang
-  # fi
-
-  # if ! command -v tock >/dev/null; then
-  echo "Installing: tock - Tock is a powerful time tracking tool for the command line."
-  go install github.com/kriuchkov/tock/cmd/tock@latest
-  asdf reshim golang
-  # fi
-
-  # if ! command -v lazydocker >/dev/null; then
-  echo "Installing: lazydocker - Docker TUI"
-  go install github.com/jesseduffield/lazydocker@latest
-  asdf reshim golang
-  # fi
-
-  if ! command -v gowall >/dev/null; then
-    echo "Installing: gowall - Convert wallpaper theme (just like pywall)"
-    go install github.com/Achno/gowall@latest
-    asdf reshim golang
-  fi
-
-  if [ ! -f /usr/local/bin/lazygit ]; then
-    echo "Installing: lazygit - Git TUI"
-    # go install github.com/jesseduffield/lazygit@latest
-    # asdf reshim golang
-    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-    tar xf lazygit.tar.gz lazygit
-    sudo install lazygit -D -t /usr/local/bin/
-    rm -rf lazygit.tar.gz lazygit
-  fi
-
-  # ──────────────────────────────────────────────────────────────────────
-  # Pip, pipx
-  # ──────────────────────────────────────────────────────────────────────
-  # if ! command -v pipx >/dev/null; then
-  echo "Installing: pipx"
-  pip install pipx
-  asdf reshim python
-  # fi
-
-  # if ! command -v calcure >/dev/null; then
-  echo "Installing: calcure - Calendar TUI"
-  pipx install calcure
-  asdf reshim python
-  # fi
-
-  # if ! command -v img2art >/dev/null; then
-  # https://github.com/Asthestarsfalll/img2art
-  echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
-  pipx install img2art
-  asdf reshim python
-  # fi
-
-  # if ! command -v yt-dlp >/dev/null; then
-  echo "Installing: yt-dlp - A tool for download youtube video"
-  # To force an update, use the --force option, for example:
-  # 'pipx install yt-dlp --force'
-  pipx install yt-dlp
-  asdf reshim python
-  # fi
-
-  # ──────────────────────────────────────────────────────────────────────
-  # NPM
-  # ──────────────────────────────────────────────────────────────────────
-  # if ! command -v mmdc >/dev/null; then
-  echo "Installing: mmdc - A tool for the mermaid library nvim"
-  npm install -g @mermaid-js/mermaid-cli
-  asdf reshim nodejs
-  # fi
-
-  # if ! command -v cronstrue >/dev/null; then
-  echo "Installing: cronstrue - parses a cron expression and outputs a human readable"
-  npm install -g cronstrue
-  asdf reshim nodejs
-  # fi
-
-  # if ! command -v yarn >/dev/null; then
-  echo "Installing: yarn - another package managers for JavaScript"
-  npm install -g yarn
-  asdf reshim nodejs
-  # fi
+      sudo apt install -y gh
+  } || failed+=( gh )
 }
 
-Green=$(tput setaf 2)  # Green
-Color_Off=$(tput sgr0) # Text Reset
+_install_newsboat() {
+  _have newsboat && return 0
+
+  local script="$HOME/.config/miscxrdb/exbin/install-newsboat"
+  if [[ ! -f $script ]]; then
+    _warn "newsboat: $script not found"
+    return 1
+  fi
+
+  _log "newsboat - RSS reader"
+  bash "$script" || failed+=( newsboat )
+}
+
+# ══════════════════════ GitHub releases (direct binaries) ════════════════════
+_gh_latest_tag() { # <owner/repo>
+  curl -fsSL "https://api.github.com/repos/$1/releases/latest" | jq -r .tag_name
+}
+
+_install_resterm() {
+  _have resterm && (( ! UPDATE )) && return 0
+  _log "resterm - HTTP/GraphQL/gRPC client for the terminal"
+
+  local tmp tag
+  tmp=$(mktemp -d) || return 1
+
+  tag=$(_gh_latest_tag unkn0wn-root/resterm) &&
+    curl -fL -o "$tmp/resterm" \
+      "https://github.com/unkn0wn-root/resterm/releases/download/${tag}/resterm_$(uname -s)_$(uname -m)" &&
+    sudo install -m 0755 "$tmp/resterm" /usr/local/bin/resterm ||
+    failed+=( resterm )
+
+  rm -rf -- "$tmp"
+}
+
+_install_lazygit() {
+  _have lazygit && (( ! UPDATE )) && return 0
+  _log "lazygit - Git TUI"
+
+  local arch tmp tag
+  case $(uname -m) in
+    x86_64)        arch=x86_64 ;;
+    aarch64|arm64) arch=arm64 ;;
+    *) _warn "lazygit: unsupported architecture ($(uname -m))"; return 1 ;;
+  esac
+
+  tmp=$(mktemp -d) || return 1
+
+  tag=$(_gh_latest_tag jesseduffield/lazygit) &&
+    curl -fL "https://github.com/jesseduffield/lazygit/releases/download/${tag}/lazygit_${tag#v}_Linux_${arch}.tar.gz" |
+    tar xz -C "$tmp" lazygit &&
+    sudo install -D -t /usr/local/bin "$tmp/lazygit" ||
+    failed+=( lazygit )
+
+  rm -rf -- "$tmp"
+}
+
+# ├───────────────────────────────┤ RUST / CARGO ├───────────────────────────────┤
+# _cargo_ensure <binary> <description> <cargo install arguments...>
+_cargo_ensure() {
+  local bin=$1 desc=$2
+  shift 2
+  _have "$bin" && (( ! UPDATE )) && return 0
+
+  _log "$bin - $desc"
+  cargo install "$@" || failed+=( "$bin" )
+}
+
+_install_rust_tools() {
+  _section "RUST (cargo)"
+  if ! _have cargo; then
+    _warn "cargo not found, skipping the Rust section"
+    return 0
+  fi
+
+  _cargo_ensure bat         "cat with syntax highlighting"                bat
+  _cargo_ensure viu         "terminal image viewer (fzf-lua dependency)"  viu
+  _cargo_ensure rmpc        "MPD client (alternative to ncmpcpp)"         --git https://github.com/mierak/rmpc --locked
+  _cargo_ensure gifski      "GIF encoder"                                 gifski
+  _cargo_ensure dua         "disk usage (similar to du)"                  dua-cli
+  _cargo_ensure procs       "ps replacement"                              procs
+  _cargo_ensure eza         "colorful ls replacement"                     eza
+  _cargo_ensure zoxide      "smarter cd"                                  zoxide --locked
+  _cargo_ensure delta       "color pager for git diff"                    git-delta
+  _cargo_ensure tclock      "TUI clock"                                   clock-tui
+  _cargo_ensure tree-sitter "tree-sitter CLI for nvim"                    tree-sitter-cli
+  _cargo_ensure yazi        "TUI file manager"                            --force --locked yazi-build
+
+  # rust-analyzer: the `rust-analyzer` shim always exists even when the component
+  # isn't installed, so check via rustup.
+  if _have rustup && ! rustup component list --installed 2>/dev/null | grep -q '^rust-analyzer'; then
+    _log "rust-analyzer - LSP Rust"
+    rustup component add rust-analyzer || failed+=( rust-analyzer )
+  fi
+
+  _have asdf && asdf reshim rust
+}
+
+# ├────────────────────────────────────┤ GO ├────────────────────────────────────┤
+# _go_ensure <binary> <description> <package@version>
+_go_ensure() {
+  local bin=$1 desc=$2 pkg=$3
+  _have "$bin" && (( ! UPDATE )) && return 0
+
+  _log "$bin - $desc"
+  go install "$pkg" || failed+=( "$bin" )
+}
+
+_install_go_tools() {
+  _section "GO"
+  if ! _have go; then
+    _warn "go not found, skipping the Go section"
+    return 0
+  fi
+
+  _go_ensure dive       "explore docker layers"            github.com/wagoodman/dive@latest
+  _go_ensure sesh       "tmux session management"          github.com/joshmedeski/sesh/v2@latest
+  _go_ensure tock       "time tracking CLI"                github.com/kriuchkov/tock/cmd/tock@latest
+  _go_ensure lazydocker "Docker TUI"                       github.com/jesseduffield/lazydocker@latest
+  _go_ensure gowall     "wallpaper theme conversion (pywall)" github.com/Achno/gowall@latest
+}
+
+# ├──────────────────────────────┤ PYTHON / PIPX ├────────────────────────────┤
+# _pipx_ensure <binary> <description> <package>
+_pipx_ensure() {
+  local bin=$1 desc=$2 pkg=$3
+
+  if _have "$bin"; then
+    (( UPDATE )) || return 0
+    _log "$bin - upgrade"
+    pipx upgrade "$pkg" || failed+=( "$bin" )
+  else
+    _log "$bin - $desc"
+    pipx install "$pkg" || failed+=( "$bin" )
+  fi
+}
+
+_install_python_tools() {
+  _section "PYTHON (pipx)"
+
+  if ! _have pipx; then
+    if ! _have pip; then
+      _warn "pip not found, skipping the Python section"
+      return 0
+    fi
+    _log "pipx"
+    pip install pipx || { failed+=( pipx ); return 1; }
+    _have asdf && asdf reshim python
+    hash -r
+  fi
+
+  _pipx_ensure calcure "TUI calendar"                                          calcure
+  _pipx_ensure img2art "image/gif/video -> ascii art (snacks.nvim dashboard)"  img2art
+  _pipx_ensure yt-dlp  "YouTube video downloader"                              yt-dlp
+
+  _have asdf && asdf reshim python
+}
+
+# ├───────────────────────────────────┤ NPM ├─────────────────────────────────┤
+_install_npm_tools() {
+  _section "NPM"
+  if ! _have npm; then
+    _warn "npm not found, skipping the NPM section"
+    return 0
+  fi
+
+  # format: "binary=package"
+  local -a table=(
+    "mmdc=@mermaid-js/mermaid-cli"   # mermaid for nvim
+    "cronstrue=cronstrue"            # cron expression -> text
+    "yarn=yarn"
+  )
+
+  local -a pkgs=()
+  local entry
+  for entry in $table; do
+    if (( UPDATE )) || ! _have "${entry%%=*}"; then
+      pkgs+=( "${entry#*=}" )
+    fi
+  done
+
+  if (( $#pkgs )); then
+    _log "npm: $pkgs"
+    npm install -g $pkgs || failed+=( npm )
+    _have asdf && asdf reshim nodejs
+  fi
+}
+
+# ╓──────────────────────────────────────────────────────────────────────────────╖
+# ║                                 ENTRY POINT                                  ║
+# ╙──────────────────────────────────────────────────────────────────────────────╜
+build-install() {
+  local UPDATE=0
+  [[ $1 == (-u|--update) ]] && UPDATE=1
+  local -a failed=()
+
+  _install_apt
+  _install_gh
+  _install_newsboat
+  _install_resterm
+  _install_lazygit
+  _install_rust_tools
+  _install_go_tools
+  _install_python_tools
+  _install_npm_tools
+
+  print
+  if (( $#failed )); then
+    _warn "Failed: ${(j:, :)failed}"
+    return 1
+  fi
+  _log "Done"
+}
+
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                               SCAFFOLD PROJECT                               ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# _require_arg <nama-fungsi> <argumen>
+_require_arg() {
+  [[ -n $2 ]] && return 0
+  print -u2 -r -- "${Red}You must provide a project name${Color_Off}"$'\n'"Example: '$1 <project-name>'"
+  return 1
+}
 
 build-python() {
-  if [[ $1 == "" ]]; then
-    echo "Must define project name:\nEx: 'build-python <name-project>'"
-  else
-    # poetry new "$1"
-    uv init "$1"
-    cd "$1"
-  fi
+  _require_arg build-python "$1" || return 1
+  uv init "$1" && cd -- "$1"
 }
 
 build-react() {
-  if [[ $1 == "" ]]; then
-    echo "Must define project name:\n Ex: 'build-react <name-project>'"
-  else
-    git clone https://github.com/mrowegawd/react-starter.git $@
-  fi
+  _require_arg build-react "$1" || return 1
+  git clone --depth=1 https://github.com/mrowegawd/react-starter.git "$@"
 }
 
 build-go() {
-  if [[ $1 == "" ]]; then
-    echo "Must define project name:\n Ex: 'build-go <name-project>'"
-  else
-    mkdir -p $1
-    cd $1
-    go mod init $1
-  fi
+  _require_arg build-go "$1" || return 1
+  mkdir -p -- "$1" && cd -- "$1" && go mod init "$1"
 }
 
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                                 ZLE WIDGETS                                  ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# ├────────────────────┤ <Alt-o>  jump to the marked folder ├────────────────────┤
 run-mark() {
-  local cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
-  if grep -qi microsoft /proc/version; then # --> check for WSL
-    cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+  local marks="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+  if [[ -n $WSL_DISTRO_NAME || ${(L)$(</proc/version)} == *microsoft* ]]; then
+    marks="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
   fi
 
-  if [[ ! -f $cwd ]]; then
-    echo -ne "[warn] path not found: $cwd\n"
-  else
-    select=$(cat $cwd | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
-      --preview-window right:50%:nohidden \
-      --height=60% --prompt "Jump to> ")
-    if [[ -n $select ]]; then
-      if [[ ! -d $select ]]; then
-        notify-send "invalid folder path:" "$select"
-      else
-        cd $select
-      fi
+  if [[ ! -f $marks ]]; then
+    print -u2 -r -- "[warn] path not found: $marks"
+    _zle_fresh_prompt
+    return
+  fi
 
+  local choice
+  choice=$(
+    fzf --height=60% --prompt "Jump to> " \
+      --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+      --preview-window right:50%:nohidden < "$marks"
+  )
+
+  if [[ -n $choice ]]; then
+    if [[ -d $choice ]]; then
+      cd -- "$choice"
+    elif _have notify-send; then
+      notify-send "invalid folder path:" "$choice"
+    else
+      _warn "invalid folder path: $choice"
     fi
   fi
 
-  # ensure accept-line is called when ZLE is active
-  # if [[ -n "$ZLE" ]]; then
-  zle accept-line
-  # fi
+  _zle_fresh_prompt
 }
-
 zle -N run-mark
 bindkey '^[o' run-mark
 
-function fg-bg() {
-  if [[ -z $BUFFER ]]; then
-    if jobs % &>/dev/null; then
-      fg
-    else
-      print -Pn "\a%F{red}❌ no current job%f\n" >&2
-      zle accept-line
-    fi
-  else
+# ├─────┤ <Ctrl-z>  empty buffer -> fg, non-empty buffer -> save it first ├───┤
+fg-bg() {
+  if [[ -n $BUFFER ]]; then
     zle push-input
+  elif (( $#jobstates )); then
+    BUFFER=fg
+    zle accept-line
+  else
+    zle -M "no current job"
   fi
 }
-
 zle -N fg-bg
 bindkey '^z' fg-bg
 
-function exitme() {
-  LBUFFER+="exit "
+# ├──────────────────────────────┤ <Alt-x>  exit ├────────────────────────────┤
+exitme() {
+  BUFFER=exit
   zle accept-line
 }
 zle -N exitme
 bindkey '^[x' exitme
 
+# ├─┤ <Ctrl-g>  grep file contents (rg + fzf), then open in nvim at that line ├┤
 find-in-file() {
-  local _file="$(rg --color=always --line-number --hidden --no-heading --smart-case "${@:-^[^\n]}" |
-    fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
-      --preview-window='50%' --prompt='Grep In File> ' --height='50%' --with-nth 1,3.. --exact)"
+  local sel
+  sel=$(
+    rg --color=always --line-number --hidden --no-heading --smart-case \
+      --glob '!.git/' -- "${@:-.}" |
+      fzf --ansi --exact --delimiter=: --with-nth=1,3.. \
+        --prompt='Grep In File> ' --height=50% \
+        --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
+        --preview-window='50%,+{2}+3/3,~3'
+  )
 
-  _file="${_file%%:*}"
-  if [[ -n $_file ]]; then
-    exec nvim "$_file"
+  if [[ -n $sel ]]; then
+    local file=${sel%%:*}
+    local line=${${sel#*:}%%:*}
+    nvim "+$line" -- "$file"
   fi
 
-  zle accept-line
+  _zle_fresh_prompt
 }
-
 zle -N find-in-file
 bindkey '^g' find-in-file
 
-# CREDIT: taken from https://github.com/kevinhwang91/dotfiles/blob/main/zsh/lplug/fzf/fzf-completion-widget
+# ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+# ╏                                TAB DISPATCHER                                ╏
+# ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# CREDIT: https://github.com/kevinhwang91/dotfiles/blob/main/zsh/lplug/fzf/fzf-completion-widget
+# _fps [separator]  -> PID terpilih, dipisah separator (default: spasi)
 _fps() {
-  ps -eo user,pid,ppid,pgid,stat,command | awk '
-    BEGIN { "ps -p $$ -o pgid= | tr -d \"[:blank:]\"" | getline pgid } {
-  if ($4 != pgid || $2 == pgid) print }' |
-    grcat fps.grc | fzf --header-lines=1 -m \
-    ${commands[grcat]:+--ansi} --height=60% \
-    --min-height=15 --tac --reverse \
-    --preview-window=down:2,border-top |
-    awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
-    sed -E "s/${myflag:- }$//"
+  local sep=${1:- }
+  local -a filter=(cat) fzf_opts=()
+  if _have grcat; then
+    filter=(grcat fps.grc)
+    fzf_opts=(--ansi)
+  fi
+
+  local -a pids=( ${(f)"$(
+    ps -eo user,pid,ppid,pgid,stat,command |
+      awk '
+        BEGIN { "ps -p $$ -o pgid=" | getline pgid; gsub(/[[:blank:]]/, "", pgid) }
+        { if ($4 != pgid || $2 == pgid) print }
+      ' |
+      $filter |
+      fzf --header-lines=1 -m --height=60% --min-height=15 --tac --reverse $fzf_opts |
+      awk '{ print $2 }'
+  )"} )
+
+  local IFS=$sep
+  print -rn -- "${pids[*]}"
 }
 
+# Git aliases -> alias names.
+# (`-p 80%` = popup; make sure your `fzf` supports it / fzf-tmux wrapper)
+_pick_git_alias() {
+  git config --get-regexp '^alias\.' 2>/dev/null |
+    awk '{ name = substr($1, 7); $1 = ""; printf "%-20s => %s\n", name, substr($0, 2) }' |
+    fzf -p 80% |
+    awk '{ print $1 }'
+}
+
+# Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
+# _pick_docker container|image  -> ID (one per line)
+_pick_docker() {
+  case $1 in
+    container)
+      docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
+      ;;
+    image)
+      docker images --format "table {{.ID}}\t{{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedSince}}"
+      ;;
+  esac | fzf --multi --height=40% --header-lines=1 | awk '{ print $1 }'
+}
+
+# Functions in aliases.bashrc (those starting with a comment line) -> function names.
+_pick_alias_func() {
+  local file="$HOME/.config/bashrc/aliases.bashrc"
+  [[ -r $file ]] || return 1
+
+  awk '
+    /\(\)/ && last {
+      name = $1; sub(/\(\).*/, "", name)
+      desc = last; sub(/^#[[:space:]]*/, "", desc)
+      printf "%-24s %s\n", name, desc
+    }
+    { last = "" }
+    /^#/ { last = $0 }
+  ' "$file" | fzf --exit-0 --ansi | awk '{ print $1 }'
+}
+
+# Capture the output of `_t_expand_alias` (if any) into $REPLY without
+# a subshell, so that `unfunction` actually takes effect in the main shell.
 _t_expand_alias_f() {
-  # echo $functions
-  if (($+functions[_t_expand_alias])); then
-    print ${functions[_t_expand_alias]#$'\t'}
-    unset -f _t_expand_alias
+  if (( $+functions[_t_expand_alias] )); then
+    REPLY=${functions[_t_expand_alias]#$'\t'}
+    unfunction _t_expand_alias
   else
-    print $@
+    REPLY=$1
   fi
 }
 
+# ├──────────────────────────────────┤ WIDGET ├──────────────────────────────────┤
 show_alias() {
   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
 
-  local select
-  local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
+  _t_expand_alias_f "$LBUFFER"
+  local -a words=( ${(z)REPLY} )
+  local last=${words[-1]} prev=${words[-2]} picked ids
 
-  local doc_con="doc_con_"
-  local doc_im="doc_im_"
+  if [[ $last == -p ]]; then
+    # select a process PID
+    picked=$(_fps ",")
+    [[ -n $picked ]] && LBUFFER+="$picked "
 
-  # env TMUX_POPUP=1
+  elif [[ $prev == alias ]]; then
+    # `git alias <Tab>` -> pick a git alias
+    picked=$(_pick_git_alias)
+    [[ -n $picked ]] && LBUFFER="git $picked "
 
-  if [[ $myargs[-1] == "-p" ]]; then
-    select=$(myflag="," _fps)
-    LBUFFER="${LBUFFER}$select "
-    zle reset-prompt
-    return
-
-  elif [[ $myargs[-2] == "alias" ]]; then
-    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' |
-      fzf -p 80% | cut -d" " -f1 | xargs)
-    if [[ -n $alias_sel ]]; then
-      LBUFFER="git $alias_sel "
-      zle reset-prompt
-      return
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
+  elif [[ $last == doc_con_??* ]]; then
+    # `doc_con_*` tokens -> replaced with the selected container ID
+    picked=$(_pick_docker container)
+    if [[ -n $picked ]]; then
+      ids=${(j: :)${(f)picked}}
+      LBUFFER="${LBUFFER%"$last"}$ids "
     fi
 
-  # USE fzf-tab-completions.zsh
-  # for nvim, vim
-  # elif [[ $myargs[-1] == "v" ]]; then
-  #   local select="**"
-  #   if [[ -n $select ]]; then
-  #     LBUFFER="${LBUFFER}$select"
-  #     zle reset-prompt
-  #     return
-  #   else
-  #     LBUFFER="${LBUFFER}"
-  #     zle reset-prompt
-  #     return
-  #   fi
-  # elif [[ $myargs[-1] == "nvim" ]]; then
-  #   local select="**"
-  #   if [[ -n $select ]]; then
-  #     LBUFFER="${LBUFFER}$select"
-  #     zle reset-prompt
-  #     return
-  #   else
-  #     LBUFFER="${LBUFFER}"
-  #     zle reset-prompt
-  #     return
-  #   fi
-  # elif [[ $myargs[-1] == "vim" ]]; then
-  #   local select="**"
-  #   if [[ -n $select ]]; then
-  #     LBUFFER="${LBUFFER}$select"
-  #     zle reset-prompt
-  #     return
-  #   else
-  #     LBUFFER="${LBUFFER}"
-  #     zle reset-prompt
-  #     return
-  #   fi
-
-  elif echo "${myargs[-1]}" | grep -q "^doc_con_[a-zA-Z0-9_]\+\S"; then
-    #
-    # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
-    #
-    FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
-    FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
-    local select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" |
-      fzf --multi --height=40% --header-lines=1 | awk '{print $1}')
-    if [[ -n $select ]]; then
-      LBUFFER="${LBUFFER}$select "
-      zle reset-prompt
-      return
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
+  elif [[ $last == doc_im_??* ]]; then
+    # `doc_im_*` tokens -> replaced with the selected image ID
+    picked=$(_pick_docker image)
+    if [[ -n $picked ]]; then
+      ids=${(j: :)${(f)picked}}
+      LBUFFER="${LBUFFER%"$last"}$ids "
     fi
 
-  elif echo "${myargs[-1]}" | grep -q "^doc_im_[a-zA-Z0-9_]\+\S"; then
-    #
-    # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
-    #
-    local select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" |
-      fzf --multi --height=40% --header-lines=1 | awk '{print $3}')
+  elif [[ -z $last ]]; then
+    # empty buffer -> pick a function from aliases.bashrc
+    picked=$(_pick_alias_func)
+    [[ -n $picked ]] && LBUFFER+="$picked "
 
-    if [[ -n $select ]]; then
-      LBUFFER="${LBUFFER}$select "
-      zle reset-prompt
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-      return
-    fi
-
-  elif [[ $myargs[-1] == "" ]]; then
-    local alias_selected=$(
-      awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-        column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf --exit-0 --ansi
-    )
-
-    if [[ -n $alias_selected ]]; then
-      local select
-      select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
-      if [[ -n $select ]]; then
-        LBUFFER="${LBUFFER}$select "
-        zle reset-prompt
-      else
-        LBUFFER="${LBUFFER}"
-        zle reset-prompt
-        return
-      fi
-    else
-      LBUFFER="${LBUFFER}"
-      zle reset-prompt
-    fi
   else
-    # https://github.com/Aloxaf/fzf-tab/issues/65
-    fzf-tab-complete
+    # default: regular completion (fzf-tab)
+    if (( $+functions[fzf-tab-complete] )); then
+      fzf-tab-complete
+    else
+      zle expand-or-complete
+    fi
+    return
   fi
+
+  zle reset-prompt
 }
 zle -N show_alias
 bindkey '\t' show_alias # <Tab>

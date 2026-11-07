@@ -6,9 +6,9 @@ local add = require("vim-pack").add
 
 add {
   {
-    src = "phha/zenburn.nvim",
+    src = "MadKuntilanak/zenburn.nvim",
     setup = false,
   },
 }
 
-vim.cmd("colorscheme zenburn")
+vim.cmd "colorscheme zenburn"

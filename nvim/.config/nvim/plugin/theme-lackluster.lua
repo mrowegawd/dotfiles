@@ -3,16 +3,13 @@ if vim.g.colorscheme ~= "lackluster" then
 end
 
 local add = require("vim-pack").add
+local coder = require "theme-pallete.lackluster-coder"
 
 add {
   {
     src = "slugbyte/lackluster.nvim",
     opts = function()
-      return {
-        tweak_background = {
-          normal = "#050505",
-        },
-      }
+      return coder.opts()
     end,
   },
 }

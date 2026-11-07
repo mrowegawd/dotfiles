@@ -91,11 +91,7 @@ local cmds = {
   --stylua: ignore
   { "<Leader>xr", function() vim.cmd "Trouble resume" end, "resume" },
   --stylua: ignore
-  { "<Leader>xF", function() vim.cmd.Trouble() end, "list builtin" },
-  --stylua: ignore
-  { "<Leader>xt", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd [[Trouble todo toggle filter.buf=0]] end, "todo-trouble on curbuf" },
-  --stylua: ignore
-  { "<Leader>xT", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd.TodoTrouble() end, "todo-trouble on curbuf" },
+  { "<Leader>xT", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd.TodoTrouble() end, "todo-trouble global" },
   --stylua: ignore
   { "<Leader>xD", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle]] end, "workspace diagnostics (global project)" },
   --stylua: ignore
@@ -108,3 +104,6 @@ for _, cmd in ipairs(cmds) do
     cmd[2]()
   end, { desc = ("Exec: %s [trouble]"):format(cmd[3]) })
 end
+
+--stylua: ignore
+UtilKey.nnoremap("<Leader>xF", function() load_trouble() vim.cmd.Trouble() end, { desc = "Bulk: list trouble builtin" })

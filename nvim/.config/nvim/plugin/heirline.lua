@@ -87,6 +87,11 @@ add_on_event("ColorScheme", {
               return true
             end
 
+            local ok, _ = lazy("utils.window").call_stack_peek()
+            if ok then
+              return true
+            end
+
             local ft = vim.bo[buf].filetype
             local buft = vim.bo[buf].buftype
 

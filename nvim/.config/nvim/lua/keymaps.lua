@@ -15,12 +15,12 @@ local nosilent = { silent = false }
 UtilKey.inoremap("<C-a>", "<C-O>^", silent)
 UtilKey.inoremap("<C-e>", "<C-O>$", silent)
 
-UtilKey.inoremap("<a-l>", "<Right>", silent)
-UtilKey.inoremap("<a-h>", "<Left>", silent)
-UtilKey.inoremap("<a-j>", "<Down>", silent)
-UtilKey.inoremap("<a-k>", "<Up>", silent)
-UtilKey.inoremap("<a-b>", "<Esc>bi", silent)
-UtilKey.inoremap("<a-f>", "<Esc>ea", silent)
+UtilKey.inoremap("<c-l>", "<Right>", silent)
+UtilKey.inoremap("<c-h>", "<Left>", silent)
+UtilKey.inoremap("<c-j>", "<Down>", silent)
+UtilKey.inoremap("<c-k>", "<Up>", silent)
+UtilKey.inoremap("<c-b>", "<Esc>bi", silent)
+UtilKey.inoremap("<c-f>", "<Esc>ea", silent)
 
 UtilKey.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
 UtilKey.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
@@ -215,7 +215,7 @@ local function get_term()
 end
 
 -- stylua: ignore
-UtilKey.noremap({ "n", "x", "t" }, "<a-v>", function() get_term().toggle_term() end, { desc = "Terminal: toggle [ergoterm]" })
+UtilKey.noremap({ "n", "x", "t" }, "<a-f>", function() get_term().toggle_term() end, { desc = "Terminal: toggle [ergoterm]" })
 
 -- ══════════════════════════════════ TAB TERM ══════════════════════════════════
 -- stylua: ignore
@@ -234,12 +234,12 @@ UtilKey.noremap({ "n", "x", "t" }, "<a-T>", function() get_term().open_float() e
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 UtilKey.cnoremap("hh", "<Esc>", { desc = "Commandline: exit" })
-UtilKey.cnoremap("<a-a>", "<Home>", { desc = "Commandline: start" })
-UtilKey.cnoremap("<a-e>", "<End>", { desc = "Commandline: end" })
-UtilKey.cnoremap("<a-h>", "<Left>", { desc = "Commandline: left" })
-UtilKey.cnoremap("<a-l>", "<Right>", { desc = "Commandline: right" })
-UtilKey.cnoremap("<a-b>", "<S-Left>", { desc = "Commandline: back word" })
-UtilKey.cnoremap("<a-f>", "<S-Right>", { desc = "Commandline: forwaaard word" })
+UtilKey.cnoremap("<c-a>", "<Home>", { desc = "Commandline: start" })
+UtilKey.cnoremap("<c-e>", "<End>", { desc = "Commandline: end" })
+UtilKey.cnoremap("<c-h>", "<Left>", { desc = "Commandline: left" })
+UtilKey.cnoremap("<c-l>", "<Right>", { desc = "Commandline: right" })
+UtilKey.cnoremap("<c-b>", "<S-Left>", { desc = "Commandline: back word" })
+-- UtilKey.cnoremap("<c-f>", "<S-Right>", { desc = "Commandline: forward word" })
 
 UtilKey.cabbrev("BD", "bd!")
 UtilKey.cabbrev("Bd", "bd!")

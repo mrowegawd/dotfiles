@@ -3,15 +3,14 @@ if vim.g.colorscheme ~= "vscode" then
 end
 
 local add = require("vim-pack").add
+local coder = require "theme-pallete.vscode_coder"
 
 add {
   {
     src = "Mofiqul/vscode.nvim",
     opts = {
-      group_overrides = {
-        Normal = { bg = "#191919", fg = "#d4d4d4" },
-        Directory = { bg = "NONE", fg = "#569cd6" },
-      },
+      color_overrides = coder.color_overrides or {},
+      group_overrides = coder.group_overrides or {},
     },
   },
 }

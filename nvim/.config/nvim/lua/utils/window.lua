@@ -320,7 +320,7 @@ function M.switch_focus_targeted_window()
     return
   end
 
-  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm" }
+  local right_win = { "trouble", "aerial", "Outline", "neo-tree", "snacks_notif_history", "ErgoTerm", "qf" }
   if go_prev_window(right_win) then
     return
   end

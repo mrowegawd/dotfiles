@@ -4,7 +4,7 @@ local lazy = require("utils.plugin").require_lazy
 
 add_local_or_remote {
   {
-    -- Sebelum install: run command ini di cli "gh auth login --scopes read:project"
+    -- Sebelum install, run command ini di cli: "gh auth login --scopes read:project"
     -- "pwntester/octo.nvim",
     --"MadKuntilanak/octo.nvim",
     src = "nvim_plugins/octo.nvim",
@@ -329,7 +329,6 @@ UtilAugroup("Octo", {
     whichkey.add {
       { "<C-c>f", group = "find", buffer = ev.buf },
       { "<C-c>ff", name = "list:issue", buffer = ev.buf },
-      { "<C-c>o", group = "open", buffer = ev.buf },
       { "<C-c>y", name = "yank/copy", buffer = ev.buf },
       { "<C-c>a", group = "add:review/assignee/label/comment/reactions", buffer = ev.buf },
       { "<C-c>as", group = "assignee", buffer = ev.buf },
@@ -341,7 +340,6 @@ UtilAugroup("Octo", {
       { "<C-c>c", group = "check:checkout/merge/rebase/rebase", buffer = ev.buf },
       { "<C-c>cp", group = "mergequeue", buffer = ev.buf },
       { "<C-c>u", group = "toggle", buffer = ev.buf },
-      { "<C-c>x", group = "exec", buffer = ev.buf },
     }
   end,
 })

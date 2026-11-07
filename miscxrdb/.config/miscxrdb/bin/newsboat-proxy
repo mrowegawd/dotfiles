@@ -51,6 +51,7 @@ if ! docker ps --format '{{.Names}}' | grep -wq "$TARGET_CONTAINER"; then
 fi
 
 # Cek apakah berhasil atau timeout
+# shellcheck disable=SC2181
 if [ $? -eq 0 ]; then
   NEWSBOATURLS_PATH="$HOME/Dropbox/data.programming.forprivate/newsboat-urls"
 

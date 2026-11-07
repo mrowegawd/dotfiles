@@ -285,7 +285,7 @@ add {
       lazy("mason").setup()
       lazy("mason-lspconfig").setup()
       lazy("mason-tool-installer").setup {
-        ensure_installed = { "lua_ls", "cbfmt", "stylua", "markdownlint-cli2", "markdown-toc", "cspell" },
+        ensure_installed = { "lua_ls", "cbfmt", "stylua", "markdownlint-cli2", "markdown-toc", "cspell", "sqlfluff" },
       }
 
       setup_diagnostics()

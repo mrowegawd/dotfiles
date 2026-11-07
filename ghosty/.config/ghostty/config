@@ -4,7 +4,7 @@
 # +-----------------------------------------------------------+
 font-family                     = "Liberation Mono"
 
-font-size                       = 9.5
+font-size                       = 9
 # font-feature                  = -calt
 # font-feature                  = -liga
 # font-feature                  = -dlig
@@ -44,6 +44,8 @@ shell-integration-features      = no-cursor
 gtk-titlebar                    = false
 gtk-single-instance             = true
 
+macos-option-as-alt = true
+
 # unfocused-split-opacity         = 0.5
 # adjust-cell-width               = 0
 # adjust-cell-height              = 20%
@@ -64,12 +66,15 @@ gtk-single-instance             = true
 # clear all default mappings, to unbind specific mapping --> use ex: ctrl+enter=unbind
 keybind = clear
 
+keybind = alt+shift+b=unbind
+
 # ┏╍╍╍╍╍╍┓
 # ╏ MISC ╏
 # ┗╍╍╍╍╍╍┛
 keybind = ctrl+shift+c=copy_to_clipboard
 keybind = ctrl+shift+v=paste_from_clipboard
 keybind = ctrl+enter=unbind
+keybind = alt+b=unbind
 
 keybind = ctrl+equal=increase_font_size:1
 keybind = ctrl+minus=decrease_font_size:1
@@ -78,6 +83,7 @@ keybind = ctrl+zero=reset_font_size
 # keybind = performable:alt+m=toggle_split_zoom
 
 keybind = ctrl+shift+comma=reload_config
+
 # keybind = alt+shift+r=reload_config
 # keybind = global:alt+f=toggle_quick_terminal # (Mac only)
 

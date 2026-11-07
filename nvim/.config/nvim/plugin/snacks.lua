@@ -109,6 +109,7 @@ add {
               or vim.t.diffview_view_initialized
               or (vim.bo[buf].filetype == "snacks_picker_preview")
               or vim.tbl_contains({ "markdown", "org", "tmux", "ini", "toml" }, vim.bo.filetype)
+              or lazy("utils.cmd").is_float()
             then
               return false
             end

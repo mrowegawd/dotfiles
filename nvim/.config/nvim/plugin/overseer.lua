@@ -1,6 +1,8 @@
 local add = require("vim-pack").add
 
-local UtilKey = require "utils.map"
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
 
 -- Task runner and job management
 add {
@@ -14,7 +16,7 @@ add {
         ["open the output in tab"] = {
           desc = "Open this task in a new tab",
           run = function(task)
-            local overseer_util = require "overseer.util"
+            local overseer_util = lazy "overseer.util"
             local bufnr = task:get_bufnr()
             if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
               vim.cmd.tabnew()
@@ -76,7 +78,7 @@ add {
             vim.cmd "OverseerClose"
           end,
           ["R"] = function()
-            local sidebar = require "overseer.task_list.sidebar"
+            local sidebar = lazy "overseer.task_list.sidebar"
             local sb = sidebar.get_or_create()
             sb:run_action "restart"
           end,

@@ -1,21 +1,11 @@
 local M = {}
 
-local Conditions
-local H = require "utils.highlights"
+local lazy = require("utils.plugin").require_lazy
 
-local function get_conditions()
-  if not Conditions then
-    Conditions = require "heirline.conditions"
-  end
-
-  return Conditions
-end
-
-local UtilQf = function()
-  return require "utils.qf"
-end
-local Icons = require "icons"
-local ConfigPath = require("config").path
+local H = lazy "utils.highlights"
+local Icons = lazy "icons"
+local ConfigPath = lazy("config").path
+local Conditions = lazy "heirline.conditions"
 
 local function rpad(child)
   return { condition = child.condition, child }
@@ -471,9 +461,10 @@ local function __colors()
   end
 
   local normal_bg = H.get("Normal", "bg")
-  local statusline_fg = H.get("StatusLine", "fg")
+  local statusline_fg = H.get("StatusLineTheme", "fg")
   local winbar_fg = H.get("WinBar", "fg")
   local boolean_fg = H.get("Boolean", "fg")
+  boolean_fg = H.tint(boolean_fg, 1)
   local keyword = H.get("Keyword", "fg")
   local error_fg = H.get("Error", "fg")
   local string_fg = H.get("String", "fg")
@@ -482,7 +473,7 @@ local function __colors()
 
   return {
     statusline_fg = statusline_fg,
-    statusline_bg = H.get("StatusLine", "bg"),
+    statusline_bg = H.get("StatusLineTheme", "bg"),
 
     winbar_fg = winbar_fg,
     winbar_bg = H.get("WinBar", "bg"),
@@ -672,6 +663,73 @@ local mode_colors = {
   t = colors.mode_term_bg,
 }
 
+-- ├───────────────────────────────┤ SEP HELPER ├───────────────────────────────┤
+
+---@param v any
+---@param self table
+---@return any
+local function sep_resolve(v, self)
+  if type(v) == "function" then
+    return v(self)
+  end
+  return v
+end
+
+---@alias SepAttr boolean|fun(self: table): boolean
+---@alias SepProvider string|fun(self: table): string
+---@alias SepColor string|fun(self: table): string
+
+---@class SepTerm
+---@field fg? SepColor
+---@field bg? SepColor
+---@field is_term? fun(self: table): boolean
+
+---@class SepOpts
+---@field provider? SepProvider
+---@field term? SepTerm
+---@field bold? SepAttr
+---@field italic? SepAttr
+---@field underline? SepAttr
+
+---@param fg SepColor
+---@param bg SepColor
+---@param opts? SepOpts
+---@return table
+local function sep(fg, bg, opts)
+  opts = opts or {}
+  local term = opts.term
+
+  return {
+    provider = opts.provider or "",
+    ---@param self table
+    ---@return vim.api.keyset.highlight
+    hl = function(self)
+      local final_fg, final_bg = fg, bg
+
+      if term and (term.is_term or set_conditions.is_terminal_ft)(self) then
+        if term.fg ~= nil then
+          final_fg = term.fg
+        end
+        if term.bg ~= nil then
+          final_bg = term.bg
+        end
+      end
+
+      return {
+        fg = sep_resolve(final_fg, self),
+        bg = sep_resolve(final_bg, self),
+        bold = sep_resolve(opts.bold, self),
+        italic = sep_resolve(opts.italic, self),
+        underline = sep_resolve(opts.underline, self),
+      }
+    end,
+  }
+end
+
+local function esc(s)
+  return (tostring(s):gsub("%%", "%%%%"))
+end
+
 -- ├───────────────────────────────┤ PATH LABOR ├───────────────────────────────┤
 
 local PATH_SEP = package.config:sub(1, 1)
@@ -698,17 +756,17 @@ local function get_git_type(bufname)
 end
 
 ---@param bufname string
----@return string path
+---@return string
 local function get_relative_path(bufname)
   if bufname == "" then
     return ""
   end
 
-  local root = require("utils.root").get {
+  local root = lazy("utils.root").get {
     normalize = true,
   }
 
-  local cwd = require("utils.root").cwd()
+  local cwd = lazy("utils.root").cwd()
 
   if cwd ~= "" and bufname:find(cwd, 1, true) == 1 then
     return bufname:sub(#cwd + 2)
@@ -723,8 +781,8 @@ end
 
 ---@param bufname string
 ---@param git_type string
----@return string|nil commit
----@return string|nil filepath
+---@return string|nil
+---@return string|nil
 local function parse_git_path(bufname, git_type)
   local clean = bufname:gsub("^%w+://", "")
 
@@ -803,16 +861,15 @@ M.Branch = {
     local status = vim.b.gitsigns_status_dict
     self.branch = status and status.head or ""
   end,
-
-  provider = function(self)
-    if self.branch == "" then
-      return ""
-    end
-
-    return "  " .. self.branch .. " "
-  end,
-
-  hl = { bold = true },
+  sep(colors.bright, colors.statusline_bg, {
+    bold = true,
+    provider = function(self)
+      if self.branch == "" then
+        return ""
+      end
+      return "  " .. self.branch .. " "
+    end,
+  }),
 }
 M.FilePath = {
   update = {
@@ -833,24 +890,18 @@ M.FilePath = {
     self.cwd_name = cwd and vim.fn.fnamemodify(cwd, ":t") or ""
   end,
 
-  {
+  sep(colors.directory, colors.statusline_bg, {
+    term = { bg = colors.mode_term_statusline_bg },
     provider = function(self)
       if set_conditions.is_terminal_ft() or self.git_type or self.exclude_ft or self.filetype == "octo" then
         return " "
       end
-
       if self.cwd_name == "" then
         return ""
       end
-
       return " " .. self.cwd_name
     end,
-
-    hl = {
-      fg = colors.directory,
-      bold = true,
-    },
-  },
+  }),
 
   {
     provider = function(self)
@@ -869,8 +920,6 @@ M.FilePath = {
       if #self.filename == 0 then
         return "[Unknown Filename]"
       end
-
-      Conditions = get_conditions()
 
       local is_very_narrow = not Conditions.width_percent_below(#self.filename, 0.47)
         and set_conditions.hide_in_col_width(40)
@@ -921,6 +970,7 @@ M.FilePath = {
 
       return #path > 1 and ("/" .. path .. PATH_SEP) or "/"
     end,
+    hl = { fg = colors.statusline_fg },
   },
 
   {
@@ -946,7 +996,7 @@ M.FilePath = {
           path = path:sub(#ConfigPath.home + 2)
         end
 
-        return require("utils.file").basename(path)
+        return lazy("utils.file").basename(path)
       end
 
       if self.git_type then
@@ -968,22 +1018,20 @@ M.FilePath = {
         end
       end
 
-      return require("utils.file").basename(self.filename)
+      return lazy("utils.file").basename(self.filename)
     end,
-
     hl = {
       bold = true,
-      fg = colors.winbar_bright,
+      fg = colors.bright,
     },
   },
-
-  {
+  sep(colors.statusline_bg, colors.statusline_bg, {
+    term = {
+      fg = colors.mode_term_statusline_bg,
+      bg = colors.mode_term_statusline_bg,
+    },
     provider = Icons.misc.separator_up,
-
-    hl = {
-      fg = colors.statusline_bg,
-    },
-  },
+  }),
 }
 M.Filetype = {
   init = function(self)
@@ -1001,7 +1049,6 @@ M.Filetype = {
 
       return "[??] "
     end,
-
     hl = { fg = colors.statusline_fg },
   },
 }
@@ -1011,7 +1058,7 @@ M.FileIcon = {
     local filename = get_vars.filename(bufname)
     local extension = get_vars.extension(filename)
     self.path = get_vars.path()
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+    self.icon, self.icon_color = lazy("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
     self.is_excluded = vim.tbl_contains({ "qf", "pdfview", "codecompanion" }, vim.bo.filetype)
   end,
   condition = function()
@@ -1039,7 +1086,6 @@ M.FileIcon = {
 }
 M.Git = {
   condition = function()
-    Conditions = get_conditions()
     return Conditions.is_git_repo()
   end,
   init = function(self)
@@ -1069,110 +1115,91 @@ M.Git = {
   },
 }
 M.QuickfixStatus = {
-  init = function(self)
-    self.height = vim.api.nvim_buf_line_count(0)
-    local utilqf = UtilQf()
-
-    self.title_qflist = utilqf.get_title_qf()
-    self.stack_qflists = #utilqf.get_total_stack_qf()
-
-    self.title_loclist = utilqf.get_title_qf(true)
-    self.stack_loclists = #utilqf.get_total_stack_qf(true)
-
-    self.utilqf = utilqf
-  end,
   condition = function()
-    return vim.bo[0].filetype == "qf"
+    return vim.bo.filetype == "qf"
   end,
+
+  init = function(self)
+    local winid = vim.api.nvim_get_current_win()
+    local is_loc = vim.fn.getwininfo(winid)[1].loclist == 1
+
+    local function get(what)
+      if is_loc then
+        return vim.fn.getloclist(winid, what)
+      end
+      return vim.fn.getqflist(what)
+    end
+
+    local cur = get { nr = 0, title = 0, idx = 0, size = 0 }
+    local last = get { nr = "$" }
+
+    self.is_loc = is_loc
+    self.title = cur.title or ""
+    self.idx = cur.idx or 0
+    self.size = cur.size or 0
+    self.stack_nr = cur.nr or 0
+    self.stack_total = last.nr or 0
+  end,
+
+  -- QF / LF Indicator
   {
     provider = function(self)
-      if self.utilqf.is_loclist() then
-        return " LF "
-      else
-        return " QF "
-      end
+      return self.is_loc and " LF " or " QF "
     end,
     hl = function(self)
-      local fg = colors.qf_indicator_fg
-      local bg = colors.qf_indicator_bg
-      if self.utilqf.is_loclist() then
-        fg = colors.lf_indicator_fg
-        bg = colors.lf_indicator_bg
+      if self.is_loc then
+        return { fg = colors.lf_indicator_fg, bg = colors.lf_indicator_bg, bold = true }
       end
-      return { fg = fg, bg = bg, bold = true }
+      return { fg = colors.qf_indicator_fg, bg = colors.qf_indicator_bg, bold = true }
     end,
   },
-  {
-    provider = Icons.misc.separator_up,
-    hl = function(self)
-      local fg = colors.qf_indicator_bg
-      if self.utilqf.is_loclist() then
-        fg = colors.lf_indicator_bg
-      end
-      return { fg = fg, bg = colors.winbar_bg_bottom }
-    end,
-  },
-  {
-    provider = Icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_bottom, bg = colors.qf_keyword_bg },
-  },
+  sep(function(self)
+    return self.is_loc and colors.lf_indicator_bg or colors.qf_indicator_bg
+  end, colors.winbar_bg_bottom, { provider = Icons.misc.separator_up }),
+  sep(colors.winbar_bg_bottom, colors.qf_keyword_bg, { provider = Icons.misc.separator_up }),
+
+  -- item dan stack position
   {
     provider = function(self)
-      local parts = {}
-      local stacklists = #self.utilqf.get_total_stack_qf(self.utilqf.is_loclist())
-      local current_stacklists = self.utilqf.get_current_history_qf(self.utilqf.is_loclist())
-      local idx_lists = self.utilqf.get_current_idx_qf(self.utilqf.is_loclist())
-      table.insert(
-        parts,
-        string.format("  %d/%d 󱗿 %d/%d ", idx_lists, self.height, current_stacklists, stacklists)
-      )
-      return table.concat(parts, " ")
+      return string.format("  %d/%d 󱗿 %d/%d ", self.idx, self.size, self.stack_nr, self.stack_total)
     end,
-    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = false },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
   },
-  {
-    provider = Icons.misc.separator_up,
-    hl = { fg = colors.qf_keyword_bg, bg = colors.winbar_bg_bottom },
-  },
-  {
-    provider = Icons.misc.separator_up,
-    hl = { fg = colors.winbar_bg_bottom, bg = colors.qf_keyword_bg },
-  },
+  -- sep(colors.qf_keyword_bg, colors.winbar_bg_bottom, { provider = Icons.misc.separator_up }),
+  -- sep(colors.winbar_bg_bottom, colors.qf_keyword_bg, { provider = Icons.misc.separator_up }),
+
+  sep(colors.qf_keyword_bg, colors.winbar_bg_bottom, { provider = Icons.misc.separator_up, bold = true }),
+  sep(colors.winbar_bg_bottom, colors.qf_keyword_bg, { provider = Icons.misc.separator_up, bold = true }),
+
+  -- Title
   {
     provider = function(self)
-      local parts = {}
-      if self.utilqf.is_loclist() then
-        table.insert(parts, string.format(" %s %s ", "LFtitle:", self.title_loclist))
-      else
-        table.insert(parts, string.format(" %s %s ", "QFtitle:", self.title_qflist))
-      end
-      return table.concat(parts, " ")
+      local label = self.is_loc and "title:" or "title:"
+      return esc(string.format(" %s %s ", label, self.title))
     end,
-    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = false },
+    hl = { fg = colors.qf_keyword_fg, bg = colors.qf_keyword_bg, bold = true },
   },
-  {
-    provider = Icons.misc.separator_up,
-    hl = { fg = colors.qf_keyword_bg, bg = colors.winbar_bg_bottom },
-  },
+  sep(colors.qf_keyword_bg, colors.winbar_bg_bottom, { provider = Icons.misc.separator_up }),
 }
 M.FileFlags = {
   {
-    provider = function()
-      local icon_flag = "  "
-      local is_readonly = (not vim.bo.modifiable or vim.bo.readonly) and true or false
-      local is_modifiled = vim.bo.modified
+    sep(colors.modified_fg, colors.statusline_bg, {
+      term = { bg = colors.mode_term_statusline_bg },
+      provider = function()
+        local icon_flag = "  "
+        local is_readonly = (not vim.bo.modifiable or vim.bo.readonly) and true or false
+        local is_modifiled = vim.bo.modified
 
-      if is_readonly then
-        icon_flag = Icons.misc.readonly
-      end
+        if is_readonly then
+          icon_flag = Icons.misc.readonly
+        end
 
-      if is_modifiled then
-        icon_flag = Icons.misc.modified
-      end
-
-      return " " .. icon_flag .. " "
-    end,
-    hl = { fg = colors.modified_fg },
+        if is_modifiled then
+          icon_flag = Icons.misc.modified
+        end
+        return " " .. icon_flag .. " "
+      end,
+    }),
   },
 }
 M.Gap = { { provider = "%=" } }
@@ -1184,13 +1211,18 @@ M.Dap = {
     if vim.tbl_contains(dap_ft_include, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
       return false
     end
-    local session = require("dap").session()
+    local session = lazy("dap").session()
     return session ~= nil
   end,
   provider = function()
-    return " " .. require("dap").status() .. "  "
+    return " " .. lazy("dap").status() .. "  "
   end,
-  hl = { fg = colors.diagnostic_err, bg = colors.statusline_bg, bold = true },
+  sep(colors.diagnostic_err, colors.statusline_bg, {
+    provider = function()
+      return " " .. lazy("dap").status() .. "  "
+    end,
+    bold = true,
+  }),
 }
 M.virtualenv = {
   condition = function()
@@ -1200,27 +1232,7 @@ M.virtualenv = {
     local bufname = get_vars.bufname()
     local filename = get_vars.filename(bufname)
     local extension = get_vars.extension(filename)
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-
-    --   local python_logo = "" -- Icon Python
-    --   local venv_path = vim.env.VIRTUAL_ENV or ""
-    --   local venv_name = ""
-    --
-    --   -- Ambil nama folder virtualenv (nama environment)
-    --   if venv_path ~= "" then
-    --     venv_name = venv_path:match "([^/\\]+)$" or venv_path
-    --   end
-    --
-    --   -- Cek apakah ini Poetry (.venv biasanya Poetry default)
-    --   local is_poetry_venv = venv_name:find "%.venv" ~= nil
-    --
-    --   if is_poetry_venv then
-    --     self.venv = string.format("%s UV ", python_logo)
-    --   elseif venv_name ~= "" then
-    --     self.venv = string.format("%s venv ", python_logo)
-    --   else
-    --     self.venv = ""
-    --   end
+    self.icon, self.icon_color = lazy("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
   end,
   {
     provider = function()
@@ -1274,12 +1286,7 @@ M.LSPActive = {
 
     self.names = cache and cache.names or {}
   end,
-
-  {
-    provider = " LSP: ",
-    hl = { italic = false },
-  },
-
+  sep(colors.statusline_fg, colors.statusline_bg, { provider = " LSP: " }),
   {
     provider = function(self)
       local str = table.concat(self.names, ", ")
@@ -1292,7 +1299,6 @@ M.LSPActive = {
     condition = function(self)
       return #self.names > 0
     end,
-
     provider = "  ",
   },
 }
@@ -1456,8 +1462,8 @@ M.Tasks = {
     return package.loaded.overseer and set_conditions.hide_in_col_width(120)
   end,
   init = function(self)
-    local tasks = require("overseer").list_tasks { unique = true }
-    local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
+    local tasks = lazy("overseer").list_tasks { unique = true }
+    local tasks_by_status = lazy("overseer.util").tbl_group_by(tasks, "status")
     self.tasks = tasks_by_status
   end,
   {
@@ -1509,108 +1515,82 @@ M.RmuxTargetPane = {
     -- Do not call overseer.list_tasks() here.
     self.has_overseer_task = overseer_has_task
   end,
-
   condition = function()
     local status = get_rmux()
     return status ~= nil
   end,
-
-  {
+  sep(colors.statusline_bg, colors.task_bg, {
+    term = {
+      fg = colors.mode_term_statusline_bg,
+    },
     provider = function(self)
       if self.task > 0 or self.watch ~= "" then
-        return Icons.misc.separator_down
+        return Icons.misc.separator_up
       end
+      return ""
     end,
-
-    hl = {
-      fg = colors.statusline_bg,
-      bg = colors.task_bg,
-    },
-  },
-
-  {
+  }),
+  sep(colors.task_fg, colors.task_bg, {
+    bold = true,
     provider = function(self)
       if self.task > 0 or self.watch ~= "" then
         return " Tmux:"
       end
+      return ""
     end,
-
-    hl = {
-      fg = colors.task_fg,
-      bg = colors.task_bg,
-      bold = true,
-    },
-  },
-
-  {
+  }),
+  sep(colors.task_fg, colors.task_bg, {
+    bold = true,
     provider = function(self)
       if self.task > 0 then
         return "  " .. self.task
       end
+      return ""
     end,
-
-    hl = {
-      fg = colors.task_fg,
-      bg = colors.task_bg,
-      bold = true,
-    },
-  },
-
-  {
+  }),
+  sep(colors.task_fg, colors.task_bg, {
+    bold = true,
     provider = function(self)
       if self.watch ~= "" then
         return "  " .. self.watch
       end
+      return ""
     end,
-
-    hl = {
-      fg = colors.task_fg,
-      bg = colors.task_bg,
-      bold = true,
-    },
-  },
-
-  {
+  }),
+  sep(colors.task_bg, colors.task_bg, {
     provider = function(self)
       if self.task > 0 or self.watch ~= "" then
         return Icons.misc.separator_down
       end
+      return ""
     end,
-
-    hl = {
-      fg = colors.task_bg,
-      bg = colors.task_bg,
-    },
-  },
-
-  {
-    provider = function(self)
-      local has_task = self.task > 0 or self.watch ~= ""
-
-      if has_task or self.has_overseer_task then
-        return Icons.misc.separator_down .. "  "
-      end
-    end,
-
-    hl = function(self)
+  }),
+  sep(
+    function(self)
       local fg = colors.statusline_bg
-
       local has_task = self.task > 0 or self.watch ~= ""
-
-      if set_conditions.is_terminal_ft() then
-        fg = colors.mode_term_statusline_bg
-      elseif not set_conditions.hide_in_col_width(120) then
+      if not set_conditions.hide_in_col_width(120) then
         fg = colors.statusline_bg
       elseif has_task or self.has_overseer_task then
         fg = colors.task_bg
       end
-
-      return {
-        fg = fg,
-        bg = colors.statusline_bg,
-      }
+      return fg
     end,
-  },
+    colors.statusline_bg,
+    {
+      term = {
+        fg = colors.mode_term_statusline_bg,
+        bg = colors.mode_term_statusline_bg,
+      },
+      provider = function(self)
+        local has_task = self.task > 0 or self.watch ~= ""
+        if has_task or self.has_overseer_task then
+          return Icons.misc.separator_up .. "  "
+        end
+        return ""
+      end,
+    }
+  ),
 }
 M.Filetype = {
   init = function(self)
@@ -1698,7 +1678,10 @@ M.Ruler = {
 }
 M.Clock = {
   condition = function()
-    return not vim.env.TMUX and not (vim.env.TERM_PROGRAM == "WezTerm") and set_conditions.hide_in_col_width(120)
+    return not vim.env.HERDR_ENV
+      and not vim.env.TMUX
+      and not (vim.env.TERM_PROGRAM == "WezTerm")
+      and set_conditions.hide_in_col_width(120)
   end,
   {
     provider = Icons.misc.separator_up,
@@ -1765,7 +1748,6 @@ M.Clock = {
 
 M.status_active_left = {
   condition = function()
-    Conditions = get_conditions()
     return Conditions.is_active()
   end,
   M.Mode,
@@ -1820,6 +1802,7 @@ M.WinbarFilePath = {
     "BufEnter",
     "BufFilePost",
     "DirChanged",
+    "WinResized",
   },
 
   init = function(self)
@@ -2011,16 +1994,16 @@ M.WinbarNavic = {
       end
 
       local first = format_part(data[1], true)
-      local sep = " "
+      local separator = " "
 
       if set_conditions.hide_in_width(80) then
-        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator#", sep, first)
+        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator#", separator, first)
       end
 
       if set_conditions.hide_in_width(90) then
         local last = format_part(data[#data])
 
-        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", sep, first, last)
+        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", separator, first, last)
       end
 
       local full = build_full_location(data)
@@ -2028,20 +2011,13 @@ M.WinbarNavic = {
       if not Conditions.width_percent_below(get_display_width(full), 0.50) then
         local last = format_part(data[#data])
 
-        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", sep, first, last)
+        return string.format("%s%%#NavicSeparator# %s %%#NavicSeparator# … %%* %s", separator, first, last)
       end
 
-      return sep .. "%#NavicSeparator# " .. full
+      return separator .. "%#NavicSeparator# " .. full
     end,
   },
-
-  hl = function()
-    return {
-      fg = colors.winbar_fg,
-      bg = colors.winbar_bg,
-      bold = true,
-    }
-  end,
+  sep(colors.winbar_fg, colors.winbar_bg, { bold = true }),
 }
 
 M.status_winbar_active_left = {

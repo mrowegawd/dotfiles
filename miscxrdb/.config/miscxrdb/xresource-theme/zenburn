@@ -1,46 +1,31 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
-!
-! Zenburn
-!
-*.foreground:  #dcdccc
-*.background:  #3f3f3f
-*.cursorColor: #A0E6A0
-!
-! Black
-*.color0:      #4d4d4d
-*.color8:      #709080
-!
-! Red
-*.color1:      #7d5d5d
-*.color9:      #dca3a3
-!
-! Green
-*.color2:      #60b48a
-*.color10:     #c3bf9f
-!
-! Yellow
-*.color3:      #f0dfaf
-*.color11:     #e0cf9f
-!
-! Blue
-*.color4:      #5d6d7d
-*.color12:     #94bff3
-!
-! Magenta
-*.color5:      #dc8cc3
-*.color13:     #ec93d3
-!
-! Cyan
-*.color6:      #8cd0d3
-*.color14:     #93e0e3
-!
-! White
-*.color7:      #dcdccc
-*.color15:     #ffffff
-!
-! Bold, Italic, Underline
-*.colorBD:     #dcdccc
-!*.colorIT:
-!*.colorUL:
 
-*.color16:     #f0dfaf
+*background: #3f3f3f
+*foreground: #dcdccc
+
+*cursorColor: #8faf9f
+*pointerColor: #8faf9f
+
+*highlightColor: #233323
+*highlightTextColor: #ffffe0
+
+*color0:  #282828
+*color1:  #cc9393
+*color2:  #7f9f7f
+*color3:  #dfaf8f
+*color4:  #8c9cbd
+*color5:  #dc8cc3
+*color6:  #8cd0d3
+*color7:  #dcdccc
+
+! ANSI bright colors
+*color8:  #737b79
+*color9:  #e89393
+*color10: #a3c8a3
+*color11: #f2d9a0
+*color12: #9cdbdf
+*color13: #e0b0d0
+*color14: #a8c5c5
+*color15: #ffffff
+
+*.color16:     #f2d9a0

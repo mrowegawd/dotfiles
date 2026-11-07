@@ -38,7 +38,8 @@ add {
         ["<Leader>os"] = { "actions.select", opts = { horizontal = true } },
         ["<Leader>ot"] = { "actions.select", opts = { tab = true } },
         ["<C-c>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
-        ["<C-c>vv"] = { "actions.change_sort", mode = "n" },
+        ["<LocalLeader><LocalLeader>"] = { "actions.change_sort", mode = "n" },
+        ["<LocalLeader>m"] = { "actions.change_sort", mode = "n" },
         ["<C-c>p"] = "actions.paste_from_system_clipboard",
         ["<C-c>q"] = {
           desc = "add path into qf",

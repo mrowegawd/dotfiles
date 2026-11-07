@@ -184,7 +184,6 @@ __update_window_obj() {
       "cwd": $cwd,
       "file_manager_layout": $left
     }' "$json_file" >tmp.json && mv tmp.json "$json_file"
-  # Bug fix: "$left" sebelumnya tidak expand
 }
 
 __remove_data_obj() {
@@ -535,7 +534,6 @@ handle_split_term() {
   if ! __is_pane_id_exists "$TOGGLE_TERM_PANE_ID" || [[ "$TOGGLE_TERM_PANE_ID" == "$MAIN_PANE_ID" ]]; then
     _go_select_pane_with_id "$MAIN_PANE_ID"
     if [[ "$LAYOUT_SIDE" == "right" ]] || [[ "$LAYOUT_SIDE" == "left" ]]; then
-      dunstify "hore"
       get_pane_id_below_main_id=$(_get_pane_below_main_pane_id "$MAIN_PANE_ID")
 
       if [[ -n "$get_pane_id_below_main_id" ]]; then

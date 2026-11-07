@@ -33,23 +33,22 @@ toggle_call_win() {
   POSITION_WIN=$2
 
   for VAR in $(bspc query -N); do
-    # output dari $VAR adalah 0x041xx (number window id)
-    # output dari xdotool getwindowname "$VAR" (berupa string)
+    WIN_NAME=$(xdotool getwindowname "$VAR" 2>/dev/null)
 
-    # check apakah getwindowname name dari $VAR contains string mozilla
-    if [ "$1" == "firefox" ]; then
-      if [[ $(xdotool getwindowname "$VAR") == *"Mozilla"* ]] || [[ $(xdotool getwindowname "$VAR") == *"Zen Browser"* ]]; then
+    case "$1" in
+    firefox)
+      if [[ "$WIN_NAME" == *"Mozilla"* || "$WIN_NAME" == *"Zen Browser"* || "$WIN_NAME" == *"Google Chrome"* ]]; then
         make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
         break
       fi
-    fi
-
-    if [ "$1" == "zathura" ]; then
-      if [[ $(xdotool getwindowname "$VAR") == *".pdf"* ]]; then
+      ;;
+    zathura)
+      if [[ "$WIN_NAME" == *".pdf"* ]]; then
         make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
         break
       fi
-    fi
+      ;;
+    esac
   done
 }
 
@@ -93,7 +92,6 @@ win_center_toggle() {
 
   STATE_FILE="${TMP_DIR}/${wid_hex}.state"
 
-  # Get ukuran, posisi current window
   get_window_size() {
     info=$(xwininfo -id "$wid_hex")
     x=$(echo "$info" | grep "Absolute upper-left X" | awk '{print $NF}')
@@ -105,9 +103,7 @@ win_center_toggle() {
 
   local message_notify
 
-  # Toggle logic
   if [[ -f "$STATE_FILE" ]]; then
-    # Restore original size
     read -r x y width height <"$STATE_FILE"
     bspc node -t floating
     xdotool windowmove "$wid" "$x" "$y"
@@ -116,24 +112,20 @@ win_center_toggle() {
 
     message_notify="⤺ Restore to ${width}x${height}"
   else
-    # Save current size, and then expand
     read -r x y width height < <(get_window_size)
     echo "$x $y $width $height" >"$STATE_FILE"
 
-    # Get ukuran layar (monitor aktif)
     screen_width=$(xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f1)
     screen_height=$(xdpyinfo | awk '/dimensions/{print $2}' | cut -d 'x' -f2)
 
     target_width=1000
     target_height=800
 
-    # Hitung posisi tengah
     center_x=$(((screen_width - target_width) / 2))
     center_y=$(((screen_height - target_height) / 2))
 
     bspc node -t floating
 
-    # Resize dan pindahkan ke tengah
     xdotool windowsize "$wid" "$target_width" "$target_height"
     xdotool windowmove "$wid" "$center_x" "$center_y"
 

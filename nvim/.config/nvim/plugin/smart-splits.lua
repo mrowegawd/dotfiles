@@ -116,18 +116,20 @@ end
 
 add_on_event("UIEnter", {
   { src = "smart-splits-nvim/backend-tmux", setup = false },
-  -- { src = "adriankarlen/smart-splits-backend-herdr", setup = false },
+  { src = "adriankarlen/smart-splits-backend-herdr", setup = false },
   {
     src = "mrjones2014/smart-splits.nvim",
-    opts = {
-      ignored_filetypes = { "nofile", "quickfix", "prompt", "Trouble" },
-      ignored_buftypes = { "NvimTree" },
-      swap = { move_cursor = true },
-      move = { same_row = false },
-      resize = { amount = 4 },
-      kitty_password = nil,
-      mux = { backend = "smart-splits-backend-tmux" },
-    },
+    opts = function()
+      return {
+        ignored_filetypes = { "nofile", "quickfix", "prompt", "Trouble" },
+        ignored_buftypes = { "NvimTree" },
+        swap = { move_cursor = true },
+        move = { same_row = false },
+        resize = { amount = 4 },
+        kitty_password = nil,
+        mux = { backend = "smart-splits-backend-" .. (vim.env.HERDR_ENV and "herdr" or "tmux") },
+      }
+    end,
     on_setup = function()
       local function smart_split()
         return lazy "smart-splits"

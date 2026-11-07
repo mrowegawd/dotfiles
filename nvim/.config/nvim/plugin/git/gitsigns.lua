@@ -11,6 +11,23 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
   {
     src = "lewis6991/gitsigns.nvim",
     opts = function()
+      local H = lazy "utils.highlights"
+      H.plugin("Gitsign", {
+        theme = {
+          ["*"] = {
+            {
+              GitSignsCurrentLineBlame = {
+                fg = {
+                  from = "Comment",
+                  attr = "fg",
+                  alter = 0.1,
+                },
+                italic = true,
+              },
+            },
+          },
+        },
+      })
       return {
         signs = {
           add = { text = solid_bar },

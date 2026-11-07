@@ -7,7 +7,10 @@ local lazy = require("utils.plugin").require_lazy
 local Log = lazy "utils.log"
 
 ---@param mode "vsplit" | "split" | "none" | "tab"
-local function open_item(mode)
+---@param no_jump boolean?
+local function open_item(mode, no_jump)
+  no_jump = no_jump or false
+
   local inst = lazy("grug-far").get_instance(0)
   if not inst then
     return
@@ -31,10 +34,20 @@ local function open_item(mode)
     vim.cmd "split"
   end
 
-  api.nvim_set_current_win(grug_win)
+  if no_jump then
+    api.nvim_set_current_win(grug_win)
+  end
 
   inst:open_location()
 end
+
+keymap.set("n", "<TAB>", function()
+  open_item("none", true)
+end, {
+  buffer = api.nvim_get_current_buf(),
+  silent = true,
+  desc = "Open match (no jump)",
+})
 
 keymap.set("n", "o", function()
   open_item "none"

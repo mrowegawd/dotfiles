@@ -19,7 +19,10 @@ vim.loader.enable() -- Do not delete this line
 --   return orig_create_autocmd(event, opts)
 -- end
 
-local colorscheme = "vscode"
+-- require("utils.event_profiler").start()
+-- vim.defer_fn(function() require("utils.event_profiler").stop() end, 3000)
+
+local colorscheme = "luna"
 vim.g.colorscheme = colorscheme
 
 -- Disable builtins
@@ -43,9 +46,5 @@ require "autocmds"
 require "commands"
 require "keymaps"
 require "lsp"
-
-vim.schedule(function()
-  vim.o.statuscolumn = [[%!v:lua.require'utils.statuscolumn'.get()]]
-end)
 
 require("vim._core.ui2").enable {}

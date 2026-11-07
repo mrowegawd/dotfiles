@@ -3,11 +3,14 @@ if vim.g.colorscheme ~= "jellybeans" then
 end
 
 local add = require("vim-pack").add
+local coder = require "theme-pallete.jellybeans-coder"
 
 add {
   {
     src = "wtfox/jellybeans.nvim",
-    setup = false,
+    opts = function()
+      return coder.opts()
+    end,
   },
 }
 

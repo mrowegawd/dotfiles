@@ -423,13 +423,13 @@ add {
             ["z"] = "noop",
             ["/"] = "noop",
 
-            ["<C-c>vc"] = { "order_by_created", nowait = false },
-            ["<C-c>vd"] = { "order_by_diagnostics", nowait = false },
-            ["<C-c>vg"] = { "order_by_git_status", nowait = false },
-            ["<C-c>vm"] = { "order_by_modified", nowait = false },
-            ["<C-c>vn"] = { "order_by_name", nowait = false },
-            ["<C-c>vs"] = { "order_by_size", nowait = false },
-            ["<C-c>vt"] = { "order_by_type", nowait = false },
+            [",c"] = { "order_by_created", nowait = false },
+            [",D"] = { "order_by_diagnostics", nowait = false },
+            [",G"] = { "order_by_git_status", nowait = false },
+            [",m"] = { "order_by_modified", nowait = false },
+            [",n"] = { "order_by_name", nowait = false },
+            [",s"] = { "order_by_size", nowait = false },
+            [",t"] = { "order_by_type", nowait = false },
 
             ["<C-c>Fd"] = "fuzzy_finder_directory",
             ["<C-c>Fg"] = "fuzzy_finder",
@@ -494,7 +494,6 @@ UtilKey.nnoremap("<a-e>", function()
   end)
 end, { desc = "Open: file explore [neotree]" })
 
-
 local UtilAugroup = lazy("utils.map").augroup
 local whichkey = lazy "which-key"
 
@@ -505,6 +504,12 @@ UtilAugroup("neotree", {
     whichkey.add {
       { "<C-c>F", group = "filter:sort", buffer = ev.buf },
       { "<C-c>v", group = "view", buffer = ev.buf },
+
+      { "<Localleader>", group = "order", buffer = ev.buf },
+      { "<Localleader>c", name = "order by create", buffer = ev.buf },
+      { "<Localleader>s", name = "order by size", buffer = ev.buf },
+      pcall(vim.keymap.del, { "n", "x", "t" }, "<Localleader>t"),
+      { "<Localleader>t", name = "order by type", buffer = ev.buf },
     }
   end,
 })
