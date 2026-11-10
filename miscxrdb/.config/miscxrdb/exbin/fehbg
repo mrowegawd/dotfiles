@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Date Created: 10 Jul 2019
-# Last Modified: 10 Jul 2019 (02:15:09)
-# Summary:
-# Author: Gitmox
-# License:
-
-# set -u -e
-
 WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
 
 #####################################
@@ -16,13 +8,11 @@ WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
 
 #####################################
 
-# [[ ! -d "$WALLI3IMG" ]] && exit 1
-
 numberPath="$HOME/.cache/wallpaper"
 numberFile="imgWall"
 
 set_wallpaper_with_gowall() {
-  if asdf which gowall >/dev/null; then
+  if command -v gowall >/dev/null 2>&1; then
     gowall convert "$1" -t "$2" --output /tmp/newName.jpg >/dev/null
     feh --bg-scale /tmp/newName.jpg
   else
@@ -36,52 +26,52 @@ main() {
     set_theme="$1"
   fi
 
-  [[ ! -d $WALLI3IMG ]] && dunstify "Fehbg: path walli3=$WALLI3IMG not found!" && exit
+  [[ ! -d $WALLI3IMG ]] && dunstify "Fehbg: path walli3=$WALLI3IMG not found!" && exit 1
 
   pathNumber="$numberPath/$numberFile"
 
-  [[ ! -f "$pathNumber" ]] &&
-    mkdir -p "$numberPath" &&
-    touch "$pathNumber" &&
-    echo "0" >"$pathNumber"
+  mkdir -p "$numberPath"
+  [[ ! -f "$pathNumber" ]] && echo "0" >"$pathNumber"
 
-  # 1. Get all files inside path and then convert all them to array
   array=()
   while IFS= read -r -d $'\0'; do
     array+=("$REPLY")
-  done < <(find "$WALLI3IMG" -type f -name "*" -print0)
+  done < <(find "$WALLI3IMG" -type f -print0 | sort -z)
 
-  # 2. And now starting decrement sum of array
-  totalNumImg=$((${#array[@]})) # get total length of array
-  numImg="$(cat "$pathNumber")"
+  totalNumImg=${#array[@]}
 
-  if [ "$(cat "$pathNumber")" == 0 ]; then
-    echo "$totalNumImg" >"$pathNumber"
-  else
-    ((totalNumImg = numImg - 1))
-    echo "$totalNumImg" >"$pathNumber"
+  if ((totalNumImg == 0)); then
+    dunstify "Fehbg: tidak ada gambar di $WALLI3IMG"
+    exit 1
   fi
 
-  nextImg="$((${#array[@]} - $(cat "$pathNumber")))"
+  numImg="$(cat "$pathNumber")"
 
-  for i in "${!array[@]}"; do
-    if [ "$i" == "$nextImg" ]; then
-      if [[ $set_theme == "general" ]]; then
-        path_nvim="$HOME/.config/nvim/lua/r/config/init.lua"
-        if [[ -f $path_nvim ]]; then
-          colorscheme=$(grep -i "local colorscheme" <"$path_nvim" | cut -d'=' -f2 | xargs)
-          if [[ -n "$colorscheme" ]]; then
-            set_wallpaper_with_gowall "${array[$i]}" "$colorscheme"
-          fi
-        else
-          feh --bg-scale "${array[$i]}"
-        fi
+  [[ ! "$numImg" =~ ^[0-9]+$ ]] && numImg=0
+  ((numImg >= totalNumImg)) && numImg=0
+
+  local idx=$numImg
+
+  local nextNum=$(((idx + 1) % totalNumImg))
+  echo "$nextNum" >"$pathNumber"
+
+  if [[ $set_theme == "general" ]]; then
+    path_nvim="$HOME/.config/nvim/lua/r/config/init.lua"
+    if [[ -f $path_nvim ]]; then
+      colorscheme=$(grep -i "local colorscheme" <"$path_nvim" | cut -d'=' -f2 | xargs)
+      if [[ -n "$colorscheme" ]]; then
+        set_wallpaper_with_gowall "${array[$idx]}" "$colorscheme"
       else
-        set_wallpaper_with_gowall "${array[$i]}" "$set_theme"
+        feh --bg-scale "${array[$idx]}"
       fi
-      echo "${array[$i]}" >/tmp/bg-windows
+    else
+      feh --bg-scale "${array[$idx]}"
     fi
-  done
+  else
+    set_wallpaper_with_gowall "${array[$idx]}" "$set_theme"
+  fi
+
+  echo "${array[$idx]}" >/tmp/bg-windows
 }
 
 main "$@"

@@ -121,12 +121,9 @@ add_on_event("LspAttach", {
                 bg = {
                   from = "WinSeparator",
                   attr = "fg",
-                  alter = 0.25,
-                  transparency = 0.5,
-                  color = {
-                    from = "Normal",
-                    attr = "bg",
-                  },
+                  combine = { from = "Normal", attr = "bg", alter = -0.25 },
+                  combine_mode = "multiply",
+                  combine_intensity = 0.1,
                 },
               },
             },
@@ -158,9 +155,11 @@ add_on_event("LspAttach", {
             {
               TreesitterContextLineNumberBottom = {
                 fg = {
-                  from = "LineNr",
-                  attr = "fg",
-                  alter = 1.5,
+                  from = "TreesitterContext",
+                  attr = "bg",
+                  alter = 5,
+                  transparency = 0.38,
+                  color = { from = "TreesitterContext", attr = "bg" },
                 },
                 -- sp = "NONE",
                 -- underline = false,

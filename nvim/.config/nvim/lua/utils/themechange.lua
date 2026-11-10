@@ -111,33 +111,33 @@ function M.build_colors()
   local tab_inactive = { fg = get("Winbar", "fg"), bg = get("Winbar", "bg") }
 
   -- Border pane
-  local border_active = tint(sep, 0.1)
+  local border_active = sep
   local border_inactive = tint(bg, 0.15)
 
   -- ├─────────────────────────────────┤ Dunst ├──────────────────────────────┤
   local low = tint(sep, 0.1)
-  local normal_bg = tint(sep, 0.7)
-  local normal_frame = tint(sep, 0.7)
-  local normal_fg_base = tint(sep, 1)
+  local normal_bg = tint(bg, 0.85)
+  local normal_frame = tint(bg, 0.85)
+  local normal_fg_base = tint(bg, 1.1)
   local normal_fg
   local critical_fg = tint(removed, 0.4)
 
   if theme_is { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" } then
-    normal_bg = tint(sep, 0.05)
-    normal_frame = tint(sep, 0.15)
+    normal_bg = tint(bg, 0.05)
+    normal_frame = tint(bg, 0.15)
     critical_fg = tint(removed, 1)
   end
   if theme_is { "tokyonight-storm", "tokyonight" } then
-    normal_bg = tint(sep, -0.1)
-    normal_frame = tint(sep, -0.1)
+    normal_bg = tint(bg, -0.1)
+    normal_frame = tint(bg, -0.1)
   end
   if theme_is { "gruvbox", "base46-everforest" } then
-    normal_fg_base = tint(sep, 0.4)
+    normal_fg_base = tint(bg, 0.4)
   end
   if theme_is { "zenburn" } then
-    normal_fg = tint(sep, 0.9)
-    normal_bg = tint(sep, 0.02)
-    normal_frame = tint(sep, 0.15)
+    normal_fg = tint(bg, 0.9)
+    normal_bg = tint(bg, 0.02)
+    normal_frame = tint(bg, 0.15)
     critical_fg = tint(removed, 1)
   end
   normal_fg = normal_fg or darken(fg, 0.7, normal_bg)

@@ -117,7 +117,6 @@ local function open_test_commands()
 end
 
 local function test_with_coverage()
-  Log.info "waduh"
   vim.fn.jobstart({ "uv", "run", "coverage", "run", "-m", "pytest" }, {
     stdout_buffered = true,
     on_exit = function(_, code)

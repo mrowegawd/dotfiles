@@ -1695,48 +1695,48 @@ M.Clock = {
   },
 }
 
--- local spinner_index = 1
---
--- M.codecompanion = {
---   init = function(self)
---     if not self._au then
---       self._au = true
---       vim.api.nvim_create_autocmd("User", {
---         pattern = "CodeCompanionRequest*",
---         callback = function()
---           vim.cmd "redrawstatus"
---         end,
---       })
---     end
---   end,
---   {
---     provider = function()
---       local spinner_symbols = {
---         "▰▱▱▱▱▱▱",
---         "▰▰▱▱▱▱▱",
---         "▰▰▰▱▱▱▱",
---         "▰▰▰▰▱▱▱",
---         "▰▰▰▰▰▱▱",
---         "▰▰▰▰▰▰▱",
---         "▰▰▰▰▰▰▰",
---         "▰▱▱▱▱▱▱",
---       }
---       -- { "█", "▓", "▒", "░" }
---       -- { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▂" }
---       -- { "㊂", "㊀", "㊁" }
---       local spinner_symbols_len = #spinner_symbols
---       if vim.g.processing_ai then
---         spinner_index = (spinner_index % spinner_symbols_len) + 1
---         return Icons.misc.ai .. spinner_symbols[spinner_index] .. " " -- nerd font robot
---       end
---       return nil
---     end,
---     hl = { fg = colors.keyword },
---   },
---   {
---     provider = " ",
---   },
--- }
+local spinner_index = 1
+
+M.codecompanion = {
+  init = function(self)
+    if not self._au then
+      self._au = true
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "CodeCompanionRequest*",
+        callback = function()
+          vim.cmd "redrawstatus"
+        end,
+      })
+    end
+  end,
+  {
+    provider = function()
+      local spinner_symbols = {
+        "▰▱▱▱▱▱▱",
+        "▰▰▱▱▱▱▱",
+        "▰▰▰▱▱▱▱",
+        "▰▰▰▰▱▱▱",
+        "▰▰▰▰▰▱▱",
+        "▰▰▰▰▰▰▱",
+        "▰▰▰▰▰▰▰",
+        "▰▱▱▱▱▱▱",
+      }
+      -- { "█", "▓", "▒", "░" }
+      -- { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▂" }
+      -- { "㊂", "㊀", "㊁" }
+      local spinner_symbols_len = #spinner_symbols
+      if vim.g.processing_ai then
+        spinner_index = (spinner_index % spinner_symbols_len) + 1
+        return Icons.misc.ai .. spinner_symbols[spinner_index] .. " " -- nerd font robot
+      end
+      return nil
+    end,
+    hl = { fg = colors.keyword },
+  },
+  {
+    provider = " ",
+  },
+}
 --
 -- M.Separator = {
 --   { provider = " " },
@@ -1760,7 +1760,7 @@ M.status_active_left = {
   M.Gap,
 
   -- M.LazyStatus,
-  -- M.codecompanion,
+  M.codecompanion,
   -- M.Dap,
 
   M.Diagnostics,

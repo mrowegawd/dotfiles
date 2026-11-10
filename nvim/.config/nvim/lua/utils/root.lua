@@ -1,4 +1,3 @@
----@class r.utils.root
 ---@overload fun(): string
 local M = setmetatable({}, {
   __call = function(m)

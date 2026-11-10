@@ -40,27 +40,56 @@ run_once xsettingsd xsettingsd
   xset r 66
 ) >/dev/null 2>&1 &
 
+# getcolors() {
+#   read -r INACTIVE MAGENTA KEYWORD CYAN <<EOF
+# $(xrdb -query 2>/dev/null | awk '
+#   function v(x) { return x == "" ? "-" : x }
+#   $1 ~ /(^|[*.])background:$/ && !b { b = $2 }
+#   $1 ~ /(^|[*.])color5:$/     && !m { m = $2 }
+#   $1 ~ /(^|[*.])color16:$/    && !k { k = $2 }
+#   $1 ~ /(^|[*.])color9:$/     && !c { c = $2 }
+#   END { print v(b), v(m), v(k), v(c) }')
+# EOF
+#
+#   [ "$INACTIVE" = "-" ] && INACTIVE="#1d1f21"
+#   [ "$MAGENTA" = "-" ] && MAGENTA="#b294bb"
+#   [ "$KEYWORD" = "-" ] && KEYWORD="#81a2be"
+#   [ "$CYAN" = "-" ] && CYAN="#8abeb7"
+#
+#   TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+#   if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+#     t=$(awk -F= 'toupper($1) ~ /TAB_ACTIVE_BG/ { gsub(/"/, "", $2); print $2; exit }' "$TMUX_SNAPSHOT_PATH")
+#     [ -n "$t" ] && INACTIVE=$t
+#   fi
+# }
+# getcolors
+
 getcolors() {
-  read -r INACTIVE MAGENTA KEYWORD CYAN <<EOF
-$(xrdb -query 2>/dev/null | awk '
-  function v(x) { return x == "" ? "-" : x }
-  $1 ~ /(^|[*.])background:$/ && !b { b = $2 }
-  $1 ~ /(^|[*.])color5:$/     && !m { m = $2 }
-  $1 ~ /(^|[*.])color16:$/    && !k { k = $2 }
-  $1 ~ /(^|[*.])color9:$/     && !c { c = $2 }
-  END { print v(b), v(m), v(k), v(c) }')
-EOF
+  eval "$(rdb -query 2>/dev/null | awk '
+    {
+      key = $1
+      sub(/:$/, "", key)              # buang colon di akhir
+      n = split(key, a, /[*.]+/)      # ambil bagian setelah * atau .
+      name = a[n]
+      val = $2
+      if (val == "") next
+      if (name == "background" && !b) b = val
+      if (name == "color5"     && !m) m = val
+      if (name == "color16"    && !k) k = val
+      if (name == "color9"     && !c) c = val
+    }
+    END {
+      printf "INACTIVE=%s\n", (b=="" ? "#1d1f21" : b)
+      printf "MAGENTA=%s\n",  (m=="" ? "#b294bb" : m)
+      printf "KEYWORD=%s\n",  (k=="" ? "#81a2be" : k)
+      printf "CYAN=%s\n",     (c=="" ? "#8abeb7" : c)
+    }')"
 
-  [ "$INACTIVE" = "-" ] && INACTIVE="#1d1f21"
-  [ "$MAGENTA" = "-" ] && MAGENTA="#b294bb"
-  [ "$KEYWORD" = "-" ] && KEYWORD="#81a2be"
-  [ "$CYAN" = "-" ] && CYAN="#8abeb7"
-
-  TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
-  if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
-    t=$(awk -F= 'toupper($1) ~ /TAB_ACTIVE_BG/ { gsub(/"/, "", $2); print $2; exit }' "$TMUX_SNAPSHOT_PATH")
-    [ -n "$t" ] && INACTIVE=$t
-  fi
+  # TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
+  # if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
+  #   t=$(awk -F= 'toupper($1) ~ /TAB_ACTIVE_BG/ { gsub(/"/, "", $2); print $2; exit }' "$TMUX_SNAPSHOT_PATH")
+  #   [ -n "$t" ] && INACTIVE=$t
+  # fi
 }
 getcolors
 

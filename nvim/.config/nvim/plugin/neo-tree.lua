@@ -123,6 +123,12 @@ add {
               ["H"] = "toggle_hidden",
               ["<C-n>"] = "next_git_modified",
               ["<C-p>"] = "prev_git_modified",
+
+              ["<C-c>Fd"] = "fuzzy_finder_directory",
+              ["<C-c>Fg"] = "fuzzy_finder",
+              ["<C-c>Fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
+              ["<C-c>Ff"] = "filter_on_submit",
+              ["<C-c>FC"] = "clear_filter",
             },
             fuzzy_finder_mappings = {
               ["<a-n>"] = "move_cursor_down",
@@ -391,13 +397,14 @@ add {
             mappings = {
               ["gg"] = "noop",
               ["w"] = "noop",
+              ["<C-c>"] = "noop",
 
               ["<Leader>gsa"] = "git_add_file",
               ["<Leader>gsA"] = "git_add_all",
               ["<Leader>gsu"] = "git_unstage_file",
               ["<Leader>gsr"] = "git_revert_file",
 
-              ["e"] = "child_or_open",
+              -- ["e"] = "child_or_open",
               [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
               ["g?"] = "show_help",
             },
@@ -422,6 +429,7 @@ add {
             ["f"] = "noop",
             ["z"] = "noop",
             ["/"] = "noop",
+            ["<C-c>"] = "noop",
 
             [",c"] = { "order_by_created", nowait = false },
             [",D"] = { "order_by_diagnostics", nowait = false },
@@ -430,12 +438,6 @@ add {
             [",n"] = { "order_by_name", nowait = false },
             [",s"] = { "order_by_size", nowait = false },
             [",t"] = { "order_by_type", nowait = false },
-
-            ["<C-c>Fd"] = "fuzzy_finder_directory",
-            ["<C-c>Fg"] = "fuzzy_finder",
-            ["<C-c>Fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
-            ["<C-c>Ff"] = "filter_on_submit",
-            ["<C-c>FC"] = "clear_filter",
 
             ["<a-b>"] = "bookmark_cycle_pick",
             ["b"] = "bookmark_cycle_save",

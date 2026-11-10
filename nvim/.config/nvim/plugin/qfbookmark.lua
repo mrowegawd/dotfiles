@@ -220,7 +220,7 @@ add_local_or_remote {
                       opts:add_note_to "todo"
                     end,
                     mode = "v",
-                    desc = "Qf: test mark",
+                    desc = "Qfmark: test mark",
                   },
                   {
                     key = "<LocalLeader>at",
@@ -228,7 +228,7 @@ add_local_or_remote {
                       opts:add_note_to "tomorrow"
                     end,
                     mode = "v",
-                    desc = "Qf: test mark",
+                    desc = "Qfmark: test mark",
                   },
                 },
               },
@@ -245,7 +245,7 @@ add_local_or_remote {
                     cmd = function(opts)
                       opts.selected:add_to "quickfix"
                     end,
-                    desc = "Qf: add to quickfix",
+                    desc = "Qfmark: add to quickfix",
                   },
 
                   {
@@ -253,28 +253,28 @@ add_local_or_remote {
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
-                    desc = "Qf: add to debug mark",
+                    desc = "Qfmark: add to debug mark",
                   },
                   {
                     key = "<C-c><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
-                    desc = "Qf: add to note mark",
+                    desc = "Qfmark: add to note mark",
                   },
                   {
                     key = "<C-c><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
-                    desc = "Qf: add to fix mark",
+                    desc = "Qfmark: add to fix mark",
                   },
                   {
                     key = "<C-c><C-m>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
-                    desc = "Qf: add to mark",
+                    desc = "Qfmark: add to mark",
                   },
                 },
               },
@@ -291,28 +291,28 @@ add_local_or_remote {
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
-                    desc = "Qf: add item to debug mark",
+                    desc = "Qfmark: add item to debug mark",
                   },
                   {
                     key = "<C-c><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
-                    desc = "Qf: add to note mark",
+                    desc = "Qfmark: add to note mark",
                   },
                   {
                     key = "<C-c><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
-                    desc = "Qf: add to fix mark",
+                    desc = "Qfmark: add to fix mark",
                   },
                   {
                     key = "<C-c><C-m>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
-                    desc = "Qf: add to mark",
+                    desc = "Qfmark: add to mark",
                   },
 
                   -- 🔧 Filter & Update (Quickfix)
@@ -325,7 +325,7 @@ add_local_or_remote {
                         vim.api.nvim_feedkeys(cmd, "n", false)
                       end
                     end,
-                    desc = "Qf: run Cfilter or Lfilter",
+                    desc = "Qfmark: run Cfilter or Lfilter",
                   },
                   {
                     key = "<C-c>Fc",
@@ -336,7 +336,7 @@ add_local_or_remote {
                         vim.api.nvim_feedkeys(cmd, "n", false)
                       end
                     end,
-                    desc = "Qf: run cdo or ldo",
+                    desc = "Qfmark: run cdo or ldo",
                   },
 
                   {
@@ -348,7 +348,7 @@ add_local_or_remote {
                         vim.api.nvim_feedkeys(cmd, "n", false)
                       end
                     end,
-                    desc = "Qf: run cfdo or lfdo",
+                    desc = "Qfmark: run cfdo or lfdo",
                   },
                 },
               },
@@ -367,7 +367,7 @@ add_local_or_remote {
                     cmd = function(opts)
                       opts.selected:add_to "quickfix"
                     end,
-                    desc = "Qf: add to debug quickfix",
+                    desc = "Qfmark: add to debug quickfix",
                   },
                 },
               },

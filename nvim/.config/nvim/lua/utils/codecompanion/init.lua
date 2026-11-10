@@ -1,0 +1,149 @@
+local M = {}
+
+local lazy = require("utils.plugin").require_lazy
+
+local adapters = lazy "utils.codecompanion.adapters"
+local mappings = lazy "utils.codecompanion.keymaps"
+local extensions = lazy "utils.codecompanion.extensions"
+local cli = lazy "utils.codecompanion.cli"
+local rules = lazy "utils.codecompanion.rules"
+local tools = lazy "utils.codecompanion.tools"
+local slash_commands = lazy "utils.codecompanion.slash_commands"
+local prompt_library = lazy "utils.codecompanion.prompt_library"
+local ui = lazy "utils.codecompanion.ui"
+
+local function setup_plugin()
+  return {
+    -- Adapters
+    adapters = {
+      http = {
+        opts = {
+          show_presets = false,
+          show_model_choices = true,
+        },
+
+        ollama_qwen25_14b = adapters.ollama_qwen25_14b(),
+        ollama_qwen25_7b = adapters.ollama_qwen25_7b(),
+        ollama_qwen3_8b = adapters.ollama_qwen3_8b(),
+        llama3_1_8b = adapters.llama3_1_8b(),
+        supa_ai_gemma2_9b_sahabatai = adapters.supa_ai_gemma2_9b_sahabatai(),
+        ollama_qwen2_5_7b_instruct_Q4_K_M = adapters.ollama_qwen2_5_7b_instruct_Q4_K_M(),
+        webai = adapters.webai(),
+        -- openai_gpt_55 = adapters.openai_gpt_55,
+        -- openai_gpt_54_nano = adapters.openai_gpt_54_nano,
+        -- openai_gpt_54_nano_legacy = adapters.openai_gpt_54_nano_legacy,
+        gemini_flash_35 = adapters.gemini_flash_35,
+        -- ollama_qwen35_08b = adapters.ollama_qwen35_08b,
+        -- tavily = adapters.tavily,
+      },
+      acp = {
+        opts = {
+          show_presets = false,
+          show_model_choices = false,
+        },
+        -- claude_code = adapters.claude_code,
+        -- codex = adapters.codex,
+      },
+    },
+    -- Display
+    display = {
+      chat = ui.chat_display(),
+      action_palette = {
+        prompt = "> ",
+        opts = {
+          show_preset_actions = true,
+          show_preset_prompts = false,
+        },
+      },
+      diff = {
+        -- layout = "vertical",
+        enabled = true,
+        threshold_for_chat = 15,
+        window = {
+          ---@return number|fun(): number
+          width = function()
+            return math.min(120, vim.o.columns - 10)
+          end,
+          ---@return number|fun(): number
+          height = function()
+            return vim.o.lines - 4
+          end,
+          opts = {
+            number = true,
+          },
+        },
+      },
+    },
+    -- Interactions
+    interactions = {
+      -- Chat
+      chat = {
+        adapter = "ollama_qwen2_5_7b_instruct_Q4_K_M",
+        roles = {
+          user = "Me",
+          llm = ui.llm_role,
+        },
+        opts = {
+          context_management = {
+            enabled = false,
+          },
+          system_prompt = function(ctx)
+            if ctx.adapter and ctx.adapter.type == "acp" then
+              return ""
+            end
+            return "You are a helpful assistant."
+          end,
+          prompt_decorator = function(message)
+            return message
+          end,
+          goto_file_action = function(fname)
+            vim.cmd.wincmd "h"
+            vim.cmd.edit(fname)
+          end,
+        },
+        keymaps = vim.tbl_extend("force", mappings.chat_keymaps(), rules.chat_keymaps()),
+
+        -- Slash commands
+        slash_commands = slash_commands.build(),
+        -- Tools
+        tools = tools.build(),
+        -- Editor context (variables)
+        editor_context = {
+          ["buffer"] = {
+            opts = {
+              default_params = "diff",
+            },
+          },
+        },
+      },
+      -- CLI
+      cli = cli.build(),
+      -- Inline
+      inline = {
+        adapter = "ollama_qwen25_7b",
+      },
+      shared = {
+        keymaps = mappings.shared_keymaps(),
+      },
+    },
+    -- Prompt library
+    prompt_library = prompt_library.build(),
+    -- -- MCP
+    -- mcp = mcp.build(),
+    -- -- Rules
+    rules = rules.build(),
+    -- Extensions
+    extensions = extensions.build(),
+  }
+end
+
+function M.setup()
+  lazy("utils.codecompanion.webai").setup { provider = "chatgpt", cdp_port = 9222, new_chat = true }
+  lazy("codecompanion").setup(setup_plugin())
+  ui.setup()
+
+  local setup_group = "CodeCompanion"
+  mappings.setup(setup_group)
+end
+
+return M

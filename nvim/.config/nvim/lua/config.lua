@@ -15,6 +15,7 @@ M.path = {
   wiki_path = vim.fs.joinpath(dropbox_path, "neorg"),
   snippet_path = vim.fs.joinpath(dropbox_path, "/snippets-for-all"),
   dropbox_path = dropbox_path,
+  prompt_dir = vim.fs.joinpath(dropbox_path, "data.programming.forprivate", "ai-prompts"),
   home = home,
 }
 

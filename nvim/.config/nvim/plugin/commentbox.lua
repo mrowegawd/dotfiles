@@ -19,47 +19,41 @@ local load_comment_box = function()
   lazy("vim-pack").load_now "comment-box.nvim"
 end
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cbb", function()
-  load_comment_box()
-  vim.cmd "CBlcbox5"
-end, { desc = "Action: comment box no 5" })
+local cb = function(suffix, cmd, desc, modes)
+  UtilKey.noremap(modes or { "n", "x" }, "<Leader>cb" .. suffix, function()
+    load_comment_box()
+    vim.cmd(cmd)
+  end, { desc = "CommentBox: " .. desc })
+end
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cbB", function()
-  load_comment_box()
-  vim.cmd "CBlcbox9"
-end, { desc = "Action: comment box no 9" })
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ╏                                  BOX TITLE                                  ╏
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+cb("tj", "CBlcbox5", "box title center 5")
+cb("th", "CBllbox5", "box title left 5")
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cbl", function()
-  load_comment_box()
-  vim.cmd "CBlcbox21"
-end, { desc = "Action: comment box no 21" })
+-- ┌─────────────────────────────────────────────────────────────────────────────┐
+--                                     BOX SUB
+-- └─────────────────────────────────────────────────────────────────────────────┘
+cb("Tj", "CBlcbox20", "box for big comment center 20")
+cb("Th", "CBllbox20", "box for big comment left 20")
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cbe", function()
-  load_comment_box()
-  vim.cmd "CBllbox10"
-end, { desc = "Action: comment line garis tipis 10" })
+-- ╒═════════════════════════════════════════════════════════════════════════════╕
+--                                  BOX MISC SUB
+-- ╘═════════════════════════════════════════════════════════════════════════════╛
+cb("sj", "CBlcbox21", "box title sub center 21")
+cb("sh", "CBllbox21", "box title sub left 21")
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cbE", function()
-  load_comment_box()
-  vim.cmd "CBlcbox10"
-end, { desc = "Action: comment line garis tipis center 10" })
+-- ── Line1 ──────────────────────────────────────────────────────────────────
+cb("l1", "CBclline1", "line 1")
+-- ─[ line2 ]─────────────────────────────────────────────────────────────────
+cb("l2", "CBclline6", "line 6")
+-- ─< line3 >─────────────────────────────────────────────────────────────────
+cb("l3", "CBclline8", "line 8")
+-- ━━ line hard ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cb("ll", "CBclline9", "line 9 (hard)")
 
-UtilKey.noremap({ "n", "x" }, "<Leader>cba", function()
-  load_comment_box()
-  vim.cmd "CBlcline10"
-end, { desc = "Action: comment line 10" })
-
-UtilKey.noremap({ "n", "x" }, "<Leader>cby", function()
-  load_comment_box()
-  vim.cmd "CBllline6"
-end, { desc = "Action: comment line left 6" })
-
-UtilKey.noremap({ "n", "x" }, "<Leader>cbA", function()
-  load_comment_box()
-  vim.cmd "CBlcline13"
-end, { desc = "Action: comment line 13" })
-
-UtilKey.nnoremap("<Leader>cbf", function()
+UtilKey.noremap("n", "<Leader>cbB", function()
   load_comment_box()
   vim.cmd "CBcatalog"
-end, { desc = "Action: open catalogs" })
+end, { desc = "CommentBox: open catalog" })

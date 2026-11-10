@@ -162,6 +162,31 @@ function M.open_cmd_bulk_center(commands, opts, only_key)
   )
 end
 
+function M.open_center_medium(opts)
+  return dropdown(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
+    winopts = {
+      fullscreen = false,
+      width = 0.6,
+      height = 0.5,
+      row = 0.5,
+      col = 0.5,
+      preview = { hidden = true },
+    },
+  }, opts))
+end
+
+function M.open_center_small_wide(opts)
+  return M.open_center_medium(vim.tbl_deep_extend("force", {
+    ---@type fzf-lua.config.Winopts
+    winopts = {
+      height = 0.4,
+      width = 0.8,
+      preview = { hidden = false },
+    },
+  }, opts))
+end
+
 local layout_center = function(opts)
   return dropdown(vim.tbl_deep_extend("force", {
     ---@diagnostic disable: missing-fields

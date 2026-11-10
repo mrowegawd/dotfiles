@@ -8,8 +8,50 @@ vim.g.maplocalleader = ","
 o.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
 o.breakindent = true -- start wrapped lines indented
 
-local is_ssh = (vim.env.SSH_TTY or vim.env.SSH_CONNECTION) ~= nil
-o.clipboard = is_ssh and "" or "unnamedplus"
+-- local is_ssh = (vim.env.SSH_TTY or vim.env.SSH_CONNECTION) ~= nil
+-- o.clipboard = is_ssh and "" or "unnamedplus"
+-- o.clipboard = "unnamedplus"
+
+-- Sync clipboard between OS and Neovim.
+--  Schedule the setting after `UiEnter` because it can increase startup-time.
+--  Remove this option if you want your OS clipboard to remain independent.
+--  See `:help 'clipboard'`
+vim.schedule(function()
+  vim.opt.clipboard:append "unnamedplus"
+
+  -- Fix "waiting for osc52 response from terminal" message
+  -- https://github.com/neovim/neovim/issues/28611
+
+  if vim.env.SSH_TTY ~= nil then
+    -- Set up clipboard for ssh
+
+    local function my_paste(_)
+      return function(_)
+        local content = vim.fn.getreg '"'
+        return vim.split(content, "\n")
+      end
+    end
+
+    vim.g.clipboard = {
+      name = "OSC 52",
+      copy = {
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        ["+"] = require("vim.ui.clipboard.osc52").copy "+",
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        ["*"] = require("vim.ui.clipboard.osc52").copy "*",
+      },
+      paste = {
+        -- No OSC52 paste action since wezterm doesn't support it
+        -- Should still paste from nvim
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        ["+"] = my_paste "+",
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        ["*"] = my_paste "*",
+      },
+    }
+  end
+end)
+
 -- if is_ssh then
 --   local osc52 = require "vim.ui.clipboard.osc52"
 --   local function paste_from_register()
@@ -180,6 +222,8 @@ o.foldtext = ""
 -- {{{ Timings
 o.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
 o.updatetime = 200 -- Save swap file and trigger CursorHold
+-- o.updatetime = 50
+
 o.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the undodir
 o.undolevels = 10000
 o.history = 1000 -- Number of commands to remember in a history table (per buffer).
@@ -255,6 +299,7 @@ for _, plugin in pairs(enable_providers) do
   vim.cmd("runtime " .. plugin)
 end
 -- }}}
+
 -- {{{ Neovide stuff
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.15

@@ -28,7 +28,7 @@ add_on_event("BufReadPost", {
               "Outline",
               "aerial",
               "trouble",
-              "codecompanion",
+              -- "codecompanion",
               "eldochover",
               "main_layout",
             }, ft)

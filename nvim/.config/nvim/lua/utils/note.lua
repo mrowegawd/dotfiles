@@ -17,7 +17,7 @@ local Config = lazy "config"
 local ConfigPath = Config.path
 local wiki_path = ConfigPath.wiki_path
 
-local Orgmode = lazy "org"
+local Org = lazy "org"
 local Fzflua = lazy "fzf-lua"
 local FzfluaBuiltin = lazy "fzf-lua.previewer.builtin"
 
@@ -76,13 +76,13 @@ local org_pgk = {
     path_global_wiki = string.format("%s/**/**/*", wiki_path),
     path_local_wiki = string.format("%s/orgmode/**/**/*", ConfigPath.wiki_path),
     search_tag = function(tag)
-      Orgmode.agenda:tags { match_query = tag }
+      Org.agenda:tags { match_query = tag }
     end,
     collect_tags = function()
       contents_tags.tags = {}
     end,
     set_agenda_dir = function(path)
-      Orgmode.setup { org_agenda_files = path }
+      Org.setup { org_agenda_files = path }
     end,
   },
 }
@@ -190,7 +190,6 @@ local function swith_note_mode(force_set)
 end
 
 -- ├──────────────────────────────────┤ TAGS ├──────────────────────────────────┤
----@param tag_locations obsidian.TagLocation[]
 ---@return string[]
 local list_tags = function(tag_locations)
   local tags = {}
@@ -368,7 +367,7 @@ local function get_headline_at_cursor(mode_open)
         end
       end
 
-      Orgmode.action "org_mappings.open_at_point"
+      Org.action "org_mappings.open_at_point"
       return
     end
 
@@ -384,7 +383,7 @@ local function get_headline_at_cursor(mode_open)
         end
       end
 
-      Orgmode.links:follow(link.url:to_string())
+      Org.links:follow(link.url:to_string())
       return
     end
 
@@ -996,68 +995,68 @@ function Mapping.open_tags()
   }
 end
 
-local function scan()
-  local ok, s = pcall(require, "plenary.scandir")
-  if not ok then
-    return nil
-  end
+-- local function scan()
+--   local ok, s = pcall(require, "plenary.scandir")
+--   if not ok then
+--     return nil
+--   end
+--
+--   return s
+-- end
 
-  return s
-end
+-- local function extract_tags(line)
+--   local result = {}
+--   local pos = 1
+--   while true do
+--     local s, e, tag = line:find(":([%a][%w_@]+):", pos)
+--     if not s then
+--       break
+--     end
+--     result[#result + 1] = tag
+--     pos = e -- not e + 1! Reuse the closing ":" as the opening ":" for the next match.
+--   end
+--   return result
+-- end
 
-local function extract_tags(line)
-  local result = {}
-  local pos = 1
-  while true do
-    local s, e, tag = line:find(":([%a][%w_@]+):", pos)
-    if not s then
-      break
-    end
-    result[#result + 1] = tag
-    pos = e -- not e + 1! Reuse the closing ":" as the opening ":" for the next match.
-  end
-  return result
-end
-
-local function get_tags_from_path_async(path, callback)
-  local _scan = scan()
-  if not _scan then
-    return
-  end
-
-  _scan.scan_dir_async(path, {
-    hidden = false,
-    add_dirs = false,
-    search_pattern = "%.org$",
-    on_exit = function(files)
-      vim.schedule(function()
-        local tags = {}
-        local seen = {}
-        for _, file in ipairs(files) do
-          local lines = vim.fn.readfile(file)
-          for _, line in ipairs(lines) do
-            if
-              not line:match "^%s*SCHEDULED:"
-              and not line:match "^%s*DEADLINE:"
-              and not line:match "^%s*CLOSED:"
-              and not line:match "^%s*:.*:$"
-              and not line:match "<%d%d%d%d%-%d%d%-%d%d"
-            then
-              for _, tag in ipairs(extract_tags(line)) do
-                if not seen[tag] then
-                  seen[tag] = true
-                  tags[#tags + 1] = tag
-                end
-              end
-            end
-          end
-        end
-        table.sort(tags)
-        callback(tags)
-      end)
-    end,
-  })
-end
+-- local function get_tags_from_path_async(path, callback)
+--   local _scan = scan()
+--   if not _scan then
+--     return
+--   end
+--
+--   _scan.scan_dir_async(path, {
+--     hidden = false,
+--     add_dirs = false,
+--     search_pattern = "%.org$",
+--     on_exit = function(files)
+--       vim.schedule(function()
+--         local tags = {}
+--         local seen = {}
+--         for _, file in ipairs(files) do
+--           local lines = vim.fn.readfile(file)
+--           for _, line in ipairs(lines) do
+--             if
+--               not line:match "^%s*SCHEDULED:"
+--               and not line:match "^%s*DEADLINE:"
+--               and not line:match "^%s*CLOSED:"
+--               and not line:match "^%s*:.*:$"
+--               and not line:match "<%d%d%d%d%-%d%d%-%d%d"
+--             then
+--               for _, tag in ipairs(extract_tags(line)) do
+--                 if not seen[tag] then
+--                   seen[tag] = true
+--                   tags[#tags + 1] = tag
+--                 end
+--               end
+--             end
+--           end
+--         end
+--         table.sort(tags)
+--         callback(tags)
+--       end)
+--     end,
+--   })
+-- end
 
 ---@param opts? {last: boolean }
 local function get_tags(opts)
@@ -1264,7 +1263,54 @@ local function insert_tag(opts)
   }
 
   if M.note_mode == "org" then
-    contents_tags.tags = Orgmode.files:get_tags()
+    if not set_global_agenda_files then
+      org.set_agenda_dir(org.path_global_wiki)
+    end
+
+    local tags = lazy "org.tags"
+    local counts, defined = {}, {}
+
+    local function define(defs)
+      for _, d in ipairs(defs or {}) do
+        if type(d) == "table" and d.name and not d.name:match "^[{}]" then
+          defined[d.name] = true
+        end
+      end
+    end
+
+    pcall(function()
+      define(tags.option_definitions())
+    end)
+
+    for _, f in ipairs(lazy("org.files").agenda_files()) do
+      pcall(function()
+        define(f:tag_definitions())
+      end)
+
+      for _, t in ipairs(f.settings.filetags or {}) do
+        counts[t] = (counts[t] or 0) + 1
+      end
+
+      for _, hl in ipairs(f.headlines) do
+        for _, t in ipairs(hl.tags) do
+          counts[t] = (counts[t] or 0) + 1
+        end
+      end
+    end
+
+    local names = {}
+    for k in pairs(counts) do
+      names[#names + 1] = k
+    end
+    for k in pairs(defined) do
+      if not counts[k] then
+        names[#names + 1] = k
+      end
+    end
+
+    table.sort(names)
+    contents_tags.tags = names
+
     if not contents_tags.tags or #contents_tags.tags == 0 then
       return
     end
@@ -1442,7 +1488,7 @@ end
 
 ---@param bufnr integer
 local function set_repeater_todo(bufnr, repeater_dates, headline)
-  local OrgMappings = Orgmode.org_mappings
+  local OrgMappings = Org.org_mappings
 
   vim.api.nvim_buf_call(bufnr, function()
     local range = headline:get_range()
@@ -1456,7 +1502,7 @@ local function set_repeater_todo(bufnr, repeater_dates, headline)
     -- Step 2: setelah buffer berubah, reload file dan cari headline yang sama by line
     vim.cmd "silent! write"
 
-    local file = Orgmode.files:get(vim.api.nvim_buf_get_name(bufnr))
+    local file = Org.files:get(vim.api.nvim_buf_get_name(bufnr))
     if not file then
       return
     end
@@ -1493,7 +1539,7 @@ end
 
 ---@param tags string[]
 local function remove_todo_by_tag(tags)
-  local files = Orgmode.files
+  local files = Org.files
 
   local EventManager = lazy "orgmode.events"
   local events = EventManager.event

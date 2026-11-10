@@ -1,0 +1,459 @@
+#!/bin/bash
+# hd-toggle-pane — port dari tm-toggle-pane (tmux) ke herdr
+#
+# Dependensi: herdr (>= 0.8), jq
+# Pemakaian : hd-toggle-pane <nama_fungsi> [args]
+#             contoh: hd-toggle-pane handle_split_term
+
+LAYOUT_SIDE="nvim" # right | left | nvim
+FM_RATIO="0.18"    # lebar file manager (fraksi untuk pane BARU, left/right)
+TERM_RATIO="0.25"  # tinggi terminal bawah (fraksi untuk pane BARU)
+TERM_ZOOM=0        # 1 = terminal bawah di-zoom saat difokus (resize di bawah dilewati)
+
+# Resize saat toggle (pengganti FIXED_HEIGHT_BELOW_PANE / FIXED_HEIGHT_MAIN_PANE di tmux)
+RESIZE_ENABLED=1
+TERM_ACTIVE_AMOUNT="0.25" # saat masuk terminal: terminal tumbuh sebesar ini dari ukuran minimum
+MAIN_MAX_AMOUNT="0.95"    # saat kembali ke main: main dibesarkan sebesar mungkin (seperti "-y +100")
+
+HERDR="${HERDR_BIN_PATH:-herdr}"
+FILE_MANAGER="${TERM_FILEMANAGER:-yazi}"
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/herdr-main-layout.json"
+
+ORIGIN_PANE=""
+ORIGIN_TAB=""
+ORIGIN_LAYOUT_JSON=""
+MAIN_PANE_ID=""
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ UTILS                                                    ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_h() { "$HERDR" "$@"; }
+
+# Ambil nilai pertama dari key tertentu di mana pun posisinya dalam JSON
+# (tahan terhadap perbedaan struktur .result.xxx antar versi).
+_jget() {
+  jq -r --arg k "$2" '[.. | objects | select(has($k)) | .[$k]] | first // empty' <<<"$1" 2>/dev/null
+}
+
+# __send_notify versi herdr: toast bawaan, tanpa dunstify
+_notify() {
+  local title="$1" msg="${2:-}" warn="${3:-}"
+  if [[ -n "$warn" ]]; then
+    _h notification show "$title" --body "$msg" --sound request >/dev/null 2>&1
+  else
+    _h notification show "$title" --body "$msg" >/dev/null 2>&1
+  fi
+  return 0
+}
+_notify_ws() { _notify "🔄 Herdr WORKSPCHelper" "$1" "${2:-}"; }
+_notify_warn() { _notify_ws "$1" warn; }
+
+_pane_exists() {
+  [[ -n "$1" ]] && _h pane get "$1" >/dev/null 2>&1
+}
+
+# Apakah foreground process pane mengandung nama tertentu (yazi/nvim/watch/tclock)
+_pane_runs() {
+  _h pane process-info --pane "$1" 2>/dev/null |
+    jq -r '[.. | strings] | join(" ")' 2>/dev/null |
+    grep -qiw -- "$2"
+}
+
+# Fokus berdasarkan arah, relatif terhadap pane referensi
+# (herdr tidak punya "focus pane by id", hanya by direction)
+_focus_dir() {
+  local dir="$1" ref="${2:-$ORIGIN_PANE}"
+  _h pane focus --direction "$dir" --pane "$ref" >/dev/null 2>&1
+}
+
+# split → cetak pane_id baru. $4 = --focus | --no-focus
+_split() {
+  local pane="$1" dir="$2" ratio="$3" focus="${4:---no-focus}"
+  _h pane split "$pane" --direction "$dir" --ratio "$ratio" "$focus" 2>/dev/null |
+    jq -r '.result.pane.pane_id // empty'
+}
+
+# Resize dengan fallback: bila amount terlalu besar ditolak, coba lebih kecil.
+# Meniru trik "resize-pane -y <angka besar>" di tmux (tumbuh sampai batas maksimum).
+_resize_clamped() {
+  local pane="$1" dir="$2" amount="$3" a
+  for a in "$amount" $(awk -v a="$amount" 'BEGIN{for(i=0.75;i>=0.1;i-=0.15) printf "%.2f ", a*i}'); do
+    _h pane resize --direction "$dir" --amount "$a" --pane "$pane" >/dev/null 2>&1 && return 0
+  done
+  return 1
+}
+
+# Masuk terminal bawah: kecilkan dulu sampai minimum, lalu tumbuhkan sebesar jumlah tetap
+# → tinggi terminal selalu sama tiap toggle (setara -y FIXED_HEIGHT_BELOW_PANE).
+# Catatan: main (atas) hanya punya tepi bawah, terminal (bawah) hanya punya tepi atas,
+# jadi arah "down"/"up" tidak ambigu.
+_resize_for_term() {
+  [[ "$RESIZE_ENABLED" == 1 && "$TERM_ZOOM" != 1 ]] || return 0
+  _resize_clamped "$MAIN_PANE_ID" down "$MAIN_MAX_AMOUNT"
+  _h pane resize --direction up --amount "$TERM_ACTIVE_AMOUNT" --pane "$1" >/dev/null 2>&1
+}
+
+# Kembali ke main: main dibesarkan maksimum, terminal mengecil (setara -y FIXED_HEIGHT_MAIN_PANE)
+_resize_for_main() {
+  [[ "$RESIZE_ENABLED" == 1 && "$TERM_ZOOM" != 1 ]] || return 0
+  _resize_clamped "$MAIN_PANE_ID" down "$MAIN_MAX_AMOUNT"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ ORIGIN (pane yang sedang fokus saat keybinding ditekan)  ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_init_origin() {
+  ORIGIN_LAYOUT_JSON=$(_h pane layout 2>/dev/null)
+  ORIGIN_PANE=$(_jget "$ORIGIN_LAYOUT_JSON" focused_pane_id)
+  ORIGIN_TAB=$(_jget "$ORIGIN_LAYOUT_JSON" tab_id)
+
+  [[ -z "$ORIGIN_PANE" ]] && ORIGIN_PANE="${HERDR_PANE_ID:-}"
+  [[ -z "$ORIGIN_TAB" ]] && ORIGIN_TAB="${HERDR_TAB_ID:-default}"
+
+  if [[ -z "$ORIGIN_PANE" ]]; then
+    _notify_warn "Tidak bisa menentukan pane aktif (herdr server jalan?)"
+    exit 1
+  fi
+}
+
+_pane_count() {
+  local n
+  n=$(jq '[.. | objects | select(.type=="pane")] | length' <<<"$ORIGIN_LAYOUT_JSON" 2>/dev/null)
+  if [[ -z "$n" || "$n" == 0 ]]; then
+    n=$(_h pane list 2>/dev/null |
+      jq --arg t "$ORIGIN_TAB" '[.. | objects | select(has("pane_id") and .tab_id==$t)] | length' 2>/dev/null)
+  fi
+  echo "${n:-0}"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ STATE (JSON per tab)                                     ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_state_get() {
+  [[ -s "$STATE_FILE" ]] || return 0
+  jq -r --arg t "$ORIGIN_TAB" --arg f "$1" '.[$t][$f] // empty' "$STATE_FILE"
+}
+
+_state_set() {
+  local tmp
+  tmp=$(mktemp) || return 1
+  [[ -s "$STATE_FILE" ]] || echo '{}' >"$STATE_FILE"
+  jq --arg t "$ORIGIN_TAB" --arg f "$1" --arg v "$2" '.[$t][$f] = $v' \
+    "$STATE_FILE" >"$tmp" && mv "$tmp" "$STATE_FILE"
+}
+
+_state_reset_tab() {
+  local tmp
+  [[ -s "$STATE_FILE" ]] || return 0
+  tmp=$(mktemp) || return 1
+  jq --arg t "$ORIGIN_TAB" 'del(.[$t])' "$STATE_FILE" >"$tmp" && mv "$tmp" "$STATE_FILE"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ BASE LAYOUT                                              ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+setup_layout_workspace() {
+  local id inv
+  _state_reset_tab
+  _state_set main_pane_id "$ORIGIN_PANE"
+
+  case "$LAYOUT_SIDE" in
+  nvim)
+    id=$(_split "$ORIGIN_PANE" down "$TERM_RATIO")
+    [[ -n "$id" ]] && _state_set toggle_term_pane_id "$id"
+    ;;
+  right)
+    id=$(_split "$ORIGIN_PANE" right "$FM_RATIO")
+    [[ -n "$id" ]] && _state_set file_manager_pane_id "$id"
+    ;;
+  left)
+    # herdr hanya punya split right|down: split ke kanan lalu swap posisi.
+    # Pane baru dapat (1 - FM_RATIO) dulu supaya slot kiri (sempit) yang diisi file manager.
+    inv=$(awk -v r="$FM_RATIO" 'BEGIN{printf "%.2f", 1-r}')
+    id=$(_split "$ORIGIN_PANE" right "$inv")
+    if [[ -n "$id" ]]; then
+      _h pane swap --source-pane "$ORIGIN_PANE" --target-pane "$id" >/dev/null 2>&1
+      _state_set file_manager_pane_id "$id"
+    fi
+    ;;
+  esac
+}
+
+_ensure_layout() {
+  if [[ "$(_pane_count)" -le 1 ]]; then
+    setup_layout_workspace
+  fi
+
+  MAIN_PANE_ID=$(_state_get main_pane_id)
+  if ! _pane_exists "$MAIN_PANE_ID"; then
+    _notify_ws "Main pane diperbarui"
+    MAIN_PANE_ID="$ORIGIN_PANE"
+    _state_set main_pane_id "$MAIN_PANE_ID"
+  fi
+}
+
+# Arah dari main → file manager, dan sebaliknya
+_dir_main_to_fm() { [[ "$LAYOUT_SIDE" == "left" ]] && echo left || echo right; }
+_dir_fm_to_main() { [[ "$LAYOUT_SIDE" == "left" ]] && echo right || echo left; }
+
+# Pastikan pane file manager ada; cetak id-nya
+_ensure_fm_pane() {
+  local fm
+  if [[ "$LAYOUT_SIDE" == "nvim" ]]; then
+    return 1
+  fi
+  fm=$(_state_get file_manager_pane_id)
+  if ! _pane_exists "$fm" || [[ "$fm" == "$MAIN_PANE_ID" ]]; then
+    fm=$(_split "$MAIN_PANE_ID" right "$FM_RATIO")
+    [[ -z "$fm" ]] && return 1
+    _state_set file_manager_pane_id "$fm"
+  fi
+  echo "$fm"
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ FILE MANAGER                                             ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_close_running_process() {
+  local pane="$1" proc="$2" _
+  case "$proc" in
+  nvim)
+    _h pane send-keys "$pane" esc >/dev/null
+    _h pane send-text "$pane" ":q!" >/dev/null
+    _h pane send-keys "$pane" enter >/dev/null
+    ;;
+  yazi) _h pane send-keys "$pane" q >/dev/null ;;
+  watch) _h pane send-keys "$pane" ctrl+c >/dev/null ;;
+  tclock) _h pane send-keys "$pane" q >/dev/null ;;
+  esac
+
+  for _ in {1..20}; do
+    _pane_runs "$pane" "$proc" || break
+    sleep 0.1
+  done
+
+  _h pane run "$pane" "clear" >/dev/null
+}
+
+# Proses "milik panel samping" yang boleh ditutup otomatis
+_find_running_aux() {
+  local p
+  for p in yazi nvim watch tclock; do
+    if _pane_runs "$1" "$p"; then
+      echo "$p"
+      return 0
+    fi
+  done
+  return 1
+}
+
+handle_open_filetree() {
+  _ensure_layout
+  local fm running
+  if ! fm=$(_ensure_fm_pane); then
+    _notify_warn "Layout '$LAYOUT_SIDE' tidak punya pane file manager"
+    return 1
+  fi
+
+  if running=$(_find_running_aux "$fm"); then
+    _close_running_process "$fm" "$running"
+    _focus_dir "$(_dir_fm_to_main)" "$fm"
+    return
+  fi
+
+  _focus_dir "$(_dir_main_to_fm)" "$MAIN_PANE_ID"
+  _h pane run "$fm" "clear" >/dev/null
+  _h pane run "$fm" "$FILE_MANAGER" >/dev/null
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ SPLIT TERMINAL (toggle terminal di bawah main)           ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+handle_split_term() {
+  _ensure_layout
+
+  local term
+  term=$(_state_get toggle_term_pane_id)
+
+  if ! _pane_exists "$term" || [[ "$term" == "$MAIN_PANE_ID" ]]; then
+    term=$(_split "$MAIN_PANE_ID" down "$TERM_RATIO")
+    if [[ -z "$term" ]]; then
+      _notify_warn "Gagal membuat terminal pane"
+      return 1
+    fi
+    _state_set toggle_term_pane_id "$term"
+  fi
+
+  if [[ "$ORIGIN_PANE" == "$term" ]]; then
+    # sedang di terminal bawah → kembali ke main (atas)
+    [[ "$TERM_ZOOM" == 1 ]] && _h pane zoom "$term" --off >/dev/null 2>&1
+    _focus_dir up "$term"
+    _resize_for_main
+  else
+    # sedang di main / pane lain → ke terminal bawah
+    _focus_dir down "$MAIN_PANE_ID"
+    _resize_for_term "$term"
+    [[ "$TERM_ZOOM" == 1 ]] && _h pane zoom "$term" --on >/dev/null 2>&1
+  fi
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ SHOW NOTES                                               ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+handle_show_notes() {
+  _ensure_layout
+  local fm running
+  if ! fm=$(_ensure_fm_pane); then
+    _notify_warn "Layout '$LAYOUT_SIDE' tidak punya panel samping untuk notes"
+    return 1
+  fi
+
+  if running=$(_find_running_aux "$fm"); then
+    _close_running_process "$fm" "$running"
+  fi
+
+  _h pane run "$fm" "watch -t -n 1 $HOME/.config/miscxrdb/bin/_task_doit_now run" >/dev/null
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ CLOCK AND POMODORO                                       ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_clock_color() {
+  local snap="$HOME/.config/tmuxconfig/themes/tmux-snapshot" c=""
+  [[ -f "$snap" ]] && c=$(grep -i SESSION_FG "$snap" | head -1 | cut -d= -f2 | tr -d '"')
+  [[ -z "$c" ]] && c=$(xrdb -query 2>/dev/null | awk '/color16:/{print $NF}')
+  echo "${c:-#ffffff}"
+}
+
+open_clock_mode() {
+  local mode="$1" time="$2" clock fm _ color
+  _ensure_layout
+
+  if ! fm=$(_ensure_fm_pane); then
+    _notify_warn "Layout '$LAYOUT_SIDE' tidak punya pane untuk clock"
+    return 1
+  fi
+
+  clock=$(_state_get clock_pane_id)
+  if ! _pane_exists "$clock"; then
+    clock=$(_split "$fm" down "0.25")
+    [[ -z "$clock" ]] && return 1
+    _state_set clock_pane_id "$clock"
+  fi
+
+  for _ in {1..10}; do
+    _pane_runs "$clock" tclock || break
+    _h pane send-keys "$clock" q >/dev/null
+    sleep 0.1
+  done
+
+  if ! command -v tclock &>/dev/null; then
+    _notify_warn "tclock tidak ditemukan"
+    return 1
+  fi
+
+  color=$(_clock_color)
+  if [[ "$mode" == "clock" ]]; then
+    _h pane run "$clock" "tclock -c '$color' clock -S" >/dev/null
+  else
+    _h pane run "$clock" "tclock -c '$color' timer -d $time -M" >/dev/null
+  fi
+}
+
+clock_mode() { open_clock_mode "clock" ""; }
+pomodoro_1hour() { open_clock_mode "pomodoro" "1h"; }
+pomdoro_30minute() { open_clock_mode "pomodoro" "30m"; }
+pomdoro_25minute() { open_clock_mode "pomodoro" "25m"; }
+pomdoro_5minute() { open_clock_mode "pomodoro" "5m"; }
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ OPEN IN NVIM / BROWSER (input via stdin)                 ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+_open_in_nvim() {
+  local path="$1" line="$2" term
+  _ensure_layout
+
+  if [[ -z "$path" ]]; then
+    _notify "󰢱 Open In Nvim" "failed: empty file path" warn
+    return 1
+  fi
+  if [[ ! -f "$path" ]]; then
+    _notify "󰢱 Open In Nvim" "file not found → $path" warn
+    return 1
+  fi
+
+  # Pindah fokus ke main bila sedang di terminal bawah / file manager
+  term=$(_state_get toggle_term_pane_id)
+  if [[ "$ORIGIN_PANE" == "$term" ]]; then
+    _focus_dir up "$term"
+  elif [[ "$ORIGIN_PANE" != "$MAIN_PANE_ID" && "$LAYOUT_SIDE" != "nvim" ]]; then
+    _focus_dir "$(_dir_fm_to_main)" "$ORIGIN_PANE"
+  fi
+
+  _h pane send-keys "$MAIN_PANE_ID" esc >/dev/null
+  _h pane send-text "$MAIN_PANE_ID" ":vsplit ${path// /\\ }" >/dev/null
+  _h pane send-keys "$MAIN_PANE_ID" enter >/dev/null
+
+  if [[ -n "$line" ]]; then
+    _h pane send-text "$MAIN_PANE_ID" ":$line" >/dev/null
+    _h pane send-keys "$MAIN_PANE_ID" enter >/dev/null
+    _notify "󰢱 Open In Nvim" "$(basename "$path"):$line"
+  else
+    _notify "󰢱 Open In Nvim" "$(basename "$path")"
+  fi
+}
+
+jump_to_main_pane() {
+  local file_path
+  file_path=$(cat)
+
+  case "$file_path" in
+  file://*)
+    local file_name="${file_path/file:\/\//}"
+    file_name="$(echo "$file_name" | cut -d":" -f1)"
+    _open_in_nvim "$file_name"
+    ;;
+  *:[0-9]*)
+    local file_name line_number
+    file_name=$(echo "$file_path" | cut -d':' -f1)
+    line_number=$(echo "$file_path" | cut -d':' -f2)
+    _open_in_nvim "$file_name" "$line_number"
+    ;;
+  *\",[[:space:]]line*)
+    local file_name line_number
+    file_name=$(echo "$file_path" | cut -d'"' -f1)
+    line_number=$(echo "$file_path" | rev | cut -d' ' -f1 | rev)
+    _open_in_nvim "$file_name" "$line_number"
+    ;;
+  https://*)
+    if command -v xdg-open &>/dev/null; then xdg-open "$file_path" >/dev/null 2>&1 & else open "$file_path"; fi
+    _notify "Open In Browser" "Open $file_path"
+    ;;
+  *)
+    _notify "Tm_Toggle_Pane" "No selection. No pattern. Abort it" warn
+    ;;
+  esac
+}
+
+# ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+# ╎ DISPATCH                                                 ╎
+# └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+
+if [[ $# -lt 1 ]] || ! declare -F "$1" >/dev/null || [[ "$1" == _* ]]; then
+  echo "usage: ${0##*/} <function> [args]" >&2
+  echo "  handle_split_term | handle_open_filetree | handle_show_notes | clock_mode" >&2
+  echo "  pomodoro_1hour | pomdoro_30minute | pomdoro_25minute | pomdoro_5minute | jump_to_main_pane" >&2
+  exit 2
+fi
+
+_init_origin
+"$@"

@@ -386,6 +386,7 @@ add {
 
       Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
       Snacks.toggle.zen():map "<Leader>uz"
+      Snacks.toggle.zoom():map "<Leader>mm"
 
       UtilKey.nnoremap("<Leader>ii", function()
         Snacks.picker.icons()

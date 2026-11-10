@@ -529,3 +529,9 @@ UtilKey.nnoremap("<C-c>xD", ":QfDedupe ", {
   desc = "QF: check dedupe by filter f=file/line/file,line",
   force = true,
 })
+
+UtilKey.nnoremap("<C-c>xs", ":QfSort ", {
+  buffer = api.nvim_get_current_buf(),
+  desc = "QF: short by filter f=file|line|col|text|type[:desc][,field2...]",
+  force = true,
+})

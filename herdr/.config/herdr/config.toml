@@ -164,11 +164,17 @@ width = "80%"
 height = "80%"
 
 # install: herdr plugin install meerzulee/herdr-float --yes
+# [[keys.command]]
+# key = "alt+shift+t"
+# type = "plugin_action"
+# command = "herdr-float.toggle"
+# description = "Toggle floating scratch shell"
+
 [[keys.command]]
-key = "alt+shift+t"
-type = "plugin_action"
-command = "herdr-float.toggle"
-description = "Toggle floating scratch shell"
+key = "alt+f"
+type = "shell"
+command = "hd-toggle-pane handle_split_term"
+description = "Toggle Split term"
 
 # ╒══════════════════════════════════════════════════════════════════════════════╕
 #                                      THEMES
