@@ -1,7 +1,9 @@
 local M = {}
 
-local Log = require "utils.log"
-local UtilAugroup = require("utils.map").augroup
+local lazy = require("utils.plugin").require_lazy
+
+local Log = lazy "utils.log"
+local UtilAugroup = lazy("utils.map").augroup
 
 local Win = {}
 Win.layout = {}
@@ -24,7 +26,7 @@ vim.o.equalalways = false -- this motherfucker is driving me insane!! hadeeeh
 -- +-----------------------------------------------------------------------------+
 
 local function _get_width_size()
-  local UtilCmd = require "utils.cmd"
+  local UtilCmd = lazy "utils.cmd"
   local col = vim.o.columns
   if UtilCmd and UtilCmd.get_option then
     col = UtilCmd.get_option "columns"
@@ -380,7 +382,7 @@ end
 
 ---@param master_saved_layout table
 function Win.ensure_main_sidebar_is_left(master_saved_layout)
-  local layouts_win = require("utils.window").windows_is_opened(Win.slot_win.fts, true, true)
+  local layouts_win = lazy("utils.window").windows_is_opened(Win.slot_win.fts, true, true)
   Win.update_layout(layouts_win.winid)
 
   if not layouts_win.found then
@@ -534,8 +536,8 @@ function Win.reopen_win(is_autocmd)
   --     break
   --   end
   --   local name_cmd = "open_" .. name_win
-  --   if require("utils.terminal")[name_cmd] and not vim.api.nvim_win_is_valid(win) then
-  --     require("utils.terminal")[name_cmd]()
+  --   if lazy("utils.terminal")[name_cmd] and not vim.api.nvim_win_is_valid(win) then
+  --     lazy("utils.terminal")[name_cmd]()
   --     if is_autocmd then
   --       respawn = 1
   --     end

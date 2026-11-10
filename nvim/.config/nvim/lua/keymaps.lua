@@ -173,9 +173,9 @@ UtilKey.nnoremap("<Leader>oU", function()
   if not package.loaded["undotree"] then
     vim.cmd "packadd nvim.undotree "
   end
-  lazy("utils.layout").toggle_sidebar("nvim-undotree", function()
-    lazy("undotree").open()
-  end, true)
+  -- lazy("utils.layout").toggle_sidebar("nvim-undotree", function()
+  lazy("undotree").open()
+  -- end, true)
 end, { desc = "Open: undotree" })
 
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓

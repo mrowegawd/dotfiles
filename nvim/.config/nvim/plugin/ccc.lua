@@ -25,6 +25,11 @@ UtilKey.nnoremap("<Leader>oP", function()
   vim.cmd.CccPick()
 end, { desc = "Open: pick color [ccc.nvim]" })
 
+UtilKey.nnoremap("<Leader>uC", function()
+  load_ccc()
+  vim.cmd.CccHighlighterToggle()
+end, { desc = "Toggle: color highlight [ccc.nvim]" })
+
 local ccc_cmds = { "CccHighlighterToggle", "CccHighlighterEnable", "CccHighlighterDisable" }
 for _, ccc_cmd in pairs(ccc_cmds) do
   vim.api.nvim_create_user_command(ccc_cmd, function()

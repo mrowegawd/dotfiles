@@ -92,7 +92,13 @@ add {
 
           { "<Leader>c", group = "code/action" },
           { "<Leader>cp", group = "peek/overlook" },
+
           { "<Leader>cb", group = "comment-box" },
+          { "<Leader>cbs", group = "box sub title" },
+          { "<Leader>cbt", group = "box title" },
+          { "<Leader>cbT", group = "box big comment" },
+          { "<Leader>cbL", group = "line with text" },
+          { "<Leader>cbl", group = "line only" },
 
           { "<Leader>g", group = "git" },
           { "<Leader>go", group = "open" },

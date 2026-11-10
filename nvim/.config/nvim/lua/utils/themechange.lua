@@ -123,7 +123,7 @@ function M.build_colors()
   local critical_fg = tint(removed, 0.4)
 
   if theme_is { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" } then
-    normal_bg = tint(bg, 0.05)
+    normal_bg = tint(bg, 0.1)
     normal_frame = tint(bg, 0.15)
     critical_fg = tint(removed, 1)
   end

@@ -17,10 +17,10 @@ local function setup_plugin()
     -- Adapters
     adapters = {
       http = {
-        opts = {
-          show_presets = false,
-          show_model_choices = true,
-        },
+        -- opts = {
+        --   show_presets = false,
+        --   show_model_choices = true,
+        -- },
 
         ollama_qwen25_14b = adapters.ollama_qwen25_14b(),
         ollama_qwen25_7b = adapters.ollama_qwen25_7b(),

@@ -44,6 +44,7 @@ local update_col_colorscheme = {
     linenrnote_transparency_fg = 0.3,
     commentnote_fg_alter = 0.15,
     normalnote_bg_alter = 0.35,
+    normalnote_transparency_fg = 0.7,
 
     floatborderaiprompt_fg_alter = 2.5,
   },
@@ -59,7 +60,9 @@ local update_col_colorscheme = {
     winbar_fg_alter = 3,
     troubleindent_transparency_fg = 0.4,
     statuslinetheme_fg_alter = 4,
-    folded_fg_alter = 0.55,
+    folded_fg_alter = 0.7,
+    folded_transparency_bg = 0.1,
+    foldsign_fg_alter = 0.1,
 
     normalnote_bg_alter = 1,
     normalnote_transparency_fg = 0.75,
@@ -178,7 +181,7 @@ local update_col_colorscheme = {
     folded_transparency_bg = 0.05,
 
     linenrnote_fg_alter = 1.2,
-    linenrnote_transparency_fg = 0.4,
+    linenrnote_transparency_fg = 0.3,
     normalnote_transparency_fg = 0.9,
     winseparatornote_transparency_fg = 0.08,
     normalnote_fg_alter = 14,
@@ -251,7 +254,7 @@ local update_col_colorscheme = {
 
     linenrnote_fg_alter = 1.4,
     linenrnote_transparency_fg = 0.4,
-    normalnote_fg_alter = 12,
+    normalnote_transparency_fg = 0.68,
     normalnote_bg_alter = 0.6,
     winseparatornote_transparency_fg = 0.06,
   },
@@ -280,7 +283,7 @@ local update_col_colorscheme = {
     folded_fg_alter = -0.4,
     folded_fg_combine_intesity = 0.2,
 
-    normalnote_fg_alter = 11,
+    normalnote_transparency_fg = 0.67,
     normalnote_bg_alter = 2.5,
     linenrnote_fg_alter = 1.5,
     linenrnote_transparency_fg = 0.35,
@@ -291,7 +294,8 @@ local update_col_colorscheme = {
   },
   ["luna"] = {
     Directory = { fg = "#75a1c7", bg = "NONE" },
-    linenr_transparency_fg = 0.38,
+    linenr_transparency_fg = 0.36,
+    cursorline_bg_alter = 0.5,
     normalfloat_bg_alter = 0.75,
     comment_transparency_fg = 0.3,
     codeblock_bg_alter = 0.45,
@@ -311,11 +315,12 @@ local update_col_colorscheme = {
     folded_transparency_bg = 0.04,
     folded_fg_combine_intesity = 0.18,
 
-    normalnote_bg_alter = 1.7,
-    normalnote_fg_alter = 5,
+    normalnote_bg_alter = 1.5,
+    normalnote_transparency_fg = 0.65,
     orgdirective_fg_alter = 0.3,
     visualnote_bg_alter = 1.5,
-    linenrnote_fg_alter = 2.4,
+    linenrnote_fg_alter = 2.5,
+    linenrnote_transparency_fg = 0.25,
     commentnote_fg_alter = 0.4,
     winseparatornote_transparency_fg = 0.08,
 
@@ -368,10 +373,10 @@ local update_col_colorscheme = {
 
     normalnote_bg_alter = 0.8,
     normalnote_fg_alter = 10,
+    normalnote_transparency_fg = 0.7,
     linenrnote_transparency_fg = 0.5,
     linenrnote_fg_alter = 1,
     commentnote_fg_alter = 1.5,
-    winseparatornote_transparency_fg = 0.08,
 
     floatborderaiprompt_fg_alter = 6,
   },
@@ -391,9 +396,10 @@ local update_col_colorscheme = {
     folded_transparency_bg = 0.06,
     foldsign_fg_alter = -0.1,
     folded_fg_combine_intesity = 0.1,
+    normalfloat_bg_alter = 0.2,
 
     normalnote_fg_alter = 10,
-    normalfloat_bg_alter = 0.2,
+    normalnote_bg_alter = 0.45,
     nontextnote_fg_alter = 1.5,
     commentnote_fg_alter = 0.6,
     linenrnote_transparency_fg = 0.3,
@@ -495,11 +501,12 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     panelsidenormal_bg_alter = -0.5,
     cursorlinebright_bg_alter = 0.9,
     folded_fg_alter = 1.2,
-    codeblock_bg_alter = 0.45,
+    codeblock_bg_alter = 0.5,
     floatborder_transparency_fg = 0.5,
     zshlines_bg_alter = 5.5,
 
     normalnote_fg_alter = 15,
+    normalnote_transparency_fg = 0.7,
     normalnote_bg_alter = 0.5,
     linenrnote_transparency_fg = 0.55,
   }
@@ -583,6 +590,7 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
 
     linenrnote_fg_alter = 1.2,
     linenrnote_transparency_fg = 0.3,
+    normalnote_transparency_fg = 0.7,
     commentnote_fg_alter = 0.8,
   }
   update_col_colorscheme["kanagawa"] = {
@@ -626,6 +634,7 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     linenr_transparency_fg = 0.45,
     folded_fg_alter = -0.2,
     folded_transparency_bg = 0.08,
+    codeblock_bg_alter = 0.4,
     comment_transparency_fg = 0.3,
     cursorlinebright_bg_alter = 1.8,
     statuslinetheme_fg_alter = 9,
@@ -641,7 +650,8 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     zshlines_bg_alter = 15,
 
     orgdirective_fg_alter = 0.6,
-    normalnote_bg_alter = 3.5,
+    normalnote_bg_alter = 3,
+    normalnote_transparency_fg = 0.7,
     commentnote_fg_alter = 0.1,
     visualnote_bg_alter = 1.2,
     linenrnote_transparency_fg = 0.4,
@@ -662,6 +672,7 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
 
     normalnote_bg_alter = 1.5,
     normalnote_fg_alter = 12,
+    normalnote_transparency_fg = 0.7,
     commentnote_fg_alter = 1.2,
     linenrnote_transparency_fg = 0.6,
     winseparatornote_transparency_fg = 0.08,
@@ -740,7 +751,7 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     linenrnote_fg_alter = 0.55,
   }
   update_col_colorscheme["vscode"] = {
-    linenr_transparency_fg = 0.12,
+    linenr_transparency_fg = 0.1,
     statuslinetheme_fg_alter = 3.5,
     panelsidenormal_bg_alter = -0.6,
     winbar_fg_alter = 2.5,
@@ -751,8 +762,9 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
 
     commentnote_fg_alter = 0.85,
     normalnote_bg_alter = 0.4,
+    normalnote_transparency_fg = 0.7,
     linenrnote_fg_alter = 0.95,
-    linenrnote_transparency_fg = 0.45,
+    linenrnote_transparency_fg = 0.32,
     winseparatornote_transparency_fg = 0.15,
   }
   update_col_colorscheme["zenburn"] = {
