@@ -127,10 +127,12 @@ M.misc = {
 
 M.dap = {
   Stopped = "󰁕 ",
-  Breakpoint = " ",
-  BreakpointCondition = " ",
-  BreakpointRejected = " ",
-  LogPoint = ".>",
+  Breakpoint = " ", -- "",
+  BreakpointCondition = " ", -- "",
+  BreakpointRejected = " ", -- "",
+  LogPoint = ".>", -- "",
+
+  Disconnect = "",
   Pause = " ",
   Play = " ",
   Step_into = " ",
@@ -140,26 +142,6 @@ M.dap = {
   Run_last = " ",
   Terminate = " ",
   Debug = " ",
-  Trace = "✎ ",
-}
-
-M.dap = {
-  Stopped = "",
-  Breakpoint = "",
-  BreakpointCondition = "",
-  BreakpointRejected = "",
-  LogPoint = "",
-
-  Disconnect = "",
-  Pause = "",
-  Play = "",
-  Run_last = "",
-  Step_back = "",
-  Step_into = "",
-  Step_out = "",
-  Step_over = "",
-  Terminate = "",
-  Debug = "",
   Trace = "✎ ",
 }
 

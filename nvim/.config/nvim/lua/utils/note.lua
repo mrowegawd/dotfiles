@@ -17,6 +17,8 @@ local Config = lazy "config"
 local ConfigPath = Config.path
 local wiki_path = ConfigPath.wiki_path
 
+local UtilCmd = lazy "utils.cmd"
+
 local Org = lazy "org"
 local Fzflua = lazy "fzf-lua"
 local FzfluaBuiltin = lazy "fzf-lua.previewer.builtin"
@@ -1475,17 +1477,6 @@ end
 -- |                                SPECIFIC: ORG                                |
 -- +-----------------------------------------------------------------------------+
 
----@param filename string
-local function get_or_create_bufnr(filename)
-  local bufnr = vim.fn.bufnr(filename)
-  if bufnr == -1 then
-    -- Buffer not exist, create it without loading
-    bufnr = vim.fn.bufadd(filename)
-  end
-  vim.fn.bufload(bufnr) -- load isi file ke memory
-  return bufnr
-end
-
 ---@param bufnr integer
 local function set_repeater_todo(bufnr, repeater_dates, headline)
   local OrgMappings = Org.org_mappings
@@ -1603,7 +1594,7 @@ local function remove_todo_by_tag(tags)
       end
 
       local filename = file.filename
-      local bufnr = get_or_create_bufnr(filename)
+      local bufnr = UtilCmd.get_or_create_bufnr(filename)
       if bufnr == nil then
         goto continue_headline_loop
       end

@@ -71,8 +71,6 @@ add {
         {
           mode = { "n", "x" },
           { "<Leader>q", group = "quickfix", icon = { icon = "󰁨 ", color = "yellow" } },
-          { "<Leader>d", group = "debug" },
-          { "<Leader>a", group = "ai" },
           { "<Leader>f", group = "picker" },
           { "<Leader>i", group = "insert" },
           { "<Leader>j", group = "jump", icon = { icon = "󰁝 ", color = "cyan" } },
@@ -90,8 +88,17 @@ add {
           { "<Leader>w", group = "windows" },
           { "<leader>b", group = "buffer", icon = { icon = "󰈙 ", color = "green" } },
 
+          { "<Leader>a", group = "ai" },
+          { "<Leader>ax", group = "exec" },
+          { "<Leader>as", group = "set" },
+          { "<Leader>ao", group = "open" },
+
           { "<Leader>c", group = "code/action" },
           { "<Leader>cp", group = "peek/overlook" },
+
+          { "<Leader>d", group = "debug" },
+          { "<Leader>db", group = "breakpoint" },
+          { "<Leader>du", group = "toggle" },
 
           { "<Leader>cb", group = "comment-box" },
           { "<Leader>cbs", group = "box sub title" },

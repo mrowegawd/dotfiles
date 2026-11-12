@@ -121,9 +121,11 @@ add_on_event("LspAttach", {
                 bg = {
                   from = "WinSeparator",
                   attr = "fg",
-                  combine = { from = "Normal", attr = "bg", alter = -0.25 },
+                  combine = { from = "String", attr = "fg", alter = -0.25 },
                   combine_mode = "multiply",
-                  combine_intensity = 0.1,
+                  combine_intensity = 0.5,
+                  transparency = 0.85,
+                  color = { from = "Normal", attr = "bg" },
                 },
               },
             },

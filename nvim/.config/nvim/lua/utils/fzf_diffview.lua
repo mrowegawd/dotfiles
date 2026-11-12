@@ -29,6 +29,7 @@ local status_cmd_git = {
     return "Gedit " .. commit_hash
   end,
   ["compare commit diff to head"] = function(commit_hash)
+    lazy("vim-pack").load_now "diffview.nvim"
     Log.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
     return "DiffviewOpen " .. commit_hash .. "~..HEAD"
   end,

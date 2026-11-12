@@ -258,7 +258,7 @@ UtilAugroup("WrapFiletype", {
 })
 
 UtilAugroup("DisableJsonConceal", {
-  event = { "FileType" },
+  event = "FileType",
   pattern = { "json", "jsonc" },
   command = function()
     vim.opt_local.conceallevel = 0
@@ -266,14 +266,14 @@ UtilAugroup("DisableJsonConceal", {
 })
 
 UtilAugroup("TextYankHighlight", {
-  event = { "TextYankPost" },
+  event = "TextYankPost",
   command = function()
     vim.hl.hl_op { higroup = "Visual", timeout = 200 }
   end,
 })
 
 UtilAugroup("LocateLastPosition", { -- Go to last loc when opening a buffer
-  event = { "BufReadPost" },
+  event = "BufReadPost",
   command = function(event)
     local exclude = { "gitcommit", "Glance", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage", "qf" }
     local buf = event.buf
@@ -384,8 +384,18 @@ UtilAugroup("TrackLastBuffer", {
 -- ├───────────────────────────────┤ COPY PASTE ├───────────────────────────────┤
 
 UtilAugroup("SetNopaste", {
-  event = { "InsertLeave" },
+  event = "InsertLeave",
   pattern = "*",
   command = "set nopaste",
 })
 
+UtilAugroup("KilljobOrchannelAfterQuit", {
+  event = "VimLeavePre",
+  command = function()
+    for _, chan in ipairs(vim.api.nvim_list_chans()) do
+      if chan.id and chan.stream == "job" then
+        pcall(vim.fn.jobstop, chan.id)
+      end
+    end
+  end,
+})

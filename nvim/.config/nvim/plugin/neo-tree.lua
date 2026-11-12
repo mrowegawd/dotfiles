@@ -34,6 +34,18 @@ add {
             { NeoTreeStatusLine = { inherit = "PanelSideStusLine" } },
             { NeoTreeWinSeparator = { inherit = "PanelSideWinSeparator" } },
             { NeoTreeExpander = { inherit = "TroubleIndentFoldClosed" } },
+
+            {
+              NeoTreeSelected = {
+                fg = {
+                  from = "Question",
+                  attr = "fg",
+                  combine = { from = "String", attr = "fg", alter = 0.2 },
+                  combine_mode = "screen",
+                  combine_intensity = 0.5,
+                },
+              },
+            },
             {
               NeoTreeTabActive = {
                 fg = { from = "Keyword", attr = "fg" },

@@ -39,7 +39,7 @@ local update_col_colorscheme = {
     pmenu_fg = 0.4,
     pmenusel_transparency_bg = 0.08,
     pmenu_transparency_bg = 0.25,
-    troubleindent_transparency_fg = 0.13,
+    troubleindent_transparency_fg = 0.4,
 
     linenrnote_transparency_fg = 0.3,
     commentnote_fg_alter = 0.15,
@@ -423,7 +423,7 @@ local update_col_colorscheme = {
     pmenusel_transparency_bg = 0.2,
     winbar_fg_alter = 0.55,
     winbar_fg_combine_from = "String",
-    fzfluaheadertext = 0.25,
+    fzfluaheadertext_transparency_bg = 0.25,
     floattitle_bg_from = "Number",
     folded_fg_alter = 0.5,
     foldsign_fg_alter = -0.1,
@@ -461,7 +461,6 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     winseparatornote_transparency_fg = 0.15,
   }
   update_col_colorscheme["catppuccin"] = {
-    panelsidenormal_bg_alter = -0.5,
     statuslinetheme_transparency_fg = 0.5,
     winbar_fg_combine_from = "Number",
     winseparator_transparency_fg = 0.2,
@@ -471,6 +470,9 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     normalfloat_bg_alter = 0.25,
     zshlines_transparency_bg = 0.4,
     floatborder_transparency_fg = 0.5,
+    troubleindent_transparency_fg = 0.4,
+    panelsidenormal_bg_alter = -0.5,
+    panelbottomlinenr_fg_alter = 1.4,
 
     normalnote_fg_alter = 8,
     normalnote_bg_alter = 0.4,
@@ -478,29 +480,32 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     linenrnote_transparency_fg = 0.32,
   }
   update_col_colorscheme["cendre"] = {
-    folded_fg_alter = 0.85,
     winbar_fg_alter = 2.5,
     cursorlinebright_bg_alter = 0.7,
     panelsidenormal_bg_alter = -0.5,
     statuslinetheme_transparency_fg = 0.7,
     winseparator_transparency_fg = 0.26,
     floatborder_transparency_fg = 0.5,
-    linenr_transparency_fg = 0.15,
+    linenr_transparency_fg = 0.12,
     zshlines_transparency_bg = 0.53,
+    codeblock_bg_alter = 0.4,
+    folded_fg_alter = 1.2,
 
     normalnote_fg_alter = 10,
     commentnote_fg_alter = 0.9,
     linenrnote_fg_alter = 0.9,
-    linenrnote_transparency_fg = 0.55,
+    linenrnote_transparency_fg = 0.4,
   }
   update_col_colorscheme["ef-cherie"] = {
     nonetext_opacity = 0.15,
     linenr_transparency_fg = 0.15,
+    comment_transparency_fg = 0.5,
     troubleindent_transparency_fg = 0.4,
     winseparator_transparency_fg = 0.4,
-    panelsidenormal_bg_alter = -0.5,
+    panelsidenormal_bg_alter = -0.65,
     cursorlinebright_bg_alter = 0.9,
-    folded_fg_alter = 1.2,
+    folded_fg_alter = 1.5,
+    folded_transparency_bg = 0.06,
     codeblock_bg_alter = 0.5,
     floatborder_transparency_fg = 0.5,
     zshlines_bg_alter = 5.5,
@@ -513,8 +518,8 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
   update_col_colorscheme["ef-dream"] = {
     statuslinetheme_transparency_fg = 0.5,
     panelsidenormal_bg_alter = -0.4,
-    troubleindent_transparency_fg = 0.15,
-    linenr_transparency_fg = 0.12,
+    troubleindent_transparency_fg = 0.25,
+    linenr_transparency_fg = 0.1,
     panelbottomlinenr_fg_alter = 1.5,
     normalfloat_bg_alter = 0.2,
     folded_fg_alter = 0.8,
@@ -539,8 +544,9 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     floatborder_transparency_fg = 0.5,
     winseparator_transparency_fg = 0.18,
 
-    linenrnote_transparency_fg = 0.3,
-    normalnote_transparency_fg = 1,
+    linenrnote_transparency_fg = 0.25,
+    normalnote_transparency_fg = 0.8,
+    winseparatornote_transparency_fg = 0.15,
   }
   update_col_colorscheme["gruvbox"] = {
     orgdirective_fg_alter = 0.4,
@@ -555,38 +561,44 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     folded_fg_alter = 0.9,
 
     linenrnote_fg_alter = 1.8,
+    linenrnote_transparency_fg = 0.18,
     commentnote_fg_alter = 0.8,
+    normalnote_transparency_fg = 0.7,
     normalnote_bg_alter = 0.45,
   }
   update_col_colorscheme["imli"] = {
-    linenr_transparency_fg = 0.1,
+    linenr_transparency_fg = 0.11,
     winbar_fg_combine_from = "Function",
     winseparator_transparency_fg = 0.26,
+    commentnote_fg_alter = 0.8,
     floatborder_transparency_fg = 0.55,
+    troubleindent_transparency_fg = 0.4,
     cursorlinebright_bg_alter = 1,
     codeblock_bg_alter = 0.4,
     statuslinetheme_fg_alter = 4.2,
-    panelsidenormal_bg_alter = -0.4,
+    panelsidenormal_bg_alter = -0.7,
     panelbottomlinenr_fg_alter = 1.5,
-    folded_fg_alter = 0.8,
+    folded_fg_alter = 1,
     zshlines_bg_alter = 4.5,
 
-    linenrnote_transparency_fg = 0.5,
+    linenrnote_transparency_fg = 0.3,
     normalnote_fg_alter = 15,
   }
   update_col_colorscheme["jellybeans"] = {
     statuslinetheme_fg_alter = 4.2,
     winbar_fg_alter = 3,
     winbar_fg_combine_from = "Type",
-    winseparator_transparency_fg = 0.22,
+    winseparator_transparency_fg = 0.25,
+    comment_transparency_fg = 0.55,
     floatborder_transparency_fg = 0.5,
-    troubleindent_transparency_fg = 0.3,
+    troubleindent_transparency_fg = 0.4,
+    panelbottomcursorlinenr_alter_fg = 0.4,
     linenr_transparency_fg = 0.12,
     cursorlinebright_bg_alter = 0.7,
-    panelsidenormal_bg_alter = -0.55,
-    panelbottomlinenr_fg_alter = 3.25,
+    panelsidenormal_bg_alter = -0.6,
+    panelbottomlinenr_fg_alter = 1.2,
     zshlines_bg_alter = 4.5,
-    folded_fg_alter = 0.8,
+    folded_fg_alter = 0.9,
 
     linenrnote_fg_alter = 1.2,
     linenrnote_transparency_fg = 0.3,
@@ -596,7 +608,7 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
   update_col_colorscheme["kanagawa"] = {
     nonetext_opacity = 0.3,
     linenr_transparency_fg = 0.15,
-    panelsidenormal_bg_alter = -0.5,
+    panelsidenormal_bg_alter = -0.65,
     panelbottomlinenr_fg_alter = 3,
     floatborder_transparency_fg = 0.6,
     winseparator_transparency_fg = 0.38,
@@ -606,14 +618,18 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     orgdirective_fg_alter = 0.25,
     zshlines_bg_alter = 8,
 
-    normalnote_bg_alter = 1.5,
+    normalnote_bg_alter = 1,
+    normalnote_transparency_fg = 0.6,
     linenrnote_transparency_fg = 0.4,
     commentnote_fg_alter = 0.45,
   }
   update_col_colorscheme["intent"] = {
     troubleindent_transparency_fg = 0.4,
     panelbottomlinenr_fg_alter = 2.8,
+    panelsidenormal_bg_alter = -0.6,
     linenr_fg_alter = 0.08,
+    linenr_transparency_fg = 0.15,
+    normalfloat_transparency_fg = 0.9,
     codeblock_bg_alter = 0.4,
     cursorlinebright_bg_alter = 1.4,
     winseparator_transparency_fg = 0.38,
@@ -624,25 +640,26 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     zshlines_bg_alter = 5.5,
 
     winseparatornote_transparency_fg = 0.1,
-    linenrnote_transparency_fg = 0.4,
-    normalnote_bg_alter = 1.2,
+    linenrnote_transparency_fg = 0.3,
+    normalnote_bg_alter = 0.8,
     normalnote_fg_alter = 12,
+    normalnote_transparency_fg = 0.73,
     commentnote_fg_alter = 0.6,
   }
   update_col_colorscheme["lackluster"] = {
     nonetext_opacity = 0.3,
-    linenr_transparency_fg = 0.45,
+    linenr_transparency_fg = 0.3,
     folded_fg_alter = -0.2,
     folded_transparency_bg = 0.08,
-    codeblock_bg_alter = 0.4,
+    codeblock_bg_alter = 0.5,
     comment_transparency_fg = 0.3,
     cursorlinebright_bg_alter = 1.8,
     statuslinetheme_fg_alter = 9,
     floatborder_transparency_fg = 0.55,
     troubleindent_transparency_fg = 0.6,
-    panelsidenormal_bg_alter = 0.3,
+    panelsidenormal_bg_alter = 1,
     winseparator_transparency_fg = 0.8,
-    panelbottomlinenr_fg_alter = 7,
+    panelbottomlinenr_fg_alter = 2.5,
     winbar_fg_combine_alter = 30,
     winbar_fg_combine_intensity = 0.8,
     winbar_fg_combine_from = "Boolean",
@@ -654,44 +671,50 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     normalnote_transparency_fg = 0.7,
     commentnote_fg_alter = 0.1,
     visualnote_bg_alter = 1.2,
-    linenrnote_transparency_fg = 0.4,
+    linenrnote_transparency_fg = 0.3,
   }
   update_col_colorscheme["luna"] = {
     linenr_transparency_fg = 0.3,
     nonetext_opacity = 0.35,
     winseparator_transparency_fg = 0.55,
     statuslinetheme_fg_alter = 8,
-    panelsidenormal_bg_alter = -0.8,
-    panelbottomlinenr_fg_alter = 5,
+    panelsidenormal_bg_alter = 0.8,
+    panelbottomlinenr_fg_alter = 1.8,
+    codeblock_bg_alter = 0.55,
+    normalfloat_fg_alter = 30,
+    normalfloat_bg_alter = 0.6,
     cursorlinebright_bg_alter = 1.45,
-    comment_transparency_fg = 0.4,
-    troubleindent_transparency_fg = 0.6,
+    comment_transparency_fg = 0.3,
+    troubleindent_transparency_fg = 0.5,
     floatborder_transparency_fg = 0.6,
+    fzfluaheadertext_transparency_bg = 1,
     zshlines_bg_alter = 10,
     cursorline_bg_alter = 0.4,
 
     normalnote_bg_alter = 1.5,
-    normalnote_fg_alter = 12,
-    normalnote_transparency_fg = 0.7,
+    normalnote_transparency_fg = 0.6,
     commentnote_fg_alter = 1.2,
-    linenrnote_transparency_fg = 0.6,
+    linenrnote_transparency_fg = 0.5,
     winseparatornote_transparency_fg = 0.08,
   }
   update_col_colorscheme["techbase"] = {
     nonetext_opacity = 0.38,
     comment_fg_alter = 0.4,
-    linenr_transparency_fg = 0.1,
+    linenr_transparency_fg = 0.09,
     troubleindent_transparency_fg = 0.25,
     folded_fg_alter = 0.8,
     winbar_fg_alter = 1.8,
     winbar_fg_combine_from = "Number",
     statuslinetheme_transparency_fg = 0.5,
     winseparator_transparency_fg = 0.18,
-    panelbottomlinenr_fg_alter = 1.5,
+    panelbottomlinenr_fg_alter = 1,
+    panelbottomcursorlinenr_alter_fg = 0.4,
+    panelsidenormal_bg_alter = -0.65,
     zshlines_transparency_bg = 0.4,
 
     linenrnote_fg_alter = 0.8,
     linenrnote_transparency_fg = 0.35,
+    normalnote_bg_alter = 0.45,
     winseparatornote_transparency_fg = 0.1,
   }
   update_col_colorscheme["neogotham"] = {
@@ -759,6 +782,8 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     winseparator_transparency_fg = 0.22,
     normalfloat_bg_alter = 0.28,
     folded_fg_alter = 0.8,
+    foldsign_transparency_bg = 0.8,
+    troubleindent_transparency_fg = 0.3,
 
     commentnote_fg_alter = 0.85,
     normalnote_bg_alter = 0.4,
@@ -772,8 +797,9 @@ if vim.tbl_contains({ "ghostty-cairo", "ghostty" }, os.getenv "TERMINAL") then
     winbar_fg_combine_from = "String",
     nonetext_opacity = 0.35,
     pmenu_transparency_bg = 0.1,
-    panelbottomlinenr_fg_alter = 1,
+    panelbottomlinenr_fg_alter = 0.6,
     statuslinetheme_transparency_fg = 0.5,
+    codeblock_bg_alter = 0.2,
     linenr_transparency_fg = 0.08,
     pmenusel_transparency_bg = 0.4,
     winseparator_transparency_fg = 0.15,
@@ -810,7 +836,10 @@ local general_overrides = function()
     -- ║                                    BASE                                     ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
+    -- NormalBack digunakan untuk antisipasi color yang berubah pada `get_fill` di tabby.nvim
+    { NormalBack = { inherit = "Normal" } },
     { NormalNC = { inherit = "Normal" } },
+
     { Directory = colors.Directory },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
@@ -889,23 +918,9 @@ local general_overrides = function()
         bold = true,
       },
     },
-    { -- ini dibutuhkan untuk re-link kembali CursorLineNr akibat perubahan warna
-      CursorLineNrBackup = {
-        fg = { from = "Boolean", attr = "fg" },
-        bg = {
-          from = "Boolean",
-          attr = "fg",
-          transparency = 0.2,
-          color = { from = "Normal", attr = "bg" },
-        },
-
-        bold = true,
-      },
-    },
 
     {
       StatusLine = {
-        bg = { from = "Normal", attr = "bg", alter = -0.3 },
         fg = {
           from = "Normal",
           attr = "bg",
@@ -913,19 +928,23 @@ local general_overrides = function()
           transparency = 0.7,
           color = { from = "Statusline", attr = "bg" },
         },
+        bg = { from = "Normal", attr = "bg", alter = -0.3 },
         reverse = false,
       },
     },
     { StatusLineNC = { inherit = "StatusLine" } },
 
-    -- --------------------
+    -- ────────────────────────────────────────────────────────────────────────────────
+    -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+    -- ╏      Ini color untuk statusline yang bekerja untuk component heirline       ╏
+    -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
     {
       StatusLineTheme = {
         bg = {
-          from = "LineNr",
+          from = "WinSeparator",
           attr = "fg",
-          transparency = 0.2,
+          transparency = 0.15,
           color = { from = "Normal", attr = "bg" },
         },
         reverse = false,
@@ -937,14 +956,13 @@ local general_overrides = function()
           from = "StatusLineTheme",
           attr = "bg",
           alter = colors.statuslinetheme_fg_alter or 5,
-          transparency = colors.statuslinetheme_transparency_fg or 0.8,
+          transparency = colors.statuslinetheme_transparency_fg or 0.5,
           color = { from = "StatusLineTheme", attr = "bg" },
         },
       },
     },
     { StatusLineNCTheme = { inherit = "StatusLineTheme" } },
-
-    -- --------------------
+    -- ────────────────────────────────────────────────────────────────────────────────
 
     {
       Pmenu = {
@@ -1089,6 +1107,58 @@ local general_overrides = function()
       },
     },
 
+    {
+      DapStopped = {
+        fg = {
+          from = "DiagnosticOk",
+          attr = "fg",
+        },
+        bg = {
+          from = "DiagnosticOk",
+          attr = "fg",
+          transparency = 0.03,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
+    {
+      DapStoppedLine = {
+        bg = {
+          from = "DiagnosticOk",
+          attr = "fg",
+          transparency = 0.03,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
+
+    {
+      DapBreakpointRejected = {
+        inherit = "DiagnosticSignError",
+      },
+    },
+    {
+      DapBreakpointRejectedLine = {
+        bg = {
+          from = "DapBreakpointRejected",
+          attr = "fg",
+          transparency = 0.05,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
+
+    {
+      DapBreakpointCondition = {
+        fg = {
+          from = "DiagnosticWarn",
+          attr = "fg",
+          -- transparency = 0.8,
+          -- color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
+
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    SPELL                                    ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
@@ -1104,7 +1174,7 @@ local general_overrides = function()
     {
       diffAdded = {
         fg = { from = "diffAdded", attr = "fg", alter = 0.1 },
-        bg = { from = "diffAdded", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
+        bg = { from = "diffAdded", attr = "fg", transparency = 0.06, color = { from = "Normal", attr = "bg" } },
       },
     },
     { diffChanged = { fg = git_diff_change } },
@@ -1118,7 +1188,7 @@ local general_overrides = function()
     {
       diffRemoved = {
         fg = { from = "diffRemoved", attr = "fg", alter = 0.15 },
-        bg = { from = "diffRemoved", attr = "fg", transparency = 0.1, color = { from = "Normal", attr = "bg" } },
+        bg = { from = "diffRemoved", attr = "fg", transparency = 0.01, color = { from = "Normal", attr = "bg" } },
       },
     },
     {
@@ -1783,6 +1853,12 @@ local plugins_overrides = function()
     -- Highlight :Messages noice
     { NoiceSplit = { bg = { from = "NormalKeyword", attr = "bg", alter = -0.6, opacity = 0.7 } } },
 
+    -- ┌─────────────────────────────────────────────────────────────────────────────┐
+    --                                TINY-CMDLINE.NVIM
+    -- └─────────────────────────────────────────────────────────────────────────────┘
+    { TinyCmdlineBorder = { fg = { from = "FloatBorder", attr = "fg" } } },
+    { TinyCmdlineNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+
     -- ╓─────────────────────────────────────────────────────────────────────────────╖
     -- ║                                    BLINK                                    ║
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
@@ -1966,7 +2042,17 @@ local plugins_overrides = function()
           from = "FzfLuaNormal",
           attr = "bg",
           alter = 1,
-          transparency = colors.fzfluaheadertext or 0.6,
+          transparency = colors.fzfluaheadertext_transparency_bg or 0.6,
+          color = { from = "FzfLuaNormal", attr = "bg" },
+        },
+      },
+    },
+    {
+      FzfLuaHeaderBind = {
+        fg = {
+          from = "Type",
+          attr = "fg",
+          transparency = 0.6,
           color = { from = "FzfLuaNormal", attr = "bg" },
         },
       },
@@ -2335,6 +2421,7 @@ local plugins_overrides = function()
       },
     },
     { ["@markup.list.markdown"] = { bg = "NONE" } },
+    { ["@markup.raw"] = { bg = "NONE" } },
 
     {
       ["@markup.quote.markdown"] = {
@@ -2556,6 +2643,7 @@ local plugins_overrides = function()
     -- ╙─────────────────────────────────────────────────────────────────────────────╜
 
     { CodeBlock = { inherit = "RenderMarkdownCode", reverse = false } },
+    { OrgTable = { bg = "NONE" } },
     {
       CodeBlockFiletypeText = {
         bg = {
@@ -2745,7 +2833,17 @@ local plugins_overrides = function()
     { NavicIconsTypeParameter = { inherit = "LspKindTypeParameter" } },
     { NavicIconsValue = { inherit = "LspKindValue" } },
 
-    { NavicSeparator = { fg = { from = "WinBar", attr = "fg", alter = -0.1 } } },
+    {
+      NavicSeparator = {
+        fg = {
+          from = "WinBar",
+          attr = "fg",
+          alter = -0.1,
+          transparency = 0.4,
+          color = { from = "Normal", attr = "bg" },
+        },
+      },
+    },
     { LspInlayHint = { inherit = "LspInlayhint" } },
   }
 end
@@ -2813,23 +2911,27 @@ local function set_panel_highlight()
     { PanelBottomHeading = { inherit = "PanelBottomBackground", bold = true } },
     { PanelBottomBackground = { bg = { from = "PanelBottomNormal", attr = "bg" } } },
     {
-      PanelBottomCursorLine = {
-        bg = {
-          from = "Keyword",
-          attr = "fg",
-          transparency = 0.05,
-          color = { from = "PanelSideNormal", attr = "bg" },
-        },
-        bold = true,
-      },
-    },
-    {
       PanelBottomCursorLineNr = {
         fg = {
           from = "PanelBottomNormal",
           attr = "bg",
         },
-        bg = { from = "ErrorMsg", attr = "fg" },
+        bg = {
+          from = "FloatTitle",
+          attr = "bg",
+          alter = colors.panelbottomcursorlinenr_alter_fg or 0.65,
+        },
+        bold = true,
+      },
+    },
+    {
+      PanelBottomCursorLine = {
+        bg = {
+          from = "PanelBottomCursorLineNr",
+          attr = "bg",
+          transparency = 0.1,
+          color = { from = "PanelSideNormal", attr = "bg" },
+        },
         bold = true,
       },
     },
@@ -2909,7 +3011,7 @@ local function set_panel_highlight()
     },
     { QuickFixLineNr = { fg = { from = "PanelBottomNormal", attr = "bg", contrast = 0.5 } } },
     { QuickFixMiddleLineNr = { fg = { from = "Constant", attr = "fg", contrast = 0.2 } } },
-    { QuickFixWinDelimiter = { fg = { from = "PanelBottomNormal", attr = "bg", alter = 1 } } },
+    { QuickFixWinDelimiter = { fg = { from = "PanelBottomNormal", attr = "bg", contrast = 0.2 } } },
     {
       QuickFixWinSeparator = {
         fg = { from = "WinSeparator", attr = "fg" },
@@ -3084,7 +3186,7 @@ local function set_panel_highlight()
         fg = {
           from = "PanelSideNormal",
           attr = "bg",
-          alter = 3.5,
+          alter = 4,
           transparency = colors.troubleindent_transparency_fg or 0.2,
           color = { from = "PanelSideNormal", attr = "bg" },
         },
@@ -3100,7 +3202,13 @@ local function set_panel_highlight()
     { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
     {
       TroubleFsPos = {
-        fg = { from = "TroubleIndentFoldClosed", attr = "fg", alter = 0.1 },
+        fg = {
+          from = "TroubleIndentFoldClosed",
+          attr = "fg",
+          alter = 0.1,
+          transparency = 0.3,
+          color = { from = "PanelSideNormal", attr = "bg" },
+        },
         bg = "NONE",
       },
     },
@@ -3122,7 +3230,7 @@ local function set_panel_highlight()
     { TroubleLspFilename = { link = "TroubleDirectory" } },
     { TroubleLspPos = { link = "TroubleFsPos" } },
     { TroubleLspCount = { link = "TroubleFsCount" } },
-    { TroubleLspItemClient = { inherit = "Comment", bg = "NONE" } },
+    { TroubleLspItemClient = { inherit = "TroubleFsPos", bg = "NONE" } },
 
     -- ├──────────────────────────────┤ DIAGNOSTICS ├───────────────────────────┤
 
@@ -3171,38 +3279,34 @@ local function set_panel_highlight()
         bg = "NONE",
       },
     },
-    {
-      OutlineCurrent = {
-        bg = {
-          from = "TroublePreview",
-          attr = "fg",
-          transparency = 0.25,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
-      },
-    },
-    {
-      OutlineCurrent = {
-        fg = {
-          from = "TroublePreview",
-          attr = "fg",
-          alter = 0.15,
-        },
-      },
-    },
-    {
-      OutlineCurrentParent = {
-        bg = {
-          from = "String",
-          attr = "fg",
-          transparency = 0.25,
-          color = { from = "PanelBottomNormal", attr = "bg" },
-        },
-      },
-    },
+
     {
       OutlineCurrentParent = {
         fg = { from = "String", attr = "fg" },
+        bg = {
+          from = "String",
+          attr = "fg",
+          transparency = 0.1,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+      },
+    },
+    {
+      OutlineCurrent = {
+        bg = {
+          from = "Function",
+          attr = "fg",
+          combine = { from = "Boolean", attr = "fg", alter = 0.8 },
+          combine_mode = "multiply",
+          combine_intensity = 0.4,
+          transparency = 0.15,
+          color = { from = "PanelBottomNormal", attr = "bg" },
+        },
+        fg = {
+          from = "Function",
+          attr = "fg",
+          alter = 0.1,
+        },
       },
     },
 
@@ -3211,10 +3315,10 @@ local function set_panel_highlight()
     {
       OutlineDetails = {
         fg = {
-          from = "OutlineFoldMarker",
+          from = "OutlineGuides",
           attr = "fg",
           alter = 0.1,
-          transparency = 0.6,
+          transparency = 0.8,
           color = { from = "PanelBottomNormal", attr = "bg" },
         },
         bg = "NONE",
@@ -3570,6 +3674,7 @@ Win.filetype_blacklist_winhighlights = {
 
 Win.filetype_winhighlights = {
   ["qf"] = true,
+  ["dap-view"] = true,
   ["sqmeow-drawer"] = true,
   ["sqmeow-result"] = true,
   ["Outline"] = true,
@@ -3577,6 +3682,8 @@ Win.filetype_winhighlights = {
   ["trouble"] = true,
   ["grug-far"] = true,
   ["dbui"] = true,
+  ["DiffviewFiles"] = true,
+  ["DiffviewFileHistory"] = true,
   ["dbout"] = true,
 
   ["dap-repl"] = true,

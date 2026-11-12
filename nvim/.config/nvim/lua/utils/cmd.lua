@@ -904,4 +904,40 @@ function M.force_foldopen(is_only_check, bufnr)
   end
 end
 
+---@param path string
+---@return string|nil
+function M.read_file(path)
+  local fd = io.open(path, "r")
+  if not fd then
+    return nil
+  end
+  local text = fd:read "*a"
+  fd:close()
+  return text
+end
+
+---@param directory string
+function M.mk_non_dir(directory)
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if not directory and (bufname == "" or bufname:match "^[%w+.-]+://") then
+    return
+  end
+  local dir = directory or vim.fs.dirname(bufname)
+  local stat = vim.uv.fs_stat(dir)
+  if stat == nil or stat.type ~= "directory" then
+    vim.fs.mkdir(dir, { parents = true })
+  end
+end
+
+---@param filename string
+function M.get_or_create_bufnr(filename)
+  local bufnr = vim.fn.bufnr(filename)
+  if bufnr == -1 then
+    -- Buffer not exist, create it without loading
+    bufnr = vim.fn.bufadd(filename)
+  end
+  vim.fn.bufload(bufnr) -- load isi file ke memory
+  return bufnr
+end
+
 return M

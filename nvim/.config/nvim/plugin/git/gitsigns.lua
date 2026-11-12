@@ -20,7 +20,12 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
                 fg = {
                   from = "Comment",
                   attr = "fg",
-                  alter = 0.1,
+                  alter = 0.5,
+                  combine = { from = "Boolean", attr = "fg", alter = 0.1 },
+                  combine_mode = "screen",
+                  combine_intensity = 0.3,
+                  transparency = 0.5,
+                  color = { from = "Normal", attr = "bg" },
                 },
                 italic = true,
               },
@@ -110,11 +115,11 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
           map("n", "<Leader>xG", function()
             gs.setqflist "all"
             auto_close_trouble_win()
-          end, "Exec: collect all git hunks in trouble (qf) [gitsigns] [trouble]")
+          end, "Exec: collect all git hunks in trouble (qf) (gitsigns) [trouble]")
           map("n", "<Leader>xg", function()
             gs.setqflist()
             auto_close_trouble_win()
-          end, "Exec: collect git hunks curbuf in trouble (qf) [gitsigns] [trouble]")
+          end, "Exec: collect git hunks curbuf in trouble (qf) (gitsigns) [trouble]")
         end,
       }
     end,

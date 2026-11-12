@@ -252,7 +252,9 @@ function M.arange_wins(direction)
     end
 
     if direction == "tabe" then
-      vim.cmd "tabedit %"
+      local cursor = vim.api.nvim_win_get_cursor(0)
+      vim.cmd "$tabedit %"
+      vim.api.nvim_win_set_cursor(0, cursor)
       return
     end
 

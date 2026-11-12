@@ -17,6 +17,10 @@ alias v="nvim"
 alias pvv="poetry run nvim"
 alias uvv="uv run nvim"
 
+nvim-clean() {
+  ps -eo pid,tty,comm | awk '$3=="nvim" && $2=="?" {print $1}' | xargs -r kill
+}
+
 # alias vvim="uv run nvim"
 alias vvim="source ./.venv/bin/activate && nvim"
 alias svim="sudo nvim"
@@ -704,7 +708,7 @@ r_vidToGif() {
         continue
       fi
 
-      if ((!is_delimiter_encountered)); then
+      if ((! is_delimiter_encountered)); then
         ffmpeg_opts+=("$opt")
       else
         gifski_opts+=("$opt")

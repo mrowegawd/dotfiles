@@ -2,29 +2,24 @@ local lazy = require("utils.plugin").require_lazy
 
 local Log = lazy "utils.log"
 
-local Codecompanion = lazy "codecompanion"
-local Config = lazy "codecompanion.config"
+local ACP = lazy "codecompanion.acp"
+local UtilGit = lazy "utils.git"
+local UtilCmd = lazy "utils.cmd"
+local codecompanion = lazy "codecompanion"
+local config = lazy "codecompanion.config"
 
 local M = {
   repo = {},
   state = {},
   chat = {},
   window = {},
+  acp = {},
   usage = {},
 }
 
-local function git_root(path)
-  local target = path or vim.api.nvim_buf_get_name(0)
-  if target == "" then
-    target = vim.uv.cwd()
-  end
-
-  return vim.fs.root(target, ".git")
-end
-
--- ├────────────────────────────┤ REPO/FILESYSTEM ├─────────────────────────┤
+-- Repo/filesystem
 function M.repo.git_root_or_notify(path)
-  local root = git_root(path)
+  local root = UtilGit.git_root(path)
   if root then
     return root
   end
@@ -36,7 +31,7 @@ end
 function M.repo.git_root_file(filename, path)
   vim.validate("filename", filename, "string")
 
-  local root = git_root(path)
+  local root = UtilGit.git_root(path)
   if not root then
     return nil
   end
@@ -50,83 +45,90 @@ function M.repo.git_root_file(filename, path)
   return filepath
 end
 
-function M.state.get_last_chat()
-  local ok, chat = pcall(Codecompanion.last_chat)
+function M.repo.git(args, cwd)
+  local result = vim.system(vim.list_extend({ "git" }, args), { cwd = cwd, text = true }):wait()
+  if result.code ~= 0 then
+    -- Some failures, such as merge conflicts, are reported on stdout
+    Log.error(vim.trim(result.stdout .. result.stderr))
+    return nil
+  end
+  return result.stdout
+end
+
+-- List the repository's worktrees as { path, branch } with the main checkout first
+function M.repo.worktrees(path)
+  local root = UtilGit.git_root(path)
+  if not root then
+    return Log.info("No worktrees: not a Git repository: " .. path)
+  end
+  local listing = M.repo.git({ "worktree", "list", "--porcelain" }, root)
+  if not listing then
+    return nil
+  end
+  local trees = {}
+  for line in listing:gmatch "[^\n]+" do
+    local tree_path = line:match "^worktree (.+)"
+    local branch = line:match "^branch refs/heads/(.+)"
+    if tree_path then
+      trees[#trees + 1] = { path = tree_path }
+    elseif branch then
+      trees[#trees].branch = branch
+    end
+  end
+  return trees
+end
+
+-- State
+-- Shared status vocabulary for window titles and picker rows
+M.state.turn_states = {
+  attention = { icon = "!", hl = "DiagnosticWarn" },
+  running = { icon = "󰜎", hl = "DiagnosticInfo" },
+  ready = { icon = "●", hl = "DiagnosticOk" },
+  stopped = { icon = "×", hl = "DiagnosticError" },
+  idle = { icon = " ", hl = "Comment" },
+}
+
+local superscript_digits = {
+  ["0"] = "⁰",
+  ["1"] = "¹",
+  ["2"] = "²",
+  ["3"] = "³",
+  ["4"] = "⁴",
+  ["5"] = "⁵",
+  ["6"] = "⁶",
+  ["7"] = "⁷",
+  ["8"] = "⁸",
+  ["9"] = "⁹",
+}
+
+function M.state.get_turn_state(bufnr)
+  if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+    return vim.b[bufnr].codecompanion_turn_state
+  end
+end
+
+function M.state.set_turn_state(bufnr, state)
+  if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+    vim.b[bufnr].codecompanion_turn_state = state
+  end
+end
+
+function M.state.superscript(number)
+  local formatted = tostring(number):gsub("%d", superscript_digits)
+  return formatted
+end
+
+local function get_last_chat()
+  local ok, chat = pcall(codecompanion.last_chat)
   if ok and chat then
     return chat
   end
   return nil
 end
 
--- ├──────────────────────────────────┤ CHAT ├──────────────────────────────────┤
-function M.chat.run_slash_command(name, opts)
-  opts = opts or {}
-
-  local chat = M.chat.get_or_create_chat()
-  local cmd = Config.interactions.chat.slash_commands[name]
-
-  if cmd and type(cmd.callback) == "function" then
-    cmd.callback(chat, opts)
-    M.window.focus_or_toggle_chat { startinsert = false }
-  else
-    Log.error("Slash command not found: " .. tostring(name))
-  end
+local function get_or_create_chat()
+  return get_last_chat() or codecompanion.chat()
 end
-
-function M.chat.get_or_create_chat()
-  return M.state.get_last_chat() or Codecompanion.chat()
-end
-
-function M.chat.add_context(files)
-  local chat = M.chat.get_or_create_chat()
-  if not chat then
-    return nil
-  end
-
-  for _, file in ipairs(files) do
-    local fd = io.open(file, "r")
-    local content
-    if fd then
-      content = fd:read "*a"
-      fd:close()
-    end
-
-    if not content then
-      Log.error("Could not read file: " .. file)
-    else
-      local normalized_file = vim.fs.normalize(file)
-      local id = string.format("<file>%s</file>", normalized_file)
-
-      -- Add context manually (rather than via chat:add_context) because that helper
-      -- drops msg.context.path which ACP adapters need to see the file
-      chat:add_message({
-        role = "user",
-        content = string.format("Here is the content of %s:%s", normalized_file, content),
-      }, {
-        visible = false,
-        context = { id = id, path = normalized_file },
-        _meta = { tag = "file" },
-      })
-      chat.context:add { id = id, path = normalized_file }
-    end
-  end
-
-  M.window.focus_or_toggle_chat { startinsert = false }
-end
-
-function M.chat.submit_user_message(chat, content)
-  chat:add_buf_message {
-    role = Config.constants.USER_ROLE,
-    content = content,
-  }
-  chat:add_message {
-    role = Config.constants.USER_ROLE,
-    content = content,
-  }
-  chat:submit()
-end
-
--- ├─────────────────────────────────┤ STATE ├──────────────────────────────┤
 
 local function get_chat_ordinal(bufnr)
   for i, chat_bufnr in ipairs(_G.codecompanion_buffers or {}) do
@@ -136,13 +138,13 @@ local function get_chat_ordinal(bufnr)
   end
 end
 
-function M.state.get_chat_label(chat)
+function M.state.get_chat_name(chat)
   local ordinal = get_chat_ordinal(chat.bufnr)
   local label = ordinal and ("Chat " .. ordinal) or nil
 
   if not label then
     pcall(function()
-      for _, entry in pairs(Codecompanion.buf_get_chat()) do
+      for _, entry in pairs(codecompanion.buf_get_chat()) do
         if entry.chat == chat then
           label = entry.name
           break
@@ -155,7 +157,12 @@ function M.state.get_chat_label(chat)
     label = "Chat " .. chat.bufnr
   end
 
-  local title = (chat.title ~= "" and chat.title) or (chat.opts and chat.opts.title)
+  return label
+end
+
+function M.state.get_chat_label(chat)
+  local label = M.state.get_chat_name(chat)
+  local title = chat.title
   if title and title ~= "" then
     label = string.format("%s · %s", label, title)
   end
@@ -164,7 +171,7 @@ function M.state.get_chat_label(chat)
 end
 
 function M.state.for_each_open_chat(callback)
-  local ok, chats = pcall(Codecompanion.buf_get_chat)
+  local ok, chats = pcall(codecompanion.buf_get_chat)
   if not ok or not chats then
     return
   end
@@ -174,50 +181,28 @@ function M.state.for_each_open_chat(callback)
   end
 end
 
-local function get_open_chat_count()
-  local count = 0
-  M.state.for_each_open_chat(function()
-    count = count + 1
-  end)
-  return count
-end
-
-function M.state.format_open_chat_count()
-  local count = get_open_chat_count()
-  return ({
-    [1] = "¹",
-    [2] = "²",
-    [3] = "³",
-    [4] = "⁴",
-    [5] = "⁵",
-  })[count] or tostring(count)
-end
-
-function M.state.get_current_system_role_prompt()
-  local chat = M.state.get_last_chat()
-  if not chat or type(chat.messages) ~= "table" then
-    return nil
-  end
-
-  local system_role = nil
-  for _, entry in ipairs(chat.messages) do
-    if entry.role == "system" then
-      system_role = entry.content
+function M.state.get_turn_state_counts()
+  local counts = {}
+  local open_chat_count = 0
+  M.state.for_each_open_chat(function(chat)
+    open_chat_count = open_chat_count + 1
+    local state = M.state.get_turn_state(chat.bufnr)
+    if state then
+      counts[state] = (counts[state] or 0) + 1
     end
-  end
-
-  return system_role
+  end)
+  return counts, open_chat_count
 end
 
-function M.state.get_last_user_prompt()
-  local chat = M.state.get_last_chat()
+function M.state.get_last_user_prompt(chat)
+  chat = chat or get_last_chat()
   if not chat or type(chat.messages) ~= "table" then
     return nil
   end
 
   for i = #chat.messages, 1, -1 do
     local msg = chat.messages[i]
-    if msg.role == "user" then
+    if msg.role == "user" and not msg.context and not (msg.opts and msg.opts.visible == false) then
       return msg.content
     end
   end
@@ -225,58 +210,148 @@ function M.state.get_last_user_prompt()
   return nil
 end
 
-function M.state.get_cycle_count()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
-  return metadata.cycles or 0
-end
-
-function M.state.provider_icon(name)
-  name = (name or ""):lower()
-  if name:find "claude" or name:find "anthropic" then
-    return "" -- cod-sparkle
-  elseif name:find "codex" or name:find "openai" or name:find "gpt" then
-    return "󰙴" -- md-creation
-  elseif name:find "gemini" or name:find "google" then
-    return "󰊭" -- md-google
-  end
-  return "󰚩" -- md-robot
+function M.state.get_cycle_count(chat)
+  return (chat and chat.cycle) or 0
 end
 
 function M.state.get_adapter_model(adapter)
-  return vim.tbl_get(adapter, "schema", "model", "default")
+  -- ACP model changes live on the connection, not the adapter defaults
+  local model
+  M.state.for_each_open_chat(function(chat)
+    if model or chat.adapter ~= adapter or not chat.acp_connection then
+      return
+    end
+
+    local models = chat.acp_connection:get_models()
+    model = models and models.currentModelId
+  end)
+
+  return model
     or vim.tbl_get(adapter, "defaults", "session_config_options", "model")
     or vim.tbl_get(adapter, "defaults", "model")
 end
 
-function M.state.get_adapter_effort(adapter)
-  local effort = vim.tbl_get(adapter, "schema", "reasoning.effort", "default")
-    or vim.tbl_get(adapter, "schema", "reasoning_effort", "default")
+function M.state.format_model_label(adapter, model)
+  local adapter_name = type(adapter) == "table" and adapter.name or adapter
+  local labels = { claude_code = "Claude", codex = "Codex" }
+  if not model then
+    return labels[adapter_name] or adapter_name or "unknown"
+  end
 
-  -- local home = vim.env.HOME
-  -- if not effort and home and adapter.name == "claude_code" then
-  --   local ok, settings = pcall(vim.json.decode, u.read_file(home .. "/.claude/settings.json") or "")
-  --   effort = ok and settings.effortLevel or nil
-  -- elseif not effort and home and adapter.name == "codex" then
-  --   effort = (u.read_file(home .. "/.codex/config.toml") or ""):match "model_reasoning_effort%s*=%s*[\"']([^\"']+)"
-  -- end
+  if adapter_name == "claude_code" then
+    model = model:gsub("^claude%-", ""):gsub("%-%d%d%d%d%d%d%d%d$", "")
+    model = model:gsub("(%d+)%-(%d+)$", "%1.%2")
+  end
+
+  return model
+end
+
+function M.state.get_chat_model_label(chat)
+  local adapter = chat and chat.adapter
+  if not adapter then
+    return "unknown"
+  end
+
+  local connection = chat.acp_connection
+  local models = connection and connection:get_models()
+  local model = models and models.currentModelId or M.state.get_adapter_model(adapter)
+  if adapter.name == "claude_code" and models then
+    -- IDs such as opus[1m] omit the version supplied in the display name
+    for _, option in ipairs(models.availableModels or {}) do
+      if option.modelId == model then
+        local family, version = (option.name or ""):lower():gsub("^claude%s+", ""):match "^(%a+)%s+(%d+%.?%d*)"
+        if family and version then
+          model = family .. "-" .. version
+        end
+        break
+      end
+    end
+  end
+  return M.state.format_model_label(adapter, model)
+end
+
+function M.state.get_chat_title(chat, entry)
+  local accepted_title = chat
+    and (
+      chat._acp_session_loaded
+      or chat._background_title_set
+      or chat._title_pinned
+      or (chat.opts and chat.opts.title and chat.opts.title ~= "")
+    )
+  if accepted_title and chat.title and chat.title ~= "" then
+    return chat.title
+  end
+
+  if entry and entry.name then
+    local ordinal = get_chat_ordinal(entry.bufnr)
+    return ordinal and ("Chat " .. ordinal) or entry.name
+  end
+
+  return chat and M.state.get_chat_name(chat) or "Chat"
+end
+
+function M.state.get_chat_number(entry)
+  local number = get_chat_ordinal(entry and entry.bufnr) or (entry and entry.name or ""):match "Chat%s+(%d+)"
+  return number and ("#" .. number) or ("#" .. tostring(entry and entry.bufnr or "?"))
+end
+
+function M.state.get_adapter_effort(adapter)
+  local effort = vim.tbl_get(adapter, "defaults", "effort")
 
   if effort and effort ~= "" and effort ~= "none" then
     return tostring(effort)
   end
 end
 
-function M.state.get_adapter_context_window(adapter)
-  if type(adapter) ~= "table" then
+function M.state.format_model_effort_label(model, effort)
+  local code = ({ low = "L", medium = "M", high = "H", xhigh = "X" })[effort]
+  return code and string.format("%s (%s)", model, code) or model
+end
+
+function M.state.get_chat_model_effort_label(chat)
+  local adapter = chat and chat.adapter
+  local effort = adapter and M.state.get_adapter_effort(adapter)
+  local option_id = adapter and ({ claude_code = "effort", codex = "reasoning_effort" })[adapter.name]
+  local connection = chat and chat.acp_connection
+  if connection and option_id then
+    local option = vim.iter(connection:get_config_options()):find(function(item)
+      return item.id == option_id
+    end)
+    effort = option and option.currentValue or effort
+  end
+
+  return M.state.format_model_effort_label(M.state.get_chat_model_label(chat), effort)
+end
+
+function M.state.provider_icon(name)
+  name = (name or ""):lower()
+  if name:find "claude" then
+    return "" -- cod-claude
+  elseif name:find "codex" or name:find "openai" then
+    return "" -- cod-openai
+  end
+  return "󰚩" -- md-robot
+end
+
+local function get_chat_context_window(chat)
+  if type(chat) ~= "table" then
     return nil
   end
 
-  local model = M.state.get_adapter_model(adapter)
+  local adapter = chat.adapter
+  local connection = chat.acp_connection
+  local models = connection and connection:get_models()
+  local model = models and models.currentModelId or M.state.get_adapter_model(adapter)
   if not model then
     return nil
   end
 
-  local context_window = vim.tbl_get(adapter, "schema", "model", "choices", model, "meta", "context_window")
+  local context_window = chat.context_windows and chat.context_windows[model]
+  if type(context_window) == "number" then
+    return context_window
+  end
+
+  context_window = vim.tbl_get(adapter, "schema", "model", "choices", model, "meta", "context_window")
   if type(context_window) == "number" then
     return context_window
   end
@@ -284,17 +359,148 @@ function M.state.get_adapter_context_window(adapter)
   return nil
 end
 
-function M.state.format_context_usage(adapter)
-  local bufnr = vim.api.nvim_get_current_buf()
-  local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
-  local tokens = metadata.tokens or 0
-  local max_ctx = M.state.get_adapter_context_window(adapter)
+local function format_token_count(tokens)
+  return string.format("%.1fk", tokens / 1000)
+end
 
+function M.state.format_context_usage(chat)
+  local tokens = (chat and chat.tokens) or 0
+
+  local max_ctx = get_chat_context_window(chat)
   if not max_ctx then
-    return string.format("unknown ctx (%d)", tokens)
+    return format_token_count(tokens) .. " (ctx?)"
   end
 
-  return string.format("%.1f%% (%d)", (tokens / max_ctx) * 100, tokens)
+  return string.format("%.1f%% (%s)", (tokens / max_ctx) * 100, format_token_count(tokens))
+end
+
+-- ACP agent config files
+local function read_json(path)
+  local ok, data = pcall(vim.json.decode, UtilCmd.read_file(path) or "")
+  return ok and data or {}
+end
+
+local function read_toml_value(path, key)
+  return (UtilCmd.read_file(path) or ""):match(key .. "%s*=%s*[\"']([^\"']+)")
+end
+
+function M.acp.claude_config()
+  local settings = read_json(vim.env.HOME .. "/.claude/settings.json")
+  return {
+    model = settings.model,
+    effort = settings.effortLevel,
+    mode = vim.tbl_get(settings, "permissions", "defaultMode"),
+  }
+end
+
+function M.acp.codex_config()
+  local path = vim.env.HOME .. "/.codex/config.toml"
+  return {
+    model = read_toml_value(path, "model"),
+    effort = read_toml_value(path, "model_reasoning_effort"),
+  }
+end
+
+-- ACP session state
+local function acp_value_is_plan(value)
+  local text = (tostring(value.value or "") .. tostring(value.name or "")):lower()
+  return text:find("plan", 1, true) ~= nil
+end
+
+local function acp_value_matches(value, expected)
+  if not expected then
+    return false
+  end
+
+  local normalized = tostring(expected):lower()
+  return tostring(value.value or ""):lower() == normalized or tostring(value.name or ""):lower() == normalized
+end
+
+local function acp_default_mode(chat)
+  local mode = vim.tbl_get(chat, "adapter", "defaults", "session_config_options", "mode")
+  if type(mode) == "function" then
+    mode = mode(chat.adapter)
+  end
+  return mode
+end
+
+local function acp_mode(chat)
+  local connection = chat and chat.acp_connection
+  if not connection then
+    return nil
+  end
+
+  local opt = vim.iter(connection:get_config_options()):find(function(opt)
+    if opt.type ~= "select" then
+      return false
+    end
+    return vim.iter(ACP.flatten_config_options(opt.options or {})):any(acp_value_is_plan)
+  end)
+  if not opt then
+    return nil
+  end
+
+  local values = ACP.flatten_config_options(opt.options or {})
+  local current = vim.iter(values):find(function(value)
+    return value.value == opt.currentValue
+  end) or { value = opt.currentValue, name = opt.currentValue }
+  return opt,
+    {
+      value = current.value,
+      name = current.name,
+      is_plan = acp_value_is_plan(current),
+    },
+    values
+end
+
+function M.acp.mode_label(chat)
+  local _, mode = acp_mode(chat)
+  if mode and mode.is_plan then
+    return "plan"
+  end
+end
+
+function M.acp.toggle_plan_mode(chat)
+  if not chat or not chat.acp_connection then
+    Log.warn "No ACP connection available"
+    return
+  end
+
+  local opt, current, values = acp_mode(chat)
+  if not opt then
+    Log.warn "This ACP adapter does not expose a mode option"
+    return
+  end
+
+  local want_plan = not (current and current.is_plan)
+  local target = not want_plan
+    and vim.iter(values):find(function(value)
+      return value.value ~= opt.currentValue and acp_value_matches(value, acp_default_mode(chat))
+    end)
+
+  target = target
+    or vim.iter(values):find(function(value)
+      return value.value ~= opt.currentValue and acp_value_is_plan(value) == want_plan
+    end)
+
+  if not target then
+    Log.warn "No alternate ACP mode value is available for this adapter"
+    return
+  end
+
+  if not chat.acp_connection:set_config_option(opt.id, target.value) then
+    Log.error "Failed to change ACP mode"
+    return
+  end
+
+  Log.info("ACP mode: " .. (target.name or target.value))
+  vim.api.nvim_exec_autocmds("User", {
+    pattern = "CodeCompanionChatACPModeChanged",
+    data = {
+      bufnr = chat.bufnr,
+      session_id = chat.acp_connection.session_id,
+    },
+  })
 end
 
 -- Usage limits: shell out to the ai_session_usage script
@@ -316,7 +522,7 @@ function M.usage.get(name)
   return usage_cache[name]
 end
 
--- Cache the 5h usage for claude_code/codex, parsed from the script output; cb
+-- Cache usage for claude_code/codex, parsed from the script output; cb
 -- re-renders the footer once data lands. Results are reused for USAGE_TTL
 -- seconds per adapter
 function M.usage.refresh(name, cb)
@@ -333,10 +539,12 @@ function M.usage.refresh(name, cb)
   usage_last_run[name] = os.time()
   M.usage.run(name, function(out)
     local label = usage_labels[name]
-    local pct, reset = out:match(label .. "%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)")
-    pct = pct or out:match(label .. "%s+5h:%s+([%d%.]+)")
+    local window, pct, reset = out:match(label .. "%s+(%d+[hd]):%s+([%d%.]+)%%%s+%(resets ([^)]+)%)")
+    if not pct then
+      window, pct = out:match(label .. "%s+(%d+[hd]):%s+([%d%.]+)")
+    end
     if pct then
-      usage_cache[name] = { pct = tonumber(pct), reset = reset }
+      usage_cache[name] = { pct = tonumber(pct), reset = reset, window = window }
     end
     if cb then
       vim.schedule(cb)
@@ -344,7 +552,109 @@ function M.usage.refresh(name, cb)
   end)
 end
 
--- ├──────────────────────────────┤ Chat windows ├──────────────────────────────┤
+-- Chat
+function M.chat.add_context(files)
+  local chat = get_or_create_chat()
+
+  for _, file in ipairs(files) do
+    local normalized_file = vim.fs.normalize(file)
+    local id = string.format("<file>%s</file>", normalized_file)
+
+    -- ACP agents read files themselves; keep binary data out of chat history
+    -- Add context manually because chat:add_context drops the path ACP needs
+    chat:add_message({
+      role = "user",
+      content = "File path: " .. normalized_file,
+    }, {
+      visible = false,
+      context = { id = id, path = normalized_file },
+      _meta = { tag = "file" },
+    })
+    chat.context:add { id = id, path = normalized_file }
+  end
+
+  M.window.focus_or_toggle_chat { startinsert = false }
+end
+
+-- Keep JPEG copies of HEIC attachments so saved chats can still load them
+local function image_attachment_path(path)
+  path = vim.fs.normalize(path)
+  local ext = vim.fs.ext(path):lower()
+  if ext ~= "heic" and ext ~= "heif" then
+    return path
+  end
+
+  local dir = vim.fs.joinpath(vim.env.HOME, "Pictures", "nvim-images")
+  UtilCmd.mk_non_dir(dir)
+  local name = vim.fs.basename(path):gsub("%.[^.]+$", ".jpg")
+  local output = vim.fs.joinpath(dir, name)
+  local temporary = output .. ".tmp.jpg"
+  local result = vim
+    .system({
+      "magick",
+      path .. "[0]",
+      "-auto-orient",
+      "-quality",
+      "92",
+      temporary,
+    }, { text = true })
+    :wait()
+  if result.code ~= 0 then
+    vim.uv.fs_unlink(temporary)
+    return nil, vim.trim(result.stderr)
+  end
+  local ok, err = vim.uv.fs_rename(temporary, output)
+  if not ok then
+    vim.uv.fs_unlink(temporary)
+    return nil, err
+  end
+  return output
+end
+
+function M.chat.add_images(files)
+  local image_utils = require "codecompanion.utils.images"
+  local chat = get_or_create_chat()
+
+  for _, file in ipairs(files) do
+    local path, err = image_attachment_path(file)
+    local image = path and image_utils.encode_image { path = path, id = path } or err
+    if type(image) == "string" then
+      Log.error(string.format("Could not encode %s: %s", file, image))
+    else
+      chat:add_image_message(image)
+    end
+  end
+
+  M.window.focus_or_toggle_chat { startinsert = false }
+end
+
+function M.chat.run_slash_command(name, opts)
+  opts = opts or {}
+
+  local chat = get_or_create_chat()
+  local cmd = config.interactions.chat.slash_commands[name]
+
+  if cmd and type(cmd.callback) == "function" then
+    cmd.callback(chat, opts)
+    M.window.focus_or_toggle_chat { startinsert = false }
+  else
+    Log.error("Slash command not found: " .. tostring(name))
+  end
+end
+
+function M.chat.submit_user_message(chat, content)
+  chat:add_buf_message {
+    role = config.constants.USER_ROLE,
+    content = content,
+  }
+  chat:submit()
+end
+
+function M.chat.request_skill(chat, skill, request)
+  M.chat.submit_user_message(chat, string.format("Use your `%s` skill to %s.", skill, request))
+end
+
+-- Chat windows
 function M.window.try_focus_chat_float()
   for _, win_id in ipairs(vim.api.nvim_list_wins()) do
     local conf = vim.api.nvim_win_get_config(win_id)
@@ -371,10 +681,10 @@ function M.window.focus_or_toggle_chat(opts)
   if opts.startinsert ~= nil then
     startinsert = opts.startinsert
   else
-    startinsert = next(Codecompanion.buf_get_chat()) == nil
+    startinsert = next(codecompanion.buf_get_chat()) == nil
   end
 
-  Codecompanion.toggle_chat()
+  codecompanion.toggle_chat()
 
   if startinsert then
     vim.defer_fn(function()
@@ -402,6 +712,11 @@ function M.window.toggle_cc_zoom()
     width = math.floor(vim.o.columns * 0.80),
     height = vim.o.lines - 4,
   })
+end
+
+function M.window.toggle_chat_zoom()
+  vim.cmd.stopinsert()
+  M.window.toggle_cc_zoom()
 end
 
 return M

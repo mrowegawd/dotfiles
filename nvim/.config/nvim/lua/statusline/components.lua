@@ -540,8 +540,8 @@ local function __colors()
 
     mode_term_fg = boolean_fg,
     mode_term_bg = H.tint(H.darken(boolean_fg, 0.8, normal_bg), 0.1),
-    mode_term_statusline_fg = H.tint(H.darken(boolean_fg, 0.5, normal_bg), 0.2),
-    mode_term_statusline_bg = H.tint(H.darken(boolean_fg, 0.1, normal_bg), 0.1),
+    mode_term_statusline_fg = H.tint(H.darken(boolean_fg, 0.5, normal_bg), 0.5),
+    mode_term_statusline_bg = H.tint(H.darken(boolean_fg, 0.06, normal_bg), 0.05),
 
     diff_add = diff_add,
     diff_change = diff_change,
@@ -690,6 +690,7 @@ end
 ---@field bold? SepAttr
 ---@field italic? SepAttr
 ---@field underline? SepAttr
+---@field blocksep? SepAttr
 
 ---@param fg SepColor
 ---@param bg SepColor
@@ -712,6 +713,14 @@ local function sep(fg, bg, opts)
         end
         if term.bg ~= nil then
           final_bg = term.bg
+        end
+      end
+
+      if set_conditions.is_note_ft() then
+        final_fg = fg
+        final_bg = colors.mode_note_bg
+        if opts.blocksep then
+          final_fg = colors.mode_note_bg
         end
       end
 
@@ -1030,6 +1039,7 @@ M.FilePath = {
       fg = colors.mode_term_statusline_bg,
       bg = colors.mode_term_statusline_bg,
     },
+    blocksep = true,
     provider = Icons.misc.separator_up,
   }),
 }
@@ -1786,6 +1796,10 @@ M.status_active_left = {
       bg = colors.mode_term_statusline_bg
     end
 
+    if set_conditions.is_note_ft() then
+      fg = colors.mode_note_fg
+      bg = colors.mode_note_bg
+    end
     return { fg = fg, bg = bg }
   end,
 }

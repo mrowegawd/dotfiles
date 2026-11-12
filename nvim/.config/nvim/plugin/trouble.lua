@@ -2,6 +2,8 @@ local add_local_or_remote = require("vim-pack").add_local_or_remote
 
 local lazy = require("utils.plugin").require_lazy
 
+local Log = lazy "utils.log"
+
 local UtilKey = lazy "utils.map"
 local UtilWindow = lazy "utils.window"
 local IconsLSP = lazy("icons").kinds
@@ -57,27 +59,77 @@ add_local_or_remote {
       },
       keys = {
         ["<esc>"] = "cancel",
-
         q = "close",
         ["<Leader>bk"] = "close",
 
-        r = "refresh",
-        R = "toggle_refresh",
-
-        ["<c-s>"] = "jump_split_aboveleft_close",
-        -- ["<c-v>"] = "jump_vsplit",
+        ["R"] = "refresh",
+        ["<Leader>r"] = "toggle_refresh",
 
         o = "jump",
 
-        P = "toggle_preview",
+        ["P"] = "toggle_preview",
 
-        ["<C-a>"] = "fold_toggle",
         ["<TAB>"] = "fold_toggle",
 
+        ["<C-s>"] = "jump_split_aboveleft_close",
         ["<a-n>"] = "next",
         ["<c-n>"] = "next",
         ["<a-p>"] = "prev",
         ["<c-p>"] = "prev",
+
+        gb = {
+          action = function(view)
+            view:filter({ buf = 0 }, { toggle = true })
+          end,
+          desc = "Toggle Current Buffer Filter",
+        },
+        gx = {
+          action = function(view)
+            local has = view:get_filter "not-buf"
+            view:filter(has and nil or { ["not"] = { buf = 0 } }, { id = "not-buf", toggle = true })
+          end,
+          desc = "Exclude Current Buffer",
+        },
+
+        gt = {
+          action = function(view)
+            Log.info(vim.inspect(view))
+          end,
+          desc = "Exclude Current Buffer",
+        },
+
+        gy = {
+          action = function(view)
+            local items = view:get_items()
+            local lines = {}
+            for _, item in ipairs(items) do
+              lines[#lines + 1] = item.filename .. ":" .. item.pos[1] .. ":" .. item.pos[2]
+            end
+            vim.fn.setreg("+", table.concat(lines, "\n"))
+            vim.notify(("Copied %d items"):format(#lines))
+          end,
+          desc = "Yank All Items",
+        },
+
+        ss = {
+          action = function(view)
+            local f = view:get_filter "severity"
+            local severity = ((f and f.filter.severity or 0) + 1) % 5
+            view:filter({ severity = severity }, {
+              id = "severity",
+              template = "{hl:Title}Filter:{hl} {severity}",
+              del = severity == 0,
+            })
+          end,
+          desc = "Toggle Severity Filter",
+        },
+        se = {
+          action = function(view)
+            local has = view:get_filter "severity"
+            view:filter(has and nil or { severity = vim.diagnostic.severity.ERROR }, { id = "severity" })
+          end,
+          desc = "Toggle Error-only Filter",
+        },
       },
     },
   },
@@ -93,9 +145,24 @@ local cmds = {
   --stylua: ignore
   { "<Leader>xT", function() UtilKey.plugin_load_now "todo-comments.nvim" auto_close_qf_win() vim.cmd.TodoTrouble() end, "todo-trouble global" },
   --stylua: ignore
-  { "<Leader>xD", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle]] end, "workspace diagnostics (global project)" },
+  { "<Leader>xD", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle]] end, "workspace diagnostics (global)" },
   --stylua: ignore
-  { "<Leader>xd", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle filter.buf=0]] end, "document diagnostics (on curbuf)" },
+  { "<Leader>xF", function() load_trouble() vim.cmd.Trouble() end, "Bulk: list trouble builtin" },
+  --stylua: ignore
+  { "<Leader>xd", function() auto_close_qf_win() vim.cmd [[Trouble diagnostics toggle filter.buf=0]] end, "document diagnostics (local)" },
+
+  -- {
+  --   "<Leader>lU",
+  --   function()
+  --     local word = lazy("utils.cmd").get_lines_under_cusor()
+  --
+  --     lazy("trouble").open {
+  --       mode = "lsp_references",
+  --       title = "{hl:Title}References{hl} {hl:Comment}(" .. word .. "){hl} {count}",
+  --     }
+  --   end,
+  --   "LSP References (Trouble)",
+  -- },
 }
 
 for _, cmd in ipairs(cmds) do
@@ -104,6 +171,3 @@ for _, cmd in ipairs(cmds) do
     cmd[2]()
   end, { desc = ("Exec: %s [trouble]"):format(cmd[3]) })
 end
-
---stylua: ignore
-UtilKey.nnoremap("<Leader>xF", function() load_trouble() vim.cmd.Trouble() end, { desc = "Bulk: list trouble builtin" })

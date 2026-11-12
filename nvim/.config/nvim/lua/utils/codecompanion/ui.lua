@@ -1,71 +1,189 @@
 local lazy = require("utils.plugin").require_lazy
 
 local codecompanion = lazy "codecompanion"
-local config = lazy "codecompanion.config"
+local devicons = lazy "nvim-web-devicons"
+local tool_labels = lazy "codecompanion.interactions.chat.tools.labels"
 
+local UtilGit = lazy "utils.git"
+local acp_helpers = lazy("utils.codecompanion.helpers").acp
 local state_helpers = lazy("utils.codecompanion.helpers").state
 local usage_helpers = lazy("utils.codecompanion.helpers").usage
-local prompt_library = lazy "utils.codecompanion.prompt_library"
 
 local M = {}
 
--- local function cwd_footer()
---   return vim.uv.cwd():match "([^/]+/[^/]+/[^/]+)$" or ""
--- end
+local get_turn_state = state_helpers.get_turn_state
+local set_turn_state = state_helpers.set_turn_state
+
+-- Title and footer rendering
+local function truncate(text, max_width)
+  text = text:gsub("%s+", " ")
+  if vim.fn.strdisplaywidth(text) <= max_width then
+    return text
+  end
+
+  local length = vim.fn.strchars(text)
+  repeat
+    length = length - 1
+    text = vim.fn.strcharpart(text, 0, length)
+  until length == 0 or vim.fn.strdisplaywidth(text .. "…") <= max_width
+  return text .. "…"
+end
+
+local function cwd_footer(chat)
+  local cwd = vim.uv.cwd()
+  if chat then
+    -- Agents run at the git root (see patch_acp_cwd), so reflect that
+    if not chat.opts.cwd or chat.opts.cwd == "" then
+      chat.opts.cwd = UtilGit.git_root(cwd) or cwd
+    end
+    cwd = chat.opts.cwd
+  end
+
+  return cwd and cwd:match "([^/]+/[^/]+)$" or ""
+end
+
+local function chat_title(chat)
+  -- Status counts cover every open chat, while the trailing title is local
+  local counts, open_chat_count = state_helpers.get_turn_state_counts()
+  local chat_count = "󰭹" .. state_helpers.superscript(open_chat_count)
+  local statuses = {}
+  for _, state in ipairs { "attention", "running", "ready", "stopped" } do
+    if counts[state] then
+      local prefix = statuses[1] and " " or ""
+      local state_icon = state_helpers.turn_states[state].icon
+      statuses[#statuses + 1] = {
+        prefix .. state_icon .. state_helpers.superscript(counts[state]),
+        "FloatTitle",
+      }
+    end
+  end
+
+  local title = { { chat_count, "FloatTitle" } }
+  if statuses[1] then
+    title[#title + 1] = { " (", "FloatTitle" }
+    vim.list_extend(title, statuses)
+    title[#title + 1] = { ")", "FloatTitle" }
+  end
+
+  local width = vim.api.nvim_win_get_width(chat.ui.winnr) - 4
+  local left_width = 0
+  for _, chunk in ipairs(title) do
+    left_width = left_width + vim.fn.strdisplaywidth(chunk[1])
+  end
+  local chat_name = truncate(state_helpers.get_chat_title(chat), math.max(1, width - left_width - 3))
+
+  title[#title + 1] = { " · " .. chat_name, "FloatTitle" }
+  return title
+end
 
 local function chat_footer(chat)
-  local parts = {}
-  local adapter = chat and chat.adapter
-  if adapter then
-    -- acp agents show their name (Claude/Codex); http shows the model
-    local labels = { claude_code = "Claude", codex = "Codex" }
-    local label = labels[adapter.name] or state_helpers.get_adapter_model(adapter) or adapter.name
-    table.insert(parts, string.format("%s %s", state_helpers.provider_icon(adapter.name), label))
+  local chat_number = state_helpers.get_chat_number({ bufnr = chat.bufnr }):sub(2)
+  local adapter = chat.adapter
+  local parts = {
+    string.format(
+      "%s %s:%s",
+      state_helpers.provider_icon(adapter and adapter.name),
+      chat_number,
+      state_helpers.get_chat_model_effort_label(chat)
+    ),
+  }
+  if adapter and acp_helpers.mode_label(chat) then
+    table.insert(parts, " Plan")
   end
-  -- local cwd = cwd_footer()
-  -- if cwd ~= "" then
-  --   table.insert(parts, " " .. cwd)
-  -- end
-  if chat then
-    table.insert(parts, string.format(" %d", state_helpers.get_cycle_count(chat)))
-    table.insert(parts, string.format(" %s", state_helpers.format_context_usage(chat)))
-    if adapter and adapter.type == "acp" then
-      local usage = usage_helpers.get(adapter.name)
-      if usage then
-        local label = string.format(" 5h %.0f%%", usage.pct)
-        if usage.reset then
-          label = label .. " (" .. usage.reset .. ")"
-        end
-        table.insert(parts, label)
+  local cwd = cwd_footer(chat)
+  if cwd ~= "" then
+    table.insert(parts, " " .. cwd)
+  end
+  table.insert(parts, string.format(" %d", state_helpers.get_cycle_count(chat)))
+  table.insert(parts, string.format(" %s", state_helpers.format_context_usage(chat)))
+  if adapter then
+    local usage = usage_helpers.get(adapter.name)
+    if usage then
+      local label = string.format(" %s %.0f%%", usage.window, usage.pct)
+      if usage.reset then
+        label = label .. " (" .. usage.reset .. ")"
       end
+      table.insert(parts, label)
     end
   end
   return table.concat(parts, " · ")
 end
 
-local function chat_title(chat)
-  return string.format(
-    " ╭[◉_◉]╮ %s %s ",
-    state_helpers.format_open_chat_count(),
-    state_helpers.get_chat_label(chat)
-  )
+-- Window refresh
+local function refresh_chat_footer(bufnr)
+  local ok, chat = pcall(function()
+    return codecompanion.buf_get_chat(bufnr)
+  end)
+  if not ok or not chat or not chat.ui or not chat.ui.winnr then
+    return
+  end
+  if not vim.api.nvim_win_is_valid(chat.ui.winnr) or vim.api.nvim_win_get_buf(chat.ui.winnr) ~= chat.bufnr then
+    return
+  end
+  vim.api.nvim_win_set_config(chat.ui.winnr, {
+    footer = chat_footer(chat),
+    footer_pos = "center",
+  })
 end
 
-local function set_chat_win_title(e)
+local function refresh_all_chat_titles()
+  state_helpers.for_each_open_chat(function(chat)
+    if
+      chat
+      and chat.ui
+      and chat.ui.winnr
+      and vim.api.nvim_win_is_valid(chat.ui.winnr)
+      -- Hidden chats retain the window ID when another chat reuses it
+      and vim.api.nvim_win_get_buf(chat.ui.winnr) == chat.bufnr
+    then
+      vim.api.nvim_win_set_config(chat.ui.winnr, {
+        title = chat_title(chat),
+      })
+    end
+  end)
+end
+
+local function notify_chat_done(bufnr)
+  local chat = codecompanion.buf_get_chat(bufnr)
+  if not chat then
+    return
+  end
+
+  local message =
+    string.format("%s finished (%s)", state_helpers.get_chat_model_label(chat), state_helpers.get_chat_name(chat))
+  vim.api.nvim_echo({ { message, "DiagnosticOk" } }, true)
+end
+
+-- Fetch the usage limit for claude_code/codex chats and re-render the footer
+local function refresh_chat_usage(bufnr)
+  local ok, chat = pcall(function()
+    return codecompanion.buf_get_chat(bufnr)
+  end)
+  if not ok or not chat or not chat.adapter then
+    return
+  end
+  usage_helpers.refresh(chat.adapter.name, function()
+    refresh_chat_footer(bufnr)
+  end)
+end
+
+local function refresh_current_chat_window(e, attempt)
   e = e or {}
+  attempt = attempt or 0
 
   local ok, chat = pcall(function()
     return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
   end)
 
   if not ok or not chat or not chat.ui or not chat.ui.winnr then
-    -- vim.defer_fn(function()
-    --   local picker = telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
-    --   if picker then
-    --     vim.api.nvim_win_close(picker.prompt_win, true)
-    --   end
-    -- end, 50)
-    -- vim.wait(100)
+    -- Picker/restore events can arrive before the chat window is registered
+    if attempt < 2 then
+      -- Retry for up to 100 ms without blocking the UI
+      vim.defer_fn(function()
+        refresh_current_chat_window(e, attempt + 1)
+      end, 50)
+      return
+    end
 
     if vim.bo.filetype == "codecompanion" and e.data and e.data.title then
       local win_id = vim.api.nvim_get_current_win()
@@ -77,143 +195,84 @@ local function set_chat_win_title(e)
     return
   end
 
-  local chatmap = {}
-  for _, entry in pairs(codecompanion.buf_get_chat()) do
-    chatmap[entry.chat.ui.winnr] = entry.name
-  end
-
   vim.api.nvim_win_set_config(chat.ui.winnr, {
-    title = string.format(
-      " ╭[◉_◉]╮ %s%s ",
-      chatmap[chat.ui.winnr],
-      (chat.opts.title and chat.opts.title ~= "") and string.format(" (%s)", chat.opts.title) or ""
-    ),
+    title = chat_title(chat),
     footer = chat_footer(chat),
     footer_pos = "center",
   })
-end
-
-local function refresh_chat_footer(bufnr)
-  local ok, chat = pcall(function()
-    return codecompanion.buf_get_chat(bufnr)
-  end)
-  if not ok or not chat or not chat.ui or not chat.ui.winnr then
-    return
-  end
-  if not vim.api.nvim_win_is_valid(chat.ui.winnr) then
-    return
-  end
-  vim.api.nvim_win_set_config(chat.ui.winnr, {
-    footer = chat_footer(chat),
-    footer_pos = "center",
-  })
-end
-
-local function refresh_all_chat_titles()
-  state_helpers.for_each_open_chat(function(chat)
-    if chat and chat.ui and chat.ui.winnr and vim.api.nvim_win_is_valid(chat.ui.winnr) then
-      vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = chat_title(chat),
-      })
-    end
-  end)
 end
 
 -- Role label formatter for the chat UI
 function M.llm_role(adapter)
-  local current_system_role_prompt = state_helpers.get_current_system_role_prompt()
-  local system_role = prompt_library.SYSTEM_ROLE
-
-  for name, prompt in pairs(config.prompt_library or {}) do
-    local prompts = prompt and prompt.prompts
-    if type(prompts) == "table" then
-      local first = prompts[1]
-      if first and type(first.content) == "string" then
-        if first.content == current_system_role_prompt then
-          system_role = name
-          break
-        end
-      end
-    end
-  end
-
   local adapter_name = adapter.formatted_name or adapter.name or "unknown"
   local model = state_helpers.get_adapter_model(adapter) or "unknown"
   local effort = state_helpers.get_adapter_effort(adapter)
   if effort then
     model = string.format("%s %s", model, effort)
   end
-
-  if not system_role then
-    local max_len = 25
-    local short_model_name = require("qfbookmark.ui.utils").shorten_text(model, max_len)
-
-    local header_format
-    if config.config.display.chat.window.layout and config.config.display.chat.window.layout ~= "float" then
-      header_format = string.format("%s (%s)", adapter_name, short_model_name)
-    else
-      header_format = string.format("%s (%s) | %s", adapter_name, short_model_name, os.date "%Y-%m-%d %H:%M:%S")
-    end
-    return header_format
-  end
-
-  return string.format("%s (%s) | %s", adapter_name, model, system_role)
+  return string.format("%s (%s) |  %s", adapter_name, model, os.date "%Y-%m-%d %H:%M:%S")
 end
 
--- Spinner internals
-local spinner = {
-  states = {
-    "🤘 ",
-    "🤟 ",
-    "🖖 ",
-    "✋ ",
-    "🤚 ",
-    "👆 ",
-  },
+-- Spinner
+vim.api.nvim_set_hl(0, "CodeCompanionSpinner", { fg = "#7f848e" })
 
-  ns = vim.api.nvim_create_namespace "codecompanion_spinner",
-  bufnr = nil,
-  timer = nil,
-  index = 1,
+local spinner_frames = {
+  "⢎ ",
+  "⠎⠁",
+  "⠊⠑",
+  "⠈⠱",
+  " ⡱",
+  "⢀⡰",
+  "⢄⡠",
+  "⢆⡀",
 }
+local spinner_ns = vim.api.nvim_create_namespace "codecompanion_spinner"
+local spinners = {}
 
-local function spinner_winnr()
-  if not (spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr)) then
-    return nil
+local function update_spinner(bufnr)
+  local current = spinners[bufnr]
+  if not current or not vim.api.nvim_buf_is_valid(bufnr) then
+    return
   end
-  local winnr = vim.fn.bufwinid(spinner.bufnr)
+  local winnr = vim.fn.bufwinid(bufnr)
   if winnr == -1 or not vim.api.nvim_win_is_valid(winnr) then
-    return nil
-  end
-  return winnr
-end
-
-local function clear_spinner()
-  if spinner.timer then
-    spinner.timer:stop()
-    spinner.timer:close()
-    spinner.timer = nil
-  end
-
-  if spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr) then
-    vim.api.nvim_buf_clear_namespace(spinner.bufnr, spinner.ns, 0, -1)
-  end
-
-  spinner.bufnr = nil
-end
-
-local function update_spinner()
-  if not spinner_winnr() then
     return
   end
 
-  local last_line = vim.api.nvim_buf_line_count(spinner.bufnr) - 1
-  vim.api.nvim_buf_set_extmark(spinner.bufnr, spinner.ns, last_line, 0, {
+  vim.api.nvim_buf_set_extmark(bufnr, spinner_ns, vim.api.nvim_buf_line_count(bufnr) - 1, 0, {
     id = 1,
-    virt_text = { { spinner.states[spinner.index], "CodeCompanionSpinner" } },
+    virt_text = {
+      { spinner_frames[current.index], "CodeCompanionSpinner" },
+    },
     virt_text_pos = "right_align",
   })
-  spinner.index = spinner.index % #spinner.states + 1
+  current.index = current.index % #spinner_frames + 1
+end
+
+local function clear_spinner(bufnr)
+  local current = spinners[bufnr]
+  if not current then
+    return
+  end
+
+  current.timer:stop()
+  current.timer:close()
+  if vim.api.nvim_buf_is_valid(bufnr) then
+    vim.api.nvim_buf_clear_namespace(bufnr, spinner_ns, 0, -1)
+  end
+  spinners[bufnr] = nil
+end
+
+local function start_spinner(bufnr)
+  clear_spinner(bufnr)
+  spinners[bufnr] = { timer = vim.uv.new_timer(), index = 1 }
+  spinners[bufnr].timer:start(
+    0,
+    100,
+    vim.schedule_wrap(function()
+      update_spinner(bufnr)
+    end)
+  )
 end
 
 -- Chat display
@@ -228,125 +287,29 @@ function M.chat_display()
     window = {
       layout = "float",
       border = "rounded",
-      height = vim.o.lines - 7,
+      height = vim.o.lines - 5,
       width = 0.461,
       relative = "editor",
       col = vim.o.columns,
       row = 1,
-      -- opts = {
-      --   -- winfixbuf = true,
-      --   number = false,
-      -- },
     },
-    -- debug_window = {
-    --   width = math.floor(vim.o.columns * 0.535),
-    --   height = vim.o.lines - 4,
-    -- },
   }
 end
 
--- ├──────────────┤ Handle markdown rendering not being applied ├───────────┤
----@param buf integer
-local function force_render_buf(buf)
-  local ok_rm, render_markdown = pcall(require, "render-markdown")
-  if not ok_rm then
-    return
-  end
-
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_get_buf(win) == buf then
-      -- Run as if this window were the current one (without actually
-      -- moving the user's cursor), then toggle off->on so render-markdown
-      -- fully re-renders from scratch, instead of being a no-op because
-      -- the state is already "enabled".
-      vim.api.nvim_win_call(win, function()
-        render_markdown.buf_disable()
-        render_markdown.buf_enable()
-      end)
-    end
-  end
-end
-
----@type table<integer, uv.uv_timer_t>
-local debounce_timers = {}
-local DEBOUNCE_MS = 250
-
----@param buf integer
-local function schedule_debounced_render(buf)
-  local timer = debounce_timers[buf]
-  if not timer then
-    ---@diagnostic disable-next-line: cast-local-type
-    timer = vim.uv.new_timer()
-    debounce_timers[buf] = timer
-  end
-
-  ---@diagnostic disable-next-line: need-check-nil
-  timer:stop()
-  ---@diagnostic disable-next-line: need-check-nil
-  timer:start(
-    DEBOUNCE_MS,
-    0,
-    vim.schedule_wrap(function()
-      if vim.api.nvim_buf_is_valid(buf) then
-        force_render_buf(buf)
-      end
-    end)
-  )
-end
-
----@return boolean
-local function has_active_codecompanion_buffers()
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "codecompanion" then
-      return true
-    end
-  end
-  return false
-end
-
-M.active = true
-
---- Cleans up all resources created by M.setup():
---- per-buffer debounce timers, the spinner timer, and buffer-local flags.
---- Safe to call multiple times (idempotent).
-function M.teardown()
-  M.active = false
-
-  -- 1. Remove all autocmds registered in this group.
-  --    The augroup itself is preserved, so its ID remains valid and can be
-  --    reused if M.setup() is called again.
-  -- pcall(vim.api.nvim_clear_autocmds, { group = group })
-
-  -- 2. Stop and close any remaining debounce timers.
-  for buf, timer in pairs(debounce_timers) do
-    if timer then
-      pcall(function()
-        timer:stop()
-        timer:close()
-      end)
-    end
-    debounce_timers[buf] = nil
-  end
-
-  -- 3. Stop the spinner timer if it's still running.
-  clear_spinner()
-
-  -- 4. Clear the buffer-local flag so M.setup() can safely reattach to the
-  --    buffer if it's called again (e.g. when opening a new chat), rather
-  --    than skipping the attachment because of a stale flag.
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_valid(buf) then
-      vim.b[buf].cc_force_render_attached = nil
-    end
-  end
-end
-
+-- Setup
 function M.setup()
-  -- +-----------------------------------------------------------------------------+
-  -- |                                Window titles                                |
-  -- +-----------------------------------------------------------------------------+
+  -- Re-sourcing replaces handlers instead of registering duplicates
+  local group = vim.api.nvim_create_augroup("codecompanion_ui", { clear = true })
+
+  -- Icons
+  devicons.set_icon {
+    codecompanion = { icon = " " },
+  }
+  devicons.set_icon_by_filetype { codecompanion = "codecompanion" }
+
+  -- Chat window lifecycle
   vim.api.nvim_create_autocmd("User", {
-    -- group = group,
+    group = group,
     pattern = {
       "CodeCompanionChatCreated",
       "CodeCompanionChatOpened",
@@ -354,151 +317,63 @@ function M.setup()
       "CodeCompanionBackgroundTitleSet",
       "CodeCompanionChatClosed",
     },
-    desc = "Set CodeCompanion chat window title after chat events",
+    desc = "Refresh CodeCompanion chat windows",
     callback = function(e)
-      M.active = true -- re-activate semua fitur lain
-
-      if config.config.display.chat.window.layout and config.config.display.chat.window.layout ~= "float" then
-        return
-      end
-
       vim.defer_fn(function()
-        set_chat_win_title(e)
+        if e.match ~= "CodeCompanionChatClosed" then
+          refresh_current_chat_window(e)
+        end
         refresh_all_chat_titles()
       end, 1)
     end,
   })
 
-  -- +-----------------------------------------------------------------------------+
-  -- |                              Spinner lifecycle                              |
-  -- +-----------------------------------------------------------------------------+
-  vim.api.nvim_create_autocmd("User", {
-    -- group = group,
-    pattern = "CodeCompanionChatSubmitted",
-    desc = "Start CodeCompanion spinner when a chat turn begins",
+  -- Width-aware title truncation
+  vim.api.nvim_create_autocmd("WinResized", {
+    group = group,
+    desc = "Refresh CodeCompanion chat titles after resize",
+    callback = refresh_all_chat_titles,
+  })
+
+  -- Read-state and notification cleanup
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = group,
+    desc = "Clear reviewed CodeCompanion chat notifications",
     callback = function(e)
-      if not M.active then
+      local state = get_turn_state(e.buf)
+      if state ~= "ready" and state ~= "attention" then
         return
       end
 
-      clear_spinner()
-
-      local bufnr = e.data and e.data.bufnr
-      if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-        return
-      end
-
-      spinner.bufnr = bufnr
-      spinner.timer = vim.uv.new_timer()
-      spinner.timer:start(0, 100, vim.schedule_wrap(update_spinner))
-    end,
-  })
-
-  vim.api.nvim_create_autocmd("User", {
-    pattern = { "CodeCompanionChatDone", "CodeCompanionChatStopped" },
-    desc = "Clear CodeCompanion spinner when a chat turn ends",
-    callback = function()
-      if not M.active then
-        return
-      end
-
-      vim.defer_fn(clear_spinner, 50)
-    end,
-  })
-
-  -- ├──────────────┤ Handle markdown rendering not being applied ├───────────┤
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "CodeCompanionChatOpened",
-    callback = function(request)
-      if not M.active then
-        return
-      end
-
-      local buf = request.buf
-      if not buf or not vim.api.nvim_buf_is_valid(buf) then
-        return
-      end
-
-      if vim.b[buf].cc_force_render_attached then
-        return
-      end
-      vim.b[buf].cc_force_render_attached = true
-
-      vim.api.nvim_buf_attach(buf, false, {
-        on_lines = function()
-          -- Debounce ONLY here -- toggling render off/on is relatively
-          -- heavy, so it's not ideal to call it on every streamed token.
-          schedule_debounced_render(buf)
-        end,
-        on_detach = function()
-          local timer = debounce_timers[buf]
-          if timer then
-            timer:stop()
-            timer:close()
-            debounce_timers[buf] = nil
-          end
-        end,
-      })
-    end,
-  })
-
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "CodeCompanionRequestFinished",
-    callback = function(request)
-      if not M.active then
-        return
-      end
-
-      local buf = request.buf or (request.data and request.data.bufnr)
-      if buf and vim.api.nvim_buf_is_valid(buf) then
-        schedule_debounced_render(buf)
+      -- Attention stays active until its approval is handled
+      vim.api.nvim_echo({ { "" } }, false)
+      if state == "ready" then
+        set_turn_state(e.buf, nil)
+        refresh_all_chat_titles()
       end
     end,
   })
 
-  -- local group = vim.api.nvim_create_augroup("CodeCompanionForceScroll", { clear = true })
+  -- The chat may belong to another repository; refresh all visible Git statuses
+  -- vim.api.nvim_create_autocmd("User", {
+  --   desc = "Refresh Fugitive after CodeCompanion agent changes",
+  --   group = group,
+  --   pattern = { "CodeCompanionChatDone", "CodeCompanionChatStopped" },
+  --   callback = function()
+  --     vim.fn["fugitive#DidChange"](0, 1)
+  --   end,
+  -- })
 
+  -- Footer values that change when a turn ends or a session is restored
   vim.api.nvim_create_autocmd("User", {
-    pattern = { "CodeCompanionRequestStreaming", "CodeCompanionRequestFinished" },
-    -- group = group,
-    callback = function(request)
-      if not M.active then
-        return
-      end
-
-      local bufnr = request.data and request.data.bufnr
-      if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-        return
-      end
-
-      -- Cari window yang sedang menampilkan buffer chat ini
-      for _, winid in ipairs(vim.api.nvim_list_wins()) do
-        if vim.api.nvim_win_get_buf(winid) == bufnr then
-          local line_count = vim.api.nvim_buf_line_count(bufnr)
-          vim.api.nvim_win_set_cursor(winid, { line_count, 0 })
-          -- paksa juga viewport-nya biar baris terakhir kelihatan
-          vim.api.nvim_win_call(winid, function()
-            vim.cmd "normal! zb"
-          end)
-        end
-      end
-    end,
-  })
-
-  -- +-----------------------------------------------------------------------------+
-  -- |                                   Footer                                    |
-  -- +-----------------------------------------------------------------------------+
-  vim.api.nvim_create_autocmd("User", {
+    group = group,
     pattern = {
       "CodeCompanionChatDone",
       "CodeCompanionChatStopped",
       "CodeCompanionACPChatRestored",
     },
-    desc = "Refresh CodeCompanion chat footer when displayed state changes",
+    desc = "Refresh CodeCompanion chat footer",
     callback = function(e)
-      if not M.active then
-        return
-      end
       local bufnr = e.data and e.data.bufnr
       if not bufnr then
         return
@@ -509,56 +384,165 @@ function M.setup()
     end,
   })
 
+  -- ACP usage fetched after chat lifecycle events
   vim.api.nvim_create_autocmd("User", {
-    pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel" },
-    desc = "Refresh CodeCompanion chat footer when the adapter or model changes",
+    group = group,
+    pattern = {
+      "CodeCompanionChatCreated",
+      "CodeCompanionChatOpened",
+      "CodeCompanionChatDone",
+      "CodeCompanionChatStopped",
+    },
+    desc = "Refresh CodeCompanion usage limit",
     callback = function(e)
-      if not M.active then
-        return
-      end
       local bufnr = e.data and e.data.bufnr
       if not bufnr then
         return
       end
+      vim.defer_fn(function()
+        refresh_chat_usage(bufnr)
+      end, 50)
+    end,
+  })
 
+  -- Footer identity after adapter or model changes
+  vim.api.nvim_create_autocmd("User", {
+    group = group,
+    pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel" },
+    desc = "Refresh CodeCompanion chat adapter display",
+    callback = function(e)
+      local bufnr = e.data and e.data.bufnr
+      if not bufnr then
+        return
+      end
       vim.schedule(function()
         refresh_chat_footer(bufnr)
-        -- refresh_chat_usage(bufnr)
+        refresh_chat_usage(bufnr)
       end)
     end,
   })
 
+  -- Plan mode in the footer
   vim.api.nvim_create_autocmd("User", {
-    pattern = "CodeCompanionRequest*",
-    callback = function(request)
-      if not M.active then
+    group = group,
+    pattern = "CodeCompanionChatACPModeChanged",
+    desc = "Refresh CodeCompanion ACP mode display",
+    callback = function(e)
+      local bufnr = e.data and e.data.bufnr
+      if not bufnr then
         return
       end
+      vim.schedule(function()
+        refresh_chat_footer(bufnr)
+      end)
+    end,
+  })
 
-      if request.match == "CodeCompanionRequestStarted" then
-        vim.g.processing_ai = true
-      elseif request.match == "CodeCompanionRequestFinished" then
-        vim.g.processing_ai = false
+  -- Tool approval needs attention
+  vim.api.nvim_create_autocmd("User", {
+    group = group,
+    pattern = "CodeCompanionToolApprovalRequested",
+    desc = "Mark CodeCompanion chat as needing attention",
+    callback = function(e)
+      local bufnr = e.data and e.data.bufnr
+      if not bufnr then
+        return
+      end
+      set_turn_state(bufnr, "attention")
+      refresh_all_chat_titles()
+    end,
+  })
+
+  -- Resume the running state after an approval response
+  vim.api.nvim_create_autocmd("User", {
+    group = group,
+    pattern = "CodeCompanionToolApprovalFinished",
+    desc = "Resume CodeCompanion chat after tool approval",
+    callback = function(e)
+      local choice = e.data and e.data.choice
+      if choice ~= "cancelled" and not tool_labels.is_rejection(choice) then
+        vim.api.nvim_echo({ { "" } }, false)
+      end
+
+      local bufnr = e.data and e.data.bufnr
+      if bufnr and get_turn_state(bufnr) == "attention" then
+        set_turn_state(bufnr, spinners[bufnr] and "running" or nil)
+        refresh_all_chat_titles()
       end
     end,
   })
 
+  -- Start the turn state and buffer spinner
   vim.api.nvim_create_autocmd("User", {
-    pattern = "CodeCompanionChatClosed",
-    callback = function()
-      if not M.active then
+    group = group,
+    pattern = "CodeCompanionChatSubmitted",
+    desc = "Start CodeCompanion chat turn UI",
+    callback = function(e)
+      local bufnr = e.data and e.data.bufnr
+      if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
         return
       end
 
-      -- Defer slightly because the recently closed buffer may still be reported
-      -- as valid when this event fires.
+      set_turn_state(bufnr, "running")
+      refresh_all_chat_titles()
+      start_spinner(bufnr)
+    end,
+  })
+
+  -- Finish the turn state and clear the spinner
+  vim.api.nvim_create_autocmd("User", {
+    group = group,
+    pattern = { "CodeCompanionChatDone", "CodeCompanionChatStopped" },
+    desc = "Finish CodeCompanion chat turn UI",
+    callback = function(e)
+      local bufnr = e.data and e.data.bufnr
+      if not bufnr then
+        return
+      end
+
+      if e.match == "CodeCompanionChatStopped" then
+        set_turn_state(bufnr, "stopped")
+      elseif get_turn_state(bufnr) == "stopped" then
+        -- CodeCompanion can emit Done after Stopped
+        set_turn_state(bufnr, nil)
+      elseif vim.api.nvim_get_current_buf() == bufnr then
+        set_turn_state(bufnr, nil)
+      else
+        set_turn_state(bufnr, "ready")
+        notify_chat_done(bufnr)
+      end
+      refresh_all_chat_titles()
+
       vim.defer_fn(function()
-        if not has_active_codecompanion_buffers() then
-          M.teardown()
-        end
+        clear_spinner(bufnr)
       end, 50)
     end,
   })
+
+  -- Running inline requests, shown by the lualine codecompanion_inline component
+  -- vim.api.nvim_create_autocmd("User", {
+  --   group = group,
+  --   pattern = { "CodeCompanionInlineStarted", "CodeCompanionInlineFinished" },
+  --   desc = "Track running CodeCompanion inline requests",
+  --   callback = function(e)
+  --     local data = e.data
+  --     if not vim.api.nvim_buf_is_valid(data.bufnr) then
+  --       return
+  --     end
+  --
+  --     local buf_vars = vim.b[data.bufnr]
+  --     if e.match == "CodeCompanionInlineStarted" then
+  --       buf_vars.codecompanion_inline = {
+  --         id = data.id,
+  --         status = state_helpers.provider_icon(data.adapter.name) .. " " .. " 󰜎",
+  --       }
+  --     elseif vim.tbl_get(buf_vars, "codecompanion_inline", "id") == data.id then
+  --       -- An older request finishing must not clear a newer one's status
+  --       buf_vars.codecompanion_inline = nil
+  --     end
+  --     require("lualine").refresh { place = { "statusline" } }
+  --   end,
+  -- })
 end
 
 return M

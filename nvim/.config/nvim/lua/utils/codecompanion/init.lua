@@ -17,11 +17,10 @@ local function setup_plugin()
     -- Adapters
     adapters = {
       http = {
-        -- opts = {
-        --   show_presets = false,
-        --   show_model_choices = true,
-        -- },
-
+        opts = {
+          show_presets = false,
+          show_model_choices = true,
+        },
         ollama_qwen25_14b = adapters.ollama_qwen25_14b(),
         ollama_qwen25_7b = adapters.ollama_qwen25_7b(),
         ollama_qwen3_8b = adapters.ollama_qwen3_8b(),
@@ -55,24 +54,28 @@ local function setup_plugin()
           show_preset_prompts = false,
         },
       },
+
       diff = {
-        -- layout = "vertical",
-        enabled = true,
         threshold_for_chat = 15,
-        window = {
-          ---@return number|fun(): number
-          width = function()
-            return math.min(120, vim.o.columns - 10)
-          end,
-          ---@return number|fun(): number
-          height = function()
-            return vim.o.lines - 4
-          end,
-          opts = {
-            number = true,
-          },
-        },
       },
+      -- diff = {
+      --   -- layout = "vertical",
+      --   enabled = true,
+      --   threshold_for_chat = 15,
+      --   window = {
+      --     ---@return number|fun(): number
+      --     width = function()
+      --       return math.min(120, vim.o.columns - 10)
+      --     end,
+      --     ---@return number|fun(): number
+      --     height = function()
+      --       return vim.o.lines - 4
+      --     end,
+      --     opts = {
+      --       number = true,
+      --     },
+      --   },
+      -- },
     },
     -- Interactions
     interactions = {

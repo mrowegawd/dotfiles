@@ -204,6 +204,8 @@ add_local_or_remote {
             prev_item = "<a-p>",
 
             quit = { "q", "<Esc>" },
+
+            diselect_all = { "D", "<C-c><C-c>" },
           },
 
           note = {

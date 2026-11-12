@@ -58,6 +58,7 @@ add {
           -- equal to fold mapping
           ["zM"] = "Depth1",
           ["zR"] = "Depth4",
+          ["zO"] = "Depth4",
 
           -- ["<C-n>"] = false,
           -- ["<c-p>"] = false,

@@ -80,7 +80,7 @@ add_local_or_remote {
       picker = "fzf-lua", -- fzf-lua, telescope
       keymaps = {
         show_help = "g?",
-        close = { "q", "<Leader><Tab>", "<leader>bk" },
+        close = { "q", "<Leader><Tab>", "<Leader>bk" },
         goto_location = { "<CR>", "o" },
         peek_location = "<a-k>",
         goto_and_close = {},
@@ -89,6 +89,7 @@ add_local_or_remote {
         fold_toggle = { "<Tab>", "za" },
         fold = "zc",
         fold_all = "zM",
+        fold_toggle_all = {},
         unfold_all = { "zO", "zR" },
         fold_reset = "<space><space>",
         cycle_fold_depth = "<S-tab>",
@@ -96,10 +97,12 @@ add_local_or_remote {
         rename_symbol = {},
         code_actions = {},
         hover_symbol = "K",
-        next_ref_node = "<c-n>",
-        prev_ref_node = "<c-p>",
+        next_ref_node = "<C-n>",
+        prev_ref_node = "<C-p>",
         down_and_jump = "<a-n>",
         up_and_jump = "<a-p>",
+
+        filter_symbols = "<C-c>Fs",
 
         open_in_vsplit = "<Leader>ov",
         open_in_split = "<Leader>os",
@@ -127,11 +130,6 @@ UtilKey.nnoremap("<Leader>oA", function()
   load_outline()
   vim.cmd.OutlineFloat()
 end, { desc = "Open: outline float window [outline]" })
-
-UtilKey.nnoremap("<Leader>ua", function()
-  load_outline()
-  vim.cmd.OutlineFloat()
-end, { desc = "Toggle: toggle follow outline [outline]" })
 
 vim.api.nvim_create_user_command("OutlineToggleFollow", function()
   load_outline()
@@ -161,3 +159,19 @@ vim.api.nvim_create_user_command("OutlineToggleFollow", function()
     Log.info "Outline: follow enabled"
   end
 end, {})
+
+local UtilAugroup = lazy("utils.map").augroup
+local whichkey = lazy "which-key"
+
+UtilAugroup("OutlineNvim", {
+  event = "FileType",
+  pattern = "Outline",
+  command = function(ev)
+    whichkey.add {
+      { "<C-c>F", name = "Filter", buffer = ev.buf },
+    }
+
+    --stylua: ignore
+    UtilKey.nnoremap("<C-c>uf", vim.cmd.OutlineToggleFollow , { desc = "Toggle: toggle follow outline [outline]", buffer = ev.buf, remap = true, force = true })
+  end,
+})

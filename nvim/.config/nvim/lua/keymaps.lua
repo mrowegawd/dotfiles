@@ -1,7 +1,6 @@
-local UtilKey = require "utils.map"
-
 local lazy = require("utils.plugin").require_lazy
 
+local UtilKey = lazy "utils.map"
 local Log = lazy "utils.log"
 local IconMisc = lazy("icons").misc
 
@@ -108,8 +107,9 @@ UtilKey.nnoremap("tn", function()
   if vim.bo.filetype == "neo-tree" then
     vim.cmd "wincmd p"
   end
-  vim.cmd "tabedit %"
+  vim.cmd "$tabedit %"
 end, { desc = "Tab: new tab", silent = true })
+
 UtilKey.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close" })
 UtilKey.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first" })
 UtilKey.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last" })
@@ -504,9 +504,9 @@ UtilKey.xnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 UtilKey.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
 
 --stylua: ignore
-UtilKey.nnoremap("<Leader>cd", function() local filepath =vim.fn.expand "%:p:h" vim.cmd(string.format("cd %s", filepath)) vim.notify(string.format("ROOT CHANGED: %s", filepath)) end, { desc = "Action: cd to file" })
+UtilKey.nnoremap("<Leader>cd", function() local filepath =vim.fn.expand "%:p:h" vim.cmd(string.format("cd %s", filepath)) Log.info(string.format("ROOT CHANGED: %s", filepath)) end, { desc = "Action: cd to file" })
 --stylua: ignore
-UtilKey.nnoremap("<Leader>cy", function() local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or "" vim.fn.setreg("+", path) vim.notify(path, vim.log.levels.INFO, { title = "Copy current path" }) end, { silent = true, desc = "Action: copy path buffer" })
+UtilKey.nnoremap("<Leader>xy", function() local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or "" vim.fn.setreg("+", path) Log.info("copied: "..path) end, { silent = true, desc = "Exec: copy path buffer" })
 UtilKey.nnoremap("<Leader>xP", function()
   local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")

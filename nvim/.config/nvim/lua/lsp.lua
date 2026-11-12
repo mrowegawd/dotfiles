@@ -3,6 +3,7 @@ local add = require("vim-pack").add
 local lazy = require("utils.plugin").require_lazy
 
 local UtilKey = lazy "utils.map"
+local UtilQf = lazy "utils.qf"
 local Log = lazy "utils.log"
 
 ---@param mode string  Trouble mode, e.g. "lsp_definitions"
@@ -10,40 +11,75 @@ local Log = lazy "utils.log"
 local function trouble(mode, extra)
   return function()
     lazy("vim-pack").load_now "trouble.nvim"
-    vim.cmd(("Trouble %s toggle focus=true auto_refresh=false%s"):format(mode, extra and (" " .. extra) or ""))
+    -- vim.cmd(("Trouble %s toggle focus=true auto_refresh=false%s"):format(mode, extra and (" " .. extra) or ""))
+    vim.cmd(("Trouble %s focus=false new=true auto_refresh=false%s"):format(mode, extra and (" " .. extra) or ""))
   end
 end
 
-local ALLOWED_SYMBOL_KINDS = {
-  Class = true,
-  Constructor = true,
-  Enum = true,
-  Function = true,
-  Interface = true,
-  Method = true,
-  Module = true,
-  Namespace = true,
-  Struct = true,
+local SYMBOL_KINDS_BY_FILETYPE = {
+  lua = { "Function", "Method", "Namespace", "Module", "Object" },
+  go = { "Struct", "Interface", "Function", "Method", "TypeParameter" },
+  python = { "Class", "Function", "Method", "Module" },
+  javascript = { "Class", "Function", "Method", "Interface", "Variable", "Constant" },
+  typescript = { "Class", "Function", "Method", "Interface", "TypeAlias", "Enum", "Variable" },
+  rust = { "Struct", "Enum", "Trait", "Function", "Method", "Module" },
+  -- add more?
 }
 
+local DEFAULT_KINDS = {
+  "Class",
+  "Constructor",
+  "Enum",
+  "Function",
+  "Interface",
+  "Method",
+  "Module",
+  "Namespace",
+  "Struct",
+}
+
+local pad_symbol = 0
+local function create_lookup_set(list)
+  local set = {}
+  for _, kind in ipairs(list) do
+    set[kind] = true
+    if pad_symbol < #kind then
+      pad_symbol = #kind
+    end
+  end
+  return set
+end
+
 local function document_symbols_to_loclist()
+  local ft = vim.bo.filetype
+  local allowed_list = SYMBOL_KINDS_BY_FILETYPE[ft] or DEFAULT_KINDS
+  local allowed_set = create_lookup_set(allowed_list)
+
   vim.lsp.buf.document_symbol {
     on_list = function(opts)
       local items = opts.items or {}
 
-      if next(ALLOWED_SYMBOL_KINDS) then
-        items = vim.tbl_filter(function(item)
-          return ALLOWED_SYMBOL_KINDS[item.kind] == true
-        end, items)
-      end
+      items = vim.tbl_filter(function(item)
+        return item.kind and allowed_set[item.kind] == true
+      end, items)
 
       if #items == 0 then
-        Log.warn "No symbols found"
+        Log.warn("No relevant symbols found for filetype: " .. (ft ~= "" and ft or "unknown"))
         return
       end
 
-      vim.fn.setloclist(0, {}, " ", { title = "Document Symbols", items = items })
-      vim.cmd "lopen"
+      items = vim.tbl_map(function(item)
+        local name = item.name or item.text or ""
+        name = name:gsub("^%[.*%]%s*", "")
+
+        local padded_kind = string.format("[%s]%-" .. pad_symbol - #item.kind .. "s", item.kind or "Unknown", "")
+        item.text = string.format("%s %s", padded_kind, name)
+        return item
+      end, items)
+
+      local title = "textDocumentSymbol"
+      local list_items = { items = items, title = title }
+      UtilQf.save_to_qf_and_auto_open_qf(list_items, true)
     end,
   }
 end
@@ -136,6 +172,7 @@ local function get_keys()
       has = "definition",
       desc = "LSP: definitions vsplit [trouble]",
     },
+    { "<Leader>la", trouble "lsp", has = "typeDefinition", desc = "LSP: all [trouble]" },
     { "<Leader>lt", trouble "lsp_type_definitions", has = "typeDefinition", desc = "LSP: type definitions [trouble]" },
     { "<Leader>lr", trouble "lsp_references", has = "references", desc = "LSP: references [trouble]", nowait = true },
     { "<Leader>lR", trouble "lsp", desc = "LSP: lsp stuff [trouble]", nowait = true },
@@ -221,7 +258,7 @@ local function setup_diagnostics()
 end
 
 local function disable_default_keymaps()
-  for _, lhs in ipairs { "grn", "gri", "grr", "grt", "gO" } do
+  for _, lhs in ipairs { "grn", "gri", "grr", "grt", "gO", "grx" } do
     pcall(vim.keymap.del, "n", lhs)
   end
   pcall(vim.keymap.del, { "n", "x" }, "gra")

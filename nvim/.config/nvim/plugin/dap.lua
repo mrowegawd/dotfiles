@@ -85,31 +85,55 @@ local function setup_listeners()
     dap.listeners.after[ev][LISTENER_ID] = sync
   end
 
-  dap.listeners.before.attach[LISTENER_ID] = function()
+  local function safe(fn)
+    return function(...)
+      local ok, err = pcall(fn, ...)
+      if not ok then
+        vim.schedule(function()
+          Log.error("dap-view listener error: " .. tostring(err))
+        end)
+      end
+    end
+  end
+
+  dap.listeners.before.attach[LISTENER_ID] = safe(function()
     dv.open()
-  end
-  dap.listeners.before.launch[LISTENER_ID] = function()
+  end)
+  dap.listeners.before.launch[LISTENER_ID] = safe(function()
     dv.open()
-  end
-  dap.listeners.before.event_terminated[LISTENER_ID] = function()
+  end)
+  dap.listeners.before.event_terminated[LISTENER_ID] = safe(function()
     dv.close()
-  end
-  dap.listeners.before.event_exited[LISTENER_ID] = function()
+  end)
+  dap.listeners.before.event_exited[LISTENER_ID] = safe(function()
     dv.close()
+  end)
+end
+
+local function prune_dead_sessions()
+  for id, s in pairs(dap.sessions()) do
+    if s.closed then
+      dap.sessions()[id] = nil
+    end
   end
 end
 
 local function quit_dap()
   local s = dap.session()
   if not s then
+    prune_dead_sessions()
+    sync_session_keymaps()
     return
   end
+
   dap.terminate()
+
   vim.defer_fn(function()
     if dap.session() == s then
       pcall(dap.disconnect, { terminateDebuggee = true })
       pcall(dap.close)
     end
+    prune_dead_sessions()
     sync_session_keymaps()
   end, 2000)
 end
@@ -132,6 +156,150 @@ local function get_args(config)
   return config
 end
 
+local function focus_source_win()
+  local cur = vim.api.nvim_get_current_buf()
+  if vim.bo[cur].buftype == "" and not vim.bo[cur].filetype:match "^dap" then
+    return
+  end
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].buftype == "" and vim.api.nvim_win_get_config(win).relative == "" then
+      vim.api.nvim_set_current_win(win)
+      return
+    end
+  end
+end
+
+local function safe_continue()
+  focus_source_win()
+  prune_dead_sessions()
+  dap.continue()
+end
+
+local function move_line(delta)
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  vim.cmd.move(tostring(line + delta))
+  pcall(function()
+    vim.cmd.normal { args = { "zO" }, bang = true, mods = { silent = true } }
+  end)
+end
+
+local function get_active_adapter_info()
+  local s = dap.session()
+  if not s or not s.adapter then
+    return nil
+  end
+  return {
+    host = s.adapter.host,
+    port = s.adapter.port,
+    type = s.adapter.type,
+    id = s.id,
+  }
+end
+
+local function find_pids_on_port(port)
+  if not port then
+    return {}
+  end
+  local cmd = string.format(
+    "lsof -t -i :%d 2>/dev/null || ss -lptn 'sport = :%d' 2>/dev/null | grep -oP 'pid=\\K[0-9]+' || true",
+    port,
+    port
+  )
+  local pids = vim.fn.systemlist(cmd)
+  return vim.tbl_filter(function(p)
+    return p and p ~= "" and p:match "^%d+$"
+  end, pids)
+end
+
+local function kill_port(port, label)
+  if not port then
+    return 0
+  end
+  local pids = find_pids_on_port(port)
+  if #pids == 0 then
+    return 0
+  end
+  for _, pid in ipairs(pids) do
+    vim.fn.system { "kill", "-9", pid }
+  end
+  Log.warn(("DAP: killing %d processes on port %d (%s)"):format(#pids, port, label or "adapter"))
+  return #pids
+end
+
+local function force_disconnect()
+  pcall(dap.terminate)
+
+  vim.defer_fn(function()
+    pcall(dap.disconnect, { terminateDebuggee = true })
+    pcall(dap.close)
+    sync_session_keymaps()
+    Log.warn "DAP: session forcibly terminated"
+  end, 300)
+end
+
+local function recover_dap()
+  local info = get_active_adapter_info()
+
+  force_disconnect()
+
+  vim.defer_fn(function()
+    if info and info.port then
+      kill_port(info.port, info.type or "adapter")
+    end
+
+    vim.defer_fn(function()
+      keymaps_active = false
+      saved_maps = {}
+      prune_dead_sessions()
+      sync_session_keymaps()
+      Log.info "DAP: recovery complete, try <Leader>dn again"
+    end, 200)
+  end, 400)
+end
+
+local function kill_all_known_adapter_ports()
+  local known_ports = {
+    { 8086, "osv/nlua" }, -- one-small-step-for-vimkind
+    { 38697, "debugpy" }, -- nvim-dap-python (default)
+    { 4711, "debugpy-alt" }, -- debugpy alternative
+    { 12345, "delve" }, -- nvim-dap-go (default)
+  }
+  local total = 0
+  for _, p in ipairs(known_ports) do
+    total = total + kill_port(p[1], p[2])
+  end
+  if total == 0 then
+    Log.info "DAP: tidak ada proses adapter di port umum"
+  end
+end
+
+local function dap_status()
+  local s = dap.session()
+
+  local lines = {
+    "DAP session: " .. (s and ("active (id=" .. tostring(s.id) .. ")") or "none"),
+  }
+
+  if s and s.adapter and s.adapter.port then
+    lines[#lines + 1] = ("Adapter port: %d (%s)"):format(s.adapter.port, s.adapter.type or "?")
+  end
+
+  local known = { 8086, 38697, 4711, 12345 }
+  for _, port in ipairs(known) do
+    local busy = find_pids_on_port(port)
+    if #busy > 0 then
+      lines[#lines + 1] = ("Port %d: IN USE (pid: %s)"):format(port, table.concat(busy, ","))
+    end
+  end
+
+  if #lines == 1 then
+    lines[#lines + 1] = "No common adapter ports are in use"
+  end
+
+  Log.info(table.concat(lines, "\n"))
+end
+
 add_on_event("UIEnter", {
   {
     src = "jbyuki/one-small-step-for-vimkind",
@@ -144,11 +312,86 @@ add_on_event("UIEnter", {
   },
 })
 
+local function edit_breakpoint()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lnum = vim.api.nvim_win_get_cursor(0)[1]
+
+  local bp = { condition = "", logMessage = "", hitCondition = "", line = lnum }
+  for _, candidate in ipairs((dap_bps.get(bufnr) or {})[bufnr] or {}) do
+    if candidate.line == lnum then
+      bp = vim.tbl_extend("force", bp, candidate)
+      break
+    end
+  end
+
+  local fields = {
+    { label = "Condition", key = "condition" },
+    { label = "Hit Condition", key = "hitCondition" },
+    { label = "Log Message", key = "logMessage" },
+  }
+
+  vim.ui.select(fields, {
+    prompt = "Edit Breakpoint",
+    format_item = function(f)
+      return ("%s: %s"):format(f.label, bp[f.key] or "")
+    end,
+  }, function(f)
+    if not f then -- dibatalkan
+      return
+    end
+    bp[f.key] = vim.fn.input { prompt = f.label .. ": ", default = bp[f.key] or "" }
+    dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
+  end)
+end
+
+-- ┌─────────────────────────────────────────────────────────────────────────────┐
+--                                     PLUGIN
+-- └─────────────────────────────────────────────────────────────────────────────┘
+
 add {
   {
     src = "mfussenegger/nvim-dap",
     setup = false,
-    on_setup = setup_listeners,
+    -- on_setup = setup_listeners,
+    on_setup = function()
+      setup_listeners()
+
+      -- dap.adapters.nlua = function(callback, config)
+      --   callback {
+      --     type = "server",
+      --     host = config.host or "127.0.0.1",
+      --     port = config.port or 8086,
+      --   }
+      -- end
+      dap.adapters.nlua = function(callback, config)
+        local host, port = config.host or "127.0.0.1", config.port or 8086
+        local tcp = vim.uv.new_tcp()
+        if not tcp then
+          return
+        end
+
+        tcp:connect(host, port, function(err)
+          tcp:close()
+          vim.schedule(function()
+            if err then
+              Log.error(("osv is not listening on %s:%d, run <Leader>dL in the target instance"):format(host, port))
+              return
+            end
+            callback { type = "server", host = host, port = port }
+          end)
+        end)
+      end
+
+      dap.configurations.lua = {
+        {
+          type = "nlua",
+          request = "attach",
+          name = "Attach to running Neovim instance (osv)",
+          host = "127.0.0.1",
+          port = 8086,
+        },
+      }
+    end,
   },
   {
     src = "theHamsta/nvim-dap-virtual-text",
@@ -188,12 +431,51 @@ add {
       switchbuf = "usetab,uselast",
 
       keymaps = {
-        threads = {
-          filter = "s",
-          toggle_subtle_frames = "i",
+        scopes = {
+          toggle = { "<CR>", "<2-LeftMouse>" },
+          jump_to_parent = "[[",
+          set_value = "s",
         },
         watches = {
-          edit_expression = "x",
+          toggle = { "<CR>", "<2-LeftMouse>" },
+          jump_to_parent = "[[",
+          set_value = "s",
+          copy_value = "c",
+          delete_expression = "d",
+          append_expression = "a",
+          insert_expression = "i",
+          edit_expression = "e",
+        },
+        hover = {
+          quit = "q",
+          toggle = { "<CR>", "<2-LeftMouse>" },
+          jump_to_parent = "[[",
+          set_value = "s",
+        },
+        help = {
+          quit = "q",
+        },
+        console = {
+          next_session = "]s",
+          prev_session = "[s",
+        },
+        threads = {
+          toggle_subtle_frames = "t",
+          filter = "f",
+          invert_filter = "o",
+          jump_to_frame = { "<CR>", "<2-LeftMouse>" },
+          force_jump = "<C-w><CR>",
+        },
+        exceptions = {
+          toggle_filter = { "<CR>", "<2-LeftMouse>" },
+        },
+        sessions = {
+          switch_session = { "<CR>", "<2-LeftMouse>" },
+        },
+        breakpoints = {
+          delete_breakpoint = "d",
+          jump_to_breakpoint = { "<CR>", "<2-LeftMouse>" },
+          force_jump = "<C-w><CR>",
         },
         base = {
           next_view = "gl",
@@ -228,6 +510,89 @@ add {
   },
 }
 
+vim.fn.sign_define {
+  {
+    name = "DapBreakpoint",
+    texthl = "DapBreakpoint",
+    -- linehl = "DapBreakpointLine",
+    text = IconsDebug.Breakpoint,
+  },
+  {
+    name = "DapBreakpointCondition",
+    texthl = "DapBreakpointCondition",
+    text = IconsDebug.BreakpointCondition,
+  },
+  {
+    name = "DapStopped",
+    texthl = "DapStoppedIcon",
+    numhl = "DapStopped",
+    linehl = "DapStoppedLine",
+    text = IconsDebug.Stopped,
+  },
+  {
+    name = "DapBreakpointRejected",
+    texthl = "DapBreakpointRejected",
+    numhl = "DapBreakpointRejected",
+    linehl = "DapBreakpointRejectedLine",
+    text = IconsDebug.BreakpointRejected,
+  },
+}
+
+-- ────────────────────────────────────────────────────────────────────────────────
+-- ╒═════════════════════════════════════════════════════════════════════════════╕
+--        - TAKEN FROM: https://igorlfs.github.io/nvim-dap-view/completion
+-- ╘═════════════════════════════════════════════════════════════════════════════╛
+---@param line integer?
+---@diagnostic disable-next-line: undefined-doc-name
+---@return dap.bp?
+local function get_breakpoint_by_line(line)
+  local line_ = line or vim.api.nvim_win_get_cursor(0)[1]
+  local buf = vim.api.nvim_get_current_buf()
+  local breakpoints = lazy("dap.breakpoints").get(buf)
+  local breakpoint = vim.iter(breakpoints[buf] or {}):find(function(bp)
+    ---@diagnostic disable-next-line: undefined-field
+    return bp.line == line_
+  end)
+
+  return breakpoint
+end
+
+local function set_breakpoint_conditional()
+  local default = get_breakpoint_by_line()
+
+  vim.ui.input({
+    prompt = "Breakpoint condition: ",
+    -- Note that the function is not called directly
+    completion = "customlist,v:lua.require'dap-view'.complete",
+    ---@diagnostic disable-next-line: undefined-field
+    default = default and default.condition,
+  }, function(input)
+    if input then
+      dap.set_breakpoint(input)
+    end
+  end)
+end
+
+local function set_log_point()
+  local default = get_breakpoint_by_line()
+
+  vim.ui.input({
+    prompt = "Log point message: ",
+    completion = "customlist,v:lua.require'dap-view'.complete",
+    ---@diagnostic disable-next-line: undefined-field
+    default = default and default.logMessage,
+  }, function(input)
+    if input then
+      dap.set_breakpoint(nil, nil, input)
+    end
+  end)
+end
+-- ────────────────────────────────────────────────────────────────────────────────
+
+-- ┌─────────────────────────────────────────────────────────────────────────────┐
+--                                     KEYMAPS
+-- └─────────────────────────────────────────────────────────────────────────────┘
+
 UtilAugroup("dap_options", {
   event = "FileType",
   pattern = "dap-view",
@@ -237,91 +602,24 @@ UtilAugroup("dap_options", {
   desc = "Set options for DAP UI",
 })
 
-vim.fn.sign_define {
-  {
-    name = "DapBreakpoint",
-    texthl = "DapBreakpoint",
-    text = IconsDebug.Breakpoint,
-  },
-  {
-    name = "DapStopped",
-    texthl = "DapStoppedIcon",
-    numhl = "DapStopped",
-    linehl = "DapStopped",
-    text = IconsDebug.Stopped,
-  },
-  {
-    name = "DapBreakpointRejected",
-    texthl = "DapBreakpointRejected",
-    numhl = "DapBreakpointRejected",
-    linehl = "DapBreakpointRejected",
-    text = IconsDebug.BreakpointRejected,
-  },
-}
-
-local function edit_breakpoint()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lnum = vim.api.nvim_win_get_cursor(0)[1]
-
-  local bp = { condition = "", logMessage = "", hitCondition = "", line = lnum }
-  for _, candidate in ipairs((dap_bps.get(bufnr) or {})[bufnr] or {}) do
-    if candidate.line == lnum then
-      bp = vim.tbl_extend("force", bp, candidate)
-      break
-    end
-  end
-
-  local fields = {
-    { label = "Condition", key = "condition" },
-    { label = "Hit Condition", key = "hitCondition" },
-    { label = "Log Message", key = "logMessage" },
-  }
-
-  vim.ui.select(fields, {
-    prompt = "Edit Breakpoint",
-    format_item = function(f)
-      return ("%s: %s"):format(f.label, bp[f.key] or "")
-    end,
-  }, function(f)
-    if not f then -- dibatalkan
-      return
-    end
-    bp[f.key] = vim.fn.input { prompt = f.label .. ": ", default = bp[f.key] or "" }
-    dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
-  end)
-end
-
 local function open_debug_commands()
   local debug_cmds = {
     ["Breakpoint - breakpoint with conditions"] = edit_breakpoint,
-    ["Breakpoint - breakpoint clear all"] = function()
-      dap.clear_breakpoints()
-    end,
-    ["Breakpoint - breakpoints send to qf"] = function()
-      dap.list_breakpoints(true)
-    end,
-    ["Cursor - go to line"] = function()
-      dap.goto_()
-    end,
-    ["Run - run at cursor"] = function()
-      dap.run_to_cursor()
-    end,
-    ["Run - run last"] = function()
-      dap.run_last()
-    end,
-    ["Run - run with arguments"] = function()
-      dap.continue { before = get_args }
-    end,
-    ["Run - run / start / continue"] = function()
-      dap.continue()
-    end,
+    ["Breakpoint - breakpoint clear all"] = dap.clear_breakpoints,
+    --stylua: ignore
+    ["Breakpoint - breakpoints send to qf"] = function() dap.list_breakpoints(true) end,
+    ["Cursor - go to line"] = dap.goto_,
+    ["Run - run at cursor"] = dap.run_to_cursor,
+    ["Run - run last"] = dap.run_last,
+    --stylua: ignore
+    ["Run - run with arguments"] = function() dap.continue { before = get_args } end,
+    ["Run - run / start / continue"] = safe_continue,
+    ["Run - restart"] = recover_dap,
     ["Run - quit / close / terminate the debug session"] = quit_dap,
-    ["Run - printout or show the session"] = function()
-      Log.info(vim.inspect(dap.session(), { depth = 2 }))
-    end,
-    ["REPL - toggle dap REPL"] = function()
-      dap.repl.toggle()
-    end,
+    --stylua: ignore
+    ["Run - printout or show the session"] = function() Log.info(vim.inspect(dap.session(), { depth = 2 })) end,
+    ["REPL - toggle dap REPL"] = dap.repl.toggle,
+    ["GUI - toggle dap GUI"] = dv.toggle,
   }
 
   if vim.bo.filetype == "lua" then
@@ -346,27 +644,24 @@ local function open_debug_commands()
   })
 end
 
-local function move_line(delta)
-  local line = vim.api.nvim_win_get_cursor(0)[1]
-  vim.cmd.move(tostring(line + delta))
-  pcall(function()
-    vim.cmd.normal { args = { "zO" }, bang = true, mods = { silent = true } }
-  end)
-end
-
 local cmds = {
   --stylua: ignore
   { "<Leader>dl", function() dap.run_last() end, "run last" },
   --stylua: ignore
-  { "<Leader>db", function() dap.toggle_breakpoint() end, "toggle breakpoint" },
+  { "<Leader>dbb", function() dap.toggle_breakpoint() end, "toggle breakpoint" },
   --stylua: ignore
-  { "<Leader>dB", function() dap.clear_breakpoints() end, "clear all breakpoint" },
+  { "<Leader>dbC", function() dap.clear_breakpoints() end, "clear all breakpoint" },
   --stylua: ignore
-  { "<Leader>dc", function() dap.set_breakpoint(vim.fn.input "Breakpoint condition: ") end, "conditional breakpoint" },
+  { "<Leader>dbc", set_breakpoint_conditional, "conditional breakpoint" },
   --stylua: ignore
-  { "<Leader>df", function() fzf.dap_breakpoints() end, "list breakpoints (fzflua)" },
+  { "<Leader>dbl", set_log_point,"set log breakpoint" },
   --stylua: ignore
-  { "<Leader>dn", function() dap.continue() end, "run/start/continue" },
+  { "<Leader>dbf", function() fzf.dap_breakpoints() end, "list breakpoints (fzflua)" },
+  --stylua: ignore
+  { "<Leader>dn", safe_continue, "run/start/continue" },
+  { "<Leader>dR", recover_dap, "recovery session & adapter" },
+  { "<Leader>dK", kill_all_known_adapter_ports, "kill all known adapter ports" },
+  { "<Leader>dS", dap_status, "check status session & port" },
   --stylua: ignore
   { "<Leader>dC", quit_dap, "quit/close" },
   --stylua: ignore
@@ -380,3 +675,5 @@ for _, cmd in ipairs(cmds) do
 end
 
 UtilKey.nnoremap("<Leader>dF", open_debug_commands, { desc = "Bulk: debug commands" })
+--stylua: ignore
+UtilKey.nnoremap("<Leader>duu", function() dv.toggle() end, { desc = "Toggle: gui" })

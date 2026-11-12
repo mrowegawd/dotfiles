@@ -32,7 +32,7 @@ M.config = {
   split_position = "above",
 
   float_ratio = 0.25,
-  float_width_ratio = 0.5,
+  float_width_ratio = 0.3,
   float_border = "rounded",
   float_padding = 2,
 

@@ -64,6 +64,50 @@ local path_normalize = function(path_str)
   return vim.fs.normalize(path)
 end
 
+---@param is_grep boolean?
+local function call_overlook(is_grep)
+  is_grep = is_grep or false
+
+  return function(selected)
+    if not selected then
+      return
+    end
+
+    local paths = {}
+    if #selected > 1 then
+      Log.warn "Multiple paths selected; using the first one"
+    end
+
+    local sel = selected[1]
+    local col = 1
+    local lnum = 1
+    if is_grep then
+      local sel_trim = vim.split(sel, ":")
+      sel = sel_trim[1]
+      lnum = tonumber(sel_trim[2]) or lnum
+      col = tonumber(sel_trim[3]) or col
+    end
+
+    table.insert(paths, path_normalize(sel))
+
+    local Overlook_win = lazy "overlook.window"
+    local current_win = vim.api.nvim_get_current_win()
+    if Overlook_win.instances[current_win] then
+      Overlook_win.instances[current_win] = nil
+    end
+
+    for _, p in pairs(paths) do
+      local buf = lazy("utils.cmd").get_or_create_bufnr(p)
+      lazy("overlook.window").open_popup {
+        target_bufnr = buf,
+        lnum = lnum,
+        col = col,
+        title = vim.fn.bufname(buf),
+      }
+    end
+  end
+end
+
 -- Picker, finder, etc.
 add {
   {
@@ -186,10 +230,7 @@ add {
               header = "find-at-dir",
             },
             ["ctrl-o"] = {
-              fn = function(...)
-                local P = lazy "overlook.peek"
-                P.peek_fzflua(...)
-              end,
+              fn = call_overlook(),
               noclose = false,
               desc = "peek-file",
               header = "peek-file",
@@ -450,6 +491,12 @@ add {
               fn = function(selected, opts)
                 actions.file_sel_to_qf(selected, opts)
               end,
+            },
+            ["ctrl-o"] = {
+              fn = call_overlook(true),
+              noclose = false,
+              desc = "peek-file",
+              header = "peek-file",
             },
             ["ctrl-x"] = {
               fn = function()

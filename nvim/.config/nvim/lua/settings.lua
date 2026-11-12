@@ -220,9 +220,10 @@ o.foldmethod = "expr" -- Uses treesitter as folding source.
 o.foldtext = ""
 -- }}}
 -- {{{ Timings
-o.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
-o.updatetime = 200 -- Save swap file and trigger CursorHold
--- o.updatetime = 50
+o.updatetime = 300
+o.timeout = true
+o.timeoutlen = 500
+o.ttimeoutlen = 50
 
 o.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the undodir
 o.undolevels = 10000

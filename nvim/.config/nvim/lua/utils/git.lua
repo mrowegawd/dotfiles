@@ -27,7 +27,7 @@ local function git(args, cwd)
   return out ~= "" and out or nil
 end
 
-local function git_root()
+function M.git_root()
   local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
   if vim.fn.isdirectory(dir) == 0 then
     ---@diagnostic disable-next-line: cast-local-type
@@ -100,7 +100,7 @@ end
 --- Resolve the repo root and remote info in one go, logging an error if it fails.
 ---@return string? root, RemoteInfo? remote
 local function resolve_repo()
-  local root = git_root()
+  local root = M.git_root()
   if not root then
     Log.error "Not a git repository"
     return nil
@@ -215,7 +215,7 @@ end
 
 --- Stream previously deleted files into fzf asynchronously (keeps the UI responsive).
 function M.trace_file_event()
-  local root = git_root()
+  local root = M.git_root()
   if not root then
     Log.error "Bukan repository git"
     return
@@ -305,7 +305,7 @@ end
 
 --- Pick a branch, then a file from that branch, and open it with fugitive.
 function M.select_file_different_branch()
-  local root = git_root()
+  local root = M.git_root()
   local branches = vim.fn.systemlist {
     "git",
     "-C",
