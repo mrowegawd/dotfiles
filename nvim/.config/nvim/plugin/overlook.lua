@@ -109,17 +109,111 @@ local function get_api()
   return lazy "overlook.api"
 end
 
+---@param bufnr? integer
+local function peek_buffer_info(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    vim.notify("Invalid buffer", vim.log.levels.WARN)
+    return
+  end
+
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local short_name = vim.fn.fnamemodify(filename, ":t")
+
+  local function get_option(name)
+    local ok, value = pcall(vim.api.nvim_get_option_value, name, {
+      buf = bufnr,
+    })
+
+    return ok and value or "<unavailable>"
+  end
+
+  local function format_value(value)
+    if type(value) == "string" then
+      return value == "" and '""' or value
+    end
+
+    return vim.inspect(value)
+  end
+
+  local options = {
+    "filetype",
+    "buftype",
+    "buflisted",
+    "bufhidden",
+    "modifiable",
+    "modified",
+    "readonly",
+    "swapfile",
+    "undofile",
+    "fileformat",
+    "fileencoding",
+    "bomb",
+    "endofline",
+    "fixendofline",
+    "expandtab",
+    "shiftwidth",
+    "tabstop",
+    "softtabstop",
+    "textwidth",
+    "autoindent",
+    "smartindent",
+    "formatoptions",
+    "commentstring",
+    "iskeyword",
+    "omnifunc",
+    "indentexpr",
+    "formatexpr",
+  }
+
+  local lines = {
+    "BUFFER INFORMATION",
+    string.rep("─", 40),
+    "Name       : " .. (short_name ~= "" and short_name or "[No Name]"),
+    "Path       : " .. (filename ~= "" and filename or "[No Name]"),
+    "Buffer     : " .. bufnr,
+    "Loaded     : " .. tostring(vim.api.nvim_buf_is_loaded(bufnr)),
+    "Lines      : " .. vim.api.nvim_buf_line_count(bufnr),
+    "Changed    : " .. vim.api.nvim_buf_get_changedtick(bufnr),
+    "",
+    "BUFFER OPTIONS",
+    string.rep("─", 40),
+  }
+
+  for _, name in ipairs(options) do
+    lines[#lines + 1] = string.format("%-16s : %s", name, format_value(get_option(name)))
+  end
+
+  local info_bufnr = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(info_bufnr, 0, -1, false, lines)
+
+  -- vim.api.nvim_set_option_value("filetype", "text", { buf = info_bufnr })
+  -- vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = info_bufnr })
+  -- vim.api.nvim_set_option_value("swapfile", false, { buf = info_bufnr })
+  -- vim.api.nvim_set_option_value("modifiable", false, { buf = info_bufnr })
+
+  require("overlook.window").open_popup {
+    target_bufnr = info_bufnr,
+    lnum = 1,
+    col = 0,
+    title = " Buffer Info: " .. (short_name ~= "" and short_name or "[No Name]"),
+  }
+end
+
 local cmds = {
   --stylua: ignore
-  { "<Leader>cpp", function() get_api().peek_definition() end, "definition" },
+  { "<Leader>pd", function() get_api().peek_definition() end, "definition" },
   --stylua: ignore
-  { "<Leader>cpC", function() get_api().close_all() end, "close all" },
+  { "<Leader>pC", function() get_api().close_all() end, "close all" },
   --stylua: ignore
-  { "<Leader>cpc", function() get_api().peek_cursor() end, "cursor" },
+  { "<Leader>pp", function() get_api().peek_cursor() end, "cursor" },
   --stylua: ignore
-  { "<Leader>cpr", function() get_api().restore_popup() end, "restore popup" },
+  { "<Leader>pb", peek_buffer_info, "buffer info & options" },
   --stylua: ignore
-  { "<Leader>cpR", function() get_api().restore_all_popups() end, "restore all popup" },
+  { "<Leader>pr", function() get_api().restore_popup() end, "restore last popup" },
+  --stylua: ignore
+  { "<Leader>pR", function() get_api().restore_all_popups() end, "restore all popups" },
 }
 
 for _, cmd in ipairs(cmds) do

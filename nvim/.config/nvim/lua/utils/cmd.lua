@@ -127,11 +127,9 @@ end
 function M.get_selection()
   local is_visual, mode = M.get_vim_mode()
   if is_visual then
-    local type_map = { v = "v", V = "V", ["\22"] = "b" }
-    local vtype = type_map[mode] or "v"
     local start_pos = vim.fn.getpos "v"
     local end_pos = vim.fn.getpos "."
-    local region = vim.fn.getregion(start_pos, end_pos, { type = vtype })
+    local region = vim.fn.getregion(start_pos, end_pos, { mode = mode })
     return table.concat(region, "\n")
   end
   return vim.fn.expand "<cword>"

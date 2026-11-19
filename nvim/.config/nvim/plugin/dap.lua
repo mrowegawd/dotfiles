@@ -173,7 +173,15 @@ end
 local function safe_continue()
   focus_source_win()
   prune_dead_sessions()
-  dap.continue()
+  if not has_session() then
+    if vim.bo.filetype == "rust" then
+      vim.cmd.RustLsp "debuggables"
+    else
+      dap.continue()
+    end
+  else
+    dap.continue()
+  end
 end
 
 local function move_line(delta)
@@ -304,11 +312,6 @@ add_on_event("UIEnter", {
   {
     src = "jbyuki/one-small-step-for-vimkind",
     setup = false,
-    on_setup = function()
-      UtilKey.nnoremap("<Leader>dL", function()
-        osv.launch { port = 8086 }
-      end, { desc = "Debug: launch lua adapter", remap = true, force = true })
-    end,
   },
 })
 
@@ -478,8 +481,8 @@ add {
           force_jump = "<C-w><CR>",
         },
         base = {
-          next_view = "gl",
-          prev_view = "gh",
+          next_view = { "gl", "gn" },
+          prev_view = { "gh", "gp" },
           jump_to_first = "gH",
           jump_to_last = "gL",
           help = "g?",

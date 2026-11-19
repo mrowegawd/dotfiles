@@ -520,6 +520,9 @@ set_zshrc() {
 
   sed -i -e "s/^colorpromptbright_fg=.*/colorpromptbright_fg=\"$(theme_get zshrc_promptbrigt_fg)\"/g" "$zshrc"
   sed -i -e "s/^colorpromptbright_bg=.*/colorpromptbright_bg=\"$(theme_get zshrc_promptbrigt_bg)\"/g" "$zshrc"
+
+  sed -i -e "s/^colorrprompt_fg=.*/colorrprompt_fg=\"$(theme_get tmux_statusline_fg)\"/g" "$zshrc"
+  sed -i -e "s/^colorrprompt_bg=.*/colorrprompt_bg=\"$(theme_get tmux_statusline_bg)\"/g" "$zshrc"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -709,6 +712,33 @@ wm_bspwm() { ~/.config/bspwm/bspwmrc &>/dev/null; }
 wm_awesome() { echo "awesome.restart()" | awesome-client; }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# set_nvim_palette
+# ─────────────────────────────────────────────────────────────────────────────
+
+set_nvim_palette() {
+  local nvim_config="$DOTFILES_PATH/nvim/.config/nvim/init.lua"
+  local theme="$1"
+
+  NVIM_THEME="$theme" nvim --headless \
+    -u "$nvim_config" \
+    -i NONE \
+    -n \
+    -c 'lua
+      local ok, err = pcall(function()
+
+        -- Export the colors to the master theme file.
+        require("utils.themechange").change_colorscheme_global()
+      end)
+
+      if not ok then
+        io.stderr:write("Failed to generate theme palette: " .. tostring(err) .. "\n")
+        vim.cmd("cquit 1")
+      end
+    ' \
+    -c 'qa!'
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # setup: apply all themes
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -721,13 +751,16 @@ setup() {
     "$DOTFILES_PATH/home/.Xresources"
   xrdb ~/.Xresources
 
+  # Generate Neovim palette first.
+  set_vim "$theme"
+  set_nvim_palette "$theme"
+
   set_rofi
   set_dunst
   set_tmux "$theme"
   set_herdr
   set_btop
   set_eww
-  set_vim "$theme"
   set_terminal "$theme"
   set_fzf
   set_yazi "$theme"

@@ -33,6 +33,26 @@ local status_cmd_git = {
     Log.info("Checking all files from commit " .. commit_hash .. " to HEAD...")
     return "DiffviewOpen " .. commit_hash .. "~..HEAD"
   end,
+
+  ["compare current with specific hash diffbandit"] = function(commit_hash)
+    lazy("vim-pack").load_now "diffbandit.nvim"
+    vim.cmd("DiffBanditGit --current --base " .. commit_hash)
+  end,
+
+  ["compare current with specific hash gitsigns"] = function(commit_hash)
+    vim.cmd "$tabnew %"
+
+    local ok, err = pcall(Gitsigns.diffthis, commit_hash)
+    if not ok then
+      Log.warn(err)
+    end
+  end,
+
+  ["compare current with specific hash fugitive"] = function(commit_hash)
+    lazy("vim-pack").load_now "vim-fugitive"
+    local cmdmsg = "Gvdiffsplit " .. commit_hash
+    vim.cmd(cmdmsg)
+  end,
 }
 
 local set_last_query = function(query)
@@ -784,7 +804,6 @@ function M.git_open_with_compare_hash()
       return
     end
 
-    local is_done
     local commit_hash_msg = {}
     for _, sel in pairs(selected) do
       local commit_hash, err_msg = extract_git_hash_single(sel)
@@ -793,28 +812,7 @@ function M.git_open_with_compare_hash()
         goto continue
       end
 
-      if not is_done then
-        vim.cmd "tabnew %"
-        is_done = true
-      end
-
-      -- With gitsigns
-      local ok, err = pcall(Gitsigns.diffthis, commit_hash)
-      if not ok then
-        Log.warn(err)
-        goto continue
-      end
-
-      -- With vim-fugitive
-      -- local cmdmsg = "Gvdiffsplit " .. commit_hash
-      -- vim.cmd(cmdmsg)
-
-      -- With diffview
-      -- local cmdmsg = "DiffviewOpen -uno " .. commit_hash
-      -- vim.cmd(cmdmsg)
-
-      -- With codediff.nvim
-      -- vim.cmd("VscodeDiff file " .. commit_hash)
+      status_cmd_git["compare current with specific hash diffbandit"](commit_hash)
 
       commit_hash_msg[#commit_hash_msg + 1] = commit_hash
       ::continue::

@@ -159,6 +159,107 @@ local function diagnostic_float_markdown(scope)
   end
 end
 
+---@param fts table<string> | string
+local function check_current_ft(fts)
+  if type(fts) == "string" then
+    return vim.bo[0].filetype == fts
+  else
+    if vim.tbl_contains(fts, vim.bo[0].filetype) then
+      return true
+    end
+    return false
+  end
+end
+
+local function buil_lsp_cmds()
+  local lang_lsp_cmds = {}
+
+  if check_current_ft { "typescriptreact", "typescript" } then
+    table.insert(lang_lsp_cmds, {
+      ["Run TSC"] = function()
+        vim.cmd [[TSC]]
+      end,
+      ["TypescriptLSP - Organizer Imports"] = function()
+        vim.cmd [[TSToolsOrganizeImports]]
+      end,
+      ["TypescriptLSP - Short Imports"] = function()
+        vim.cmd [[TSToolsSortImports]]
+      end,
+      ["TypescriptLSP - Remove Unused imports"] = function()
+        vim.cmd [[TSToolsRemoveUnusedImports]]
+      end,
+      ["TypescriptLSP - Check missing imports"] = function()
+        vim.cmd [[TSToolsAddMissingImports]]
+      end,
+      ["Eslint - Fix all"] = function()
+        vim.cmd [[TSToolsFixAll]]
+      end,
+    })
+  end
+
+  if check_current_ft "go" then
+    table.insert(lang_lsp_cmds, {
+      ["LSP - Run Gomod"] = function()
+        vim.cmd [[GoGenerate %]]
+      end,
+      ["LSP - Run go tidy"] = function()
+        vim.cmd [[GoMod tidy]]
+      end,
+    })
+  end
+
+  -- if check_current_ft { "python" } then
+  --   table.insert(lang_lsp_cmds, {
+  --     ["PythonLSP - Run organize imports"] = function()
+  --       RUtils.lsp.action["source.organizeImports"]()
+  --     end,
+  --     ["Virtualenv - List cmds from uv.nvim"] = function()
+  --       require("uv").pick_uv_commands()
+  --     end,
+  --   })
+  -- end
+
+  local lsp_cmds = vim.tbl_deep_extend("force", {
+    ["Plugin - PluginStatus"] = function()
+      vim.cmd [[PluginStatus]]
+    end,
+    ["LSP - open Mason"] = function()
+      vim.cmd [[Mason]]
+    end,
+    ["LSP - show LspInfo"] = function()
+      vim.cmd [[LspInfo]]
+    end,
+    ["LSP - show LspInfo New"] = function()
+      vim.cmd [[LspInfoNew]]
+    end,
+    ["LSP - show LspLog"] = function()
+      vim.cmd [[LspLog]]
+    end,
+    ["LSP - restart LSP"] = function()
+      vim.cmd [[LspRestart]]
+    end,
+    ["LSP - disable LSP client"] = function()
+      vim.cmd [[lsp stop]]
+    end,
+    ["Diagnostics - toggle diagnostics"] = function()
+      local new_value = not vim.diagnostic.is_enabled()
+
+      vim.diagnostic.enable(new_value)
+      Log.info("Diagnostics enabled: " .. tostring(new_value))
+    end,
+    ["Diagnostics - toggle diagnostics virtual lines"] = function()
+      local new_value = not vim.diagnostic.config().virtual_lines
+
+      Log.info("Diagnostic virtual_lines: " .. tostring(new_value))
+      vim.diagnostic.config { virtual_lines = new_value }
+    end,
+  }, unpack(lang_lsp_cmds) or {})
+
+  table.sort(lsp_cmds)
+
+  lazy("utils.fzflua").open_cmd_bulk_center(lsp_cmds, { { winopts = { title = "LSP Commands" } } })
+end
+
 ---@return LspKeySpec[]
 local function get_keys()
   local diag = UtilKey.lsp.diagnostic_goto
@@ -172,39 +273,26 @@ local function get_keys()
       has = "definition",
       desc = "LSP: definitions vsplit [trouble]",
     },
+    { "<Leader>lC", trouble "lsp_incoming_calls", has = "definition", desc = "LSP: who call this func [trouble]" },
+    { "<Leader>lc", trouble "lsp_outgoing_calls", has = "definition", desc = "LSP: what this func calls [trouble]" },
     { "<Leader>la", trouble "lsp", has = "typeDefinition", desc = "LSP: all [trouble]" },
     { "<Leader>lt", trouble "lsp_type_definitions", has = "typeDefinition", desc = "LSP: type definitions [trouble]" },
     { "<Leader>lr", trouble "lsp_references", has = "references", desc = "LSP: references [trouble]", nowait = true },
     { "<Leader>lR", trouble "lsp", desc = "LSP: lsp stuff [trouble]", nowait = true },
+    --stylua: ignore
+    { "<Leader>lF", buil_lsp_cmds, desc = "LSP: toggle hover [hover_eglot]" },
     { "gO", document_symbols_to_loclist, has = "documentSymbol", desc = "LSP: document symbols to location list" },
 
     -- Hover
     { "K", vim.lsp.buf.hover, has = "hover", desc = "LSP: Hover" },
-    {
-      "<C-c>ls",
-      function()
-        lazy("utils.hover_eldoc").show "float"
-      end,
-      has = "hover",
-      desc = "LSP: show hover [hover_eglot]",
-    },
-    {
-      "<C-c>lS",
-      function()
-        lazy("utils.hover_eldoc").toggle "float"
-      end,
-      has = "hover",
-      desc = "LSP: toggle hover [hover_eglot]",
-    },
-    {
-      "<C-s>",
-      function()
-        lazy("utils.hover_eldoc").toggle_auto_hover()
-      end,
-      has = "hover",
-      desc = "LSP: show signature [hover_eglot]",
-      mode = { "i", "v" },
-    },
+
+    --stylua: ignore
+    { "<C-c>ls", function() lazy("utils.hover_eldoc").show "float" end, has = "hover", desc = "LSP: show hover [hover_eglot]" },
+    --stylua: ignore
+    { "<C-c>lS", function() lazy("utils.hover_eldoc").toggle "float" end, has = "hover", desc = "LSP: toggle hover [hover_eglot]" },
+
+    --stylua: ignore
+    { "<C-s>", function() lazy("utils.hover_eldoc").toggle_auto_hover() end, has = "hover", desc = "LSP: show signature [hover_eglot]", mode = { "i", "v" }, },
 
     -- Code actions & rename
     { "<Leader>ca", code_action, mode = { "n", "x" }, has = "codeAction", desc = "Action: source action" },
@@ -213,20 +301,10 @@ local function get_keys()
     -- Diagnostics (doesn't need `has`, still attached to buffers with LSP)
     { "dn", diag(1), desc = "Diagnostic: next item" },
     { "dp", diag(-1), desc = "Diagnostic: prev item" },
-    {
-      "dP",
-      function()
-        diagnostic_float_markdown "line"
-      end,
-      desc = "Diagnostic: open float peek (markdown)",
-    },
-    {
-      "dK",
-      function()
-        diagnostic_float_markdown "cursor"
-      end,
-      desc = "Diagnostic: float at cursor (markdown)",
-    },
+    --stylua: ignore
+    { "dP", function() diagnostic_float_markdown "line" end, desc = "Diagnostic: open float peek (markdown)" },
+    --stylua: ignore
+    { "dK", function() diagnostic_float_markdown "cursor" end, desc = "Diagnostic: float at cursor (markdown)" },
   }
 end
 
@@ -258,7 +336,7 @@ local function setup_diagnostics()
 end
 
 local function disable_default_keymaps()
-  for _, lhs in ipairs { "grn", "gri", "grr", "grt", "gO", "grx" } do
+  for _, lhs in ipairs { "grn", "gri", "grr", "grt", "gO", "grx", "K" } do
     pcall(vim.keymap.del, "n", lhs)
   end
   pcall(vim.keymap.del, { "n", "x" }, "gra")
@@ -322,7 +400,16 @@ add {
       lazy("mason").setup()
       lazy("mason-lspconfig").setup()
       lazy("mason-tool-installer").setup {
-        ensure_installed = { "lua_ls", "cbfmt", "stylua", "markdownlint-cli2", "markdown-toc", "cspell", "sqlfluff" },
+        ensure_installed = {
+          "lua_ls",
+          "cbfmt",
+          "stylua",
+          "markdownlint-cli2",
+          "markdown-toc",
+          "cspell",
+          "sqlfluff",
+          "codelldb",
+        },
       }
 
       setup_diagnostics()

@@ -14,16 +14,15 @@ local nosilent = { silent = false }
 UtilKey.inoremap("<C-a>", "<C-O>^", silent)
 UtilKey.inoremap("<C-e>", "<C-O>$", silent)
 
-UtilKey.inoremap("<c-l>", "<Right>", silent)
-UtilKey.inoremap("<c-h>", "<Left>", silent)
-UtilKey.inoremap("<c-j>", "<Down>", silent)
-UtilKey.inoremap("<c-k>", "<Up>", silent)
-UtilKey.inoremap("<c-b>", "<Esc>bi", silent)
-UtilKey.inoremap("<c-f>", "<Esc>ea", silent)
+UtilKey.inoremap("<C-l>", "<Right>", silent)
+UtilKey.inoremap("<C-h>", "<Left>", silent)
+UtilKey.inoremap("<C-j>", "<Down>", silent)
+UtilKey.inoremap("<C-k>", "<Up>", silent)
+UtilKey.inoremap("<C-b>", "<Esc>bi", silent)
+UtilKey.inoremap("<C-f>", "<Esc>ea", silent)
 
 UtilKey.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
 UtilKey.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
-
 
 --stylua: ignore
 UtilKey.inoremap("<Esc>", function() UtilKey.feedkey "<C-c>" vim.cmd "noh" return "<esc>" end, silent)
@@ -356,9 +355,14 @@ end, { desc = "Scroll: leap up (full-page)" })
 local function smart_move(dir)
   local count = vim.v.count
   local mode = vim.api.nvim_get_mode().mode
-  local is_op = mode:match "no"
-  local move = (count == 0 and not is_op) and ("g" .. dir) or dir
-  local mark = count > 5 and "m'" or ""
+  local is_op = mode:match "^no" ~= nil
+
+  local use_visual = (not is_op) and (count == 0 or count <= 3)
+  local prefix = count > 0 and tostring(count) or ""
+
+  local move = use_visual and (prefix .. "g" .. dir) or (prefix .. dir)
+  local mark = count > 2 and "m'" or ""
+
   return mark .. move
 end
 
@@ -447,11 +451,6 @@ UtilKey.xnoremap("<Leader>gv", "<esc><cmd>CompareClipboardSelection<cr>", { desc
 -- ╏                                    MISC                                     ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
--- Mapping fo testing
--- UtilKey.nnoremap("<Leader><F1>", function()
--- .. some logic
--- end, { desc = "Exec: replace visual selection" })
-
 UtilKey.nmap("q", "<Nop>")
 
 UtilKey.nnoremap("<Leader>n", function()
@@ -476,6 +475,7 @@ end, { desc = "Misc: redraw / clear hlsearch / diff update" })
 UtilKey.nnoremap("*", function() local word = vim.fn.expand "<cword>" vim.fn.setreg("/", "\\v" .. word) vim.o.hlsearch = true end, { remap = true, desc = "Misc: search word under cursor (no jump)" })
 --stylua: ignore
 UtilKey.nnoremap("dd", function() if vim.fn.getline "." == "" then return '"_dd' end return "dd" end, { expr = true })
+UtilKey.nnoremap("x", '"_x')
 
 UtilKey.nnoremap("<Leader>xl", function()
   ---@diagnostic disable-next-line: param-type-mismatch
@@ -798,9 +798,9 @@ UtilKey.noremap({ "n", "x", "t" }, "<Leader>gF", bulk_cmd_git, { desc = "Bulk: g
 
 local bulk_cmd_toggle = function()
   util_fzflua().open_cmd_bulk_center({
-    -- ["Layout - toggle sidebar size"] = function()
-    --   RUtils.layout.disable()
-    -- end,
+    ["Layout - toggle sidebar size"] = function()
+      lazy("layout").disable()
+    end,
     ["Color highlight - toggle CccHighlighterToggle"] = function()
       vim.cmd.CccHighlighterToggle()
     end,
@@ -818,9 +818,6 @@ local bulk_cmd_toggle = function()
       end
       Log.info "No active highlights to clear"
     end,
-    -- ["Treesitter - toggle highlight"] = function()
-    --   Snacks.toggle.treesitter()
-    -- end,
   }, { winopts = { title = "Toggle Commands" } })
 end
 

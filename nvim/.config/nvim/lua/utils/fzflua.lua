@@ -60,7 +60,6 @@ local dropdown = function(opts)
       ["--multi"] = true,
     },
     ---@diagnostic disable: missing-fields
-    ---@type fzf-lua.config.Winopts
     winopts = {
       border = Border.rectangle,
       title_pos = opts.winopts.title and "center" or nil,
@@ -81,12 +80,10 @@ local dropdown = function(opts)
 end
 
 ---@diagnostic disable: missing-fields
----@param opts fzf-lua.config.Defaults
 function M.layout_pojokan(opts)
   local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
   local win_height = math.ceil(lines * 0.5)
   return dropdown(vim.tbl_deep_extend("force", {
-    ---@type fzf-lua.config.Winopts
     winopts = {
       width = math.floor(math.min(60, vim.o.columns / 2)),
       height = win_height - 10,
@@ -164,7 +161,6 @@ end
 
 function M.open_center_medium(opts)
   return dropdown(vim.tbl_deep_extend("force", {
-    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = false,
       width = 0.6,
@@ -178,7 +174,6 @@ end
 
 function M.open_center_small_wide(opts)
   return M.open_center_medium(vim.tbl_deep_extend("force", {
-    ---@type fzf-lua.config.Winopts
     winopts = {
       height = 0.4,
       width = 0.8,
@@ -190,7 +185,6 @@ end
 local layout_center = function(opts)
   return dropdown(vim.tbl_deep_extend("force", {
     ---@diagnostic disable: missing-fields
-    ---@type fzf-lua.config.Winopts
     winopts = {
       fullscreen = false,
       height = 20,

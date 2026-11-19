@@ -67,6 +67,7 @@ add_local_or_remote {
             },
           },
           mark = {
+
             preview_fullscreen = false,
             context_templates = {
               separator = nil, -- or "\n\n" .. string.rep("─", 60) .. "\n\n",
@@ -272,7 +273,7 @@ add_local_or_remote {
                     desc = "Qfmark: add to fix mark",
                   },
                   {
-                    key = "<C-c><C-m>",
+                    key = "<C-c><C-c>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -284,6 +285,14 @@ add_local_or_remote {
           },
 
           quickfix = {
+            open_toggle_qf = "sj",
+            open_toggle_loc = "sl",
+
+            rename_title = "sT",
+
+            add_item_to_qf = "st",
+            add_item_to_loc = "sy",
+
             integrations = {
               custom = {
                 enabled = true,
@@ -310,7 +319,7 @@ add_local_or_remote {
                     desc = "Qfmark: add to fix mark",
                   },
                   {
-                    key = "<C-c><C-m>",
+                    key = "<C-c><C-c>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -358,8 +367,17 @@ add_local_or_remote {
           },
 
           mark = {
+            add_mark = "ss",
+            add_fix = "sf",
+            add_debug = "sd",
+            add_mark_annotation = "sa",
+
             move_item_down = "<c-n>",
             move_item_up = "<c-p>",
+
+            next_mark = "sn",
+            prev_mark = "sp",
+
             integrations = {
               custom = {
                 enabled = true,

@@ -61,12 +61,14 @@ KEYTIMEOUT=20   # 0.2s; reduce the delay when typing 'h' due to the 'hh' binding
 
 autoload -Uz colors && colors
 
-colorline="#171717"
-colorsuggest="#3b3b3b"
-colorprompt_fg="#060606"
-colorprompt_bg="#696969"
-colorpromptbright_bg="#252525"
+colorline="#373731"
+colorsuggest="#373737"
+colorprompt_fg="#0b0b0b"
+colorprompt_bg="#c86a38"
+colorpromptbright_bg="#462514"
 colorbranch=150
+colorrprompt_bg="#111111"
+colorrprompt_fg="#555555"
 
 # ── FPATH / PATH / FUNCS ──────────────────────────────────────────────
 
@@ -290,7 +292,7 @@ typeset -g __G_BRANCH=$'\ue0a0'   #
 typeset -g __G_PY=$'\ue73c'       #
 
 __build_prompt() {
-  local dir_bg=$colorprompt_bg dir_fg=$colorprompt_fg git_bg=$colorpromptbright_bg
+  local dir_bg=$colorprompt_bg dir_fg=$colorprompt_fg git_bg=$colorpromptbright_bg dir_rbg=$colorrprompt_bg dir_rfg=$colorrprompt_fg
   local venv_bg=65 venv_fg=255
 
   # Segment 1: directory
@@ -322,7 +324,7 @@ __build_prompt() {
   # Right prompt
   local rt=""
   [[ -n $cmd_exec_time ]] && rt="%F{yellow}%{${__DOTS[ITALIC_ON]}%}${cmd_exec_time}%{${__DOTS[ITALIC_OFF]}%}%f "
-  RPROMPT="${rt}%F{$git_bg}${__G_RSEP}%K{$git_bg}%F{$dir_bg} %* %k%f"
+  RPROMPT="${rt}%F{$dir_rbg}${__G_RSEP}%K{$dir_rbg}%F{$dir_rfg} %* %k%f"
 }
 
 SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "

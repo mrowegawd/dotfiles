@@ -5,7 +5,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 -- {{{ Generals
-o.jumpoptions = "view" -- mapping jump c-i/o is suck, so use default aja, yang `clean`
+o.jumpoptions = "clean,stack,view" -- clean unloaded buffers, maintain jump history as a stack, and restore window views
 o.breakindent = true -- start wrapped lines indented
 
 -- local is_ssh = (vim.env.SSH_TTY or vim.env.SSH_CONNECTION) ~= nil
@@ -216,7 +216,7 @@ opt.fillchars = {
 o.foldlevelstart = 99 -- start with all code unfolded
 o.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
 o.foldmethod = "expr" -- Uses treesitter as folding source.
--- opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 o.foldtext = ""
 -- }}}
 -- {{{ Timings
@@ -229,6 +229,7 @@ o.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the un
 o.undolevels = 10000
 o.history = 1000 -- Number of commands to remember in a history table (per buffer).
 o.swapfile = false -- Ask what state to recover when opening a file that was not saved.
+o.switchbuf = "usetab,uselast" -- reuse existing windows or tabs when switching buffers
 o.backup = false -- no backup file
 o.writebackup = false -- do not backup file before write
 o.undofile = true -- don't create root-owned files

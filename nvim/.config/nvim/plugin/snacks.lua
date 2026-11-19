@@ -10,8 +10,12 @@ local Log = lazy "utils.log"
 
 ---@param min_height? integer
 local function allow_height(min_height)
-  min_height = min_height or 40
   local ui = vim.api.nvim_list_uis()[1]
+  if not ui then
+    return false
+  end
+
+  min_height = min_height or 40
   local height = math.floor(ui.height * 20 / 100)
   return (ui.height - height) > min_height
 end
@@ -384,6 +388,8 @@ add {
     on_setup = function()
       local Snacks = lazy "snacks"
 
+      local diag = UtilKey.lsp.diagnostic_goto
+
       Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
       Snacks.toggle.zen():map "<Leader>uz"
       Snacks.toggle.zoom():map "<Leader>mm"
@@ -392,21 +398,16 @@ add {
         Snacks.picker.icons()
       end)
 
-      ---@param is_bottom boolean?
-      local function __jump_scope(is_bottom)
-        is_bottom = is_bottom or false
+      ---@param is_prev boolean?
+      ---@param is_diag boolean?
+      local function __jump_lsp_mark_githunk(is_prev, is_diag)
+        is_prev = is_prev or false
+        is_diag = is_diag or false
 
         local exclude_win = { "codecompanion", "pdfview" }
         if vim.tbl_contains(exclude_win, vim.bo.filetype) then
           return
         end
-        vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
-        Snacks.scope.jump { bottom = is_bottom }
-      end
-
-      ---@param is_prev boolean?
-      local function __jump_lsp_mark_githunk(is_prev)
-        is_prev = is_prev or false
 
         local key = {
           hilist = is_prev and "Hi{" or "Hi}",
@@ -414,18 +415,26 @@ add {
           neogidiffview = is_prev and "}" or "{",
           wo_diff = is_prev and "[c" or "]c",
           gs_hunk = is_prev and "prev" or "next",
+          diagnostic = is_prev and -1 or 1,
         }
 
-        local ok, _ = pcall(vim.fn.HiList)
-        if ok then
-          local hilist = vim.fn.HiList()
-          if hilist and #hilist > 0 then
-            return vim.cmd(key.hilist)
-          end
+        local ok, hilist = pcall(vim.fn.HiList)
+        if ok and hilist and #hilist > 0 then
+          return vim.cmd(key.hilist)
         end
 
         if vim.g.snacks_word_highlight then
           Snacks.words.jump(key.snack_word, true)
+          return
+        end
+
+        if is_diag then
+          diag(key.diagnostic)()
+          return
+        end
+
+        if vim.wo.diff then
+          vim.cmd.normal { key.wo_diff, bang = true }
           return
         end
 
@@ -434,22 +443,32 @@ add {
           return
         end
 
-        if vim.wo.diff then
-          vim.cmd.normal { key.wo_diff, bang = true }
-        else
-          local gs = package.loaded.gitsigns
+        local gs = package.loaded.gitsigns
+        if gs then
           vim.schedule(function()
-            gs.nav_hunk(key.gs_hunk, { navigation_message = false, foldopen = true })
+            gs.nav_hunk(key.gs_hunk, {
+              navigation_message = false,
+              foldopen = true,
+            })
           end)
+          return
         end
+
+        vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
+        Snacks.scope.jump { bottom = not is_prev }
       end
 
       UtilKey.nnoremap("<C-j>", function()
-        __jump_scope(true)
+        __jump_lsp_mark_githunk(false, true)
       end)
+
       UtilKey.nnoremap("<C-k>", function()
-        __jump_scope()
+        __jump_lsp_mark_githunk(true, true)
       end)
+
+      UtilKey.nnoremap("<Leader>cF", function()
+        Snacks.rename.rename_file()
+      end, { desc = "Action: rename file" })
 
       UtilKey.nnoremap("<Localleader>nw", function()
         lazy("snacks.notifier").show_history {
@@ -491,11 +510,13 @@ add {
           Snacks.words.enable()
           is_set_toggle_words = true
         end
-        Log.info(tostring(not is_enabled))
+        Log.info("Jump Word: " .. tostring(not is_enabled))
       end
 
       UtilKey.nnoremap("<Leader>lh", function()
-        toggle_words()
+        vim.schedule(function()
+          toggle_words()
+        end)
         if vim.g.snacks_word_highlight then
           vim.g.snacks_word_highlight = false
           return

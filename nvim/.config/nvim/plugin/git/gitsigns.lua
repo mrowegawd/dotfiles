@@ -52,6 +52,7 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
         },
         preview_config = { border = "rounded" },
         current_line_blame = true,
+        signs_staged_enable = false,
         gh = true,
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
@@ -115,11 +116,11 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
           map("n", "<Leader>xG", function()
             gs.setqflist "all"
             auto_close_trouble_win()
-          end, "Exec: collect all git hunks in trouble (qf) (gitsigns) [trouble]")
+          end, "Git: collect all git hunks in trouble (qf) (gitsigns) [trouble]")
           map("n", "<Leader>xg", function()
             gs.setqflist()
             auto_close_trouble_win()
-          end, "Exec: collect git hunks curbuf in trouble (qf) (gitsigns) [trouble]")
+          end, "Git: collect git hunks curbuf in trouble (qf) (gitsigns) [trouble]")
         end,
       }
     end,

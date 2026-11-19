@@ -1,3 +1,8 @@
+
+# +------------------------------------------------------------------------------+
+# | WINDOWS                                                                      |
+# +------------------------------------------------------------------------------+
+
 [[window]]
 name = "dotfilesxc"
 path = "~/Downloads/dotfilesxc"
@@ -19,12 +24,10 @@ path = "~/Dropbox/neorg"
 [[window]]
 name = "vimrc"
 path = "~/moxconf/development/dotfiles"
-# startup_script = "vpack"
 
 [[window]]
 name = "Downloads"
 path = "~/Downloads"
-# startup_script = "sleep 2 && tmux split-window -h -R 50 && yazi "
 startup_script = "yazi"
 
 [[window]]
@@ -41,6 +44,7 @@ name = "Vim-pack"
 path = "~/.local/share/nvim/site/pack/core/opt"
 startup_script = "ll"
 
+
 # +------------------------------------------------------------------------------+
 # | DOTFILES                                                                     |
 # +------------------------------------------------------------------------------+
@@ -51,6 +55,7 @@ path = "~/moxconf/development/dotfiles"
 startup_command = "v"
 windows = ["dotfilesxc", "notes", ".config", "Lazy", "Vim-pack"]
 
+
 # +------------------------------------------------------------------------------+
 # | ANSIBLE PLAYBOOK                                                             |
 # +------------------------------------------------------------------------------+
@@ -58,8 +63,8 @@ windows = ["dotfilesxc", "notes", ".config", "Lazy", "Vim-pack"]
 [[session]]
 name = "Linuxvoid"
 path = "~/moxconf/development/linux-void"
-startup_command = "source .venv/bin/activate"
 windows = ["playbook"]
+
 
 # +------------------------------------------------------------------------------+
 # | IMAGE & VIDEO                                                                |
@@ -68,8 +73,8 @@ windows = ["playbook"]
 [[session]]
 name = "Image&Video"
 path = "~/Downloads/screenshot"
-startup_command = "yazi"
 windows = ["videos", "Downloads"]
+
 
 # +------------------------------------------------------------------------------+
 # | PROJECT                                                                      |
@@ -98,9 +103,7 @@ disable_startup_command = true
 [[session]]
 name = "Bot"
 path = "~/moxconf/development/project/misc"
-startup_command = ""
 
 [[session]]
 name = "Nvimplugin"
 path = "~/.local/src/nvim_plugins"
-startup_command = ""

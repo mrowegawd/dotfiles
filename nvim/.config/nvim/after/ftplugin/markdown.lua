@@ -5,6 +5,8 @@ local listchars = vim.deepcopy(vim.opt.listchars:get())
 listchars.tab = "  "
 vim.opt_local.listchars = listchars
 
+vim.wo.number = false
+
 local lazy = require("utils.plugin").require_lazy
 
 local UtilKey = lazy "utils.map"
@@ -110,7 +112,12 @@ UtilKey.nnoremap("<Leader>rn", function()
   opts.winopts.width = pad / 0.5
 
   fzf_lua().fzf_exec(tbl_cmds, opts)
-end, { buffer = true, desc = "Task: run live/img/sniprun" })
+end, {
+  buffer = true,
+  desc = "Task: run live/img/sniprun",
+  remap = true,
+  force = true,
+})
 
 local function has_surrounding_fencemarks(lnum)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)

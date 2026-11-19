@@ -15,47 +15,48 @@ add_local_or_remote {
     end,
     on_setup = function()
       UtilKey.nnoremap("<Leader>rf", vim.cmd.RmuxRunFile, { desc = "Task: run file [rmux]" })
+      UtilKey.nnoremap("<Leader>rr", vim.cmd.RmuxBoard, { desc = "Task: open board [rmux]" })
       --stylua: ignore
       UtilKey.noremap({ "n", "x" }, "<Leader>rl", vim.cmd.RmuxSendline, { desc = "Task: send line [rmux]" })
       UtilKey.noremap({ "n", "x" }, "<Leader>r<CR>", vim.cmd.RmuxSendEnter, { desc = "Task: send enter key [rmux]" })
       UtilKey.nnoremap("<Leader>rs", vim.cmd.RmuxSelectTargetPane, { desc = "Task: select target pane [rmux]" })
       --stylua: ignore
-      UtilKey.nnoremap("<Leader>rR", vim.cmd.RmuxSendRestartTaskPane, { desc = "Task: restart the selected task pane [rmux]" })
       UtilKey.nnoremap("<Leader>ri", vim.cmd.RmuxSendInterrupt, { desc = "Task: send interrupt [rmux]" })
       UtilKey.nnoremap("<Leader>rI", vim.cmd.RmuxSendInterruptAll, { desc = "Task: send interrupt all [rmux]" })
       UtilKey.nnoremap("<Leader>rC", vim.cmd.RmuxKillAllPanes, { desc = "Task: kill all panes [rmux]" })
       UtilKey.nnoremap("<a-R>", vim.cmd.RmuxGrepBuf, { desc = "Task: open single find err [rmux]" })
+      UtilKey.nnoremap("<Leader>re", vim.cmd.RmuxGrepErr, { desc = "Task: grep err task [rmux]" })
 
       UtilKey.nnoremap("<Leader>rF", function()
         local task_cmds = {
-          ["Task - Run task with Rmux"] = function()
+          ["Rmux - Run task with Rmux"] = function()
             vim.cmd "RmuxRunFile"
           end,
-          ["Task - Setup file rc"] = function()
+          ["Rmux - Setup file rc"] = function()
             vim.cmd "RmuxSetTemplate"
           end,
-          ["Task - Send interrupt"] = function()
+          ["Rmux - Send interrupt"] = function()
             vim.cmd "RmuxSendInterrupt"
           end,
-          ["Task - Send interrupt all"] = function()
+          ["Rmux - Send interrupt all"] = function()
             vim.cmd "RmuxSendInterruptAll"
           end,
-          ["Task - Grep error (task running required)"] = function()
+          ["Rmux - Grep error (task running required)"] = function()
             vim.cmd "RmuxGrepErr"
           end,
-          ["Task - Kill all panes"] = function()
+          ["Rmux - Kill all panes"] = function()
             vim.cmd "RmuxKillAllPanes"
           end,
-          ["Task - Select target pane"] = function()
+          ["Rmux - Select target pane"] = function()
             vim.cmd "RmuxKillAllPanes"
           end,
-          ["Task - Edit config tasks.json"] = function()
+          ["Rmux - Edit config tasks.json"] = function()
             vim.cmd "RmuxEDITConfig"
           end,
-          ["Task - Select filerc"] = function()
+          ["Rmux - Select filerc"] = function()
             vim.cmd "RmuxSelectFilerc"
           end,
-          ["Task - Printout / Show configs"] = function()
+          ["Rmux - Printout / Show configs"] = function()
             vim.cmd "RmuxSelectFilerc"
           end,
 

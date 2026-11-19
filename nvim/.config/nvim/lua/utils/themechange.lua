@@ -93,6 +93,7 @@ function M.build_colors()
   local sep = get("WinSeparator", "fg")
   local keyword = get("Keyword", "fg")
   local func = get("Function", "fg")
+  local error = get("Error", "fg")
   local removed = get("diffRemoved", "fg")
   local changed = get("diffChanged", "fg")
 
@@ -104,7 +105,7 @@ function M.build_colors()
     raw_fg = get("StatuslineTheme", "fg"),
     bg = get("StatuslineTheme", "bg"),
   }
-  statusline.fg = darken(statusline.raw_fg, 0.7, statusline.bg)
+  statusline.fg = statusline.raw_fg
 
   -- Tab
   local tab_active = { fg = get("QuickFixWinbar", "fg"), bg = get("QuickFixWinbar", "bg") }
@@ -115,31 +116,47 @@ function M.build_colors()
   local border_inactive = tint(bg, 0.15)
 
   -- ├─────────────────────────────────┤ Dunst ├──────────────────────────────┤
-  local low = tint(sep, 0.1)
-  local normal_bg = tint(bg, 0.85)
-  local normal_frame = tint(bg, 0.85)
-  local normal_fg_base = tint(bg, 1.1)
-  local normal_fg
-  local critical_fg = tint(removed, 0.4)
+  local low_bg = darken(fg, 0.3, bg)
+  local low_fg = tint(low_bg, 3)
+  local low_frame = tint(low_bg, 0.3)
 
-  if theme_is { "base46-everforest", "catppuccin", "vscode", "rose-pine", "oxocarbon", "gruvbox" } then
-    normal_bg = tint(bg, 0.1)
-    normal_frame = tint(bg, 0.15)
-    critical_fg = tint(removed, 1)
+  local icon_fg = tint(bg, 1.1)
+
+  local normal_bg = tint(bg, 0.3)
+  local normal_fg
+  local normal_frame = tint(normal_bg, 0.8)
+
+  local critical_bg = darken(error, 0.3, bg)
+  local critical_fg = tint(critical_bg, 2.5)
+  local critical_frame = tint(critical_bg, 0.5)
+
+  if theme_is { "catppuccin", "techbase",  } then
+    normal_bg = tint(normal_bg, 0.3)
+    normal_frame = tint(normal_bg, 0.8)
   end
-  if theme_is { "tokyonight-storm", "tokyonight" } then
-    normal_bg = tint(bg, -0.1)
-    normal_frame = tint(bg, -0.1)
+  if theme_is { "gruvbox", "imli", "vscode" } then
+    normal_bg = tint(normal_bg, 0.2)
+    normal_fg = tint(normal_bg, 4)
+    normal_frame = tint(normal_bg, 0.8)
   end
-  if theme_is { "gruvbox", "base46-everforest" } then
-    normal_fg_base = tint(bg, 0.4)
+  if theme_is { "intent", "kanagawa", "tokyonight-night" } then
+    normal_bg = tint(normal_bg, 0.5)
+    normal_fg = tint(normal_bg, 5)
+    normal_frame = tint(normal_bg, 1)
+  end
+  if theme_is { "lackluster" } then
+    normal_bg = tint(normal_bg, 0.5)
+    normal_fg = tint(normal_bg, 8)
+    normal_frame = tint(normal_bg, 1.5)
+  end
+  if theme_is { "everforest" } then
+    normal_fg = tint(bg, 6.5)
   end
   if theme_is { "zenburn" } then
-    normal_fg = tint(bg, 0.9)
-    normal_bg = tint(bg, 0.02)
-    normal_frame = tint(bg, 0.15)
-    critical_fg = tint(removed, 1)
+    normal_fg = tint(normal_bg, 7)
+    normal_frame = tint(normal_bg, 0.3)
   end
+
   normal_fg = normal_fg or darken(fg, 0.7, normal_bg)
 
   -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
@@ -207,18 +224,19 @@ function M.build_colors()
     },
 
     dunst = {
-      low_fg = tint(sep, 2.2),
-      low_bg = low,
-      low_frame = low,
+      low_fg = low_fg,
+      low_bg = low_bg,
+      low_frame = low_frame,
 
       normal_title_fg = fg,
+
       normal_fg = normal_fg,
       normal_bg = normal_bg,
       normal_frame = normal_frame,
 
       critical_fg = critical_fg,
-      critical_bg = tint(removed, -0.25),
-      critical_frame = tint(removed, -0.2),
+      critical_bg = critical_bg,
+      critical_frame = critical_frame,
 
       bg = tint(bg, 0.25),
       fg = tint(fg, 0.25),
@@ -255,7 +273,7 @@ function M.build_colors()
       hunk_header_fg = get("diffFile", "fg"),
       hunk_header_bg = get("diffFile", "bg"),
 
-      line_number_fg = tint(bg, 0.5),
+      line_number_fg = darken(sep, 0.85, bg),
       line_number_plus = get("NeogitDiffAdd", "fg"),
       line_number_minus = get("NeogitDiffDelete", "fg"),
 
@@ -272,14 +290,14 @@ function M.build_colors()
 
     eww = {
       bg = bg,
-      fg = statusline.fg,
+      fg = darken(statusline.fg, 0.6, bg),
       fg2 = tint(changed, -0.3),
 
       bg_darken = tint(bg, -0.3),
       bg_alt = tint(bg, 0.3),
 
       red = red_muted,
-      icon_fg = normal_fg_base,
+      icon_fg = icon_fg,
       keyword = keyword,
     },
 

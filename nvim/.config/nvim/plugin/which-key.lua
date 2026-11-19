@@ -58,7 +58,7 @@ add {
           { pattern = "action", icon = "⚡", color = "yellow" },
           { pattern = "insert", icon = "󰀧 ", color = "green" },
           { pattern = "help", icon = " ", color = "gray" },
-          { pattern = "projects", icon = " ", color = "blue" },
+          { pattern = "peek", icon = " ", color = "blue" },
           { pattern = "grug-far", icon = "🦴", color = "yellow" },
           { pattern = "grug far", icon = "🦴", color = "yellow" },
           { pattern = "org agenda", icon = "📓", name = "green" },
@@ -74,7 +74,7 @@ add {
           { "<Leader>f", group = "picker" },
           { "<Leader>i", group = "insert" },
           { "<Leader>j", group = "jump", icon = { icon = "󰁝 ", color = "cyan" } },
-          { "<Leader>p", group = "projects" },
+          { "<Leader>p", group = "peek" },
           { "<Leader>y", group = "surrounds", icon = { icon = "󰉢 ", color = "magenta" } },
           { "<Leader>l", group = "LSP", icon = { icon = "📡", color = "cyan" } },
           { "<Leader>o", group = "open", icon = { icon = "󰏌", color = "magenta" } },
@@ -121,7 +121,7 @@ add {
           { "<Localleader>f", group = "telescope" },
           { "<Localleader>o", group = "open/misc" },
 
-          { "<Localleader>s", group = "snacks" },
+          { "<Localleader>s", group = "session" },
           { "<Localleader>w", group = "swap" },
 
           --- GLOBAL <C-c>..

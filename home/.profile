@@ -30,7 +30,7 @@ fi
 # shellcheck source=/dev/null
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
-export TERMINAL="kitty" # ghostty-cairo, kitty, ghostty
+export TERMINAL="ghostty-cairo" # ghostty-cairo, kitty, ghostty
 export NUBROWSER="google-chrome"
 
 # Set PATH ditaruh disini karena alasan nya biar 'ensure` PATH terakses ketika

@@ -53,7 +53,7 @@ add {
     on_setup = function()
       local resession = lazy "resession"
 
-      UtilKey.nnoremap("<Leader>sS", function()
+      UtilKey.nnoremap("<LocalLeader>sS", function()
         vim.ui.input({ prompt = "Session name" }, function(selected)
           if selected then
             resession.save(selected, {})
@@ -61,22 +61,22 @@ add {
         end)
       end, { desc = "Session: save session with name [resession.nvim]" })
 
-      UtilKey.nnoremap("<Leader>ss", function()
+      UtilKey.nnoremap("<LocalLeader>ss", function()
         resession.save(UtilSession.last_session_name())
       end, { desc = "Session: save last session (per CWD) [resession.nvim]" })
 
-      UtilKey.nnoremap("<Leader>sl", function()
+      UtilKey.nnoremap("<LocalLeader>sl", function()
         local last_sesname = UtilSession.last_session_name()
         ---@diagnostic disable-next-line: undefined-field
         Log.info("Load session: `" .. last_sesname .. "`")
         resession.load(last_sesname, { silence_errors = true })
       end, { desc = "Session: load last session (per CWD) [resession.nvim]" })
 
-      UtilKey.nnoremap("<Leader>sL", function()
+      UtilKey.nnoremap("<LocalLeader>sL", function()
         lazy("utils.session").select_session()
       end, { desc = "Session: load session from lists [resession.nvim]" })
 
-      UtilKey.nnoremap("<Leader>sD", function()
+      UtilKey.nnoremap("<LocalLeader>sD", function()
         resession.detach()
         ---@diagnostic disable-next-line: undefined-field
         Log.warn "Session detach now!"

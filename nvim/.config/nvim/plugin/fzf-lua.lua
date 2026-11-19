@@ -679,7 +679,7 @@ UtilKey.noremap({ "n", "x" }, "<Leader>fb", search_current_buf, { desc = "Picker
 UtilKey.nnoremap("<Leader>ff", "<cmd>FzfLua files<cr>", { desc = "Picker: find files [fzflua]" })
 UtilKey.nnoremap("<Leader>fc", "<cmd>FzfLua highlights<cr>", { desc = "Picker: highlights [fzfua]" })
 UtilKey.nnoremap("<Leader>fC", "<cmd>FzfLua colorschemes<cr>", { desc = "Picker: colorschemes [fzfua]" })
-UtilKey.nnoremap("<Leader>fA", "<cmd>FzfLua autocmds<cr>", { desc = "Picker: commands [fzfua]" })
+UtilKey.nnoremap("<Leader>fA", "<cmd>FzfLua autocmds<cr>", { desc = "Picker: list autocmds [fzfua]" })
 UtilKey.nnoremap("<Leader>fm", "<cmd>FzfLua marks<cr>", { desc = "Picker: marks [fzflua]" })
 UtilKey.nnoremap("<Leader>fF", function()
   local packs = vim.pack.get()
@@ -707,9 +707,43 @@ UtilKey.nnoremap("<Leader>fF", function()
           lazy("fzf-lua").files { cwd = cj }
         end,
       },
+      ["ctrl-y"] = {
+        fn = function(selected)
+          if not selected or #selected == 0 then
+            return
+          end
+
+          local sel = selected[1]
+
+          local result = {}
+
+          local function slice_last(t, count)
+            local n = #t
+            local from = math.max(1, n - count + 1)
+            for i = from, n do
+              result[#result + 1] = t[i]
+            end
+            return result
+          end
+
+          for _, p in ipairs(packs) do
+            if p.spec.name == sel then
+              local prepo = p.spec.src
+              local tbl_prepo = vim.split(prepo, "/")
+              slice_last(tbl_prepo, 2)
+            end
+          end
+
+          local pathrepo = table.concat(result, "/")
+          Log.info("`" .. pathrepo .. "` > copied")
+          vim.fn.setreg("+", pathrepo)
+        end,
+        desc = "copy-repo-name-for-octo",
+        header = "copy-repo-name-for-octo",
+      },
     },
   })
-end, { desc = "Picker: commands [fzfua]" })
+end, { desc = "Picker: list plugins [fzfua]" })
 
 UtilKey.nnoremap("<Leader>fz", function()
   lazy("fzf-lua").files {
@@ -735,7 +769,7 @@ UtilKey.nnoremap( "<Leader>fd", "<cmd>FzfLua lsp_document_diagnostics<cr>", { de
 UtilKey.nnoremap("<Leader>fg", "<Cmd>FzfLua live_grep<CR>", { desc = "Picker: live grep [fzflua]" })
 UtilKey.xnoremap("<Leader>fg", "<Cmd>FzfLua grep_visual<CR>", { desc = "Picker: grep visual selection [fzflua]" })
 
-UtilKey.nnoremap("<Leader>fh", "<cmd>FzfLua command_history<cr>", { desc = "Picker: command history [fzflua]" })
+UtilKey.nnoremap("<Leader>fh", "<cmd>FzfLua command_history<cr>", { desc = "Picker: history [fzflua]" })
 UtilKey.nnoremap("<Leader>fH", "<cmd>FzfLua search_history<cr>", { desc = "Picker: search history [fzflua]" })
 
 UtilKey.nnoremap("<Leader>fo", function()

@@ -36,3 +36,7 @@ UtilKey.noremap({ "n", "x" }, "<Leader>uh", function()
 
   vim.cmd ":Hi + "
 end, { desc = "Toggle: highlight word/selection [vim-highlighter]" })
+
+UtilKey.nnoremap("<Leader>uH", function()
+  vim.cmd ":Hi - "
+end, { desc = "Toggle: clear word highlight [vim-highlighter]" })

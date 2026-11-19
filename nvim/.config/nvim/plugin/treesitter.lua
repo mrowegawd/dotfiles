@@ -106,7 +106,110 @@ add {
   },
 }
 
-add_on_event("LspAttach", {
+local base_colorscheme = {
+  lackluster = {
+    kitty = {
+      treesittercontext_alter = 0.65,
+      snacksindentscope_alter = 1.3,
+    },
+  },
+  luna = {
+    kitty = {
+      treesittercontext_alter = 0.65,
+      snacksindentscope_alter = 1,
+    },
+  },
+  ["ef-cherie"] = {
+    kitty = {
+      snacksindentscope_alter = 0.8,
+    },
+  },
+  ["ef-dream"] = {
+    kitty = {
+      treesittercontext_alter = 0.2,
+      snacksindentscope_alter = 0.8,
+    },
+  },
+  ["tokyonight-night"] = {
+    kitty = {
+      treesittercontext_alter = 0.7,
+      snacksindentscope_alter = 0.8,
+    },
+  },
+  kanagawa = {
+    kitty = {
+      snacksindentscope_alter = 1.2,
+    },
+  },
+  imli = {
+    kitty = {
+      snacksindentscope_alter = 0.8,
+    },
+  },
+  jellybeans = {
+    kitty = {
+      snacksindentscope_alter = 0.7,
+    },
+  },
+  techbase = {
+    kitty = {
+      snacksindentscope_alter = 0.65,
+    },
+  },
+  vscode = {
+    kitty = {
+      snacksindentscope_alter = 0.9,
+    },
+  },
+  zenburn = {
+    kitty = {
+      snacksindentscope_alter = 0.2,
+    },
+    ["ghostty-cairo"] = {
+      snacksindentscope_alter = 1,
+    },
+  },
+  default = {
+    kitty = {
+      treesittercontext_alter = 0.2,
+      snacksindentscope_alter = 0.7,
+    },
+    ["ghostty-cairo"] = {
+      treesittercontext_alter = 0.2,
+      snacksindentscope_alter = 1.5,
+    },
+  },
+}
+
+local function resolve_col_scope(colorscheme)
+  local col1, col2
+  local base = base_colorscheme[colorscheme]
+  local base_default = base_colorscheme["default"]
+  if not base then
+    base = base_default
+  end
+
+  local col = base[(vim.env.TERMINAL):lower()]
+  local colbase = base_default[(vim.env.TERMINAL):lower()]
+
+  if col and col.treesittercontext_alter then
+    col1 = col.treesittercontext_alter
+  else
+    col1 = colbase.treesittercontext_alter
+  end
+
+  if col and col.snacksindentscope_alter then
+    col2 = col.snacksindentscope_alter
+  else
+    col2 = colbase.snacksindentscope_alter
+  end
+
+  return col1, col2
+end
+
+local treesittercontext_alter, snacksindentscope_alter = resolve_col_scope(vim.g.colorscheme)
+
+add_on_event("UIEnter", {
   {
     src = "nvim-treesitter/nvim-treesitter-context",
     module_name = "treesitter-context",
@@ -119,60 +222,21 @@ add_on_event("LspAttach", {
             {
               TreesitterContext = {
                 bg = {
-                  from = "WinSeparator",
-                  attr = "fg",
-                  combine = { from = "String", attr = "fg", alter = -0.25 },
-                  combine_mode = "multiply",
-                  combine_intensity = 0.5,
-                  transparency = 0.85,
-                  color = { from = "Normal", attr = "bg" },
+                  from = "StatusLineTheme",
+                  attr = "bg",
+                  alter = treesittercontext_alter,
                 },
-              },
-            },
-            {
-              TreesitterContextSeparator = {
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext", attr = "bg" },
               },
             },
             {
               TreesitterContextBottom = {
                 fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext", attr = "bg" },
-
                 underline = true,
                 sp = {
                   from = "TreesitterContext",
                   attr = "bg",
                   alter = 1,
                   transparency = 0.4,
-                  color = {
-                    from = "TreesitterContext",
-                    attr = "bg",
-                  },
-                },
-              },
-            },
-
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = {
-                  from = "TreesitterContext",
-                  attr = "bg",
-                  alter = 5,
-                  transparency = 0.38,
-                  color = { from = "TreesitterContext", attr = "bg" },
-                },
-                -- sp = "NONE",
-                -- underline = false,
-                -- undercurl = false,
-
-                underline = true,
-                sp = {
-                  from = "TreesitterContext",
-                  attr = "bg",
-                  alter = 1,
-                  transparency = 0.3,
                   color = {
                     from = "TreesitterContext",
                     attr = "bg",
@@ -182,17 +246,25 @@ add_on_event("LspAttach", {
             },
             {
               TreesitterContextLineNumber = {
+                fg = { from = "LineNr", atrr = "fg" },
+                bg = { from = "Normal", atrr = "bg" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
                 fg = {
-                  from = "TreesitterContextLineNumberBottom",
-                  attr = "fg",
-                  transparency = 0.4,
-                  color = {
-                    from = "TreesitterContext",
-                    attr = "bg",
-                  },
+                  from = "TreesitterContext",
+                  attr = "bg",
+                  alter = 5,
+                  transparency = 0.38,
+                  color = { from = "TreesitterContext", attr = "bg" },
                 },
-                bg = { from = "TreesitterContext" },
-                bold = true,
+              },
+            },
+            {
+              SnacksIndentScope = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = snacksindentscope_alter },
+                bg = "NONE",
               },
             },
           },
@@ -200,11 +272,14 @@ add_on_event("LspAttach", {
       })
       return {
         -- Avoid the sticky context from growing a lot.
-        max_lines = 3,
+        max_lines = 0,
         -- Match the context lines to the source code.
         multiline_threshold = 1,
         -- Disable it when the window is too small.
         min_window_height = 20,
+
+        mode = "topline", -- Line used to calculate context. Choices: 'cursor', 'topline'
+        line_numbers = false,
 
         on_attach = function(bufnr)
           -- Check if buffer or window is invalid

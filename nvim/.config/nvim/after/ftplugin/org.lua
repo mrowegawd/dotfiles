@@ -7,6 +7,10 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.bo.smartindent = true
 
+vim.wo.foldexpr = "v:lua.require'org.fold'.foldexpr(v:lnum)"
+
+vim.wo.number = false
+
 local lazy = require("utils.plugin").require_lazy
 
 local UtilKey = lazy "utils.map"

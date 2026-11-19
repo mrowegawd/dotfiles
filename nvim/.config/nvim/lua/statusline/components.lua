@@ -127,6 +127,10 @@ local set_conditions = {
   is_note_ft = function()
     return NOTE_FT[vim.bo.filetype] == true
   end,
+  is_float = function(win)
+    win = win or vim.api.nvim_get_current_win()
+    return vim.api.nvim_win_get_config(win).relative ~= ""
+  end,
 }
 
 -- ├───────────────────────────────┤ LSP HELPER ├───────────────────────────────┤
@@ -475,6 +479,8 @@ local function __colors()
     statusline_fg = statusline_fg,
     statusline_bg = H.get("StatusLineTheme", "bg"),
 
+    statusline_float_bg = H.get("NormalFloat", "bg"),
+
     winbar_fg = winbar_fg,
     winbar_bg = H.get("WinBar", "bg"),
     winbar_bg_bottom = H.get("PanelSideNormal", "bg"),
@@ -540,7 +546,7 @@ local function __colors()
 
     mode_term_fg = boolean_fg,
     mode_term_bg = H.tint(H.darken(boolean_fg, 0.8, normal_bg), 0.1),
-    mode_term_statusline_fg = H.tint(H.darken(boolean_fg, 0.5, normal_bg), 0.5),
+    mode_term_statusline_fg = H.tint(H.darken(boolean_fg, 0.5, normal_bg), 0.3),
     mode_term_statusline_bg = H.tint(H.darken(boolean_fg, 0.06, normal_bg), 0.05),
 
     diff_add = diff_add,
@@ -579,6 +585,14 @@ local function get_winbar_mode()
 
   if set_conditions.is_path_git_relative() then
     return colors.mode_yellow_fg, colors.mode_yellow_bg, colors.mode_yellow_fg_bright
+  end
+
+  if set_conditions.is_terminal_ft() then
+    return colors.mode_yellow_fg, colors.mode_yellow_bg, colors.mode_yellow_fg_bright
+  end
+
+  if set_conditions.is_float() then
+    return colors.mode_note_fg, colors.statusline_float_bg, colors.mode_note_fg_bright
   end
 
   return nil
@@ -912,7 +926,8 @@ M.FilePath = {
     end,
   }),
 
-  {
+  sep(colors.statusline_fg, colors.statusline_bg, {
+    term = { fg = colors.mode_term_statusline_fg, bg = colors.mode_term_statusline_bg },
     provider = function(self)
       if self.exclude_ft then
         return ""
@@ -979,10 +994,11 @@ M.FilePath = {
 
       return #path > 1 and ("/" .. path .. PATH_SEP) or "/"
     end,
-    hl = { fg = colors.statusline_fg },
-  },
+  }),
 
-  {
+  sep(colors.bright, colors.statusline_bg, {
+    term = { fg = colors.mode_term_statusline_fg, bg = colors.mode_term_statusline_bg },
+    bold = true,
     provider = function(self)
       local path = vim.fn.fnamemodify(self.bufname, ":t")
 
@@ -1029,11 +1045,8 @@ M.FilePath = {
 
       return lazy("utils.file").basename(self.filename)
     end,
-    hl = {
-      bold = true,
-      fg = colors.bright,
-    },
-  },
+  }),
+
   sep(colors.statusline_bg, colors.statusline_bg, {
     term = {
       fg = colors.mode_term_statusline_bg,
@@ -1476,30 +1489,43 @@ M.Tasks = {
     local tasks_by_status = lazy("overseer.util").tbl_group_by(tasks, "status")
     self.tasks = tasks_by_status
   end,
-  {
+  sep(colors.statusline_bg, colors.task_bg, {
+    term = { fg = colors.mode_term_statusline_bg },
     provider = function(self)
       for i, _ in pairs(symbols_overseer) do
         if self.tasks[i] then
-          return Icons.misc.separator_down
+          return Icons.misc.separator_up
         end
       end
+      return ""
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.task_bg },
-  },
-  {
+  }),
+  sep(colors.task_fg, colors.task_bg, {
+    bold = true,
     provider = function(self)
       for i, _ in pairs(symbols_overseer) do
         if self.tasks[i] then
           return " Overseer: "
         end
+        return ""
       end
     end,
-    hl = { fg = colors.statusline_bg, bg = colors.task_bg, bold = true },
-  },
+  }),
   rpad(overseer_tasks_for_status("CANCELED", colors)),
   rpad(overseer_tasks_for_status("RUNNING", colors)),
   rpad(overseer_tasks_for_status("SUCCESS", colors)),
   rpad(overseer_tasks_for_status("FAILURE", colors)),
+  sep(colors.task_bg, colors.statusline_bg, {
+    term = { bg = colors.mode_term_statusline_bg },
+    provider = function(self)
+      for i, _ in pairs(symbols_overseer) do
+        if self.tasks[i] then
+          return Icons.misc.separator_up .. "  "
+        end
+      end
+      return ""
+    end,
+  }),
 }
 M.RmuxTargetPane = {
   init = function(self)
@@ -1588,10 +1614,7 @@ M.RmuxTargetPane = {
     end,
     colors.statusline_bg,
     {
-      term = {
-        fg = colors.mode_term_statusline_bg,
-        bg = colors.mode_term_statusline_bg,
-      },
+      term = { fg = colors.task_bg, bg = colors.mode_term_statusline_bg },
       provider = function(self)
         local has_task = self.task > 0 or self.watch ~= ""
         if has_task or self.has_overseer_task then
@@ -1607,7 +1630,8 @@ M.Filetype = {
     self.filetype = get_vars.filetype()
   end,
 
-  {
+  sep(colors.statusline_fg, colors.statusline_bg, {
+    term = { fg = colors.mode_term_statusline_fg, bg = colors.mode_term_statusline_bg },
     provider = function(self)
       if self.filetype and self.filetype ~= "" then
         return "[" .. self.filetype .. "] "
@@ -1615,9 +1639,12 @@ M.Filetype = {
 
       return "[??] "
     end,
+  }),
 
-    hl = { fg = colors.statusline_fg },
-  },
+  -- {
+  --
+  --   hl = { fg = colors.statusline_fg },
+  -- },
 }
 M.Ruler = {
   init = function(self)
@@ -1693,10 +1720,10 @@ M.Clock = {
       and not (vim.env.TERM_PROGRAM == "WezTerm")
       and set_conditions.hide_in_col_width(120)
   end,
-  {
+  sep(colors.statusline_bg, colors.diagnostic_err, {
+    term = { fg = colors.mode_term_statusline_bg },
     provider = Icons.misc.separator_up,
-    hl = { bg = colors.diagnostic_err, fg = colors.statusline_bg },
-  },
+  }),
   {
     provider = function()
       return "  " .. os.date "%H:%M "
@@ -1780,7 +1807,7 @@ M.status_active_left = {
   M.PinnedBuffer,
   M.QFbookmark,
   M.Sessions,
-  -- M.Tasks,
+  M.Tasks,
   M.RmuxTargetPane,
   M.Filetype,
   M.Branch,
@@ -1974,8 +2001,7 @@ M.WinbarNavic = {
 
   condition = function()
     local navic = get_navic()
-
-    return navic ~= nil and not set_conditions.is_note_ft()
+    return navic ~= nil and not set_conditions.is_note_ft() and not set_conditions.is_float()
   end,
 
   {

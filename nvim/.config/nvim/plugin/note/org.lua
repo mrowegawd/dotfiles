@@ -13,7 +13,7 @@ add_on_event("UIEnter", {
       H.plugin("org.nvim", {
         theme = {
           ["*"] = {
-
+            { OrgLink = { underline = false, sp = "NONE", fg = { from = "NormalNote", attr = "fg" } } },
             { OrgBold = { bg = "NONE" } },
             { OrgCheckbox = { bg = "NONE", reverse = false } },
             { OrgQuoteBlock = { inherit = "@markup.quote.markdown" } },
@@ -33,7 +33,6 @@ add_on_event("UIEnter", {
                   transparency = 0.5,
                   color = { from = "NormalNote", attr = "bg" },
                 },
-                fg = { from = "Normal", attr = "fg" },
                 bold = true,
               },
             },
@@ -46,7 +45,7 @@ add_on_event("UIEnter", {
                   from = "CodeBlock",
                   attr = "bg",
                   alter = 2,
-                  transparency = 0.5,
+                  transparency = 0.3,
                   color = { from = "NormalNote", attr = "bg" },
                 },
               },
@@ -57,12 +56,12 @@ add_on_event("UIEnter", {
                 bg = {
                   from = "NormalNote",
                   attr = "bg",
-                  alter = 1,
+                  alter = 2,
                   transparency = 0.25,
                   color = { from = "NormalNote", attr = "bg" },
-                  combine = { from = "Boolean", attr = "fg", alter = 0.2 },
-                  combine_mode = "mix",
-                  combine_intensity = 0.1,
+                  -- combine = { from = "Boolean", attr = "fg", alter = 0.2 },
+                  -- combine_mode = "mix",
+                  -- combine_intensity = 0.1,
                 },
               },
             },
@@ -130,6 +129,19 @@ add_on_event("UIEnter", {
                   from = "Boolean",
                   attr = "fg",
                   alter = 0.2,
+                  transparency = 0.1,
+                  color = { from = "NormalNote", attr = "bg" },
+                },
+              },
+            },
+          },
+          ["zenburn"] = {
+            {
+              OrgBlockDelimiter = {
+                fg = {
+                  from = "OrgBlockDelimiter",
+                  attr = "fg",
+                  alter = 2,
                   transparency = 0.1,
                   color = { from = "NormalNote", attr = "bg" },
                 },
@@ -222,6 +234,7 @@ add_on_event("UIEnter", {
 
         -- NOTE: this is just a test of custom_commands in the agenda.
         agenda = {
+          window = "float",
           custom_commands = {
             b = {
               description = "Agenda with no -homework",
@@ -388,8 +401,8 @@ add_on_event("UIEnter", {
             clock_resolve = "<prefix>scz",
             clock_report = "<prefix>scr",
             clock_display = "<prefix>scd",
-            link_preview = "<prefix>xv",
-            link_preview_refresh = "<prefix>xV",
+            link_preview = "<prefix>uv",
+            link_preview_refresh = "<prefix>uV",
             latex_preview = "<prefix>xl",
             dblock_update = "<prefix>xu",
             dblock_update_all = "<prefix>xU",
@@ -551,8 +564,8 @@ add_on_event("UIEnter", {
             -- insert a clocktable with <C-c><C-x>x or <prefix>xr
             clock_report = false,
             clock_display = "<C-c><C-x><C-d>",
-            link_preview = "<C-c><C-x><C-v>",
-            link_preview_refresh = "<C-c><C-x><C-M-v>",
+            link_preview = "<C-c><C-u><C-v>",
+            link_preview_refresh = "<C-c><C-u><C-M-v>",
             latex_preview = "<C-c><C-x><C-l>",
             set_effort = "<C-c><C-x>e",
             inc_effort = "<C-c><C-x>E",

@@ -132,6 +132,24 @@ add {
       },
     },
     on_setup = function()
+      local problem_matcher = require "overseer.vscode.problem_matcher"
+
+      -- FOR RUST
+      problem_matcher.register_problem_matcher("$rustc", {
+        owner = "rustc",
+        source = "rustc",
+        severity = "error",
+        fileLocation = { "relative", "${cwd}" },
+        pattern = {
+          regexp = [[^(.+):(\d+):(\d+): (error|warning)(.*)$]],
+          file = 1,
+          line = 2,
+          column = 3,
+          severity = 4,
+          message = 5,
+        },
+      })
+
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
 
       UtilKey.nnoremap("<Leader>rO", function()

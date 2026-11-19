@@ -7,6 +7,7 @@ bo.buflisted = false
 wo.list = false
 
 vim.cmd.packadd "cfilter"
+vim.wo.number = true
 
 local lazy = require("utils.plugin").require_lazy
 
@@ -107,14 +108,15 @@ local function peek_item_qf()
   }
 end
 
-UtilKey.nnoremap("<Leader>cpp", function()
+local function peek_now()
   lazy("vim-pack").load_now "overlook.nvim"
   peek_item_qf()
-end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
-UtilKey.nnoremap("P", function()
-  lazy("vim-pack").load_now "overlook.nvim"
-  peek_item_qf()
-end, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
+end
+
+--stylua: ignore
+UtilKey.nnoremap( "<Leader>pp", peek_now, { desc = "Peek: qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
+--stylua: ignore
+UtilKey.nnoremap( "P", peek_now, { desc = "Action: peek qf item [overlook.nvim]", buffer = api.nvim_get_current_buf(), force = true })
 
 UtilKey.nnoremap("<Leader>ff", function()
   local opts = {

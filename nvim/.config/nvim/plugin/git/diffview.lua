@@ -15,11 +15,17 @@ add {
       H.plugin("DiffviewHiCol", {
         theme = {
           ["*"] = {
-            { DiffviewDiffAdd = { inherit = "diffAdded" } },
-            { DiffviewDiffChange = { inherit = "diffChanged" } },
-            { DiffViewDiffDelete = { inherit = "diffRemoved" } },
+            { DiffviewDiffAdd = { inherit = "diffAdded", fg = "NONE" } },
+            { DiffviewDiffChange = { inherit = "diffChanged", fg = "NONE" } },
+            { DiffViewDiffDelete = { inherit = "diffRemoved", fg = "NONE" } },
+            {
+              DiffviewDiffDeleteDim = {
+                fg = { from = "Normal", attr = "bg", alter = 0.5 },
+                bg = { from = "Normal", attr = "bg" },
+              },
+            },
 
-            { DiffviewDiffText = { inherit = "DiffText" } },
+            { DiffviewDiffText = { inherit = "DiffText", fg = "NONE" } },
 
             { DiffviewStatusAdded = { inherit = "GitSignsAdd", bg = "NONE" } },
             { DiffviewStatusModified = { inherit = "GitSignsChange", bg = "NONE" } },
@@ -41,14 +47,7 @@ add {
             -- directly (which would make the two indistinguishable).
             {
               DiffviewDiffAddAsDelete = {
-                fg = {
-                  from = "diffRemoved",
-                  attr = "fg",
-                  alter = 0.1,
-                  combine = { from = "String", attr = "fg", alter = -0.5 },
-                  combine_mode = "screen",
-                  combine_intensity = 0.8,
-                },
+                fg = "NONE",
                 bg = {
                   from = "diffRemoved",
                   attr = "fg",
