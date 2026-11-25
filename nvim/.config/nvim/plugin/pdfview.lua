@@ -14,7 +14,7 @@ add_remote_or_local_on_event("BufReadPost", {
           end,
         },
         keymaps = {
-          go_to_page = "<C-c>ff",
+          go_to_page = "<C-x><C-f>",
           show_page_in_zathura = "<Leader>oz",
           next_page = "<a-n>",
           prev_page = "<a-p>",

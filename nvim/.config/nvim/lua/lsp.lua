@@ -287,9 +287,9 @@ local function get_keys()
     { "K", vim.lsp.buf.hover, has = "hover", desc = "LSP: Hover" },
 
     --stylua: ignore
-    { "<C-c>ls", function() lazy("utils.hover_eldoc").show "float" end, has = "hover", desc = "LSP: show hover [hover_eglot]" },
+    { "<C-x>ls", function() lazy("utils.hover_eldoc").show "float" end, has = "hover", desc = "LSP: show hover [hover_eglot]" },
     --stylua: ignore
-    { "<C-c>lS", function() lazy("utils.hover_eldoc").toggle "float" end, has = "hover", desc = "LSP: toggle hover [hover_eglot]" },
+    { "<C-x>lS", function() lazy("utils.hover_eldoc").toggle "float" end, has = "hover", desc = "LSP: toggle hover [hover_eglot]" },
 
     --stylua: ignore
     { "<C-s>", function() lazy("utils.hover_eldoc").toggle_auto_hover() end, has = "hover", desc = "LSP: show signature [hover_eglot]", mode = { "i", "v" }, },
@@ -302,9 +302,9 @@ local function get_keys()
     { "dn", diag(1), desc = "Diagnostic: next item" },
     { "dp", diag(-1), desc = "Diagnostic: prev item" },
     --stylua: ignore
-    { "dP", function() diagnostic_float_markdown "line" end, desc = "Diagnostic: open float peek (markdown)" },
+    { "<C-w>D", function() diagnostic_float_markdown "line" end, desc = "Diagnostic: open float peek (markdown)" },
     --stylua: ignore
-    { "dK", function() diagnostic_float_markdown "cursor" end, desc = "Diagnostic: float at cursor (markdown)" },
+    { "<C-w>d", function() diagnostic_float_markdown "cursor" end, desc = "Diagnostic: float at cursor (markdown)" },
   }
 end
 

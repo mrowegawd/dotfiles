@@ -7,6 +7,14 @@ local IconMisc = lazy("icons").misc
 local silent = { silent = true }
 local nosilent = { silent = false }
 
+-- Disable default native multicursor mappings
+vim.keymap.set({ "n", "x" }, "Q", "<Nop>")
+vim.keymap.set({ "n", "x" }, "ZQ", "<Nop>")
+vim.keymap.set({ "n", "i", "x" }, "<C-LeftMouse>", "<Nop>")
+
+-- Disable default native scroll window
+vim.keymap.set({ "n", "i", "x" }, "<S-CR>", "<Nop>")
+
 -- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- ╏                                 Edit/Insert                                 ╏
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
@@ -23,13 +31,6 @@ UtilKey.inoremap("<C-f>", "<Esc>ea", silent)
 
 UtilKey.vnoremap("<S-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", silent)
 UtilKey.vnoremap("<S-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", silent)
-
---stylua: ignore
-UtilKey.inoremap("<Esc>", function() UtilKey.feedkey "<C-c>" vim.cmd "noh" return "<esc>" end, silent)
---stylua: ignore
-UtilKey.nnoremap("<Esc>", function() vim.cmd "noh" return "<esc>" end, silent)
---stylua: ignore
-UtilKey.vnoremap("<Esc>", function() UtilKey.feedkey "<C-c>" vim.cmd "noh" return "<esc>" end, silent)
 
 --stylua: ignore
 UtilKey.inoremap("hh", function() vim.schedule(function() vim.cmd "nohlsearch" UtilKey.actions.snippet_stop() UtilKey.feedkey "<Esc>" end) end, silent)
@@ -70,20 +71,20 @@ UtilKey.nnoremap("<Leader>wv", function() UtilWindow.arange_wins "vsplit"() end,
 --stylua: ignore
 UtilKey.nnoremap("<Leader>ws", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>s", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split" })
+UtilKey.nnoremap("<C-w>s", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>j", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split (alternative)" })
+UtilKey.nnoremap("<C-w>j", function() UtilWindow.arange_wins "split"() end, { desc = "Window: split (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>v", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<C-w>v", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>l", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<C-w>l", function() UtilWindow.arange_wins "vsplit"() end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
 UtilKey.noremap({ "n", "x" }, "<Leader>ll", function() UtilWindow.switch_focus_targeted_window() end, { desc = "Window: switch focus" })
 
 --stylua: ignore
-UtilKey.nnoremap("<c-w>L", function() if vim.w.is_overlook_popup then UtilWindow.arange_wins "vsplit"() end UtilKey.feedkey "<C-w>L" end, { desc = "Window: vsplit (alternative)" })
+UtilKey.nnoremap("<C-w>L", function() if vim.w.is_overlook_popup then UtilWindow.arange_wins "vsplit"() end UtilKey.feedkey "<C-w>L" end, { desc = "Window: vsplit (alternative)" })
 --stylua: ignore
-UtilKey.nnoremap("<c-w>t", function() UtilWindow.arange_wins "tabe"() end, { desc = "Window: move new tab", silent = true })
+UtilKey.nnoremap("<C-w>t", function() UtilWindow.arange_wins "tabe"() end, { desc = "Window: move new tab", silent = true })
 
 --stylua: ignore
 UtilKey.noremap({ "n", "x" }, "<Leader>wJ", function() UtilWindow.arange_wins "J"() end, { desc = "Window: move ↓" })
@@ -199,13 +200,13 @@ UtilKey.tnoremap("<C-a-l>", function() UtilKey.feedkey("<C-\\><C-n><C-a-l>") end
 UtilKey.tnoremap("<C-a-h>", function() UtilKey.feedkey("<C-\\><C-n><C-a-h>") end, { desc = "Terminal: prev tab" })
 
 -- stylua: ignore
-UtilKey.tnoremap("<c-Left>", function() UtilKey.feedkey("<C-\\><C-n><C-w>h" ) end, { desc = "Terminal: move left" })
+UtilKey.tnoremap("<C-x><C-h>", function() UtilKey.feedkey("<C-\\><C-n><C-w>h") end, { desc = "Terminal: move left" })
 -- stylua: ignore
-UtilKey.tnoremap("<c-Down>", function() UtilKey.feedkey "<C-\\><C-n>:wincmd j<CR>" end, { desc = "Terminal: move down" })
+UtilKey.tnoremap("<C-x><C-j>", function() UtilKey.feedkey("<C-\\><C-n><C-w>j") end, { desc = "Terminal: move down" })
 -- stylua: ignore
-UtilKey.tnoremap("<c-Up>", function() UtilKey.feedkey("<C-\\><C-n><C-w>k") end, { desc = "Terminal: move up" })
+UtilKey.tnoremap("<C-x><C-k>", function() UtilKey.feedkey("<C-\\><C-n><C-w>k") end, { desc = "Terminal: move up" })
 -- stylua: ignore
-UtilKey.tnoremap("<c-Right>", function() UtilKey.feedkey("<C-\\><C-n>:wincmd l<CR>") end, { desc = "Terminal: move right" })
+UtilKey.tnoremap("<C-x><C-l>", function() UtilKey.feedkey("<C-\\><C-n><C-w>l") end, { desc = "Terminal: move right" })
 
 -- ════════════════════════════════ TOGGLE TERM ═════════════════════════════
 
@@ -233,12 +234,12 @@ UtilKey.noremap({ "n", "x", "t" }, "<a-T>", function() get_term().open_float() e
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 UtilKey.cnoremap("hh", "<Esc>", { desc = "Commandline: exit" })
-UtilKey.cnoremap("<c-a>", "<Home>", { desc = "Commandline: start" })
-UtilKey.cnoremap("<c-e>", "<End>", { desc = "Commandline: end" })
-UtilKey.cnoremap("<c-h>", "<Left>", { desc = "Commandline: left" })
-UtilKey.cnoremap("<c-l>", "<Right>", { desc = "Commandline: right" })
-UtilKey.cnoremap("<c-b>", "<S-Left>", { desc = "Commandline: back word" })
--- UtilKey.cnoremap("<c-f>", "<S-Right>", { desc = "Commandline: forward word" })
+UtilKey.cnoremap("<C-a>", "<Home>", { desc = "Commandline: start" })
+UtilKey.cnoremap("<C-e>", "<End>", { desc = "Commandline: end" })
+UtilKey.cnoremap("<C-h>", "<Left>", { desc = "Commandline: left" })
+UtilKey.cnoremap("<C-l>", "<Right>", { desc = "Commandline: right" })
+UtilKey.cnoremap("<C-b>", "<S-Left>", { desc = "Commandline: back word" })
+-- UtilKey.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: forward word" })
 
 UtilKey.cabbrev("BD", "bd!")
 UtilKey.cabbrev("Bd", "bd!")
@@ -527,8 +528,8 @@ UtilKey.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev
 -- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 UtilKey.nnoremap("<Localleader>aft", lazy("utils.note").filter_by_tags, { desc = "Note: find notes by tag" })
-UtilKey.nnoremap("<Localleader>afl", lazy("utils.note").last_filter_by_tags, { desc = "Note: repeat tag search" })
-UtilKey.nnoremap("<Localleader>aff", lazy("utils.note").find_files_notes, { desc = "Note: find note files" })
+-- UtilKey.nnoremap("<Localleader>afl", lazy("utils.note").last_filter_by_tags, { desc = "Note: repeat tag search" })
+UtilKey.nnoremap("<Localleader>aff", lazy("utils.note").find_files, { desc = "Note: find note files" })
 UtilKey.nnoremap("<Localleader>afg", lazy("utils.note").live_grep, { desc = "Note: live grep" })
 UtilKey.vnoremap("<Localleader>afg", lazy("utils.note").live_grep_visual, { desc = "Note: live grep (visual)" })
 

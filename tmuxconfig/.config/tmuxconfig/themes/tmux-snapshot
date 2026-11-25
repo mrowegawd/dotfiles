@@ -6,48 +6,48 @@
 
 # --- Statusline ---------------------------------------------------------------
 
-STATUSLINE_FG="#4d4d4d"
-STATUSLINE_BG="#191919"
-STATUSLINE_BG_MESSAGE="#f1f1be"
+STATUSLINE_FG="#575757"
+STATUSLINE_BG="#0f0f0f"
+STATUSLINE_BG_MESSAGE="#88a7e4"
 
 # --- Tabs / Windows -----------------------------------------------------------
 
-TAB_ACTIVE_FG="#191919"
-TAB_ACTIVE_BG="#5a5a5a"
+TAB_ACTIVE_FG="#0b0b0b"
+TAB_ACTIVE_BG="#c86a38"
 
 TAB_INACTIVE_FG="#7fa9cc"
 TAB_INACTIVE_BG="#374a59"
 
 # --- Session ------------------------------------------------------------------
 
-SESSION_BG="#121212"
-SESSION_FG="#606060"
+SESSION_BG="#0f0f0f"
+SESSION_FG="#575757"
 
 # --- Tmux ---------------------------------------------------------------------
 
-TMUX_BG="#121212"
-TMUX_FG="#aaaaaa"
-TMUX_KEYWORD="#c586c0"
-TMUX_VISUAL_BG="#fffffc"
+TMUX_BG="#0b0b0b"
+TMUX_FG="#b0ac95"
+TMUX_INACTIVE_BG="#090909"
+TMUX_KEYWORD="#957fb8"
+TMUX_VISUAL_BG="#2d4f67"
 
 # --- File manager -------------------------------------------------------------
 
 # Background used when yazi/file-manager is active.
 # Kept in sync with the file-manager background used by Neovim.
-FM_BG="#141414"
+FM_BG="#090909"
 
 # --- Pane borders -------------------------------------------------------------
-
 BORDER_ACTIVE="#272727"
-BORDER_INACTIVE="#1d1d1d"
-BORDER_INACTIVE_STATUS_FG="#1d1d1d"
+BORDER_INACTIVE="#0d0d0d"
+BORDER_INACTIVE_STATUS_FG="#0d0d0d"
 
 # --- General colors -----------------------------------------------------------
 
-RED="#f44747"
-BLUE="#569cd6"
-WHITE="#d4d4d4"
-GREEN="#608b4e"
+RED="#d8616b"
+BLUE="#7E9CD8"
+WHITE="#c8c093"
+GREEN="#98BB6C"
 YELLOW="#dcdcaa"
 
 
@@ -68,6 +68,12 @@ set -g pane-border-indicators colour
 
 # Show pane title on the top border.
 set -g pane-border-status top
+
+# Setting ini dibuat untuk mencegah muncullah underscore pada glyph
+set -g window-status-current-style "none"
+
+# setw -g window-style bg=$TMUX_INACTIVE_BG
+# setw -g window-active-style bg=$TMUX_BG
 
 # Prefer the title explicitly set by the application.
 #
@@ -123,7 +129,7 @@ set -g status-justify left
 set -g status-interval 5
 
 set -g status-style \
-    "fg=$STATUSLINE_BG_MESSAGE,bg=$TMUX_BG"
+    "fg=$STATUSLINE_BG_MESSAGE,bg=$STATUSLINE_BG"
 
 
 # ==============================================================================
@@ -143,7 +149,7 @@ set -g status-right "\
 #[fg=$RED]#{?pane_input_off,🔒 Input OFF,}\
 #[default] \
 #[fg=$BLUE] #($HOME/.config/tmuxconfig/scripts/status-ses-tmux \"#S\") \
-#[fg=$STATUSLINE_FG]  #(date +\"%A %d-%b-%Y\" | sed \
+#[fg=$YELLOW]  #(date +\"%A %d-%b-%Y\" | sed \
 -e 's/Monday/Senin/' \
 -e 's/Tuesday/Selasa/' \
 -e 's/Wednesday/Rabu/' \
@@ -152,9 +158,9 @@ set -g status-right "\
 -e 's/Saturday/Sabtu/' \
 -e 's/Sunday/Minggu/') \
 #[fg=$RED]  #(date +\"%H:%M\") \
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG] \
+#[fg=$STATUSLINE_FG]#[bg=$STATUSLINE_BG] \
 #{?client_prefix,#[fg=$TMUX_KEYWORD]#{prefix},#{prefix}}\
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] 👨 #(whoami)\
+#[fg=$STATUSLINE_FG]#[bg=$STATUSLINE_BG]#[bold] 👨 #(whoami)\
 }"
 
 
@@ -178,7 +184,7 @@ set -g status-left "\
 #[bg=$SESSION_FG]#[fg=$SESSION_BG] ❐ #[bold]#S,\
 #[bg=$SESSION_BG]#[fg=$SESSION_FG]\
 #(printf '%*s' $(( $(tmux display -p '#{window_width}') * 18 / 100 )) '')\
- ❐ #[bold]#S\
+ ❐ #[bold]#S \
 }\
 \
 #{?#{==:#I,1},\
@@ -187,19 +193,19 @@ set -g status-left "\
 \
 #{?#{>=:#{window_width},80},\
 #[fg=$SESSION_BG]#[bg=$RED],\
-#[fg=$TMUX_BG]#[bg=$RED]\
+#[fg=$STATUSLINE_BG]#[bg=$RED]\
 },\
 \
 #{?#{>=:#{window_width},80},\
 #[fg=$SESSION_BG]#[bg=$TAB_ACTIVE_BG],\
-#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]\
+#[fg=$STATUSLINE_BG]#[bg=$TAB_ACTIVE_BG]\
 }\
 }\
 ,\
 \
 #{?#{>=:#{window_width},80},\
-#[fg=$SESSION_BG]#[bg=$TMUX_BG],\
-#[fg=$TMUX_BG]#[bg=$TMUX_BG]\
+#[fg=$SESSION_BG]#[bg=$STATUSLINE_BG],\
+#[fg=$STATUSLINE_BG]#[bg=$STATUSLINE_BG]\
 }\
 \
 }"
@@ -214,18 +220,18 @@ set -g window-status-current-format "\
 \
 #{?#{==:#I,1},\
 #[fg=$RED]#[bg=$RED],\
-#[fg=$TMUX_BG]#[bg=$RED]\
+#[fg=$STATUSLINE_BG]#[bg=$RED]\
 }\
-#[fg=$TMUX_BG]#[bg=$RED],\
+#[fg=$STATUSLINE_BG]#[bg=$RED],\
 \
 #{?#{==:#I,1},\
 #[fg=$TAB_ACTIVE_BG]#[bg=$TAB_ACTIVE_BG],\
-#[fg=$TMUX_BG]#[bg=$TAB_ACTIVE_BG]\
+#[fg=$STATUSLINE_BG]#[bg=$TAB_ACTIVE_BG]\
 }\
 #[fg=$TAB_ACTIVE_FG]#[bg=$TAB_ACTIVE_BG]\
 }\
 \
-#[bold] #I:\
+#[none,bold] #I:\
 #{?#{==:#{automatic-rename},1},\
 #{=30:#{b:pane_current_path}},\
 #{window_name}\
@@ -235,7 +241,7 @@ set -g window-status-current-format "\
 #{?window_zoomed_flag,\
 #{?pane_in_mode,\
 #[fg=$TMUX_BG]󰁌 ,\
-#[fg=$TAB_ACTIVE_FG]󰁌 \
+#[fg=$YELLOW]󰁌 \
 },\
 }\
 \
@@ -243,19 +249,19 @@ set -g window-status-current-format "\
 \
 #{?#{e|>:#{search_count},0},\
 \
-#[fg=$RED]#[bg=$TAB_ACTIVE_FG]\
-#[fg=$TAB_ACTIVE_BG] Found #{search_count} \
-#[fg=$TAB_ACTIVE_FG]#[bg=$STATUSLINE_BG_MESSAGE],\
+#[fg=$RED]#[bg=$WHITE]\
+#[bg=$WHITE]#[fg=$TMUX_BG]#[bold] Found #{search_count} \
+#[fg=$WHITE]#[bg=$STATUSLINE_BG_MESSAGE],\
 \
 #[fg=$RED]#[bg=$STATUSLINE_BG_MESSAGE]\
 }\
 \
-#[fg=$TMUX_BG] ℓ \
+#[fg=$STATUSLINE_BG] ℓ \
 #{e|-|:#{history_size},#{scroll_position}}\
 /#{history_size} \
-#[fg=$STATUSLINE_BG_MESSAGE]#[bg=$TMUX_BG],\
+#[fg=$STATUSLINE_BG_MESSAGE]#[bg=$STATUSLINE_BG],\
 \
-#[fg=$TAB_ACTIVE_BG]#[bg=$TMUX_BG]\
+#[fg=$TAB_ACTIVE_BG]#[bg=$STATUSLINE_BG]\
 }"
 
 
@@ -264,9 +270,9 @@ set -g window-status-current-format "\
 # ==============================================================================
 
 set -g window-status-format "\
-#[fg=$TMUX_BG,bg=$TMUX_BG]\
-#[fg=$STATUSLINE_FG,bg=$TMUX_BG,noreverse] \
-#I:\
+#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG]\
+#[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,noreverse] \
+#[none]#I:\
 #{?#{==:#{automatic-rename},1},\
 #{=30:#{b:pane_current_path}},\
 #{window_name}\
@@ -276,7 +282,7 @@ set -g window-status-format "\
 #[fg=$YELLOW]󰁌 ,\
 }\
 \
-#[fg=$TMUX_BG,bg=$TMUX_BG]\
+#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG]\
 "
 
 

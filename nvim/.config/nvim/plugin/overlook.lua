@@ -14,8 +14,9 @@ add {
           size_ratio = 0.70,
           min_width = 40,
           min_height = 20,
+          z_index_base = 50,
         },
-        adapters = {
+       adapters = {
           peek_fzflua = {
             get = function(selection)
               local path = lazy("utils.cmd").__strip_str(selection[1])
@@ -100,13 +101,31 @@ add {
   },
 }
 
+local ZOOM_RATIO = { width = 0.90, height = 0.90 }
+
 local function load_peek()
   lazy("vim-pack").load_now "overlook.nvim"
+  lazy("utils.monkeypatch.overlook").setup()
 end
 
 local function get_api()
   load_peek()
   return lazy "overlook.api"
+end
+
+local function close_host_stack()
+  local instance = require("overlook.window").instances[vim.api.nvim_get_current_win()]
+  if instance then
+    pcall(instance.close_all, instance)
+  end
+end
+
+local function peek_zoom()
+  load_peek()
+  close_host_stack()
+  lazy("utils.monkeypatch.overlook").with_zoom(ZOOM_RATIO, function()
+    require("overlook.api").peek_cursor()
+  end)
 end
 
 ---@param bufnr? integer
@@ -187,18 +206,20 @@ local function peek_buffer_info(bufnr)
 
   local info_bufnr = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(info_bufnr, 0, -1, false, lines)
+  vim.api.nvim_set_option_value("filetype", "text", { buf = info_bufnr })
+  vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = info_bufnr })
+  vim.api.nvim_set_option_value("modifiable", false, { buf = info_bufnr })
 
-  -- vim.api.nvim_set_option_value("filetype", "text", { buf = info_bufnr })
-  -- vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = info_bufnr })
-  -- vim.api.nvim_set_option_value("swapfile", false, { buf = info_bufnr })
-  -- vim.api.nvim_set_option_value("modifiable", false, { buf = info_bufnr })
-
-  require("overlook.window").open_popup {
-    target_bufnr = info_bufnr,
-    lnum = 1,
-    col = 0,
-    title = " Buffer Info: " .. (short_name ~= "" and short_name or "[No Name]"),
-  }
+  close_host_stack()
+  require("utils.monkeypatch.overlook").with_zoom(ZOOM_RATIO, function()
+    require("overlook.window").open_popup {
+      target_bufnr = info_bufnr,
+      lnum = 1,
+      col = 0,
+      title = " Buffer Info: " .. (short_name ~= "" and short_name or "[No Name]"),
+      temporary = true,
+    }
+  end)
 end
 
 local cmds = {
@@ -206,14 +227,16 @@ local cmds = {
   { "<Leader>pd", function() get_api().peek_definition() end, "definition" },
   --stylua: ignore
   { "<Leader>pC", function() get_api().close_all() end, "close all" },
-  --stylua: ignore
+  -- stylua: ignore
   { "<Leader>pp", function() get_api().peek_cursor() end, "cursor" },
-  --stylua: ignore
-  { "<Leader>pb", peek_buffer_info, "buffer info & options" },
   --stylua: ignore
   { "<Leader>pr", function() get_api().restore_popup() end, "restore last popup" },
   --stylua: ignore
   { "<Leader>pR", function() get_api().restore_all_popups() end, "restore all popups" },
+  --stylua: ignore
+  { "<Leader>pb", peek_buffer_info, "buffer info & options" },
+  --stylua: ignore
+  { "<Leader>pa", peek_zoom, "zoom" },
 }
 
 for _, cmd in ipairs(cmds) do

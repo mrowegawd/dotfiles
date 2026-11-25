@@ -714,9 +714,4 @@ function M.window.toggle_cc_zoom()
   })
 end
 
-function M.window.toggle_chat_zoom()
-  vim.cmd.stopinsert()
-  M.window.toggle_cc_zoom()
-end
-
 return M

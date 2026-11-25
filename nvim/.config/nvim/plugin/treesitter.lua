@@ -109,14 +109,8 @@ add {
 local base_colorscheme = {
   lackluster = {
     kitty = {
-      treesittercontext_alter = 0.65,
-      snacksindentscope_alter = 1.3,
-    },
-  },
-  luna = {
-    kitty = {
-      treesittercontext_alter = 0.65,
-      snacksindentscope_alter = 1,
+      treesittercontext_alter = 0.4,
+      -- snacksindentscope_alter = ,
     },
   },
   ["ef-cherie"] = {
@@ -124,59 +118,58 @@ local base_colorscheme = {
       snacksindentscope_alter = 0.8,
     },
   },
+  gruvbox = {
+    kitty = {
+      snacksindentscope_alter = 0.25,
+    },
+  },
   ["ef-dream"] = {
-    kitty = {
-      treesittercontext_alter = 0.2,
-      snacksindentscope_alter = 0.8,
-    },
-  },
-  ["tokyonight-night"] = {
-    kitty = {
-      treesittercontext_alter = 0.7,
-      snacksindentscope_alter = 0.8,
-    },
-  },
-  kanagawa = {
-    kitty = {
-      snacksindentscope_alter = 1.2,
-    },
-  },
-  imli = {
-    kitty = {
-      snacksindentscope_alter = 0.8,
-    },
-  },
-  jellybeans = {
-    kitty = {
-      snacksindentscope_alter = 0.7,
-    },
-  },
-  techbase = {
-    kitty = {
-      snacksindentscope_alter = 0.65,
-    },
-  },
-  vscode = {
-    kitty = {
-      snacksindentscope_alter = 0.9,
-    },
-  },
-  zenburn = {
     kitty = {
       snacksindentscope_alter = 0.2,
     },
     ["ghostty-cairo"] = {
-      snacksindentscope_alter = 1,
+      snacksindentscope_alter = 0.95,
+    },
+  },
+  imli = {
+    kitty = {
+      snacksindentscope_alter = 0.15,
+    },
+  },
+  jellybeans = {
+    kitty = {
+      snacksindentscope_alter = 0.3,
+    },
+  },
+  techbase = {
+    kitty = {
+      snacksindentscope_alter = 0.3,
+    },
+    ["ghostty-cairo"] = {
+      snacksindentscope_alter = 0.77,
+    },
+  },
+  vscode = {
+    kitty = {
+      snacksindentscope_alter = 0.2,
+    },
+  },
+  zenburn = {
+    kitty = {
+      snacksindentscope_alter = 0.1,
+    },
+    ["ghostty-cairo"] = {
+      snacksindentscope_alter = 0.4,
     },
   },
   default = {
     kitty = {
-      treesittercontext_alter = 0.2,
-      snacksindentscope_alter = 0.7,
+      treesittercontext_alter = 0.15,
+      snacksindentscope_alter = 0.35,
     },
     ["ghostty-cairo"] = {
-      treesittercontext_alter = 0.2,
-      snacksindentscope_alter = 1.5,
+      treesittercontext_alter = 0.1,
+      snacksindentscope_alter = 0.9,
     },
   },
 }

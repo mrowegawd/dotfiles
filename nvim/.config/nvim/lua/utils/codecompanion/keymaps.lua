@@ -33,6 +33,30 @@ local function send_message(chat_obj)
   keymaps.send.callback(chat_obj)
 end
 
+local function open_options()
+  keymaps.options.callback()
+  vim.defer_fn(function()
+    vim.cmd.stopinsert()
+    vim.api.nvim_win_resize(0, math.min(160, vim.o.columns), -1)
+  end, 1)
+end
+
+local function open_debug(chat_obj)
+  keymaps.debug.callback(chat_obj)
+  vim.defer_fn(function()
+    vim.cmd.stopinsert()
+    local win_id = vim.api.nvim_get_current_win()
+    local win_config = vim.api.nvim_win_get_config(win_id)
+    if win_config.relative == "editor" then
+      win_config.width = math.floor(vim.o.columns * 0.535)
+      win_config.height = vim.o.lines - 4
+      win_config.row = 1
+      win_config.col = math.floor((vim.o.columns - win_config.width) / 2)
+      vim.api.nvim_win_set_config(win_id, win_config)
+    end
+  end, 1)
+end
+
 local function create_chat(cwd)
   if cwd then
     local args = {
@@ -51,176 +75,118 @@ local function create_chat(cwd)
   end, 100)
 end
 
-local function force_close(chat_obj)
-  keymaps.close.callback(chat_obj)
-end
-
-local function open_debug(chat_obj)
-  keymaps.debug.callback(chat_obj)
-  vim.defer_fn(function()
-    vim.cmd.stopinsert()
-    local win_id = vim.api.nvim_get_current_win()
-    local win_config = vim.api.nvim_win_get_config(win_id)
-    if win_config.relative == "editor" then
-      win_config.col = 1
-      vim.api.nvim_win_set_config(win_id, win_config)
+local function create_chat_in_directory(chat_obj)
+  local cwd = chat_obj.opts.cwd or vim.uv.cwd()
+  local root = UtilGit.git_root(cwd)
+  vim.ui.input({
+    prompt = "Chat directory: ",
+    default = (root and vim.fs.dirname(root) or cwd) .. "/",
+    completion = "dir",
+  }, function(dir)
+    if not dir or dir == "" then
+      return
     end
-  end, 1)
+
+    dir = vim.fs.normalize(dir)
+    local stat = vim.uv.fs_stat(dir)
+    if not stat or stat.type ~= "directory" then
+      return vim.notify("Not a directory: " .. dir, vim.log.levels.ERROR)
+    end
+
+    chat_obj.ui:hide()
+    create_chat(UtilGit.git_root(dir) or dir)
+  end)
 end
 
+-- Chat window keymaps
 function M.chat_keymaps()
   return {
     -- Chat lifecycle
     create_chat = {
-      modes = { n = "<A-c>" },
+      modes = { n = "<A-c>", i = "<A-c>" },
       description = "Codecompanion: create new chat",
       callback = function()
-        vim.cmd.CodeCompanionChat()
-        -- Hack to make completions work immediately in a new chat
-        vim.cmd.stopinsert()
-        vim.defer_fn(function()
-          vim.cmd.startinsert { bang = true }
-        end, 100)
+        create_chat()
       end,
     },
-
+    create_chat_in_directory = {
+      modes = { n = "<A-e>", i = "<A-e>" },
+      description = "Codecompanion: create new chat in directory",
+      callback = create_chat_in_directory,
+    },
     hide_chats = {
       modes = { n = "<Leader>bk" },
       description = "Codecompanion: hide chats",
       callback = hide_chats,
     },
+    close = { modes = { n = "<Leader>bK" } },
+    clear = { modes = { n = "dM" } },
 
+    -- Message actions
+    send = {
+      modes = { n = "<C-o>", i = "<C-o>" },
+      description = "Codecompanion: send message",
+      callback = send_message,
+    },
+    stop = { modes = { n = "q" } },
+    yank_code = { modes = { n = "<C-x>Y", i = "<Nope>" } },
     regenerate = {
-      modes = { n = { "<C-c>xR", "<C-c><C-r>" } },
+      modes = { n = { "<C-x>eR" } },
       index = 3,
       callback = "keymaps.regenerate",
       description = "Codecompanion: regenerate the last response",
     },
-
-    close = {
-      modes = { n = { "<Leader>bK", i = "<nope>" } },
-      description = "Codecompanion: kill or close chat buffer",
-      callback = force_close,
-    },
-    clear = {
-      modes = { n = "dM" },
-      description = "Codecompanion: clear chat buffer",
-    },
-
-    -- Stop the request
-    stop = {
-      modes = { n = "q" },
-      description = "Codecompanion: stop request",
-    },
-    yank_code = {
-      modes = { n = "Y", i = "<Nope>" },
-      description = "Codecompanion: yank code",
-    },
-
-    -- Message actions
-    send = {
-      modes = { n = { "<C-o>", "<c-c><c-c>" }, i = { "<C-o>", "<C-c><C-c>" } },
-      description = "Codecompanion: send message",
-      callback = send_message,
-    },
-
-    fold_code = {
-      modes = { n = "zc" },
-      description = "Codecompanion: fold code",
-    },
-
     -- Navigations
-    next_chat = {
-      modes = { n = "<C-n>" },
-      description = "Codecompanion: next chat",
-    },
-    previous_chat = {
-      modes = { n = "<C-p>" },
-      description = "Codecompanion: prev chat",
-    },
-
-    previous_header = {
-      modes = { n = "<A-p>" },
-      description = "Codecompanion: prev header",
-    },
-    next_header = {
-      modes = { n = "<A-n>" },
-      description = "Codecompanion: next header",
-    },
-
-    goto_file_under_cursor = {
-      modes = { n = { "gf", "<Leader>oe" } },
-      description = "Codecompanion: go to file under cursor",
-    },
+    next_chat = { modes = { n = "<C-n>" } },
+    previous_chat = { modes = { n = "<C-p>" } },
+    previous_header = { modes = { n = "<A-p>" } },
+    next_header = { modes = { n = "<A-n>" } },
+    fold_code = { modes = { n = "zc" } },
+    goto_file_under_cursor = { modes = { n = { "gf", "<Leader>oe" } } },
 
     -- Chat tools
     action_palette = {
       modes = { n = "<CR>" },
       description = "Codecompanion: action palette",
       callback = function()
-        vim.defer_fn(function()
-          vim.cmd.CodeCompanionActions()
-        end, 1)
+        vim.cmd.CodeCompanionActions()
       end,
     },
-
-    change_adapter = {
-      modes = { n = "<C-c>sc" },
-      description = "Codecompanion: change adapter",
+    options = {
+      modes = { n = { "g?", "<Leader>?" } },
+      callback = open_options,
     },
-
-    debug = {
-      modes = { n = "<F5>" },
-      description = "Codecompanion: debug",
-      callback = open_debug,
-    },
-
-    clear_approvals = {
-      modes = { n = "<C-c>sX" },
-      description = "Codecompanion: clear approvals",
-    },
+    change_adapter = { modes = { n = "<C-x>sc" }, description = "Codecompanion: change adapter" },
+    debug = { modes = { n = "<C-x>od" }, description = "Codecompanion: debug", callback = open_debug },
 
     -- Chat modes
-    _btw = {
-      modes = { n = "<C-c>sW" },
-      description = "Codecompanion: _bw",
-    },
-
-    yolo_mode = {
-      modes = { n = "<C-c>sY" },
-      description = "Codecompanion: yolo mode",
-    },
+    _btw = { modes = { n = "<C-x>sW" }, description = "Codecompanion: _bw" },
 
     -- Buffer sync
     sync_all = {
-      modes = { n = "<C-c>bs" },
+      modes = { n = "<C-x>bs" },
       description = "Codecompanion: buffer sync all",
     },
     sync_diff = {
-      modes = { n = "<C-c>bd" },
+      modes = { n = "<C-x>bd" },
       description = "Codecompanion: buffer sync diff",
     },
 
-    -- Helps
-    options = {
-      modes = { n = { "g?", "?" } },
-      callback = "keymaps.options",
-      description = "Codecompanion: show help",
-      hide = true,
-    },
+    clear_approvals = { modes = { n = "<C-x>Fa" }, description = "Codecompanion: clear approvals" },
+    yolo_mode = { modes = { n = "<C-x>sY" }, description = "Codecompanion: yolo mode" },
   }
 end
 
 -- Shared interactions keymaps
 function M.shared_keymaps()
   return {
-    view_diff = { modes = { n = "ds" } },
-    always_accept = { modes = { n = "aa" } },
     accept_change = { modes = { n = "dp" } },
-    reject_change = { modes = { n = "de" } },
+    always_accept = { modes = { n = "aa" } },
+    cancel = { modes = { n = "ct" } },
     next_hunk = { modes = { n = "]h" } },
     previous_hunk = { modes = { n = "[h" } },
-    cancel = { modes = { n = "ct" } },
+    reject_change = { modes = { n = "de" } },
+    view_diff = { modes = { n = "ds" } },
   }
 end
 
@@ -236,18 +202,63 @@ local function insert_last_user_prompt()
   end, 1)
 end
 
+local function toggle_chat_zoom()
+  vim.cmd.stopinsert()
+  window_helpers.toggle_cc_zoom()
+end
+
+local function yank_session_id()
+  local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+  local session_id = chat.acp_connection and chat.acp_connection.session_id
+  if not session_id then
+    vim.notify("No ACP session ID available", vim.log.levels.WARN)
+    return
+  end
+  vim.fn.setreg("+", session_id)
+  vim.fn.setreg("*", session_id)
+  vim.notify("Yanked session ID: " .. session_id, vim.log.levels.INFO)
+end
+
+local function open_file_link()
+  local target = vim.api.nvim_get_current_line():match "%b[]%((.-)%)"
+  if not target then
+    return
+  end
+  local file, line = target:match "^(.-):(%d+)$"
+  UtilKey.split_open(file or target)
+  if line then
+    vim.api.nvim_win_set_cursor(0, { tonumber(line), 0 })
+    vim.cmd.normal "zz"
+  end
+end
+
+-- CodeCompanion chat filetype-local mappings
 local function setup_codecompanion_filetype_mappings(e)
   local bufnr = e.buf
 
-  UtilKey.nnoremap("<C-c>il", insert_last_user_prompt, {
+  UtilKey.nnoremap("<C-x>il", insert_last_user_prompt, {
     desc = "Codecompanion: insert last user prompt",
     buf = bufnr,
     remap = true,
     force = true,
   })
 
-  UtilKey.nnoremap("<Leader>mm", window_helpers.toggle_chat_zoom, {
+  UtilKey.nnoremap("<Leader>mm", toggle_chat_zoom, {
     desc = "Codecompanion: toggle zoom",
+    buf = bufnr,
+    remap = true,
+    force = true,
+  })
+
+  UtilKey.nnoremap("<Leader>ys", yank_session_id, {
+    desc = "Codecompanion: yank session id",
+    buf = bufnr,
+    remap = true,
+    force = true,
+  })
+
+  UtilKey.nnoremap("<Leader>ov", open_file_link, {
+    desc = "Codecompanion: yank session id",
     buf = bufnr,
     remap = true,
     force = true,
@@ -265,28 +276,14 @@ local function setup_filetype_mappings(group_name)
       setup_codecompanion_filetype_mappings(e)
 
       whichkey.add {
-        { "<C-c>s", group = "set", buffer = e.buf },
-        { "<C-c>x", group = "exec", buffer = e.buf },
-        { "<C-c>i", group = "insert", buffer = e.buf },
-        { "<C-c>f", group = "find", buffer = e.buf },
-        { "<C-c>b", group = "buffer", buffer = e.buf },
+        { "<C-x>s", group = "set", buffer = e.buf },
+        { "<C-x>e", group = "exec", buffer = e.buf },
+        { "<C-x>i", group = "insert", buffer = e.buf },
+        { "<C-x>f", group = "find", buffer = e.buf },
+        { "<C-x>b", group = "buffer", buffer = e.buf },
       }
     end,
   })
-end
-
-local function show_ai_usage()
-  vim.api.nvim_echo({ { "Retrieving rate limits..." } }, false, {})
-  usage_helpers.run(nil, function(out)
-    vim.schedule(function()
-      if out == "" then
-        vim.api.nvim_echo({ { "" } }, false, {})
-        Log.warn "ai_session_usage: no output"
-      else
-        vim.api.nvim_echo({ { out } }, false, {})
-      end
-    end)
-  end)
 end
 
 local function paste_selection_to_chat()
@@ -349,6 +346,20 @@ local function send_review_comments()
   window_helpers.focus_or_toggle_chat { startinsert = false }
 end
 
+local function show_ai_usage()
+  vim.api.nvim_echo({ { "Retrieving rate limits..." } }, false, {})
+  usage_helpers.run(nil, function(out)
+    vim.schedule(function()
+      if out == "" then
+        vim.api.nvim_echo({ { "" } }, false, {})
+        Log.warn "ai_session_usage: no output"
+      else
+        vim.api.nvim_echo({ { out } }, false, {})
+      end
+    end)
+  end)
+end
+
 local function edit_repo_rules()
   local git_root = repo_helpers.git_root_or_notify()
   if not git_root then
@@ -406,6 +417,7 @@ local function setup_global_mappings()
   UtilKey.nnoremap("<Leader>aoc", explore_review_comments, { desc = "Codecompanion: explore comment in quickfix", })
 end
 
+-- Public setup
 function M.setup(group)
   setup_filetype_mappings(group)
   setup_global_mappings()

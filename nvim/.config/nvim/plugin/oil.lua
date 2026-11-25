@@ -37,12 +37,12 @@ add {
         ["<Leader>ov"] = { "actions.select", opts = { vertical = true } },
         ["<Leader>os"] = { "actions.select", opts = { horizontal = true } },
         ["<Leader>ot"] = { "actions.select", opts = { tab = true } },
-        ["<C-c>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
+        ["<C-a>y"] = { "actions.copy_to_system_clipboard", mode = { "n", "v" } },
         ["<LocalLeader><LocalLeader>"] = { "actions.change_sort", mode = "n" },
         ["<LocalLeader>m"] = { "actions.change_sort", mode = "n" },
-        ["<C-c>p"] = "actions.paste_from_system_clipboard",
-        ["<C-c>q"] = {
-          desc = "add path into qf",
+        ["<C-x>p"] = "actions.paste_from_system_clipboard",
+        ["<C-x>q"] = {
+          desc = "Append path to quickfix (qf)",
           function()
             local oil = lazy "oil"
             local fs = lazy "oil.fs"
@@ -110,7 +110,7 @@ add {
             end)
           end,
         },
-        ["<C-c>vd"] = {
+        ["<C-x>vd"] = {
           desc = "Toggle detail view",
           callback = function()
             local oil = lazy "oil"
@@ -164,14 +164,14 @@ add {
             return lazy("utils.terminal").lazydocker()
           end,
         },
-        ["<C-c><C-t>"] = {
+        ["<C-x><C-t>"] = {
           desc = "open_cwd_in_terminal",
           function()
             local dir = lazy("oil").get_current_dir()
             lazy("utils.terminal").open_terminal_in_filetree(dir)
           end,
         },
-        ["<C-c>ff"] = {
+        ["<C-x><C-f>"] = {
           desc = "find files in dir",
           function()
             local dir = lazy("oil").get_current_dir()
@@ -182,7 +182,7 @@ add {
             fzf_lua.files { cwd = dir }
           end,
         },
-        ["<C-c>fg"] = {
+        ["<C-x><C-g>"] = {
           desc = "Find grep in dir",
           function()
             local dir = lazy("oil").get_current_dir()
@@ -229,8 +229,8 @@ UtilAugroup("oil", {
   pattern = "oil",
   command = function(ev)
     whichkey.add {
-      { "<C-c>f", group = "find", buffer = ev.buf },
-      { "<C-c>v", group = "view", buffer = ev.buf },
+      { "<C-x>f", group = "find", buffer = ev.buf },
+      { "<C-x>v", group = "view", buffer = ev.buf },
     }
   end,
 })

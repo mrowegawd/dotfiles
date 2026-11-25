@@ -371,7 +371,7 @@ local get_pinnedBuf = function()
 
   local ok, pinned = pcall(require, "stickybuf")
   if not ok then
-    return nil
+    return false
   end
 
   Pinnedbuffer = pinned
@@ -478,6 +478,8 @@ local function __colors()
   return {
     statusline_fg = statusline_fg,
     statusline_bg = H.get("StatusLineTheme", "bg"),
+
+    filepath_fg = H.tint(statusline_fg, 0.2),
 
     statusline_float_bg = H.get("NormalFloat", "bg"),
 
@@ -926,7 +928,7 @@ M.FilePath = {
     end,
   }),
 
-  sep(colors.statusline_fg, colors.statusline_bg, {
+  sep(colors.filepath_fg, colors.statusline_bg, {
     term = { fg = colors.mode_term_statusline_fg, bg = colors.mode_term_statusline_bg },
     provider = function(self)
       if self.exclude_ft then
@@ -1459,7 +1461,7 @@ M.Sessions = {
 M.PinnedBuffer = {
   condition = function()
     local pinned = get_pinnedBuf()
-    return pinned and pinned.is_pinned() or false
+    return pinned and pinned.is_pinned()
   end,
   {
     provider = function()

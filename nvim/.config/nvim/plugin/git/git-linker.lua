@@ -33,6 +33,6 @@ UtilKey.noremap({ "n", "x" }, "<Leader>gox", function()
   vim.cmd "GitLink! blame"
 end, { desc = "Git: browse blame repo [gitlinker]" })
 
-UtilKey.noremap({ "n", "x" }, "<C-c>gy", function()
+UtilKey.noremap({ "n", "x" }, "<C-a>gy", function()
   lazy("utils.git").copy_repo_name()
 end, { desc = "Git: copy repo name" })

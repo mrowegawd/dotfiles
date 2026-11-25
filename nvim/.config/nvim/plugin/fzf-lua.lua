@@ -808,15 +808,15 @@ UtilKey.inoremap("<C-x><C-f>", function()
 end, { desc = "Picker: fuzzy complete path [fzflua]" })
 
 -- Git
-UtilKey.nnoremap("<C-c>gs", "<cmd>FzfLua git_status<cr>", { desc = "Git: status [fzfua]" })
-UtilKey.nnoremap("<C-c>gS", "<cmd>FzfLua git_stash<cr>", { desc = "Git: stash [fzfua]" })
-UtilKey.nnoremap("<C-c>gl", "<cmd>FzfLua git_bcommits<cr>", { desc = "Git: bcommits [fzfua]" })
-UtilKey.nnoremap("<C-c>gL", "<cmd>FzfLua git_commits<cr>", { desc = "Git: commits [fzfua]" })
+UtilKey.nnoremap("<C-x>gs", "<cmd>FzfLua git_status<cr>", { desc = "Git: status [fzfua]" })
+UtilKey.nnoremap("<C-x>gS", "<cmd>FzfLua git_stash<cr>", { desc = "Git: stash [fzfua]" })
+UtilKey.nnoremap("<C-x>gl", "<cmd>FzfLua git_bcommits<cr>", { desc = "Git: bcommits [fzfua]" })
+UtilKey.nnoremap("<C-x>gL", "<cmd>FzfLua git_commits<cr>", { desc = "Git: commits [fzfua]" })
 
 --stylua: ignore
-UtilKey.nnoremap( "<C-c>gD", lazy("utils.git").trace_file_event, { desc = "Git: track commit for renamed or file deleted [fzflua]" })
+UtilKey.nnoremap( "<C-x>gD", lazy("utils.git").trace_file_event, { desc = "Git: track commit for renamed or file deleted [fzflua]" })
 --stylua: ignore
-UtilKey.nnoremap( "<C-c>gf", lazy("utils.git").select_file_different_branch, { desc = "Git: find files branch [fzflua]" })
+UtilKey.nnoremap( "<C-x>gf", lazy("utils.git").select_file_different_branch, { desc = "Git: find files branch [fzflua]" })
 
 -- LSP
 --stylua: ignore

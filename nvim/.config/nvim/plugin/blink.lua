@@ -53,7 +53,7 @@ local idx = 1
 -- Auto-completion and snippets.
 add_on_event({ "CmdlineEnter", "InsertEnter" }, {
   { src = "saghen/blink.lib", setup = false },
-  { src = "mikavilpas/blink-ripgrep.nvim", setup = false },
+  -- { src = "mikavilpas/blink-ripgrep.nvim", setup = false },
   { src = "Kaiser-Yang/blink-cmp-git", setup = false },
   { src = "kristijanhusak/vim-dadbod-completion", setup = false },
   {
@@ -118,21 +118,21 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
           end,
           "fallback",
         },
-        ["<c-y>"] = {
-          function(cmp)
-            local luasnip = lazy "luasnip"
-            if cmp.is_visible() then
-              return cmp.select_and_accept()
-            elseif luasnip.expand_or_jumpable() then
-              return cmp.accept()
-            elseif luasnip.get_active_snip() then
-              return luasnip.jump(1)
-            elseif vim.snippet.active() then
-              return vim.snippet.jump(1)
-            end
-          end,
-          "fallback",
-        },
+        -- ["<c-y>"] = {
+        --   function(cmp)
+        --     local luasnip = lazy "luasnip"
+        --     if cmp.is_visible() then
+        --       return cmp.select_and_accept()
+        --     elseif luasnip.expand_or_jumpable() then
+        --       return cmp.accept()
+        --     elseif luasnip.get_active_snip() then
+        --       return luasnip.jump(1)
+        --     elseif vim.snippet.active() then
+        --       return vim.snippet.jump(1)
+        --     end
+        --   end,
+        --   "fallback",
+        -- },
         ["<Tab>"] = {
           function()
             local luasnip = lazy "luasnip"
@@ -159,19 +159,24 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
             end
           end,
         },
-        ["<c-g>"] = {
-          function(cmp)
-            return cmp.show { providers = { "ripgrep" } }
-          end,
-        },
-        ["<c-r>"] = {
+        -- ["<a-g>"] = {
+        --   function(cmp)
+        --     return cmp.show { providers = { "ripgrep" } }
+        --   end,
+        -- },
+        ["<a-r>"] = {
           function(cmp)
             local current_provider = providers[idx]
             cmp.show { providers = { current_provider } }
             idx = (idx % #providers) + 1
           end,
         },
-        ["<c-q>"] = { "hide" },
+        ["<a-q>"] = { "hide" },
+        ["<a-s>"] = {
+          "hide",
+          "cancel",
+          "show",
+        },
         ["<a-n>"] = {
           function(cmp)
             if not cmp.is_visible() then
@@ -345,7 +350,7 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
           ["<Left>"] = false,
 
           ["<a-y>"] = { "select_and_accept" },
-          ["<c-y>"] = { "select_and_accept" },
+          -- ["<c-y>"] = { "select_and_accept" },
 
           ["<a-j>"] = {
             function()
@@ -399,12 +404,17 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               end
             end,
           },
-          ["<c-r>"] = {
+          ["<a-r>"] = {
             "hide",
             "cancel",
             "show",
           },
-          ["<c-q>"] = {
+          ["<a-s>"] = {
+            "hide",
+            "cancel",
+            "show",
+          },
+          ["<a-q>"] = {
             "hide",
             "cancel",
             function()
@@ -453,16 +463,16 @@ add_on_event({ "CmdlineEnter", "InsertEnter" }, {
               before_reload_cache = function() end,
             },
           },
-          ripgrep = {
-            name = "RG",
-            module = "blink-ripgrep",
-            opts = {
-              project_root_marker = { "package.json", ".git" },
-              backend = {
-                use = "gitgrep-or-ripgrep",
-              },
-            },
-          },
+          -- ripgrep = {
+          --   name = "RG",
+          --   module = "blink-ripgrep",
+          --   opts = {
+          --     project_root_marker = { "package.json", ".git" },
+          --     backend = {
+          --       use = "gitgrep-or-ripgrep",
+          --     },
+          --   },
+          -- },
         },
       },
       appearance = {

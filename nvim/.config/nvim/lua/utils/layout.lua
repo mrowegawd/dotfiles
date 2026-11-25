@@ -7,6 +7,7 @@ local UtilAugroup = lazy("utils.map").augroup
 
 local Win = {}
 Win.layout = {}
+Win.set = { position = "right" } -- "set position window nya disini: left, right"
 
 local is_autocmd_registered = false
 local is_processing_layout = false
@@ -31,7 +32,7 @@ local function _get_width_size()
   if UtilCmd and UtilCmd.get_option then
     col = UtilCmd.get_option "columns"
   end
-  local w = math.floor(col * 18 / 100)
+  local w = math.floor(col * 25 / 100)
   return w
 end
 
@@ -139,6 +140,33 @@ end
 --   end
 -- end
 
+local function set_toggle()
+  if Win.set.position == "left" then
+    if not is_toggle then
+      is_toggle = true
+    else
+      is_toggle = false
+    end
+    return true
+  end
+  return false
+end
+
+local function move_window_left()
+  vim.cmd "wincmd H"
+end
+
+local function move_window_right()
+  vim.cmd "wincmd L"
+end
+
+Win.set["left_or_right"] = function()
+  if Win.set.position == "right" then
+    return move_window_right()
+  end
+  return move_window_left()
+end
+
 --- @param  f function
 --- @param  delay number
 --- @return function
@@ -222,6 +250,24 @@ local function check_lsp_symbol_readiness()
   return true
 end
 
+-- Close the sidebar window before opening a new blank window
+local function resolve_master_layout()
+  local tab = vim.fn.tabpagenr()
+  local main_layout = Win.get_main_layout(tab)
+  local target_skip_win = (main_layout.win and vim.api.nvim_win_is_valid(main_layout.win)) and main_layout.win
+    or vim.api.nvim_get_current_win()
+  local master_saved_layout = save_wins_current_tab(target_skip_win)
+
+  -- Close the sidebar window before opening a new blank window
+  if is_valid_main_layout(main_layout) then
+    vim.api.nvim_win_close(main_layout.win, true)
+    vim.schedule(function()
+      restore_wins(master_saved_layout)
+    end)
+  end
+  return master_saved_layout
+end
+
 -- +-----------------------------------------------------------------------------+
 -- |                                 WIN LAYOUT                                  |
 -- +-----------------------------------------------------------------------------+
@@ -301,9 +347,14 @@ function Win.get_main_layout(tab)
   return Win.layout[tab]
 end
 
----@param position "topleft" | "right"
+---@param position "topleft" | "right" |"botright"
 function Win.open_empty_blank_buffer(position)
-  vim.cmd(position .. " vsplit")
+  if Win.set.position == "right" then
+    position = "botright"
+  end
+
+  local cmds = position .. " vsplit"
+  vim.cmd(cmds)
 
   local winid = vim.api.nvim_get_current_win()
   local buf = vim.api.nvim_get_current_buf()
@@ -407,7 +458,7 @@ function Win.ensure_main_sidebar_is_left(master_saved_layout)
     vim.api.nvim_win_call(main_layout.win, function()
       local saved = save_wins_current_tab(vim.api.nvim_get_current_win())
 
-      vim.cmd "wincmd H"
+      Win.set.left_or_right()
 
       if master_saved_layout then
         restore_wins(master_saved_layout)
@@ -456,7 +507,7 @@ function Win.keep_sidebar_left()
     -- note: kenapa diset is_all_window = true,
     -- karena open window eldochover itu filetye nya ==  ""
     -- jadi mesti di set is_all_window = false, check bagian M.open_window_safely
-    -- ini guna mencegah winbar terhapus setelah `wincmd H`
+    -- ini guna mencegah winbar terhapus setelah `wincmd H` or `wincmd L`
     if vim.bo.filetype ~= "" then
       is_all_window = true
     end
@@ -480,7 +531,7 @@ function Win.keep_sidebar_left()
       Win.handle_close_support_win()
 
       __cmd_win_call(cur_winid, winid, function()
-        vim.cmd "wincmd H"
+        Win.set.left_or_right()
       end)
 
       vim.schedule(function()
@@ -798,23 +849,10 @@ function M.toggle_sidebar(ft, fn, is_force)
   -- Close support window first e.g clock window
   Win.handle_close_support_win()
 
-  local tab = vim.fn.tabpagenr()
-  local main_layout = Win.get_main_layout(tab)
-  local target_skip_win = (main_layout.win and vim.api.nvim_win_is_valid(main_layout.win)) and main_layout.win
-    or vim.api.nvim_get_current_win()
-  local master_saved_layout = save_wins_current_tab(target_skip_win)
+  local master_saved_layout = resolve_master_layout()
 
-  -- Close the sidebar window before opening a new blank window
-  if is_valid_main_layout(main_layout) then
-    vim.api.nvim_win_close(main_layout.win, true)
-    vim.schedule(function()
-      restore_wins(master_saved_layout)
-    end)
-  end
-
-  if not is_toggle then
-    Win.open_empty_blank_buffer "topleft"
-    is_toggle = true
+  if set_toggle() then
+    Win.open_empty_blank_buffer(Win.set.position)
 
     if not is_force then
       return
@@ -829,6 +867,7 @@ function M.toggle_sidebar(ft, fn, is_force)
 
   debounce(function()
     Win.reopen_win()
+    vim.cmd "wincmd ="
   end, 100)()
 end
 
@@ -849,6 +888,10 @@ function M.get_Win()
 end
 
 M.close_support_window = Win.handle_close_support_win
+M.close_master_window = function()
+  M.close_support_window()
+  resolve_master_layout()
+end
 
 ---@return table
 function M.get_support_win_layout()

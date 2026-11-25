@@ -23,17 +23,17 @@ add_local_or_remote {
         auto_refresh = false, -- use `R` to refresh it
         follow = false,
         win = { position = "bottom", relative = "win" },
-        preview = {
-          type = "float", -- can use: type = "split", relative = "win", position = "right",
-          scratch = true,
-          border = "rounded",
-          title = " Trouble Preview - [P] to disable it  ",
-          title_pos = "center",
-          size = { width = 0.6, height = 0.5 },
-          wo = {
-            winhighlight = "Normal:NormalFloat,CursorLine:CursorLineFloat",
-          },
-        },
+        -- preview = {
+        --   type = "float", -- can use: type = "split", relative = "win", position = "right",
+        --   scratch = true,
+        --   border = "rounded",
+        --   title = " Trouble Preview - [P] to disable it  ",
+        --   title_pos = "center",
+        --   size = { width = 0.6, height = 0.5 },
+        --   wo = {
+        --     winhighlight = "Normal:NormalFloat,CursorLine:CursorLineFloat",
+        --   },
+        -- },
 
         icons = {
           kinds = {
@@ -89,16 +89,15 @@ add_local_or_remote {
 
           s = false,
 
-          gb = {
+          ["<C-x>ub"] = {
             action = function(view)
               view:filter({ buf = 0 }, { toggle = true })
             end,
             desc = "Toggle Current Buffer Filter",
           },
-          gx = {
+          ["<C-x>ue"] = {
             action = function(view)
-              local has = view:get_filter "not-buf"
-              view:filter(has and nil or { ["not"] = { buf = 0 } }, { id = "not-buf", toggle = true })
+              view:filter({ ["not"] = { buf = 0 } }, { id = "not-buf", toggle = true })
             end,
             desc = "Exclude Current Buffer",
           },
@@ -123,7 +122,7 @@ add_local_or_remote {
           --   desc = "Yank All Items",
           -- },
 
-          ge = {
+          ["<C-x>uF"] = {
             action = function(view)
               local f = view:get_filter "severity"
               local severity = ((f and f.filter.severity or 0) + 1) % 5
@@ -135,10 +134,9 @@ add_local_or_remote {
             end,
             desc = "Toggle Severity Filter",
           },
-          gE = {
+          ["<C-x>ee"] = {
             action = function(view)
-              local has = view:get_filter "severity"
-              view:filter(has and nil or { severity = vim.diagnostic.severity.ERROR }, { id = "severity" })
+              view:filter({ severity = vim.diagnostic.severity.ERROR }, { id = "severity", toggle = true })
             end,
             desc = "Toggle Error-only Filter",
           },

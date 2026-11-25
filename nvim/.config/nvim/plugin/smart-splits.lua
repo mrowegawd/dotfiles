@@ -1,3 +1,7 @@
+if vim.env.HERDR_ENV then
+  return
+end
+
 local add_on_event = require("vim-pack").add_on_event
 
 local lazy = require("utils.plugin").require_lazy
@@ -131,19 +135,17 @@ add_on_event("UIEnter", {
       }
     end,
     on_setup = function()
-      local function smart_split()
-        return lazy "smart-splits"
-      end
+      local smart_split = lazy "smart-splits"
 
       local cmds = {
-        --stylua: ignore
-        { "<a-h>", function() smart_split().move_cursor_left() end, "left" },
-        --stylua: ignore
-        { "<a-j>", function() smart_split().move_cursor_down() end, "down", },
-        --stylua: ignore
-        { "<a-k>", function() smart_split().move_cursor_up() end, "up" },
-        --stylua: ignore
-        { "<a-l>", function() smart_split().move_cursor_right() end, "right", },
+        { "<a-h>", smart_split.move_cursor_left, "left" },
+        { "<C-x><C-h>", smart_split.move_cursor_left, "left" },
+        { "<a-j>", smart_split.move_cursor_down, "down" },
+        { "<C-x><C-j>", smart_split.move_cursor_down, "down" },
+        { "<a-k>", smart_split.move_cursor_up, "up" },
+        { "<C-x><C-k>", smart_split.move_cursor_up, "up" },
+        { "<a-l>", smart_split.move_cursor_right, "right" },
+        { "<C-x><C-l>", smart_split.move_cursor_right, "right" },
 
         {
           "<a-H>",
@@ -152,9 +154,9 @@ add_on_event("UIEnter", {
               vim.cmd("vertical resize " .. resize_plus_or_mines "left")
               return
             end
-            smart_split().resize_left()
+            smart_split.resize_left()
           end,
-          "resize win left",
+          "resize left",
         },
         {
           "<a-J>",
@@ -163,9 +165,9 @@ add_on_event("UIEnter", {
               vim.cmd("resize " .. resize_plus_or_mines "down")
               return
             end
-            smart_split().resize_down()
+            smart_split.resize_down()
           end,
-          "resize win down",
+          "resize down",
         },
         {
           "<a-K>",
@@ -174,9 +176,9 @@ add_on_event("UIEnter", {
               vim.cmd("resize " .. resize_plus_or_mines "up")
               return
             end
-            smart_split().resize_up()
+            smart_split.resize_up()
           end,
-          "resize win up",
+          "resize up",
         },
         {
           "<a-L>",
@@ -185,9 +187,9 @@ add_on_event("UIEnter", {
               vim.cmd("vertical resize " .. resize_plus_or_mines "right")
               return
             end
-            smart_split().resize_right()
+            smart_split.resize_right()
           end,
-          "resize win right",
+          "resize right",
         },
       }
 

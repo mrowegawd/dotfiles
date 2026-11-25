@@ -150,19 +150,19 @@ add {
             { "n", "<Leader>ot", actions.goto_file_tab, { desc = "Git: open in newtab [diffview-view]" } },
 
             { "n", "o", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview-view]" } },
-            { "n", "<C-c>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
+            { "n", "<C-x>ue", actions.toggle_files, { desc = "Git: toggle the file panel [diffview-view]" } },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<C-c><C-n>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
-            { "n", "<C-c><C-p>", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
+            { "n", "<C-x><C-n>", actions.next_conflict, { desc = "Git: next conflict [diffview-view]" } },
+            { "n", "<C-x><C-p>", actions.prev_conflict, { desc = "Git: prev conflict [diffview-view]" } },
 
-            { "n", "<C-c>c1", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
-            { "n", "<C-c>c3", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
-            { "n", "<C-c>c0", actions.conflict_choose "base", { desc = "Git: choose BASE (kosong) conflict [diffview-view]" } },
-            { "n", "<C-c>c2", actions.conflict_choose "all", { desc = "Git: choose BOTH conflict [diffview-view]" } },
+            { "n", "<C-x>c1", actions.conflict_choose "ours", { desc = "Git: choose OURS conflict [diffview-view]" } },
+            { "n", "<C-x>c3", actions.conflict_choose "theirs", { desc = "Git: choose THEIRS conflict [diffview-view]" }, },
+            { "n", "<C-x>c0", actions.conflict_choose "base", { desc = "Git: choose BASE (kosong) conflict [diffview-view]" } },
+            { "n", "<C-x>c2", actions.conflict_choose "all", { desc = "Git: choose BOTH conflict [diffview-view]" } },
 
-            { "n", "<C-c>cN", actions.conflict_choose "none", { desc = "Git: delete region conflict [diffview-view]" } },
-            { "n", "<C-c>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-view]" }, },
+            { "n", "<C-x>cN", actions.conflict_choose "none", { desc = "Git: delete region conflict [diffview-view]" } },
+            { "n", "<C-x>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-view]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview-view]" } },
@@ -201,7 +201,7 @@ add {
             { "n", "gg", false },
             { "n", "G", false},
 
-            { "n", "<C-c>R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview-panel]" }, },
+            { "n", "<C-x>R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview-panel]" }, },
 
             --  ───────────────────────────────[ FOLD ]────────────────────────────
             { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview-panel]" } },
@@ -213,15 +213,15 @@ add {
             { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: close all folds (alternative-back) [diffview-panel]" }, },
 
             --  ───────────────────────────[ GIT CONFLICT ]────────────────────────
-            { "n", "<C-c><C-n>", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
-            { "n", "<C-c><C-p>", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
+            { "n", "<C-x><C-n>", actions.next_conflict, { desc = "Git: next git conflict [diffview-panel]" } },
+            { "n", "<C-x><C-p>", actions.prev_conflict, { desc = "Git: prev git conflict [diffview-panel]" } },
 
-            { "n", "<C-c>c1", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
-            { "n", "<C-c>c3", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },
-            { "n", "<C-c>c0", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-panel]" }, },
-            { "n", "<C-c>c2", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-panel]" }, },
+            { "n", "<C-x>c1", actions.conflict_choose_all "ours", { desc = "Git: choose ALL OURS conflict [diffview-panel]" }, },
+            { "n", "<C-x>c3", actions.conflict_choose_all "theirs", { desc = "Git: choose ALL THEIRS conflict [diffview-panel]" }, },
+            { "n", "<C-x>c0", actions.conflict_choose_all "base", { desc = "Git: choose ALL BASE conflict [diffview-panel]" }, },
+            { "n", "<C-x>c2", actions.conflict_choose_all "all", { desc = "Git: choose ALL BOTH conflict [diffview-panel]" }, },
 
-            { "n", "<C-c>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-panel]" }, },
+            { "n", "<C-x>cA", actions.conflict_choose_all "none", { desc = "Git: delete all region conflict [diffview-panel]" }, },
 
             --  ───────────────────────────────[ MISC ]────────────────────────────
             { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview-panel]" } },

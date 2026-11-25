@@ -398,6 +398,11 @@ add {
         Snacks.picker.icons()
       end)
 
+      local jump_scope = function(is_prev)
+        vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
+        Snacks.scope.jump { bottom = not is_prev }
+      end
+
       ---@param is_prev boolean?
       ---@param is_diag boolean?
       local function __jump_lsp_mark_githunk(is_prev, is_diag)
@@ -454,8 +459,9 @@ add {
           return
         end
 
-        vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
-        Snacks.scope.jump { bottom = not is_prev }
+        -- vim.fn.win_execute(vim.api.nvim_get_current_win(), "normal! m'")
+        -- Snacks.scope.jump { bottom = not is_prev }
+        jump_scope(is_prev)
       end
 
       UtilKey.nnoremap("<C-j>", function()
@@ -466,11 +472,18 @@ add {
         __jump_lsp_mark_githunk(true, true)
       end)
 
+      UtilKey.nnoremap("<C-x><C-g>k", function()
+        jump_scope(true) -- go up
+      end, { desc = "Jump: go up scope [snacks.nvim])" })
+      UtilKey.nnoremap("<C-x><C-g>j", function()
+        jump_scope(false) -- go down
+      end, { desc = "Jump: go down scope [snacks.nvim])" })
+
       UtilKey.nnoremap("<Leader>cF", function()
         Snacks.rename.rename_file()
       end, { desc = "Action: rename file" })
 
-      UtilKey.nnoremap("<Localleader>nw", function()
+      UtilKey.nnoremap("<LocalLeader>nw", function()
         lazy("snacks.notifier").show_history {
           filter = function(n)
             local lvl = vim.log.levels[n.level:upper()] -- only show -> WARN and ERROR
@@ -479,17 +492,21 @@ add {
         }
       end, { desc = "Notify: show WARN/ERROR history [snacks.nvim]" })
 
-      UtilKey.nnoremap("<Localleader>nd", function()
+      UtilKey.nnoremap("<LocalLeader>nd", function()
         lazy("snacks.notifier").hide()
       end, { desc = "Notify: dismiss all notifications [snacks.nvim]" })
 
-      UtilKey.nnoremap("<Localleader>nl", function()
+      UtilKey.nnoremap("<LocalLeader>nl", function()
         lazy("snacks.notifier").show_history {
           -- filter = function(n)
           --   return vim.log.levels[n.level:upper()] >= vim.log.levels.TRACE
           -- end,
         }
       end, { desc = "Notify: show notification history [snacks.nvim]" })
+
+      UtilKey.nnoremap("<LocalLeader>no", function()
+        vim.cmd "messages"
+      end, { desc = "Notify: show messages" })
 
       UtilKey.nnoremap("<c-n>", function()
         __jump_lsp_mark_githunk()

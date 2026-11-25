@@ -15,9 +15,9 @@ add {
       },
       mappings = {
         commit_view = {
+          ["<Esc>"] = false,
           ["o"] = false,
           ["q"] = false,
-          ["<Esc>"] = false,
 
           ["<Leader>oe"] = "GoToFile",
           ["<Leader>ov"] = "OpenFileInWorktree",
@@ -26,32 +26,32 @@ add {
 
           ["<Leader>qY"] = "OpenTree",
 
-          ["<CR>"] = "GoToFile",
           ["<s-cr>"] = "PeekFile",
-          ["<c-v>"] = "VSplitOpen",
-          ["<c-x>"] = "SplitOpen",
-          ["<c-t>"] = "TabOpen",
+          ["<C-v>"] = "VSplitOpen",
+          ["<C-s>"] = "SplitOpen",
+          ["<C-t>"] = "TabOpen",
+          ["<CR>"] = "GoToFile",
 
           ["g?"] = "HelpPopup",
         },
 
         commit_editor = {
           ["q"] = "Close",
-          ["<c-c><c-c>"] = "Submit",
-          ["<c-c><c-k>"] = "Abort",
+          ["<C-x><C-x>"] = "Submit",
+          ["<C-x><C-k>"] = "Abort",
           ["<m-p>"] = "PrevMessage",
           ["<m-n>"] = "NextMessage",
           ["<m-r>"] = "ResetMessage",
         },
 
         rebase_editor = {
-          ["q"] = false,
           ["<Esc>"] = false,
+          ["q"] = false,
         },
         status = { -- NeogitStatus
           ["<Esc>"] = false,
+          ["<C-x>"] = false,
           ["q"] = false,
-          ["<c-x>"] = false,
           ["Y"] = false,
           ["o"] = false,
 
@@ -60,30 +60,26 @@ add {
           ["zR"] = "Depth4",
           ["zO"] = "Depth4",
 
-          -- ["<C-n>"] = false,
-          -- ["<c-p>"] = false,
-
           ["<Leader>oe"] = "GoToFile",
           ["<Leader>ov"] = "VSplitOpen",
           ["<Leader>os"] = "SplitOpen",
           ["<Leader>ot"] = "TabOpen",
-          ["<c-s>"] = "SplitOpen", -- alternative to open
-          ["<c-v>"] = "VSplitOpen",
-          ["<c-t>"] = "TabOpen",
+          ["<C-s>"] = "SplitOpen", -- alternative to open
+          ["<C-v>"] = "VSplitOpen",
+          ["<C-t>"] = "TabOpen",
 
-          ["<C-c>pp"] = "PeekFile",
-          ["<C-c>y"] = "YankSelected",
-          ["<C-c>ob"] = "OpenTree",
+          ["<C-a>pp"] = "PeekFile",
+          ["<C-a>y"] = "YankSelected",
+          ["<C-a>ob"] = "OpenTree",
 
-          ["<c-n>"] = "GoToNextHunkHeader",
-          ["<c-p>"] = "GoToPreviousHunkHeader",
+          ["<C-n>"] = "GoToNextHunkHeader",
+          ["<C-p>"] = "GoToPreviousHunkHeader",
 
           ["R"] = "RefreshBuffer",
+          ["<C-x>R"] = "RefreshBuffer",
         },
         finder = {
           ["<Esc>"] = false,
-          ["<c-c>"] = false,
-          ["<esc>"] = false,
         },
         popup = {
           ["<Esc>"] = false,
@@ -102,21 +98,21 @@ add {
           ["Z"] = false,
           ["o"] = false,
 
-          ["<C-c>ot"] = "TagPopup",
-          ["<C-c>om"] = "MergePopup",
-          ["<C-c>oM"] = "MarginPopup",
-          ["<C-c>or"] = "RemotePopup",
-          ["<C-c>ow"] = "WorktreePopup",
-          ["<C-c>oR"] = "RevertPopup",
-          ["<C-c>od"] = "DiffPopup",
-          ["<C-c>oc"] = "BranchPopup",
-          ["<C-c>oB"] = "BisectPopup",
-          ["<C-c>os"] = "StashPopup",
+          ["<C-x>ot"] = "TagPopup",
+          ["<C-x>om"] = "MergePopup",
+          ["<C-x>oM"] = "MarginPopup",
+          ["<C-x>or"] = "RemotePopup",
+          ["<C-x>ow"] = "WorktreePopup",
+          ["<C-x>oR"] = "RevertPopup",
+          ["<C-x>od"] = "DiffPopup",
+          ["<C-x>oc"] = "BranchPopup",
+          ["<C-x>oB"] = "BisectPopup",
+          ["<C-x>os"] = "StashPopup",
 
-          ["<C-c>ol"] = "LogPopup",
+          ["<C-x>ol"] = "LogPopup",
 
           ["g?"] = "HelpPopup",
-          ["<c-c>?"] = "HelpPopup",
+          ["<C-x>?"] = "HelpPopup",
         },
       },
       integrations = {
@@ -144,23 +140,23 @@ UtilAugroup("neogit", {
   pattern = "NeogitStatus",
   command = function(ev)
     whichkey.add {
-      { "<C-c>y", name = "yank selected", buffer = ev.buf },
-      { "<C-c>o", group = "open", buffer = ev.buf },
-      { "<C-c>ot", group = "TagPopup", buffer = ev.buf },
-      { "<C-c>om", name = "MergePopup", buffer = ev.buf },
-      { "<C-c>oM", name = "MerginPopup", buffer = ev.buf },
-      { "<C-c>ow", name = "WorktreePopup", buffer = ev.buf },
-      { "<C-c>or", name = "RemotePopup", buffer = ev.buf },
-      { "<C-c>oR", name = "RevertPopup", buffer = ev.buf },
-      { "<C-c>od", name = "DiffPopup", buffer = ev.buf },
-      { "<C-c>oc", name = "BranchPopup", buffer = ev.buf },
-      { "<C-c>oB", name = "BisectPopup", buffer = ev.buf },
-      { "<C-c>os", name = "StagsPopup", buffer = ev.buf },
+      { "<C-x>y", name = "yank selected", buffer = ev.buf },
+      { "<C-x>o", group = "open", buffer = ev.buf },
+      { "<C-x>ot", group = "TagPopup", buffer = ev.buf },
+      { "<C-x>om", name = "MergePopup", buffer = ev.buf },
+      { "<C-x>oM", name = "MerginPopup", buffer = ev.buf },
+      { "<C-x>ow", name = "WorktreePopup", buffer = ev.buf },
+      { "<C-x>or", name = "RemotePopup", buffer = ev.buf },
+      { "<C-x>oR", name = "RevertPopup", buffer = ev.buf },
+      { "<C-x>od", name = "DiffPopup", buffer = ev.buf },
+      { "<C-x>oc", name = "BranchPopup", buffer = ev.buf },
+      { "<C-x>oB", name = "BisectPopup", buffer = ev.buf },
+      { "<C-x>os", name = "StagsPopup", buffer = ev.buf },
 
-      { "<C-c>ob", name = "Browse this worktree", buffer = ev.buf },
+      { "<C-x>ob", name = "Browse this worktree", buffer = ev.buf },
 
-      { "<C-c>ol", name = "LogPopup", buffer = ev.buf },
-      { "<C-c>?", name = "help", buffer = ev.buf },
+      { "<C-x>ol", name = "LogPopup", buffer = ev.buf },
+      { "<C-x>?", name = "help", buffer = ev.buf },
     }
   end,
 })

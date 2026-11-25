@@ -82,6 +82,8 @@ UtilAugroup("SmartClose", {
     "spectre_panel",
     "startuptime",
     "tsplayground",
+
+    "grug-far-history",
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
@@ -112,107 +114,85 @@ UtilAugroup("SmartClose", {
 
 local resize_window = { "orgagenda", "NeogitCommitMessage" }
 
-UtilAugroup(
-  "WindowBehaviour",
-  {
-    event = "FileType",
-    pattern = {
-      "NeogitCommitMessage",
-      "NeogitPopup",
-      "capture",
-      "gitcommit",
-      "orgagenda",
-    },
-    command = function()
-      cmd "wincmd J"
-      if vim.tbl_contains(resize_window, vim.bo[0].filetype) then
-        cmd [[resize 20]]
-      end
-    end,
+UtilAugroup("WindowBehaviour", {
+  event = "FileType",
+  pattern = {
+    "NeogitCommitMessage",
+    "NeogitPopup",
+    "capture",
+    "gitcommit",
+    "orgagenda",
   },
-  {
-    event = "WinLeave",
-    command = function()
-      _G.LastWinId = vim.fn.win_getid()
-    end,
-    desc = "Only show cursorline in the current window and save last visited window id",
-  },
-  {
-    event = { "QuitPre", "BufDelete" },
-    command = function()
-      if vim.fn.getcmdwintype() ~= "" then
-        return
-      end
-      if vim.bo.filetype ~= "qf" then
-        vim.cmd.lclose { mods = { silent = true } }
-      end
-    end,
-    desc = "Auto-close loclist when quitting a window",
-  },
-  {
-    event = "FileType",
-    pattern = { "gitcommit", "NeogitCommitMessage", "orgagenda" },
-    command = function()
-      vim.opt_local.spell = true
-      vim.opt_local.wrap = true
-      vim.opt_local.spelllang = { "en_us", "id" }
-      vim.opt_local.conceallevel = 2
+  command = function()
+    cmd "wincmd J"
+    if vim.tbl_contains(resize_window, vim.bo[0].filetype) then
+      cmd [[resize 20]]
+    end
+  end,
+}, {
+  event = "WinLeave",
+  command = function()
+    _G.LastWinId = vim.fn.win_getid()
+  end,
+  desc = "Only show cursorline in the current window and save last visited window id",
+}, {
+  event = { "QuitPre", "BufDelete" },
+  command = function()
+    if vim.fn.getcmdwintype() ~= "" then
+      return
+    end
+    if vim.bo.filetype ~= "qf" then
+      vim.cmd.lclose { mods = { silent = true } }
+    end
+  end,
+  desc = "Auto-close loclist when quitting a window",
+}, {
+  event = "FileType",
+  pattern = { "gitcommit", "NeogitCommitMessage", "orgagenda" },
+  command = function()
+    vim.opt_local.spell = true
+    vim.opt_local.wrap = true
+    vim.opt_local.spelllang = { "en_us", "id" }
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+  end,
+}, {
+  event = { "BufRead", "BufEnter" },
+  pattern = "*",
+  command = function(ctx)
+    local buf = ctx.buf
+
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+
+    local buftype = vim.bo[buf].buftype
+    local filetype = vim.bo[buf].filetype
+
+    if filetype == "codecompanion" then
       vim.opt_local.relativenumber = false
       vim.opt_local.number = false
-    end,
-  },
-  {
-    event = { "BufRead", "BufEnter" },
-    pattern = "*",
-    command = function(ctx)
-      local buf = ctx.buf
+    end
 
-      if not buf or not vim.api.nvim_buf_is_valid(buf) then
+    if buftype ~= "terminal" and filetype ~= "gitcommit" and filetype ~= "OverseerList" then
+      return
+    end
+
+    vim.defer_fn(function()
+      if not vim.api.nvim_buf_is_valid(buf) then
         return
       end
 
-      local buftype = vim.bo[buf].buftype
-      local filetype = vim.bo[buf].filetype
-
-      if filetype == "codecompanion" then
-        vim.opt_local.relativenumber = false
-        vim.opt_local.number = false
-      end
-
-      if buftype ~= "terminal" and filetype ~= "gitcommit" and filetype ~= "OverseerList" then
-        return
-      end
-
-      vim.defer_fn(function()
-        if not vim.api.nvim_buf_is_valid(buf) then
-          return
+      for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+        if vim.api.nvim_win_is_valid(win) then
+          vim.wo[win].cursorline = false
+          vim.wo[win].signcolumn = "no"
         end
-
-        for _, win in ipairs(vim.fn.win_findbuf(buf)) do
-          if vim.api.nvim_win_is_valid(win) then
-            vim.wo[win].cursorline = false
-            vim.wo[win].signcolumn = "no"
-          end
-        end
-      end, 100)
-    end,
-  }
-  --   {
-  --   event = { "WinEnter", "BufEnter" },
-  --   pattern = "*",
-  --   command = function(ctx)
-  --     local buf = ctx.buf
-  --     if not buf or not vim.api.nvim_buf_is_valid(buf) then
-  --       return
-  --     end
-  --
-  --     local ft = vim.bo[buf].filetype
-  --     if vim.tbl_contains({ "markdown", "org", "orgagenda" }, ft) then
-  --       RUtils.notes.swith_note_mode(ft)
-  --     end
-  --   end,
-  -- }
-)
+      end
+    end, 100)
+  end,
+})
 
 -- ├──────────────────────────────────┤ MISC ├──────────────────────────────────┤
 
@@ -242,7 +222,12 @@ UtilAugroup("WrapFiletype", {
       if not buf or not vim.api.nvim_buf_is_valid(buf) then
         return
       end
-      lazy("utils.note").swith_note_mode(vim.bo[buf].filetype)
+      local ft = vim.bo[buf].filetype
+      if ft == "orgagenda" then
+        ft = "org"
+      end
+
+      lazy("utils.note").swith_note_mode(ft)
       lazy("keymaps_note").note_mappings_ft(buf)
     end)
   end,

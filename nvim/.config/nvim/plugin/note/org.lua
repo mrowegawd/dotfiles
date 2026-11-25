@@ -3,7 +3,6 @@ local add_on_event = require("vim-pack").add_on_event
 local lazy = require("utils.plugin").require_lazy
 
 local ConfigPath = lazy("config").path
-local UtilKey = lazy "utils.map"
 
 add_on_event("UIEnter", {
   {
@@ -13,7 +12,18 @@ add_on_event("UIEnter", {
       H.plugin("org.nvim", {
         theme = {
           ["*"] = {
-            { OrgLink = { underline = false, sp = "NONE", fg = { from = "NormalNote", attr = "fg" } } },
+            {
+              OrgLink = {
+                sp = {
+                  from = "Directory",
+                  attr = "fg",
+                  transparency = 0.4,
+                  color = { from = "NormalNote", attr = "bg" },
+                },
+                fg = { from = "Directory", attr = "fg" },
+                underline = true,
+              },
+            },
             { OrgBold = { bg = "NONE" } },
             { OrgCheckbox = { bg = "NONE", reverse = false } },
             { OrgQuoteBlock = { inherit = "@markup.quote.markdown" } },
@@ -45,7 +55,7 @@ add_on_event("UIEnter", {
                   from = "CodeBlock",
                   attr = "bg",
                   alter = 2,
-                  transparency = 0.3,
+                  transparency = 0.5,
                   color = { from = "NormalNote", attr = "bg" },
                 },
               },
@@ -166,48 +176,6 @@ add_on_event("UIEnter", {
 
       local whichkey = lazy "which-key"
       whichkey.add(mappings)
-
-      local UtilAugroup = lazy("utils.map").augroup
-
-      UtilAugroup("Org.nvim", {
-        event = "FileType",
-        pattern = "orgagenda",
-        command = function(ev)
-          whichkey.add {
-            { "<Localleader>aF", group = "filter/sort", buffer = ev.buf },
-            { "<Localleader>as", group = "set:deadline/schedule/clock", buffer = ev.buf },
-            { "<Localleader>asc", group = "set:clock", buffer = ev.buf },
-            { "<Localleader>ase", group = "set:effort", buffer = ev.buf },
-            { "<Localleader>asm", group = "set:timer", buffer = ev.buf },
-            { "<Localleader>asp", group = "set:property", buffer = ev.buf },
-            { "<Localleader>au", group = "toggle", buffer = ev.buf },
-            { "<Localleader>av", group = "view", buffer = ev.buf },
-            { "<Localleader>ar", group = "refile", buffer = ev.buf },
-            { "<Localleader>ail", group = "links", buffer = ev.buf },
-          }
-
-          UtilKey.nnoremap("<C-c>xr", function()
-            lazy("utils.note").auto_remote_repeater_todo_org_nvim { match = "workout|habit|homework", by_time = true }
-          end, { desc = "Exec: automatically close repeater TODOs", remap = true, force = true })
-        end,
-      }, {
-        event = "FileType",
-        pattern = "org",
-        command = function(ev)
-          whichkey.add {
-            { "<Localleader>aF", group = "filter/sort", buffer = ev.buf },
-            { "<Localleader>as", group = "set:deadline/schedule/clock", buffer = ev.buf },
-            { "<Localleader>asc", group = "set:clock", buffer = ev.buf },
-            { "<Localleader>asc", group = "set:clock", buffer = ev.buf },
-            { "<Localleader>ase", group = "set:effort", buffer = ev.buf },
-            { "<Localleader>asp", group = "set:property", buffer = ev.buf },
-            { "<Localleader>au", group = "set:toggle", buffer = ev.buf },
-            { "<Localleader>ar", group = "refile", buffer = ev.buf },
-            { "<Localleader>ao", group = "open:narrow", buffer = ev.buf },
-          }
-        end,
-      })
-
       return {
         picker = "fzf-lua",
         picker_opts = { winopts = {} },
@@ -216,6 +184,8 @@ add_on_event("UIEnter", {
         org_directory = ConfigPath.wiki_path,
         agenda_files = { string.format("%s/orgmode/**/**/*.org", ConfigPath.wiki_path) },
         default_notes_file = string.format("%s/orgmode/gtd/refile.org", ConfigPath.wiki_path),
+
+        complete_tags_always_offer_all_agenda_tags = true,
 
         extensions = {
           roam = { directory = ConfigPath.wiki_path },
@@ -236,7 +206,7 @@ add_on_event("UIEnter", {
         agenda = {
           window = "float",
           custom_commands = {
-            b = {
+            K = {
               description = "Agenda with no -homework",
               types = {
                 { type = "agenda", span = "day", header = "Hari Ini" },
@@ -245,7 +215,9 @@ add_on_event("UIEnter", {
             },
           },
         },
-
+        links = {
+          frame_setup = { file = "current-window" },
+        },
         refile = {
           max_level = 2,
           include_current_file = true,
@@ -301,13 +273,13 @@ add_on_event("UIEnter", {
           disable_all = false,
           prefix = "<Localleader>a",
           global = {
-            agenda = "<prefix>a",
-            capture = "<prefix>cc",
-            store_link = "<prefix>cl",
-            goto_heading = "<prefix>fh",
-            clock_goto = "<prefix>scj",
-            clock_out = "<prefix>sco",
-            clock_cancel = "<prefix>scC",
+            agenda = "<Localleader>aa",
+            capture = "<C-x>C",
+            store_link = "<C-x>L",
+            goto_heading = "<Localleader>afh",
+            clock_goto = "<C-x><C-g>c",
+            clock_out = "<Localleader>aco",
+            clock_cancel = "<Localleader>acC",
           },
           org = {
             help = "g?",
@@ -315,7 +287,7 @@ add_on_event("UIEnter", {
             cycle = "<Tab>",
             global_cycle = "<S-Tab>",
             -- context / links
-            context_action = { "<C-c><C-c>", "<prefix><CR>" },
+            context_action = { "<C-x>ec", "<prefix><CR>" },
             open_at_point = { "<CR>", "<Leader>ld", "<Leader>lv" },
             open_at_mouse = "<MiddleMouse>",
             find_file_at_mouse = "<RightMouse>",
@@ -326,7 +298,7 @@ add_on_event("UIEnter", {
             insert_todo_heading = "<prefix>it",
             insert_subheading = "<prefix>is",
             insert_drawer = "<prefix>id",
-            insert_structure_template = "<prefix>ib",
+            insert_structure_template = { "<prefix>ib", "<C-x>it" },
             insert_footnote = "<prefix>if",
             cite_insert = "<prefix>i@",
             promote_heading = "<<",
@@ -337,10 +309,10 @@ add_on_event("UIEnter", {
             meta_right = { "<M-Right>" },
             meta_up = { "<M-Up>" },
             meta_down = { "<M-Down>" },
-            shift_meta_left = "<C-c><c-h>",
-            shift_meta_right = "<C-c><c-l>",
-            shift_meta_up = "<C-c><M-K>",
-            shift_meta_down = "<C-c><M-J>",
+            shift_meta_left = "<C-x>H",
+            shift_meta_right = "<C-x>L",
+            shift_meta_up = "<C-x>K",
+            shift_meta_down = "<C-x>J",
             move_subtree_up = "<prefix>K",
             move_subtree_down = "<prefix>J",
             copy_subtree = "<prefix>hy",
@@ -349,17 +321,17 @@ add_on_event("UIEnter", {
             yank = "p", -- org-yank: folds / adjusts pasted subtrees
             yank_before = "P",
             clone_subtree = "<prefix>hc",
-            sort = "<prefix>Fs",
-            narrow_subtree = "<prefix>oo",
+            sort = { "<prefix>Fs", "<C-x>Fs" },
+            narrow_subtree = { "<prefix>oo", "<C-x>on" },
             toggle_comment = "<prefix>uc",
-            toggle_archive_tag = "<prefix>hA",
+            toggle_archive_tag = "<C-x>sag",
             toggle_heading = "<prefix>*",
             toggle_item = "<prefix>-",
             emphasize = "<prefix>E",
             mark_element = "<prefix>v",
-            narrow_block = "<prefix>ob",
-            narrow_element = "<prefix>oe",
-            goto_parent = "g{",
+            narrow_block = { "<prefix>ob", "<C-x>ob" },
+            narrow_element = { "<prefix>oe", "<C-x>oe" },
+            goto_parent = "<C-x><C-g>p",
             next_heading = "<M-n>",
             prev_heading = "<M-p>",
             next_sibling = "][",
@@ -371,38 +343,38 @@ add_on_event("UIEnter", {
             todo_prev = "ciT",
             shift_right = "<S-Right>",
             shift_left = "<S-Left>",
-            todo_select = "<prefix>st",
+            todo_select = { "<prefix>st", "<C-x>st" },
             shift_up = "<S-Up>",
             shift_down = "<S-Down>",
             increment = "<prefix><C-a>",
             decrement = "<prefix><C-x>",
-            priority = "<prefix>spp",
+            priority = { "<prefix>spp", "<C-x>sp" },
             set_tags = "<prefix>sg",
-            set_property = "<prefix>spa",
+            set_property = { "<prefix>spa", "<C-x>sP" },
             delete_property = "<prefix>spC",
             id_get_create = "<prefix>si",
             -- dates
-            schedule = "<prefix>ss",
-            deadline = "<prefix>sd",
-            timestamp = "<prefix>i.",
-            timestamp_inactive = "<prefix>i!",
+            schedule = { "<prefix>ss", "<C-x>ss" },
+            deadline = { "<prefix>sd", "<C-x>sd" },
+            timestamp = { "<prefix>i.", "<C-x>si" },
+            timestamp_inactive = { "<prefix>i!", "<C-x>sI" },
             -- lists
             toggle_checkbox = "<C-Space>",
             update_statistics = "<prefix>#",
             cycle_bullet = "<prefix>hb",
             -- clock
-            clock_in = "<prefix>sci",
-            clock_out = "<prefix>sco",
-            clock_cancel = "<prefix>scC",
-            clock_goto = "<prefix>scj",
+            clock_in = { "<prefix>sci", "<C-x>sci" },
+            clock_out = { "<prefix>sco", "<C-x>sco" },
+            clock_cancel = { "<prefix>scC", "<C-x>scC" },
+            clock_goto = { "<C-x><C-g>c" },
             set_effort = "<prefix>see",
             inc_effort = "<prefix>sei",
             clock_modify_effort = "<prefix>scm",
             clock_resolve = "<prefix>scz",
             clock_report = "<prefix>scr",
-            clock_display = "<prefix>scd",
-            link_preview = "<prefix>uv",
-            link_preview_refresh = "<prefix>uV",
+            clock_display = { "<prefix>scd", "<C-x>Id" },
+            link_preview = { "<prefix>uv", "<C-x>uv" },
+            link_preview_refresh = { "<prefix>uV", "<C-x>uv" },
             latex_preview = "<prefix>xl",
             dblock_update = "<prefix>xu",
             dblock_update_all = "<prefix>xU",
@@ -434,11 +406,11 @@ add_on_event("UIEnter", {
             table_delete_row = "<prefix>TR",
             table_insert_column = "<prefix>Ti",
             table_delete_column = "<prefix>TI",
-            table_copy_down = "<S-CR>",
+            table_copy_down = false,
             table_transpose = "<prefix>Tt",
             table_rotate_marks = "<prefix>T#",
             -- babel
-            edit_special = "<prefix>e",
+            edit_special = { "<prefix>e", "<C-x>ee" },
             babel_execute = "<prefix>xx",
             babel_execute_buffer = "<prefix>xb",
             babel_execute_subtree = "<prefix>xs",
@@ -474,7 +446,7 @@ add_on_event("UIEnter", {
             insert_tab = "<Tab>",
             table_prev_field = "<S-Tab>",
             table_next_row = "<CR>",
-            table_copy_down = "<S-CR>",
+            table_copy_down = false,
           },
           --- Emacs Org keys (org-mode-map), on top of the Vim-style keys above.
           --- Set a section to `false` to disable it, or an entry to `false` to
@@ -495,7 +467,7 @@ add_on_event("UIEnter", {
             ctrl_c_caret = "<C-c>^",
             toggle_comment = "<C-c>;",
             insert_structure_template = "<C-c><C-,>",
-            insert_drawer = "<C-c><C-x>d",
+            insert_drawer = "<C-x>id",
             insert_footnote = "<C-c><C-x>f",
             cite_insert = "<C-c><C-x>@",
             emphasize = "<C-c><C-x><C-f>",
@@ -683,8 +655,8 @@ add_on_event("UIEnter", {
             quit = "q",
             quit_kill = "Q",
             exit = "x",
-            redo = "<C-c>R",
-            redo_all = "gr", -- Emacs: g (a Vim prefix key)
+            redo = "<C-x>R",
+            redo_all = "<C-x><C-z>", -- Emacs: g (a Vim prefix key)
             later = "f",
             earlier = "b",
             today = "~",
@@ -706,19 +678,19 @@ add_on_event("UIEnter", {
             recenter = "L",
             delete_other_windows = "<Leader>bK",
             follow_mode = "<prefix>uF",
-            tree_to_indirect_buffer = "<C-c><C-x>b",
-            todo = { "<prefix>st", "<C-c><C-t>" },
+            tree_to_indirect_buffer = "<C-x>eb",
+            todo = { "<prefix>st", "<C-x>st" },
             todo_yesterday = false, -- Emacs: unbound
             todo_next = "<C-S-Right>",
             todo_prev = "<C-S-Left>",
             priority = { "<prefix>spp" },
             priority_up = { "+", "<S-Up>" },
             priority_down = { "-", "<S-Down>" },
-            set_tags = { "<prefix>sg", "<C-c><C-g>" },
-            show_tags = "<prefix>ug",
+            set_tags = "<prefix>sg",
+            show_tags = { "<prefix>ug", "<C-x>ug" },
             set_property = "<prefix>spa",
-            schedule = { "<C-c><C-s>", "<prefix>ss" },
-            deadline = { "<C-c><C-d>", "<prefix>sd" },
+            schedule = { "<C-x>ss", "<prefix>ss" },
+            deadline = { "<C-x>sd", "<prefix>sd" },
             date_later = { "<S-Right>", "<C-c><C-x><Right>" },
             date_earlier = { "<S-Left>", "<C-c><C-x><Left>" },
             -- Emacs: unbound (C-u / C-u C-u <S-Right>, here counts 4 / 16)
@@ -727,22 +699,22 @@ add_on_event("UIEnter", {
             date_later_minutes = false,
             date_earlier_minutes = false,
             date_prompt = ">",
-            clock_in = { "<prefix>sci", "<C-c><C-x><C-i>" },
-            clock_out = { "<prefix>sco", "<C-c><C-x><C-o>" },
-            clock_cancel = { "<prefix>scC", "<C-c><C-x><C-x>" },
-            clock_goto = { "<prefix>scj", "<C-c><C-x><C-j>" },
-            attach = "<C-c><C-a>",
-            set_effort = { "<prefix>see", "<C-c><C-x>e" },
+            clock_in = { "<prefix>sci", "<C-x>sci" },
+            clock_out = { "<prefix>sco", "<C-x>sco" },
+            clock_cancel = { "<prefix>scC", "<C-x>scC" },
+            clock_goto = { "<C-x><C-g>c" },
+            attach = "<C-x><C-a>",
+            set_effort = { "<prefix>see", "<C-x>se" },
             timer = "<prefix>smm",
             timer_stop = "<prefix>smC",
             restriction_lock = "<C-c><C-x><",
             remove_restriction_lock = "<C-c><C-x>>",
             refile = "<prefix>rr",
-            archive = { "<C-c>$", "<C-c><C-x><C-s>" },
-            archive_default = "<prefix>sA",
-            archive_default_confirm = "<prefix>sa",
-            archive_sibling = "<C-c><C-x>A",
-            toggle_archive_tag = "<C-c><C-x>a",
+            archive = { "<C-c>$", "<C-x>s$" },
+            archive_default = { "<prefix>sA", "<C-x>saA" },
+            archive_default_confirm = { "<prefix>sa", "<C-x>saa" },
+            archive_sibling = "<C-x>sas",
+            toggle_archive_tag = "<C-x>sag",
             kill = "<C-k>",
             open_link = "<C-c><C-o>",
             add_note = { "<prefix>sn", "<C-c><C-z>" },
@@ -761,13 +733,13 @@ add_on_event("UIEnter", {
             toggle_habits_display = "vh", -- Emacs: K (capture here)
             toggle_habits = false, -- Emacs: unbound
             dim_blocked = "#",
-            filter = "<prefix>Ff",
-            filter_tag = "<prefix>Fg",
-            filter_category = "<prefix>Fc",
-            filter_regexp = "<prefix>Fr",
-            filter_effort = "<prefix>Fe",
-            filter_top_headline = "<prefix>Ft",
-            filter_remove = "<prefix>FC",
+            filter = { "<prefix>Ff", "<C-x>Ff" },
+            filter_tag = { "<prefix>Fg", "<C-x>Fg" },
+            filter_category = { "<prefix>Fc", "<C-x>Fc" },
+            filter_regexp = { "<prefix>Fr", "<C-x>Fr" },
+            filter_effort = { "<prefix>Fe", "<C-x>Fe" },
+            filter_top_headline = { "<prefix>Ft", "<C-x>Ft" },
+            filter_remove = { "<prefix>FC", "<C-x>FC" },
             -- limit = "<prefix>Fsl",
             limit = false, -- di disabled dulu sementara, karena prefix>Fsl itu prefix>Fs untuk sort
             query_add = "[",
@@ -800,27 +772,27 @@ add_on_event("UIEnter", {
             save_all = "<C-x><C-s>",
             undo = { "<C-_>", "<C-/>", "<C-x>u" }, -- org-agenda-undo (Emacs undo keys)
             capture = "K", -- Emacs: k (kept free for motion)
-            export = "<C-x><C-w>",
+            export = "<C-x>ee",
             help = "g?",
             show_flagging_note = "?",
             mobile_pull = "<C-c><C-x><CR>g",
             mobile_push = "<C-c><C-x><CR>p",
           },
           capture = {
-            finalize = { "<C-c><C-c>", "<prefix>w" },
-            kill = { "<C-c><C-k>", "<prefix>k" },
-            refile = { "<C-c><C-w>", "<prefix>rr" },
+            finalize = { "<C-x><C-x>", "<prefix>w", "<C-o>" },
+            kill = { "<C-x><C-k>", "<prefix>k", "<Leader>bk" },
+            refile = { "<C-x>rr", "<prefix>rr" },
           },
           edit_src = {
-            save_exit = { "<C-c><C-C>", "<prefix>w" },
-            abort = { "<C-c><C-k>", "<prefix>k" },
+            save_exit = { "<C-x><C-cx>", "<prefix>w" },
+            abort = { "<C-x><C-k>", "<prefix>k", "<Leader>bk" },
             -- the block has a :session: send the buffer (Visual: the lines) to it
             -- (org-src-associate-babel-session)
-            send_to_session = { "<C-c><C-s>" },
+            send_to_session = { "<C-x>Ss" },
           },
           --- Keys of the Beamer mode (org-beamer-mode-map), only while it is on.
           beamer = {
-            beamer_select_environment = "<C-c><C-b>",
+            beamer_select_environment = "<C-x><C-b>",
           },
         },
       }

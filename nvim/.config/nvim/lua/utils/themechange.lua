@@ -130,7 +130,7 @@ function M.build_colors()
   local critical_fg = tint(critical_bg, 2.5)
   local critical_frame = tint(critical_bg, 0.5)
 
-  if theme_is { "catppuccin", "techbase",  } then
+  if theme_is { "catppuccin", "techbase" } then
     normal_bg = tint(normal_bg, 0.3)
     normal_frame = tint(normal_bg, 0.8)
   end
@@ -183,6 +183,7 @@ function M.build_colors()
     tmux = {
       fg = text_dim,
       bg = bg,
+      inactive_bg = tint(bg, -0.15),
       fm_bg = get("PanelSideBackground", "bg"), -- file manager bg (yazi, dll)
       keyword = keyword,
 
@@ -290,7 +291,7 @@ function M.build_colors()
 
     eww = {
       bg = bg,
-      fg = darken(statusline.fg, 0.6, bg),
+      fg = darken(statusline.fg, 0.5, bg),
       fg2 = tint(changed, -0.3),
 
       bg_darken = tint(bg, -0.3),

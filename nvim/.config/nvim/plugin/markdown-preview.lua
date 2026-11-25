@@ -1,7 +1,7 @@
 local add_on_file_type = require("vim-pack").add_on_file_type
 local on_plugin_update = require("vim-pack").on_plugin_update
 
-local UtilKey = require "utils.map"
+-- local UtilKey = require "utils.map"
 
 -- Markdown preview on the browser.
 add_on_file_type("markdown", {

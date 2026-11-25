@@ -136,11 +136,14 @@ add {
               ["<C-n>"] = "next_git_modified",
               ["<C-p>"] = "prev_git_modified",
 
-              ["<C-c>Fd"] = "fuzzy_finder_directory",
-              ["<C-c>Fg"] = "fuzzy_finder",
-              ["<C-c>Fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
-              ["<C-c>Ff"] = "filter_on_submit",
-              ["<C-c>FC"] = "clear_filter",
+              ["gn"] = "next_git_modified",
+              ["gp"] = "prev_git_modified",
+
+              ["<C-x>Fd"] = "fuzzy_finder_directory",
+              ["<C-x>Fg"] = "fuzzy_finder",
+              ["<C-x>Fs"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
+              ["<C-x>Ff"] = "filter_on_submit",
+              ["<C-x>FC"] = "clear_filter",
             },
             fuzzy_finder_mappings = {
               ["<a-n>"] = "move_cursor_down",
@@ -409,20 +412,19 @@ add {
             mappings = {
               ["gg"] = "noop",
               ["w"] = "noop",
-              ["<C-c>"] = "noop",
 
               ["<Leader>gsa"] = "git_add_file",
               ["<Leader>gsA"] = "git_add_all",
               ["<Leader>gsu"] = "git_unstage_file",
               ["<Leader>gsr"] = "git_revert_file",
 
-              -- ["e"] = "child_or_open",
               [","] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
               ["g?"] = "show_help",
             },
           },
         },
         window = {
+          position = "right", -- left, right, top, bottom, float, current
           mappings = {
             ["tn"] = "noop",
             ["<space>"] = "noop",
@@ -441,7 +443,7 @@ add {
             ["f"] = "noop",
             ["z"] = "noop",
             ["/"] = "noop",
-            ["<C-c>"] = "noop",
+            ["<C-x>"] = "noop",
 
             [",c"] = { "order_by_created", nowait = false },
             [",D"] = { "order_by_diagnostics", nowait = false },
@@ -466,10 +468,10 @@ add {
             ["<Leader>os"] = "open_split",
             ["<Leader>ov"] = "open_vsplit",
 
-            ["<C-c><C-t>"] = "open_cwd_in_terminal",
+            ["<C-x><C-t>"] = "open_cwd_in_terminal",
 
             ["<S-Tab>"] = "invert_selection",
-            ["<C-c><C-c>"] = "clear_selection",
+            ["<C-c>"] = "clear_selection",
             ["<Tab>"] = "select",
 
             ["zM"] = "close_all_nodes",
@@ -480,6 +482,8 @@ add {
 
             ["th"] = "prev_source",
             ["tl"] = "next_source",
+            ["gh"] = "prev_source",
+            ["gl"] = "next_source",
 
             ["mc"] = { "order_by_created", nowait = false },
             ["mg"] = { "order_by_git_status", nowait = false },
@@ -508,6 +512,14 @@ UtilKey.nnoremap("<a-e>", function()
   end)
 end, { desc = "Open: file explore [neotree]" })
 
+UtilKey.nnoremap("<F1>", function()
+  -- local j = lazy("utils.layout").get_support_win_layout()
+  -- vim.notify(vim.inspect(j))
+  for _, mode in ipairs { "n", "i", "v", "t" } do
+    print(mode, vim.inspect(vim.fn.maparg("<S-CR>", mode)))
+  end
+end, { desc = "Open: test commands [neotree]" })
+
 local UtilAugroup = lazy("utils.map").augroup
 local whichkey = lazy "which-key"
 
@@ -515,14 +527,14 @@ UtilAugroup("neotree", {
   event = "FileType",
   pattern = "neo-tree",
   command = function(ev)
+    pcall(vim.keymap.del, { "n", "x", "t" }, "<Localleader>t")
     whichkey.add {
-      { "<C-c>F", group = "filter:sort", buffer = ev.buf },
-      { "<C-c>v", group = "view", buffer = ev.buf },
+      { "<C-x>F", group = "filter:sort", buffer = ev.buf },
+      -- { "<C-x>v", group = "view", buffer = ev.buf },
 
       { "<Localleader>", group = "order", buffer = ev.buf },
       { "<Localleader>c", name = "order by create", buffer = ev.buf },
       { "<Localleader>s", name = "order by size", buffer = ev.buf },
-      pcall(vim.keymap.del, { "n", "x", "t" }, "<Localleader>t"),
       { "<Localleader>t", name = "order by type", buffer = ev.buf },
     }
   end,

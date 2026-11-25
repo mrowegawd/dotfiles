@@ -21,8 +21,8 @@ local FzfActions = lazy "fzf-lua.actions"
 local WhichKey = lazy "which-key"
 
 local mappings = {
-  { "<C-c>F", group = "filter:cdo/cfdo/Cfilter/Dedupe" },
-  { "<C-c>x", group = "exec" },
+  { "<C-x>F", group = "filter:cdo/cfdo/Cfilter/Dedupe" },
+  { "<C-x>e", group = "exec" },
 }
 WhichKey.add(mappings)
 
@@ -110,6 +110,7 @@ end
 
 local function peek_now()
   lazy("vim-pack").load_now "overlook.nvim"
+  lazy("utils.monkeypatch.overlook").setup()
   peek_item_qf()
 end
 
@@ -520,19 +521,19 @@ vim.api.nvim_create_user_command("QfLongLines", function()
   vim.cmd("vimgrep /\\%>70c./ " .. table.concat(files, " "))
 end, { desc = "Qf: Cari baris >70 karakter di semua file unik dari quickfix saat ini" })
 
-UtilKey.nnoremap("<C-c>xl", "<CMD>QfLongLines<CR>", {
+UtilKey.nnoremap("<C-x>el", "<CMD>QfLongLines<CR>", {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: collect long lines from qf items",
   force = true,
 })
 
-UtilKey.nnoremap("<C-c>xD", ":QfDedupe ", {
+UtilKey.nnoremap("<C-x>eD", ":QfDedupe ", {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: check dedupe by filter f=file/line/file,line",
   force = true,
 })
 
-UtilKey.nnoremap("<C-c>xs", ":QfSort ", {
+UtilKey.nnoremap("<C-x>es", ":QfSort ", {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: short by filter f=file|line|col|text|type[:desc][,field2...]",
   force = true,

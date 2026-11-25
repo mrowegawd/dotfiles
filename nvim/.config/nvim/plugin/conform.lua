@@ -4,7 +4,7 @@ local lazy = require("utils.plugin").require_lazy
 
 local UtilKey = lazy "utils.map"
 
-add_on_event("BufWritePre", {
+add_on_event("UIEnter", {
   {
     src = "stevearc/conform.nvim",
     opts = function()

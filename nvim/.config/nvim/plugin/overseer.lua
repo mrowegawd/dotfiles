@@ -74,10 +74,13 @@ add {
           ["C"] = function()
             vim.cmd "OverseerClose"
           end,
+          ["<C-c>"] = function()
+            vim.cmd "OverseerClose"
+          end,
           ["<Leader><TAB>"] = function()
             vim.cmd "OverseerClose"
           end,
-          ["R"] = function()
+          ["<C-x>R"] = function()
             local sidebar = lazy "overseer.task_list.sidebar"
             local sb = sidebar.get_or_create()
             sb:run_action "restart"

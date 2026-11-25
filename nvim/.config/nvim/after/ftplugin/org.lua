@@ -1,4 +1,4 @@
-local bo = vim.bo
+local bo, api = vim.bo, vim.api
 
 bo.textwidth = 60
 vim.opt_local.list = false
@@ -53,3 +53,23 @@ end, {
   remap = true,
   force = true,
 })
+
+UtilKey.nnoremap(
+  "<C-x>sg",
+  lazy("utils.note").insert_tag,
+  { desc = "Org: insert tag", buffer = vim.api.nvim_get_current_buf(), remap = true, force = true }
+)
+
+local whichkey = lazy "which-key"
+whichkey.add {
+  { "<Localleader>aF", group = "filter/sort", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>as", group = "set:deadline/schedule/clock", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>asc", group = "set:clock", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>asc", group = "set:clock", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>ase", group = "set:effort", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>asp", group = "set:property", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>au", group = "set:toggle", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>ar", group = "refile", buffer = api.nvim_get_current_buf() },
+  { "<Localleader>ao", group = "open:narrow", buffer = api.nvim_get_current_buf() },
+  { "<C-x>ic", group = "column", buffer = api.nvim_get_current_buf() },
+}

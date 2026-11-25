@@ -1,8 +1,13 @@
 local M = {}
 local ns = vim.api.nvim_create_namespace "org_heading_render"
 
-local signs = { "1", "2", "3", "4", "5", "6", "7" }
-local icons = { "󰲡", "󰲣", "󰲥", "󰲧", "󰲩", "󰲫" } -- "●", "○", "◆" ..
+-- local signs = { "1", "2", "3", "4", "5", "6", "7" }
+-- local icons = { "󰲡", "󰲣", "󰲥", "󰲧", "󰲩", "󰲫" } -- "●", "○", "◆" ..
+-- local icons = { "", "", "", "", "", "", "" } -- "●", "○", "◆" ..
+local icons = { "●", "○", "◆", "◇", "■", "□", "▲" }
+-- "●", "○", "◆" ..
+-- local icons = { "① ", "② ", "③ ", "④ ", "⑤ " }
+local signs = { "① ", "② ", "③ ", "④ ", "⑤ ", "⑥ ", "⑦ " }
 
 local hl_groups = {
   "@org.headline.level1",

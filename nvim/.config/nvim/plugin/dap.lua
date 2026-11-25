@@ -436,12 +436,12 @@ add {
       keymaps = {
         scopes = {
           toggle = { "<CR>", "<2-LeftMouse>" },
-          jump_to_parent = "[[",
+          jump_to_parent = "<C-x><C-g>p",
           set_value = "s",
         },
         watches = {
           toggle = { "<CR>", "<2-LeftMouse>" },
-          jump_to_parent = "[[",
+          jump_to_parent = "<C-x><C-g>p",
           set_value = "s",
           copy_value = "c",
           delete_expression = "d",
@@ -452,7 +452,7 @@ add {
         hover = {
           quit = "q",
           toggle = { "<CR>", "<2-LeftMouse>" },
-          jump_to_parent = "[[",
+          jump_to_parent = "<C-x><C-g>p",
           set_value = "s",
         },
         help = {

@@ -102,7 +102,13 @@ add_local_or_remote {
         down_and_jump = "<a-n>",
         up_and_jump = "<a-p>",
 
-        filter_symbols = "<C-c>Fs",
+        freeze = {},
+        unfreeze = {},
+        toggle_freeze = "<C-x>uf",
+
+        pick = "f",
+
+        filter_symbols = "<C-x>Ff",
 
         open_in_vsplit = "<Leader>ov",
         open_in_split = "<Leader>os",
@@ -168,10 +174,10 @@ UtilAugroup("OutlineNvim", {
   pattern = "Outline",
   command = function(ev)
     whichkey.add {
-      { "<C-c>F", name = "Filter", buffer = ev.buf },
+      { "<C-x>F", name = "Filter", buffer = ev.buf },
     }
 
     --stylua: ignore
-    UtilKey.nnoremap("<C-c>uf", vim.cmd.OutlineToggleFollow , { desc = "Toggle: toggle follow outline [outline]", buffer = ev.buf, remap = true, force = true })
+    UtilKey.nnoremap("<C-x>uf", vim.cmd.OutlineToggleFollow , { desc = "Toggle: toggle follow outline [outline]", buffer = ev.buf, remap = true, force = true })
   end,
 })

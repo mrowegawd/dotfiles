@@ -16,24 +16,41 @@ add {
       resultLocation = { showNumberLabel = false },
       windowCreationCommand = "botright vsplit",
       keymaps = {
-        replace = { n = "<C-c><C-c>" },
+        replace = { n = "<C-x>er" },
         qflist = { n = "<C-q>" },
-        syncLocations = { n = "<C-c>xs" },
-        syncLine = { n = "<C-c>xl" },
+        syncLocations = { n = "<C-x>es" },
+        syncLine = { n = "<C-x>el" },
         close = { n = "q" },
-        historyOpen = { n = "<C-c>oh" },
-        historyAdd = { n = "<C-a>A" },
-        refresh = { n = "<C-c>R" },
+        historyOpen = { n = "<C-x>oh" },
+        historyAdd = { n = "<C-x>oo" },
+        refresh = { n = "<C-x>R" },
         gotoLocation = { n = "<enter>" },
         pickHistoryEntry = { n = "<enter>" },
-        nextInput = { n = "<a-n>" },
-        prevInput = { n = "<a-p>" },
+
+        nextInput = { n = "<C-n>" },
+        prevInput = { n = "<C-p>" },
+
+        openNextLocation = { n = "<a-n>" },
+        openPrevLocation = { n = "<a-p>" },
+
+        toggleShowCommand = { n = "<C-x>ui" },
+        help = { n = "g?", "<C-x>?" },
+        abort = { n = "<C-x><C-k>" },
+
+        swapEngine = { n = "<localleader>e" },
+
+        syncNext = { n = "<S-Down>" },
+        syncPrev = { n = "<S-Up>" },
+        applyNext = { n = "<C-j>" },
+        applyPrev = { n = "<C-k>" },
       },
     },
   },
 }
 
 UtilKey.nnoremap("<Localleader>gg", function()
+  lazy("utils.layout").close_master_window()
+
   UtilKey.plugin_load_now "grug-far.nvim"
 
   local grug = lazy "grug-far"

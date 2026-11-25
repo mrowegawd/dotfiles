@@ -41,8 +41,13 @@ cb("Th", "CBllbox20", "box for big comment left 20")
 -- ╒═════════════════════════════════════════════════════════════════════════════╕
 --                                  BOX MISC SUB
 -- ╘═════════════════════════════════════════════════════════════════════════════╛
-cb("sj", "CBlcbox21", "box title sub center 21")
+cb("sj", "CBllbox15", "box title sub center 21")
 cb("sh", "CBllbox21", "box title sub left 21")
+
+cb("b1", "CBlabox1", "box title sub 1")
+cb("b2", "CBlabox3", "box title sub 2")
+cb("b3", "CBlabox4", "box title sub 4")
+cb("b4", "CBlabox5", "box title sub 5")
 
 -- ── Line1 ──────────────────────────────────────────────────────────────────
 cb("L1", "CBclline1", "line 1")

@@ -206,6 +206,7 @@ set_tmux() {
   # General
   replace_var "$tmux_themes" "TMUX_FG" "$(theme_get tmux_fg)"
   replace_var "$tmux_themes" "TMUX_BG" "$(theme_get tmux_bg)"
+  replace_var "$tmux_themes" "TMUX_INACTIVE_BG" "$(theme_get tmux_inactive_bg)"
   replace_var "$tmux_themes" "FM_BG" "$(theme_get tmux_fm_bg)"
   replace_var "$tmux_themes" "TMUX_KEYWORD" "$(theme_get tmux_keyword)"
 

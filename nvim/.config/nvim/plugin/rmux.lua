@@ -1,7 +1,9 @@
 local add_local_or_remote = require("vim-pack").add_local_or_remote
 
-local UtilKey = require "utils.map"
-local ConfigPath = require("config").path
+local lazy = require("utils.plugin").require_lazy
+
+local UtilKey = lazy "utils.map"
+local ConfigPath = lazy("config").path
 
 add_local_or_remote {
   {
@@ -14,8 +16,8 @@ add_local_or_remote {
       }
     end,
     on_setup = function()
-      UtilKey.nnoremap("<Leader>rf", vim.cmd.RmuxRunFile, { desc = "Task: run file [rmux]" })
-      UtilKey.nnoremap("<Leader>rr", vim.cmd.RmuxBoard, { desc = "Task: open board [rmux]" })
+      -- UtilKey.nnoremap("<Leader>rf", vim.cmd.RmuxRunFile, { desc = "Task: run file [rmux]" })
+      UtilKey.nnoremap("<Leader>rf", vim.cmd.RmuxBoard, { desc = "Task: open board [rmux]" })
       --stylua: ignore
       UtilKey.noremap({ "n", "x" }, "<Leader>rl", vim.cmd.RmuxSendline, { desc = "Task: send line [rmux]" })
       UtilKey.noremap({ "n", "x" }, "<Leader>r<CR>", vim.cmd.RmuxSendEnter, { desc = "Task: send enter key [rmux]" })

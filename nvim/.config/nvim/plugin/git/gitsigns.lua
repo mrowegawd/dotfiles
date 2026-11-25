@@ -51,7 +51,7 @@ add_on_event({ "BufReadPost", "BufNewFile" }, {
           changedelete = { text = dashed_bar },
         },
         preview_config = { border = "rounded" },
-        current_line_blame = true,
+        current_line_blame = false,
         signs_staged_enable = false,
         gh = true,
         on_attach = function(bufnr)

@@ -204,9 +204,9 @@ add_local_or_remote {
             next_item = "<a-n>",
             prev_item = "<a-p>",
 
-            quit = { "q", "<Esc>" },
+            quit = { "q", "<Esc>","<C-c>" },
 
-            diselect_all = { "D", "<C-c><C-c>" },
+            diselect_all = { "D" },
           },
 
           note = {
@@ -244,7 +244,7 @@ add_local_or_remote {
                 enabled = true,
                 commands = {
                   {
-                    key = "<C-c><C-q>",
+                    key = "<C-x><C-x>",
                     cmd = function(opts)
                       opts.selected:add_to "quickfix"
                     end,
@@ -252,28 +252,28 @@ add_local_or_remote {
                   },
 
                   {
-                    key = "<C-c><C-d>",
+                    key = "<C-x><C-d>",
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
                     desc = "Qfmark: add to debug mark",
                   },
                   {
-                    key = "<C-c><C-n>",
+                    key = "<C-x><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
                     desc = "Qfmark: add to note mark",
                   },
                   {
-                    key = "<C-c><C-f>",
+                    key = "<C-x><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
                     desc = "Qfmark: add to fix mark",
                   },
                   {
-                    key = "<C-c><C-c>",
+                    key = "<C-x><C-x>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -285,41 +285,41 @@ add_local_or_remote {
           },
 
           quickfix = {
-            open_toggle_qf = "sj",
-            open_toggle_loc = "sl",
+            -- open_toggle_qf = "sj",
+            -- open_toggle_loc = "sl",
 
-            rename_title = "sT",
-
-            add_item_to_qf = "st",
-            add_item_to_loc = "sy",
+            -- rename_title = "sT",
+            --
+            -- add_item_to_qf = "st",
+            -- add_item_to_loc = "sy",
 
             integrations = {
               custom = {
                 enabled = true,
                 commands = {
                   {
-                    key = "<C-c><C-d>",
+                    key = "<C-x><C-d>",
                     cmd = function(opts)
                       opts.selected:add_to "DEBUG"
                     end,
                     desc = "Qfmark: add item to debug mark",
                   },
                   {
-                    key = "<C-c><C-n>",
+                    key = "<C-x><C-n>",
                     cmd = function(opts)
                       opts.selected:add_to "NOTE"
                     end,
                     desc = "Qfmark: add to note mark",
                   },
                   {
-                    key = "<C-c><C-f>",
+                    key = "<C-x><C-f>",
                     cmd = function(opts)
                       opts.selected:add_to "FIX"
                     end,
                     desc = "Qfmark: add to fix mark",
                   },
                   {
-                    key = "<C-c><C-c>",
+                    key = "<C-x><C-x>",
                     cmd = function(opts)
                       opts.selected:add_to "MARK"
                     end,
@@ -328,7 +328,7 @@ add_local_or_remote {
 
                   -- 🔧 Filter & Update (Quickfix)
                   {
-                    key = "<C-c>Ff",
+                    key = "<C-x>Ff",
                     cmd = function()
                       local str_cmd = call_func { qf = "Cfilter", lf = "Lfilter" }
                       if str_cmd then
@@ -339,7 +339,7 @@ add_local_or_remote {
                     desc = "Qfmark: run Cfilter or Lfilter",
                   },
                   {
-                    key = "<C-c>Fc",
+                    key = "<C-x>Fc",
                     cmd = function()
                       local str_cmd = call_func { qf = "cdo", lf = "ldo" }
                       if str_cmd then
@@ -351,7 +351,7 @@ add_local_or_remote {
                   },
 
                   {
-                    key = "<C-c>Fd",
+                    key = "<C-x>Fd",
                     cmd = function()
                       local str_cmd = call_func { qf = "cfdo", lf = "lfdo" }
                       if str_cmd then
@@ -367,23 +367,23 @@ add_local_or_remote {
           },
 
           mark = {
-            add_mark = "ss",
-            add_fix = "sf",
-            add_debug = "sd",
-            add_mark_annotation = "sa",
+            add_mark = "<C-x><C-x>",
+            add_fix = "<C-x><C-f>",
+            add_debug = "<C-x><C-d>",
+            add_mark_annotation = "<C-x><C-n>",
 
-            move_item_down = "<c-n>",
-            move_item_up = "<c-p>",
+            move_item_down = "<C-n>",
+            move_item_up = "<C-p>",
 
-            next_mark = "sn",
-            prev_mark = "sp",
+            next_mark = "gn",
+            prev_mark = "gp",
 
             integrations = {
               custom = {
                 enabled = true,
                 commands = {
                   {
-                    key = "ss",
+                    key = "<C-x><C-x>",
                     cmd = function(opts)
                       opts.selected:add_to "quickfix"
                     end,
@@ -398,3 +398,7 @@ add_local_or_remote {
     end,
   },
 }
+
+local UtilKey = lazy "utils.map"
+
+UtilKey.nnoremap("<Leader>qF", "<CMD>QfbookmarkPickMaster<CR>", { desc = "Qf: pick master" })
